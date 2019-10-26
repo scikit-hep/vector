@@ -1,2 +1,3 @@
 # vector
-Vector classes and utilities
+
+Vector classes and utilities.
