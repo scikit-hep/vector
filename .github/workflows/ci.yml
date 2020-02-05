@@ -50,10 +50,7 @@ jobs:
 
     - name: Prepare condarc file
       run: |
-          echo "channels:" > .condarc
-          echo "  - conda-forge" >> .condarc
-          echo "  - defaults" >> .condarc
-          echo "notify_outdated_conda: false" >> .condarc
+          echo "notify_outdated_conda: false" > .condarc
 
     - uses: goanpeca/setup-miniconda@v1
       with:
