@@ -2,9 +2,9 @@ name: vector
 channels:
   - conda-forge
 dependencies:
-  - root
   - jupyterlab
   - pip
   - pytest
+  - root >=6.18.04
   - pip:
       . -e
