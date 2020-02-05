@@ -48,12 +48,19 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Prepare condarc file
+      run: |
+          echo "channels:" > .condarc
+          echo "  - conda-forge" >> .condarc
+          echo "  - defaults" >> .condarc
+          echo "notify_outdated_conda: false" >> .condarc
+
     - uses: goanpeca/setup-miniconda@v1
       with:
         miniconda-version: 4.7.12
-        python-version: 3.8
         environment-file: environment.yml
         activate-environment: vector
+        condarc-file: .condarc
 
     - name: Run tests
       shell: bash -l {0}
