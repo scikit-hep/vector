@@ -1,0 +1,10 @@
+name: vector
+channels:
+  - conda-forge
+dependencies:
+  - jupyterlab
+  - pip
+  - pytest
+  - root >=6.18.04
+  - pip:
+      . -e
