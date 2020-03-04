@@ -5,3 +5,5 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 Vector classes and utilities. See [CONTRIBUTING.md](./.github/CONTRIBUTING.md) for information on setting up a development environment.
+
+Python 2 is partially supported.
