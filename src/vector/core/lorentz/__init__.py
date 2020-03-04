@@ -3,5 +3,4 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-# Convenient access to the version number
-from ._version import __version__
+from . import xyzt
