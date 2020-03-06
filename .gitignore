@@ -130,3 +130,6 @@ dmypy.json
 
 # Other editor files
 .vscode
+
+# Version file
+/src/vector/version.py

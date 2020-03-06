@@ -1,2 +1,12 @@
 [build-system]
-requires = ["wheel", "setuptools"]
+
+requires = [
+    "wheel",
+    "setuptools>=42.0",
+    "setuptools_scm[toml]>=3.4"
+]
+
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+write_to = "src/vector/version.py"
