@@ -4,4 +4,4 @@
 # or https://github.com/scikit-hep/vector for details.
 
 # Convenient access to the version number
-from ._version import __version__
+from .version import version as __version__
