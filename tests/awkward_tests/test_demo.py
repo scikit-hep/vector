@@ -30,21 +30,21 @@ def test_simple_example():
             ak.layout.NumpyArray(t.content.astype(np.float64)),
         ],
         keys=["x", "y", "z", "t"],
-        parameters={"__record__": "LorentzXYZ", "__typestr__": "Lxyz"},
+        parameters={"__record__": "LorentzXYZ"},
     )
 
     # This array is generic: it doesn't know what records labeled "LorentzXYZ" mean.
     example = ak.Array(ak.layout.ListOffsetArray64(offsets, content))
     assert (
         repr(example)
-        == "<Array [[{x: -52.9, y: -11.7, ... t: 69.6}]] type='2421 * var * Lxyz'>"
+        == '<Array [[{x: -52.9, y: -11.7, ... t: 69.6}]] type=\'2421 * var * struct[["x", "y"...\'>'
     )
 
     # This new array understands that data labeled "LorentzXYZ" should have the above methods.
     example2 = ak.Array(example, behavior=lorentzbehavior)
     assert (
         repr(example2)
-        == "<Array [[Lxyz(-52.9 -11.7 -8.16 54.8), ... ] type='2421 * var * Lxyz'>"
+        == "<Array [[Lxyz(-52.9 -11.7 -8.16 54.8), ... ] type='2421 * var * LorentzXYZ'>"
     )
 
     assert repr(example2[0, 0]) == "Lxyz(-52.9 -11.7 -8.16 54.8)"
