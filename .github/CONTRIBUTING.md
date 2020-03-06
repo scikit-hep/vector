@@ -6,7 +6,7 @@ You should *always* use a virtual environment when developing software. Setup:
 ```bash
 python3 -m venv .env
 . .env/bin/activate
-pip install -e .[dev]
+pip install -e .[dev,test]
 ```
 
 If you use conda environments and want to compare against ROOT:

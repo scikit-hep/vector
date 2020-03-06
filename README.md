@@ -6,4 +6,6 @@
 
 Vector classes and utilities. See [CONTRIBUTING.md](./.github/CONTRIBUTING.md) for information on setting up a development environment.
 
+> ### This is under heavy development and anything could change at any time.
+
 Python 2 is partially supported.

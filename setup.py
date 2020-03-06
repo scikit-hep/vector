@@ -6,4 +6,16 @@
 
 from setuptools import setup
 
-setup()
+extras = {
+    "dev": [
+        "awkward1>=0.1.128",
+        "uproot>=3.11",
+        'numba>=0.46; python_version>="3"',
+        "scikit-hep-testdata>=0.1.3",
+    ],
+    "test": ["pytest>=4.6"],
+}
+
+extras["all"] = sum(extras.values(), [])
+
+setup(extras_require=extras)
