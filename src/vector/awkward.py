@@ -42,3 +42,5 @@ lorentzbehavior["*", "LorentzXYZ"] = LorentzXYZArray
 
 # The NumPy ufunc for "add" will use our definition for __record__ = "LorentzXYZ".
 lorentzbehavior[np.add, "LorentzXYZ", "LorentzXYZ"] = lorentz_add_xyz_xyz
+
+lorentzbehavior["__typestr__", "LorentzXYZ"] = "LorentzXYZ"
