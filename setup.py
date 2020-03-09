@@ -11,7 +11,7 @@ extras = {
         "awkward1>=0.1.128",
         "uproot>=3.11",
         'numba>=0.46; python_version>="3"',
-        "scikit-hep-testdata>=0.1.3",
+        "scikit-hep-testdata>=0.2.0",
     ],
     "test": ["pytest>=4.6"],
 }
