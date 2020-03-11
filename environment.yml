@@ -10,6 +10,6 @@ dependencies:
   - uproot >=3.11
   - numba >=0.46
   - pip:
-    - awkward1 ==0.2.3
-    - scikit-hep-testdata >=0.2.0
+    - "awkward1>=0.2.3,!=0.2.4"
+    - "scikit-hep-testdata>=0.2.0"
     - -e .
