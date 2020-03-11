@@ -2,9 +2,14 @@ name: vector
 channels:
   - conda-forge
 dependencies:
-  - jupyterlab
-  - pip
+  - jupyterlab >=1.2
+  - nb_conda_kernels
+  - pip >=18
   - pytest
   - root >=6.18.04
+  - uproot >=3.11
+  - numba >=0.46
   - pip:
-      . -e
+    - awkward1 ==0.2.3
+    - scikit-hep-testdata >=0.2.0
+    - -e .
