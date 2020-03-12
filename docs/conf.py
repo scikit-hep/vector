@@ -66,7 +66,7 @@ html_static_path = ["_static"]
 
 # -- Options for notebooks --------------------------------------------------
 
-highlight_language = "python3"
+highlight_language = "python"
 
 nbsphinx_execute_arguments = [
     "--InlineBackend.figure_formats={'png2x'}",
