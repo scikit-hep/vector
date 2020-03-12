@@ -20,6 +20,14 @@ conda config --env --add channels conda-forge  # Optional
 You can update the environment with `conda env update`.
 
 
+## Docs
+
+The documentation is in `/docs`. To rebuild the API docs:
+
+```bash
+sphinx-apidoc -o api ../src/vector -M -f
+```
+
 ## Design
 
 The library is in `src/vector`. The main subpackages are:
