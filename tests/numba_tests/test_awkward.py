@@ -3,7 +3,7 @@ import pytest
 ak = pytest.importorskip("awkward1")
 
 import numba
-from vector.numba.awkward import lorentzbehavior
+from vector.numba.awkward import behavior
 from vector.single.lorentz import LorentzXYZFree
 
 
@@ -15,7 +15,7 @@ def fill_it(testit, output):
 
 def test_fillable():
     testit = LorentzXYZFree(1, 2, 3, 4)
-    output = ak.ArrayBuilder(behavior=lorentzbehavior)
+    output = ak.ArrayBuilder(behavior=behavior)
     fill_it(testit, output)
 
     assert str(output.snapshot()) == "[Lxyz(1 2 3 4), Lxyz(1 2 3 4)]"
@@ -30,7 +30,7 @@ def adding_muons(input):
 
 
 def test_addition(ak_HZZ_example):
-    example = ak.Array(ak_HZZ_example, behavior=lorentzbehavior)
+    example = ak.Array(ak_HZZ_example, behavior=behavior)
     assert str(adding_muons(example)) == "Lxyz(-15.2 -11 -19.5 94.2)"
 
 
@@ -58,8 +58,8 @@ def do_cool_stuff(input, output):
 
 
 def test_cool_stuff(ak_HZZ_example):
-    example = ak.Array(ak_HZZ_example, behavior=lorentzbehavior)
-    output = ak.ArrayBuilder(behavior=lorentzbehavior)
+    example = ak.Array(ak_HZZ_example, behavior=behavior)
+    output = ak.ArrayBuilder(behavior=behavior)
     do_cool_stuff(example, output)
 
     assert (

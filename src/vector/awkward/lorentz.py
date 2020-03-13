@@ -8,7 +8,7 @@ from __future__ import division, absolute_import, print_function
 import awkward1 as ak
 import numpy as np
 
-from .common.lorentz import LorentzXYZCommon
+from ..common.lorentz import LorentzXYZCommon
 
 
 class LorentzXYZ(ak.Record, LorentzXYZCommon):
@@ -34,15 +34,15 @@ def lorentz_add_xyz_xyz(left, right):
 
 
 # Define some behaviors for Lorentz vectors.
-lorentzbehavior = dict(ak.behavior)
+behavior = dict(ak.behavior)
 
 # Any records with __record__ = "LorentzXYZ" will be mapped to LorentzXYZ instances.
-lorentzbehavior["LorentzXYZ"] = LorentzXYZ
+behavior["LorentzXYZ"] = LorentzXYZ
 
 # Any arrays containing such records (any number of levels deep) will be LorentsXYZArrays.
-lorentzbehavior["*", "LorentzXYZ"] = LorentzXYZArray
+behavior["*", "LorentzXYZ"] = LorentzXYZArray
 
 # The NumPy ufunc for "add" will use our definition for __record__ = "LorentzXYZ".
-lorentzbehavior[np.add, "LorentzXYZ", "LorentzXYZ"] = lorentz_add_xyz_xyz
+behavior[np.add, "LorentzXYZ", "LorentzXYZ"] = lorentz_add_xyz_xyz
 
-lorentzbehavior["__typestr__", "LorentzXYZ"] = "LorentzXYZ"
+behavior["__typestr__", "LorentzXYZ"] = "LorentzXYZ"

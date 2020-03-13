@@ -7,7 +7,7 @@ from __future__ import division, absolute_import, print_function
 
 import awkward1 as ak
 from .lorentz import LorentzXYZType
-from ..awkward import lorentzbehavior
+from ..awkward.lorentz import behavior
 from ..single.lorentz import LorentzXYZFree
 import operator
 
@@ -28,7 +28,7 @@ def lower_ArrayBuilder_append_LorentzXYZ(context, builder, sig, args):
     return context.compile_internal(builder, doit, sig, args)
 
 
-lorentzbehavior[
+behavior[
     "__numba_lower__", ak.ArrayBuilder.append, LorentzXYZType
 ] = lower_ArrayBuilder_append_LorentzXYZ
 
@@ -46,9 +46,9 @@ def lower_lorentz_xyz_add(context, builder, sig, args):
     return context.compile_internal(builder, compute, sig, args)
 
 
-lorentzbehavior[
+behavior[
     "__numba_typer__", "LorentzXYZ", operator.add, "LorentzXYZ"
 ] = typer_lorentz_xyz_add
-lorentzbehavior[
+behavior[
     "__numba_lower__", "LorentzXYZ", operator.add, "LorentzXYZ"
 ] = lower_lorentz_xyz_add

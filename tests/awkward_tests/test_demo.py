@@ -5,8 +5,8 @@ from pytest import approx
 
 import awkward1 as ak
 import numpy as np
-import vector.awkward
-from vector.awkward import lorentzbehavior
+import vector.awkward.lorentz
+from vector.awkward.lorentz import behavior
 
 
 def test_simple_example(ak_HZZ_example):
@@ -16,14 +16,14 @@ def test_simple_example(ak_HZZ_example):
     )
 
     # This new array understands that data labeled "LorentzXYZ" should have the above methods.
-    example2 = ak.Array(ak_HZZ_example, behavior=lorentzbehavior)
+    example2 = ak.Array(ak_HZZ_example, behavior=behavior)
     assert (
         repr(example2)
         == "<Array [[Lxyz(-52.9 -11.7 -8.16 54.8), ... ] type='2421 * var * LorentzXYZ'>"
     )
 
     assert repr(example2[0, 0]) == "Lxyz(-52.9 -11.7 -8.16 54.8)"
-    assert type(example2[0, 0]) is vector.awkward.LorentzXYZ
+    assert type(example2[0, 0]) is vector.awkward.lorentz.LorentzXYZ
 
     assert example2[0, 0].mass == approx(0.10559298741436905)
     assert (
