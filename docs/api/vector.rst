@@ -11,6 +11,7 @@ Subpackages
 
 .. toctree::
 
+   vector.awkward
    vector.common
    vector.core
    vector.numba
@@ -18,14 +19,6 @@ Subpackages
 
 Submodules
 ----------
-
-vector.awkward module
----------------------
-
-.. automodule:: vector.awkward
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 vector.version module
 ---------------------
