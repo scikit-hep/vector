@@ -2,7 +2,7 @@ from pytest import approx
 
 import ROOT
 
-from vector.single.lorentz import LorentzXYZFree
+from vector.single.lorentz.xyzt import LorentzXYZFree
 
 
 def test_simple():

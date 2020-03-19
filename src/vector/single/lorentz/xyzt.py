@@ -5,7 +5,7 @@
 
 from __future__ import division, absolute_import, print_function
 
-from ..common.lorentz import LorentzXYZCommon
+from vector.common.lorentz.xyzt import LorentzXYZCommon
 
 import json
 

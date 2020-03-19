@@ -1,7 +1,7 @@
 import pytest
 
 import numba
-from vector.numba.lorentz import LorentzXYZFree
+from vector.numba.lorentz.xyzt import LorentzXYZFree
 
 
 @numba.njit

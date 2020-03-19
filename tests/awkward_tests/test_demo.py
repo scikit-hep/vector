@@ -5,8 +5,8 @@ from pytest import approx
 
 import awkward1 as ak
 import numpy as np
-import vector.awkward.lorentz
-from vector.awkward.lorentz import behavior
+import vector.awkward.lorentz.xyzt
+from vector.awkward.lorentz.xyzt import behavior
 
 
 def test_simple_example(ak_HZZ_example):
@@ -23,7 +23,7 @@ def test_simple_example(ak_HZZ_example):
     )
 
     assert repr(example2[0, 0]) == "Lxyz(-52.9 -11.7 -8.16 54.8)"
-    assert type(example2[0, 0]) is vector.awkward.lorentz.LorentzXYZ
+    assert type(example2[0, 0]) is vector.awkward.lorentz.xyzt.LorentzXYZ
 
     assert example2[0, 0].mass == approx(0.10559298741436905)
     assert (

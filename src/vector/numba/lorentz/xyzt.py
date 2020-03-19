@@ -8,9 +8,9 @@ from __future__ import division, absolute_import, print_function
 import numba
 import operator
 
-from ..common.lorentz import LorentzXYZCommon
-from ..single.lorentz import LorentzXYZFree
-from .. import core
+from ...common.lorentz.xyzt import LorentzXYZCommon
+from ...single.lorentz.xyzt import LorentzXYZFree
+from ... import core
 
 
 @numba.extending.typeof_impl.register(LorentzXYZFree)
