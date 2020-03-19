@@ -3,8 +3,8 @@ import pytest
 ak = pytest.importorskip("awkward1")
 
 import numba
-from vector.numba.awkward import behavior
-from vector.single.lorentz import LorentzXYZFree
+from vector.numba.awkward.lorentz.xyzt import behavior
+from vector.single.lorentz.xyzt import LorentzXYZFree
 
 
 @numba.njit

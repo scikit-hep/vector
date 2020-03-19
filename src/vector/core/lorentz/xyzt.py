@@ -9,6 +9,11 @@ import numpy as np
 
 # Functions that return a value
 
+# x: already included
+# y: already included
+# z: already included
+# t: already included
+
 
 def pt(rec):
     return np.sqrt(rec.x ** 2 + rec.y ** 2)
@@ -22,5 +27,11 @@ def phi(rec):
     return np.arctan2(rec.y, rec.x)
 
 
+# mag
 def mass(rec):
     return np.sqrt(rec.t ** 2 - rec.x ** 2 - rec.y ** 2 - rec.z ** 2)
+
+
+# mag2
+def mass2(rec):
+    return rec.t ** 2 - rec.x ** 2 - rec.y ** 2 - rec.z ** 2

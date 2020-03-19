@@ -8,7 +8,7 @@ from __future__ import division, absolute_import, print_function
 import awkward1 as ak
 import numpy as np
 
-from ..common.lorentz import LorentzXYZCommon
+from ...common.lorentz.xyzt import LorentzXYZCommon
 
 
 class LorentzXYZ(ak.Record, LorentzXYZCommon):

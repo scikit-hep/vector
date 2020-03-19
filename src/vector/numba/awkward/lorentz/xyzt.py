@@ -6,9 +6,9 @@
 from __future__ import division, absolute_import, print_function
 
 import awkward1 as ak
-from .lorentz import LorentzXYZType
-from ..awkward.lorentz import behavior
-from ..single.lorentz import LorentzXYZFree
+from vector.numba.lorentz.xyzt import LorentzXYZType
+from vector.awkward.lorentz.xyzt import behavior
+from vector.single.lorentz.xyzt import LorentzXYZFree
 import operator
 
 

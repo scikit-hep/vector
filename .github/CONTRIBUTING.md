@@ -40,3 +40,11 @@ The library is in `src/vector`. The main subpackages are:
 * `numba.awkward`: The awkward-numba backend
 
 In the future, you may not need to import so many subpackages. But that's for a later time.
+
+## Adding a method
+
+If you add a new simple method (returns a value), you need to:
+
+1. `core.lorentz.all`: The ufunc goes here.
+2. `common.lorentz.all`: The method gets added here. Docstring goes here. This adds `np.errstate` if division is valid.
+3.
