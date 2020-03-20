@@ -7,7 +7,7 @@ from __future__ import division, absolute_import, print_function
 
 import numpy as np
 
-from ...core import lorentz
+from vector.core import lorentz
 
 
 class LorentzXYZTCommon(object):
