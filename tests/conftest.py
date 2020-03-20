@@ -23,8 +23,8 @@ def ak_HZZ_example():
             ak.layout.NumpyArray(t.content.astype(np.float64)),
         ],
         keys=["x", "y", "z", "t"],
-        parameters={"__record__": "LorentzXYZ"},
+        parameters={"__record__": "LorentzXYZT"},
     )
 
-    # This array is generic: it doesn't know what records labeled "LorentzXYZ" mean.
+    # This array is generic: it doesn't know what records labeled "LorentzXYZT" mean.
     return ak.Array(ak.layout.ListOffsetArray64(offsets, content))

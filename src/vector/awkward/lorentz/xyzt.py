@@ -8,17 +8,17 @@ from __future__ import division, absolute_import, print_function
 import awkward1 as ak
 import numpy as np
 
-from ...common.lorentz.xyzt import LorentzXYZCommon
+from ...common.lorentz.xyzt import LorentzXYZTCommon
 
 
-class LorentzXYZ(ak.Record, LorentzXYZCommon):
+class LorentzXYZT(ak.Record, LorentzXYZTCommon):
     def __repr__(self):
         return "Lxyz({0:.3g} {1:.3g} {2:.3g} {3:.3g})".format(
             self.x, self.y, self.z, self.t
         )
 
 
-class LorentzXYZArray(ak.Array, LorentzXYZCommon):
+class LorentzXYZTArray(ak.Array, LorentzXYZTCommon):
     pass
 
 
@@ -29,20 +29,20 @@ def lorentz_add_xyz_xyz(left, right):
     z = ak.layout.NumpyArray(np.asarray(left["z"]) + np.asarray(right["z"]))
     t = ak.layout.NumpyArray(np.asarray(left["t"]) + np.asarray(right["t"]))
     return ak.layout.RecordArray(
-        {"x": x, "y": y, "z": z, "t": t}, parameters={"__record__": "LorentzXYZ"},
+        {"x": x, "y": y, "z": z, "t": t}, parameters={"__record__": "LorentzXYZT"},
     )
 
 
 # Define some behaviors for Lorentz vectors.
 behavior = dict(ak.behavior)
 
-# Any records with __record__ = "LorentzXYZ" will be mapped to LorentzXYZ instances.
-behavior["LorentzXYZ"] = LorentzXYZ
+# Any records with __record__ = "LorentzXYZT" will be mapped to LorentzXYZT instances.
+behavior["LorentzXYZT"] = LorentzXYZT
 
 # Any arrays containing such records (any number of levels deep) will be LorentsXYZArrays.
-behavior["*", "LorentzXYZ"] = LorentzXYZArray
+behavior["*", "LorentzXYZT"] = LorentzXYZTArray
 
-# The NumPy ufunc for "add" will use our definition for __record__ = "LorentzXYZ".
-behavior[np.add, "LorentzXYZ", "LorentzXYZ"] = lorentz_add_xyz_xyz
+# The NumPy ufunc for "add" will use our definition for __record__ = "LorentzXYZT".
+behavior[np.add, "LorentzXYZT", "LorentzXYZT"] = lorentz_add_xyz_xyz
 
-behavior["__typestr__", "LorentzXYZ"] = "LorentzXYZ"
+behavior["__typestr__", "LorentzXYZT"] = "LorentzXYZT"

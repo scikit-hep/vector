@@ -4,7 +4,7 @@ ak = pytest.importorskip("awkward1")
 
 import numba
 from vector.numba.awkward.lorentz.xyzt import behavior
-from vector.single.lorentz.xyzt import LorentzXYZFree
+from vector.single.lorentz.xyzt import LorentzXYZTFree
 
 
 @numba.njit
@@ -14,7 +14,7 @@ def fill_it(testit, output):
 
 
 def test_fillable():
-    testit = LorentzXYZFree(1, 2, 3, 4)
+    testit = LorentzXYZTFree(1, 2, 3, 4)
     output = ak.ArrayBuilder(behavior=behavior)
     fill_it(testit, output)
 

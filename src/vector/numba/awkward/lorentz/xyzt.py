@@ -8,13 +8,13 @@ from __future__ import division, absolute_import, print_function
 import awkward1 as ak
 from vector.numba.lorentz.xyzt import LorentzXYZType
 from vector.awkward.lorentz.xyzt import behavior
-from vector.single.lorentz.xyzt import LorentzXYZFree
+from vector.single.lorentz.xyzt import LorentzXYZTFree
 import operator
 
 
-def lower_ArrayBuilder_append_LorentzXYZ(context, builder, sig, args):
+def lower_ArrayBuilder_append_LorentzXYZT(context, builder, sig, args):
     def doit(output, lxyz):
-        output.beginrecord("LorentzXYZ")
+        output.beginrecord("LorentzXYZT")
         output.field("x")
         output.real(lxyz.x)
         output.field("y")
@@ -30,7 +30,7 @@ def lower_ArrayBuilder_append_LorentzXYZ(context, builder, sig, args):
 
 behavior[
     "__numba_lower__", ak.ArrayBuilder.append, LorentzXYZType
-] = lower_ArrayBuilder_append_LorentzXYZ
+] = lower_ArrayBuilder_append_LorentzXYZT
 
 
 def typer_lorentz_xyz_add(binop, left, right):
@@ -39,7 +39,7 @@ def typer_lorentz_xyz_add(binop, left, right):
 
 def lower_lorentz_xyz_add(context, builder, sig, args):
     def compute(left, right):
-        return LorentzXYZFree(
+        return LorentzXYZTFree(
             left.x + right.x, left.y + right.y, left.z + right.z, left.t + right.t
         )
 
@@ -47,8 +47,8 @@ def lower_lorentz_xyz_add(context, builder, sig, args):
 
 
 behavior[
-    "__numba_typer__", "LorentzXYZ", operator.add, "LorentzXYZ"
+    "__numba_typer__", "LorentzXYZT", operator.add, "LorentzXYZT"
 ] = typer_lorentz_xyz_add
 behavior[
-    "__numba_lower__", "LorentzXYZ", operator.add, "LorentzXYZ"
+    "__numba_lower__", "LorentzXYZT", operator.add, "LorentzXYZT"
 ] = lower_lorentz_xyz_add

@@ -10,7 +10,7 @@ import numpy as np
 from ...core import lorentz
 
 
-class LorentzXYZCommon(object):
+class LorentzXYZTCommon(object):
     @property
     def pt(self):
         r"""

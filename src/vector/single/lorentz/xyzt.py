@@ -5,12 +5,12 @@
 
 from __future__ import division, absolute_import, print_function
 
-from vector.common.lorentz.xyzt import LorentzXYZCommon
+from vector.common.lorentz.xyzt import LorentzXYZTCommon
 
 import json
 
 
-class LorentzXYZFree(LorentzXYZCommon):
+class LorentzXYZTFree(LorentzXYZTCommon):
     def __init__(self, x, y, z, t):
         self.x = x
         self.y = y
