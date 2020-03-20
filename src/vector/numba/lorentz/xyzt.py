@@ -8,12 +8,12 @@ from __future__ import division, absolute_import, print_function
 import numba
 import operator
 
-from ...common.lorentz.xyzt import LorentzXYZCommon
-from ...single.lorentz.xyzt import LorentzXYZFree
+from ...common.lorentz.xyzt import LorentzXYZTCommon
+from ...single.lorentz.xyzt import LorentzXYZTFree
 from ... import core
 
 
-@numba.extending.typeof_impl.register(LorentzXYZFree)
+@numba.extending.typeof_impl.register(LorentzXYZTFree)
 def typeof_LorentzXYZFree(obj, c):
     return LorentzXYZType()
 
@@ -28,7 +28,7 @@ class LorentzXYZType(numba.types.Type):
 @numba.extending.register_model(LorentzXYZType)
 class LorentzXYZModel(numba.datamodel.models.StructModel):
     def __init__(self, dmm, fe_type):
-        # This is the C-style struct that will be used wherever LorentzXYZ are needed.
+        # This is the C-style struct that will be used wherever LorentzXYZT are needed.
         members = [
             ("x", numba.float64),
             ("y", numba.float64),
@@ -39,7 +39,7 @@ class LorentzXYZModel(numba.datamodel.models.StructModel):
 
 
 @numba.extending.unbox(LorentzXYZType)
-def unbox_LorentzXYZ(lxyztype, lxyzobj, c):
+def unbox_LorentzXYZT(lxyztype, lxyzobj, c):
     # How to turn LorentzXYZFree Python objects into LorentzXYZModel structs.
     x_obj = c.pyapi.object_getattr_string(lxyzobj, "x")
     y_obj = c.pyapi.object_getattr_string(lxyzobj, "y")
@@ -66,7 +66,7 @@ def unbox_LorentzXYZ(lxyztype, lxyzobj, c):
 
 
 @numba.extending.box(LorentzXYZType)
-def box_LorentzXYZ(lxyztype, lxyzval, c):
+def box_LorentzXYZT(lxyztype, lxyzval, c):
     # This proxy is initialized with a value, used for getattr, rather than setattr.
     inproxy = c.context.make_helper(c.builder, lxyztype, lxyzval)
     x_obj = c.pyapi.float_from_double(inproxy.x)
@@ -75,7 +75,7 @@ def box_LorentzXYZ(lxyztype, lxyzval, c):
     t_obj = c.pyapi.float_from_double(inproxy.t)
 
     # The way we get Python objects into this lowered world is by pickling them.
-    LorentzXYZFree_obj = c.pyapi.unserialize(c.pyapi.serialize_object(LorentzXYZFree))
+    LorentzXYZFree_obj = c.pyapi.unserialize(c.pyapi.serialize_object(LorentzXYZTFree))
 
     out = c.pyapi.call_function_objargs(
         LorentzXYZFree_obj, (x_obj, y_obj, z_obj, t_obj)
@@ -91,7 +91,7 @@ def box_LorentzXYZ(lxyztype, lxyzval, c):
 
 
 # Defining an in-Numba constructor is a separate thing.
-@numba.extending.type_callable(LorentzXYZFree)
+@numba.extending.type_callable(LorentzXYZTFree)
 def typer_LorentzXYZFree_constructor(context):
     def typer(x, y, z, t):
         if (
@@ -106,7 +106,7 @@ def typer_LorentzXYZFree_constructor(context):
 
 
 @numba.extending.lower_builtin(
-    LorentzXYZFree,
+    LorentzXYZTFree,
     numba.types.float64,
     numba.types.float64,
     numba.types.float64,
@@ -209,7 +209,7 @@ class typer_LorentzXYZ_getitem(numba.typing.templates.AbstractTemplate):
 @numba.extending.lower_builtin(
     operator.getitem, LorentzXYZType, numba.types.StringLiteral
 )
-def lower_getitem_LorentzXYZ(context, builder, sig, args):
+def lower_getitem_LorentzXYZT(context, builder, sig, args):
     rettype, (lxyztype, wheretype) = sig.return_type, sig.args
     lxyzval, whereval = args
 

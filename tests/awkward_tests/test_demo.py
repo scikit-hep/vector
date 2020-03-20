@@ -15,15 +15,15 @@ def test_simple_example(ak_HZZ_example):
         == '<Array [[{x: -52.9, y: -11.7, ... t: 69.6}]] type=\'2421 * var * struct[["x", "y"...\'>'
     )
 
-    # This new array understands that data labeled "LorentzXYZ" should have the above methods.
+    # This new array understands that data labeled "LorentzXYZT" should have the above methods.
     example2 = ak.Array(ak_HZZ_example, behavior=behavior)
     assert (
         repr(example2)
-        == "<Array [[Lxyz(-52.9 -11.7 -8.16 54.8), ... ] type='2421 * var * LorentzXYZ'>"
+        == "<Array [[Lxyz(-52.9 -11.7 -8.16 54.8), ... ] type='2421 * var * LorentzXYZT'>"
     )
 
     assert repr(example2[0, 0]) == "Lxyz(-52.9 -11.7 -8.16 54.8)"
-    assert type(example2[0, 0]) is vector.awkward.lorentz.xyzt.LorentzXYZ
+    assert type(example2[0, 0]) is vector.awkward.lorentz.xyzt.LorentzXYZT
 
     assert example2[0, 0].mass == approx(0.10559298741436905)
     assert (

@@ -2,11 +2,11 @@ from pytest import approx
 
 import ROOT
 
-from vector.single.lorentz.xyzt import LorentzXYZFree
+from vector.single.lorentz.xyzt import LorentzXYZTFree
 
 
 def test_simple():
-    v1 = LorentzXYZFree(1, 2, 3, 4)
+    v1 = LorentzXYZTFree(1, 2, 3, 4)
     v2 = ROOT.TLorentzVector(1, 2, 3, 4)
 
     assert v1.x == approx(v2.X())
