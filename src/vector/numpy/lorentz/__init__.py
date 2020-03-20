@@ -4,8 +4,3 @@
 # or https://github.com/scikit-hep/vector for details.
 
 from __future__ import division, absolute_import, print_function
-
-# This is the *only* place numpy is imported; it is always used from here.
-import numpy
-
-__all__ = ("numpy",)
