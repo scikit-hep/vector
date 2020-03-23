@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (c) 2019-2020, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
 #
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
@@ -190,7 +191,7 @@ def lower_LorentzXYZ_phi(context, builder, lxyztype, lxyzval):
 @numba.extending.lower_getattr(LorentzXYZType, "mass")
 def lower_LorentzXYZ_mass(context, builder, lxyztype, lxyzval):
     return context.compile_internal(
-        builder, core.lorentz.xyzt.mass, numba.float64(lxyztype), (lxyzval,)
+        builder, core.lorentz.xyzt.mag, numba.float64(lxyztype), (lxyzval,)
     )
 
 

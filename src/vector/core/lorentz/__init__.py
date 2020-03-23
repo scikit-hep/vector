@@ -4,5 +4,3 @@
 # or https://github.com/scikit-hep/vector for details.
 
 from __future__ import division, absolute_import, print_function
-
-from . import xyzt

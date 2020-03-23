@@ -8,7 +8,7 @@ from __future__ import division, absolute_import, print_function
 
 import numpy as np
 
-from vector.core import lorentz
+import vector.core.lorentz.xyzt
 
 
 class LorentzXYZTCommon(object):
@@ -27,7 +27,7 @@ class LorentzXYZTCommon(object):
         """
 
         with np.errstate(invalid="ignore"):
-            return lorentz.xyzt.pt(self)
+            return vector.core.lorentz.xyzt.pt(self)
 
     @property
     def eta(self):
@@ -45,7 +45,7 @@ class LorentzXYZTCommon(object):
         """
 
         with np.errstate(invalid="ignore"):
-            return lorentz.xyzt.eta(self)
+            return vector.core.lorentz.xyzt.eta(self)
 
     @property
     def phi(self):
@@ -61,9 +61,9 @@ class LorentzXYZTCommon(object):
         """
 
         with np.errstate(invalid="ignore"):
-            return lorentz.xyzt.phi(self)
+            return vector.core.lorentz.xyzt.phi(self)
 
     @property
     def mass(self):
         with np.errstate(invalid="ignore"):
-            return lorentz.xyzt.mass(self)
+            return vector.core.lorentz.xyzt.mag(self)

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (c) 2019-2020, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
 #
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
@@ -5,7 +6,7 @@
 
 from __future__ import division, absolute_import, print_function
 
-import numpy as np
+from vector.core import numpy as np
 
 # Functions that return a value
 
@@ -15,23 +16,23 @@ import numpy as np
 # t: already included
 
 
-def pt(rec):
-    return np.sqrt(rec.x ** 2 + rec.y ** 2)
+def pt(vec):
+    return np.sqrt(vec.x ** 2 + vec.y ** 2)
 
 
-def eta(rec):
-    return np.arcsinh(rec.z / np.sqrt(rec.x ** 2 + rec.y ** 2))
+def eta(vec):
+    return np.arcsinh(vec.z / np.sqrt(vec.x ** 2 + vec.y ** 2))
 
 
-def phi(rec):
-    return np.arctan2(rec.y, rec.x)
+def phi(vec):
+    return np.arctan2(vec.y, vec.x)
 
 
-# mag
-def mass(rec):
-    return np.sqrt(rec.t ** 2 - rec.x ** 2 - rec.y ** 2 - rec.z ** 2)
+# mass
+def mag(vec):
+    return np.sqrt(vec.t ** 2 - vec.x ** 2 - vec.y ** 2 - vec.z ** 2)
 
 
-# mag2
-def mass2(rec):
-    return rec.t ** 2 - rec.x ** 2 - rec.y ** 2 - rec.z ** 2
+# mass2
+def mag2(vec):
+    return vec.t ** 2 - vec.x ** 2 - vec.y ** 2 - vec.z ** 2

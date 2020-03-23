@@ -49,7 +49,7 @@ def do_cool_stuff(input, output):
                 output.index(0)
                 output.append(zboson)
                 output.index(1)
-                output.append(zboson.mass)
+                output.append(zboson.mag)
                 output.endtuple()
 
             output.endlist()
