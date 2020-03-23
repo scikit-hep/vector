@@ -25,7 +25,7 @@ def test_simple_example(ak_HZZ_example):
     assert repr(example2[0, 0]) == "Lxyz(-52.9 -11.7 -8.16 54.8)"
     assert type(example2[0, 0]) is vector.awkward.lorentz.xyzt.LorentzXYZT
 
-    assert example2[0, 0].mass == approx(0.10559298741436905)
+    assert example2[0, 0].mag == approx(0.10559298741436905)
     assert (
         repr(example2.mass)
         == "<Array [[0.106, 0.105], ... [0.104]] type='2421 * var * float64'>"
@@ -39,6 +39,6 @@ def test_simple_example(ak_HZZ_example):
         == "[Lxyz(-15.2 -11 -19.5 94.2), Lxyz(49.8 8.08 48.1 102), ... Lxyz(2.94 18.4 -262 273)]"
     )
     assert (
-        str((example2[hastwo, 0] + example2[hastwo, 1]).mass)
+        str((example2[hastwo, 0] + example2[hastwo, 1]).mag)
         == "[90.2, 74.7, 89.8, 94.9, 92.1, 53.4, 89.8, ... 91.7, 88.8, 101, 91.5, 92.1, 85.4, 76]"
     )

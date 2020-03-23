@@ -30,7 +30,7 @@ def test_constructor():
 
 @numba.njit
 def try_it_out(testit):
-    return testit.x, testit["x"], testit.pt, testit.eta, testit.phi, testit.mass
+    return testit.x, testit["x"], testit.pt, testit.eta, testit.phi, testit.mag
 
 
 def test_free_elements():
