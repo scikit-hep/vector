@@ -7,6 +7,7 @@ You should *always* use a virtual environment when developing software. Setup:
 python3 -m venv .env
 . .env/bin/activate
 pip install -e .[dev,test]
+python3 -m ipykernel install --user --name vector # For notebooks
 ```
 
 If you use conda environments and want to compare against ROOT:
@@ -15,6 +16,7 @@ If you use conda environments and want to compare against ROOT:
 conda env create
 conda activate vector
 conda config --env --add channels conda-forge  # Optional
+python3 -m ipykernel install --user --name vector # For notebooks
 ```
 
 You can update the environment with `conda env update`.
