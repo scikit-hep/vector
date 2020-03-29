@@ -4,7 +4,7 @@
 You should *always* use a virtual environment when developing software. Setup:
 
 ```bash
-python -m venv .env
+python3 -m venv .env
 . .env/bin/activate
 pip install -e .[dev,test]
 python -m ipykernel install --user --name vector # For notebooks
