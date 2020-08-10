@@ -15,7 +15,7 @@ import operator
 
 def lower_ArrayBuilder_append_LorentzXYZT(context, builder, sig, args):
     def doit(output, lxyz):
-        output.beginrecord("LorentzXYZT")
+        output.begin_record("LorentzXYZT")
         output.field("x")
         output.real(lxyz.x)
         output.field("y")
@@ -24,7 +24,7 @@ def lower_ArrayBuilder_append_LorentzXYZT(context, builder, sig, args):
         output.real(lxyz.z)
         output.field("t")
         output.real(lxyz.t)
-        output.endrecord()
+        output.end_record()
 
     return context.compile_internal(builder, doit, sig, args)
 
