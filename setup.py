@@ -8,10 +8,11 @@ from setuptools import setup
 
 extras = {
     "dev": [
-        "awkward1>=0.2.3,!=0.2.4",
-        "uproot>=3.11",
-        'numba>=0.46; python_version>="3"',
+        "awkward1>=0.2.29",
+        "uproot==3.*",
+        'numba>=0.50; python_version>="3"',
         "scikit-hep-testdata>=0.2.0",
+        "pytest>=4.6",
     ],
     "test": ["pytest>=4.6"],
 }

@@ -26,7 +26,7 @@ class LorentzXYZType(numba.types.Type):
 
 
 @numba.extending.register_model(LorentzXYZType)
-class LorentzXYZModel(numba.datamodel.models.StructModel):
+class LorentzXYZModel(numba.extending.models.StructModel):
     def __init__(self, dmm, fe_type):
         # This is the C-style struct that will be used wherever LorentzXYZT are needed.
         members = [
@@ -61,7 +61,7 @@ def unbox_LorentzXYZT(lxyztype, lxyzobj, c):
     c.pyapi.decref(z_obj)
     c.pyapi.decref(t_obj)
 
-    is_error = numba.cgutils.is_not_null(c.builder, c.pyapi.err_occurred())
+    is_error = numba.core.cgutils.is_not_null(c.builder, c.pyapi.err_occurred())
     return numba.extending.NativeValue(outproxy._getvalue(), is_error)
 
 
@@ -134,8 +134,8 @@ numba.extending.make_attribute_wrapper(LorentzXYZType, "z", "z")
 numba.extending.make_attribute_wrapper(LorentzXYZType, "t", "t")
 
 # For more general cases, there's an AttributeTemplate.
-@numba.typing.templates.infer_getattr
-class typer_LorentzXYZ_methods(numba.typing.templates.AttributeTemplate):
+@numba.extending.infer_getattr
+class typer_LorentzXYZ_methods(numba.core.typing.templates.AttributeTemplate):
     key = LorentzXYZType
 
     def generic_resolve(self, lxyztype, attr):
@@ -145,7 +145,7 @@ class typer_LorentzXYZ_methods(numba.typing.templates.AttributeTemplate):
             return numba.float64
         elif attr == "phi":
             return numba.float64
-        elif attr == "mass":
+        elif attr == "mag":
             return numba.float64
         else:
             # typers that return None defer to other typers.
@@ -188,16 +188,16 @@ def lower_LorentzXYZ_phi(context, builder, lxyztype, lxyzval):
     )
 
 
-@numba.extending.lower_getattr(LorentzXYZType, "mass")
-def lower_LorentzXYZ_mass(context, builder, lxyztype, lxyzval):
+@numba.extending.lower_getattr(LorentzXYZType, "mag")
+def lower_LorentzXYZ_mag(context, builder, lxyztype, lxyzval):
     return context.compile_internal(
         builder, core.lorentz.xyzt.mag, numba.float64(lxyztype), (lxyzval,)
     )
 
 
 # And the __getitem__ access...
-@numba.typing.templates.infer_global(operator.getitem)
-class typer_LorentzXYZ_getitem(numba.typing.templates.AbstractTemplate):
+@numba.core.typing.templates.infer_global(operator.getitem)
+class typer_LorentzXYZ_getitem(numba.core.typing.templates.AbstractTemplate):
     def generic(self, args, kwargs):
         if len(args) == 2 and len(kwargs) == 0 and isinstance(args[0], LorentzXYZType):
             # Only accept compile-time constants. It's a fair restriction.

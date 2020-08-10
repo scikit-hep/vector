@@ -12,14 +12,14 @@ from vector.awkward.lorentz.xyzt import behavior
 def test_simple_example(ak_HZZ_example):
     assert (
         repr(ak_HZZ_example)
-        == '<Array [[{x: -52.9, y: -11.7, ... t: 69.6}]] type=\'2421 * var * struct[["x", "y"...\'>'
+        == "<Array [[{x: -52.9, y: -11.7, ... t: 69.6}]] type='2421 * var * LorentzXYZT[\"x\":...'>"
     )
 
     # This new array understands that data labeled "LorentzXYZT" should have the above methods.
     example2 = ak.Array(ak_HZZ_example, behavior=behavior)
     assert (
         repr(example2)
-        == "<Array [[Lxyz(-52.9 -11.7 -8.16 54.8), ... ] type='2421 * var * LorentzXYZT'>"
+        == "<LorentzXYZTArray [[Lxyz(-52.9 -11.7 -8.16 54.8), ... ] type='2421 * var * Loren...'>"
     )
 
     assert repr(example2[0, 0]) == "Lxyz(-52.9 -11.7 -8.16 54.8)"

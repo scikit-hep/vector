@@ -37,24 +37,24 @@ def test_addition(ak_HZZ_example):
 @numba.njit
 def do_cool_stuff(input, output):
     for muons in input:
-        output.beginlist()
+        output.begin_list()
 
         for i in range(len(muons)):
-            output.beginlist()
+            output.begin_list()
 
             for j in range(i + 1, len(muons)):
                 zboson = muons[i] + muons[j]
 
-                output.begintuple(2)
+                output.begin_tuple(2)
                 output.index(0)
                 output.append(zboson)
                 output.index(1)
                 output.append(zboson.mag)
-                output.endtuple()
+                output.end_tuple()
 
-            output.endlist()
+            output.end_list()
 
-        output.endlist()
+        output.end_list()
 
 
 def test_cool_stuff(ak_HZZ_example):

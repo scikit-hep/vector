@@ -67,3 +67,13 @@ class LorentzXYZTCommon(object):
     def mass(self):
         with np.errstate(invalid="ignore"):
             return vector.core.lorentz.xyzt.mag(self)
+
+    @property
+    def mag(self):
+        with np.errstate(invalid="ignore"):
+            return vector.core.lorentz.xyzt.mag(self)
+
+    @property
+    def mag2(self):
+        with np.errstate(invalid="ignore"):
+            return vector.core.lorentz.xyzt.mag2(self)
