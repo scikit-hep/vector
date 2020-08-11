@@ -8,12 +8,18 @@
 
 
 > ### This package is under heavy development and anything could change at any time.
+>
+> All imports are absolute for now while the interface is being developed.
 
 
-Vector classes and utilities. See [CONTRIBUTING.md](./.github/CONTRIBUTING.md) for information on setting up a development environment.
+Vector classes and utilities. See [CONTRIBUTING.md](./.github/CONTRIBUTING.md)
+for information on setting up a development environment.
+
+Python 2 is partially supported; the simple, NumPy, and Awkward backends
+support Python 2. The Numba and AwkwardNumba (and TensorFlow, in the future)
+backends do not.
 
 
-Python 2 is partially supported.
 
 [gitter-badge]:  https://badges.gitter.im/Scikit-HEP/vector.svg
 [gitter-link]:   https://gitter.im/Scikit-HEP/vector?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
