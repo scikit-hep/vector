@@ -13,29 +13,50 @@ from vector.single.lorentz.xyzt import LorentzXYZTFree
 from vector import core
 
 
-@numba.extending.typeof_impl.register(LorentzXYZTFree)
-def typeof_LorentzXYZFree(obj, c):
-    return LorentzXYZType()
+# Typing phase - Teaching Numba about our types
 
 
 class LorentzXYZType(numba.types.Type):
     def __init__(self):
         # Type names have to be unique identifiers; they determine whether Numba
         # will recompile a function with new types.
-        super(LorentzXYZType, self).__init__(name="LorentzXYZType()")
+        super().__init__(name="LorentzXYZType()")
+
+
+@numba.extending.typeof_impl.register(LorentzXYZTFree)
+def typeof_LorentzXYZFree(obj, c):
+    return LorentzXYZType()
+
+
+@numba.extending.type_callable(operator.getitem)
+def typer_LorentzXYZ_getitem(context):
+    def generic(self, ind):
+        # Only accept compile-time constants. It's a fair restriction.
+        if isinstance(self, LorentzXYZType) and ind in {
+            numba.types.StringLiteral(c) for c in {"x", "y", "z", "t"}
+        }:
+            return numba.float64
+
+    return generic
+
+
+# Type model
 
 
 @numba.extending.register_model(LorentzXYZType)
 class LorentzXYZModel(numba.extending.models.StructModel):
     def __init__(self, dmm, fe_type):
-        # This is the C-style struct that will be used wherever LorentzXYZT are needed.
+        # This is the C-style struct that will be used wherever LorentzXYZ are needed.
         members = [
             ("x", numba.float64),
             ("y", numba.float64),
             ("z", numba.float64),
             ("t", numba.float64),
         ]
-        super(LorentzXYZModel, self).__init__(dmm, fe_type, members)
+        super().__init__(dmm, fe_type, members)
+
+
+# Unboxing & Boxing
 
 
 @numba.extending.unbox(LorentzXYZType)
@@ -90,6 +111,8 @@ def box_LorentzXYZT(lxyztype, lxyzval, c):
     return out
 
 
+# Constructor
+
 # Defining an in-Numba constructor is a separate thing.
 @numba.extending.type_callable(LorentzXYZTFree)
 def typer_LorentzXYZFree_constructor(context):
@@ -103,6 +126,9 @@ def typer_LorentzXYZFree_constructor(context):
             return LorentzXYZType()
 
     return typer
+
+
+# Lowering
 
 
 @numba.extending.lower_builtin(
@@ -132,6 +158,7 @@ numba.extending.make_attribute_wrapper(LorentzXYZType, "x", "x")
 numba.extending.make_attribute_wrapper(LorentzXYZType, "y", "y")
 numba.extending.make_attribute_wrapper(LorentzXYZType, "z", "z")
 numba.extending.make_attribute_wrapper(LorentzXYZType, "t", "t")
+
 
 # For more general cases, there's an AttributeTemplate.
 @numba.extending.infer_getattr
@@ -193,17 +220,6 @@ def lower_LorentzXYZ_mag(context, builder, lxyztype, lxyzval):
     return context.compile_internal(
         builder, core.lorentz.xyzt.mag, numba.float64(lxyztype), (lxyzval,)
     )
-
-
-# And the __getitem__ access...
-@numba.core.typing.templates.infer_global(operator.getitem)
-class typer_LorentzXYZ_getitem(numba.core.typing.templates.AbstractTemplate):
-    def generic(self, args, kwargs):
-        if len(args) == 2 and len(kwargs) == 0 and isinstance(args[0], LorentzXYZType):
-            # Only accept compile-time constants. It's a fair restriction.
-            if isinstance(args[1], numba.types.StringLiteral):
-                if args[1].literal_value in ("x", "y", "z", "t"):
-                    return numba.float64(*args)
 
 
 @numba.extending.lower_builtin(
