@@ -1,6 +1,8 @@
-from pytest import approx
+# -*- coding: utf-8 -*-
 
 import ROOT
+
+from pytest import approx
 
 from vector.single.lorentz.xyzt import LorentzXYZTFree
 

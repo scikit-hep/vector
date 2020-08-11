@@ -16,4 +16,3 @@ vector.core.lorentz.xyzt module
    :members:
    :undoc-members:
    :show-inheritance:
-

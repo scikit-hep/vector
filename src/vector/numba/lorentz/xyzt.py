@@ -4,13 +4,14 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-from __future__ import division, absolute_import, print_function
+from __future__ import absolute_import, division, print_function
 
-import numba
 import operator
 
-from vector.single.lorentz.xyzt import LorentzXYZTFree
+import numba
+
 from vector import core
+from vector.single.lorentz.xyzt import LorentzXYZTFree
 
 
 # Typing phase - Teaching Numba about our types
@@ -139,10 +140,9 @@ def typer_LorentzXYZFree_constructor(context):
     numba.types.float64,
 )
 def lower_LorentzXYZFree_constructor(context, builder, sig, args):
-    rettype, (xtype, ytype, ztype, ttype) = sig.return_type, sig.args
     xval, yval, zval, tval = args
 
-    outproxy = context.make_helper(builder, rettype)
+    outproxy = context.make_helper(builder, sig.return_type)
     outproxy.x = xval
     outproxy.y = yval
     outproxy.z = zval
@@ -226,7 +226,7 @@ def lower_LorentzXYZ_mag(context, builder, lxyztype, lxyzval):
     operator.getitem, LorentzXYZType, numba.types.StringLiteral
 )
 def lower_getitem_LorentzXYZT(context, builder, sig, args):
-    rettype, (lxyztype, wheretype) = sig.return_type, sig.args
+    lxyztype, wheretype = sig.args
     lxyzval, whereval = args
 
     inproxy = context.make_helper(builder, lxyztype, lxyzval)

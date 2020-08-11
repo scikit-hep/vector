@@ -16,4 +16,3 @@ vector.awkward.lorentz module
    :members:
    :undoc-members:
    :show-inheritance:
-

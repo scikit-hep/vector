@@ -24,4 +24,3 @@ vector.numba.lorentz module
    :members:
    :undoc-members:
    :show-inheritance:
-

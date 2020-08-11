@@ -4,13 +4,15 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-from __future__ import division, absolute_import, print_function
+from __future__ import absolute_import, division, print_function
+
+import operator
 
 import awkward1 as ak
-from vector.numba.lorentz.xyzt import LorentzXYZType
+
 from vector.awkward.lorentz.xyzt import behavior
+from vector.numba.lorentz.xyzt import LorentzXYZType
 from vector.single.lorentz.xyzt import LorentzXYZTFree
-import operator
 
 
 def lower_ArrayBuilder_append_LorentzXYZT(context, builder, sig, args):

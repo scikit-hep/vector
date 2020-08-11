@@ -1,10 +1,12 @@
+# -*- coding: utf-8 -*-
+import numba
+
 import pytest
 
 ak = pytest.importorskip("awkward1")
 
-import numba
-from vector.numba.awkward.lorentz.xyzt import behavior
-from vector.single.lorentz.xyzt import LorentzXYZTFree
+from vector.numba.awkward.lorentz.xyzt import behavior  # noqa: E402
+from vector.single.lorentz.xyzt import LorentzXYZTFree  # noqa: E402
 
 
 @numba.njit

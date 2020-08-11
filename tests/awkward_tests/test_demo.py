@@ -1,10 +1,10 @@
+# -*- coding: utf-8 -*-
 from __future__ import absolute_import
 
-import pytest
+import awkward1 as ak
+
 from pytest import approx
 
-import awkward1 as ak
-import numpy as np
 import vector.awkward.lorentz.xyzt
 from vector.awkward.lorentz.xyzt import behavior
 
