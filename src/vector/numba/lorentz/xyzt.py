@@ -17,23 +17,23 @@ from vector.single.lorentz.xyzt import LorentzXYZTFree
 # Typing phase - Teaching Numba about our types
 
 
-class LorentzXYZType(numba.types.Type):
+class LorentzXYZTType(numba.types.Type):
     def __init__(self):
         # Type names have to be unique identifiers; they determine whether Numba
         # will recompile a function with new types.
-        super().__init__(name="LorentzXYZType()")
+        super().__init__(name="LorentzXYZTType()")
 
 
 @numba.extending.typeof_impl.register(LorentzXYZTFree)
-def typeof_LorentzXYZFree(obj, c):
-    return LorentzXYZType()
+def typeof_LorentzXYZTFree(obj, c):
+    return LorentzXYZTType()
 
 
 @numba.extending.type_callable(operator.getitem)
-def typer_LorentzXYZ_getitem(context):
+def typer_LorentzXYZT_getitem(context):
     def generic(self, ind):
         # Only accept compile-time constants. It's a fair restriction.
-        if isinstance(self, LorentzXYZType) and ind in {
+        if isinstance(self, LorentzXYZTType) and ind in {
             numba.types.StringLiteral(c) for c in {"x", "y", "z", "t"}
         }:
             return numba.float64
@@ -42,11 +42,11 @@ def typer_LorentzXYZ_getitem(context):
 
 
 @numba.extending.type_callable(operator.add)
-def typer_LorentzXYZ_add(context):
+def typer_LorentzXYZT_add(context):
     def generic(self, other):
         # Only accept compile-time constants. It's a fair restriction.
-        if isinstance(self, LorentzXYZType) and isinstance(other, LorentzXYZType):
-            return LorentzXYZType()
+        if isinstance(self, LorentzXYZTType) and isinstance(other, LorentzXYZTType):
+            return LorentzXYZTType()
 
     return generic
 
@@ -54,10 +54,10 @@ def typer_LorentzXYZ_add(context):
 # Type model
 
 
-@numba.extending.register_model(LorentzXYZType)
-class LorentzXYZModel(numba.extending.models.StructModel):
+@numba.extending.register_model(LorentzXYZTType)
+class LorentzXYZTModel(numba.extending.models.StructModel):
     def __init__(self, dmm, fe_type):
-        # This is the C-style struct that will be used wherever LorentzXYZ are needed.
+        # This is the C-style struct that will be used wherever LorentzXYZT are needed.
         members = [
             ("x", numba.float64),
             ("y", numba.float64),
@@ -70,9 +70,9 @@ class LorentzXYZModel(numba.extending.models.StructModel):
 # Unboxing & Boxing
 
 
-@numba.extending.unbox(LorentzXYZType)
+@numba.extending.unbox(LorentzXYZTType)
 def unbox_LorentzXYZT(lxyztype, lxyzobj, c):
-    # How to turn LorentzXYZFree Python objects into LorentzXYZModel structs.
+    # How to turn LorentzXYZTFree Python objects into LorentzXYZTModel structs.
     x_obj = c.pyapi.object_getattr_string(lxyzobj, "x")
     y_obj = c.pyapi.object_getattr_string(lxyzobj, "y")
     z_obj = c.pyapi.object_getattr_string(lxyzobj, "z")
@@ -97,7 +97,7 @@ def unbox_LorentzXYZT(lxyztype, lxyzobj, c):
     return numba.extending.NativeValue(outproxy._getvalue(), is_error)
 
 
-@numba.extending.box(LorentzXYZType)
+@numba.extending.box(LorentzXYZTType)
 def box_LorentzXYZT(lxyztype, lxyzval, c):
     # This proxy is initialized with a value, used for getattr, rather than setattr.
     inproxy = c.context.make_helper(c.builder, lxyztype, lxyzval)
@@ -107,13 +107,13 @@ def box_LorentzXYZT(lxyztype, lxyzval, c):
     t_obj = c.pyapi.float_from_double(inproxy.t)
 
     # The way we get Python objects into this lowered world is by pickling them.
-    LorentzXYZFree_obj = c.pyapi.unserialize(c.pyapi.serialize_object(LorentzXYZTFree))
+    LorentzXYZTFree_obj = c.pyapi.unserialize(c.pyapi.serialize_object(LorentzXYZTFree))
 
     out = c.pyapi.call_function_objargs(
-        LorentzXYZFree_obj, (x_obj, y_obj, z_obj, t_obj)
+        LorentzXYZTFree_obj, (x_obj, y_obj, z_obj, t_obj)
     )
 
-    c.pyapi.decref(LorentzXYZFree_obj)
+    c.pyapi.decref(LorentzXYZTFree_obj)
     c.pyapi.decref(x_obj)
     c.pyapi.decref(y_obj)
     c.pyapi.decref(z_obj)
@@ -126,7 +126,7 @@ def box_LorentzXYZT(lxyztype, lxyzval, c):
 
 # Defining an in-Numba constructor is a separate thing.
 @numba.extending.type_callable(LorentzXYZTFree)
-def typer_LorentzXYZFree_constructor(context):
+def typer_LorentzXYZTFree_constructor(context):
     def typer(x, y, z, t):
         if (
             x == numba.types.float64
@@ -134,7 +134,7 @@ def typer_LorentzXYZFree_constructor(context):
             and z == numba.types.float64
             and t == numba.types.float64
         ):
-            return LorentzXYZType()
+            return LorentzXYZTType()
 
     return typer
 
@@ -149,7 +149,7 @@ def typer_LorentzXYZFree_constructor(context):
     numba.types.Float,
     numba.types.Float,
 )
-def lower_LorentzXYZFree_constructor(context, builder, sig, args):
+def lower_LorentzXYZTFree_constructor(context, builder, sig, args):
     xval, yval, zval, tval = args
 
     outproxy = context.make_helper(builder, sig.return_type)
@@ -164,16 +164,16 @@ def lower_LorentzXYZFree_constructor(context, builder, sig, args):
 # Now it's time to define the methods and properties.
 
 # To simply map model attributes to user-accessible properties, use a macro.
-numba.extending.make_attribute_wrapper(LorentzXYZType, "x", "x")
-numba.extending.make_attribute_wrapper(LorentzXYZType, "y", "y")
-numba.extending.make_attribute_wrapper(LorentzXYZType, "z", "z")
-numba.extending.make_attribute_wrapper(LorentzXYZType, "t", "t")
+numba.extending.make_attribute_wrapper(LorentzXYZTType, "x", "x")
+numba.extending.make_attribute_wrapper(LorentzXYZTType, "y", "y")
+numba.extending.make_attribute_wrapper(LorentzXYZTType, "z", "z")
+numba.extending.make_attribute_wrapper(LorentzXYZTType, "t", "t")
 
 
 # For more general cases, there's an AttributeTemplate.
 @numba.extending.infer_getattr
-class typer_LorentzXYZ_methods(numba.core.typing.templates.AttributeTemplate):
-    key = LorentzXYZType
+class typer_LorentzXYZT_methods(numba.core.typing.templates.AttributeTemplate):
+    key = LorentzXYZTType
 
     def generic_resolve(self, lxyztype, attr):
         if attr == "pt":
@@ -204,35 +204,35 @@ class typer_LorentzXYZ_methods(numba.core.typing.templates.AttributeTemplate):
 #    * lowered Numba values
 
 
-@numba.extending.lower_getattr(LorentzXYZType, "pt")
-def lower_LorentzXYZ_pt(context, builder, lxyztype, lxyzval):
+@numba.extending.lower_getattr(LorentzXYZTType, "pt")
+def lower_LorentzXYZT_pt(context, builder, lxyztype, lxyzval):
     return context.compile_internal(
         builder, core.lorentz.xyzt.pt, numba.float64(lxyztype), (lxyzval,)
     )
 
 
-@numba.extending.lower_getattr(LorentzXYZType, "eta")
-def lower_LorentzXYZ_eta(context, builder, lxyztype, lxyzval):
+@numba.extending.lower_getattr(LorentzXYZTType, "eta")
+def lower_LorentzXYZT_eta(context, builder, lxyztype, lxyzval):
     return context.compile_internal(
         builder, core.lorentz.xyzt.eta, numba.float64(lxyztype), (lxyzval,)
     )
 
 
-@numba.extending.lower_getattr(LorentzXYZType, "phi")
-def lower_LorentzXYZ_phi(context, builder, lxyztype, lxyzval):
+@numba.extending.lower_getattr(LorentzXYZTType, "phi")
+def lower_LorentzXYZT_phi(context, builder, lxyztype, lxyzval):
     return context.compile_internal(
         builder, core.lorentz.xyzt.phi, numba.float64(lxyztype), (lxyzval,)
     )
 
 
-@numba.extending.lower_getattr(LorentzXYZType, "mag")
-def lower_LorentzXYZ_mag(context, builder, lxyztype, lxyzval):
+@numba.extending.lower_getattr(LorentzXYZTType, "mag")
+def lower_LorentzXYZT_mag(context, builder, lxyztype, lxyzval):
     return context.compile_internal(
         builder, core.lorentz.xyzt.mag, numba.float64(lxyztype), (lxyzval,)
     )
 
 
-@numba.extending.lower_builtin(operator.add, LorentzXYZType, LorentzXYZType)
+@numba.extending.lower_builtin(operator.add, LorentzXYZTType, LorentzXYZTType)
 def lower_add_LorentzXYZT(context, builder, sig, args):
     a_type, b_type = sig.args
     a_val, b_val = args
@@ -241,13 +241,13 @@ def lower_add_LorentzXYZT(context, builder, sig, args):
         return LorentzXYZTFree(a.x + b.x, a.y + b.y, a.z + b.z, a.t + b.t)
 
     res = context.compile_internal(
-        builder, f, LorentzXYZType()(a_type, b_type), (a_val, b_val)
+        builder, f, LorentzXYZTType()(a_type, b_type), (a_val, b_val)
     )
     return res
 
 
 @numba.extending.lower_builtin(
-    operator.getitem, LorentzXYZType, numba.types.StringLiteral
+    operator.getitem, LorentzXYZTType, numba.types.StringLiteral
 )
 def lower_getitem_LorentzXYZT(context, builder, sig, args):
     lxyztype, wheretype = sig.args

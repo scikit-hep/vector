@@ -79,6 +79,6 @@ class LorentzXYZTCommon(object):
             return vector.core.lorentz.xyzt.mag2(self)
 
 
-class LorentzXYZNormal(LorentzXYZTCommon):
+class LorentzXYZTNormal(LorentzXYZTCommon):
     def __add__(self, other):
         return self.__class__(*vector.core.lorentz.xyzt.add(self, other))
