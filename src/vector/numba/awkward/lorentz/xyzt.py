@@ -11,7 +11,7 @@ import operator
 import awkward1 as ak
 
 from vector.awkward.lorentz.xyzt import behavior
-from vector.numba.lorentz.xyzt import LorentzXYZType
+from vector.numba.lorentz.xyzt import LorentzXYZTType
 from vector.numba.lorentz.xyzt import lower_add_LorentzXYZT
 
 
@@ -32,12 +32,12 @@ def lower_ArrayBuilder_append_LorentzXYZT(context, builder, sig, args):
 
 
 behavior[
-    "__numba_lower__", ak.ArrayBuilder.append, LorentzXYZType
+    "__numba_lower__", ak.ArrayBuilder.append, LorentzXYZTType
 ] = lower_ArrayBuilder_append_LorentzXYZT
 
 
 def typer_lorentz_xyz_add(binop, left, right):
-    return LorentzXYZType()(left, right)
+    return LorentzXYZTType()(left, right)
 
 
 behavior[

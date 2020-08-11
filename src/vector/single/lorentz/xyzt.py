@@ -11,7 +11,7 @@ import json
 import vector.common.lorentz.xyzt
 
 
-class LorentzXYZTFree(vector.common.lorentz.xyzt.LorentzXYZNormal):
+class LorentzXYZTFree(vector.common.lorentz.xyzt.LorentzXYZTNormal):
     def __init__(self, x, y, z, t):
         self.x = x
         self.y = y

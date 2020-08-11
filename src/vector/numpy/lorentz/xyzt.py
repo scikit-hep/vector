@@ -10,7 +10,7 @@ import vector.common.lorentz.xyzt
 from vector.core import numpy as np
 
 
-class LorentzXYZT(vector.common.lorentz.xyzt.LorentzXYZNormal):
+class LorentzXYZT(vector.common.lorentz.xyzt.LorentzXYZTNormal):
     def __init__(self, x, y, z, t):
         """
         Notes
