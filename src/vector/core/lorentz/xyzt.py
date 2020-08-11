@@ -16,6 +16,15 @@ from vector.core import numpy as np
 # t: already included
 
 
+def add(left, right):
+    x = left.x + right.x
+    y = left.y + right.y
+    z = left.z + right.z
+    t = left.t + right.t
+
+    return x, y, z, t
+
+
 def pt(vec):
     return np.sqrt(vec.x ** 2 + vec.y ** 2)
 

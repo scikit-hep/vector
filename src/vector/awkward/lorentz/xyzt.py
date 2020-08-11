@@ -6,10 +6,13 @@
 
 from __future__ import absolute_import, division, print_function
 
+from typing import Any, Dict
+
 import awkward1 as ak
 
 import numpy as np
 
+import vector.core.lorentz.xyzt
 from vector.common.lorentz.xyzt import LorentzXYZTCommon
 
 
@@ -24,19 +27,18 @@ class LorentzXYZTArray(ak.Array, LorentzXYZTCommon):
     pass
 
 
-# This function only works as a ufunc overload, but it creates an AwkwardArray
-def lorentz_add_xyz_xyz(left, right):
-    x = ak.layout.NumpyArray(np.asarray(left["x"]) + np.asarray(right["x"]))
-    y = ak.layout.NumpyArray(np.asarray(left["y"]) + np.asarray(right["y"]))
-    z = ak.layout.NumpyArray(np.asarray(left["z"]) + np.asarray(right["z"]))
-    t = ak.layout.NumpyArray(np.asarray(left["t"]) + np.asarray(right["t"]))
-    return ak.layout.RecordArray(
-        {"x": x, "y": y, "z": z, "t": t}, parameters={"__record__": "LorentzXYZT"},
-    )
+def _create_dict(args):
+    keys = ("x", "y", "z", "t")
+    vals = {k: v for k, v in zip(keys, args)}
+    return ak.zip(vals, with_name="LorentzXYZT")
+
+
+def _create_behavior(function):
+    return lambda a, b: _create_dict(function(a, b))
 
 
 # Define some behaviors for Lorentz vectors.
-behavior = dict(ak.behavior)
+behavior = dict()  # type: Dict[Any, Any]
 
 # Any records with __record__ = "LorentzXYZT" will be mapped to LorentzXYZT instances.
 behavior["LorentzXYZT"] = LorentzXYZT
@@ -45,4 +47,6 @@ behavior["LorentzXYZT"] = LorentzXYZT
 behavior["*", "LorentzXYZT"] = LorentzXYZTArray
 
 # The NumPy ufunc for "add" will use our definition for __record__ = "LorentzXYZT".
-behavior[np.add, "LorentzXYZT", "LorentzXYZT"] = lorentz_add_xyz_xyz
+behavior[np.add, "LorentzXYZT", "LorentzXYZT"] = _create_behavior(
+    vector.core.lorentz.xyzt.add
+)

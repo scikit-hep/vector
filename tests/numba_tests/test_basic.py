@@ -28,6 +28,14 @@ def test_constructor():
     assert repr(test_constructor()) == repr(LorentzXYZTFree(1.1, 2.2, 3.3, 4.4))
 
 
+def test_addition():
+    @numba.njit
+    def test_addition():
+        return LorentzXYZTFree(1.0, 2.0, 3.0, 4.0) + LorentzXYZTFree(4.0, 3.0, 2.0, 1.0)
+
+    assert repr(test_addition()) == repr(LorentzXYZTFree(5, 5, 5, 5))
+
+
 @numba.njit
 def try_it_out(testit):
     return testit.x, testit["x"], testit.pt, testit.eta, testit.phi, testit.mag

@@ -6,11 +6,11 @@
 
 from __future__ import absolute_import, division, print_function
 
-from vector.common.lorentz.xyzt import LorentzXYZTCommon
+import vector.common.lorentz.xyzt
 from vector.core import numpy as np
 
 
-class LorentzXYZT(LorentzXYZTCommon):
+class LorentzXYZT(vector.common.lorentz.xyzt.LorentzXYZNormal):
     def __init__(self, x, y, z, t):
         """
         Notes

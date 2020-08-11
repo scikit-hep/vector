@@ -8,10 +8,10 @@ from __future__ import absolute_import, division, print_function
 
 import json
 
-from vector.common.lorentz.xyzt import LorentzXYZTCommon
+import vector.common.lorentz.xyzt
 
 
-class LorentzXYZTFree(LorentzXYZTCommon):
+class LorentzXYZTFree(vector.common.lorentz.xyzt.LorentzXYZNormal):
     def __init__(self, x, y, z, t):
         self.x = x
         self.y = y
