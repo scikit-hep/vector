@@ -16,4 +16,3 @@ vector.common.lorentz module
    :members:
    :undoc-members:
    :show-inheritance:
-

@@ -4,11 +4,11 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-from __future__ import division, absolute_import, print_function
-
-from vector.common.lorentz.xyzt import LorentzXYZTCommon
+from __future__ import absolute_import, division, print_function
 
 import json
+
+from vector.common.lorentz.xyzt import LorentzXYZTCommon
 
 
 class LorentzXYZTFree(LorentzXYZTCommon):

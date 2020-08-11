@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from vector.numpy.lorentz.xyzt import LorentzXYZT
 
 

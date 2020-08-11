@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Configuration file for the Sphinx documentation builder.
 #
 # This file only contains a selection of the most common options. For a full
@@ -14,6 +15,7 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+from pkg_resources import get_distribution
 
 # -- Project information -----------------------------------------------------
 
@@ -22,9 +24,6 @@ copyright = (
     "2019-2020, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner"
 )
 author = "Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner"
-
-
-from pkg_resources import get_distribution
 
 version = get_distribution("vector").version
 
