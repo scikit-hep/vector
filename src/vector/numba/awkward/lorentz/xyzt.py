@@ -12,7 +12,7 @@ import awkward1 as ak
 
 from vector.awkward.lorentz.xyzt import behavior
 from vector.numba.lorentz.xyzt import LorentzXYZType
-from vector.single.lorentz.xyzt import LorentzXYZTFree
+from vector.numba.lorentz.xyzt import lower_add_LorentzXYZT
 
 
 def lower_ArrayBuilder_append_LorentzXYZT(context, builder, sig, args):
@@ -40,18 +40,9 @@ def typer_lorentz_xyz_add(binop, left, right):
     return LorentzXYZType()(left, right)
 
 
-def lower_lorentz_xyz_add(context, builder, sig, args):
-    def compute(left, right):
-        return LorentzXYZTFree(
-            left.x + right.x, left.y + right.y, left.z + right.z, left.t + right.t
-        )
-
-    return context.compile_internal(builder, compute, sig, args)
-
-
 behavior[
     "__numba_typer__", "LorentzXYZT", operator.add, "LorentzXYZT"
 ] = typer_lorentz_xyz_add
 behavior[
     "__numba_lower__", "LorentzXYZT", operator.add, "LorentzXYZT"
-] = lower_lorentz_xyz_add
+] = lower_add_LorentzXYZT

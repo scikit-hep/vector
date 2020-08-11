@@ -77,3 +77,8 @@ class LorentzXYZTCommon(object):
     def mag2(self):
         with np.errstate(invalid="ignore"):
             return vector.core.lorentz.xyzt.mag2(self)
+
+
+class LorentzXYZNormal(LorentzXYZTCommon):
+    def __add__(self, other):
+        return self.__class__(*vector.core.lorentz.xyzt.add(self, other))
