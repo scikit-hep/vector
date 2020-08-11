@@ -3,21 +3,22 @@ name: CI
 on:
   pull_request:
   push:
-    branches: master
+    branches:
+    - master
+    - main
+    - develop
 
 jobs:
   pre-commit:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-python@v1
-    - name: set PY
-      run: echo "::set-env name=PY::$(python --version --version | sha256sum | cut -d' ' -f1)"
-    - uses: actions/cache@v1
+    - uses: actions/checkout@v2
       with:
-        path: ~/.cache/pre-commit
-        key: pre-commit|${{ env.PY }}|${{ hashFiles('.pre-commit-config.yaml') }}
-    - uses: pre-commit/action@v1.0.0
+        fetch-depth: 0
+    - uses: actions/setup-python@v2
+    - uses: pre-commit/action@v2.0.0
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
 
   checks:
     runs-on: ubuntu-latest
@@ -31,7 +32,7 @@ jobs:
     name: Check Python ${{ matrix.python-version }}
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-python@v1
+    - uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -49,20 +50,21 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Install environment
-      run: conda env create
+    - name: Get Conda
+      uses: goanpeca/setup-miniconda@v1
+      with:
+        environment-file: environment.yml
+        activate-environment: vector
 
     - name: Run tests
-      run: |
-        eval "$(conda shell.bash hook)"
-        conda activate vector
-        python -m pytest tests/root_tests
+      shell: "bash -l {0}"
+      run: python -m pytest tests/root_tests
 
   dist:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v1
+    - uses: actions/checkout@v1
+    - uses: actions/setup-python@v2
       with:
         python-version: 3.8
 
@@ -75,9 +77,8 @@ jobs:
     - name: Build wheel
       run: python -m pip wheel . -w wheels && cp wheels/vector*any.whl dist/
 
-    - uses: actions/upload-artifact@v1
+    - uses: actions/upload-artifact@v2
       with:
-        name: DistPackage
         path: dist
 
     - uses: pypa/gh-action-pypi-publish@master
