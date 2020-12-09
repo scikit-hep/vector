@@ -3,7 +3,7 @@ import numba
 
 import pytest
 
-ak = pytest.importorskip("awkward1")
+ak = pytest.importorskip("awkward")
 
 from vector.numba.awkward.lorentz.xyzt import behavior  # noqa: E402
 from vector.single.lorentz.xyzt import LorentzXYZTFree  # noqa: E402

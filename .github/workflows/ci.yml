@@ -9,17 +9,6 @@ on:
     - develop
 
 jobs:
-  pre-commit:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - uses: actions/setup-python@v2
-    - uses: pre-commit/action@v2.0.0
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-
   checks:
     runs-on: ubuntu-latest
     strategy:
@@ -51,7 +40,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Get Conda
-      uses: goanpeca/setup-miniconda@v1
+      uses: conda-incubator/setup-miniconda@v2
       with:
         environment-file: environment.yml
         activate-environment: vector
@@ -65,17 +54,12 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
 
     - name: Install wheel and sdist requirements
-      run: python -m pip install "setuptools>=42.0" "setuptools_scm[toml]>=3.4" "wheel"
+      run: python -m pip install "build"
 
-    - name: Build sdist
-      run: python setup.py sdist
-
-    - name: Build wheel
-      run: python -m pip wheel . -w wheels && cp wheels/vector*any.whl dist/
+    - name: Build sdist and wheel
+      run: python -m build
 
     - uses: actions/upload-artifact@v2
       with:

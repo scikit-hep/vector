@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-
-import numpy as np
-
 import pytest
 
 
@@ -9,21 +6,20 @@ import pytest
 def ak_HZZ_example():
     skhep_testdata = pytest.importorskip("skhep_testdata")
     uproot = pytest.importorskip("uproot")
-    ak = pytest.importorskip("awkward1")
+    ak = pytest.importorskip("awkward")
 
     tree = uproot.open(skhep_testdata.data_path("uproot-HZZ.root"))["events"]
 
-    x, y, z, t = tree.arrays(
-        ["Muon_Px", "Muon_Py", "Muon_Pz", "Muon_E"], outputtype=tuple
-    )
+    x, y, z, t = tree.arrays(["Muon_Px", "Muon_Py", "Muon_Pz", "Muon_E"], how=tuple)
 
-    offsets = ak.layout.Index64(x.offsets)
+    offsets = x.layout.offsets
+
     content = ak.layout.RecordArray(
         [
-            ak.layout.NumpyArray(x.content.astype(np.float64)),
-            ak.layout.NumpyArray(y.content.astype(np.float64)),
-            ak.layout.NumpyArray(z.content.astype(np.float64)),
-            ak.layout.NumpyArray(t.content.astype(np.float64)),
+            ak.layout.NumpyArray(ak.values_astype(x.layout.content, "float64")),
+            ak.layout.NumpyArray(ak.values_astype(y.layout.content, "float64")),
+            ak.layout.NumpyArray(ak.values_astype(z.layout.content, "float64")),
+            ak.layout.NumpyArray(ak.values_astype(t.layout.content, "float64")),
         ],
         keys=["x", "y", "z", "t"],
         parameters={"__record__": "LorentzXYZT"},
