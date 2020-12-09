@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 
-import awkward1 as ak
+import awkward as ak
 
 from pytest import approx
 

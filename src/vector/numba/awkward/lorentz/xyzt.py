@@ -8,7 +8,7 @@ from __future__ import absolute_import, division, print_function
 
 import operator
 
-import awkward1 as ak
+import awkward as ak
 
 from vector.awkward.lorentz.xyzt import behavior
 from vector.numba.lorentz.xyzt import LorentzXYZTType
