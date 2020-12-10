@@ -6,7 +6,7 @@
 
 from __future__ import absolute_import, division, print_function
 
-from typing import Any, TYPE_CHECKING
+from typing import Any, TYPE_CHECKING, cast
 
 import vector.common.lorentz.xyzt
 from vector.core import numpy as np
@@ -38,3 +38,9 @@ class LorentzXYZT(vector.common.lorentz.xyzt.LorentzXYZTNormal):
             return getattr(self, attr)
         else:
             raise ValueError("key {0} does not exist in x,y,z,t".format(attr))
+
+
+if TYPE_CHECKING:
+    from vector.protocols.lorentz import LorentzVector
+
+    _ = cast(LorentzXYZT, None)  # type: LorentzVector

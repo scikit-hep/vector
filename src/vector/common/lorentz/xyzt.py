@@ -10,15 +10,16 @@ from typing import TYPE_CHECKING, TypeVar
 
 import numpy as np
 
+import vector.core.lorentz.xyzt
+
 if TYPE_CHECKING:
     from vector.protocols.lorentz import LorentzVector, Scalar
 
-    T = TypeVar("T", bound="LorentzVector")
 
-import vector.core.lorentz.xyzt
+T = TypeVar("T")
 
 
-class LorentzXYZTCommon(object):
+class LorentzXYZTCommon:
     """
     This is the base class if you do not want magic methods.
     """
@@ -96,11 +97,11 @@ class LorentzXYZTCommon(object):
             return vector.core.lorentz.xyzt.mag2(self)
 
     def mul(self, other):
-        # type: (T, Scalar) -> T
+        # type: (LorentzVector, Scalar) -> LorentzVector
         return self.__class__(*vector.core.lorentz.xyzt.multiply_scalar(self, other))
 
     def dot(self, other):
-        # type: (T, T) -> Scalar
+        # type: (LorentzVector, LorentzVector) -> Scalar
         return vector.core.lorentz.xyzt.dot(self, other)
 
 
@@ -110,7 +111,7 @@ class LorentzXYZTNormal(LorentzXYZTCommon):
     """
 
     def __add__(self, other):
-        # type: (T, LorentzVector) -> T
+        # type: (LorentzVector, LorentzVector) -> LorentzVector
         return self.__class__(*vector.core.lorentz.xyzt.add(self, other))
 
     def __mul__(self, other):

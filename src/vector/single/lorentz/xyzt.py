@@ -7,6 +7,7 @@
 from __future__ import absolute_import, division, print_function
 
 import json
+from typing import TYPE_CHECKING, cast
 
 import vector.common.lorentz.xyzt
 
@@ -34,3 +35,9 @@ class LorentzXYZTFree(vector.common.lorentz.xyzt.LorentzXYZTNormal):
             raise ValueError(
                 "key {0} does not exist (not in record)".format(json.dumps(attr))
             )
+
+
+if TYPE_CHECKING:
+    from vector.protocols.lorentz import LorentzVector
+
+    _ = cast(LorentzXYZTFree, None)  # type: LorentzVector

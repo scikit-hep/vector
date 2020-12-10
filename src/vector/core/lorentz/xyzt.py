@@ -9,9 +9,10 @@ from __future__ import absolute_import, division, print_function
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from vector.protocols.lorentz import LorentzVector, Scalar, LorentzTuple
+    from vector.protocols.lorentz import LorentzVector, LorentzTuple, Scalar
 
 from vector.core import numpy as np
+
 
 # Functions that return a value
 
