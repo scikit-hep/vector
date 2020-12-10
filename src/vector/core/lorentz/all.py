@@ -47,8 +47,8 @@ def rapidity(vec):
 
 def delta_r2(vec, other):
     # type: (LorentzVector, LorentzVector) -> Scalar
-    """Return :math:`\\Delta R` the distance in (eta,phi) space with another Lorentz vector, defined as:
-    :math:`\\Delta R = \\sqrt{(\\Delta \\eta)^2 + (\\Delta \\phi)^2}`
+    """Return :math:`\\Delta R^2` the distance squared in (eta,phi) space with another Lorentz vector, defined as:
+    :math:`\\Delta R^2 = (\\Delta \\eta)^2 + (\\Delta \\phi)^2`
     """
     delta_phi = np.mod(vec.phi - other.phi + np.pi, np.pi * 2) - np.pi
     return (vec.eta - other.eta) ** 2 + delta_phi ** 2
