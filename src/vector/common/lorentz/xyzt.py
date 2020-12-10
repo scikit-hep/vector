@@ -6,14 +6,26 @@
 
 from __future__ import absolute_import, division, print_function
 
+from typing import TYPE_CHECKING, TypeVar
+
 import numpy as np
+
+if TYPE_CHECKING:
+    from vector.protocols.lorentz import LorentzVector, Scalar
+
+    T = TypeVar("T", bound="LorentzVector")
 
 import vector.core.lorentz.xyzt
 
 
 class LorentzXYZTCommon(object):
+    """
+    This is the base class if you do not want magic methods.
+    """
+
     @property
     def pt(self):
+        # type: (LorentzVector) -> Scalar
         r"""
         The traverse momentum.
 
@@ -31,6 +43,7 @@ class LorentzXYZTCommon(object):
 
     @property
     def eta(self):
+        # type: (LorentzVector) -> Scalar
         r"""
         The
 
@@ -49,6 +62,7 @@ class LorentzXYZTCommon(object):
 
     @property
     def phi(self):
+        # type: (LorentzVector) -> Scalar
         r"""
         Notes
         -----
@@ -65,20 +79,41 @@ class LorentzXYZTCommon(object):
 
     @property
     def mass(self):
+        # type: (LorentzVector) -> Scalar
         with np.errstate(invalid="ignore"):
             return vector.core.lorentz.xyzt.mag(self)
 
     @property
     def mag(self):
+        # type: (LorentzVector) -> Scalar
         with np.errstate(invalid="ignore"):
             return vector.core.lorentz.xyzt.mag(self)
 
     @property
     def mag2(self):
+        # type: (LorentzVector) -> Scalar
         with np.errstate(invalid="ignore"):
             return vector.core.lorentz.xyzt.mag2(self)
 
+    def mul(self, other):
+        # type: (T, Scalar) -> T
+        return self.__class__(*vector.core.lorentz.xyzt.multiply_scalar(self, other))
+
+    def dot(self, other):
+        # type: (T, T) -> Scalar
+        return vector.core.lorentz.xyzt.dot(self, other)
+
 
 class LorentzXYZTNormal(LorentzXYZTCommon):
+    """
+    This is the base class with magic methods.
+    """
+
     def __add__(self, other):
+        # type: (T, LorentzVector) -> T
         return self.__class__(*vector.core.lorentz.xyzt.add(self, other))
+
+    def __mul__(self, other):
+        return (
+            self.dot(other) if isinstance(other, LorentzXYZTCommon) else self.mul(other)
+        )

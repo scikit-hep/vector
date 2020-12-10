@@ -6,12 +6,18 @@
 
 from __future__ import absolute_import, division, print_function
 
+from typing import Any, TYPE_CHECKING
+
 import vector.common.lorentz.xyzt
 from vector.core import numpy as np
+
+if TYPE_CHECKING:
+    ArrayLike = Any
 
 
 class LorentzXYZT(vector.common.lorentz.xyzt.LorentzXYZTNormal):
     def __init__(self, x, y, z, t):
+        # type: (ArrayLike, ArrayLike, ArrayLike, ArrayLike) -> None
         """
         Notes
         =====
@@ -22,9 +28,11 @@ class LorentzXYZT(vector.common.lorentz.xyzt.LorentzXYZTNormal):
         self.x, self.y, self.z, self.t = np.broadcast_arrays(x, y, z, t)
 
     def __repr__(self):
+        # type: () -> str
         return "Lxyz({0}, {1}, {2}, {3})".format(self.x, self.y, self.z, self.t)
 
     def __getitem__(self, attr):
+        # type: (str) -> ArrayLike
         # It has to behave the same way as the bound objects or users will get confused.
         if attr in ("x", "y", "z", "t"):
             return getattr(self, attr)

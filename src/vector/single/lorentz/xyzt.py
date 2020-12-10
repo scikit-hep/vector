@@ -13,17 +13,20 @@ import vector.common.lorentz.xyzt
 
 class LorentzXYZTFree(vector.common.lorentz.xyzt.LorentzXYZTNormal):
     def __init__(self, x, y, z, t):
+        # type: (float, float, float, float) -> None
         self.x = x
         self.y = y
         self.z = z
         self.t = t
 
     def __repr__(self):
+        # type: () -> str
         return "Lxyz({0:.3g} {1:.3g} {2:.3g} {3:.3g})".format(
             self.x, self.y, self.z, self.t
         )
 
     def __getitem__(self, attr):
+        # type: (str) -> float
         # It has to behave the same way as the bound objects or users will get confused.
         if attr in ("x", "y", "z", "t"):
             return getattr(self, attr)
