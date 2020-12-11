@@ -32,14 +32,24 @@ def add(left, right):
     return x, y, z, t
 
 
-def multiply_scalar(left, right):
+def add_scalar(left, right):
     # type: (LorentzVector, Scalar) -> LorentzTuple
-    return left.x * right, left.y * right, left.z * right, left.t * right
+    x = left.x + right
+    y = left.y + right
+    z = left.z + right
+    t = left.t + right
+
+    return x, y, z, t
 
 
 def dot(left, right):
     # type: (LorentzVector, LorentzVector) -> Scalar
     return left.t * right.t - left.x * right.x - left.y * right.y - left.z * right.z
+
+
+def multiply_scalar(left, right):
+    # type: (LorentzVector, Scalar) -> LorentzTuple
+    return left.x * right, left.y * right, left.z * right, left.t * right
 
 
 def pt(vec):

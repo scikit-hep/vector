@@ -6,6 +6,7 @@
 
 from __future__ import absolute_import, division, print_function
 
+import numbers
 from typing import Any, Dict
 
 import awkward as ak
@@ -37,6 +38,10 @@ def _create_behavior(function):
     return lambda a, b: _create_dict(function(a, b))
 
 
+def _create_behavior_r(function):
+    return lambda a, b: _create_dict(function(b, a))
+
+
 # Define some behaviors for Lorentz vectors.
 behavior = dict()  # type: Dict[Any, Any]
 
@@ -46,7 +51,24 @@ behavior["LorentzXYZT"] = LorentzXYZT
 # Any arrays containing such records (any number of levels deep) will be LorentsXYZArrays.
 behavior["*", "LorentzXYZT"] = LorentzXYZTArray
 
-# The NumPy ufunc for "add" will use our definition for __record__ = "LorentzXYZT".
 behavior[np.add, "LorentzXYZT", "LorentzXYZT"] = _create_behavior(
     vector.core.lorentz.xyzt.add
+)
+
+behavior[np.add, "LorentzXYZT", numbers.Real] = _create_behavior(
+    vector.core.lorentz.xyzt.add_scalar
+)
+
+behavior[np.add, numbers.Real, "LorentzXYZT"] = _create_behavior_r(
+    vector.core.lorentz.xyzt.add_scalar
+)
+
+behavior[np.multiply, "LorentzXYZT", "LorentzXYZT"] = vector.core.lorentz.xyzt.dot
+
+behavior[np.multiply, "LorentzXYZT", numbers.Real] = _create_behavior(
+    vector.core.lorentz.xyzt.multiply_scalar
+)
+
+behavior[np.multiply, numbers.Real, "LorentzXYZT"] = _create_behavior_r(
+    vector.core.lorentz.xyzt.multiply_scalar
 )

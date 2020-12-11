@@ -3,11 +3,6 @@ from __future__ import annotations  # type: ignore
 
 from typing import Protocol, Tuple, TypeVar, overload
 
-V = TypeVar("V", covariant=True)
-T = TypeVar("T")
-
-GenericLorentzTuple = Tuple[V, V, V, V]
-
 
 Self = TypeVar("Self", bound="Scalar")
 
@@ -38,60 +33,67 @@ class Scalar(Protocol):
         ...
 
 
-class GenericLorentzVector(Protocol[T]):
-    def __init__(self, x: T, y: T, z: T, t: T):
+LorentzTuple = Tuple[Scalar, Scalar, Scalar, Scalar]
+
+
+class LorentzVector(Protocol):
+    def __init__(self, x: Scalar, y: Scalar, z: Scalar, t: Scalar):
         ...
 
     @property
-    def x(self) -> T:
+    def x(self) -> Scalar:
         ...
 
     @property
-    def y(self) -> T:
+    def y(self) -> Scalar:
         ...
 
     @property
-    def z(self) -> T:
+    def z(self) -> Scalar:
         ...
 
     @property
-    def t(self) -> T:
+    def t(self) -> Scalar:
         ...
 
     @property
-    def pt(self) -> T:
+    def pt(self) -> Scalar:
         ...
 
     @property
-    def eta(self) -> T:
+    def eta(self) -> Scalar:
         ...
 
     @property
-    def phi(self) -> T:
+    def phi(self) -> Scalar:
         ...
 
     @property
-    def mag(self) -> T:
+    def mag(self) -> Scalar:
         ...
 
     @property
-    def mag2(self) -> T:
-        ...
-
-    def __add__(self, other: GenericLorentzVector) -> GenericLorentzVector:
+    def mag2(self) -> Scalar:
         ...
 
     @overload
-    def __mul__(self, other: T) -> GenericLorentzVector:
+    def __add__(self, other: LorentzVector) -> LorentzVector:
         ...
 
     @overload
-    def __mul__(self, other: GenericLorentzVector) -> T:
+    def __add__(self, other: Scalar) -> LorentzVector:
+        ...
+
+    def __add__(self, other):
+        ...
+
+    @overload
+    def __mul__(self, other: LorentzVector) -> Scalar:
+        ...
+
+    @overload
+    def __mul__(self, other: Scalar) -> LorentzVector:
         ...
 
     def __mul__(self, other):
         ...
-
-
-LorentzVector = GenericLorentzVector[Scalar]
-LorentzTuple = GenericLorentzTuple[Scalar]

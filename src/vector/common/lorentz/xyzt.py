@@ -6,7 +6,7 @@
 
 from __future__ import absolute_import, division, print_function
 
-from typing import TYPE_CHECKING, TypeVar
+from typing import TYPE_CHECKING, TypeVar, overload
 
 import numpy as np
 
@@ -96,10 +96,6 @@ class LorentzXYZTCommon:
         with np.errstate(invalid="ignore"):
             return vector.core.lorentz.xyzt.mag2(self)
 
-    def mul(self, other):
-        # type: (LorentzVector, Scalar) -> LorentzVector
-        return self.__class__(*vector.core.lorentz.xyzt.multiply_scalar(self, other))
-
     def dot(self, other):
         # type: (LorentzVector, LorentzVector) -> Scalar
         return vector.core.lorentz.xyzt.dot(self, other)
@@ -110,11 +106,44 @@ class LorentzXYZTNormal(LorentzXYZTCommon):
     This is the base class with magic methods.
     """
 
+    @overload
     def __add__(self, other):
         # type: (LorentzVector, LorentzVector) -> LorentzVector
-        return self.__class__(*vector.core.lorentz.xyzt.add(self, other))
+        pass
+
+    @overload
+    def __add__(self, other):
+        # type: (LorentzVector, Scalar) -> LorentzVector
+        pass
+
+    def __add__(self, other):
+        if isinstance(other, LorentzXYZTCommon):
+            return self.__class__(*vector.core.lorentz.xyzt.add(self, other))
+        else:
+            return self.__class__(*vector.core.lorentz.xyzt.add_scalar(self, other))
+
+    @overload
+    def __mul__(self, other):
+        # type: (LorentzVector, LorentzVector) -> Scalar
+        pass
+
+    @overload
+    def __mul__(self, other):
+        # type: (LorentzVector, Scalar) -> LorentzVector
+        pass
 
     def __mul__(self, other):
-        return (
-            self.dot(other) if isinstance(other, LorentzXYZTCommon) else self.mul(other)
-        )
+        if isinstance(other, LorentzXYZTCommon):
+            return vector.core.lorentz.xyzt.dot(self, other)
+        else:
+            return self.__class__(
+                *vector.core.lorentz.xyzt.multiply_scalar(self, other)
+            )
+
+    def __radd__(self, other):
+        # type: (LorentzVector, Scalar) -> LorentzVector
+        return self.__class__(*vector.core.lorentz.xyzt.add_scalar(self, other))
+
+    def __rmul__(self, other):
+        # type: (LorentzVector, Scalar) -> LorentzVector
+        return self.__class__(*vector.core.lorentz.xyzt.multiply_scalar(self, other))
