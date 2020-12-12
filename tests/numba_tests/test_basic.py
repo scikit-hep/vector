@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+
 import numba
+
+from pytest import approx
 
 from vector.numba.lorentz.xyzt import LorentzXYZTFree
 
@@ -34,6 +37,22 @@ def test_addition():
         return LorentzXYZTFree(1.0, 2.0, 3.0, 4.0) + LorentzXYZTFree(4.0, 3.0, 2.0, 1.0)
 
     assert repr(test_addition()) == repr(LorentzXYZTFree(5, 5, 5, 5))
+
+
+def test_multiply():
+    @numba.njit
+    def test_multiply():
+        return LorentzXYZTFree(1.0, 2.0, 3.0, 4.0) * LorentzXYZTFree(4.0, 3.0, 2.0, 1.0)
+
+    assert test_multiply() == approx(4 - 6 - 6 - 4)
+
+
+def test_multiply_scalar():
+    @numba.njit
+    def test_multiply_scalar():
+        return LorentzXYZTFree(1.0, 2.0, 3.0, 4.0) * 2.0
+
+    assert repr(test_multiply_scalar()) == repr(LorentzXYZTFree(2, 4, 6, 8))
 
 
 @numba.njit
