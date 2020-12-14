@@ -32,7 +32,6 @@ def typeof_LorentzXYZTFree(obj, c):
 @numba.extending.type_callable(operator.getitem)
 def typer_LorentzXYZT_getitem(context):
     def generic(self, ind):
-        # Only accept compile-time constants. It's a fair restriction.
         if isinstance(self, LorentzXYZTType) and ind in {
             numba.types.StringLiteral(c) for c in {"x", "y", "z", "t"}
         }:
@@ -44,8 +43,11 @@ def typer_LorentzXYZT_getitem(context):
 @numba.extending.type_callable(operator.add)
 def typer_LorentzXYZT_add(context):
     def generic(self, other):
-        # Only accept compile-time constants. It's a fair restriction.
         if isinstance(self, LorentzXYZTType) and isinstance(other, LorentzXYZTType):
+            return LorentzXYZTType()
+        elif isinstance(self, LorentzXYZTType) and isinstance(other, numba.types.Float):
+            return LorentzXYZTType()
+        elif isinstance(self, numba.types.Float) and isinstance(other, LorentzXYZTType):
             return LorentzXYZTType()
 
     return generic
@@ -54,10 +56,11 @@ def typer_LorentzXYZT_add(context):
 @numba.extending.type_callable(operator.mul)
 def typer_LorentzXYZT_mul(context):
     def generic(self, other):
-        # Only accept compile-time constants. It's a fair restriction.
         if isinstance(self, LorentzXYZTType) and isinstance(other, LorentzXYZTType):
             return numba.float64
         elif isinstance(self, LorentzXYZTType) and isinstance(other, numba.types.Float):
+            return LorentzXYZTType()
+        elif isinstance(self, numba.types.Float) and isinstance(other, LorentzXYZTType):
             return LorentzXYZTType()
 
     return generic
@@ -200,11 +203,10 @@ class typer_LorentzXYZT_methods(numba.core.typing.templates.AttributeTemplate):
             # typers that return None defer to other typers.
             return None
 
-    # If we had any methods with arguments, this is how we'd do it.
-    #
-    # @numba.typing.templates.bound_function("pt")
-    # def pt_resolve(self, lxyztype, args, kwargs):
-    #     ...
+    @numba.core.typing.templates.bound_function("LorentzXYZTFree.dot")
+    def resolve_dot(self, lxyztype, args, kwargs):
+        assert not kwargs
+        return numba.core.typing.templates.signature(numba.float64, LorentzXYZTType())
 
 
 # To lower these functions, we can duck-type the Python functions above.
@@ -258,6 +260,34 @@ def lower_add_LorentzXYZT(context, builder, sig, args):
     return res
 
 
+@numba.extending.lower_builtin(operator.add, LorentzXYZTType, numba.float64)
+def lower_add_scalar_LorentzXYZT(context, builder, sig, args):
+    a_type, b_type = sig.args
+    a_val, b_val = args
+
+    def f(a, b):
+        return LorentzXYZTFree(a.x + b, a.y + b, a.z + b, a.t + b)
+
+    res = context.compile_internal(
+        builder, f, LorentzXYZTType()(a_type, b_type), (a_val, b_val)
+    )
+    return res
+
+
+@numba.extending.lower_builtin(operator.add, numba.float64, LorentzXYZTType)
+def lower_add_scalar_r_LorentzXYZT(context, builder, sig, args):
+    a_type, b_type = sig.args
+    a_val, b_val = args
+
+    def f(a, b):
+        return LorentzXYZTFree(a + b.x, a + b.y, a + b.z, a + b.t)
+
+    res = context.compile_internal(
+        builder, f, LorentzXYZTType()(a_type, b_type), (a_val, b_val)
+    )
+    return res
+
+
 @numba.extending.lower_builtin(operator.mul, LorentzXYZTType, numba.float64)
 def lower_mul_scalar_LorentzXYZT(context, builder, sig, args):
     a_type, b_type = sig.args
@@ -272,8 +302,32 @@ def lower_mul_scalar_LorentzXYZT(context, builder, sig, args):
     return res
 
 
+@numba.extending.lower_builtin(operator.mul, numba.float64, LorentzXYZTType)
+def lower_mul_scalar_r_LorentzXYZT(context, builder, sig, args):
+    a_type, b_type = sig.args
+    a_val, b_val = args
+
+    def f(a, b):
+        return LorentzXYZTFree(a * b.x, a * b.y, a * b.z, a * b.t)
+
+    res = context.compile_internal(
+        builder, f, LorentzXYZTType()(a_type, b_type), (a_val, b_val)
+    )
+    return res
+
+
 @numba.extending.lower_builtin(operator.mul, LorentzXYZTType, LorentzXYZTType)
 def lower_mul_LorentzXYZT(context, builder, sig, args):
+    a_type, b_type = sig.args
+    a_val, b_val = args
+
+    return context.compile_internal(
+        builder, core.lorentz.xyzt.dot, numba.float64(a_type, b_type), (a_val, b_val)
+    )
+
+
+@numba.extending.lower_builtin("LorentzXYZTFree.dot", LorentzXYZTType, LorentzXYZTType)
+def lower_dot_LorentzXYZT(context, builder, sig, args):
     a_type, b_type = sig.args
     a_val, b_val = args
 

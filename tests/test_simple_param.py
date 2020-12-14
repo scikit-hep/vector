@@ -83,21 +83,6 @@ def test_add_scalar(vi):
     assert_almost_equal(5, v21.t)
 
 
-def test_basic_scalar(vi):
-    v1 = vi.init(1, 2, 3, 4)
-    v12 = v1 * 2
-    assert_almost_equal(v1.x * 2, v12.x)
-    assert_almost_equal(v1.y * 2, v12.y)
-    assert_almost_equal(v1.z * 2, v12.z)
-    assert_almost_equal(v1.t * 2, v12.t)
-
-    v21 = 2 * v1
-    assert_almost_equal(v1.x * 2, v21.x)
-    assert_almost_equal(v1.y * 2, v21.y)
-    assert_almost_equal(v1.z * 2, v21.z)
-    assert_almost_equal(v1.t * 2, v21.t)
-
-
 def test_dot(vi):
     v1 = vi.init(1, 2, 3, 4)
     v2 = vi.init(0, 2, 2, 5)
@@ -107,7 +92,7 @@ def test_dot(vi):
     assert_almost_equal(20 - 6 - 4, res)
 
 
-def test_mul_vec(vi):
+def test_multiply_vec(vi):
     v1 = vi.init(1, 2, 3, 4)
     v2 = vi.init(0, 2, 2, 5)
 
