@@ -10,9 +10,8 @@ import operator
 
 import awkward as ak
 
+import vector.numba.lorentz.xyzt
 from vector.awkward.lorentz.xyzt import behavior
-from vector.numba.lorentz.xyzt import LorentzXYZTType
-from vector.numba.lorentz.xyzt import lower_add_LorentzXYZT
 
 
 def lower_ArrayBuilder_append_LorentzXYZT(context, builder, sig, args):
@@ -32,17 +31,34 @@ def lower_ArrayBuilder_append_LorentzXYZT(context, builder, sig, args):
 
 
 behavior[
-    "__numba_lower__", ak.ArrayBuilder.append, LorentzXYZTType
+    "__numba_lower__", ak.ArrayBuilder.append, vector.numba.lorentz.xyzt.LorentzXYZTType
 ] = lower_ArrayBuilder_append_LorentzXYZT
 
 
 def typer_lorentz_xyz_add(binop, left, right):
-    return LorentzXYZTType()(left, right)
+    return vector.numba.lorentz.xyzt.LorentzXYZTType()(left, right)
 
 
 behavior[
     "__numba_typer__", "LorentzXYZT", operator.add, "LorentzXYZT"
 ] = typer_lorentz_xyz_add
+
 behavior[
     "__numba_lower__", "LorentzXYZT", operator.add, "LorentzXYZT"
-] = lower_add_LorentzXYZT
+] = vector.numba.lorentz.xyzt.lower_add_LorentzXYZT
+
+# behavior[
+#     "__numba_typer__", "LorentzXYZT", operator.add, numba.types.Float
+# ] = typer_lorentz_xyz_add
+#
+# behavior[
+#     "__numba_lower__", "LorentzXYZT", operator.add, numba.types.Float
+# ] = vector.numba.lorentz.xyzt.lower_add_scalar_LorentzXYZT
+#
+# behavior[
+#     "__numba_typer__", numba.types.Float, operator.add, "LorentzXYZT"
+# ] = typer_lorentz_xyz_add
+#
+# behavior[
+#     "__numba_lower__", numba.types.Float, operator.add, "LorentzXYZT"
+# ] = vector.numba.lorentz.xyzt.lower_add_scalar_r_LorentzXYZT

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import numba
 
 from pytest import approx
@@ -7,22 +6,11 @@ from pytest import approx
 from vector.numba.lorentz.xyzt import LorentzXYZTFree
 
 
-# Wrapped so the syntax remains the same with main test file
-def assert_almost_equal(actual, expected):
-    assert actual == expected
-
-
-@numba.njit
-def pass_through(obj):
-    return obj
-
-
-def test_simple_check():
-    testit = LorentzXYZTFree(1, 2, 3, 4)
-    assert repr(testit) == "Lxyz(1 2 3 4)"
-
-
 def test_passthrough():
+    @numba.njit
+    def pass_through(obj):
+        return obj
+
     assert repr(pass_through(LorentzXYZTFree(1, 2, 3, 4))) == repr(
         LorentzXYZTFree(1.0, 2.0, 3.0, 4.0)
     )
@@ -74,15 +62,9 @@ def test_add_scalar():
 
     v12, v21 = test_addition_scalar()
 
-    assert_almost_equal(2, v12.x)
-    assert_almost_equal(3, v12.y)
-    assert_almost_equal(4, v12.z)
-    assert_almost_equal(5, v12.t)
-
-    assert_almost_equal(2, v21.x)
-    assert_almost_equal(3, v21.y)
-    assert_almost_equal(4, v21.z)
-    assert_almost_equal(5, v21.t)
+    ans = LorentzXYZTFree(1.0, 2.0, 3.0, 4.0) + 1
+    assert ans == v12
+    assert ans == v21
 
 
 # test_multiply_vec
@@ -106,12 +88,5 @@ def test_multiply_scalar():
     v1 = LorentzXYZTFree(1.0, 2.0, 3.0, 4.0)
     v12, v21 = test_multiply_scalar(v1)
 
-    assert_almost_equal(v1.x * 2, v12.x)
-    assert_almost_equal(v1.y * 2, v12.y)
-    assert_almost_equal(v1.z * 2, v12.z)
-    assert_almost_equal(v1.t * 2, v12.t)
-
-    assert_almost_equal(v1.x * 2, v21.x)
-    assert_almost_equal(v1.y * 2, v21.y)
-    assert_almost_equal(v1.z * 2, v21.z)
-    assert_almost_equal(v1.t * 2, v21.t)
+    assert v1 * 2 == v12
+    assert v1 * 2 == v21

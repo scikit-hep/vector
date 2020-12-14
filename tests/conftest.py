@@ -1,6 +1,25 @@
 # -*- coding: utf-8 -*-
 import pytest
 
+import vector.single.lorentz.xyzt
+
+
+def __eq__(vector1, vector2):
+    return (
+        vector1.x == pytest.approx(vector2.x)
+        and vector1.y == pytest.approx(vector2.y)
+        and vector1.z == pytest.approx(vector2.z)
+        and vector1.t == pytest.approx(vector2.t)
+    )
+
+
+def __ne__(vector1, vector2):
+    return not vector1 == vector2
+
+
+vector.single.lorentz.xyzt.LorentzXYZTFree.__eq__ = __eq__
+vector.single.lorentz.xyzt.LorentzXYZTFree.__ne__ = __ne__
+
 
 @pytest.fixture(scope="session")
 def ak_HZZ_example():
