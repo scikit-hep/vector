@@ -14,17 +14,17 @@ import awkward as ak
 import numpy as np
 
 import vector.core.lorentz.xyzt
-from vector.common.lorentz.xyzt import LorentzXYZTCommon
+from vector.common.lorentz.xyzt import LorentzXYZTMethodMixin
 
 
-class LorentzXYZT(ak.Record, LorentzXYZTCommon):
+class LorentzXYZT(ak.Record, LorentzXYZTMethodMixin):
     def __repr__(self):
         return "Lxyz({0:.3g} {1:.3g} {2:.3g} {3:.3g})".format(
             self.x, self.y, self.z, self.t
         )
 
 
-class LorentzXYZTArray(ak.Array, LorentzXYZTCommon):
+class LorentzXYZTArray(ak.Array, LorentzXYZTMethodMixin):
     pass
 
 
