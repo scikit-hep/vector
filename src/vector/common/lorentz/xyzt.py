@@ -101,7 +101,7 @@ class LorentzXYZTCommon:
         return vector.core.lorentz.xyzt.dot(self, other)
 
 
-class LorentzXYZTNormal(LorentzXYZTCommon):
+class LorentzXYZTDunderMixin(LorentzXYZTCommon):
     """
     This is the base class with magic methods.
     """

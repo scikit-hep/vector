@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, cast
 import vector.common.lorentz.xyzt
 
 
-class LorentzXYZTFree(vector.common.lorentz.xyzt.LorentzXYZTNormal):
+class LorentzXYZTFree(vector.common.lorentz.xyzt.LorentzXYZTDunderMixin):
     def __init__(self, x, y, z, t):
         # type: (float, float, float, float) -> None
         self.x = x
@@ -37,6 +37,10 @@ class LorentzXYZTFree(vector.common.lorentz.xyzt.LorentzXYZTNormal):
             )
 
 
+# This is a "standard" trick to validate a Protocol.
+# Standard is in quotes because the PEP literally says don't do it this way, but
+# since a nicer way was never added, this is the way everyone recommends doing it.
+# Think of it like instantiating an ABC, but at type-check time.
 if TYPE_CHECKING:
     from vector.protocols.lorentz import LorentzVector
 
