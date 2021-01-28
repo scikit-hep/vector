@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 T = TypeVar("T")
 
 
-class LorentzXYZTCommon:
+class LorentzXYZTMethodMixin:
     """
     This is the base class if you do not want magic methods.
     """
@@ -101,7 +101,7 @@ class LorentzXYZTCommon:
         return vector.core.lorentz.xyzt.dot(self, other)
 
 
-class LorentzXYZTDunderMixin(LorentzXYZTCommon):
+class LorentzXYZTDunderMixin(LorentzXYZTMethodMixin):
     """
     This is the base class with magic methods.
     """
@@ -117,7 +117,7 @@ class LorentzXYZTDunderMixin(LorentzXYZTCommon):
         pass
 
     def __add__(self, other):
-        if isinstance(other, LorentzXYZTCommon):
+        if isinstance(other, LorentzXYZTMethodMixin):
             return self.__class__(*vector.core.lorentz.xyzt.add(self, other))
         else:
             return self.__class__(*vector.core.lorentz.xyzt.add_scalar(self, other))
@@ -133,7 +133,7 @@ class LorentzXYZTDunderMixin(LorentzXYZTCommon):
         pass
 
     def __mul__(self, other):
-        if isinstance(other, LorentzXYZTCommon):
+        if isinstance(other, LorentzXYZTMethodMixin):
             return vector.core.lorentz.xyzt.dot(self, other)
         else:
             return self.__class__(
