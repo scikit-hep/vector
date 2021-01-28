@@ -1,7 +1,7 @@
-vector.common package
+vector.mixins package
 =====================
 
-.. automodule:: vector.common
+.. automodule:: vector.mixins
    :members:
    :undoc-members:
    :show-inheritance:
@@ -9,10 +9,10 @@ vector.common package
 Submodules
 ----------
 
-vector.common.lorentz module
+vector.mixins.lorentz module
 ----------------------------
 
-.. automodule:: vector.common.lorentz
+.. automodule:: vector.mixins.lorentz
    :members:
    :undoc-members:
    :show-inheritance:
