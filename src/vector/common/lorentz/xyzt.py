@@ -101,7 +101,7 @@ class LorentzXYZTMethodMixin:
         return vector.core.lorentz.xyzt.dot(self, other)
 
 
-class LorentzXYZTDunderMixin(LorentzXYZTMethodMixin):
+class LorentzXYZTDunderMixin:
     """
     This is the base class with magic methods.
     """

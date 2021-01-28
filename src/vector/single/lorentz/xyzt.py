@@ -12,7 +12,10 @@ from typing import TYPE_CHECKING, cast
 import vector.common.lorentz.xyzt
 
 
-class LorentzXYZTFree(vector.common.lorentz.xyzt.LorentzXYZTDunderMixin):
+class LorentzXYZTFree(
+    vector.common.lorentz.xyzt.LorentzXYZTMethodMixin,
+    vector.common.lorentz.xyzt.LorentzXYZTDunderMixin,
+):
     def __init__(self, x, y, z, t):
         # type: (float, float, float, float) -> None
         self.x = x

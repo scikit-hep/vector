@@ -15,7 +15,10 @@ if TYPE_CHECKING:
     ArrayLike = Any
 
 
-class LorentzXYZT(vector.common.lorentz.xyzt.LorentzXYZTDunderMixin):
+class LorentzXYZT(
+    vector.common.lorentz.xyzt.LorentzXYZTMethodMixin,
+    vector.common.lorentz.xyzt.LorentzXYZTDunderMixin,
+):
     def __init__(self, x, y, z, t):
         # type: (ArrayLike, ArrayLike, ArrayLike, ArrayLike) -> None
         """
