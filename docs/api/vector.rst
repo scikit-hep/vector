@@ -11,11 +11,11 @@ Subpackages
 
 .. toctree::
 
-   vector.awkward
-   vector.common
+   vector.mixins
    vector.core
-   vector.numba
    vector.numpy
+   vector.awkward
+   vector.numba
 
 Submodules
 ----------

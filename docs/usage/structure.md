@@ -2,8 +2,8 @@
 
 This is the structure of the package:
 
-* common
 * core
+* mixins
 * numba
 * numpy
 * awkward

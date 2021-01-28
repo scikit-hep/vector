@@ -14,7 +14,7 @@ import awkward as ak
 import numpy as np
 
 import vector.core.lorentz.xyzt
-from vector.common.lorentz.xyzt import LorentzXYZTMethodMixin
+from vector.mixins.lorentz.xyzt import LorentzXYZTMethodMixin
 
 
 class LorentzXYZT(ak.Record, LorentzXYZTMethodMixin):

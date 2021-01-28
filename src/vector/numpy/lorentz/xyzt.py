@@ -8,7 +8,7 @@ from __future__ import absolute_import, division, print_function
 
 from typing import Any, TYPE_CHECKING, cast
 
-import vector.common.lorentz.xyzt
+import vector.mixins.lorentz.xyzt
 from vector.core import numpy as np
 
 if TYPE_CHECKING:
@@ -16,8 +16,8 @@ if TYPE_CHECKING:
 
 
 class LorentzXYZT(
-    vector.common.lorentz.xyzt.LorentzXYZTMethodMixin,
-    vector.common.lorentz.xyzt.LorentzXYZTDunderMixin,
+    vector.mixins.lorentz.xyzt.LorentzXYZTMethodMixin,
+    vector.mixins.lorentz.xyzt.LorentzXYZTDunderMixin,
 ):
     def __init__(self, x, y, z, t):
         # type: (ArrayLike, ArrayLike, ArrayLike, ArrayLike) -> None

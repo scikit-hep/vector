@@ -34,7 +34,7 @@ sphinx-apidoc -o api ../src/vector -M -f
 
 The library is in `src/vector`. The main subpackages are:
 * `core`: The numpy ufunct free functions that do most of the calculations
-* `common`: The (above) ufuncts wrapped into a mixin class
+* `mixins`: The (above) ufuncts wrapped into a mixin class
 * `single`: The single-value backend (used by Numba)
 * `numpy`: The numpy backend
 * `awkward`: The awkward1 backend
