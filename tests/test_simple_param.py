@@ -2,9 +2,8 @@
 from collections import namedtuple
 
 import numpy as np
-from numpy.testing import assert_almost_equal as _aae
-
 import pytest
+from numpy.testing import assert_almost_equal as _aae
 
 from vector.numpy.lorentz.xyzt import LorentzXYZT
 from vector.single.lorentz.xyzt import LorentzXYZTFree

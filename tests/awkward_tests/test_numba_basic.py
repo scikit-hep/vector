@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import awkward as ak
-
 import pytest
 
 numba = pytest.importorskip("numba")
