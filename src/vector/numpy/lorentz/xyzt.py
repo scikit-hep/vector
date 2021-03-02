@@ -6,7 +6,7 @@
 
 from __future__ import absolute_import, division, print_function
 
-from typing import Any, TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, Any, cast
 
 import vector.mixins.lorentz.xyzt
 from vector.core import numpy as np
@@ -32,7 +32,7 @@ class LorentzXYZT(
 
     def __repr__(self):
         # type: () -> str
-        return "Lxyz({0}, {1}, {2}, {3})".format(self.x, self.y, self.z, self.t)
+        return "Lxyz({}, {}, {}, {})".format(self.x, self.y, self.z, self.t)
 
     def __getitem__(self, attr):
         # type: (str) -> ArrayLike
@@ -40,7 +40,7 @@ class LorentzXYZT(
         if attr in ("x", "y", "z", "t"):
             return getattr(self, attr)
         else:
-            raise ValueError("key {0} does not exist in x,y,z,t".format(attr))
+            raise ValueError("key {} does not exist in x,y,z,t".format(attr))
 
 
 if TYPE_CHECKING:

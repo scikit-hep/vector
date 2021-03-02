@@ -2,7 +2,6 @@
 from __future__ import absolute_import
 
 import awkward as ak
-
 from pytest import approx
 
 import vector.awkward.lorentz.xyzt

@@ -13,7 +13,6 @@ import numba
 from vector import core
 from vector.single.lorentz.xyzt import LorentzXYZTFree
 
-
 # Typing phase - Teaching Numba about our types
 
 

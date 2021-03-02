@@ -13,7 +13,6 @@ if TYPE_CHECKING:
 
 from vector.core import numpy as np
 
-
 # Functions that return a value
 
 # x: already included

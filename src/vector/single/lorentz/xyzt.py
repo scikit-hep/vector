@@ -25,7 +25,7 @@ class LorentzXYZTFree(
 
     def __repr__(self):
         # type: () -> str
-        return "Lxyz({0:.3g} {1:.3g} {2:.3g} {3:.3g})".format(
+        return "Lxyz({:.3g} {:.3g} {:.3g} {:.3g})".format(
             self.x, self.y, self.z, self.t
         )
 
@@ -36,7 +36,7 @@ class LorentzXYZTFree(
             return getattr(self, attr)
         else:
             raise ValueError(
-                "key {0} does not exist (not in record)".format(json.dumps(attr))
+                "key {} does not exist (not in record)".format(json.dumps(attr))
             )
 
 
