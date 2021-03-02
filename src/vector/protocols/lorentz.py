@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from __future__ import annotations  # type: ignore
 
 from typing import Protocol, Tuple, TypeVar, overload

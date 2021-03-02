@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2019-2020, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
 #
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-from __future__ import absolute_import, division, print_function
 
 from typing import TYPE_CHECKING, Any, cast
 
@@ -32,7 +30,7 @@ class LorentzXYZT(
 
     def __repr__(self):
         # type: () -> str
-        return "Lxyz({}, {}, {}, {})".format(self.x, self.y, self.z, self.t)
+        return f"Lxyz({self.x}, {self.y}, {self.z}, {self.t})"
 
     def __getitem__(self, attr):
         # type: (str) -> ArrayLike
@@ -40,7 +38,7 @@ class LorentzXYZT(
         if attr in ("x", "y", "z", "t"):
             return getattr(self, attr)
         else:
-            raise ValueError("key {} does not exist in x,y,z,t".format(attr))
+            raise ValueError(f"key {attr} does not exist in x,y,z,t")
 
 
 if TYPE_CHECKING:
