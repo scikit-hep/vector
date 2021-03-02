@@ -4,15 +4,12 @@
 # or https://github.com/scikit-hep/vector for details.
 
 
-from typing import TYPE_CHECKING, TypeVar, overload
+from typing import TypeVar, overload
 
 import numpy as np
 
 import vector.core.lorentz.xyzt
-
-if TYPE_CHECKING:
-    from vector.protocols.lorentz import LorentzVector, Scalar
-
+from vector.protocols.lorentz import LorentzVector, Scalar
 
 T = TypeVar("T")
 
@@ -23,8 +20,7 @@ class LorentzXYZTMethodMixin:
     """
 
     @property
-    def pt(self):
-        # type: (LorentzVector) -> Scalar
+    def pt(self: LorentzVector) -> Scalar:
         r"""
         The traverse momentum.
 
@@ -41,8 +37,7 @@ class LorentzXYZTMethodMixin:
             return vector.core.lorentz.xyzt.pt(self)
 
     @property
-    def eta(self):
-        # type: (LorentzVector) -> Scalar
+    def eta(self: LorentzVector) -> Scalar:
         r"""
         The
 
@@ -60,8 +55,7 @@ class LorentzXYZTMethodMixin:
             return vector.core.lorentz.xyzt.eta(self)
 
     @property
-    def phi(self):
-        # type: (LorentzVector) -> Scalar
+    def phi(self: LorentzVector) -> Scalar:
         r"""
         Notes
         -----
@@ -77,25 +71,21 @@ class LorentzXYZTMethodMixin:
             return vector.core.lorentz.xyzt.phi(self)
 
     @property
-    def mass(self):
-        # type: (LorentzVector) -> Scalar
+    def mass(self: LorentzVector) -> Scalar:
         with np.errstate(invalid="ignore"):
             return vector.core.lorentz.xyzt.mag(self)
 
     @property
-    def mag(self):
-        # type: (LorentzVector) -> Scalar
+    def mag(self: LorentzVector) -> Scalar:
         with np.errstate(invalid="ignore"):
             return vector.core.lorentz.xyzt.mag(self)
 
     @property
-    def mag2(self):
-        # type: (LorentzVector) -> Scalar
+    def mag2(self: LorentzVector) -> Scalar:
         with np.errstate(invalid="ignore"):
             return vector.core.lorentz.xyzt.mag2(self)
 
-    def dot(self, other):
-        # type: (LorentzVector, LorentzVector) -> Scalar
+    def dot(self: LorentzVector, other: LorentzVector) -> Scalar:
         return vector.core.lorentz.xyzt.dot(self, other)
 
 
@@ -105,14 +95,12 @@ class LorentzXYZTDunderMixin:
     """
 
     @overload
-    def __add__(self, other):
-        # type: (LorentzVector, LorentzVector) -> LorentzVector
-        pass
+    def __add__(self: LorentzVector, other: LorentzVector) -> LorentzVector:
+        ...
 
     @overload
-    def __add__(self, other):
-        # type: (LorentzVector, Scalar) -> LorentzVector
-        pass
+    def __add__(self: LorentzVector, other: Scalar) -> LorentzVector:
+        ...
 
     def __add__(self, other):
         if isinstance(other, LorentzXYZTMethodMixin):
@@ -121,14 +109,12 @@ class LorentzXYZTDunderMixin:
             return self.__class__(*vector.core.lorentz.xyzt.add_scalar(self, other))
 
     @overload
-    def __mul__(self, other):
-        # type: (LorentzVector, LorentzVector) -> Scalar
-        pass
+    def __mul__(self: LorentzVector, other: LorentzVector) -> Scalar:
+        ...
 
     @overload
-    def __mul__(self, other):
-        # type: (LorentzVector, Scalar) -> LorentzVector
-        pass
+    def __mul__(self: LorentzVector, other: Scalar) -> LorentzVector:
+        ...
 
     def __mul__(self, other):
         if isinstance(other, LorentzXYZTMethodMixin):
@@ -138,10 +124,8 @@ class LorentzXYZTDunderMixin:
                 *vector.core.lorentz.xyzt.multiply_scalar(self, other)
             )
 
-    def __radd__(self, other):
-        # type: (LorentzVector, Scalar) -> LorentzVector
+    def __radd__(self: LorentzVector, other: Scalar) -> LorentzVector:
         return self.__class__(*vector.core.lorentz.xyzt.add_scalar(self, other))
 
-    def __rmul__(self, other):
-        # type: (LorentzVector, Scalar) -> LorentzVector
+    def __rmul__(self: LorentzVector, other: Scalar) -> LorentzVector:
         return self.__class__(*vector.core.lorentz.xyzt.multiply_scalar(self, other))

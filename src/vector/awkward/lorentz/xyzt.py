@@ -40,7 +40,7 @@ def _create_behavior_r(function):
 
 
 # Define some behaviors for Lorentz vectors.
-behavior = dict()  # type: Dict[Any, Any]
+behavior: Dict[Any, Any] = dict()
 
 # Any records with __record__ = "LorentzXYZT" will be mapped to LorentzXYZT instances.
 behavior["LorentzXYZT"] = LorentzXYZT

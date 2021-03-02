@@ -1,5 +1,3 @@
-from __future__ import annotations  # type: ignore
-
 from typing import Protocol, Tuple, TypeVar, overload
 
 Self = TypeVar("Self", bound="Scalar")
@@ -75,22 +73,22 @@ class LorentzVector(Protocol):
         ...
 
     @overload
-    def __add__(self, other: LorentzVector) -> LorentzVector:
+    def __add__(self, other: "LorentzVector") -> "LorentzVector":
         ...
 
     @overload
-    def __add__(self, other: Scalar) -> LorentzVector:
+    def __add__(self, other: Scalar) -> "LorentzVector":
         ...
 
     def __add__(self, other):
         ...
 
     @overload
-    def __mul__(self, other: LorentzVector) -> Scalar:
+    def __mul__(self, other: "LorentzVector") -> Scalar:
         ...
 
     @overload
-    def __mul__(self, other: Scalar) -> LorentzVector:
+    def __mul__(self, other: Scalar) -> "LorentzVector":
         ...
 
     def __mul__(self, other):

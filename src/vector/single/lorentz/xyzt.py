@@ -14,21 +14,18 @@ class LorentzXYZTFree(
     vector.mixins.lorentz.xyzt.LorentzXYZTMethodMixin,
     vector.mixins.lorentz.xyzt.LorentzXYZTDunderMixin,
 ):
-    def __init__(self, x, y, z, t):
-        # type: (float, float, float, float) -> None
+    def __init__(self, x: float, y: float, z: float, t: float) -> None:
         self.x = x
         self.y = y
         self.z = z
         self.t = t
 
-    def __repr__(self):
-        # type: () -> str
+    def __repr__(self) -> str:
         return "Lxyz({:.3g} {:.3g} {:.3g} {:.3g})".format(
             self.x, self.y, self.z, self.t
         )
 
-    def __getitem__(self, attr):
-        # type: (str) -> float
+    def __getitem__(self, attr: str) -> float:
         # It has to behave the same way as the bound objects or users will get confused.
         if attr in ("x", "y", "z", "t"):
             return getattr(self, attr)
@@ -45,4 +42,4 @@ class LorentzXYZTFree(
 if TYPE_CHECKING:
     from vector.protocols.lorentz import LorentzVector
 
-    _ = cast(LorentzXYZTFree, None)  # type: LorentzVector
+    _: LorentzVector = cast(LorentzXYZTFree, None)

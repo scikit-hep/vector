@@ -10,6 +10,8 @@ import vector.mixins.lorentz.xyzt
 from vector.core import numpy as np
 
 if TYPE_CHECKING:
+    from numpy.typing import ArrayLike
+else:
     ArrayLike = Any
 
 
@@ -17,8 +19,7 @@ class LorentzXYZT(
     vector.mixins.lorentz.xyzt.LorentzXYZTMethodMixin,
     vector.mixins.lorentz.xyzt.LorentzXYZTDunderMixin,
 ):
-    def __init__(self, x, y, z, t):
-        # type: (ArrayLike, ArrayLike, ArrayLike, ArrayLike) -> None
+    def __init__(self, x: ArrayLike, y: ArrayLike, z: ArrayLike, t: ArrayLike) -> None:
         """
         Notes
         =====
@@ -28,12 +29,10 @@ class LorentzXYZT(
 
         self.x, self.y, self.z, self.t = np.broadcast_arrays(x, y, z, t)
 
-    def __repr__(self):
-        # type: () -> str
+    def __repr__(self) -> str:
         return f"Lxyz({self.x}, {self.y}, {self.z}, {self.t})"
 
-    def __getitem__(self, attr):
-        # type: (str) -> ArrayLike
+    def __getitem__(self, attr: str) -> ArrayLike:
         # It has to behave the same way as the bound objects or users will get confused.
         if attr in ("x", "y", "z", "t"):
             return getattr(self, attr)
@@ -44,4 +43,4 @@ class LorentzXYZT(
 if TYPE_CHECKING:
     from vector.protocols.lorentz import LorentzVector
 
-    _ = cast(LorentzXYZT, None)  # type: LorentzVector
+    _: LorentzVector = cast(LorentzXYZT, None)
