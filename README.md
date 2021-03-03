@@ -15,10 +15,6 @@
 Vector classes and utilities. See [CONTRIBUTING.md](./.github/CONTRIBUTING.md)
 for information on setting up a development environment.
 
-Python 2 is partially supported; the simple, NumPy, and Awkward backends
-support Python 2. The Numba and AwkwardNumba (and TensorFlow, in the future)
-backends do not.
-
 
 
 [gitter-badge]:  https://badges.gitter.im/Scikit-HEP/vector.svg
