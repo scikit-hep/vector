@@ -8,14 +8,15 @@ vector package
 
 Subpackages
 -----------
+..
 
-.. toctree::
+   .. toctree::
 
-   vector.mixins
-   vector.core
-   vector.numpy
-   vector.awkward
-   vector.numba
+      vector.mixins
+      vector.core
+      vector.numpy
+      vector.awkward
+      vector.numba
 
 Submodules
 ----------

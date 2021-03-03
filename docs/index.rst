@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Vector's documentation!
-==================================
+Vector: vectorized 2D, 3D, and Lorentz vectors
+==============================================
 
 .. toctree::
    :maxdepth: 2
@@ -15,8 +15,6 @@ Welcome to Vector's documentation!
 .. toctree::
    :maxdepth: 3
    :caption: Examples:
-
-   notebooks/VectorDesignPrototype
 
 .. toctree::
    :caption: API Reference:
