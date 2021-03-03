@@ -1,7 +1,10 @@
-# -*- coding: utf-8 -*-
-from __future__ import annotations  # type: ignore
+import sys
+from typing import Tuple, TypeVar, overload
 
-from typing import Protocol, Tuple, TypeVar, overload
+if sys.version_info < (3, 8):
+    from typing_extensions import Protocol
+else:
+    from typing import Protocol
 
 Self = TypeVar("Self", bound="Scalar")
 
@@ -76,22 +79,22 @@ class LorentzVector(Protocol):
         ...
 
     @overload
-    def __add__(self, other: LorentzVector) -> LorentzVector:
+    def __add__(self, other: "LorentzVector") -> "LorentzVector":
         ...
 
     @overload
-    def __add__(self, other: Scalar) -> LorentzVector:
+    def __add__(self, other: Scalar) -> "LorentzVector":
         ...
 
     def __add__(self, other):
         ...
 
     @overload
-    def __mul__(self, other: LorentzVector) -> Scalar:
+    def __mul__(self, other: "LorentzVector") -> Scalar:
         ...
 
     @overload
-    def __mul__(self, other: Scalar) -> LorentzVector:
+    def __mul__(self, other: Scalar) -> "LorentzVector":
         ...
 
     def __mul__(self, other):

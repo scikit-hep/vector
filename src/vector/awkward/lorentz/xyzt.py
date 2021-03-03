@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2019-2020, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
 #
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-from __future__ import absolute_import, division, print_function
 
 import numbers
 from typing import Any, Dict
@@ -42,7 +40,7 @@ def _create_behavior_r(function):
 
 
 # Define some behaviors for Lorentz vectors.
-behavior = dict()  # type: Dict[Any, Any]
+behavior: Dict[Any, Any] = dict()
 
 # Any records with __record__ = "LorentzXYZT" will be mapped to LorentzXYZT instances.
 behavior["LorentzXYZT"] = LorentzXYZT

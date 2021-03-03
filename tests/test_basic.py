@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import vector
 import vector.single.lorentz.xyzt
 
