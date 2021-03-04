@@ -5,7 +5,8 @@
 
 import numpy
 
-import vector.compute
+import vector.geometry
+import vector.methods
 
 
 class AzimuthalNumpy:
@@ -112,7 +113,9 @@ class TemporalNumpyTau(numpy.ndarray, TemporalNumpy, vector.geometry.TemporalTau
         return self["tau"].view(numpy.ndarray)
 
 
-class PlanarVectorNumpy(numpy.ndarray, vector.geometry.Planar, vector.geometry.Vector):
+class PlanarNumpy(numpy.ndarray, vector.methods.Planar):
+    lib = numpy
+
     def __new__(cls, *args, **kwargs):
         return numpy.array(*args, **kwargs).view(cls)
 
@@ -131,34 +134,22 @@ class PlanarVectorNumpy(numpy.ndarray, vector.geometry.Planar, vector.geometry.V
     def azimuthal(self):
         return self.view(self._azimuthal_type)
 
-    @property
-    def x(self):
-        return vector.compute.planar.x.dispatch(numpy, self)
 
-    @property
-    def y(self):
-        return vector.compute.planar.y.dispatch(numpy, self)
-
-    @property
-    def rho(self):
-        return vector.compute.planar.rho.dispatch(numpy, self)
-
-    @property
-    def phi(self):
-        return vector.compute.planar.phi.dispatch(numpy, self)
-
-    @property
-    def rho2(self):
-        return vector.compute.planar.rho2.dispatch(numpy, self)
-
-
-class SpatialVectorNumpy(
-    numpy.ndarray, vector.geometry.Spatial, vector.geometry.Vector
-):
+class PlanarVectorNumpy(vector.geometry.PlanarVector, PlanarNumpy):
     pass
 
 
-class LorentzVectorNumpy(
-    numpy.ndarray, vector.geometry.Lorentz, vector.geometry.Vector
-):
+class SpatialNumpy(numpy.ndarray, vector.methods.Spatial):
+    pass
+
+
+class SpatialVectorNumpy(vector.geometry.SpatialVector, SpatialNumpy):
+    pass
+
+
+class LorentzNumpy(numpy.ndarray, vector.methods.Lorentz):
+    pass
+
+
+class LorentzVectorNumpy(vector.geometry.LorentzVector, LorentzNumpy):
     pass

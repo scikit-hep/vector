@@ -7,7 +7,8 @@ import typing
 
 import numpy
 
-import vector.compute
+import vector.geometry
+import vector.methods
 
 
 class AzimuthalObject:
@@ -100,34 +101,20 @@ class TemporalObjectTau(typing.NamedTuple):
 TemporalObjectTau.__bases__ = (TemporalObject, vector.geometry.TemporalTau, tuple)
 
 
-class PlanarVectorObject(vector.geometry.Planar, vector.geometry.Vector):
+class PlanarObject(vector.methods.Planar):
     __slots__ = ("azimuthal",)
+
+    lib = numpy
 
     def __init__(self, azimuthal):
         self.azimuthal = azimuthal
 
-    @property
-    def x(self):
-        return vector.compute.planar.x.dispatch(numpy, self)
 
-    @property
-    def y(self):
-        return vector.compute.planar.y.dispatch(numpy, self)
-
-    @property
-    def rho(self):
-        return vector.compute.planar.rho.dispatch(numpy, self)
-
-    @property
-    def phi(self):
-        return vector.compute.planar.phi.dispatch(numpy, self)
-
-    @property
-    def rho2(self):
-        return vector.compute.planar.rho2.dispatch(numpy, self)
+class PlanarVectorObject(vector.geometry.PlanarVector, PlanarObject):
+    pass
 
 
-class SpatialVectorObject(vector.geometry.Spatial, vector.geometry.Vector):
+class SpatialObject(vector.methods.Spatial):
     __slots__ = ("azimuthal", "longitudinal")
 
     def __init__(self, azimuthal, longitudinal):
@@ -135,10 +122,18 @@ class SpatialVectorObject(vector.geometry.Spatial, vector.geometry.Vector):
         self.longitudinal = longitudinal
 
 
-class LorentzVectorObject(vector.geometry.Lorentz, vector.geometry.Vector):
+class SpatialVectorObject(vector.geometry.SpatialVector, SpatialObject):
+    pass
+
+
+class LorentzObject(vector.methods.Lorentz):
     __slots__ = ("azimuthal", "longitudinal", "temporal")
 
     def __init__(self, azimuthal, longitudinal, temporal):
         self.azimuthal = azimuthal
         self.longitudinal = longitudinal
         self.temporal = temporal
+
+
+class LorentzVectorObject(vector.geometry.LorentzVector, LorentzObject):
+    pass
