@@ -5,4 +5,5 @@
 
 # import vector.compute.lorentz  # noqa: F401
 import vector.compute.planar  # noqa: F401
+
 # import vector.compute.spatial  # noqa: F401

@@ -21,9 +21,6 @@ dispatch_map = {
 
 
 def dispatch(lib, v1):
-    for azimuthal_type in type(v1.azimuthal).__mro__:
-        if azimuthal_type.__module__ == "vector.geometry":
-            break
     return dispatch_map[
-        azimuthal_type,
+        vector.geometry.aztype(v1),
     ](lib, *v1.azimuthal)
