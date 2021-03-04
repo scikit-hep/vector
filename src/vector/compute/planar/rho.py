@@ -8,7 +8,7 @@ import vector.geometry
 
 
 def xy(lib, x1, y1):
-    return lib.sqrt(vector.compute.planar.rho(lib, x1, y1))
+    return lib.sqrt(vector.compute.planar.rho2.xy(lib, x1, y1))
 
 
 def rhophi(lib, rho1, phi1):
