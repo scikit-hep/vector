@@ -1,11 +1,11 @@
 # Structure of Vector
 
-This is the structure of the package:
+<!-- This is the structure of the package: -->
 
-* core
-* mixins
-* numba
-* numpy
-* awkward
-* tensorflow
-* single
+<!-- * core -->
+<!-- * mixins -->
+<!-- * numba -->
+<!-- * numpy -->
+<!-- * awkward -->
+<!-- * tensorflow -->
+<!-- * single -->
