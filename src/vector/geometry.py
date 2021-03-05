@@ -40,21 +40,25 @@ class LorentzPoint(Point):
     pass
 
 
-class Azimuthal:
+class Coordinates:
+    pass
+
+
+class Azimuthal(Coordinates):
     @property
     def elements(self):
         "azimuthal elements docs"
         raise AssertionError
 
 
-class Longitudinal:
+class Longitudinal(Coordinates):
     @property
     def elements(self):
         "longitudinal elements docs"
         raise AssertionError
 
 
-class Temporal:
+class Temporal(Coordinates):
     @property
     def elements(self):
         "temporal elements docs"
@@ -123,7 +127,7 @@ class Transform:
         return self.apply(v)
 
 
-class FrameTransform:
-    def __call__(self, v):
-        "call docs"
-        return self.apply(v)
+# class FrameTransform:
+#     def __call__(self, v):
+#         "call docs"
+#         return self.apply(v)

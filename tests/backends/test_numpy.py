@@ -33,6 +33,19 @@ def test_xy():
     assert numpy.allclose(out.x, [0, 2, 11])
     assert numpy.allclose(out.y, [0, 4, 25])
 
+    trans = vector.backends.numpy_.AzimuthalRotationNumpy(
+        [(0,), (0,), (math.pi / 2)],
+        dtype=[
+            ("angle", numpy.float64),
+        ],
+    )
+    assert not isinstance(trans.angle, vector.backends.numpy_.AzimuthalRotationNumpy)
+    assert numpy.allclose(trans.angle, [0, 0, math.pi / 2])
+    out = trans(array)
+    assert isinstance(out, vector.backends.numpy_.PlanarVectorNumpy)
+    assert numpy.allclose(out.x, [0, 0, -4])
+    assert numpy.allclose(out.y, [0, 1, 3])
+
 
 def test_rhophi():
     array = vector.backends.numpy_.PlanarVectorNumpy(

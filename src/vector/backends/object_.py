@@ -11,15 +11,19 @@ import vector.geometry
 import vector.methods
 
 
-class AzimuthalObject:
+class CoordinatesObject:
     pass
 
 
-class LongitudinalObject:
+class AzimuthalObject(CoordinatesObject):
     pass
 
 
-class TemporalObject:
+class LongitudinalObject(CoordinatesObject):
+    pass
+
+
+class TemporalObject(CoordinatesObject):
     pass
 
 
@@ -149,6 +153,10 @@ class PlanarVectorObject(vector.geometry.PlanarVector, PlanarObject):
     pass
 
 
+class PlanarPointObject(vector.geometry.PlanarPoint, PlanarObject):
+    pass
+
+
 class SpatialObject(vector.methods.Spatial):
     __slots__ = ("azimuthal", "longitudinal")
 
@@ -161,6 +169,10 @@ class SpatialObject(vector.methods.Spatial):
 
 
 class SpatialVectorObject(vector.geometry.SpatialVector, SpatialObject):
+    pass
+
+
+class SpatialPointObject(vector.geometry.SpatialPoint, SpatialObject):
     pass
 
 
@@ -177,6 +189,10 @@ class LorentzObject(vector.methods.Lorentz):
 
 
 class LorentzVectorObject(vector.geometry.LorentzVector, LorentzObject):
+    pass
+
+
+class LorentzPointObject(vector.geometry.LorentzPoint, LorentzObject):
     pass
 
 

@@ -331,7 +331,7 @@ class Transform4D(vector.geometry.Transform):
         return self.elements[15]
 
 
-class LongitudinalBoost(Transform3D):
+class LongitudinalBoost(Transform4D):
     @property
     def beta(self):
         "beta docs (derived)"
@@ -350,7 +350,7 @@ class LongitudinalBoost(Transform3D):
         )
 
 
-class AxisAngleBoost(Transform3D):
+class AxisAngleBoost(Transform4D):
     @property
     def phi(self):
         "phi docs"
