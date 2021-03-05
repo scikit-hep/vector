@@ -5,7 +5,20 @@
 
 import numpy
 
-import vector.compute
+import vector.backends.object_
+import vector.geometry
+import vector.methods
+
+
+def getitem(array, where, object_type):
+    if isinstance(where, str):
+        return array.view(numpy.ndarray)[where]
+    else:
+        out = numpy.ndarray.__getitem__(array, where)
+        if isinstance(out, numpy.void):
+            return object_type(*out)
+        else:
+            return out
 
 
 class AzimuthalNumpy:
@@ -21,98 +34,130 @@ class TemporalNumpy:
 
 
 class AzimuthalNumpyXY(numpy.ndarray, AzimuthalNumpy, vector.geometry.AzimuthalXY):
-    def __iter__(self):
-        yield self["x"].view(numpy.ndarray)
-        yield self["y"].view(numpy.ndarray)
+    @property
+    def elements(self):
+        return (self["x"], self["y"])
 
     @property
     def x(self):
-        return self["x"].view(numpy.ndarray)
+        return self["x"]
 
     @property
     def y(self):
-        return self["y"].view(numpy.ndarray)
+        return self["y"]
+
+    def __getitem__(self, where):
+        return getitem(self, where, vector.backends.object_.AzimuthalObjectXY)
 
 
 class AzimuthalNumpyRhoPhi(
     numpy.ndarray, AzimuthalNumpy, vector.geometry.AzimuthalRhoPhi
 ):
-    def __iter__(self):
-        yield self["rho"].view(numpy.ndarray)
-        yield self["phi"].view(numpy.ndarray)
+    @property
+    def elements(self):
+        return (self["rho"], self["phi"])
 
     @property
     def rho(self):
-        return self["rho"].view(numpy.ndarray)
+        return self["rho"]
 
     @property
     def phi(self):
-        return self["phi"].view(numpy.ndarray)
+        return self["phi"]
+
+    def __getitem__(self, where):
+        return getitem(self, where, vector.backends.object_.AzimuthalObjectRhoPhi)
 
 
 class LongitudinalNumpyZ(
     numpy.ndarray, LongitudinalNumpy, vector.geometry.LongitudinalZ
 ):
-    def __iter__(self):
-        yield self["z"].view(numpy.ndarray)
+    @property
+    def elements(self):
+        return (self["z"],)
 
     @property
     def z(self):
-        return self["z"].view(numpy.ndarray)
+        return self["z"]
+
+    def __getitem__(self, where):
+        return getitem(self, where, vector.backends.object_.LongitudinalObjectZ)
 
 
 class LongitudinalNumpyTheta(
     numpy.ndarray, LongitudinalNumpy, vector.geometry.LongitudinalTheta
 ):
-    def __iter__(self):
-        yield self["theta"].view(numpy.ndarray)
+    @property
+    def elements(self):
+        return (self["theta"],)
 
     @property
     def theta(self):
-        return self["theta"].view(numpy.ndarray)
+        return self["theta"]
+
+    def __getitem__(self, where):
+        return getitem(self, where, vector.backends.object_.LongitudinalObjectTheta)
 
 
 class LongitudinalNumpyEta(
     numpy.ndarray, LongitudinalNumpy, vector.geometry.LongitudinalEta
 ):
-    def __iter__(self):
-        yield self["eta"].view(numpy.ndarray)
+    @property
+    def elements(self):
+        return (self["eta"],)
 
     @property
     def eta(self):
-        return self["eta"].view(numpy.ndarray)
+        return self["eta"]
+
+    def __getitem__(self, where):
+        return getitem(self, where, vector.backends.object_.LongitudinalObjectEta)
 
 
 class LongitudinalNumpyW(
     numpy.ndarray, LongitudinalNumpy, vector.geometry.LongitudinalW
 ):
-    def __iter__(self):
-        yield self["w"].view(numpy.ndarray)
+    @property
+    def elements(self):
+        return (self["w"],)
 
     @property
     def w(self):
-        return self["w"].view(numpy.ndarray)
+        return self["w"]
+
+    def __getitem__(self, where):
+        return getitem(self, where, vector.backends.object_.LongitudinalObjectW)
 
 
 class TemporalNumpyT(numpy.ndarray, TemporalNumpy, vector.geometry.TemporalT):
-    def __iter__(self):
-        yield self["t"].view(numpy.ndarray)
+    @property
+    def elements(self):
+        return (self["t"],)
 
     @property
     def t(self):
-        return self["t"].view(numpy.ndarray)
+        return self["t"]
+
+    def __getitem__(self, where):
+        return getitem(self, where, vector.backends.object_.TemporalObjectT)
 
 
 class TemporalNumpyTau(numpy.ndarray, TemporalNumpy, vector.geometry.TemporalTau):
-    def __iter__(self):
-        yield self["tau"].view(numpy.ndarray)
+    @property
+    def elements(self):
+        return (self["tau"],)
 
     @property
     def tau(self):
-        return self["tau"].view(numpy.ndarray)
+        return self["tau"]
+
+    def __getitem__(self, where):
+        return getitem(self, where, vector.backends.object_.TemporalObjectTau)
 
 
-class PlanarVectorNumpy(numpy.ndarray, vector.geometry.Planar, vector.geometry.Vector):
+class PlanarNumpy(numpy.ndarray, vector.methods.Planar):
+    lib = numpy
+
     def __new__(cls, *args, **kwargs):
         return numpy.array(*args, **kwargs).view(cls)
 
@@ -131,34 +176,64 @@ class PlanarVectorNumpy(numpy.ndarray, vector.geometry.Planar, vector.geometry.V
     def azimuthal(self):
         return self.view(self._azimuthal_type)
 
-    @property
-    def x(self):
-        return vector.compute.planar.x.dispatch(numpy, self)
+
+class PlanarVectorNumpy(vector.geometry.PlanarVector, PlanarNumpy):
+    def __getitem__(self, where):
+        return getitem(self, where, vector.backends.object_.PlanarVectorObject)
+
+
+class SpatialNumpy(numpy.ndarray, vector.methods.Spatial):
+    lib = numpy
+
+    def __new__(cls, *args, **kwargs):
+        return numpy.array(*args, **kwargs).view(cls)
+
+
+class SpatialVectorNumpy(vector.geometry.SpatialVector, SpatialNumpy):
+    def __getitem__(self, where):
+        return getitem(self, where, vector.backends.object_.SpatialVectorObject)
+
+
+class LorentzNumpy(numpy.ndarray, vector.methods.Lorentz):
+    lib = numpy
+
+    def __new__(cls, *args, **kwargs):
+        return numpy.array(*args, **kwargs).view(cls)
+
+    def __array_finalize__(self, obj):
+        raise NotImplementedError
+
+
+class LorentzVectorNumpy(vector.geometry.LorentzVector, LorentzNumpy):
+    def __getitem__(self, where):
+        return getitem(self, where, vector.backends.object_.LorentzVectorObject)
+
+
+class TransformNumpy:
+    lib = numpy
+
+
+class Transform2DNumpy(numpy.ndarray, TransformNumpy, vector.methods.Transform2D):
+    def __new__(cls, *args, **kwargs):
+        return numpy.array(*args, **kwargs).view(cls)
+
+    def __array_finalize__(self, obj):
+        if self.dtype.names != ("xx", "xy", "yx", "yy"):
+            raise TypeError(
+                f"{type(self).__name__} must have a structured dtype with fields "
+                '("xx", "xy", "yx", "yy")'
+            )
+
+    def __getitem__(self, where):
+        return getitem(self, where, vector.backends.object_.Transform2DObject)
 
     @property
-    def y(self):
-        return vector.compute.planar.y.dispatch(numpy, self)
+    def elements(self):
+        return tuple(self[x] for x in ("xx", "xy", "yx", "yy"))
 
-    @property
-    def rho(self):
-        return vector.compute.planar.rho.dispatch(numpy, self)
-
-    @property
-    def phi(self):
-        return vector.compute.planar.phi.dispatch(numpy, self)
-
-    @property
-    def rho2(self):
-        return vector.compute.planar.rho2.dispatch(numpy, self)
-
-
-class SpatialVectorNumpy(
-    numpy.ndarray, vector.geometry.Spatial, vector.geometry.Vector
-):
-    pass
-
-
-class LorentzVectorNumpy(
-    numpy.ndarray, vector.geometry.Lorentz, vector.geometry.Vector
-):
-    pass
+    def apply(self, v):
+        x, y = vector.methods.Transform2D.apply(self, v)
+        out = numpy.empty(x.shape, dtype=[("x", x.dtype), ("y", y.dtype)])
+        out["x"] = x
+        out["y"] = y
+        return out.view(PlanarVectorNumpy)

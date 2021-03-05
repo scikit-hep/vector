@@ -14,11 +14,11 @@ def test_xy():
     vec = vector.backends.object_.PlanarVectorObject(
         vector.backends.object_.AzimuthalObjectXY(3, 4)
     )
-    assert pytest.approx(vec.y, 4)
+    assert vec.y == pytest.approx(4)
 
 
 def test_rhophi():
     vec = vector.backends.object_.PlanarVectorObject(
         vector.backends.object_.AzimuthalObjectRhoPhi(5, math.atan2(4, 3))
     )
-    assert pytest.approx(vec.y, 4)
+    assert vec.y == pytest.approx(4)

@@ -12,63 +12,53 @@ class Vector(Tuple):
     pass
 
 
+class PlanarVector(Vector):
+    pass
+
+
+class SpatialVector(Vector):
+    pass
+
+
+class LorentzVector(Vector):
+    pass
+
+
 class Point(Tuple):
     pass
 
 
-class Transform:
+class PlanarPoint(Point):
     pass
 
 
-class FrameTransform:
+class SpatialPoint(Point):
     pass
 
 
-class Planar:
-    @property
-    def x(self):
-        "x docs"
-        raise NotImplementedError
-
-    @property
-    def y(self):
-        "y docs"
-        raise NotImplementedError
-
-    @property
-    def rho(self):
-        "rho docs"
-        raise NotImplementedError
-
-    @property
-    def phi(self):
-        "phi docs"
-        raise NotImplementedError
-
-    @property
-    def rho2(self):
-        "rho2 docs"
-        raise NotImplementedError
-
-
-class Spatial:
-    pass
-
-
-class Lorentz:
+class LorentzPoint(Point):
     pass
 
 
 class Azimuthal:
-    pass
+    @property
+    def elements(self):
+        "azimuthal elements docs"
+        raise AssertionError
 
 
 class Longitudinal:
-    pass
+    @property
+    def elements(self):
+        "longitudinal elements docs"
+        raise AssertionError
 
 
 class Temporal:
-    pass
+    @property
+    def elements(self):
+        "temporal elements docs"
+        raise AssertionError
 
 
 class AzimuthalXY(Azimuthal):
@@ -125,3 +115,15 @@ def ttype(obj):
             return t
     else:
         raise AssertionError(type(obj.temporal))
+
+
+class Transform:
+    def __call__(self, v):
+        "call docs"
+        return self.apply(v)
+
+
+class FrameTransform:
+    def __call__(self, v):
+        "call docs"
+        return self.apply(v)
