@@ -35,7 +35,7 @@ def dispatch(v, t):
         raise TypeError(f"cannot use a {t.lib} transform on a {v.lib} vector")
     return dispatch_map[
         vector.geometry.aztype(v),
-    ](v.lib, *(v.azimuthal + t.elements))
+    ](v.lib, *(v.azimuthal.elements + t.elements))
 
 
 def from_AzimuthalRotation(lib, angle):
