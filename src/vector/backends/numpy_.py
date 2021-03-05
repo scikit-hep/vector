@@ -175,31 +175,6 @@ class LongitudinalNumpyEta(
         return getitem(self, where, vector.backends.object_.LongitudinalObjectEta)
 
 
-class LongitudinalNumpyW(
-    numpy.ndarray, LongitudinalNumpy, vector.geometry.LongitudinalW
-):
-    def __new__(cls, *args, **kwargs):
-        return numpy.array(*args, **kwargs).view(cls)
-
-    def __array_finalize__(self, obj):
-        if not has(self, ("w",)):
-            raise TypeError(
-                f"{type(self).__name__} must have a structured dtype containing "
-                'field "w"'
-            )
-
-    @property
-    def elements(self):
-        return (self["w"],)
-
-    @property
-    def w(self):
-        return self["w"]
-
-    def __getitem__(self, where):
-        return getitem(self, where, vector.backends.object_.LongitudinalObjectW)
-
-
 class TemporalNumpyT(numpy.ndarray, TemporalNumpy, vector.geometry.TemporalT):
     def __new__(cls, *args, **kwargs):
         return numpy.array(*args, **kwargs).view(cls)
@@ -300,12 +275,10 @@ class SpatialNumpy(numpy.ndarray, vector.methods.Spatial):
             self._longitudinal_type = LongitudinalNumpyTheta
         elif has(self, ("eta",)):
             self._longitudinal_type = LongitudinalNumpyEta
-        elif has(self, ("w",)):
-            self._longitudinal_type = LongitudinalNumpyW
         else:
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype containing "
-                'field "z" or "theta" or "eta" or "w"'
+                'field "z" or "theta" or "eta"'
             )
 
 
@@ -341,12 +314,10 @@ class LorentzNumpy(numpy.ndarray, vector.methods.Lorentz):
             self._longitudinal_type = LongitudinalNumpyTheta
         elif has(self, ("eta",)):
             self._longitudinal_type = LongitudinalNumpyEta
-        elif has(self, ("w",)):
-            self._longitudinal_type = LongitudinalNumpyW
         else:
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype containing "
-                'field "z" or "theta" or "eta" or "w"'
+                'field "z" or "theta" or "eta"'
             )
         if has(self, ("t",)):
             self._temporal_type = TemporalNumpyT

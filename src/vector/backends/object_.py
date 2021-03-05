@@ -100,21 +100,6 @@ LongitudinalObjectEta.__bases__ = (
 )
 
 
-class LongitudinalObjectW(typing.NamedTuple):
-    w: float
-
-    @property
-    def elements(self):
-        return (self.w,)
-
-
-LongitudinalObjectW.__bases__ = (
-    LongitudinalObject,
-    vector.geometry.LongitudinalW,
-    tuple,
-)
-
-
 class TemporalObjectT(typing.NamedTuple):
     t: float
 
