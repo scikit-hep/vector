@@ -398,7 +398,9 @@ class Transform2DNumpy(numpy.ndarray, TransformNumpy, vector.methods.Transform2D
         return out.view(PlanarVectorNumpy)
 
 
-class AzimuthalRotationNumpy(numpy.ndarray, TransformNumpy, vector.methods.AzimuthalRotation):
+class AzimuthalRotationNumpy(
+    numpy.ndarray, TransformNumpy, vector.methods.AzimuthalRotation
+):
     def __new__(cls, *args, **kwargs):
         return numpy.array(*args, **kwargs).view(cls)
 
@@ -439,16 +441,22 @@ class Transform3DNumpy(numpy.ndarray, TransformNumpy, vector.methods.Transform3D
 
     @property
     def elements(self):
-        return tuple(self[x] for x in ("xx", "xy", "xz", "yx", "yy", "yz", "zx", "zy", "zz"))
+        return tuple(
+            self[x] for x in ("xx", "xy", "xz", "yx", "yy", "yz", "zx", "zy", "zz")
+        )
 
     def apply(self, v):
         x, y, z = vector.methods.Transform3D.apply(self, v)
-        out = numpy.empty(x.shape, dtype=[("x", x.dtype), ("y", y.dtype), ("z", z.dtype)])
+        out = numpy.empty(
+            x.shape, dtype=[("x", x.dtype), ("y", y.dtype), ("z", z.dtype)]
+        )
         out["x"], out["y"], out["z"] = x, y, z
         return out.view(SpatialVectorNumpy)
 
 
-class AxisAngleRotationNumpy(numpy.ndarray, TransformNumpy, vector.methods.AxisAngleRotation):
+class AxisAngleRotationNumpy(
+    numpy.ndarray, TransformNumpy, vector.methods.AxisAngleRotation
+):
     def __new__(cls, *args, **kwargs):
         return numpy.array(*args, **kwargs).view(cls)
 
@@ -476,12 +484,16 @@ class AxisAngleRotationNumpy(numpy.ndarray, TransformNumpy, vector.methods.AxisA
 
     def apply(self, v):
         x, y, z = vector.methods.Transform3D.apply(self, v)
-        out = numpy.empty(x.shape, dtype=[("x", x.dtype), ("y", y.dtype), ("z", z.dtype)])
+        out = numpy.empty(
+            x.shape, dtype=[("x", x.dtype), ("y", y.dtype), ("z", z.dtype)]
+        )
         out["x"], out["y"], out["z"] = x, y, z
         return out.view(SpatialVectorNumpy)
 
 
-class EulerAngleRotationNumpy(numpy.ndarray, TransformNumpy, vector.methods.EulerAngleRotation):
+class EulerAngleRotationNumpy(
+    numpy.ndarray, TransformNumpy, vector.methods.EulerAngleRotation
+):
     def __new__(cls, *args, **kwargs):
         return numpy.array(*args, **kwargs).view(cls)
 
@@ -509,12 +521,16 @@ class EulerAngleRotationNumpy(numpy.ndarray, TransformNumpy, vector.methods.Eule
 
     def apply(self, v):
         x, y, z = vector.methods.Transform3D.apply(self, v)
-        out = numpy.empty(x.shape, dtype=[("x", x.dtype), ("y", y.dtype), ("z", z.dtype)])
+        out = numpy.empty(
+            x.shape, dtype=[("x", x.dtype), ("y", y.dtype), ("z", z.dtype)]
+        )
         out["x"], out["y"], out["z"] = x, y, z
         return out.view(SpatialVectorNumpy)
 
 
-class NauticalRotationNumpy(numpy.ndarray, TransformNumpy, vector.methods.NauticalRotation):
+class NauticalRotationNumpy(
+    numpy.ndarray, TransformNumpy, vector.methods.NauticalRotation
+):
     def __new__(cls, *args, **kwargs):
         return numpy.array(*args, **kwargs).view(cls)
 
@@ -542,7 +558,9 @@ class NauticalRotationNumpy(numpy.ndarray, TransformNumpy, vector.methods.Nautic
 
     def apply(self, v):
         x, y, z = vector.methods.Transform3D.apply(self, v)
-        out = numpy.empty(x.shape, dtype=[("x", x.dtype), ("y", y.dtype), ("z", z.dtype)])
+        out = numpy.empty(
+            x.shape, dtype=[("x", x.dtype), ("y", y.dtype), ("z", z.dtype)]
+        )
         out["x"], out["y"], out["z"] = x, y, z
         return out.view(SpatialVectorNumpy)
 
@@ -552,7 +570,27 @@ class Transform4DNumpy(numpy.ndarray, TransformNumpy, vector.methods.Transform4D
         return numpy.array(*args, **kwargs).view(cls)
 
     def __array_finalize__(self, obj):
-        if not has(self, ("xx", "xy", "xz", "xt", "yx", "yy", "yz", "yt", "zx", "zy", "zz", "zt", "tx", "ty", "tz", "tt")):
+        if not has(
+            self,
+            (
+                "xx",
+                "xy",
+                "xz",
+                "xt",
+                "yx",
+                "yy",
+                "yz",
+                "yt",
+                "zx",
+                "zy",
+                "zz",
+                "zt",
+                "tx",
+                "ty",
+                "tz",
+                "tt",
+            ),
+        ):
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype with fields "
                 '("xx", "xy", "xz", "xt", "yx", "yy", "yz", "yt", "zx", "zy", "zz", "zt", "tx", "ty", "tz", "tt")'
@@ -563,16 +601,41 @@ class Transform4DNumpy(numpy.ndarray, TransformNumpy, vector.methods.Transform4D
 
     @property
     def elements(self):
-        return tuple(self[x] for x in ("xx", "xy", "xz", "xt", "yx", "yy", "yz", "yt", "zx", "zy", "zz", "zt", "tx", "ty", "tz", "tt"))
+        return tuple(
+            self[x]
+            for x in (
+                "xx",
+                "xy",
+                "xz",
+                "xt",
+                "yx",
+                "yy",
+                "yz",
+                "yt",
+                "zx",
+                "zy",
+                "zz",
+                "zt",
+                "tx",
+                "ty",
+                "tz",
+                "tt",
+            )
+        )
 
     def apply(self, v):
         x, y, z, t = vector.methods.Transform4D.apply(self, v)
-        out = numpy.empty(x.shape, dtype=[("x", x.dtype), ("y", y.dtype), ("z", z.dtype), ("t", t.dtype)])
+        out = numpy.empty(
+            x.shape,
+            dtype=[("x", x.dtype), ("y", y.dtype), ("z", z.dtype), ("t", t.dtype)],
+        )
         out["x"], out["y"], out["z"], out["t"] = x, y, z, t
         return out.view(LorentzVectorNumpy)
 
 
-class LongitudinalBoostNumpy(numpy.ndarray, TransformNumpy, vector.methods.LongitudinalBoost):
+class LongitudinalBoostNumpy(
+    numpy.ndarray, TransformNumpy, vector.methods.LongitudinalBoost
+):
     def __new__(cls, *args, **kwargs):
         return numpy.array(*args, **kwargs).view(cls)
 
@@ -592,7 +655,10 @@ class LongitudinalBoostNumpy(numpy.ndarray, TransformNumpy, vector.methods.Longi
 
     def apply(self, v):
         x, y, z, t = vector.methods.Transform4D.apply(self, v)
-        out = numpy.empty(x.shape, dtype=[("x", x.dtype), ("y", y.dtype), ("z", z.dtype), ("t", t.dtype)])
+        out = numpy.empty(
+            x.shape,
+            dtype=[("x", x.dtype), ("y", y.dtype), ("z", z.dtype), ("t", t.dtype)],
+        )
         out["x"], out["y"], out["z"], out["t"] = x, y, z, t
         return out.view(LorentzVectorNumpy)
 
@@ -625,6 +691,9 @@ class AxisAngleBoostNumpy(numpy.ndarray, TransformNumpy, vector.methods.AxisAngl
 
     def apply(self, v):
         x, y, z, t = vector.methods.Transform4D.apply(self, v)
-        out = numpy.empty(x.shape, dtype=[("x", x.dtype), ("y", y.dtype), ("z", z.dtype), ("t", t.dtype)])
+        out = numpy.empty(
+            x.shape,
+            dtype=[("x", x.dtype), ("y", y.dtype), ("z", z.dtype), ("t", t.dtype)],
+        )
         out["x"], out["y"], out["z"], out["t"] = x, y, z, t
         return out.view(LorentzVectorNumpy)
