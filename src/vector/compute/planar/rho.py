@@ -24,4 +24,4 @@ dispatch_map = {
 def dispatch(v1):
     return dispatch_map[
         vector.geometry.aztype(v1),
-    ](v1.lib, *v1.azimuthal)
+    ](v1.lib, *v1.azimuthal.elements)

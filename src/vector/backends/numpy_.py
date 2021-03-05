@@ -22,9 +22,9 @@ class TemporalNumpy:
 
 
 class AzimuthalNumpyXY(numpy.ndarray, AzimuthalNumpy, vector.geometry.AzimuthalXY):
-    def __iter__(self):
-        yield self["x"].view(numpy.ndarray)
-        yield self["y"].view(numpy.ndarray)
+    @property
+    def elements(self):
+        return (self["x"].view(numpy.ndarray), self["y"].view(numpy.ndarray))
 
     @property
     def x(self):
@@ -38,9 +38,9 @@ class AzimuthalNumpyXY(numpy.ndarray, AzimuthalNumpy, vector.geometry.AzimuthalX
 class AzimuthalNumpyRhoPhi(
     numpy.ndarray, AzimuthalNumpy, vector.geometry.AzimuthalRhoPhi
 ):
-    def __iter__(self):
-        yield self["rho"].view(numpy.ndarray)
-        yield self["phi"].view(numpy.ndarray)
+    @property
+    def elements(self):
+        return (self["rho"].view(numpy.ndarray), self["phi"].view(numpy.ndarray))
 
     @property
     def rho(self):
@@ -54,8 +54,9 @@ class AzimuthalNumpyRhoPhi(
 class LongitudinalNumpyZ(
     numpy.ndarray, LongitudinalNumpy, vector.geometry.LongitudinalZ
 ):
-    def __iter__(self):
-        yield self["z"].view(numpy.ndarray)
+    @property
+    def elements(self):
+        return (self["z"].view(numpy.ndarray),)
 
     @property
     def z(self):
@@ -65,8 +66,9 @@ class LongitudinalNumpyZ(
 class LongitudinalNumpyTheta(
     numpy.ndarray, LongitudinalNumpy, vector.geometry.LongitudinalTheta
 ):
-    def __iter__(self):
-        yield self["theta"].view(numpy.ndarray)
+    @property
+    def elements(self):
+        return (self["theta"].view(numpy.ndarray),)
 
     @property
     def theta(self):
@@ -76,8 +78,9 @@ class LongitudinalNumpyTheta(
 class LongitudinalNumpyEta(
     numpy.ndarray, LongitudinalNumpy, vector.geometry.LongitudinalEta
 ):
-    def __iter__(self):
-        yield self["eta"].view(numpy.ndarray)
+    @property
+    def elements(self):
+        return (self["eta"].view(numpy.ndarray),)
 
     @property
     def eta(self):
@@ -87,8 +90,9 @@ class LongitudinalNumpyEta(
 class LongitudinalNumpyW(
     numpy.ndarray, LongitudinalNumpy, vector.geometry.LongitudinalW
 ):
-    def __iter__(self):
-        yield self["w"].view(numpy.ndarray)
+    @property
+    def elements(self):
+        return (self["w"].view(numpy.ndarray),)
 
     @property
     def w(self):
@@ -96,8 +100,9 @@ class LongitudinalNumpyW(
 
 
 class TemporalNumpyT(numpy.ndarray, TemporalNumpy, vector.geometry.TemporalT):
-    def __iter__(self):
-        yield self["t"].view(numpy.ndarray)
+    @property
+    def elements(self):
+        return (self["t"].view(numpy.ndarray),)
 
     @property
     def t(self):
@@ -105,8 +110,9 @@ class TemporalNumpyT(numpy.ndarray, TemporalNumpy, vector.geometry.TemporalT):
 
 
 class TemporalNumpyTau(numpy.ndarray, TemporalNumpy, vector.geometry.TemporalTau):
-    def __iter__(self):
-        yield self["tau"].view(numpy.ndarray)
+    @property
+    def elements(self):
+        return (self["tau"].view(numpy.ndarray),)
 
     @property
     def tau(self):
