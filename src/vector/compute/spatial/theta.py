@@ -5,7 +5,7 @@
 
 import numpy
 
-from vector.compute.planar import rho
+from vector.compute.spatial import costheta
 from vector.geometry import (
     AzimuthalRhoPhi,
     AzimuthalXY,
@@ -18,27 +18,27 @@ from vector.geometry import (
 
 
 def xy_z(lib, x, y, z):
-    return z
+    return lib.arccos(costheta.xy_z(lib, x, y, z))
 
 
 def xy_theta(lib, x, y, theta):
-    return rho.xy(lib, x, y) / lib.tan(theta)
+    return theta
 
 
 def xy_eta(lib, x, y, eta):
-    return rho.xy(lib, x, y) * lib.sinh(eta)
+    return 2.0 * lib.arctan(lib.exp(-eta))
 
 
 def rhophi_z(lib, rho, phi, z):
-    return z
+    return lib.arccos(costheta.rhophi_z(lib, rho, phi, z))
 
 
 def rhophi_theta(lib, rho, phi, theta):
-    return rho / lib.tan(theta)
+    return theta
 
 
 def rhophi_eta(lib, rho, phi, eta):
-    return rho * lib.sinh(eta)
+    return 2.0 * lib.arctan(lib.exp(-eta))
 
 
 dispatch_map = {

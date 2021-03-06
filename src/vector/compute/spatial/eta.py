@@ -5,7 +5,6 @@
 
 import numpy
 
-from vector.compute.planar import rho
 from vector.geometry import (
     AzimuthalRhoPhi,
     AzimuthalXY,
@@ -18,27 +17,27 @@ from vector.geometry import (
 
 
 def xy_z(lib, x, y, z):
-    return z
+    return lib.arctanh(z / lib.sqrt(x ** 2 + y ** 2 + z ** 2))
 
 
 def xy_theta(lib, x, y, theta):
-    return rho.xy(lib, x, y) / lib.tan(theta)
+    return -lib.log(lib.tan(0.5 * theta))
 
 
 def xy_eta(lib, x, y, eta):
-    return rho.xy(lib, x, y) * lib.sinh(eta)
+    return eta
 
 
 def rhophi_z(lib, rho, phi, z):
-    return z
+    return lib.arctanh(z / lib.sqrt(rho ** 2 + z ** 2))
 
 
 def rhophi_theta(lib, rho, phi, theta):
-    return rho / lib.tan(theta)
+    return -lib.log(lib.tan(0.5 * theta))
 
 
 def rhophi_eta(lib, rho, phi, eta):
-    return rho * lib.sinh(eta)
+    return eta
 
 
 dispatch_map = {

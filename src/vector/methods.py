@@ -53,9 +53,19 @@ class Spatial(Planar):
         return vector.compute.spatial.eta.dispatch(self)
 
     @property
-    def w(self):
-        "w docs"
-        return vector.compute.spatial.w.dispatch(self)
+    def costheta(self):
+        "costheta docs"
+        return vector.compute.spatial.costheta.dispatch(self)
+
+    @property
+    def mag(self):
+        "mag docs"
+        return vector.compute.spatial.mag.dispatch(self)
+
+    @property
+    def mag2(self):
+        "mag2 docs"
+        return vector.compute.spatial.mag2.dispatch(self)
 
 
 class Lorentz(Spatial):
