@@ -3,6 +3,7 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+import vector.compute.lorentz
 import vector.compute.planar
 import vector.compute.spatial
 import vector.compute.transform2d
@@ -72,12 +73,22 @@ class Lorentz(Spatial):
     @property
     def t(self):
         "t docs"
-        return vector.compute.temporal.t.dispatch(self)
+        return vector.compute.lorentz.t.dispatch(self)
+
+    @property
+    def t2(self):
+        "t2 docs"
+        return vector.compute.lorentz.t2.dispatch(self)
 
     @property
     def tau(self):
         "tau docs"
-        return vector.compute.temporal.tau.dispatch(self)
+        return vector.compute.lorentz.tau.dispatch(self)
+
+    @property
+    def tau2(self):
+        "tau2 docs"
+        return vector.compute.lorentz.tau2.dispatch(self)
 
 
 class Transform2D(vector.geometry.Transform):
