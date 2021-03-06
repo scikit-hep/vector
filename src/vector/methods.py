@@ -3,7 +3,9 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+import vector.compute.lorentz
 import vector.compute.planar
+import vector.compute.spatial
 import vector.compute.transform2d
 import vector.geometry
 
@@ -39,34 +41,54 @@ class Spatial(Planar):
     @property
     def z(self):
         "z docs"
-        return vector.compute.planar.z.dispatch(self)
+        return vector.compute.spatial.z.dispatch(self)
 
     @property
     def theta(self):
         "theta docs"
-        return vector.compute.planar.theta.dispatch(self)
+        return vector.compute.spatial.theta.dispatch(self)
 
     @property
     def eta(self):
         "eta docs"
-        return vector.compute.planar.eta.dispatch(self)
+        return vector.compute.spatial.eta.dispatch(self)
 
     @property
-    def w(self):
-        "w docs"
-        return vector.compute.planar.w.dispatch(self)
+    def costheta(self):
+        "costheta docs"
+        return vector.compute.spatial.costheta.dispatch(self)
+
+    @property
+    def mag(self):
+        "mag docs"
+        return vector.compute.spatial.mag.dispatch(self)
+
+    @property
+    def mag2(self):
+        "mag2 docs"
+        return vector.compute.spatial.mag2.dispatch(self)
 
 
 class Lorentz(Spatial):
     @property
     def t(self):
         "t docs"
-        return vector.compute.planar.t.dispatch(self)
+        return vector.compute.lorentz.t.dispatch(self)
+
+    @property
+    def t2(self):
+        "t2 docs"
+        return vector.compute.lorentz.t2.dispatch(self)
 
     @property
     def tau(self):
         "tau docs"
-        return vector.compute.planar.tau.dispatch(self)
+        return vector.compute.lorentz.tau.dispatch(self)
+
+    @property
+    def tau2(self):
+        "tau2 docs"
+        return vector.compute.lorentz.tau2.dispatch(self)
 
 
 class Transform2D(vector.geometry.Transform):
@@ -331,7 +353,7 @@ class Transform4D(vector.geometry.Transform):
         return self.elements[15]
 
 
-class LongitudinalBoost(Transform3D):
+class LongitudinalBoost(Transform4D):
     @property
     def beta(self):
         "beta docs (derived)"
@@ -350,7 +372,7 @@ class LongitudinalBoost(Transform3D):
         )
 
 
-class AxisAngleBoost(Transform3D):
+class AxisAngleBoost(Transform4D):
     @property
     def phi(self):
         "phi docs"

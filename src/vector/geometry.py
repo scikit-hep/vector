@@ -40,21 +40,25 @@ class LorentzPoint(Point):
     pass
 
 
-class Azimuthal:
+class Coordinates:
+    pass
+
+
+class Azimuthal(Coordinates):
     @property
     def elements(self):
         "azimuthal elements docs"
         raise AssertionError
 
 
-class Longitudinal:
+class Longitudinal(Coordinates):
     @property
     def elements(self):
         "longitudinal elements docs"
         raise AssertionError
 
 
-class Temporal:
+class Temporal(Coordinates):
     @property
     def elements(self):
         "temporal elements docs"
@@ -81,10 +85,6 @@ class LongitudinalEta(Longitudinal):
     pass
 
 
-class LongitudinalW(Longitudinal):
-    pass
-
-
 class TemporalT(Temporal):
     pass
 
@@ -98,15 +98,15 @@ def aztype(obj):
         if t in (AzimuthalXY, AzimuthalRhoPhi):
             return t
     else:
-        raise AssertionError(type(obj.azimuthal))
+        return None
 
 
 def ltype(obj):
     for t in type(obj.longitudinal).__mro__:
-        if t in (LongitudinalZ, LongitudinalTheta, LongitudinalEta, LongitudinalW):
+        if t in (LongitudinalZ, LongitudinalTheta, LongitudinalEta):
             return t
     else:
-        raise AssertionError(type(obj.longitudinal))
+        return None
 
 
 def ttype(obj):
@@ -114,7 +114,7 @@ def ttype(obj):
         if t in (TemporalT, TemporalTau):
             return t
     else:
-        raise AssertionError(type(obj.temporal))
+        return None
 
 
 class Transform:
@@ -123,7 +123,7 @@ class Transform:
         return self.apply(v)
 
 
-class FrameTransform:
-    def __call__(self, v):
-        "call docs"
-        return self.apply(v)
+# class FrameTransform:
+#     def __call__(self, v):
+#         "call docs"
+#         return self.apply(v)

@@ -11,15 +11,19 @@ import vector.geometry
 import vector.methods
 
 
-class AzimuthalObject:
+class CoordinatesObject:
     pass
 
 
-class LongitudinalObject:
+class AzimuthalObject(CoordinatesObject):
     pass
 
 
-class TemporalObject:
+class LongitudinalObject(CoordinatesObject):
+    pass
+
+
+class TemporalObject(CoordinatesObject):
     pass
 
 
@@ -96,21 +100,6 @@ LongitudinalObjectEta.__bases__ = (
 )
 
 
-class LongitudinalObjectW(typing.NamedTuple):
-    w: float
-
-    @property
-    def elements(self):
-        return (self.w,)
-
-
-LongitudinalObjectW.__bases__ = (
-    LongitudinalObject,
-    vector.geometry.LongitudinalW,
-    tuple,
-)
-
-
 class TemporalObjectT(typing.NamedTuple):
     t: float
 
@@ -149,8 +138,14 @@ class PlanarVectorObject(vector.geometry.PlanarVector, PlanarObject):
     pass
 
 
+class PlanarPointObject(vector.geometry.PlanarPoint, PlanarObject):
+    pass
+
+
 class SpatialObject(vector.methods.Spatial):
     __slots__ = ("azimuthal", "longitudinal")
+
+    lib = numpy
 
     def __init__(self, azimuthal, longitudinal):
         self.azimuthal = azimuthal
@@ -164,8 +159,14 @@ class SpatialVectorObject(vector.geometry.SpatialVector, SpatialObject):
     pass
 
 
+class SpatialPointObject(vector.geometry.SpatialPoint, SpatialObject):
+    pass
+
+
 class LorentzObject(vector.methods.Lorentz):
     __slots__ = ("azimuthal", "longitudinal", "temporal")
+
+    lib = numpy
 
     def __init__(self, azimuthal, longitudinal, temporal):
         self.azimuthal = azimuthal
@@ -177,6 +178,10 @@ class LorentzObject(vector.methods.Lorentz):
 
 
 class LorentzVectorObject(vector.geometry.LorentzVector, LorentzObject):
+    pass
+
+
+class LorentzPointObject(vector.geometry.LorentzPoint, LorentzObject):
     pass
 
 

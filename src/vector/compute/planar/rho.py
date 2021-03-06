@@ -3,25 +3,28 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-import vector.compute.planar.rho
-import vector.geometry
+import numpy
+
+from vector.compute.planar import rho2
+from vector.geometry import AzimuthalRhoPhi, AzimuthalXY, aztype
 
 
-def xy(lib, x1, y1):
-    return lib.sqrt(vector.compute.planar.rho2.xy(lib, x1, y1))
+def xy(lib, x, y):
+    return lib.sqrt(rho2.xy(lib, x, y))
 
 
-def rhophi(lib, rho1, phi1):
-    return rho1
+def rhophi(lib, rho, phi):
+    return rho
 
 
 dispatch_map = {
-    (vector.geometry.AzimuthalXY,): xy,
-    (vector.geometry.AzimuthalRhoPhi,): rhophi,
+    (AzimuthalXY,): xy,
+    (AzimuthalRhoPhi,): rhophi,
 }
 
 
-def dispatch(v1):
-    return dispatch_map[
-        vector.geometry.aztype(v1),
-    ](v1.lib, *v1.azimuthal.elements)
+def dispatch(v):
+    with numpy.errstate(all="ignore"):
+        return dispatch_map[
+            aztype(v),
+        ](v.lib, *v.azimuthal.elements)
