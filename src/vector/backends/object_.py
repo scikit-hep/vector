@@ -145,6 +145,8 @@ class PlanarPointObject(vector.geometry.PlanarPoint, PlanarObject):
 class SpatialObject(vector.methods.Spatial):
     __slots__ = ("azimuthal", "longitudinal")
 
+    lib = numpy
+
     def __init__(self, azimuthal, longitudinal):
         self.azimuthal = azimuthal
         self.longitudinal = longitudinal
@@ -163,6 +165,8 @@ class SpatialPointObject(vector.geometry.SpatialPoint, SpatialObject):
 
 class LorentzObject(vector.methods.Lorentz):
     __slots__ = ("azimuthal", "longitudinal", "temporal")
+
+    lib = numpy
 
     def __init__(self, azimuthal, longitudinal, temporal):
         self.azimuthal = azimuthal

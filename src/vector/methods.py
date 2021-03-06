@@ -4,6 +4,7 @@
 # or https://github.com/scikit-hep/vector for details.
 
 import vector.compute.planar
+import vector.compute.spatial
 import vector.compute.transform2d
 import vector.geometry
 
@@ -39,34 +40,34 @@ class Spatial(Planar):
     @property
     def z(self):
         "z docs"
-        return vector.compute.planar.z.dispatch(self)
+        return vector.compute.spatial.z.dispatch(self)
 
     @property
     def theta(self):
         "theta docs"
-        return vector.compute.planar.theta.dispatch(self)
+        return vector.compute.spatial.theta.dispatch(self)
 
     @property
     def eta(self):
         "eta docs"
-        return vector.compute.planar.eta.dispatch(self)
+        return vector.compute.spatial.eta.dispatch(self)
 
     @property
     def w(self):
         "w docs"
-        return vector.compute.planar.w.dispatch(self)
+        return vector.compute.spatial.w.dispatch(self)
 
 
 class Lorentz(Spatial):
     @property
     def t(self):
         "t docs"
-        return vector.compute.planar.t.dispatch(self)
+        return vector.compute.temporal.t.dispatch(self)
 
     @property
     def tau(self):
         "tau docs"
-        return vector.compute.planar.tau.dispatch(self)
+        return vector.compute.temporal.tau.dispatch(self)
 
 
 class Transform2D(vector.geometry.Transform):
