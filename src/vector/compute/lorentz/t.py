@@ -86,12 +86,9 @@ dispatch_map = {
 
 def dispatch(v):
     with numpy.errstate(all="ignore"):
-        return v.lib.nan_to_num(
-            dispatch_map[aztype(v), ltype(v), ttype(v),](
+        return dispatch_map[aztype(v), ltype(v), ttype(v),](
                 v.lib,
                 *v.azimuthal.elements,
                 *v.longitudinal.elements,
                 *v.temporal.elements
-            ),
-            nan=0.0,
-        )
+            )

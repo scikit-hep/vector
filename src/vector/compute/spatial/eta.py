@@ -17,11 +17,11 @@ from vector.geometry import (
 
 
 def xy_z(lib, x, y, z):
-    return lib.arctanh(z / lib.sqrt(x ** 2 + y ** 2 + z ** 2))
+    return lib.nan_to_num(lib.arctanh(z / lib.sqrt(x ** 2 + y ** 2 + z ** 2)), 0.0)
 
 
 def xy_theta(lib, x, y, theta):
-    return -lib.log(lib.tan(0.5 * theta))
+    return lib.nan_to_num(-lib.log(lib.tan(0.5 * theta)), 0.0)
 
 
 def xy_eta(lib, x, y, eta):
@@ -29,7 +29,7 @@ def xy_eta(lib, x, y, eta):
 
 
 def rhophi_z(lib, rho, phi, z):
-    return lib.arctanh(z / lib.sqrt(rho ** 2 + z ** 2))
+    return lib.nan_to_num(lib.arctanh(z / lib.sqrt(rho ** 2 + z ** 2)), 0.0)
 
 
 def rhophi_theta(lib, rho, phi, theta):
@@ -52,10 +52,7 @@ dispatch_map = {
 
 def dispatch(v):
     with numpy.errstate(all="ignore"):
-        return v.lib.nan_to_num(
-            dispatch_map[
+        return dispatch_map[
                 aztype(v),
                 ltype(v),
-            ](v.lib, *v.azimuthal.elements, *v.longitudinal.elements),
-            nan=0.0,
-        )
+            ](v.lib, *v.azimuthal.elements, *v.longitudinal.elements)

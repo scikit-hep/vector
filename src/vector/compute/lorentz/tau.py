@@ -21,7 +21,8 @@ from vector.geometry import (
 
 
 def xy_z_t(lib, x, y, z, t):
-    return lib.sqrt(tau2.xy_z_t(lib, x, y, z, t))
+    squared = tau2.xy_z_t(lib, x, y, z, t)
+    return lib.copysign(lib.sqrt(lib.absolute(squared)), squared)
 
 
 def xy_z_tau(lib, x, y, z, tau):
@@ -29,7 +30,8 @@ def xy_z_tau(lib, x, y, z, tau):
 
 
 def xy_theta_t(lib, x, y, theta, t):
-    return lib.sqrt(tau2.xy_theta_t(lib, x, y, theta, t))
+    squared = tau2.xy_theta_t(lib, x, y, theta, t)
+    return lib.copysign(lib.sqrt(lib.absolute(squared)), squared)
 
 
 def xy_theta_tau(lib, x, y, theta, tau):
@@ -37,7 +39,8 @@ def xy_theta_tau(lib, x, y, theta, tau):
 
 
 def xy_eta_t(lib, x, y, eta, t):
-    return lib.sqrt(tau2.xy_eta_t(lib, x, y, eta, t))
+    squared = tau2.xy_eta_t(lib, x, y, eta, t)
+    return lib.copysign(lib.sqrt(lib.absolute(squared)), squared)
 
 
 def xy_eta_tau(lib, x, y, eta, tau):
@@ -45,7 +48,8 @@ def xy_eta_tau(lib, x, y, eta, tau):
 
 
 def rhophi_z_t(lib, rho, phi, z, t):
-    return lib.sqrt(tau2.rhophi_z_t(lib, rho, phi, z, t))
+    squared = tau2.rhophi_z_t(lib, rho, phi, z, t)
+    return lib.copysign(lib.sqrt(lib.absolute(squared)), squared)
 
 
 def rhophi_z_tau(lib, rho, phi, z, tau):
@@ -53,7 +57,8 @@ def rhophi_z_tau(lib, rho, phi, z, tau):
 
 
 def rhophi_theta_t(lib, rho, phi, theta, t):
-    return lib.sqrt(tau2.rhophi_theta_t(lib, rho, phi, theta, t))
+    squared = tau2.rhophi_theta_t(lib, rho, phi, theta, t)
+    return lib.copysign(lib.sqrt(lib.absolute(squared)), squared)
 
 
 def rhophi_theta_tau(lib, rho, phi, theta, tau):
@@ -61,7 +66,8 @@ def rhophi_theta_tau(lib, rho, phi, theta, tau):
 
 
 def rhophi_eta_t(lib, rho, phi, eta, t):
-    return lib.sqrt(tau2.rhophi_eta_t(lib, rho, phi, eta, t))
+    squared = tau2.rhophi_eta_t(lib, rho, phi, eta, t)
+    return lib.copysign(lib.sqrt(lib.absolute(squared)), squared)
 
 
 def rhophi_eta_tau(lib, rho, phi, eta, tau):
@@ -86,12 +92,9 @@ dispatch_map = {
 
 def dispatch(v):
     with numpy.errstate(all="ignore"):
-        return v.lib.nan_to_num(
-            dispatch_map[aztype(v), ltype(v), ttype(v),](
+        return dispatch_map[aztype(v), ltype(v), ttype(v),](
                 v.lib,
                 *v.azimuthal.elements,
                 *v.longitudinal.elements,
                 *v.temporal.elements
-            ),
-            nan=0.0,
-        )
+            )
