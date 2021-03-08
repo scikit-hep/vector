@@ -26,7 +26,9 @@ def xy_theta(lib, x, y, theta):
 
 def xy_eta(lib, x, y, eta):
     return (x ** 2 + y ** 2) * (
-        1.0 + lib.nan_to_num((1.0 - lib.exp(-2.0 * eta)) / (2.0 * lib.exp(-eta)), lib.inf) ** 2
+        1.0
+        + lib.nan_to_num((1.0 - lib.exp(-2.0 * eta)) / (2.0 * lib.exp(-eta)), lib.inf)
+        ** 2
     )
 
 
@@ -39,7 +41,11 @@ def rhophi_theta(lib, rho, phi, theta):
 
 
 def rhophi_eta(lib, rho, phi, eta):
-    return rho ** 2 * (1.0 + lib.nan_to_num((1.0 - lib.exp(-2.0 * eta)) / (2.0 * lib.exp(-eta)), lib.inf) ** 2)
+    return rho ** 2 * (
+        1.0
+        + lib.nan_to_num((1.0 - lib.exp(-2.0 * eta)) / (2.0 * lib.exp(-eta)), lib.inf)
+        ** 2
+    )
 
 
 dispatch_map = {
@@ -55,6 +61,6 @@ dispatch_map = {
 def dispatch(v):
     with numpy.errstate(all="ignore"):
         return dispatch_map[
-                aztype(v),
-                ltype(v),
-            ](v.lib, *v.azimuthal.elements, *v.longitudinal.elements)
+            aztype(v),
+            ltype(v),
+        ](v.lib, *v.azimuthal.elements, *v.longitudinal.elements)
