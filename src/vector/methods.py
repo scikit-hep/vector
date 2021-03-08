@@ -27,14 +27,18 @@ class Planar:
         return vector.compute.planar.rho.dispatch(self)
 
     @property
+    def rho2(self):
+        "rho2 docs"
+        return vector.compute.planar.rho2.dispatch(self)
+
+    @property
     def phi(self):
         "phi docs"
         return vector.compute.planar.phi.dispatch(self)
 
-    @property
-    def rho2(self):
-        "rho2 docs"
-        return vector.compute.planar.rho2.dispatch(self)
+    def deltaphi(self, other):
+        "deltaphi docs"
+        return vector.compute.planar.deltaphi.dispatch(self, other)
 
 
 class Spatial(Planar):
