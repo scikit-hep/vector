@@ -5,8 +5,8 @@
 
 import numpy
 
-from vector.geometry import AzimuthalRhoPhi, AzimuthalXY, aztype
 from vector.compute.planar import phi
+from vector.geometry import AzimuthalRhoPhi, AzimuthalXY, aztype
 
 
 def xy_xy(lib, x1, y1, x2, y2):
