@@ -130,7 +130,9 @@ def rhophi_theta_rhophi_z(lib, rho1, phi1, theta1, rho2, phi2, z2):
 
 
 def rhophi_theta_rhophi_theta(lib, rho1, phi1, theta1, rho2, phi2, theta2):
-    return eta.rhophi_theta(lib, rho1, phi1, theta1) - eta.rhophi_theta(lib, rho2, phi2, theta2)
+    return eta.rhophi_theta(lib, rho1, phi1, theta1) - eta.rhophi_theta(
+        lib, rho2, phi2, theta2
+    )
 
 
 def rhophi_theta_rhophi_eta(lib, rho1, phi1, theta1, rho2, phi2, eta2):

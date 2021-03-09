@@ -28,7 +28,10 @@ def test_spatial_object():
                 getattr(v1, "to_" + t1)(),
                 getattr(v2, "to_" + t2)(),
             )
-            assert transformed1.deltaeta(transformed2) == pytest.approx(0.2674387219518324)
+            assert transformed1.deltaeta(transformed2) == pytest.approx(
+                0.2674387219518324
+            )
+
 
 def test_spatial_numpy():
     v1 = vector.backends.numpy_.SpatialVectorNumpy(
