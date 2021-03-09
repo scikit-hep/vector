@@ -17,7 +17,6 @@ from vector.geometry import (
     ltype,
 )
 
-
 # Cross-product is only computed in Cartesian coordinates; the rest are conversions.
 
 
