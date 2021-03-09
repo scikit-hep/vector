@@ -208,6 +208,14 @@ class SpatialObject(vector.methods.Spatial):
             return type(self)(AzimuthalObjectXY(*result), self.longitudinal)
         elif returns == [vector.geometry.AzimuthalRhoPhi]:
             return type(self)(AzimuthalObjectRhoPhi(*result), self.longitudinal)
+        elif returns == [
+            vector.geometry.AzimuthalXY,
+            vector.geometry.LongitudinalZ,
+            None,
+        ]:
+            azimuthal = AzimuthalObjectXY(result[0], result[1])
+            longitudinal = LongitudinalObjectZ(result[2])
+            return type(self)(azimuthal, longitudinal)
         else:
             raise AssertionError(repr(returns))
 
@@ -339,6 +347,19 @@ class LorentzObject(vector.methods.Lorentz):
             return type(self)(
                 AzimuthalObjectRhoPhi(*result), self.longitudinal, self.temporal
             )
+        elif returns == [
+            vector.geometry.AzimuthalXY,
+            vector.geometry.LongitudinalZ,
+            None,
+        ]:
+            azimuthal = AzimuthalObjectXY(result[0], result[1])
+            longitudinal = LongitudinalObjectZ(result[2])
+            if isinstance(self, LorentzVectorObject):
+                return SpatialVectorObject(azimuthal, longitudinal)
+            elif isinstance(self, LorentzPointObject):
+                return SpatialVectorObject(azimuthal, longitudinal)
+            else:
+                raise AssertionError(repr(type(self)))
         else:
             raise AssertionError(repr(returns))
 

@@ -81,6 +81,10 @@ class Spatial(Planar):
         "mag2 docs"
         return vector.compute.spatial.mag2.dispatch(self)
 
+    def cross(self, other):
+        "cross docs"
+        return vector.compute.spatial.cross.dispatch(self, other)
+
 
 class Lorentz(Spatial):
     @property

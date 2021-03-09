@@ -49,7 +49,7 @@ def _has(array, names):
     dtype_names = array.dtype.names
     if dtype_names is None:
         dtype_names = ()
-    return all(x in names for x in dtype_names)
+    return all(x in dtype_names for x in names)
 
 
 class CoordinatesNumpy:
@@ -286,51 +286,32 @@ class PlanarNumpy(numpy.ndarray, vector.methods.Planar):
     def azimuthal(self):
         return self.view(self._azimuthal_type)
 
+    def _wrap_result(self, result, returns):
+        if returns == [float]:
+            return result
+        elif returns == [vector.geometry.AzimuthalXY] or returns == [
+            vector.geometry.AzimuthalRhoPhi
+        ]:
+            dtype = []
+            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
+                dtype.append((name, result[i].dtype))
+            out = numpy.empty(result[0].shape, dtype=dtype)
+            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
+                out[name] = result[i]
+            return out.view(type(self))
+        else:
+            raise AssertionError(repr(returns))
+
+    def __getitem__(self, where):
+        return _getitem(self, where)
+
 
 class PlanarVectorNumpy(vector.geometry.PlanarVector, PlanarNumpy):
     object_type = vector.backends.object_.PlanarVectorObject
 
-    def __getitem__(self, where):
-        return _getitem(self, where)
-
-    def _wrap_result(self, result, returns):
-        if returns == [float]:
-            return result
-        elif returns == [vector.geometry.AzimuthalXY] or returns == [
-            vector.geometry.AzimuthalRhoPhi
-        ]:
-            dtype = []
-            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
-                dtype.append((name, result[i].dtype))
-            out = numpy.empty(result[0].shape, dtype=dtype)
-            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
-                out[name] = result[i]
-            return out.view(PlanarVectorNumpy)
-        else:
-            raise AssertionError(repr(returns))
-
 
 class PlanarPointNumpy(vector.geometry.PlanarPoint, PlanarNumpy):
     object_type = vector.backends.object_.PlanarPointObject
-
-    def __getitem__(self, where):
-        return _getitem(self, where)
-
-    def _wrap_result(self, result, returns):
-        if returns == [float]:
-            return result
-        elif returns == [vector.geometry.AzimuthalXY] or returns == [
-            vector.geometry.AzimuthalRhoPhi
-        ]:
-            dtype = []
-            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
-                dtype.append((name, result[i].dtype))
-            out = numpy.empty(result[0].shape, dtype=dtype)
-            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
-                out[name] = result[i]
-            return out.view(PlanarPointNumpy)
-        else:
-            raise AssertionError(repr(returns))
 
 
 class SpatialNumpy(numpy.ndarray, vector.methods.Spatial):
@@ -375,55 +356,49 @@ class SpatialNumpy(numpy.ndarray, vector.methods.Spatial):
     def longitudinal(self):
         return self.view(self._longitudinal_type)
 
+    def __getitem__(self, where):
+        return _getitem(self, where)
+
+    def _wrap_result(self, result, returns):
+        if returns == [float]:
+            return result
+        elif returns == [vector.geometry.AzimuthalXY] or returns == [
+            vector.geometry.AzimuthalRhoPhi
+        ]:
+            dtype = []
+            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
+                dtype.append((name, result[i].dtype))
+            for name in _coordinate_class_to_names[vector.geometry.ltype(self)]:
+                dtype.append((name, self.dtype[name]))
+            out = numpy.empty(result[0].shape, dtype=dtype)
+            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
+                out[name] = result[i]
+            return out.view(type(self))
+        elif returns == [
+            vector.geometry.AzimuthalXY,
+            vector.geometry.LongitudinalZ,
+            None,
+        ]:
+            dtype = [
+                ("x", result[0].dtype),
+                ("y", result[1].dtype),
+                ("z", result[2].dtype),
+            ]
+            out = numpy.empty(result[0].shape, dtype=dtype)
+            out["x"] = result[0]
+            out["y"] = result[1]
+            out["z"] = result[2]
+            return out.view(type(self))
+        else:
+            raise AssertionError(repr(returns))
+
 
 class SpatialVectorNumpy(vector.geometry.SpatialVector, SpatialNumpy):
     object_type = vector.backends.object_.SpatialVectorObject
 
-    def __getitem__(self, where):
-        return _getitem(self, where)
-
-    def _wrap_result(self, result, returns):
-        if returns == [float]:
-            return result
-        elif returns == [vector.geometry.AzimuthalXY] or returns == [
-            vector.geometry.AzimuthalRhoPhi
-        ]:
-            dtype = []
-            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
-                dtype.append((name, result[i].dtype))
-            for name in _coordinate_class_to_names[vector.geometry.ltype(self)]:
-                dtype.append((name, self.dtype[name]))
-            out = numpy.empty(result[0].shape, dtype=dtype)
-            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
-                out[name] = result[i]
-            return out.view(SpatialVectorNumpy)
-        else:
-            raise AssertionError(repr(returns))
-
 
 class SpatialPointNumpy(vector.geometry.SpatialPoint, SpatialNumpy):
     object_type = vector.backends.object_.SpatialPointObject
-
-    def __getitem__(self, where):
-        return _getitem(self, where)
-
-    def _wrap_result(self, result, returns):
-        if returns == [float]:
-            return result
-        elif returns == [vector.geometry.AzimuthalXY] or returns == [
-            vector.geometry.AzimuthalRhoPhi
-        ]:
-            dtype = []
-            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
-                dtype.append((name, result[i].dtype))
-            for name in _coordinate_class_to_names[vector.geometry.ltype(self)]:
-                dtype.append((name, self.dtype[name]))
-            out = numpy.empty(result[0].shape, dtype=dtype)
-            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
-                out[name] = result[i]
-            return out.view(SpatialPointNumpy)
-        else:
-            raise AssertionError(repr(returns))
 
 
 class LorentzNumpy(numpy.ndarray, vector.methods.Lorentz):
@@ -481,59 +456,56 @@ class LorentzNumpy(numpy.ndarray, vector.methods.Lorentz):
     def temporal(self):
         return self.view(self._temporal_type)
 
+    def __getitem__(self, where):
+        return _getitem(self, where)
+
+    def _wrap_result(self, result, returns):
+        if returns == [float]:
+            return result
+        elif returns == [vector.geometry.AzimuthalXY] or returns == [
+            vector.geometry.AzimuthalRhoPhi
+        ]:
+            dtype = []
+            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
+                dtype.append((name, result[i].dtype))
+            for name in _coordinate_class_to_names[vector.geometry.ltype(self)]:
+                dtype.append((name, self.dtype[name]))
+            for name in _coordinate_class_to_names[vector.geometry.ttype(self)]:
+                dtype.append((name, self.dtype[name]))
+            out = numpy.empty(result[0].shape, dtype=dtype)
+            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
+                out[name] = result[i]
+            return out.view(type(self))
+        elif returns == [
+            vector.geometry.AzimuthalXY,
+            vector.geometry.LongitudinalZ,
+            None,
+        ]:
+            dtype = [
+                ("x", result[0].dtype),
+                ("y", result[1].dtype),
+                ("z", result[2].dtype),
+            ]
+            out = numpy.empty(result[0].shape, dtype=dtype)
+            out["x"] = result[0]
+            out["y"] = result[1]
+            out["z"] = result[2]
+            if isinstance(self, LorentzVectorNumpy):
+                return out.view(SpatialVectorNumpy)
+            elif isinstance(self, LorentzPointNumpy):
+                return out.view(SpatialVectorNumpy)
+            else:
+                raise AssertionError(repr(type(self)))
+        else:
+            raise AssertionError(repr(returns))
+
 
 class LorentzVectorNumpy(vector.geometry.LorentzVector, LorentzNumpy):
     object_type = vector.backends.object_.LorentzVectorObject
 
-    def __getitem__(self, where):
-        return _getitem(self, where)
-
-    def _wrap_result(self, result, returns):
-        if returns == [float]:
-            return result
-        elif returns == [vector.geometry.AzimuthalXY] or returns == [
-            vector.geometry.AzimuthalRhoPhi
-        ]:
-            dtype = []
-            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
-                dtype.append((name, result[i].dtype))
-            for name in _coordinate_class_to_names[vector.geometry.ltype(self)]:
-                dtype.append((name, self.dtype[name]))
-            for name in _coordinate_class_to_names[vector.geometry.ttype(self)]:
-                dtype.append((name, self.dtype[name]))
-            out = numpy.empty(result[0].shape, dtype=dtype)
-            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
-                out[name] = result[i]
-            return out.view(LorentzPointNumpy)
-        else:
-            raise AssertionError(repr(returns))
-
 
 class LorentzPointNumpy(vector.geometry.LorentzPoint, LorentzNumpy):
     object_type = vector.backends.object_.LorentzPointObject
-
-    def __getitem__(self, where):
-        return _getitem(self, where)
-
-    def _wrap_result(self, result, returns):
-        if returns == [float]:
-            return result
-        elif returns == [vector.geometry.AzimuthalXY] or returns == [
-            vector.geometry.AzimuthalRhoPhi
-        ]:
-            dtype = []
-            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
-                dtype.append((name, result[i].dtype))
-            for name in _coordinate_class_to_names[vector.geometry.ltype(self)]:
-                dtype.append((name, self.dtype[name]))
-            for name in _coordinate_class_to_names[vector.geometry.ttype(self)]:
-                dtype.append((name, self.dtype[name]))
-            out = numpy.empty(result[0].shape, dtype=dtype)
-            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
-                out[name] = result[i]
-            return out.view(LorentzPointNumpy)
-        else:
-            raise AssertionError(repr(returns))
 
 
 class TransformNumpy:

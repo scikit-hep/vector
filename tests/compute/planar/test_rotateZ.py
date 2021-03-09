@@ -3,6 +3,7 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+import pytest
 import numpy
 
 import vector.backends.numpy_
@@ -13,7 +14,8 @@ def test_xy():
     vec = vector.backends.object_.PlanarVectorObject(
         vector.backends.object_.AzimuthalObjectXY(1, 0)
     )
-    print(vec.rotateZ(0.1))
+    assert vec.rotateZ(0.1).x == pytest.approx(0.9950041652780258)
+    assert vec.rotateZ(0.1).y == pytest.approx(0.09983341664682815)
 
     array = vector.backends.numpy_.PlanarVectorNumpy(
         [(0, 0), (1, 0), (0, 1)], dtype=[("x", numpy.float64), ("y", numpy.float64)]
@@ -31,7 +33,8 @@ def test_rhophi():
     vec = vector.backends.object_.PlanarVectorObject(
         vector.backends.object_.AzimuthalObjectRhoPhi(1, 0)
     )
-    print(vec.rotateZ(0.1))
+    assert vec.rotateZ(0.1).rho == pytest.approx(1)
+    assert vec.rotateZ(0.1).phi == pytest.approx(0.1)
 
     array = vector.backends.numpy_.PlanarVectorNumpy(
         [(0, 0), (1, 0), (0, 1)], dtype=[("rho", numpy.float64), ("phi", numpy.float64)]
