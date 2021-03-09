@@ -89,6 +89,10 @@ class Spatial(Planar):
         "deltaeta docs"
         return vector.compute.spatial.deltaeta.dispatch(self, other)
 
+    def deltaR2(self, other):
+        "deltaeta docs"
+        return vector.compute.spatial.deltaR2.dispatch(self, other)
+
 
 class Lorentz(Spatial):
     @property
