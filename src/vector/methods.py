@@ -85,6 +85,10 @@ class Spatial(Planar):
         "cross docs"
         return vector.compute.spatial.cross.dispatch(self, other)
 
+    def deltaeta(self, other):
+        "deltaeta docs"
+        return vector.compute.spatial.deltaeta.dispatch(self, other)
+
 
 class Lorentz(Spatial):
     @property
