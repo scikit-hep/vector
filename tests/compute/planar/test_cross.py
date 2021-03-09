@@ -6,9 +6,9 @@
 import numpy
 import pytest
 
-import vector.geometry
 import vector.backends.numpy_
 import vector.backends.object_
+import vector.geometry
 
 
 def test_spatial_object():
@@ -28,11 +28,16 @@ def test_spatial_object():
 
     for t1 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
         for t2 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
-            transformed1, transformed2 = getattr(v1, "to_" + t1)(), getattr(v2, "to_" + t2)()
+            transformed1, transformed2 = (
+                getattr(v1, "to_" + t1)(),
+                getattr(v2, "to_" + t2)(),
+            )
             out = transformed1.cross(transformed2)
             assert isinstance(out, vector.backends.object_.SpatialVectorObject)
             assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectXY)
-            assert isinstance(out.longitudinal, vector.backends.object_.LongitudinalObjectZ)
+            assert isinstance(
+                out.longitudinal, vector.backends.object_.LongitudinalObjectZ
+            )
             assert (out.x, out.y, out.z) == pytest.approx((-0.03, 0.06, -0.03))
 
 
@@ -52,7 +57,10 @@ def test_spatial_numpy():
 
     for t1 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
         for t2 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
-            transformed1, transformed2 = getattr(v1, "to_" + t1)(), getattr(v2, "to_" + t2)()
+            transformed1, transformed2 = (
+                getattr(v1, "to_" + t1)(),
+                getattr(v2, "to_" + t2)(),
+            )
             out = transformed1.cross(transformed2)
             assert isinstance(out, vector.backends.numpy_.SpatialVectorNumpy)
             assert out.dtype.names == ("x", "y", "z")
@@ -104,11 +112,16 @@ def test_lorentz_object():
             "rhophithetatau",
             "rhophietatau",
         ):
-            transformed1, transformed2 = getattr(v1, "to_" + t1)(), getattr(v2, "to_" + t2)()
+            transformed1, transformed2 = (
+                getattr(v1, "to_" + t1)(),
+                getattr(v2, "to_" + t2)(),
+            )
             out = transformed1.cross(transformed2)
             assert isinstance(out, vector.backends.object_.SpatialVectorObject)
             assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectXY)
-            assert isinstance(out.longitudinal, vector.backends.object_.LongitudinalObjectZ)
+            assert isinstance(
+                out.longitudinal, vector.backends.object_.LongitudinalObjectZ
+            )
             assert (out.x, out.y, out.z) == pytest.approx((-0.03, 0.06, -0.03))
 
 
@@ -164,7 +177,10 @@ def test_lorentz_numpy():
             "rhophithetatau",
             "rhophietatau",
         ):
-            transformed1, transformed2 = getattr(v1, "to_" + t1)(), getattr(v2, "to_" + t2)()
+            transformed1, transformed2 = (
+                getattr(v1, "to_" + t1)(),
+                getattr(v2, "to_" + t2)(),
+            )
             out = transformed1.cross(transformed2)
             assert isinstance(out, vector.backends.numpy_.SpatialVectorNumpy)
             assert out.dtype.names == ("x", "y", "z")
