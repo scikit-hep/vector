@@ -67,6 +67,11 @@ class Spatial(Planar):
         return vector.compute.spatial.costheta.dispatch(self)
 
     @property
+    def cottheta(self):
+        "cottheta docs"
+        return vector.compute.spatial.cottheta.dispatch(self)
+
+    @property
     def mag(self):
         "mag docs"
         return vector.compute.spatial.mag.dispatch(self)
