@@ -6,6 +6,9 @@
 import numpy
 
 import vector.backends.object_
+import vector.compute.lorentz
+import vector.compute.planar
+import vector.compute.spatial
 import vector.geometry
 import vector.methods
 from vector.geometry import _coordinate_class_to_names
@@ -282,6 +285,24 @@ class PlanarNumpy(numpy.ndarray, vector.methods.Planar):
     def __repr__(self):
         return _array_repr(self)
 
+    def to_xy(self):
+        return self._wrap_result(
+            (
+                vector.compute.planar.x.dispatch(self),
+                vector.compute.planar.y.dispatch(self),
+            ),
+            [vector.geometry.AzimuthalXY],
+        )
+
+    def to_rhophi(self):
+        return self._wrap_result(
+            (
+                vector.compute.planar.rho.dispatch(self),
+                vector.compute.planar.phi.dispatch(self),
+            ),
+            [vector.geometry.AzimuthalRhoPhi],
+        )
+
     @property
     def azimuthal(self):
         return self.view(self._azimuthal_type)
@@ -289,16 +310,22 @@ class PlanarNumpy(numpy.ndarray, vector.methods.Planar):
     def _wrap_result(self, result, returns):
         if returns == [float]:
             return result
+
         elif returns == [vector.geometry.AzimuthalXY] or returns == [
             vector.geometry.AzimuthalRhoPhi
         ]:
             dtype = []
-            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
                 dtype.append((name, result[i].dtype))
+                i += 1
             out = numpy.empty(result[0].shape, dtype=dtype)
-            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
                 out[name] = result[i]
+                i += 1
             return out.view(type(self))
+
         else:
             raise AssertionError(repr(returns))
 
@@ -348,6 +375,66 @@ class SpatialNumpy(numpy.ndarray, vector.methods.Spatial):
     def __repr__(self):
         return _array_repr(self)
 
+    def to_xyz(self):
+        return self._wrap_result(
+            (
+                vector.compute.planar.x.dispatch(self),
+                vector.compute.planar.y.dispatch(self),
+                vector.compute.spatial.z.dispatch(self),
+            ),
+            [vector.geometry.AzimuthalXY, vector.geometry.AzimuthalZ],
+        )
+
+    def to_xytheta(self):
+        return self._wrap_result(
+            (
+                vector.compute.planar.x.dispatch(self),
+                vector.compute.planar.y.dispatch(self),
+                vector.compute.spatial.theta.dispatch(self),
+            ),
+            [vector.geometry.AzimuthalXY, vector.geometry.AzimuthalTheta],
+        )
+
+    def to_xyeta(self):
+        return self._wrap_result(
+            (
+                vector.compute.planar.x.dispatch(self),
+                vector.compute.planar.y.dispatch(self),
+                vector.compute.spatial.eta.dispatch(self),
+            ),
+            [vector.geometry.AzimuthalXY, vector.geometry.AzimuthalEta],
+        )
+
+    def to_rhophiz(self):
+        return self._wrap_result(
+            (
+                vector.compute.planar.rho.dispatch(self),
+                vector.compute.planar.phi.dispatch(self),
+                vector.compute.spatial.z.dispatch(self),
+            ),
+            [vector.geometry.AzimuthalRhoPhi, vector.geometry.AzimuthalZ],
+        )
+
+    def to_rhophitheta(self):
+        return self._wrap_result(
+            (
+                vector.compute.planar.rho.dispatch(self),
+                vector.compute.planar.phi.dispatch(self),
+                vector.compute.spatial.theta.dispatch(self),
+            ),
+            [vector.geometry.AzimuthalRhoPhi, vector.geometry.AzimuthalTheta],
+        )
+
+    def to_rhophieta(self):
+        return self._wrap_result(
+            (
+                vector.compute.planar.rho.dispatch(self),
+                vector.compute.planar.phi.dispatch(self),
+                vector.compute.spatial.eta.dispatch(self),
+            ),
+            [vector.geometry.AzimuthalRhoPhi, vector.geometry.AzimuthalEta],
+        )
+
     @property
     def azimuthal(self):
         return self.view(self._azimuthal_type)
@@ -362,33 +449,49 @@ class SpatialNumpy(numpy.ndarray, vector.methods.Spatial):
     def _wrap_result(self, result, returns):
         if returns == [float]:
             return result
+
         elif returns == [vector.geometry.AzimuthalXY] or returns == [
             vector.geometry.AzimuthalRhoPhi
         ]:
             dtype = []
-            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
                 dtype.append((name, result[i].dtype))
+                i += 1
             for name in _coordinate_class_to_names[vector.geometry.ltype(self)]:
                 dtype.append((name, self.dtype[name]))
             out = numpy.empty(result[0].shape, dtype=dtype)
-            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
                 out[name] = result[i]
+                i += 1
             return out.view(type(self))
-        elif returns == [
-            vector.geometry.AzimuthalXY,
-            vector.geometry.LongitudinalZ,
-            None,
-        ]:
-            dtype = [
-                ("x", result[0].dtype),
-                ("y", result[1].dtype),
-                ("z", result[2].dtype),
-            ]
+
+        elif (
+            (len(returns) == 2 or (len(returns) == 3 and returns[2] is None))
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], vector.geometry.Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], vector.geometry.Longitudinal)
+        ):
+            dtype = []
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
             out = numpy.empty(result[0].shape, dtype=dtype)
-            out["x"] = result[0]
-            out["y"] = result[1]
-            out["z"] = result[2]
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                out[name] = result[i]
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                out[name] = result[i]
+                i += 1
             return out.view(type(self))
+
         else:
             raise AssertionError(repr(returns))
 
@@ -444,6 +547,186 @@ class LorentzNumpy(numpy.ndarray, vector.methods.Lorentz):
     def __repr__(self):
         return _array_repr(self)
 
+    def to_xyzt(self):
+        return self._wrap_result(
+            (
+                vector.compute.planar.x.dispatch(self),
+                vector.compute.planar.y.dispatch(self),
+                vector.compute.spatial.z.dispatch(self),
+                vector.compute.lorentz.t.dispatch(self),
+            ),
+            [
+                vector.geometry.AzimuthalXY,
+                vector.geometry.AzimuthalZ,
+                vector.geometry.TemporalT,
+            ],
+        )
+
+    def to_xyztau(self):
+        return self._wrap_result(
+            (
+                vector.compute.planar.x.dispatch(self),
+                vector.compute.planar.y.dispatch(self),
+                vector.compute.spatial.z.dispatch(self),
+                vector.compute.lorentz.tau.dispatch(self),
+            ),
+            [
+                vector.geometry.AzimuthalXY,
+                vector.geometry.AzimuthalZ,
+                vector.geometry.TemporalTau,
+            ],
+        )
+
+    def to_xythetat(self):
+        return self._wrap_result(
+            (
+                vector.compute.planar.x.dispatch(self),
+                vector.compute.planar.y.dispatch(self),
+                vector.compute.spatial.theta.dispatch(self),
+                vector.compute.lorentz.t.dispatch(self),
+            ),
+            [
+                vector.geometry.AzimuthalXY,
+                vector.geometry.AzimuthalTheta,
+                vector.geometry.TemporalT,
+            ],
+        )
+
+    def to_xythetatau(self):
+        return self._wrap_result(
+            (
+                vector.compute.planar.x.dispatch(self),
+                vector.compute.planar.y.dispatch(self),
+                vector.compute.spatial.theta.dispatch(self),
+                vector.compute.lorentz.tau.dispatch(self),
+            ),
+            [
+                vector.geometry.AzimuthalXY,
+                vector.geometry.AzimuthalTheta,
+                vector.geometry.TemporalTau,
+            ],
+        )
+
+    def to_xyetat(self):
+        return self._wrap_result(
+            (
+                vector.compute.planar.x.dispatch(self),
+                vector.compute.planar.y.dispatch(self),
+                vector.compute.spatial.eta.dispatch(self),
+                vector.compute.lorentz.t.dispatch(self),
+            ),
+            [
+                vector.geometry.AzimuthalXY,
+                vector.geometry.AzimuthalEta,
+                vector.geometry.TemporalT,
+            ],
+        )
+
+    def to_xyetatau(self):
+        return self._wrap_result(
+            (
+                vector.compute.planar.x.dispatch(self),
+                vector.compute.planar.y.dispatch(self),
+                vector.compute.spatial.eta.dispatch(self),
+                vector.compute.lorentz.tau.dispatch(self),
+            ),
+            [
+                vector.geometry.AzimuthalXY,
+                vector.geometry.AzimuthalEta,
+                vector.geometry.TemporalTau,
+            ],
+        )
+
+    def to_rhophizt(self):
+        return self._wrap_result(
+            (
+                vector.compute.planar.rho.dispatch(self),
+                vector.compute.planar.phi.dispatch(self),
+                vector.compute.spatial.z.dispatch(self),
+                vector.compute.lorentz.t.dispatch(self),
+            ),
+            [
+                vector.geometry.AzimuthalRhoPhi,
+                vector.geometry.AzimuthalZ,
+                vector.geometry.TemporalT,
+            ],
+        )
+
+    def to_rhophiztau(self):
+        return self._wrap_result(
+            (
+                vector.compute.planar.rho.dispatch(self),
+                vector.compute.planar.phi.dispatch(self),
+                vector.compute.spatial.z.dispatch(self),
+                vector.compute.lorentz.tau.dispatch(self),
+            ),
+            [
+                vector.geometry.AzimuthalRhoPhi,
+                vector.geometry.AzimuthalZ,
+                vector.geometry.TemporalTau,
+            ],
+        )
+
+    def to_rhophithetat(self):
+        return self._wrap_result(
+            (
+                vector.compute.planar.rho.dispatch(self),
+                vector.compute.planar.phi.dispatch(self),
+                vector.compute.spatial.theta.dispatch(self),
+                vector.compute.lorentz.t.dispatch(self),
+            ),
+            [
+                vector.geometry.AzimuthalRhoPhi,
+                vector.geometry.AzimuthalTheta,
+                vector.geometry.TemporalT,
+            ],
+        )
+
+    def to_rhophithetatau(self):
+        return self._wrap_result(
+            (
+                vector.compute.planar.rho.dispatch(self),
+                vector.compute.planar.phi.dispatch(self),
+                vector.compute.spatial.theta.dispatch(self),
+                vector.compute.lorentz.tau.dispatch(self),
+            ),
+            [
+                vector.geometry.AzimuthalRhoPhi,
+                vector.geometry.AzimuthalTheta,
+                vector.geometry.TemporalTau,
+            ],
+        )
+
+    def to_rhophietat(self):
+        return self._wrap_result(
+            (
+                vector.compute.planar.rho.dispatch(self),
+                vector.compute.planar.phi.dispatch(self),
+                vector.compute.spatial.eta.dispatch(self),
+                vector.compute.lorentz.t.dispatch(self),
+            ),
+            [
+                vector.geometry.AzimuthalRhoPhi,
+                vector.geometry.AzimuthalEta,
+                vector.geometry.TemporalT,
+            ],
+        )
+
+    def to_rhophietatau(self):
+        return self._wrap_result(
+            (
+                vector.compute.planar.rho.dispatch(self),
+                vector.compute.planar.phi.dispatch(self),
+                vector.compute.spatial.eta.dispatch(self),
+                vector.compute.lorentz.tau.dispatch(self),
+            ),
+            [
+                vector.geometry.AzimuthalRhoPhi,
+                vector.geometry.AzimuthalEta,
+                vector.geometry.TemporalTau,
+            ],
+        )
+
     @property
     def azimuthal(self):
         return self.view(self._azimuthal_type)
@@ -462,6 +745,7 @@ class LorentzNumpy(numpy.ndarray, vector.methods.Lorentz):
     def _wrap_result(self, result, returns):
         if returns == [float]:
             return result
+
         elif returns == [vector.geometry.AzimuthalXY] or returns == [
             vector.geometry.AzimuthalRhoPhi
         ]:
@@ -476,26 +760,53 @@ class LorentzNumpy(numpy.ndarray, vector.methods.Lorentz):
             for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
                 out[name] = result[i]
             return out.view(type(self))
-        elif returns == [
-            vector.geometry.AzimuthalXY,
-            vector.geometry.LongitudinalZ,
-            None,
-        ]:
-            dtype = [
-                ("x", result[0].dtype),
-                ("y", result[1].dtype),
-                ("z", result[2].dtype),
-            ]
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], vector.geometry.Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], vector.geometry.Longitudinal)
+        ):
+            dtype = []
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            is_4d = False
+            if isinstance(returns[2], type) and issubclass(
+                returns[2], vector.geometry.Temporal
+            ):
+                is_4d = True
+                for name in _coordinate_class_to_names[returns[2]]:
+                    dtype.append((name, result[i].dtype))
+                    i += 1
+            elif returns[2] is not None:
+                raise AssertionError(repr(type(returns[2])))
             out = numpy.empty(result[0].shape, dtype=dtype)
-            out["x"] = result[0]
-            out["y"] = result[1]
-            out["z"] = result[2]
-            if isinstance(self, LorentzVectorNumpy):
-                return out.view(SpatialVectorNumpy)
-            elif isinstance(self, LorentzPointNumpy):
-                return out.view(SpatialVectorNumpy)
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                out[name] = result[i]
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                out[name] = result[i]
+                i += 1
+            if is_4d:
+                for name in _coordinate_class_to_names[returns[2]]:
+                    out[name] = result[i]
+                    i += 1
+                return out.view(type(self))
             else:
-                raise AssertionError(repr(type(self)))
+                if isinstance(self, LorentzVectorNumpy):
+                    return out.view(SpatialVectorNumpy)
+                elif isinstance(self, LorentzPointNumpy):
+                    return out.view(SpatialVectorNumpy)
+                else:
+                    raise AssertionError(repr(type(self)))
+
         else:
             raise AssertionError(repr(returns))
 

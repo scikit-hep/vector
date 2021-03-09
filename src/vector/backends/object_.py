@@ -7,6 +7,9 @@ import typing
 
 import numpy
 
+import vector.compute.lorentz
+import vector.compute.planar
+import vector.compute.spatial
 import vector.geometry
 import vector.methods
 from vector.geometry import _coordinate_class_to_names
@@ -136,6 +139,22 @@ class PlanarObject(vector.methods.Planar):
     def from_rhophi(cls, rho, phi):
         return cls(AzimuthalObjectRhoPhi(rho, phi))
 
+    def to_xy(self):
+        return type(self)(
+            AzimuthalObjectXY(
+                vector.compute.planar.x.dispatch(self),
+                vector.compute.planar.y.dispatch(self),
+            )
+        )
+
+    def to_rhophi(self):
+        return type(self)(
+            AzimuthalObjectRhoPhi(
+                vector.compute.planar.rho.dispatch(self),
+                vector.compute.planar.phi.dispatch(self),
+            )
+        )
+
     def __init__(self, azimuthal):
         self.azimuthal = azimuthal
 
@@ -196,6 +215,60 @@ class SpatialObject(vector.methods.Spatial):
     @classmethod
     def from_rhophieta(cls, rho, phi, eta):
         return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectEta(eta))
+
+    def to_xyz(self):
+        return type(self)(
+            AzimuthalObjectXY(
+                vector.compute.planar.x.dispatch(self),
+                vector.compute.planar.y.dispatch(self),
+            ),
+            LongitudinalObjectZ(vector.compute.spatial.z.dispatch(self)),
+        )
+
+    def to_xytheta(self):
+        return type(self)(
+            AzimuthalObjectXY(
+                vector.compute.planar.x.dispatch(self),
+                vector.compute.planar.y.dispatch(self),
+            ),
+            LongitudinalObjectTheta(vector.compute.spatial.theta.dispatch(self)),
+        )
+
+    def to_xyeta(self):
+        return type(self)(
+            AzimuthalObjectXY(
+                vector.compute.planar.x.dispatch(self),
+                vector.compute.planar.y.dispatch(self),
+            ),
+            LongitudinalObjectEta(vector.compute.spatial.eta.dispatch(self)),
+        )
+
+    def to_rhophiz(self):
+        return type(self)(
+            AzimuthalObjectRhoPhi(
+                vector.compute.planar.rho.dispatch(self),
+                vector.compute.planar.phi.dispatch(self),
+            ),
+            LongitudinalObjectZ(vector.compute.spatial.z.dispatch(self)),
+        )
+
+    def to_rhophitheta(self):
+        return type(self)(
+            AzimuthalObjectRhoPhi(
+                vector.compute.planar.rho.dispatch(self),
+                vector.compute.planar.phi.dispatch(self),
+            ),
+            LongitudinalObjectTheta(vector.compute.spatial.theta.dispatch(self)),
+        )
+
+    def to_rhophieta(self):
+        return type(self)(
+            AzimuthalObjectRhoPhi(
+                vector.compute.planar.rho.dispatch(self),
+                vector.compute.planar.phi.dispatch(self),
+            ),
+            LongitudinalObjectEta(vector.compute.spatial.eta.dispatch(self)),
+        )
 
     def __init__(self, azimuthal, longitudinal):
         self.azimuthal = azimuthal
@@ -329,6 +402,126 @@ class LorentzObject(vector.methods.Lorentz):
             AzimuthalObjectRhoPhi(rho, phi),
             LongitudinalObjectEta(eta),
             TemporalObjectTau(tau),
+        )
+
+    def to_xyzt(self):
+        return type(self)(
+            AzimuthalObjectXY(
+                vector.compute.planar.x.dispatch(self),
+                vector.compute.planar.y.dispatch(self),
+            ),
+            LongitudinalObjectZ(vector.compute.spatial.z.dispatch(self)),
+            TemporalObjectT(vector.compute.lorentz.t.dispatch(self)),
+        )
+
+    def to_xythetat(self):
+        return type(self)(
+            AzimuthalObjectXY(
+                vector.compute.planar.x.dispatch(self),
+                vector.compute.planar.y.dispatch(self),
+            ),
+            LongitudinalObjectTheta(vector.compute.spatial.theta.dispatch(self)),
+            TemporalObjectT(vector.compute.lorentz.t.dispatch(self)),
+        )
+
+    def to_xyetat(self):
+        return type(self)(
+            AzimuthalObjectXY(
+                vector.compute.planar.x.dispatch(self),
+                vector.compute.planar.y.dispatch(self),
+            ),
+            LongitudinalObjectEta(vector.compute.spatial.eta.dispatch(self)),
+            TemporalObjectT(vector.compute.lorentz.t.dispatch(self)),
+        )
+
+    def to_rhophizt(self):
+        return type(self)(
+            AzimuthalObjectRhoPhi(
+                vector.compute.planar.rho.dispatch(self),
+                vector.compute.planar.phi.dispatch(self),
+            ),
+            LongitudinalObjectZ(vector.compute.spatial.z.dispatch(self)),
+            TemporalObjectT(vector.compute.lorentz.t.dispatch(self)),
+        )
+
+    def to_rhophithetat(self):
+        return type(self)(
+            AzimuthalObjectRhoPhi(
+                vector.compute.planar.rho.dispatch(self),
+                vector.compute.planar.phi.dispatch(self),
+            ),
+            LongitudinalObjectTheta(vector.compute.spatial.theta.dispatch(self)),
+            TemporalObjectT(vector.compute.lorentz.t.dispatch(self)),
+        )
+
+    def to_rhophietat(self):
+        return type(self)(
+            AzimuthalObjectRhoPhi(
+                vector.compute.planar.rho.dispatch(self),
+                vector.compute.planar.phi.dispatch(self),
+            ),
+            LongitudinalObjectEta(vector.compute.spatial.eta.dispatch(self)),
+            TemporalObjectT(vector.compute.lorentz.t.dispatch(self)),
+        )
+
+    def to_xyztau(self):
+        return type(self)(
+            AzimuthalObjectXY(
+                vector.compute.planar.x.dispatch(self),
+                vector.compute.planar.y.dispatch(self),
+            ),
+            LongitudinalObjectZ(vector.compute.spatial.z.dispatch(self)),
+            TemporalObjectTau(vector.compute.lorentz.tau.dispatch(self)),
+        )
+
+    def to_xythetatau(self):
+        return type(self)(
+            AzimuthalObjectXY(
+                vector.compute.planar.x.dispatch(self),
+                vector.compute.planar.y.dispatch(self),
+            ),
+            LongitudinalObjectTheta(vector.compute.spatial.theta.dispatch(self)),
+            TemporalObjectTau(vector.compute.lorentz.tau.dispatch(self)),
+        )
+
+    def to_xyetatau(self):
+        return type(self)(
+            AzimuthalObjectXY(
+                vector.compute.planar.x.dispatch(self),
+                vector.compute.planar.y.dispatch(self),
+            ),
+            LongitudinalObjectEta(vector.compute.spatial.eta.dispatch(self)),
+            TemporalObjectTau(vector.compute.lorentz.tau.dispatch(self)),
+        )
+
+    def to_rhophiztau(self):
+        return type(self)(
+            AzimuthalObjectRhoPhi(
+                vector.compute.planar.rho.dispatch(self),
+                vector.compute.planar.phi.dispatch(self),
+            ),
+            LongitudinalObjectZ(vector.compute.spatial.z.dispatch(self)),
+            TemporalObjectTau(vector.compute.lorentz.tau.dispatch(self)),
+        )
+
+    def to_rhophithetatau(self):
+        return type(self)(
+            AzimuthalObjectRhoPhi(
+                vector.compute.planar.rho.dispatch(self),
+                vector.compute.planar.phi.dispatch(self),
+            ),
+            LongitudinalObjectTheta(vector.compute.spatial.theta.dispatch(self)),
+            TemporalObjectTau(vector.compute.lorentz.tau.dispatch(self)),
+        )
+
+    def to_rhophietatau(self):
+        return type(self)(
+            AzimuthalObjectRhoPhi(
+                vector.compute.planar.rho.dispatch(self),
+                vector.compute.planar.phi.dispatch(self),
+            ),
+            LongitudinalObjectEta(vector.compute.spatial.eta.dispatch(self)),
+            TemporalObjectTau(vector.compute.lorentz.tau.dispatch(self)),
         )
 
     def __init__(self, azimuthal, longitudinal, temporal):
