@@ -25,11 +25,11 @@ def xy_z_xy_z(lib, x1, y1, z1, x2, y2, z2):
 
 
 def xy_z_xy_theta(lib, x1, y1, z1, x2, y2, theta2):
-    return xy_z_xy_z(lib, x1, y1, z1, x2, y2, *z.xy_theta(lib, x2, y2, theta2))
+    return xy_z_xy_z(lib, x1, y1, z1, x2, y2, z.xy_theta(lib, x2, y2, theta2))
 
 
 def xy_z_xy_eta(lib, x1, y1, z1, x2, y2, eta2):
-    return xy_z_xy_z(lib, x1, y1, z1, x2, y2, *z.xy_eta(lib, x2, y2, eta2))
+    return xy_z_xy_z(lib, x1, y1, z1, x2, y2, z.xy_eta(lib, x2, y2, eta2))
 
 
 def xy_z_rhophi_z(lib, x1, y1, z1, rho2, phi2, z2):
@@ -74,7 +74,7 @@ def xy_theta_xy_theta(lib, x1, y1, theta1, x2, y2, theta2):
         z.xy_theta(lib, x1, y1, theta1),
         x2,
         y2,
-        *z.xy_theta(lib, x2, y2, theta2)
+        z.xy_theta(lib, x2, y2, theta2),
     )
 
 
@@ -86,7 +86,7 @@ def xy_theta_xy_eta(lib, x1, y1, theta1, x2, y2, eta2):
         z.xy_theta(lib, x1, y1, theta1),
         x2,
         y2,
-        *z.xy_eta(lib, x2, y2, eta2)
+        z.xy_eta(lib, x2, y2, eta2),
     )
 
 
@@ -138,13 +138,13 @@ def xy_eta_xy_theta(lib, x1, y1, eta1, x2, y2, theta2):
         z.xy_eta(lib, x1, y1, eta1),
         x2,
         y2,
-        *z.xy_theta(lib, x2, y2, theta2)
+        z.xy_theta(lib, x2, y2, theta2),
     )
 
 
 def xy_eta_xy_eta(lib, x1, y1, eta1, x2, y2, eta2):
     return xy_z_xy_z(
-        lib, x1, y1, z.xy_eta(lib, x1, y1, eta1), x2, y2, *z.xy_eta(lib, x2, y2, eta2)
+        lib, x1, y1, z.xy_eta(lib, x1, y1, eta1), x2, y2, z.xy_eta(lib, x2, y2, eta2)
     )
 
 
@@ -198,7 +198,7 @@ def rhophi_z_xy_theta(lib, rho1, phi1, z1, x2, y2, theta2):
         z1,
         x2,
         y2,
-        *z.xy_theta(lib, x2, y2, theta2)
+        z.xy_theta(lib, x2, y2, theta2),
     )
 
 
@@ -210,7 +210,7 @@ def rhophi_z_xy_eta(lib, rho1, phi1, z1, x2, y2, eta2):
         z1,
         x2,
         y2,
-        *z.xy_eta(lib, x2, y2, eta2)
+        z.xy_eta(lib, x2, y2, eta2),
     )
 
 
@@ -270,7 +270,7 @@ def rhophi_theta_xy_theta(lib, rho1, phi1, theta1, x2, y2, theta2):
         z.rhophi_theta(lib, rho1, phi1, theta1),
         x2,
         y2,
-        *z.xy_theta(lib, x2, y2, theta2)
+        z.xy_theta(lib, x2, y2, theta2),
     )
 
 
@@ -282,7 +282,7 @@ def rhophi_theta_xy_eta(lib, rho1, phi1, theta1, x2, y2, eta2):
         z.rhophi_theta(lib, rho1, phi1, theta1),
         x2,
         y2,
-        *z.xy_eta(lib, x2, y2, eta2)
+        z.xy_eta(lib, x2, y2, eta2),
     )
 
 
@@ -342,7 +342,7 @@ def rhophi_eta_xy_theta(lib, rho1, phi1, eta1, x2, y2, theta2):
         z.rhophi_eta(lib, rho1, phi1, eta1),
         x2,
         y2,
-        *z.xy_theta(lib, x2, y2, theta2)
+        z.xy_theta(lib, x2, y2, theta2),
     )
 
 
@@ -354,7 +354,7 @@ def rhophi_eta_xy_eta(lib, rho1, phi1, eta1, x2, y2, eta2):
         z.rhophi_eta(lib, rho1, phi1, eta1),
         x2,
         y2,
-        *z.xy_eta(lib, x2, y2, eta2)
+        z.xy_eta(lib, x2, y2, eta2),
     )
 
 

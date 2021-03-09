@@ -22,13 +22,32 @@ def _getitem(array, where):
         if isinstance(out, numpy.void):
             azimuthal, longitudinal, temporal = None, None, None
             if hasattr(array, "_azimuthal_type"):
-                azimuthal = array._azimuthal_type.object_type(*out.view(numpy.ndarray))
+                azimuthal = array._azimuthal_type.object_type(
+                    *[
+                        out[x]
+                        for x in _coordinate_class_to_names[
+                            vector.geometry.aztype(array)
+                        ]
+                    ]
+                )
             if hasattr(array, "_longitudinal_type"):
                 longitudinal = array._longitudinal_type.object_type(
-                    *out.view(numpy.ndarray)
+                    *[
+                        out[x]
+                        for x in _coordinate_class_to_names[
+                            vector.geometry.ltype(array)
+                        ]
+                    ]
                 )
             if hasattr(array, "_temporal_type"):
-                temporal = array._temporal_type.object_type(*out.view(numpy.ndarray))
+                temporal = array._temporal_type.object_type(
+                    *[
+                        out[x]
+                        for x in _coordinate_class_to_names[
+                            vector.geometry.ttype(array)
+                        ]
+                    ]
+                )
             if temporal is not None:
                 return array.object_type(azimuthal, longitudinal, temporal)
             elif longitudinal is not None:
@@ -382,7 +401,7 @@ class SpatialNumpy(numpy.ndarray, vector.methods.Spatial):
                 vector.compute.planar.y.dispatch(self),
                 vector.compute.spatial.z.dispatch(self),
             ),
-            [vector.geometry.AzimuthalXY, vector.geometry.AzimuthalZ],
+            [vector.geometry.AzimuthalXY, vector.geometry.LongitudinalZ],
         )
 
     def to_xytheta(self):
@@ -392,7 +411,7 @@ class SpatialNumpy(numpy.ndarray, vector.methods.Spatial):
                 vector.compute.planar.y.dispatch(self),
                 vector.compute.spatial.theta.dispatch(self),
             ),
-            [vector.geometry.AzimuthalXY, vector.geometry.AzimuthalTheta],
+            [vector.geometry.AzimuthalXY, vector.geometry.LongitudinalTheta],
         )
 
     def to_xyeta(self):
@@ -402,7 +421,7 @@ class SpatialNumpy(numpy.ndarray, vector.methods.Spatial):
                 vector.compute.planar.y.dispatch(self),
                 vector.compute.spatial.eta.dispatch(self),
             ),
-            [vector.geometry.AzimuthalXY, vector.geometry.AzimuthalEta],
+            [vector.geometry.AzimuthalXY, vector.geometry.LongitudinalEta],
         )
 
     def to_rhophiz(self):
@@ -412,7 +431,7 @@ class SpatialNumpy(numpy.ndarray, vector.methods.Spatial):
                 vector.compute.planar.phi.dispatch(self),
                 vector.compute.spatial.z.dispatch(self),
             ),
-            [vector.geometry.AzimuthalRhoPhi, vector.geometry.AzimuthalZ],
+            [vector.geometry.AzimuthalRhoPhi, vector.geometry.LongitudinalZ],
         )
 
     def to_rhophitheta(self):
@@ -422,7 +441,7 @@ class SpatialNumpy(numpy.ndarray, vector.methods.Spatial):
                 vector.compute.planar.phi.dispatch(self),
                 vector.compute.spatial.theta.dispatch(self),
             ),
-            [vector.geometry.AzimuthalRhoPhi, vector.geometry.AzimuthalTheta],
+            [vector.geometry.AzimuthalRhoPhi, vector.geometry.LongitudinalTheta],
         )
 
     def to_rhophieta(self):
@@ -432,7 +451,7 @@ class SpatialNumpy(numpy.ndarray, vector.methods.Spatial):
                 vector.compute.planar.phi.dispatch(self),
                 vector.compute.spatial.eta.dispatch(self),
             ),
-            [vector.geometry.AzimuthalRhoPhi, vector.geometry.AzimuthalEta],
+            [vector.geometry.AzimuthalRhoPhi, vector.geometry.LongitudinalEta],
         )
 
     @property
@@ -557,7 +576,7 @@ class LorentzNumpy(numpy.ndarray, vector.methods.Lorentz):
             ),
             [
                 vector.geometry.AzimuthalXY,
-                vector.geometry.AzimuthalZ,
+                vector.geometry.LongitudinalZ,
                 vector.geometry.TemporalT,
             ],
         )
@@ -572,7 +591,7 @@ class LorentzNumpy(numpy.ndarray, vector.methods.Lorentz):
             ),
             [
                 vector.geometry.AzimuthalXY,
-                vector.geometry.AzimuthalZ,
+                vector.geometry.LongitudinalZ,
                 vector.geometry.TemporalTau,
             ],
         )
@@ -587,7 +606,7 @@ class LorentzNumpy(numpy.ndarray, vector.methods.Lorentz):
             ),
             [
                 vector.geometry.AzimuthalXY,
-                vector.geometry.AzimuthalTheta,
+                vector.geometry.LongitudinalTheta,
                 vector.geometry.TemporalT,
             ],
         )
@@ -602,7 +621,7 @@ class LorentzNumpy(numpy.ndarray, vector.methods.Lorentz):
             ),
             [
                 vector.geometry.AzimuthalXY,
-                vector.geometry.AzimuthalTheta,
+                vector.geometry.LongitudinalTheta,
                 vector.geometry.TemporalTau,
             ],
         )
@@ -617,7 +636,7 @@ class LorentzNumpy(numpy.ndarray, vector.methods.Lorentz):
             ),
             [
                 vector.geometry.AzimuthalXY,
-                vector.geometry.AzimuthalEta,
+                vector.geometry.LongitudinalEta,
                 vector.geometry.TemporalT,
             ],
         )
@@ -632,7 +651,7 @@ class LorentzNumpy(numpy.ndarray, vector.methods.Lorentz):
             ),
             [
                 vector.geometry.AzimuthalXY,
-                vector.geometry.AzimuthalEta,
+                vector.geometry.LongitudinalEta,
                 vector.geometry.TemporalTau,
             ],
         )
@@ -647,7 +666,7 @@ class LorentzNumpy(numpy.ndarray, vector.methods.Lorentz):
             ),
             [
                 vector.geometry.AzimuthalRhoPhi,
-                vector.geometry.AzimuthalZ,
+                vector.geometry.LongitudinalZ,
                 vector.geometry.TemporalT,
             ],
         )
@@ -662,7 +681,7 @@ class LorentzNumpy(numpy.ndarray, vector.methods.Lorentz):
             ),
             [
                 vector.geometry.AzimuthalRhoPhi,
-                vector.geometry.AzimuthalZ,
+                vector.geometry.LongitudinalZ,
                 vector.geometry.TemporalTau,
             ],
         )
@@ -677,7 +696,7 @@ class LorentzNumpy(numpy.ndarray, vector.methods.Lorentz):
             ),
             [
                 vector.geometry.AzimuthalRhoPhi,
-                vector.geometry.AzimuthalTheta,
+                vector.geometry.LongitudinalTheta,
                 vector.geometry.TemporalT,
             ],
         )
@@ -692,7 +711,7 @@ class LorentzNumpy(numpy.ndarray, vector.methods.Lorentz):
             ),
             [
                 vector.geometry.AzimuthalRhoPhi,
-                vector.geometry.AzimuthalTheta,
+                vector.geometry.LongitudinalTheta,
                 vector.geometry.TemporalTau,
             ],
         )
@@ -707,7 +726,7 @@ class LorentzNumpy(numpy.ndarray, vector.methods.Lorentz):
             ),
             [
                 vector.geometry.AzimuthalRhoPhi,
-                vector.geometry.AzimuthalEta,
+                vector.geometry.LongitudinalEta,
                 vector.geometry.TemporalT,
             ],
         )
@@ -722,7 +741,7 @@ class LorentzNumpy(numpy.ndarray, vector.methods.Lorentz):
             ),
             [
                 vector.geometry.AzimuthalRhoPhi,
-                vector.geometry.AzimuthalEta,
+                vector.geometry.LongitudinalEta,
                 vector.geometry.TemporalTau,
             ],
         )
