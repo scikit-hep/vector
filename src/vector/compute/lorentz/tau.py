@@ -75,25 +75,34 @@ def rhophi_eta_tau(lib, rho, phi, eta, tau):
 
 
 dispatch_map = {
-    (AzimuthalXY, LongitudinalZ, TemporalT): xy_z_t,
-    (AzimuthalXY, LongitudinalZ, TemporalTau): xy_z_tau,
-    (AzimuthalXY, LongitudinalTheta, TemporalT): xy_theta_t,
-    (AzimuthalXY, LongitudinalTheta, TemporalTau): xy_theta_tau,
-    (AzimuthalXY, LongitudinalEta, TemporalT): xy_eta_t,
-    (AzimuthalXY, LongitudinalEta, TemporalTau): xy_eta_tau,
-    (AzimuthalRhoPhi, LongitudinalZ, TemporalT): rhophi_z_t,
-    (AzimuthalRhoPhi, LongitudinalZ, TemporalTau): rhophi_z_tau,
-    (AzimuthalRhoPhi, LongitudinalTheta, TemporalT): rhophi_theta_t,
-    (AzimuthalRhoPhi, LongitudinalTheta, TemporalTau): rhophi_theta_tau,
-    (AzimuthalRhoPhi, LongitudinalEta, TemporalT): rhophi_eta_t,
-    (AzimuthalRhoPhi, LongitudinalEta, TemporalTau): rhophi_eta_tau,
+    (AzimuthalXY, LongitudinalZ, TemporalT): (xy_z_t, float),
+    (AzimuthalXY, LongitudinalZ, TemporalTau): (xy_z_tau, float),
+    (AzimuthalXY, LongitudinalTheta, TemporalT): (xy_theta_t, float),
+    (AzimuthalXY, LongitudinalTheta, TemporalTau): (xy_theta_tau, float),
+    (AzimuthalXY, LongitudinalEta, TemporalT): (xy_eta_t, float),
+    (AzimuthalXY, LongitudinalEta, TemporalTau): (xy_eta_tau, float),
+    (AzimuthalRhoPhi, LongitudinalZ, TemporalT): (rhophi_z_t, float),
+    (AzimuthalRhoPhi, LongitudinalZ, TemporalTau): (rhophi_z_tau, float),
+    (AzimuthalRhoPhi, LongitudinalTheta, TemporalT): (rhophi_theta_t, float),
+    (AzimuthalRhoPhi, LongitudinalTheta, TemporalTau): (rhophi_theta_tau, float),
+    (AzimuthalRhoPhi, LongitudinalEta, TemporalT): (rhophi_eta_t, float),
+    (AzimuthalRhoPhi, LongitudinalEta, TemporalTau): (rhophi_eta_tau, float),
 }
 
 
 def dispatch(v):
+    function, *returns = dispatch_map[
+        aztype(v),
+        ltype(v),
+        ttype(v),
+    ]
     with numpy.errstate(all="ignore"):
-        return dispatch_map[
-            aztype(v),
-            ltype(v),
-            ttype(v),
-        ](v.lib, *v.azimuthal.elements, *v.longitudinal.elements, *v.temporal.elements)
+        return v._wrap_result(
+            function(
+                v.lib,
+                *v.azimuthal.elements,
+                *v.longitudinal.elements,
+                *v.temporal.elements
+            ),
+            returns,
+        )

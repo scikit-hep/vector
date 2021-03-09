@@ -117,6 +117,17 @@ def ttype(obj):
         return None
 
 
+_coordinate_class_to_names = {
+    AzimuthalXY: ("x", "y"),
+    AzimuthalRhoPhi: ("rho", "phi"),
+    LongitudinalZ: ("z",),
+    LongitudinalTheta: ("theta",),
+    LongitudinalEta: ("eta",),
+    TemporalT: ("t",),
+    TemporalTau: ("tau",),
+}
+
+
 class Transform:
     def __call__(self, v):
         "call docs"

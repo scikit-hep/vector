@@ -5,8 +5,8 @@
 
 import numpy
 
-from vector.geometry import AzimuthalRhoPhi, AzimuthalXY, aztype
 from vector.compute.planar import phi
+from vector.geometry import AzimuthalRhoPhi, AzimuthalXY, aztype
 
 
 def xy_xy(lib, x1, y1, x2, y2):
@@ -26,16 +26,19 @@ def rhophi_rhophi(lib, rho1, phi1, rho2, phi2):
 
 
 dispatch_map = {
-    (AzimuthalXY, AzimuthalXY): xy_xy,
-    (AzimuthalXY, AzimuthalRhoPhi): xy_rhophi,
-    (AzimuthalRhoPhi, AzimuthalXY): rhophi_xy,
-    (AzimuthalRhoPhi, AzimuthalRhoPhi): rhophi_rhophi,
+    (AzimuthalXY, AzimuthalXY): (xy_xy, float),
+    (AzimuthalXY, AzimuthalRhoPhi): (xy_rhophi, float),
+    (AzimuthalRhoPhi, AzimuthalXY): (rhophi_xy, float),
+    (AzimuthalRhoPhi, AzimuthalRhoPhi): (rhophi_rhophi, float),
 }
 
 
 def dispatch(v1, v2):
+    function, *returns = dispatch_map[
+        aztype(v1),
+        aztype(v2),
+    ]
     with numpy.errstate(all="ignore"):
-        return dispatch_map[
-            aztype(v1),
-            aztype(v2),
-        ](v1.lib, *v1.azimuthal.elements, *v2.azimuthal.elements)
+        return v1._wrap_result(
+            function(v1.lib, *v1.azimuthal.elements, *v2.azimuthal.elements), returns
+        )

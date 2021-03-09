@@ -40,6 +40,10 @@ class Planar:
         "deltaphi docs"
         return vector.compute.planar.deltaphi.dispatch(self, other)
 
+    def rotateZ(self, angle):
+        "rotateZ docs"
+        return vector.compute.planar.rotateZ.dispatch(angle, self)
+
 
 class Spatial(Planar):
     @property

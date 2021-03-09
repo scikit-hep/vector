@@ -4,6 +4,8 @@
 # or https://github.com/scikit-hep/vector for details.
 
 
+from .backends.object_ import point, vec  # noqa: 401
+
 # from .version import version as __version__
 
 # __all__ = ("__version__",)

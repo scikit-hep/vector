@@ -8,23 +8,25 @@ import numpy
 from vector.geometry import AzimuthalRhoPhi, AzimuthalXY, aztype
 
 
-def xy(lib, x, y):
-    return y
+def xy(lib, angle, x, y):
+    s = lib.sin(angle)
+    c = lib.cos(angle)
+    return c * x - s * y, s * x + c * y
 
 
-def rhophi(lib, rho, phi):
-    return rho * lib.sin(phi)
+def rhophi(lib, angle, rho, phi):
+    return rho, phi + angle
 
 
 dispatch_map = {
-    (AzimuthalXY,): (xy, float),
-    (AzimuthalRhoPhi,): (rhophi, float),
+    (AzimuthalXY,): (xy, AzimuthalXY),
+    (AzimuthalRhoPhi,): (rhophi, AzimuthalRhoPhi),
 }
 
 
-def dispatch(v):
+def dispatch(angle, v):
     function, *returns = dispatch_map[
         aztype(v),
     ]
     with numpy.errstate(all="ignore"):
-        return v._wrap_result(function(v.lib, *v.azimuthal.elements), returns)
+        return v._wrap_result(function(v.lib, angle, *v.azimuthal.elements), returns)

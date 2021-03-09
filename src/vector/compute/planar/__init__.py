@@ -7,5 +7,6 @@ import vector.compute.planar.deltaphi  # noqa: F401
 import vector.compute.planar.phi  # noqa: F401
 import vector.compute.planar.rho  # noqa: F401
 import vector.compute.planar.rho2  # noqa: F401
+import vector.compute.planar.rotateZ  # noqa: F401
 import vector.compute.planar.x  # noqa: F401
 import vector.compute.planar.y  # noqa: F401
