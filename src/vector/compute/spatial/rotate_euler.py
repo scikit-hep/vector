@@ -17,7 +17,6 @@ from vector.geometry import (
     ltype,
 )
 
-
 # Copied from https://en.wikipedia.org/wiki/Euler_angles#Rotation_matrix
 
 
@@ -28,21 +27,9 @@ def cartesian_xzx(lib, psi, theta, phi, x, y, z):
     s2 = lib.sin(theta)
     c3 = lib.cos(phi)
     s3 = lib.sin(phi)
-    xp = (
-        (c2) * x
-        + (-c3*s2) * y
-        + (s2*s3) * z
-    )
-    yp = (
-        (c1*s2) * x
-        + (c1*c2*c3 - s1*s3) * y
-        + (-c3*s1 - c1*c2*s3) * z
-    )
-    zp = (
-        (s1*s2) * x
-        + (c1*s3 + c2*c3*s1) * y
-        + (c1*c3 - c2*s1*s3) * z
-    )
+    xp = (c2) * x + (-c3 * s2) * y + (s2 * s3) * z
+    yp = (c1 * s2) * x + (c1 * c2 * c3 - s1 * s3) * y + (-c3 * s1 - c1 * c2 * s3) * z
+    zp = (s1 * s2) * x + (c1 * s3 + c2 * c3 * s1) * y + (c1 * c3 - c2 * s1 * s3) * z
     return (xp, yp, zp)
 
 
@@ -53,21 +40,9 @@ def cartesian_xyx(lib, psi, theta, phi, x, y, z):
     s2 = lib.sin(theta)
     c3 = lib.cos(phi)
     s3 = lib.sin(phi)
-    xp = (
-        (c2) * x
-        + (s2*s3) * y
-        + (c3*s2) * z
-    )
-    yp = (
-        (s1*s2) * x
-        + (c1*c3 - c2*s1*s3) * y
-        + (-c1*s3 - c2*c3*s1) * z
-    )
-    zp = (
-        (-c1*s2) * x
-        + (c3*s1 + c1*c2*s3) * y
-        + (c1*c2*c3 - s1*s3) * z
-    )
+    xp = (c2) * x + (s2 * s3) * y + (c3 * s2) * z
+    yp = (s1 * s2) * x + (c1 * c3 - c2 * s1 * s3) * y + (-c1 * s3 - c2 * c3 * s1) * z
+    zp = (-c1 * s2) * x + (c3 * s1 + c1 * c2 * s3) * y + (c1 * c2 * c3 - s1 * s3) * z
     return (xp, yp, zp)
 
 
@@ -78,21 +53,9 @@ def cartesian_yxy(lib, psi, theta, phi, x, y, z):
     s2 = lib.sin(theta)
     c3 = lib.cos(phi)
     s3 = lib.sin(phi)
-    xp = (
-        (c1*c3 - c2*s1*s3) * x
-        + (s1*s2) * y
-        + (c1*s3 + c2*c3*s1) * z
-    )
-    yp = (
-        (s2*s3) * x
-        + (c2) * y
-        + (-c3*s2) * z
-    )
-    zp = (
-        (-c3*s1 - c1*c2*s3) * x
-        + (c1*s2) * y
-        + (c1*c2*c3 - s1*s3) * z
-    )
+    xp = (c1 * c3 - c2 * s1 * s3) * x + (s1 * s2) * y + (c1 * s3 + c2 * c3 * s1) * z
+    yp = (s2 * s3) * x + (c2) * y + (-c3 * s2) * z
+    zp = (-c3 * s1 - c1 * c2 * s3) * x + (c1 * s2) * y + (c1 * c2 * c3 - s1 * s3) * z
     return (xp, yp, zp)
 
 
@@ -103,21 +66,9 @@ def cartesian_yzy(lib, psi, theta, phi, x, y, z):
     s2 = lib.sin(theta)
     c3 = lib.cos(phi)
     s3 = lib.sin(phi)
-    xp = (
-        (c1*c2*c3 - s1*s3) * x
-        + (-c1*s2) * y
-        + (c3*s1 + c1*c2*s3) * z
-    )
-    yp = (
-        (c3*s2) * x
-        + (c2) * y
-        + (s2*s3) * z
-    )
-    zp = (
-        (-c1*s3 - c2*c3*s1) * x
-        + (s1*s2) * y
-        + (c1*c3 - c2*s1*s3) * z
-    )
+    xp = (c1 * c2 * c3 - s1 * s3) * x + (-c1 * s2) * y + (c3 * s1 + c1 * c2 * s3) * z
+    yp = (c3 * s2) * x + (c2) * y + (s2 * s3) * z
+    zp = (-c1 * s3 - c2 * c3 * s1) * x + (s1 * s2) * y + (c1 * c3 - c2 * s1 * s3) * z
     return (xp, yp, zp)
 
 
@@ -128,21 +79,9 @@ def cartesian_zyz(lib, psi, theta, phi, x, y, z):
     s2 = lib.sin(theta)
     c3 = lib.cos(phi)
     s3 = lib.sin(phi)
-    xp = (
-        (c1*c2*c3 - s1*s3) * x
-        + (-c3*s1 - c1*c2*s3) * y
-        + (c1*s2) * z
-    )
-    yp = (
-        (c1*s3 + c2*c3*s1) * x
-        + (c1*c3 - c2*s1*s3) * y
-        + (s1*s2) * z
-    )
-    zp = (
-        (-c3*s2) * x
-        + (s2*s3) * y
-        + (c2) * z
-    )
+    xp = (c1 * c2 * c3 - s1 * s3) * x + (-c3 * s1 - c1 * c2 * s3) * y + (c1 * s2) * z
+    yp = (c1 * s3 + c2 * c3 * s1) * x + (c1 * c3 - c2 * s1 * s3) * y + (s1 * s2) * z
+    zp = (-c3 * s2) * x + (s2 * s3) * y + (c2) * z
     return (xp, yp, zp)
 
 
@@ -153,21 +92,9 @@ def cartesian_zxz(lib, psi, theta, phi, x, y, z):
     s2 = lib.sin(theta)
     c3 = lib.cos(phi)
     s3 = lib.sin(phi)
-    xp = (
-        (c1*c3 - c2*s1*s3) * x
-        + (-c1*s3 - c2*c3*s1) * y
-        + (s1*s2) * z
-    )
-    yp = (
-        (c3*s1 + c1*c2*s3) * x
-        + (c1*c2*c3 - s1*s3) * y
-        + (-c1*s2) * z
-    )
-    zp = (
-        (s2*s3) * x
-        + (c3*s2) * y
-        + (c2) * z
-    )
+    xp = (c1 * c3 - c2 * s1 * s3) * x + (-c1 * s3 - c2 * c3 * s1) * y + (s1 * s2) * z
+    yp = (c3 * s1 + c1 * c2 * s3) * x + (c1 * c2 * c3 - s1 * s3) * y + (-c1 * s2) * z
+    zp = (s2 * s3) * x + (c3 * s2) * y + (c2) * z
     return (xp, yp, zp)
 
 
@@ -178,21 +105,9 @@ def cartesian_xzy(lib, psi, theta, phi, x, y, z):
     s2 = lib.sin(theta)
     c3 = lib.cos(phi)
     s3 = lib.sin(phi)
-    xp = (
-        (c2*c3) * x
-        + (-s2) * y
-        + (c2*s3) * z
-    )
-    yp = (
-        (s1*s3 + c1*c3*s2) * x
-        + (c1*c2) * y
-        + (c1*s2*s3 - c3*s1) * z
-    )
-    zp = (
-        (c3*s1*s2 - c1*s3) * x
-        + (c2*s1) * y
-        + (c1*c3 + s1*s2*s3) * z
-    )
+    xp = (c2 * c3) * x + (-s2) * y + (c2 * s3) * z
+    yp = (s1 * s3 + c1 * c3 * s2) * x + (c1 * c2) * y + (c1 * s2 * s3 - c3 * s1) * z
+    zp = (c3 * s1 * s2 - c1 * s3) * x + (c2 * s1) * y + (c1 * c3 + s1 * s2 * s3) * z
     return (xp, yp, zp)
 
 
@@ -203,21 +118,9 @@ def cartesian_xyz(lib, psi, theta, phi, x, y, z):
     s2 = lib.sin(theta)
     c3 = lib.cos(phi)
     s3 = lib.sin(phi)
-    xp = (
-        (c2*c3) * x
-        + (-c2*s3) * y
-        + (s2) * z
-    )
-    yp = (
-        (c1*s3 + c3*s1*s2) * x
-        + (c1*c3 - s1*s2*s3) * y
-        + (-c2*s1) * z
-    )
-    zp = (
-        (s1*s3 - c1*c3*s2) * x
-        + (c3*s1 + c1*s2*s3) * y
-        + (c1*c2) * z
-    )
+    xp = (c2 * c3) * x + (-c2 * s3) * y + (s2) * z
+    yp = (c1 * s3 + c3 * s1 * s2) * x + (c1 * c3 - s1 * s2 * s3) * y + (-c2 * s1) * z
+    zp = (s1 * s3 - c1 * c3 * s2) * x + (c3 * s1 + c1 * s2 * s3) * y + (c1 * c2) * z
     return (xp, yp, zp)
 
 
@@ -228,21 +131,9 @@ def cartesian_yxz(lib, psi, theta, phi, x, y, z):
     s2 = lib.sin(theta)
     c3 = lib.cos(phi)
     s3 = lib.sin(phi)
-    xp = (
-        (c1*c3 + s1*s2*s3) * x
-        + (c3*s1*s2 - c1*s3) * y
-        + (c2*s1) * z
-    )
-    yp = (
-        (c2*s3) * x
-        + (c2*c3) * y
-        + (-s2) * z
-    )
-    zp = (
-        (c1*s2*s3 - c3*s1) * x
-        + (c1*c3*s2 + s1*s3) * y
-        + (c1*c2) * z
-    )
+    xp = (c1 * c3 + s1 * s2 * s3) * x + (c3 * s1 * s2 - c1 * s3) * y + (c2 * s1) * z
+    yp = (c2 * s3) * x + (c2 * c3) * y + (-s2) * z
+    zp = (c1 * s2 * s3 - c3 * s1) * x + (c1 * c3 * s2 + s1 * s3) * y + (c1 * c2) * z
     return (xp, yp, zp)
 
 
@@ -253,21 +144,9 @@ def cartesian_yzx(lib, psi, theta, phi, x, y, z):
     s2 = lib.sin(theta)
     c3 = lib.cos(phi)
     s3 = lib.sin(phi)
-    xp = (
-        (c1*c2) * x
-        + (s1*s3 - c1*c3*s2) * y
-        + (c3*s1 + c1*s2*s3) * z
-    )
-    yp = (
-        (s2) * x
-        + (c2*c3) * y
-        + (-c2*s3) * z
-    )
-    zp = (
-        (-c2*s1) * x
-        + (c1*s3 + c3*s1*s2) * y
-        + (c1*c3 - s1*s2*s3) * z
-    )
+    xp = (c1 * c2) * x + (s1 * s3 - c1 * c3 * s2) * y + (c3 * s1 + c1 * s2 * s3) * z
+    yp = (s2) * x + (c2 * c3) * y + (-c2 * s3) * z
+    zp = (-c2 * s1) * x + (c1 * s3 + c3 * s1 * s2) * y + (c1 * c3 - s1 * s2 * s3) * z
     return (xp, yp, zp)
 
 
@@ -278,21 +157,9 @@ def cartesian_zyx(lib, psi, theta, phi, x, y, z):
     s2 = lib.sin(theta)
     c3 = lib.cos(phi)
     s3 = lib.sin(phi)
-    xp = (
-        (c1*c2) * x
-        + (c1*s2*s3 - c3*s1) * y
-        + (s1*s3 + c1*c3*s2) * z
-    )
-    yp = (
-        (c2*s1) * x
-        + (c1*c3 + s1*s2*s3) * y
-        + (c3*s1*s2 - c1*s3) * z
-    )
-    zp = (
-        (-s2) * x
-        + (c2*s3) * y
-        + (c2*c3) * z
-    )
+    xp = (c1 * c2) * x + (c1 * s2 * s3 - c3 * s1) * y + (s1 * s3 + c1 * c3 * s2) * z
+    yp = (c2 * s1) * x + (c1 * c3 + s1 * s2 * s3) * y + (c3 * s1 * s2 - c1 * s3) * z
+    zp = (-s2) * x + (c2 * s3) * y + (c2 * c3) * z
     return (xp, yp, zp)
 
 
@@ -303,21 +170,9 @@ def cartesian_zxy(lib, psi, theta, phi, x, y, z):
     s2 = lib.sin(theta)
     c3 = lib.cos(phi)
     s3 = lib.sin(phi)
-    xp = (
-        (c1*c3 - s1*s2*s3) * x
-        + (-c2*s1) * y
-        + (c1*s3 + c3*s1*s2) * z
-    )
-    yp = (
-        (c3*s1 + c1*s2*s3) * x
-        + (c1*c2) * y
-        + (s1*s3 - c1*c3*s2) * z
-    )
-    zp = (
-        (-c2*s3) * x
-        + (s2) * y
-        + (c2*c3) * z
-    )
+    xp = (c1 * c3 - s1 * s2 * s3) * x + (-c2 * s1) * y + (c1 * s3 + c3 * s1 * s2) * z
+    yp = (c3 * s1 + c1 * s2 * s3) * x + (c1 * c2) * y + (s1 * s3 - c1 * c3 * s2) * z
+    zp = (-c2 * s3) * x + (s2) * y + (c2 * c3) * z
     return (xp, yp, zp)
 
 
@@ -360,14 +215,35 @@ def make_conversion(azimuthal, longitudinal, order):
         cartesian, azout, lout = dispatch_map[AzimuthalXY, LongitudinalZ, order]
 
         def f(lib, psi, theta, phi, coord1, coord2, coord3):
-            return cartesian(lib, psi, theta, phi, to_x(coord1, coord2), to_y(coord1, coord2), to_z(coord1, coord2, coord3))
+            return cartesian(
+                lib,
+                psi,
+                theta,
+                phi,
+                to_x(coord1, coord2),
+                to_y(coord1, coord2),
+                to_z(coord1, coord2, coord3),
+            )
 
         dispatch_map[azimuthal, longitudinal, order] = (f, azout, lout)
 
 
 for azimuthal in (AzimuthalXY, AzimuthalRhoPhi):
     for longitudinal in (LongitudinalZ, LongitudinalTheta, LongitudinalEta):
-        for order in "xzx", "xyx", "yxy", "yzy", "zyz", "zxz", "xzy", "xyz", "yxz", "yzx", "zyx", "zxy":
+        for order in (
+            "xzx",
+            "xyx",
+            "yxy",
+            "yzy",
+            "zyz",
+            "zxz",
+            "xzy",
+            "xyz",
+            "yxz",
+            "yzx",
+            "zyx",
+            "zxy",
+        ):
             make_conversion(azimuthal, longitudinal, order)
 
 
@@ -379,6 +255,8 @@ def dispatch(psi, theta, phi, order, v):
     ]
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
-            function(v.lib, psi, theta, phi, *v.azimuthal.elements, *v.longitudinal.elements),
+            function(
+                v.lib, psi, theta, phi, *v.azimuthal.elements, *v.longitudinal.elements
+            ),
             returns,
         )
