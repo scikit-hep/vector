@@ -17,8 +17,11 @@ from vector.geometry import (
     ltype,
 )
 
-# Matrices copied from https://en.wikipedia.org/wiki/Euler_angles#Rotation_matrix
+# Rotation is only computed in Cartesian coordinates; the rest are conversions.
 
+
+# Matrices copied from https://en.wikipedia.org/wiki/Euler_angles#Rotation_matrix
+#
 # ROOT uses the same names, phi, theta, psi, but takes the arguments in the
 # opposite order (i.e. first psi, then theta, finally phi) and takes their
 # direction to be the opposite way (e.g. Wikipedia's psi is ROOT's -psi for all

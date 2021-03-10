@@ -108,6 +108,10 @@ for azimuthal1 in (AzimuthalXY, AzimuthalRhoPhi):
 
 
 def dispatch(v1, v2):
+    if v1.lib is not v2.lib:
+        raise TypeError(
+            f"cannot use {v1} (requires {v1.lib}) and {v2} (requires {v1.lib}) together"
+        )
     function, *returns = dispatch_map[
         aztype(v1),
         ltype(v1),
@@ -121,7 +125,7 @@ def dispatch(v1, v2):
                 *v1.azimuthal.elements,
                 *v1.longitudinal.elements,
                 *v2.azimuthal.elements,
-                *v2.longitudinal.elements
+                *v2.longitudinal.elements,
             ),
             returns,
         )

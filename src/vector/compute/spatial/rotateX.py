@@ -17,6 +17,8 @@ from vector.geometry import (
     ltype,
 )
 
+# Rotation is only computed in Cartesian coordinates; the rest are conversions.
+
 
 def xy_z(lib, angle, x, y, z):
     s = lib.sin(angle)
