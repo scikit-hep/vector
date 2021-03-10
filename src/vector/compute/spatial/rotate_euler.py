@@ -240,7 +240,20 @@ def make_conversion(azimuthal, longitudinal, order):
 
 for azimuthal in (AzimuthalXY, AzimuthalRhoPhi):
     for longitudinal in (LongitudinalZ, LongitudinalTheta, LongitudinalEta):
-        for order in ("xzx", "xyx", "yxy", "yzy", "zyz", "zxz", "xzy", "xyz", "yxz", "yzx", "zyx", "zxy",):
+        for order in (
+            "xzx",
+            "xyx",
+            "yxy",
+            "yzy",
+            "zyz",
+            "zxz",
+            "xzy",
+            "xyz",
+            "yxz",
+            "yzx",
+            "zyx",
+            "zxy",
+        ):
             make_conversion(azimuthal, longitudinal, order)
 
 
