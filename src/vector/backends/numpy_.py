@@ -484,6 +484,8 @@ class SpatialNumpy(numpy.ndarray, vector.methods.Spatial):
             for name in _coordinate_class_to_names[returns[0]]:
                 out[name] = result[i]
                 i += 1
+            for name in _coordinate_class_to_names[vector.geometry.ltype(self)]:
+                out[name] = self[name]
             return out.view(type(self))
 
         elif (
@@ -778,6 +780,39 @@ class LorentzNumpy(numpy.ndarray, vector.methods.Lorentz):
             out = numpy.empty(result[0].shape, dtype=dtype)
             for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
                 out[name] = result[i]
+            for name in _coordinate_class_to_names[vector.geometry.ltype(self)]:
+                out[name] = self[name]
+            for name in _coordinate_class_to_names[vector.geometry.ttype(self)]:
+                out[name] = self[name]
+            return out.view(type(self))
+
+        elif (
+            len(returns) == 2
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], vector.geometry.Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], vector.geometry.Longitudinal)
+        ):
+            dtype = []
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            for name in _coordinate_class_to_names[vector.geometry.ttype(self)]:
+                dtype.append((name, self.dtype[name]))
+            out = numpy.empty(result[0].shape, dtype=dtype)
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                out[name] = result[i]
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                out[name] = result[i]
+                i += 1
+            for name in _coordinate_class_to_names[vector.geometry.ttype(self)]:
+                out[name] = self[name]
             return out.view(type(self))
 
         elif (

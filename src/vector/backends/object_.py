@@ -161,10 +161,13 @@ class PlanarObject(vector.methods.Planar):
     def _wrap_result(self, result, returns):
         if returns == [float]:
             return result
+
         elif returns == [vector.geometry.AzimuthalXY]:
             return type(self)(AzimuthalObjectXY(*result))
+
         elif returns == [vector.geometry.AzimuthalRhoPhi]:
             return type(self)(AzimuthalObjectRhoPhi(*result))
+
         else:
             raise AssertionError(repr(returns))
 
@@ -277,18 +280,36 @@ class SpatialObject(vector.methods.Spatial):
     def _wrap_result(self, result, returns):
         if returns == [float]:
             return result
+
         elif returns == [vector.geometry.AzimuthalXY]:
             return type(self)(AzimuthalObjectXY(*result), self.longitudinal)
+
         elif returns == [vector.geometry.AzimuthalRhoPhi]:
             return type(self)(AzimuthalObjectRhoPhi(*result), self.longitudinal)
-        elif returns == [
-            vector.geometry.AzimuthalXY,
-            vector.geometry.LongitudinalZ,
-            None,
-        ]:
-            azimuthal = AzimuthalObjectXY(result[0], result[1])
-            longitudinal = LongitudinalObjectZ(result[2])
+
+        elif (
+            (len(returns) == 2 or (len(returns) == 3 and returns[2] is None))
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], vector.geometry.Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], vector.geometry.Longitudinal)
+        ):
+            if returns[0] is vector.geometry.AzimuthalXY:
+                azimuthal = AzimuthalObjectXY(result[0], result[1])
+            elif returns[0] is vector.geometry.AzimuthalRhoPhi:
+                azimuthal = AzimuthalObjectRhoPhi(result[0], result[1])
+            else:
+                raise AssertionError(repr(returns[0]))
+            if returns[1] is vector.geometry.LongitudinalZ:
+                longitudinal = LongitudinalObjectZ(result[2])
+            elif returns[1] is vector.geometry.LongitudinalTheta:
+                longitudinal = LongitudinalObjectTheta(result[2])
+            elif returns[1] is vector.geometry.LongitudinalEta:
+                longitudinal = LongitudinalObjectEta(result[2])
+            else:
+                raise AssertionError(repr(returns[1]))
             return type(self)(azimuthal, longitudinal)
+
         else:
             raise AssertionError(repr(returns))
 
@@ -532,27 +553,79 @@ class LorentzObject(vector.methods.Lorentz):
     def _wrap_result(self, result, returns):
         if returns == [float]:
             return result
+
         elif returns == [vector.geometry.AzimuthalXY]:
             return type(self)(
                 AzimuthalObjectXY(*result), self.longitudinal, self.temporal
             )
+
         elif returns == [vector.geometry.AzimuthalRhoPhi]:
             return type(self)(
                 AzimuthalObjectRhoPhi(*result), self.longitudinal, self.temporal
             )
-        elif returns == [
-            vector.geometry.AzimuthalXY,
-            vector.geometry.LongitudinalZ,
-            None,
-        ]:
-            azimuthal = AzimuthalObjectXY(result[0], result[1])
-            longitudinal = LongitudinalObjectZ(result[2])
-            if isinstance(self, LorentzVectorObject):
+
+        elif (
+            len(returns) == 2
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], vector.geometry.Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], vector.geometry.Longitudinal)
+        ):
+            if returns[0] is vector.geometry.AzimuthalXY:
+                azimuthal = AzimuthalObjectXY(result[0], result[1])
+            elif returns[0] is vector.geometry.AzimuthalRhoPhi:
+                azimuthal = AzimuthalObjectRhoPhi(result[0], result[1])
+            else:
+                raise AssertionError(repr(returns[0]))
+            if returns[1] is vector.geometry.LongitudinalZ:
+                longitudinal = LongitudinalObjectZ(result[2])
+            elif returns[1] is vector.geometry.LongitudinalTheta:
+                longitudinal = LongitudinalObjectTheta(result[2])
+            elif returns[1] is vector.geometry.LongitudinalEta:
+                longitudinal = LongitudinalObjectEta(result[2])
+            else:
+                raise AssertionError(repr(returns[1]))
+            return type(self)(azimuthal, longitudinal, self.temporal)
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], vector.geometry.Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], vector.geometry.Longitudinal)
+        ):
+            if returns[0] is vector.geometry.AzimuthalXY:
+                azimuthal = AzimuthalObjectXY(result[0], result[1])
+            elif returns[0] is vector.geometry.AzimuthalRhoPhi:
+                azimuthal = AzimuthalObjectRhoPhi(result[0], result[1])
+            else:
+                raise AssertionError(repr(returns[0]))
+            if returns[1] is vector.geometry.LongitudinalZ:
+                longitudinal = LongitudinalObjectZ(result[2])
+            elif returns[1] is vector.geometry.LongitudinalTheta:
+                longitudinal = LongitudinalObjectTheta(result[2])
+            elif returns[1] is vector.geometry.LongitudinalEta:
+                longitudinal = LongitudinalObjectEta(result[2])
+            else:
+                raise AssertionError(repr(returns[1]))
+            is_4d = True
+            if returns[2] is vector.geometry.TemporalT:
+                temporal = TemporalObjectT(result[3])
+            elif returns[2] is vector.geometry.TemporalTau:
+                temporal = TemporalObjectTau(result[3])
+            elif returns[2] is None:
+                is_4d = False
+            else:
+                raise AssertionError(repr(returns[2]))
+            if is_4d:
+                return type(self)(azimuthal, longitudinal, temporal)
+            elif isinstance(self, LorentzVectorObject):
                 return SpatialVectorObject(azimuthal, longitudinal)
             elif isinstance(self, LorentzPointObject):
-                return SpatialVectorObject(azimuthal, longitudinal)
+                return SpatialPointObject(azimuthal, longitudinal)
             else:
                 raise AssertionError(repr(type(self)))
+
         else:
             raise AssertionError(repr(returns))
 

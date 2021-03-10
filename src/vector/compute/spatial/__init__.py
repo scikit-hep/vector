@@ -12,5 +12,6 @@ import vector.compute.spatial.deltaR2  # noqa: F401
 import vector.compute.spatial.eta  # noqa: F401
 import vector.compute.spatial.mag  # noqa: F401
 import vector.compute.spatial.mag2  # noqa: F401
+import vector.compute.spatial.rotateX  # noqa: F401
 import vector.compute.spatial.theta  # noqa: F401
 import vector.compute.spatial.z  # noqa: F401

@@ -97,6 +97,10 @@ class Spatial(Planar):
         "deltaR2 docs"
         return vector.compute.spatial.deltaR2.dispatch(self, other)
 
+    def rotateX(self, angle):
+        "rotateX docs"
+        return vector.compute.spatial.rotateX.dispatch(angle, self)
+
 
 class Lorentz(Spatial):
     @property
