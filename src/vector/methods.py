@@ -89,8 +89,12 @@ class Spatial(Planar):
         "deltaeta docs"
         return vector.compute.spatial.deltaeta.dispatch(self, other)
 
+    def deltaR(self, other):
+        "deltaR docs"
+        return vector.compute.spatial.deltaR.dispatch(self, other)
+
     def deltaR2(self, other):
-        "deltaeta docs"
+        "deltaR2 docs"
         return vector.compute.spatial.deltaR2.dispatch(self, other)
 
 
