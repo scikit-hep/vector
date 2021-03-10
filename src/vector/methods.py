@@ -101,6 +101,10 @@ class Spatial(Planar):
         "rotateX docs"
         return vector.compute.spatial.rotateX.dispatch(angle, self)
 
+    def rotateY(self, angle):
+        "rotateY docs"
+        return vector.compute.spatial.rotateY.dispatch(angle, self)
+
 
 class Lorentz(Spatial):
     @property
