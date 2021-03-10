@@ -13,6 +13,7 @@ import vector.compute.spatial.eta  # noqa: F401
 import vector.compute.spatial.mag  # noqa: F401
 import vector.compute.spatial.mag2  # noqa: F401
 import vector.compute.spatial.rotate_axis  # noqa: F401
+import vector.compute.spatial.rotate_euler  # noqa: F401
 import vector.compute.spatial.rotateX  # noqa: F401
 import vector.compute.spatial.rotateY  # noqa: F401
 import vector.compute.spatial.theta  # noqa: F401

@@ -109,6 +109,10 @@ class Spatial(Planar):
         "rotate_axis docs"
         return vector.compute.spatial.rotate_axis.dispatch(angle, axis, self)
 
+    def rotate_euler(self, psi, theta, phi, order="zxz"):
+        "rotate_euler docs"
+        return vector.compute.spatial.rotate_euler.dispatch(psi, theta, phi, order.lower(), self)
+
 
 class Lorentz(Spatial):
     @property
