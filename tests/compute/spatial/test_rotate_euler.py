@@ -3,10 +3,8 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-import numpy
 import pytest
 
-import vector.backends.numpy_
 import vector.backends.object_
 import vector.geometry
 

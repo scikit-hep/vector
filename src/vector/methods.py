@@ -110,9 +110,28 @@ class Spatial(Planar):
         return vector.compute.spatial.rotate_axis.dispatch(angle, axis, self)
 
     def rotate_euler(self, phi, theta, psi, order="zxz"):
-        "rotate_euler docs"
+        """
+        rotate_euler docs
+
+        same conventions as ROOT
+        """
         return vector.compute.spatial.rotate_euler.dispatch(
             phi, theta, psi, order.lower(), self
+        )
+
+    def rotate_nautical(self, yaw, pitch, roll):
+        """
+        rotate_nautical docs
+
+        transforming "from the body frame to the inertial frame"
+
+        http://planning.cs.uiuc.edu/node102.html
+        http://www.chrobotics.com/library/understanding-euler-angles
+        """
+        # The order of arguments is reversed because rotate_euler
+        # follows ROOT's argument order: phi, theta, psi.
+        return vector.compute.spatial.rotate_euler.dispatch(
+            roll, pitch, yaw, "zyx", self
         )
 
 
