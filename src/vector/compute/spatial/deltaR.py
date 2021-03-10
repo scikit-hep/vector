@@ -58,7 +58,9 @@ def xy_theta_rhophi_z(lib, x1, y1, theta1, rho2, phi2, z2):
 
 
 def xy_theta_rhophi_theta(lib, x1, y1, theta1, rho2, phi2, theta2):
-    return lib.sqrt(deltaR2.xy_theta_rhophi_theta(lib, x1, y1, theta1, rho2, phi2, theta2))
+    return lib.sqrt(
+        deltaR2.xy_theta_rhophi_theta(lib, x1, y1, theta1, rho2, phi2, theta2)
+    )
 
 
 def xy_theta_rhophi_eta(lib, x1, y1, theta1, rho2, phi2, eta2):
@@ -106,7 +108,9 @@ def rhophi_z_rhophi_z(lib, rho1, phi1, z1, rho2, phi2, z2):
 
 
 def rhophi_z_rhophi_theta(lib, rho1, phi1, z1, rho2, phi2, theta2):
-    return lib.sqrt(deltaR2.rhophi_z_rhophi_theta(lib, rho1, phi1, z1, rho2, phi2, theta2))
+    return lib.sqrt(
+        deltaR2.rhophi_z_rhophi_theta(lib, rho1, phi1, z1, rho2, phi2, theta2)
+    )
 
 
 def rhophi_z_rhophi_eta(lib, rho1, phi1, z1, rho2, phi2, eta2):
@@ -118,7 +122,9 @@ def rhophi_theta_xy_z(lib, rho1, phi1, theta1, x2, y2, z2):
 
 
 def rhophi_theta_xy_theta(lib, rho1, phi1, theta1, x2, y2, theta2):
-    return lib.sqrt(deltaR2.rhophi_theta_xy_theta(lib, rho1, phi1, theta1, x2, y2, theta2))
+    return lib.sqrt(
+        deltaR2.rhophi_theta_xy_theta(lib, rho1, phi1, theta1, x2, y2, theta2)
+    )
 
 
 def rhophi_theta_xy_eta(lib, rho1, phi1, theta1, x2, y2, eta2):
@@ -126,15 +132,21 @@ def rhophi_theta_xy_eta(lib, rho1, phi1, theta1, x2, y2, eta2):
 
 
 def rhophi_theta_rhophi_z(lib, rho1, phi1, theta1, rho2, phi2, z2):
-    return lib.sqrt(deltaR2.rhophi_theta_rhophi_z(lib, rho1, phi1, theta1, rho2, phi2, z2))
+    return lib.sqrt(
+        deltaR2.rhophi_theta_rhophi_z(lib, rho1, phi1, theta1, rho2, phi2, z2)
+    )
 
 
 def rhophi_theta_rhophi_theta(lib, rho1, phi1, theta1, rho2, phi2, theta2):
-    return lib.sqrt(deltaR2.rhophi_theta_rhophi_theta(lib, rho1, phi1, theta1, rho2, phi2, theta2))
+    return lib.sqrt(
+        deltaR2.rhophi_theta_rhophi_theta(lib, rho1, phi1, theta1, rho2, phi2, theta2)
+    )
 
 
 def rhophi_theta_rhophi_eta(lib, rho1, phi1, theta1, rho2, phi2, eta2):
-    return lib.sqrt(deltaR2.rhophi_theta_rhophi_eta(lib, rho1, phi1, theta1, rho2, phi2, eta2))
+    return lib.sqrt(
+        deltaR2.rhophi_theta_rhophi_eta(lib, rho1, phi1, theta1, rho2, phi2, eta2)
+    )
 
 
 def rhophi_eta_xy_z(lib, rho1, phi1, eta1, x2, y2, z2):
@@ -154,11 +166,15 @@ def rhophi_eta_rhophi_z(lib, rho1, phi1, eta1, rho2, phi2, z2):
 
 
 def rhophi_eta_rhophi_theta(lib, rho1, phi1, eta1, rho2, phi2, theta2):
-    return lib.sqrt(deltaR2.rhophi_eta_rhophi_theta(lib, rho1, phi1, eta1, rho2, phi2, theta2))
+    return lib.sqrt(
+        deltaR2.rhophi_eta_rhophi_theta(lib, rho1, phi1, eta1, rho2, phi2, theta2)
+    )
 
 
 def rhophi_eta_rhophi_eta(lib, rho1, phi1, eta1, rho2, phi2, eta2):
-    return lib.sqrt(deltaR2.rhophi_eta_rhophi_eta(lib, rho1, phi1, eta1, rho2, phi2, eta2))
+    return lib.sqrt(
+        deltaR2.rhophi_eta_rhophi_eta(lib, rho1, phi1, eta1, rho2, phi2, eta2)
+    )
 
 
 dispatch_map = {
