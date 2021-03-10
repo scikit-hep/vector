@@ -109,10 +109,10 @@ class Spatial(Planar):
         "rotate_axis docs"
         return vector.compute.spatial.rotate_axis.dispatch(angle, axis, self)
 
-    def rotate_euler(self, psi, theta, phi, order="zxz"):
+    def rotate_euler(self, phi, theta, psi, order="zxz"):
         "rotate_euler docs"
         return vector.compute.spatial.rotate_euler.dispatch(
-            psi, theta, phi, order.lower(), self
+            phi, theta, psi, order.lower(), self
         )
 
 
