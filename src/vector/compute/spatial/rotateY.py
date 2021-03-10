@@ -21,7 +21,7 @@ from vector.geometry import (
 def xy_z(lib, angle, x, y, z):
     s = lib.sin(angle)
     c = lib.cos(angle)
-    return (c*x + s*z, y, -s*x + c*z)
+    return (c * x + s * z, y, -s * x + c * z)
 
 
 def xy_theta(lib, angle, x, y, theta):
