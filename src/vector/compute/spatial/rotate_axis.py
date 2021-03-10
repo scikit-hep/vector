@@ -20,7 +20,7 @@ from vector.geometry import (
 # Rotation is only computed in Cartesian coordinates; the rest are conversions.
 
 
-def xy_z_xy_z(lib, angle, x1, y1, z1, x2, y2, z2):
+def cartesian(lib, angle, x1, y1, z1, x2, y2, z2):
     norm = lib.sqrt(x1 ** 2 + y1 ** 2 + z1 ** 2)
     ux = x1 / norm
     uy = y1 / norm
@@ -46,593 +46,86 @@ def xy_z_xy_z(lib, angle, x1, y1, z1, x2, y2, z2):
     return (xp, yp, zp)
 
 
-def xy_z_xy_theta(lib, angle, x1, y1, z1, x2, y2, theta2):
-    return xy_z_xy_z(lib, angle, x1, y1, z1, x2, y2, z.xy_theta(lib, x2, y2, theta2))
-
-
-def xy_z_xy_eta(lib, angle, x1, y1, z1, x2, y2, eta2):
-    return xy_z_xy_z(lib, angle, x1, y1, z1, x2, y2, z.xy_eta(lib, x2, y2, eta2))
-
-
-def xy_z_rhophi_z(lib, angle, x1, y1, z1, rho2, phi2, z2):
-    return xy_z_xy_z(
-        lib, angle, x1, y1, z1, x.rhophi(lib, rho2, phi2), y.rhophi(lib, rho2, phi2), z2
-    )
-
-
-def xy_z_rhophi_theta(lib, angle, x1, y1, z1, rho2, phi2, theta2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x1,
-        y1,
-        z1,
-        x.rhophi(lib, rho2, phi2),
-        y.rhophi(lib, rho2, phi2),
-        z.rhophi_theta(lib, rho2, phi2, theta2),
-    )
-
-
-def xy_z_rhophi_eta(lib, angle, x1, y1, z1, rho2, phi2, eta2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x1,
-        y1,
-        z1,
-        x.rhophi(lib, rho2, phi2),
-        y.rhophi(lib, rho2, phi2),
-        z.rhophi_eta(lib, rho2, phi2, eta2),
-    )
-
-
-def xy_theta_xy_z(lib, angle, x1, y1, theta1, x2, y2, z2):
-    return xy_z_xy_z(lib, angle, x1, y1, z.xy_theta(lib, x1, y1, theta1), x2, y2, z2)
-
-
-def xy_theta_xy_theta(lib, angle, x1, y1, theta1, x2, y2, theta2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x1,
-        y1,
-        z.xy_theta(lib, x1, y1, theta1),
-        x2,
-        y2,
-        z.xy_theta(lib, x2, y2, theta2),
-    )
-
-
-def xy_theta_xy_eta(lib, angle, x1, y1, theta1, x2, y2, eta2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x1,
-        y1,
-        z.xy_theta(lib, x1, y1, theta1),
-        x2,
-        y2,
-        z.xy_eta(lib, x2, y2, eta2),
-    )
-
-
-def xy_theta_rhophi_z(lib, angle, x1, y1, theta1, rho2, phi2, z2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x1,
-        y1,
-        z.xy_theta(lib, x1, y1, theta1),
-        x.rhophi(lib, rho2, phi2),
-        y.rhophi(lib, rho2, phi2),
-        z2,
-    )
-
-
-def xy_theta_rhophi_theta(lib, angle, x1, y1, theta1, rho2, phi2, theta2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x1,
-        y1,
-        z.xy_theta(lib, x1, y1, theta1),
-        x.rhophi(lib, rho2, phi2),
-        y.rhophi(lib, rho2, phi2),
-        z.rhophi_theta(lib, rho2, phi2, theta2),
-    )
-
-
-def xy_theta_rhophi_eta(lib, angle, x1, y1, theta1, rho2, phi2, eta2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x1,
-        y1,
-        z.xy_theta(lib, x1, y1, theta1),
-        x.rhophi(lib, rho2, phi2),
-        y.rhophi(lib, rho2, phi2),
-        z.rhophi_eta(lib, rho2, phi2, eta2),
-    )
-
-
-def xy_eta_xy_z(lib, angle, x1, y1, eta1, x2, y2, z2):
-    return xy_z_xy_z(lib, angle, x1, y1, z.xy_eta(lib, x1, y1, eta1), x2, y2, z2)
-
-
-def xy_eta_xy_theta(lib, angle, x1, y1, eta1, x2, y2, theta2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x1,
-        y1,
-        z.xy_eta(lib, x1, y1, eta1),
-        x2,
-        y2,
-        z.xy_theta(lib, x2, y2, theta2),
-    )
-
-
-def xy_eta_xy_eta(lib, angle, x1, y1, eta1, x2, y2, eta2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x1,
-        y1,
-        z.xy_eta(lib, x1, y1, eta1),
-        x2,
-        y2,
-        z.xy_eta(lib, x2, y2, eta2),
-    )
-
-
-def xy_eta_rhophi_z(lib, angle, x1, y1, eta1, rho2, phi2, z2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x1,
-        y1,
-        z.xy_eta(lib, x1, y1, eta1),
-        x.rhophi(lib, rho2, phi2),
-        y.rhophi(lib, rho2, phi2),
-        z2,
-    )
-
-
-def xy_eta_rhophi_theta(lib, angle, x1, y1, eta1, rho2, phi2, theta2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x1,
-        y1,
-        z.xy_eta(lib, x1, y1, eta1),
-        x.rhophi(lib, rho2, phi2),
-        y.rhophi(lib, rho2, phi2),
-        z.rhophi_theta(lib, rho2, phi2, theta2),
-    )
-
-
-def xy_eta_rhophi_eta(lib, angle, x1, y1, eta1, rho2, phi2, eta2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x1,
-        y1,
-        z.xy_eta(lib, x1, y1, eta1),
-        x.rhophi(lib, rho2, phi2),
-        y.rhophi(lib, rho2, phi2),
-        z.rhophi_eta(lib, rho2, phi2, eta2),
-    )
-
-
-def rhophi_z_xy_z(lib, angle, rho1, phi1, z1, x2, y2, z2):
-    return xy_z_xy_z(
-        lib, angle, x.rhophi(lib, rho1, phi1), y.rhophi(lib, rho1, phi1), z1, x2, y2, z2
-    )
-
-
-def rhophi_z_xy_theta(lib, angle, rho1, phi1, z1, x2, y2, theta2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x.rhophi(lib, rho1, phi1),
-        y.rhophi(lib, rho1, phi1),
-        z1,
-        x2,
-        y2,
-        z.xy_theta(lib, x2, y2, theta2),
-    )
-
-
-def rhophi_z_xy_eta(lib, angle, rho1, phi1, z1, x2, y2, eta2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x.rhophi(lib, rho1, phi1),
-        y.rhophi(lib, rho1, phi1),
-        z1,
-        x2,
-        y2,
-        z.xy_eta(lib, x2, y2, eta2),
-    )
-
-
-def rhophi_z_rhophi_z(lib, angle, rho1, phi1, z1, rho2, phi2, z2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x.rhophi(lib, rho1, phi1),
-        y.rhophi(lib, rho1, phi1),
-        z1,
-        x.rhophi(lib, rho2, phi2),
-        y.rhophi(lib, rho2, phi2),
-        z2,
-    )
-
-
-def rhophi_z_rhophi_theta(lib, angle, rho1, phi1, z1, rho2, phi2, theta2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x.rhophi(lib, rho1, phi1),
-        y.rhophi(lib, rho1, phi1),
-        z1,
-        x.rhophi(lib, rho2, phi2),
-        y.rhophi(lib, rho2, phi2),
-        z.rhophi_theta(lib, rho2, phi2, theta2),
-    )
-
-
-def rhophi_z_rhophi_eta(lib, angle, rho1, phi1, z1, rho2, phi2, eta2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x.rhophi(lib, rho1, phi1),
-        y.rhophi(lib, rho1, phi1),
-        z1,
-        x.rhophi(lib, rho2, phi2),
-        y.rhophi(lib, rho2, phi2),
-        z.rhophi_eta(lib, rho2, phi2, eta2),
-    )
-
-
-def rhophi_theta_xy_z(lib, angle, rho1, phi1, theta1, x2, y2, z2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x.rhophi(lib, rho1, phi1),
-        y.rhophi(lib, rho1, phi1),
-        z.rhophi_theta(lib, rho1, phi1, theta1),
-        x2,
-        y2,
-        z2,
-    )
-
-
-def rhophi_theta_xy_theta(lib, angle, rho1, phi1, theta1, x2, y2, theta2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x.rhophi(lib, rho1, phi1),
-        y.rhophi(lib, rho1, phi1),
-        z.rhophi_theta(lib, rho1, phi1, theta1),
-        x2,
-        y2,
-        z.xy_theta(lib, x2, y2, theta2),
-    )
-
-
-def rhophi_theta_xy_eta(lib, angle, rho1, phi1, theta1, x2, y2, eta2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x.rhophi(lib, rho1, phi1),
-        y.rhophi(lib, rho1, phi1),
-        z.rhophi_theta(lib, rho1, phi1, theta1),
-        x2,
-        y2,
-        z.xy_eta(lib, x2, y2, eta2),
-    )
-
-
-def rhophi_theta_rhophi_z(lib, angle, rho1, phi1, theta1, rho2, phi2, z2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x.rhophi(lib, rho1, phi1),
-        y.rhophi(lib, rho1, phi1),
-        z.rhophi_theta(lib, rho1, phi1, theta1),
-        x.rhophi(lib, rho2, phi2),
-        y.rhophi(lib, rho2, phi2),
-        z2,
-    )
-
-
-def rhophi_theta_rhophi_theta(lib, angle, rho1, phi1, theta1, rho2, phi2, theta2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x.rhophi(lib, rho1, phi1),
-        y.rhophi(lib, rho1, phi1),
-        z.rhophi_theta(lib, rho1, phi1, theta1),
-        x.rhophi(lib, rho2, phi2),
-        y.rhophi(lib, rho2, phi2),
-        z.rhophi_theta(lib, rho2, phi2, theta2),
-    )
-
-
-def rhophi_theta_rhophi_eta(lib, angle, rho1, phi1, theta1, rho2, phi2, eta2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x.rhophi(lib, rho1, phi1),
-        y.rhophi(lib, rho1, phi1),
-        z.rhophi_theta(lib, rho1, phi1, theta1),
-        x.rhophi(lib, rho2, phi2),
-        y.rhophi(lib, rho2, phi2),
-        z.rhophi_eta(lib, rho2, phi2, eta2),
-    )
-
-
-def rhophi_eta_xy_z(lib, angle, rho1, phi1, eta1, x2, y2, z2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x.rhophi(lib, rho1, phi1),
-        y.rhophi(lib, rho1, phi1),
-        z.rhophi_eta(lib, rho1, phi1, eta1),
-        x2,
-        y2,
-        z2,
-    )
-
-
-def rhophi_eta_xy_theta(lib, angle, rho1, phi1, eta1, x2, y2, theta2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x.rhophi(lib, rho1, phi1),
-        y.rhophi(lib, rho1, phi1),
-        z.rhophi_eta(lib, rho1, phi1, eta1),
-        x2,
-        y2,
-        z.xy_theta(lib, x2, y2, theta2),
-    )
-
-
-def rhophi_eta_xy_eta(lib, angle, rho1, phi1, eta1, x2, y2, eta2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x.rhophi(lib, rho1, phi1),
-        y.rhophi(lib, rho1, phi1),
-        z.rhophi_eta(lib, rho1, phi1, eta1),
-        x2,
-        y2,
-        z.xy_eta(lib, x2, y2, eta2),
-    )
-
-
-def rhophi_eta_rhophi_z(lib, angle, rho1, phi1, eta1, rho2, phi2, z2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x.rhophi(lib, rho1, phi1),
-        y.rhophi(lib, rho1, phi1),
-        z.rhophi_eta(lib, rho1, phi1, eta1),
-        x.rhophi(lib, rho2, phi2),
-        y.rhophi(lib, rho2, phi2),
-        z2,
-    )
-
-
-def rhophi_eta_rhophi_theta(lib, angle, rho1, phi1, eta1, rho2, phi2, theta2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x.rhophi(lib, rho1, phi1),
-        y.rhophi(lib, rho1, phi1),
-        z.rhophi_eta(lib, rho1, phi1, eta1),
-        x.rhophi(lib, rho2, phi2),
-        y.rhophi(lib, rho2, phi2),
-        z.rhophi_theta(lib, rho2, phi2, theta2),
-    )
-
-
-def rhophi_eta_rhophi_eta(lib, angle, rho1, phi1, eta1, rho2, phi2, eta2):
-    return xy_z_xy_z(
-        lib,
-        angle,
-        x.rhophi(lib, rho1, phi1),
-        y.rhophi(lib, rho1, phi1),
-        z.rhophi_eta(lib, rho1, phi1, eta1),
-        x.rhophi(lib, rho2, phi2),
-        y.rhophi(lib, rho2, phi2),
-        z.rhophi_eta(lib, rho2, phi2, eta2),
-    )
-
-
 dispatch_map = {
     (AzimuthalXY, LongitudinalZ, AzimuthalXY, LongitudinalZ): (
-        xy_z_xy_z,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalXY, LongitudinalZ, AzimuthalXY, LongitudinalTheta): (
-        xy_z_xy_theta,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalXY, LongitudinalZ, AzimuthalXY, LongitudinalEta): (
-        xy_z_xy_eta,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalXY, LongitudinalZ, AzimuthalRhoPhi, LongitudinalZ): (
-        xy_z_rhophi_z,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalXY, LongitudinalZ, AzimuthalRhoPhi, LongitudinalTheta): (
-        xy_z_rhophi_theta,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalXY, LongitudinalZ, AzimuthalRhoPhi, LongitudinalEta): (
-        xy_z_rhophi_eta,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalXY, LongitudinalTheta, AzimuthalXY, LongitudinalZ): (
-        xy_theta_xy_z,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalXY, LongitudinalTheta, AzimuthalXY, LongitudinalTheta): (
-        xy_theta_xy_theta,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalXY, LongitudinalTheta, AzimuthalXY, LongitudinalEta): (
-        xy_theta_xy_eta,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalXY, LongitudinalTheta, AzimuthalRhoPhi, LongitudinalZ): (
-        xy_theta_rhophi_z,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalXY, LongitudinalTheta, AzimuthalRhoPhi, LongitudinalTheta): (
-        xy_theta_rhophi_theta,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalXY, LongitudinalTheta, AzimuthalRhoPhi, LongitudinalEta): (
-        xy_theta_rhophi_eta,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalXY, LongitudinalEta, AzimuthalXY, LongitudinalZ): (
-        xy_eta_xy_z,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalXY, LongitudinalEta, AzimuthalXY, LongitudinalTheta): (
-        xy_eta_xy_theta,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalXY, LongitudinalEta, AzimuthalXY, LongitudinalEta): (
-        xy_eta_xy_eta,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalXY, LongitudinalEta, AzimuthalRhoPhi, LongitudinalZ): (
-        xy_eta_rhophi_z,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalXY, LongitudinalEta, AzimuthalRhoPhi, LongitudinalTheta): (
-        xy_eta_rhophi_theta,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalXY, LongitudinalEta, AzimuthalRhoPhi, LongitudinalEta): (
-        xy_eta_rhophi_eta,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalRhoPhi, LongitudinalZ, AzimuthalXY, LongitudinalZ): (
-        rhophi_z_xy_z,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalRhoPhi, LongitudinalZ, AzimuthalXY, LongitudinalTheta): (
-        rhophi_z_xy_theta,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalRhoPhi, LongitudinalZ, AzimuthalXY, LongitudinalEta): (
-        rhophi_z_xy_eta,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalRhoPhi, LongitudinalZ, AzimuthalRhoPhi, LongitudinalZ): (
-        rhophi_z_rhophi_z,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalRhoPhi, LongitudinalZ, AzimuthalRhoPhi, LongitudinalTheta): (
-        rhophi_z_rhophi_theta,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalRhoPhi, LongitudinalZ, AzimuthalRhoPhi, LongitudinalEta): (
-        rhophi_z_rhophi_eta,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalRhoPhi, LongitudinalTheta, AzimuthalXY, LongitudinalZ): (
-        rhophi_theta_xy_z,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalRhoPhi, LongitudinalTheta, AzimuthalXY, LongitudinalTheta): (
-        rhophi_theta_xy_theta,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalRhoPhi, LongitudinalTheta, AzimuthalXY, LongitudinalEta): (
-        rhophi_theta_xy_eta,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalRhoPhi, LongitudinalTheta, AzimuthalRhoPhi, LongitudinalZ): (
-        rhophi_theta_rhophi_z,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalRhoPhi, LongitudinalTheta, AzimuthalRhoPhi, LongitudinalTheta): (
-        rhophi_theta_rhophi_theta,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalRhoPhi, LongitudinalTheta, AzimuthalRhoPhi, LongitudinalEta): (
-        rhophi_theta_rhophi_eta,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalRhoPhi, LongitudinalEta, AzimuthalXY, LongitudinalZ): (
-        rhophi_eta_xy_z,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalRhoPhi, LongitudinalEta, AzimuthalXY, LongitudinalTheta): (
-        rhophi_eta_xy_theta,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalRhoPhi, LongitudinalEta, AzimuthalXY, LongitudinalEta): (
-        rhophi_eta_xy_eta,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalRhoPhi, LongitudinalEta, AzimuthalRhoPhi, LongitudinalZ): (
-        rhophi_eta_rhophi_z,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalRhoPhi, LongitudinalEta, AzimuthalRhoPhi, LongitudinalTheta): (
-        rhophi_eta_rhophi_theta,
-        AzimuthalXY,
-        LongitudinalZ,
-    ),
-    (AzimuthalRhoPhi, LongitudinalEta, AzimuthalRhoPhi, LongitudinalEta): (
-        rhophi_eta_rhophi_eta,
+        cartesian,
         AzimuthalXY,
         LongitudinalZ,
     ),
 }
+
+
+def make_conversion(azimuthal1, longitudinal1, azimuthal2, longitudinal2):
+    if (azimuthal1, longitudinal1, azimuthal2, longitudinal2) != (
+        AzimuthalXY,
+        LongitudinalZ,
+        AzimuthalXY,
+        LongitudinalZ,
+    ):
+        if azimuthal1 is AzimuthalXY:
+            to_x1 = x.xy
+            to_y1 = y.xy
+            if longitudinal1 is LongitudinalZ:
+                to_z1 = z.xy_z
+            elif longitudinal1 is LongitudinalTheta:
+                to_z1 = z.xy_theta
+            elif longitudinal1 is LongitudinalEta:
+                to_z1 = z.xy_eta
+        elif azimuthal1 is AzimuthalRhoPhi:
+            to_x1 = x.rhophi
+            to_y1 = y.rhophi
+            if longitudinal1 is LongitudinalZ:
+                to_z1 = z.rhophi_z
+            elif longitudinal1 is LongitudinalTheta:
+                to_z1 = z.rhophi_theta
+            elif longitudinal1 is LongitudinalEta:
+                to_z1 = z.rhophi_eta
+        if azimuthal2 is AzimuthalXY:
+            to_x2 = x.xy
+            to_y2 = y.xy
+            if longitudinal2 is LongitudinalZ:
+                to_z2 = z.xy_z
+            elif longitudinal2 is LongitudinalTheta:
+                to_z2 = z.xy_theta
+            elif longitudinal2 is LongitudinalEta:
+                to_z2 = z.xy_eta
+        elif azimuthal2 is AzimuthalRhoPhi:
+            to_x2 = x.rhophi
+            to_y2 = y.rhophi
+            if longitudinal2 is LongitudinalZ:
+                to_z2 = z.rhophi_z
+            elif longitudinal2 is LongitudinalTheta:
+                to_z2 = z.rhophi_theta
+            elif longitudinal2 is LongitudinalEta:
+                to_z2 = z.rhophi_eta
+        cartesian, azout, lout = dispatch_map[
+            AzimuthalXY, LongitudinalZ, AzimuthalXY, LongitudinalZ
+        ]
+
+        def f(lib, angle, coord11, coord12, coord13, coord21, coord22, coord23):
+            return cartesian(
+                lib,
+                angle,
+                to_x1(lib, coord11, coord12),
+                to_y1(lib, coord11, coord12),
+                to_z1(lib, coord11, coord12, coord13),
+                to_x2(lib, coord21, coord22),
+                to_y2(lib, coord21, coord22),
+                to_z2(lib, coord21, coord22, coord23),
+            )
+
+        dispatch_map[azimuthal1, longitudinal1, azimuthal2, longitudinal2] = (
+            f,
+            azout,
+            lout,
+        )
+
+
+for azimuthal1 in (AzimuthalXY, AzimuthalRhoPhi):
+    for longitudinal1 in (LongitudinalZ, LongitudinalTheta, LongitudinalEta):
+        for azimuthal2 in (AzimuthalXY, AzimuthalRhoPhi):
+            for longitudinal2 in (LongitudinalZ, LongitudinalTheta, LongitudinalEta):
+                make_conversion(azimuthal1, longitudinal1, azimuthal2, longitudinal2)
 
 
 def dispatch(angle, v1, v2):
