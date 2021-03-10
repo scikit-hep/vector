@@ -127,7 +127,7 @@ def test_lorentz_object():
                 getattr(axis, "to_" + t1)(),
                 getattr(vec, "to_" + t2)(),
             )
-            out = vec.rotate_axis(axis, 0.25)
+            out = tvec.rotate_axis(taxis, 0.25)
             assert isinstance(out, vector.backends.object_.LorentzVectorObject)
             assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectXY)
             assert isinstance(
@@ -197,9 +197,14 @@ def test_lorentz_numpy():
                 getattr(axis, "to_" + t1)(),
                 getattr(vec, "to_" + t2)(),
             )
-            out = vec.rotate_axis(axis, 0.25)
+            out = tvec.rotate_axis(taxis, 0.25)
             assert isinstance(out, vector.backends.numpy_.LorentzVectorNumpy)
-            assert out.dtype.names == ("x", "y", "z", "t") or out.dtype.names == ("x", "y", "z", "tau")
+            assert out.dtype.names == ("x", "y", "z", "t") or out.dtype.names == (
+                "x",
+                "y",
+                "z",
+                "tau",
+            )
             assert out[0].x == pytest.approx(0.37483425404335763)
             assert out[0].y == pytest.approx(0.5383405688588193)
             assert out[0].z == pytest.approx(0.5828282027463345)
