@@ -9,15 +9,260 @@ class Vector:
 
 
 class Vector2D(Vector):
-    pass
+    def to_xy(self):
+        "to_xy docs"
+        from .compute.planar import x, y
+
+        return self._wrap_result((x.dispatch(self), y.dispatch(self)), [AzimuthalXY])
+
+    def to_rhophi(self):
+        "to_rhophi docs"
+        from .compute.planar import phi, rho
+
+        return self._wrap_result(
+            (rho.dispatch(self), phi.dispatch(self)), [AzimuthalRhoPhi]
+        )
 
 
 class Vector3D(Vector):
-    pass
+    def to_xyz(self):
+        "to_xyz docs"
+        from .compute.planar import x, y
+        from .compute.spatial import z
+
+        return self._wrap_result(
+            (x.dispatch(self), y.dispatch(self), z.dispatch(self)),
+            [AzimuthalXY, LongitudinalZ],
+        )
+
+    def to_xytheta(self):
+        "to_xytheta docs"
+        from .compute.planar import x, y
+        from .compute.spatial import theta
+
+        return self._wrap_result(
+            (x.dispatch(self), y.dispatch(self), theta.dispatch(self)),
+            [AzimuthalXY, LongitudinalTheta],
+        )
+
+    def to_xyeta(self):
+        "to_xyeta docs"
+        from .compute.planar import x, y
+        from .compute.spatial import eta
+
+        return self._wrap_result(
+            (x.dispatch(self), y.dispatch(self), eta.dispatch(self)),
+            [AzimuthalXY, LongitudinalEta],
+        )
+
+    def to_rhophiz(self):
+        "to_rhophiz docs"
+        from .compute.planar import phi, rho
+        from .compute.spatial import z
+
+        return self._wrap_result(
+            (rho.dispatch(self), phi.dispatch(self), z.dispatch(self)),
+            [AzimuthalRhoPhi, LongitudinalZ],
+        )
+
+    def to_rhophitheta(self):
+        "to_rhophitheta docs"
+        from .compute.planar import phi, rho
+        from .compute.spatial import theta
+
+        return self._wrap_result(
+            (rho.dispatch(self), phi.dispatch(self), theta.dispatch(self)),
+            [AzimuthalRhoPhi, LongitudinalTheta],
+        )
+
+    def to_rhophieta(self):
+        "to_rhophieta docs"
+        from .compute.planar import phi, rho
+        from .compute.spatial import eta
+
+        return self._wrap_result(
+            (rho.dispatch(self), phi.dispatch(self), eta.dispatch(self)),
+            [AzimuthalRhoPhi, LongitudinalEta],
+        )
 
 
 class Vector4D(Vector):
-    pass
+    def to_xyzt(self):
+        "to_xyzt docs"
+        from .compute.lorentz import t
+        from .compute.planar import x, y
+        from .compute.spatial import z
+
+        return self._wrap_result(
+            (x.dispatch(self), y.dispatch(self), z.dispatch(self), t.dispatch(self)),
+            [AzimuthalXY, LongitudinalZ, TemporalT],
+        )
+
+    def to_xyztau(self):
+        "to_xyztau docs"
+        from .compute.lorentz import tau
+        from .compute.planar import x, y
+        from .compute.spatial import z
+
+        return self._wrap_result(
+            (x.dispatch(self), y.dispatch(self), z.dispatch(self), tau.dispatch(self)),
+            [AzimuthalXY, LongitudinalZ, TemporalTau],
+        )
+
+    def to_xythetat(self):
+        "to_xythetat docs"
+        from .compute.lorentz import t
+        from .compute.planar import x, y
+        from .compute.spatial import theta
+
+        return self._wrap_result(
+            (
+                x.dispatch(self),
+                y.dispatch(self),
+                theta.dispatch(self),
+                t.dispatch(self),
+            ),
+            [AzimuthalXY, LongitudinalTheta, TemporalT],
+        )
+
+    def to_xythetatau(self):
+        "to_xythetatau docs"
+        from .compute.lorentz import tau
+        from .compute.planar import x, y
+        from .compute.spatial import theta
+
+        return self._wrap_result(
+            (
+                x.dispatch(self),
+                y.dispatch(self),
+                theta.dispatch(self),
+                tau.dispatch(self),
+            ),
+            [AzimuthalXY, LongitudinalTheta, TemporalTau],
+        )
+
+    def to_xyetat(self):
+        "to_xyetat docs"
+        from .compute.lorentz import t
+        from .compute.planar import x, y
+        from .compute.spatial import eta
+
+        return self._wrap_result(
+            (x.dispatch(self), y.dispatch(self), eta.dispatch(self), t.dispatch(self)),
+            [AzimuthalXY, LongitudinalEta, TemporalT],
+        )
+
+    def to_xyetatau(self):
+        "to_xyetatau docs"
+        from .compute.lorentz import tau
+        from .compute.planar import x, y
+        from .compute.spatial import eta
+
+        return self._wrap_result(
+            (
+                x.dispatch(self),
+                y.dispatch(self),
+                eta.dispatch(self),
+                tau.dispatch(self),
+            ),
+            [AzimuthalXY, LongitudinalEta, TemporalTau],
+        )
+
+    def to_rhophizt(self):
+        "to_rhophizt docs"
+        from .compute.lorentz import t
+        from .compute.planar import phi, rho
+        from .compute.spatial import z
+
+        return self._wrap_result(
+            (
+                rho.dispatch(self),
+                phi.dispatch(self),
+                z.dispatch(self),
+                t.dispatch(self),
+            ),
+            [AzimuthalRhoPhi, LongitudinalZ, TemporalT],
+        )
+
+    def to_rhophiztau(self):
+        "to_rhophiztau docs"
+        from .compute.lorentz import tau
+        from .compute.planar import phi, rho
+        from .compute.spatial import z
+
+        return self._wrap_result(
+            (
+                rho.dispatch(self),
+                phi.dispatch(self),
+                z.dispatch(self),
+                tau.dispatch(self),
+            ),
+            [AzimuthalRhoPhi, LongitudinalZ, TemporalTau],
+        )
+
+    def to_rhophithetat(self):
+        "to_rhophithetat docs"
+        from .compute.lorentz import t
+        from .compute.planar import phi, rho
+        from .compute.spatial import theta
+
+        return self._wrap_result(
+            (
+                rho.dispatch(self),
+                phi.dispatch(self),
+                theta.dispatch(self),
+                t.dispatch(self),
+            ),
+            [AzimuthalRhoPhi, LongitudinalTheta, TemporalT],
+        )
+
+    def to_rhophithetatau(self):
+        "to_rhophithetatau docs"
+        from .compute.lorentz import tau
+        from .compute.planar import phi, rho
+        from .compute.spatial import theta
+
+        return self._wrap_result(
+            (
+                rho.dispatch(self),
+                phi.dispatch(self),
+                theta.dispatch(self),
+                tau.dispatch(self),
+            ),
+            [AzimuthalRhoPhi, LongitudinalTheta, TemporalTau],
+        )
+
+    def to_rhophietat(self):
+        "to_rhophietat docs"
+        from .compute.lorentz import t
+        from .compute.planar import phi, rho
+        from .compute.spatial import eta
+
+        return self._wrap_result(
+            (
+                rho.dispatch(self),
+                phi.dispatch(self),
+                eta.dispatch(self),
+                t.dispatch(self),
+            ),
+            [AzimuthalRhoPhi, LongitudinalEta, TemporalT],
+        )
+
+    def to_rhophietatau(self):
+        "to_rhophietatau docs"
+        from .compute.lorentz import tau
+        from .compute.planar import phi, rho
+        from .compute.spatial import eta
+
+        return self._wrap_result(
+            (
+                rho.dispatch(self),
+                phi.dispatch(self),
+                eta.dispatch(self),
+                tau.dispatch(self),
+            ),
+            [AzimuthalRhoPhi, LongitudinalEta, TemporalTau],
+        )
 
 
 class Coordinates:

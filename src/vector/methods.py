@@ -11,6 +11,11 @@ import vector.geometry
 
 class Planar:
     @property
+    def azimuthal(self):
+        "azimuthal docs"
+        raise AssertionError(repr(type(self)))
+
+    @property
     def x(self):
         "x docs"
         return vector.compute.planar.x.dispatch(self)
@@ -57,6 +62,11 @@ class Planar:
 
 
 class Spatial(Planar):
+    @property
+    def longitudinal(self):
+        "longitudinal docs"
+        raise AssertionError(repr(type(self)))
+
     @property
     def z(self):
         "z docs"
@@ -163,6 +173,11 @@ class Spatial(Planar):
 
 
 class Lorentz(Spatial):
+    @property
+    def temporal(self):
+        "temporal docs"
+        raise AssertionError(repr(type(self)))
+
     @property
     def t(self):
         "t docs"
