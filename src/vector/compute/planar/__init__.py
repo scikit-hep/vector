@@ -3,7 +3,6 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-import vector.compute.planar.cosdeltaphi  # noqa: F401
 import vector.compute.planar.deltaphi  # noqa: F401
 import vector.compute.planar.dot  # noqa: F401
 import vector.compute.planar.phi  # noqa: F401
