@@ -134,6 +134,14 @@ class Spatial(Planar):
             roll, pitch, yaw, "zyx", self
         )
 
+    def rotate_quaternion(self, u, i, j, k):
+        """
+        rotate_quaternion docs
+
+        same conventions as ROOT
+        """
+        return vector.compute.spatial.rotate_quaternion.dispatch(u, i, j, k, self)
+
 
 class Lorentz(Spatial):
     @property
