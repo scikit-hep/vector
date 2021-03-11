@@ -41,7 +41,11 @@ class Planar:
         return vector.compute.planar.phi.dispatch(self)
 
     def deltaphi(self, other):
-        "deltaphi docs"
+        """
+        deltaphi docs
+
+        (it's the signed difference, not arccos(dot))
+        """
         return vector.compute.planar.deltaphi.dispatch(self, other)
 
     def rotateZ(self, angle):

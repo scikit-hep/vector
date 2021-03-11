@@ -10,19 +10,21 @@ from vector.geometry import AzimuthalRhoPhi, AzimuthalXY, aztype
 
 
 def xy_xy(lib, x1, y1, x2, y2):
-    return phi.xy(lib, x1, y1) - phi.xy(lib, x2, y2)
+    return (phi.xy(lib, x1, y1) - phi.xy(lib, x2, y2) + numpy.pi) % (
+        2 * numpy.pi
+    ) - numpy.pi
 
 
 def xy_rhophi(lib, x1, y1, rho2, phi2):
-    return phi.xy(lib, x1, y1) - phi2
+    return (phi.xy(lib, x1, y1) - phi2 + numpy.pi) % (2 * numpy.pi) - numpy.pi
 
 
 def rhophi_xy(lib, rho1, phi1, x2, y2):
-    return phi1 - phi.xy(lib, x2, y2)
+    return (phi1 - phi.xy(lib, x2, y2) + numpy.pi) % (2 * numpy.pi) - numpy.pi
 
 
 def rhophi_rhophi(lib, rho1, phi1, rho2, phi2):
-    return phi1 - phi2
+    return (phi1 - phi2 + numpy.pi) % (2 * numpy.pi) - numpy.pi
 
 
 dispatch_map = {
