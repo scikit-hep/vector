@@ -178,3 +178,98 @@ class Lorentz(Spatial):
     def transform4D(self, obj):
         "transform4D docs"
         return vector.compute.lorentz.transform4D.dispatch(obj, self)
+
+
+class Momentum:
+    pass
+
+
+class PlanarMomentum(Momentum):
+    @property
+    def pt(self):
+        "pt docs"
+        return self.rho
+
+    @property
+    def pt2(self):
+        "pt2 docs"
+        return self.rho2
+
+
+class SpatialMomentum(PlanarMomentum):
+    @property
+    def pseudorapidity(self):
+        "pseudorapidity docs"
+        return self.eta
+
+    @property
+    def p(self):
+        "p docs"
+        return self.mag
+
+    @property
+    def p2(self):
+        "p2 docs"
+        return self.mag2
+
+
+class LorentzMomentum(SpatialMomentum):
+    @property
+    def E(self):
+        "E docs"
+        return self.t
+
+    @property
+    def energy(self):
+        "energy docs"
+        return self.t
+
+    @property
+    def E2(self):
+        "E2 docs"
+        return self.t2
+
+    @property
+    def energy2(self):
+        "energy2 docs"
+        return self.t2
+
+    @property
+    def m(self):
+        "m docs"
+        return self.tau
+
+    @property
+    def mass(self):
+        "mass docs"
+        return self.tau
+
+    @property
+    def m2(self):
+        "m2 docs"
+        return self.tau2
+
+    @property
+    def mass2(self):
+        "mass2 docs"
+        return self.tau2
+
+    @property
+    def transverse_energy(self):
+        "transverse_energy docs"
+        return self.Et
+
+    @property
+    def transverse_energy2(self):
+        "transverse_energy2 docs"
+        return self.Et2
+
+    @property
+    def transverse_mass(self):
+        "transverse_mass docs"
+        return self.mt
+
+    @property
+    def transverse_mass2(self):
+        "transverse_mass2 docs"
+        return self.mt2

@@ -359,7 +359,7 @@ class VectorNumpy2D(
         return _getitem(self, where)
 
 
-class MomentumNumpy2D(VectorNumpy2D):
+class MomentumNumpy2D(vector.methods.PlanarMomentum, VectorNumpy2D):
     ObjectClass = vector.backends.object_.MomentumObject2D
 
 
@@ -524,7 +524,7 @@ class VectorNumpy3D(
             raise AssertionError(repr(returns))
 
 
-class MomentumNumpy3D(VectorNumpy3D):
+class MomentumNumpy3D(vector.methods.SpatialMomentum, VectorNumpy3D):
     ObjectClass = vector.backends.object_.MomentumObject3D
     ProjectionClass2D = MomentumNumpy2D
 
@@ -869,7 +869,7 @@ class VectorNumpy4D(
             raise AssertionError(repr(returns))
 
 
-class MomentumNumpy4D(VectorNumpy4D):
+class MomentumNumpy4D(vector.methods.LorentzMomentum, VectorNumpy4D):
     ObjectClass = vector.backends.object_.MomentumObject4D
     ProjectionClass2D = MomentumNumpy2D
     ProjectionClass3D = MomentumNumpy3D

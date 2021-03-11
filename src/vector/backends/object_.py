@@ -183,7 +183,7 @@ class VectorObject2D(VectorObject, vector.methods.Planar, vector.geometry.Vector
             raise AssertionError(repr(returns))
 
 
-class MomentumObject2D(VectorObject2D):
+class MomentumObject2D(vector.methods.PlanarMomentum, VectorObject2D):
     def __repr__(self):
         aznames = _coordinate_class_to_names[vector.geometry.aztype(self)]
         out = []
@@ -327,7 +327,7 @@ class VectorObject3D(VectorObject, vector.methods.Spatial, vector.geometry.Vecto
             raise AssertionError(repr(returns))
 
 
-class MomentumObject3D(VectorObject3D):
+class MomentumObject3D(vector.methods.SpatialMomentum, VectorObject3D):
     ProjectionClass2D = MomentumObject2D
 
     def __repr__(self):
@@ -644,7 +644,7 @@ class VectorObject4D(VectorObject, vector.methods.Lorentz, vector.geometry.Vecto
             raise AssertionError(repr(returns))
 
 
-class MomentumObject4D(VectorObject4D):
+class MomentumObject4D(vector.methods.LorentzMomentum, VectorObject4D):
     ProjectionClass2D = MomentumObject2D
     ProjectionClass3D = MomentumObject3D
 
