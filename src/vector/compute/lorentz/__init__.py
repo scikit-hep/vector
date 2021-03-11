@@ -3,6 +3,7 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+import vector.compute.lorentz.dot  # noqa: F401
 import vector.compute.lorentz.t  # noqa: F401
 import vector.compute.lorentz.t2  # noqa: F401
 import vector.compute.lorentz.tau  # noqa: F401

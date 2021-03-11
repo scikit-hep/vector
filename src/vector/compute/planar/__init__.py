@@ -5,6 +5,7 @@
 
 import vector.compute.planar.cosdeltaphi  # noqa: F401
 import vector.compute.planar.deltaphi  # noqa: F401
+import vector.compute.planar.dot  # noqa: F401
 import vector.compute.planar.phi  # noqa: F401
 import vector.compute.planar.rho  # noqa: F401
 import vector.compute.planar.rho2  # noqa: F401

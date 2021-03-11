@@ -22,11 +22,13 @@ def xy_z(lib, x, y, z):
 
 
 def xy_theta(lib, x, y, theta):
-    return lib.sqrt(mag2.xy_theta(lib, x, y, theta))
+    return lib.sqrt(x ** 2 + y ** 2) / lib.sin(theta)
 
 
 def xy_eta(lib, x, y, eta):
-    return lib.sqrt(mag2.xy_eta(lib, x, y, eta))
+    expmeta = lib.exp(-eta)
+    invsintheta = 0.5 * (1 + expmeta ** 2) / expmeta
+    return lib.sqrt(x ** 2 + y ** 2) * invsintheta
 
 
 def rhophi_z(lib, rho, phi, z):
@@ -34,11 +36,13 @@ def rhophi_z(lib, rho, phi, z):
 
 
 def rhophi_theta(lib, rho, phi, theta):
-    return lib.sqrt(mag2.rhophi_theta(lib, rho, phi, theta))
+    return rho / lib.sin(theta)
 
 
 def rhophi_eta(lib, rho, phi, eta):
-    return lib.sqrt(mag2.rhophi_eta(lib, rho, phi, eta))
+    expmeta = lib.exp(-eta)
+    invsintheta = 0.5 * (1 + expmeta ** 2) / expmeta
+    return rho * invsintheta
 
 
 dispatch_map = {

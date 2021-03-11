@@ -5,6 +5,7 @@
 
 import numpy
 
+from vector.compute.spatial import theta
 from vector.geometry import (
     AzimuthalRhoPhi,
     AzimuthalXY,
@@ -21,15 +22,13 @@ def xy_z(lib, x, y, z):
 
 
 def xy_theta(lib, x, y, theta):
-    return (x ** 2 + y ** 2) * (1.0 + 1.0 / lib.tan(theta) ** 2)
+    return (x ** 2 + y ** 2) / lib.sin(theta) ** 2
 
 
 def xy_eta(lib, x, y, eta):
-    return (x ** 2 + y ** 2) * (
-        1.0
-        + lib.nan_to_num((1.0 - lib.exp(-2.0 * eta)) / (2.0 * lib.exp(-eta)), lib.inf)
-        ** 2
-    )
+    expmeta = lib.exp(-eta)
+    invsintheta = 0.5 * (1 + expmeta ** 2) / expmeta
+    return (x ** 2 + y ** 2) * invsintheta ** 2
 
 
 def rhophi_z(lib, rho, phi, z):
@@ -37,15 +36,13 @@ def rhophi_z(lib, rho, phi, z):
 
 
 def rhophi_theta(lib, rho, phi, theta):
-    return rho ** 2 * (1.0 + 1.0 / lib.tan(theta) ** 2)
+    return rho ** 2 / lib.sin(theta) ** 2
 
 
 def rhophi_eta(lib, rho, phi, eta):
-    return rho ** 2 * (
-        1.0
-        + lib.nan_to_num((1.0 - lib.exp(-2.0 * eta)) / (2.0 * lib.exp(-eta)), lib.inf)
-        ** 2
-    )
+    expmeta = lib.exp(-eta)
+    invsintheta = 0.5 * (1 + expmeta ** 2) / expmeta
+    return rho ** 2 * invsintheta ** 2
 
 
 dispatch_map = {

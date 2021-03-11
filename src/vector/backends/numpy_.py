@@ -94,7 +94,7 @@ class VectorNumpy:
     pass
 
 
-class AzimuthalNumpyXY(numpy.ndarray, AzimuthalNumpy, vector.geometry.AzimuthalXY):
+class AzimuthalNumpyXY(AzimuthalNumpy, vector.geometry.AzimuthalXY, numpy.ndarray):
     ObjectClass = vector.backends.object_.AzimuthalObjectXY
 
     def __new__(cls, *args, **kwargs):
@@ -124,7 +124,7 @@ class AzimuthalNumpyXY(numpy.ndarray, AzimuthalNumpy, vector.geometry.AzimuthalX
 
 
 class AzimuthalNumpyRhoPhi(
-    numpy.ndarray, AzimuthalNumpy, vector.geometry.AzimuthalRhoPhi
+    AzimuthalNumpy, vector.geometry.AzimuthalRhoPhi, numpy.ndarray
 ):
     ObjectClass = vector.backends.object_.AzimuthalObjectRhoPhi
 
@@ -155,7 +155,7 @@ class AzimuthalNumpyRhoPhi(
 
 
 class LongitudinalNumpyZ(
-    numpy.ndarray, LongitudinalNumpy, vector.geometry.LongitudinalZ
+    LongitudinalNumpy, vector.geometry.LongitudinalZ, numpy.ndarray
 ):
     ObjectClass = vector.backends.object_.LongitudinalObjectZ
 
@@ -182,7 +182,7 @@ class LongitudinalNumpyZ(
 
 
 class LongitudinalNumpyTheta(
-    numpy.ndarray, LongitudinalNumpy, vector.geometry.LongitudinalTheta
+    LongitudinalNumpy, vector.geometry.LongitudinalTheta, numpy.ndarray
 ):
     ObjectClass = vector.backends.object_.LongitudinalObjectTheta
 
@@ -209,7 +209,7 @@ class LongitudinalNumpyTheta(
 
 
 class LongitudinalNumpyEta(
-    numpy.ndarray, LongitudinalNumpy, vector.geometry.LongitudinalEta
+    LongitudinalNumpy, vector.geometry.LongitudinalEta, numpy.ndarray
 ):
     ObjectClass = vector.backends.object_.LongitudinalObjectEta
 
@@ -235,7 +235,7 @@ class LongitudinalNumpyEta(
         return _getitem(self, where)
 
 
-class TemporalNumpyT(numpy.ndarray, TemporalNumpy, vector.geometry.TemporalT):
+class TemporalNumpyT(TemporalNumpy, vector.geometry.TemporalT, numpy.ndarray):
     ObjectClass = vector.backends.object_.TemporalObjectT
 
     def __new__(cls, *args, **kwargs):
@@ -260,7 +260,7 @@ class TemporalNumpyT(numpy.ndarray, TemporalNumpy, vector.geometry.TemporalT):
         return _getitem(self, where)
 
 
-class TemporalNumpyTau(numpy.ndarray, TemporalNumpy, vector.geometry.TemporalTau):
+class TemporalNumpyTau(TemporalNumpy, vector.geometry.TemporalTau, numpy.ndarray):
     ObjectClass = vector.backends.object_.TemporalObjectTau
 
     def __new__(cls, *args, **kwargs):
@@ -286,7 +286,7 @@ class TemporalNumpyTau(numpy.ndarray, TemporalNumpy, vector.geometry.TemporalTau
 
 
 class VectorNumpy2D(
-    numpy.ndarray, VectorNumpy, vector.methods.Planar, vector.geometry.Vector2D
+    VectorNumpy, vector.methods.Planar, vector.geometry.Vector2D, numpy.ndarray
 ):
     lib = numpy
     ObjectClass = vector.backends.object_.VectorObject2D
@@ -364,7 +364,7 @@ class MomentumNumpy2D(vector.methods.PlanarMomentum, VectorNumpy2D):
 
 
 class VectorNumpy3D(
-    numpy.ndarray, VectorNumpy, vector.methods.Spatial, vector.geometry.Vector3D
+    VectorNumpy, vector.methods.Spatial, vector.geometry.Vector3D, numpy.ndarray
 ):
     lib = numpy
     ObjectClass = vector.backends.object_.VectorObject3D
@@ -530,7 +530,7 @@ class MomentumNumpy3D(vector.methods.SpatialMomentum, VectorNumpy3D):
 
 
 class VectorNumpy4D(
-    numpy.ndarray, VectorNumpy, vector.methods.Lorentz, vector.geometry.Vector4D
+    VectorNumpy, vector.methods.Lorentz, vector.geometry.Vector4D, numpy.ndarray
 ):
     lib = numpy
     ObjectClass = vector.backends.object_.VectorObject4D

@@ -9,6 +9,7 @@ import vector.compute.spatial.cross  # noqa: F401
 import vector.compute.spatial.deltaeta  # noqa: F401
 import vector.compute.spatial.deltaR  # noqa: F401
 import vector.compute.spatial.deltaR2  # noqa: F401
+import vector.compute.spatial.dot  # noqa: F401
 import vector.compute.spatial.eta  # noqa: F401
 import vector.compute.spatial.mag  # noqa: F401
 import vector.compute.spatial.mag2  # noqa: F401
