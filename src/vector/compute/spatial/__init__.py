@@ -6,6 +6,7 @@
 import vector.compute.spatial.costheta  # noqa: F401
 import vector.compute.spatial.cottheta  # noqa: F401
 import vector.compute.spatial.cross  # noqa: F401
+import vector.compute.spatial.deltaangle  # noqa: F401
 import vector.compute.spatial.deltaeta  # noqa: F401
 import vector.compute.spatial.deltaR  # noqa: F401
 import vector.compute.spatial.deltaR2  # noqa: F401

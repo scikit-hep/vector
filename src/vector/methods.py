@@ -106,6 +106,14 @@ class Spatial(Planar):
         "cross docs"
         return vector.compute.spatial.cross.dispatch(self, other)
 
+    def deltaangle(self, other):
+        """
+        deltaangle docs
+
+        (it's just arccos(dot))
+        """
+        return vector.compute.spatial.deltaangle.dispatch(self, other)
+
     def deltaeta(self, other):
         "deltaeta docs"
         return vector.compute.spatial.deltaeta.dispatch(self, other)
