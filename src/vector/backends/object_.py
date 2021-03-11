@@ -31,6 +31,10 @@ class TemporalObject(CoordinatesObject):
     pass
 
 
+class VectorObject:
+    pass
+
+
 class AzimuthalObjectXY(typing.NamedTuple):
     x: float
     y: float
@@ -126,7 +130,7 @@ class TemporalObjectTau(typing.NamedTuple):
 TemporalObjectTau.__bases__ = (TemporalObject, vector.geometry.TemporalTau, tuple)
 
 
-class VectorObject2D(vector.methods.Planar, vector.geometry.Vector2D):
+class VectorObject2D(VectorObject, vector.methods.Planar, vector.geometry.Vector2D):
     __slots__ = ("azimuthal",)
 
     lib = numpy
@@ -188,7 +192,7 @@ class MomentumObject2D(VectorObject2D):
         return "vector.momentum(" + ", ".join(out) + ")"
 
 
-class VectorObject3D(vector.methods.Spatial, vector.geometry.Vector3D):
+class VectorObject3D(VectorObject, vector.methods.Spatial, vector.geometry.Vector3D):
     __slots__ = ("azimuthal", "longitudinal")
 
     lib = numpy
@@ -337,7 +341,7 @@ class MomentumObject3D(VectorObject3D):
         return "vector.momentum(" + ", ".join(out) + ")"
 
 
-class VectorObject4D(vector.methods.Lorentz, vector.geometry.Vector4D):
+class VectorObject4D(VectorObject, vector.methods.Lorentz, vector.geometry.Vector4D):
     __slots__ = ("azimuthal", "longitudinal", "temporal")
 
     lib = numpy

@@ -90,6 +90,10 @@ class TemporalNumpy(CoordinatesNumpy):
     pass
 
 
+class VectorNumpy:
+    pass
+
+
 class AzimuthalNumpyXY(numpy.ndarray, AzimuthalNumpy, vector.geometry.AzimuthalXY):
     ObjectClass = vector.backends.object_.AzimuthalObjectXY
 
@@ -281,7 +285,9 @@ class TemporalNumpyTau(numpy.ndarray, TemporalNumpy, vector.geometry.TemporalTau
         return _getitem(self, where)
 
 
-class VectorNumpy2D(numpy.ndarray, vector.methods.Planar, vector.geometry.Vector2D):
+class VectorNumpy2D(
+    numpy.ndarray, VectorNumpy, vector.methods.Planar, vector.geometry.Vector2D
+):
     lib = numpy
     ObjectClass = vector.backends.object_.VectorObject2D
 
@@ -357,7 +363,9 @@ class MomentumNumpy2D(VectorNumpy2D):
     ObjectClass = vector.backends.object_.MomentumObject2D
 
 
-class VectorNumpy3D(numpy.ndarray, vector.methods.Spatial, vector.geometry.Vector3D):
+class VectorNumpy3D(
+    numpy.ndarray, VectorNumpy, vector.methods.Spatial, vector.geometry.Vector3D
+):
     lib = numpy
     ObjectClass = vector.backends.object_.VectorObject3D
     ProjectionClass2D = VectorNumpy2D
@@ -521,7 +529,9 @@ class MomentumNumpy3D(VectorNumpy3D):
     ProjectionClass2D = MomentumNumpy2D
 
 
-class VectorNumpy4D(numpy.ndarray, vector.methods.Lorentz, vector.geometry.Vector4D):
+class VectorNumpy4D(
+    numpy.ndarray, VectorNumpy, vector.methods.Lorentz, vector.geometry.Vector4D
+):
     lib = numpy
     ObjectClass = vector.backends.object_.VectorObject4D
     ProjectionClass2D = VectorNumpy2D
