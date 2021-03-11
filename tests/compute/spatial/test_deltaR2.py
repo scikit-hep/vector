@@ -12,11 +12,11 @@ import vector.geometry
 
 
 def test_spatial_object():
-    v1 = vector.backends.object_.SpatialVectorObject(
+    v1 = vector.backends.object_.VectorObject3D(
         vector.backends.object_.AzimuthalObjectXY(0.1, 0.2),
         vector.backends.object_.LongitudinalObjectZ(0.3),
     )
-    v2 = vector.backends.object_.SpatialVectorObject(
+    v2 = vector.backends.object_.VectorObject3D(
         vector.backends.object_.AzimuthalObjectXY(0.4, 0.5),
         vector.backends.object_.LongitudinalObjectZ(0.6),
     )
@@ -34,11 +34,11 @@ def test_spatial_object():
 
 
 def test_spatial_numpy():
-    v1 = vector.backends.numpy_.SpatialVectorNumpy(
+    v1 = vector.backends.numpy_.VectorNumpy3D(
         [(0.1, 0.2, 0.3)],
         dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
     )
-    v2 = vector.backends.numpy_.SpatialVectorNumpy(
+    v2 = vector.backends.numpy_.VectorNumpy3D(
         [(0.4, 0.5, 0.6)],
         dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
     )
@@ -54,12 +54,12 @@ def test_spatial_numpy():
 
 
 def test_lorentz_object():
-    v1 = vector.backends.object_.LorentzVectorObject(
+    v1 = vector.backends.object_.VectorObject4D(
         vector.backends.object_.AzimuthalObjectXY(0.1, 0.2),
         vector.backends.object_.LongitudinalObjectZ(0.3),
         vector.backends.object_.TemporalObjectT(99),
     )
-    v2 = vector.backends.object_.LorentzVectorObject(
+    v2 = vector.backends.object_.VectorObject4D(
         vector.backends.object_.AzimuthalObjectXY(0.4, 0.5),
         vector.backends.object_.LongitudinalObjectZ(0.6),
         vector.backends.object_.TemporalObjectT(99),
@@ -99,7 +99,7 @@ def test_lorentz_object():
 
 
 def test_lorentz_numpy():
-    v1 = vector.backends.numpy_.LorentzVectorNumpy(
+    v1 = vector.backends.numpy_.VectorNumpy4D(
         [(0.1, 0.2, 0.3, 99)],
         dtype=[
             ("x", numpy.float64),
@@ -108,7 +108,7 @@ def test_lorentz_numpy():
             ("t", numpy.float64),
         ],
     )
-    v2 = vector.backends.numpy_.LorentzVectorNumpy(
+    v2 = vector.backends.numpy_.VectorNumpy4D(
         [(0.4, 0.5, 0.6, 99)],
         dtype=[
             ("x", numpy.float64),

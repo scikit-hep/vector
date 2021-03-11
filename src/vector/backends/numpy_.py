@@ -22,7 +22,7 @@ def _getitem(array, where):
         if isinstance(out, numpy.void):
             azimuthal, longitudinal, temporal = None, None, None
             if hasattr(array, "_azimuthal_type"):
-                azimuthal = array._azimuthal_type.object_type(
+                azimuthal = array._azimuthal_type.ObjectClass(
                     *[
                         out[x]
                         for x in _coordinate_class_to_names[
@@ -31,7 +31,7 @@ def _getitem(array, where):
                     ]
                 )
             if hasattr(array, "_longitudinal_type"):
-                longitudinal = array._longitudinal_type.object_type(
+                longitudinal = array._longitudinal_type.ObjectClass(
                     *[
                         out[x]
                         for x in _coordinate_class_to_names[
@@ -40,7 +40,7 @@ def _getitem(array, where):
                     ]
                 )
             if hasattr(array, "_temporal_type"):
-                temporal = array._temporal_type.object_type(
+                temporal = array._temporal_type.ObjectClass(
                     *[
                         out[x]
                         for x in _coordinate_class_to_names[
@@ -49,13 +49,13 @@ def _getitem(array, where):
                     ]
                 )
             if temporal is not None:
-                return array.object_type(azimuthal, longitudinal, temporal)
+                return array.ObjectClass(azimuthal, longitudinal, temporal)
             elif longitudinal is not None:
-                return array.object_type(azimuthal, longitudinal)
+                return array.ObjectClass(azimuthal, longitudinal)
             elif azimuthal is not None:
-                return array.object_type(azimuthal)
+                return array.ObjectClass(azimuthal)
             else:
-                return array.object_type(*out.view(numpy.ndarray))
+                return array.ObjectClass(*out.view(numpy.ndarray))
         else:
             return out
 
@@ -91,7 +91,7 @@ class TemporalNumpy(CoordinatesNumpy):
 
 
 class AzimuthalNumpyXY(numpy.ndarray, AzimuthalNumpy, vector.geometry.AzimuthalXY):
-    object_type = vector.backends.object_.AzimuthalObjectXY
+    ObjectClass = vector.backends.object_.AzimuthalObjectXY
 
     def __new__(cls, *args, **kwargs):
         return numpy.array(*args, **kwargs).view(cls)
@@ -122,7 +122,7 @@ class AzimuthalNumpyXY(numpy.ndarray, AzimuthalNumpy, vector.geometry.AzimuthalX
 class AzimuthalNumpyRhoPhi(
     numpy.ndarray, AzimuthalNumpy, vector.geometry.AzimuthalRhoPhi
 ):
-    object_type = vector.backends.object_.AzimuthalObjectRhoPhi
+    ObjectClass = vector.backends.object_.AzimuthalObjectRhoPhi
 
     def __new__(cls, *args, **kwargs):
         return numpy.array(*args, **kwargs).view(cls)
@@ -153,7 +153,7 @@ class AzimuthalNumpyRhoPhi(
 class LongitudinalNumpyZ(
     numpy.ndarray, LongitudinalNumpy, vector.geometry.LongitudinalZ
 ):
-    object_type = vector.backends.object_.LongitudinalObjectZ
+    ObjectClass = vector.backends.object_.LongitudinalObjectZ
 
     def __new__(cls, *args, **kwargs):
         return numpy.array(*args, **kwargs).view(cls)
@@ -180,7 +180,7 @@ class LongitudinalNumpyZ(
 class LongitudinalNumpyTheta(
     numpy.ndarray, LongitudinalNumpy, vector.geometry.LongitudinalTheta
 ):
-    object_type = vector.backends.object_.LongitudinalObjectTheta
+    ObjectClass = vector.backends.object_.LongitudinalObjectTheta
 
     def __new__(cls, *args, **kwargs):
         return numpy.array(*args, **kwargs).view(cls)
@@ -207,7 +207,7 @@ class LongitudinalNumpyTheta(
 class LongitudinalNumpyEta(
     numpy.ndarray, LongitudinalNumpy, vector.geometry.LongitudinalEta
 ):
-    object_type = vector.backends.object_.LongitudinalObjectEta
+    ObjectClass = vector.backends.object_.LongitudinalObjectEta
 
     def __new__(cls, *args, **kwargs):
         return numpy.array(*args, **kwargs).view(cls)
@@ -232,7 +232,7 @@ class LongitudinalNumpyEta(
 
 
 class TemporalNumpyT(numpy.ndarray, TemporalNumpy, vector.geometry.TemporalT):
-    object_type = vector.backends.object_.TemporalObjectT
+    ObjectClass = vector.backends.object_.TemporalObjectT
 
     def __new__(cls, *args, **kwargs):
         return numpy.array(*args, **kwargs).view(cls)
@@ -257,7 +257,7 @@ class TemporalNumpyT(numpy.ndarray, TemporalNumpy, vector.geometry.TemporalT):
 
 
 class TemporalNumpyTau(numpy.ndarray, TemporalNumpy, vector.geometry.TemporalTau):
-    object_type = vector.backends.object_.TemporalObjectTau
+    ObjectClass = vector.backends.object_.TemporalObjectTau
 
     def __new__(cls, *args, **kwargs):
         return numpy.array(*args, **kwargs).view(cls)
@@ -281,8 +281,9 @@ class TemporalNumpyTau(numpy.ndarray, TemporalNumpy, vector.geometry.TemporalTau
         return _getitem(self, where)
 
 
-class PlanarNumpy(numpy.ndarray, vector.methods.Planar):
+class VectorNumpy2D(numpy.ndarray, vector.methods.Planar, vector.geometry.Vector2D):
     lib = numpy
+    ObjectClass = vector.backends.object_.VectorObject2D
 
     def __new__(cls, *args, **kwargs):
         return numpy.array(*args, **kwargs).view(cls)
@@ -352,16 +353,14 @@ class PlanarNumpy(numpy.ndarray, vector.methods.Planar):
         return _getitem(self, where)
 
 
-class PlanarVectorNumpy(vector.geometry.PlanarVector, PlanarNumpy):
-    object_type = vector.backends.object_.PlanarVectorObject
+class MomentumNumpy2D(VectorNumpy2D):
+    ObjectClass = vector.backends.object_.MomentumObject2D
 
 
-class PlanarPointNumpy(vector.geometry.PlanarPoint, PlanarNumpy):
-    object_type = vector.backends.object_.PlanarPointObject
-
-
-class SpatialNumpy(numpy.ndarray, vector.methods.Spatial):
+class VectorNumpy3D(numpy.ndarray, vector.methods.Spatial, vector.geometry.Vector3D):
     lib = numpy
+    ObjectClass = vector.backends.object_.VectorObject3D
+    ProjectionClass2D = VectorNumpy2D
 
     def __new__(cls, *args, **kwargs):
         return numpy.array(*args, **kwargs).view(cls)
@@ -517,16 +516,16 @@ class SpatialNumpy(numpy.ndarray, vector.methods.Spatial):
             raise AssertionError(repr(returns))
 
 
-class SpatialVectorNumpy(vector.geometry.SpatialVector, SpatialNumpy):
-    object_type = vector.backends.object_.SpatialVectorObject
+class MomentumNumpy3D(VectorNumpy3D):
+    ObjectClass = vector.backends.object_.MomentumObject3D
+    ProjectionClass2D = MomentumNumpy2D
 
 
-class SpatialPointNumpy(vector.geometry.SpatialPoint, SpatialNumpy):
-    object_type = vector.backends.object_.SpatialPointObject
-
-
-class LorentzNumpy(numpy.ndarray, vector.methods.Lorentz):
+class VectorNumpy4D(numpy.ndarray, vector.methods.Lorentz, vector.geometry.Vector4D):
     lib = numpy
+    ObjectClass = vector.backends.object_.VectorObject4D
+    ProjectionClass2D = VectorNumpy2D
+    ProjectionClass3D = VectorNumpy3D
 
     def __new__(cls, *args, **kwargs):
         return numpy.array(*args, **kwargs).view(cls)
@@ -854,20 +853,13 @@ class LorentzNumpy(numpy.ndarray, vector.methods.Lorentz):
                     i += 1
                 return out.view(type(self))
             else:
-                if isinstance(self, LorentzVectorNumpy):
-                    return out.view(SpatialVectorNumpy)
-                elif isinstance(self, LorentzPointNumpy):
-                    return out.view(SpatialVectorNumpy)
-                else:
-                    raise AssertionError(repr(type(self)))
+                return out.view(self.ProjectionClass3D)
 
         else:
             raise AssertionError(repr(returns))
 
 
-class LorentzVectorNumpy(vector.geometry.LorentzVector, LorentzNumpy):
-    object_type = vector.backends.object_.LorentzVectorObject
-
-
-class LorentzPointNumpy(vector.geometry.LorentzPoint, LorentzNumpy):
-    object_type = vector.backends.object_.LorentzPointObject
+class MomentumNumpy4D(VectorNumpy4D):
+    ObjectClass = vector.backends.object_.MomentumObject4D
+    ProjectionClass2D = MomentumNumpy2D
+    ProjectionClass3D = MomentumNumpy3D

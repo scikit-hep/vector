@@ -10,12 +10,12 @@ import vector.geometry
 
 
 def test_spatial_object():
-    vec = vector.backends.object_.SpatialVectorObject(
+    vec = vector.backends.object_.VectorObject3D(
         vector.backends.object_.AzimuthalObjectXY(0.5, 0.6),
         vector.backends.object_.LongitudinalObjectZ(0.7),
     )
     out = vec.rotate_quaternion(0.1, 0.2, 0.3, 0.4)
-    assert isinstance(out, vector.backends.object_.SpatialVectorObject)
+    assert isinstance(out, vector.backends.object_.VectorObject3D)
     assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectXY)
     assert isinstance(out.longitudinal, vector.backends.object_.LongitudinalObjectZ)
     assert out.x == pytest.approx(0.078)
@@ -25,7 +25,7 @@ def test_spatial_object():
     for t in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
         tvec = getattr(vec, "to_" + t)()
         out = tvec.rotate_quaternion(0.1, 0.2, 0.3, 0.4)
-        assert isinstance(out, vector.backends.object_.SpatialVectorObject)
+        assert isinstance(out, vector.backends.object_.VectorObject3D)
         assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectXY)
         assert isinstance(out.longitudinal, vector.backends.object_.LongitudinalObjectZ)
         assert out.x == pytest.approx(0.078)

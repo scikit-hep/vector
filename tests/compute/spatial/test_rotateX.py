@@ -12,7 +12,7 @@ import vector.geometry
 
 
 def test_spatial_object():
-    vec = vector.backends.object_.SpatialVectorObject(
+    vec = vector.backends.object_.VectorObject3D(
         vector.backends.object_.AzimuthalObjectXY(0.1, 0.2),
         vector.backends.object_.LongitudinalObjectZ(0.3),
     )
@@ -33,7 +33,7 @@ def test_spatial_object():
 
 
 def test_spatial_numpy():
-    vec = vector.backends.numpy_.SpatialVectorNumpy(
+    vec = vector.backends.numpy_.VectorNumpy3D(
         [(0.1, 0.2, 0.3)],
         dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
     )
@@ -54,7 +54,7 @@ def test_spatial_numpy():
 
 
 def test_lorentz_object():
-    vec = vector.backends.object_.LorentzVectorObject(
+    vec = vector.backends.object_.VectorObject4D(
         vector.backends.object_.AzimuthalObjectXY(0.1, 0.2),
         vector.backends.object_.LongitudinalObjectZ(0.3),
         vector.backends.object_.TemporalObjectT(99),
@@ -91,7 +91,7 @@ def test_lorentz_object():
 
 
 def test_lorentz_numpy():
-    vec = vector.backends.numpy_.LorentzVectorNumpy(
+    vec = vector.backends.numpy_.VectorNumpy4D(
         [(0.1, 0.2, 0.3, 99)],
         dtype=[
             ("x", numpy.float64),

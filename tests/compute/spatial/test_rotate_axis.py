@@ -12,16 +12,16 @@ import vector.geometry
 
 
 def test_spatial_object():
-    axis = vector.backends.object_.SpatialVectorObject(
+    axis = vector.backends.object_.VectorObject3D(
         vector.backends.object_.AzimuthalObjectXY(0.1, 0.2),
         vector.backends.object_.LongitudinalObjectZ(0.3),
     )
-    vec = vector.backends.object_.SpatialVectorObject(
+    vec = vector.backends.object_.VectorObject3D(
         vector.backends.object_.AzimuthalObjectXY(0.4, 0.5),
         vector.backends.object_.LongitudinalObjectZ(0.6),
     )
     out = vec.rotate_axis(axis, 0.25)
-    assert isinstance(out, vector.backends.object_.SpatialVectorObject)
+    assert isinstance(out, vector.backends.object_.VectorObject3D)
     assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectXY)
     assert isinstance(out.longitudinal, vector.backends.object_.LongitudinalObjectZ)
     assert out.x == pytest.approx(0.37483425404335763)
@@ -35,7 +35,7 @@ def test_spatial_object():
                 getattr(vec, "to_" + t2)(),
             )
             out = tvec.rotate_axis(taxis, 0.25)
-            assert isinstance(out, vector.backends.object_.SpatialVectorObject)
+            assert isinstance(out, vector.backends.object_.VectorObject3D)
             assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectXY)
             assert isinstance(
                 out.longitudinal, vector.backends.object_.LongitudinalObjectZ
@@ -46,16 +46,16 @@ def test_spatial_object():
 
 
 def test_spatial_numpy():
-    axis = vector.backends.numpy_.SpatialVectorNumpy(
+    axis = vector.backends.numpy_.VectorNumpy3D(
         [(0.1, 0.2, 0.3)],
         dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
     )
-    vec = vector.backends.numpy_.SpatialVectorNumpy(
+    vec = vector.backends.numpy_.VectorNumpy3D(
         [(0.4, 0.5, 0.6)],
         dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
     )
     out = vec.rotate_axis(axis, 0.25)
-    assert isinstance(out, vector.backends.numpy_.SpatialVectorNumpy)
+    assert isinstance(out, vector.backends.numpy_.VectorNumpy3D)
     assert out.dtype.names == ("x", "y", "z")
     assert out[0].x == pytest.approx(0.37483425404335763)
     assert out[0].y == pytest.approx(0.5383405688588193)
@@ -68,7 +68,7 @@ def test_spatial_numpy():
                 getattr(vec, "to_" + t2)(),
             )
             out = tvec.rotate_axis(taxis, 0.25)
-            assert isinstance(out, vector.backends.numpy_.SpatialVectorNumpy)
+            assert isinstance(out, vector.backends.numpy_.VectorNumpy3D)
             assert out.dtype.names == ("x", "y", "z")
             assert out[0].x == pytest.approx(0.37483425404335763)
             assert out[0].y == pytest.approx(0.5383405688588193)
@@ -76,18 +76,18 @@ def test_spatial_numpy():
 
 
 def test_lorentz_object():
-    axis = vector.backends.object_.LorentzVectorObject(
+    axis = vector.backends.object_.VectorObject4D(
         vector.backends.object_.AzimuthalObjectXY(0.1, 0.2),
         vector.backends.object_.LongitudinalObjectZ(0.3),
         vector.backends.object_.TemporalObjectT(99),
     )
-    vec = vector.backends.object_.LorentzVectorObject(
+    vec = vector.backends.object_.VectorObject4D(
         vector.backends.object_.AzimuthalObjectXY(0.4, 0.5),
         vector.backends.object_.LongitudinalObjectZ(0.6),
         vector.backends.object_.TemporalObjectT(99),
     )
     out = vec.rotate_axis(axis, 0.25)
-    assert isinstance(out, vector.backends.object_.LorentzVectorObject)
+    assert isinstance(out, vector.backends.object_.VectorObject4D)
     assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectXY)
     assert isinstance(out.longitudinal, vector.backends.object_.LongitudinalObjectZ)
     assert hasattr(out, "temporal")
@@ -128,7 +128,7 @@ def test_lorentz_object():
                 getattr(vec, "to_" + t2)(),
             )
             out = tvec.rotate_axis(taxis, 0.25)
-            assert isinstance(out, vector.backends.object_.LorentzVectorObject)
+            assert isinstance(out, vector.backends.object_.VectorObject4D)
             assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectXY)
             assert isinstance(
                 out.longitudinal, vector.backends.object_.LongitudinalObjectZ
@@ -140,7 +140,7 @@ def test_lorentz_object():
 
 
 def test_lorentz_numpy():
-    axis = vector.backends.numpy_.LorentzVectorNumpy(
+    axis = vector.backends.numpy_.VectorNumpy4D(
         [(0.1, 0.2, 0.3, 99)],
         dtype=[
             ("x", numpy.float64),
@@ -149,7 +149,7 @@ def test_lorentz_numpy():
             ("t", numpy.float64),
         ],
     )
-    vec = vector.backends.numpy_.LorentzVectorNumpy(
+    vec = vector.backends.numpy_.VectorNumpy4D(
         [(0.4, 0.5, 0.6, 99)],
         dtype=[
             ("x", numpy.float64),
@@ -159,7 +159,7 @@ def test_lorentz_numpy():
         ],
     )
     out = vec.rotate_axis(axis, 0.25)
-    assert isinstance(out, vector.backends.numpy_.LorentzVectorNumpy)
+    assert isinstance(out, vector.backends.numpy_.VectorNumpy4D)
     assert out.dtype.names == ("x", "y", "z", "t")
     assert out[0].x == pytest.approx(0.37483425404335763)
     assert out[0].y == pytest.approx(0.5383405688588193)
@@ -198,7 +198,7 @@ def test_lorentz_numpy():
                 getattr(vec, "to_" + t2)(),
             )
             out = tvec.rotate_axis(taxis, 0.25)
-            assert isinstance(out, vector.backends.numpy_.LorentzVectorNumpy)
+            assert isinstance(out, vector.backends.numpy_.VectorNumpy4D)
             assert out.dtype.names == ("x", "y", "z", "t") or out.dtype.names == (
                 "x",
                 "y",

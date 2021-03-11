@@ -4,39 +4,19 @@
 # or https://github.com/scikit-hep/vector for details.
 
 
-class Tuple:
+class Vector:
     pass
 
 
-class Vector(Tuple):
+class Vector2D(Vector):
     pass
 
 
-class PlanarVector(Vector):
+class Vector3D(Vector):
     pass
 
 
-class SpatialVector(Vector):
-    pass
-
-
-class LorentzVector(Vector):
-    pass
-
-
-class Point(Tuple):
-    pass
-
-
-class PlanarPoint(Point):
-    pass
-
-
-class SpatialPoint(Point):
-    pass
-
-
-class LorentzPoint(Point):
+class Vector4D(Vector):
     pass
 
 

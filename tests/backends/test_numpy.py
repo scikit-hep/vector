@@ -11,7 +11,7 @@ import vector.backends.numpy_
 
 
 def test_xy():
-    array = vector.backends.numpy_.PlanarVectorNumpy(
+    array = vector.backends.numpy_.VectorNumpy2D(
         [(0, 0), (0, 1), (3, 4)], dtype=[("x", numpy.float64), ("y", numpy.float64)]
     )
     assert numpy.allclose(array.x, [0, 0, 3])
@@ -21,7 +21,7 @@ def test_xy():
 
 
 def test_rhophi():
-    array = vector.backends.numpy_.PlanarVectorNumpy(
+    array = vector.backends.numpy_.VectorNumpy2D(
         [(0, 10), (1, math.atan2(1, 0)), (5, math.atan2(4, 3))],
         dtype=[("rho", numpy.float64), ("phi", numpy.float64)],
     )

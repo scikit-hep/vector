@@ -11,14 +11,14 @@ import vector.backends.object_
 
 
 def test_xy():
-    vec = vector.backends.object_.PlanarVectorObject(
+    vec = vector.backends.object_.VectorObject2D(
         vector.backends.object_.AzimuthalObjectXY(3, 4)
     )
     assert vec.rho2 == pytest.approx(25)
 
 
 def test_rhophi():
-    vec = vector.backends.object_.PlanarVectorObject(
+    vec = vector.backends.object_.VectorObject2D(
         vector.backends.object_.AzimuthalObjectRhoPhi(5, math.atan2(4, 3))
     )
     assert vec.rho2 == pytest.approx(25)

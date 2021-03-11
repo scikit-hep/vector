@@ -4,7 +4,9 @@
 # or https://github.com/scikit-hep/vector for details.
 
 
-from .backends.object_ import point, vec  # noqa: 401
+from .geometry import Vector2D, Vector3D, Vector4D  # noqa: 401
+from .backends.object_ import generic, momentum  # noqa: 401
+from .backends.numpy_ import VectorNumpy2D, VectorNumpy3D, VectorNumpy4D, MomentumNumpy2D, MomentumNumpy3D, MomentumNumpy4D  # noqa: 401
 
 # from .version import version as __version__
 

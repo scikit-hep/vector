@@ -126,7 +126,7 @@ class TemporalObjectTau(typing.NamedTuple):
 TemporalObjectTau.__bases__ = (TemporalObject, vector.geometry.TemporalTau, tuple)
 
 
-class PlanarObject(vector.methods.Planar):
+class VectorObject2D(vector.methods.Planar, vector.geometry.Vector2D):
     __slots__ = ("azimuthal",)
 
     lib = numpy
@@ -158,6 +158,13 @@ class PlanarObject(vector.methods.Planar):
     def __init__(self, azimuthal):
         self.azimuthal = azimuthal
 
+    def __repr__(self):
+        aznames = _coordinate_class_to_names[vector.geometry.aztype(self)]
+        out = []
+        for x in aznames:
+            out.append(f"{x}={getattr(self.azimuthal, x)}")
+        return "vector.generic(" + ", ".join(out) + ")"
+
     def _wrap_result(self, result, returns):
         if returns == [float]:
             return result
@@ -172,28 +179,20 @@ class PlanarObject(vector.methods.Planar):
             raise AssertionError(repr(returns))
 
 
-class PlanarVectorObject(vector.geometry.PlanarVector, PlanarObject):
+class MomentumObject2D(VectorObject2D):
     def __repr__(self):
         aznames = _coordinate_class_to_names[vector.geometry.aztype(self)]
         out = []
         for x in aznames:
             out.append(f"{x}={getattr(self.azimuthal, x)}")
-        return "vec(" + ", ".join(out) + ")"
+        return "vector.momentum(" + ", ".join(out) + ")"
 
 
-class PlanarPointObject(vector.geometry.PlanarPoint, PlanarObject):
-    def __repr__(self):
-        aznames = _coordinate_class_to_names[vector.geometry.aztype(self)]
-        out = []
-        for x in aznames:
-            out.append(f"{x}={getattr(self.azimuthal, x)}")
-        return "point(" + ", ".join(out) + ")"
-
-
-class SpatialObject(vector.methods.Spatial):
+class VectorObject3D(vector.methods.Spatial, vector.geometry.Vector3D):
     __slots__ = ("azimuthal", "longitudinal")
 
     lib = numpy
+    ProjectionClass2D = VectorObject2D
 
     @classmethod
     def from_xyz(cls, x, y, z):
@@ -277,6 +276,16 @@ class SpatialObject(vector.methods.Spatial):
         self.azimuthal = azimuthal
         self.longitudinal = longitudinal
 
+    def __repr__(self):
+        aznames = _coordinate_class_to_names[vector.geometry.aztype(self)]
+        lnames = _coordinate_class_to_names[vector.geometry.ltype(self)]
+        out = []
+        for x in aznames:
+            out.append(f"{x}={getattr(self.azimuthal, x)}")
+        for x in lnames:
+            out.append(f"{x}={getattr(self.longitudinal, x)}")
+        return "vector.generic(" + ", ".join(out) + ")"
+
     def _wrap_result(self, result, returns):
         if returns == [float]:
             return result
@@ -314,7 +323,9 @@ class SpatialObject(vector.methods.Spatial):
             raise AssertionError(repr(returns))
 
 
-class SpatialVectorObject(vector.geometry.SpatialVector, SpatialObject):
+class MomentumObject3D(VectorObject3D):
+    ProjectionClass2D = MomentumObject2D
+
     def __repr__(self):
         aznames = _coordinate_class_to_names[vector.geometry.aztype(self)]
         lnames = _coordinate_class_to_names[vector.geometry.ltype(self)]
@@ -323,25 +334,15 @@ class SpatialVectorObject(vector.geometry.SpatialVector, SpatialObject):
             out.append(f"{x}={getattr(self.azimuthal, x)}")
         for x in lnames:
             out.append(f"{x}={getattr(self.longitudinal, x)}")
-        return "vec(" + ", ".join(out) + ")"
+        return "vector.momentum(" + ", ".join(out) + ")"
 
 
-class SpatialPointObject(vector.geometry.SpatialPoint, SpatialObject):
-    def __repr__(self):
-        aznames = _coordinate_class_to_names[vector.geometry.aztype(self)]
-        lnames = _coordinate_class_to_names[vector.geometry.ltype(self)]
-        out = []
-        for x in aznames:
-            out.append(f"{x}={getattr(self.azimuthal, x)}")
-        for x in lnames:
-            out.append(f"{x}={getattr(self.longitudinal, x)}")
-        return "point(" + ", ".join(out) + ")"
-
-
-class LorentzObject(vector.methods.Lorentz):
+class VectorObject4D(vector.methods.Lorentz, vector.geometry.Vector4D):
     __slots__ = ("azimuthal", "longitudinal", "temporal")
 
     lib = numpy
+    ProjectionClass2D = VectorObject2D
+    ProjectionClass3D = VectorObject3D
 
     @classmethod
     def from_xyzt(cls, x, y, z, t):
@@ -550,6 +551,19 @@ class LorentzObject(vector.methods.Lorentz):
         self.longitudinal = longitudinal
         self.temporal = temporal
 
+    def __repr__(self):
+        aznames = _coordinate_class_to_names[vector.geometry.aztype(self)]
+        lnames = _coordinate_class_to_names[vector.geometry.ltype(self)]
+        tnames = _coordinate_class_to_names[vector.geometry.ttype(self)]
+        out = []
+        for x in aznames:
+            out.append(f"{x}={getattr(self.azimuthal, x)}")
+        for x in lnames:
+            out.append(f"{x}={getattr(self.longitudinal, x)}")
+        for x in tnames:
+            out.append(f"{x}={getattr(self.temporal, x)}")
+        return "vector.generic(" + ", ".join(out) + ")"
+
     def _wrap_result(self, result, returns):
         if returns == [float]:
             return result
@@ -619,18 +633,17 @@ class LorentzObject(vector.methods.Lorentz):
                 raise AssertionError(repr(returns[2]))
             if is_4d:
                 return type(self)(azimuthal, longitudinal, temporal)
-            elif isinstance(self, LorentzVectorObject):
-                return SpatialVectorObject(azimuthal, longitudinal)
-            elif isinstance(self, LorentzPointObject):
-                return SpatialPointObject(azimuthal, longitudinal)
             else:
-                raise AssertionError(repr(type(self)))
+                return self.ProjectionClass3D(azimuthal, longitudinal)
 
         else:
             raise AssertionError(repr(returns))
 
 
-class LorentzVectorObject(vector.geometry.LorentzVector, LorentzObject):
+class MomentumObject4D(VectorObject4D):
+    ProjectionClass2D = MomentumObject2D
+    ProjectionClass3D = MomentumObject3D
+
     def __repr__(self):
         aznames = _coordinate_class_to_names[vector.geometry.aztype(self)]
         lnames = _coordinate_class_to_names[vector.geometry.ltype(self)]
@@ -642,22 +655,7 @@ class LorentzVectorObject(vector.geometry.LorentzVector, LorentzObject):
             out.append(f"{x}={getattr(self.longitudinal, x)}")
         for x in tnames:
             out.append(f"{x}={getattr(self.temporal, x)}")
-        return "vec(" + ", ".join(out) + ")"
-
-
-class LorentzPointObject(vector.geometry.LorentzPoint, LorentzObject):
-    def __repr__(self):
-        aznames = _coordinate_class_to_names[vector.geometry.aztype(self)]
-        lnames = _coordinate_class_to_names[vector.geometry.ltype(self)]
-        tnames = _coordinate_class_to_names[vector.geometry.ttype(self)]
-        out = []
-        for x in aznames:
-            out.append(f"{x}={getattr(self.azimuthal, x)}")
-        for x in lnames:
-            out.append(f"{x}={getattr(self.longitudinal, x)}")
-        for x in tnames:
-            out.append(f"{x}={getattr(self.temporal, x)}")
-        return "point(" + ", ".join(out) + ")"
+        return "vector.momentum(" + ", ".join(out) + ")"
 
 
 def _gather_coordinates(planar_class, spatial_class, lorentz_class, coordinates):
@@ -730,15 +728,15 @@ def _gather_coordinates(planar_class, spatial_class, lorentz_class, coordinates)
     )
 
 
-def vec(**coordinates):
-    "vec docs"
+def generic(**coordinates):
+    "generic docs"
     return _gather_coordinates(
-        PlanarVectorObject, SpatialVectorObject, LorentzVectorObject, coordinates
+        VectorObject2D, VectorObject3D, VectorObject4D, coordinates
     )
 
 
-def point(**coordinates):
-    "point docs"
+def momentum(**coordinates):
+    "momentum docs"
     return _gather_coordinates(
-        PlanarPointObject, SpatialPointObject, LorentzPointObject, coordinates
+        MomentumObject2D, MomentumObject3D, MomentumObject4D, coordinates
     )
