@@ -5,6 +5,7 @@
 
 import numpy
 
+from vector.compute.lorentz import tau2
 from vector.compute.spatial import mag2
 from vector.geometry import (
     AzimuthalRhoPhi,
@@ -25,7 +26,7 @@ def xy_z_t(lib, x, y, z, t):
 
 
 def xy_z_tau(lib, x, y, z, tau):
-    return tau ** 2 + mag2.xy_z(lib, x, y, z)
+    return lib.maximum(tau2.xy_z_tau(lib, x, y, z, tau) + mag2.xy_z(lib, x, y, z), 0)
 
 
 def xy_theta_t(lib, x, y, theta, t):
@@ -33,7 +34,9 @@ def xy_theta_t(lib, x, y, theta, t):
 
 
 def xy_theta_tau(lib, x, y, theta, tau):
-    return tau ** 2 + mag2.xy_theta(lib, x, y, theta)
+    return lib.maximum(
+        tau2.xy_theta_tau(lib, x, y, theta, tau) + mag2.xy_theta(lib, x, y, theta), 0
+    )
 
 
 def xy_eta_t(lib, x, y, eta, t):
@@ -41,7 +44,9 @@ def xy_eta_t(lib, x, y, eta, t):
 
 
 def xy_eta_tau(lib, x, y, eta, tau):
-    return tau ** 2 + mag2.xy_eta(lib, x, y, eta)
+    return lib.maximum(
+        tau2.xy_eta_tau(lib, x, y, eta, tau) + mag2.xy_eta(lib, x, y, eta), 0
+    )
 
 
 def rhophi_z_t(lib, rho, phi, z, t):
@@ -49,7 +54,9 @@ def rhophi_z_t(lib, rho, phi, z, t):
 
 
 def rhophi_z_tau(lib, rho, phi, z, tau):
-    return tau ** 2 + mag2.rhophi_z(lib, rho, phi, z)
+    return lib.maximum(
+        tau2.rhophi_z_tau(lib, rho, phi, z, tau) + mag2.rhophi_z(lib, rho, phi, z), 0
+    )
 
 
 def rhophi_theta_t(lib, rho, phi, theta, t):
@@ -57,7 +64,11 @@ def rhophi_theta_t(lib, rho, phi, theta, t):
 
 
 def rhophi_theta_tau(lib, rho, phi, theta, tau):
-    return tau ** 2 + mag2.rhophi_theta(lib, rho, phi, theta)
+    return lib.maximum(
+        tau2.rhophi_theta_tau(lib, rho, phi, theta, tau)
+        + mag2.rhophi_theta(lib, rho, phi, theta),
+        0,
+    )
 
 
 def rhophi_eta_t(lib, rho, phi, eta, t):
@@ -65,7 +76,11 @@ def rhophi_eta_t(lib, rho, phi, eta, t):
 
 
 def rhophi_eta_tau(lib, rho, phi, eta, tau):
-    return tau ** 2 + mag2.rhophi_eta(lib, rho, phi, eta)
+    return lib.maximum(
+        tau2.rhophi_eta_tau(lib, rho, phi, eta, tau)
+        + mag2.rhophi_eta(lib, rho, phi, eta),
+        0,
+    )
 
 
 dispatch_map = {
