@@ -5,7 +5,6 @@
 
 import numpy
 
-from vector.compute.spatial import theta
 from vector.geometry import (
     AzimuthalRhoPhi,
     AzimuthalXY,
