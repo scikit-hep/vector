@@ -126,15 +126,3 @@ _coordinate_class_to_names = {
     TemporalT: ("t",),
     TemporalTau: ("tau",),
 }
-
-
-class Transform:
-    def __call__(self, v):
-        "call docs"
-        return self.apply(v)
-
-
-# class FrameTransform:
-#     def __call__(self, v):
-#         "call docs"
-#         return self.apply(v)
