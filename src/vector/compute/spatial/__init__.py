@@ -18,4 +18,5 @@ import vector.compute.spatial.rotate_quaternion  # noqa: F401
 import vector.compute.spatial.rotateX  # noqa: F401
 import vector.compute.spatial.rotateY  # noqa: F401
 import vector.compute.spatial.theta  # noqa: F401
+import vector.compute.spatial.transform3D  # noqa: F401
 import vector.compute.spatial.z  # noqa: F401

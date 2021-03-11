@@ -44,6 +44,10 @@ class Planar:
         "rotateZ docs"
         return vector.compute.planar.rotateZ.dispatch(angle, self)
 
+    def transform2D(self, obj):
+        "transform2D docs"
+        return vector.compute.planar.transform2D.dispatch(obj, self)
+
 
 class Spatial(Planar):
     @property
@@ -142,6 +146,10 @@ class Spatial(Planar):
         """
         return vector.compute.spatial.rotate_quaternion.dispatch(u, i, j, k, self)
 
+    def transform3D(self, obj):
+        "transform3D docs"
+        return vector.compute.spatial.transform3D.dispatch(obj, self)
+
 
 class Lorentz(Spatial):
     @property
@@ -163,6 +171,10 @@ class Lorentz(Spatial):
     def tau2(self):
         "tau2 docs"
         return vector.compute.lorentz.tau2.dispatch(self)
+
+    def transform4D(self, obj):
+        "transform4D docs"
+        return vector.compute.lorentz.transform4D.dispatch(obj, self)
 
 
 class Transform2D(vector.geometry.Transform):
