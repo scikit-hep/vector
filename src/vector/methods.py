@@ -206,6 +206,16 @@ class Lorentz(Spatial):
         "tau2 docs"
         return vector.compute.lorentz.tau2.dispatch(self)
 
+    @property
+    def beta(self):
+        "beta docs"
+        return vector.compute.lorentz.beta.dispatch(self)
+
+    @property
+    def gamma(self):
+        "gamma docs"
+        return vector.compute.lorentz.gamma.dispatch(self)
+
     def transform4D(self, obj):
         "transform4D docs"
         return vector.compute.lorentz.transform4D.dispatch(obj, self)
