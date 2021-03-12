@@ -17,8 +17,8 @@ from vector.geometry import (
 )
 
 
-def xy_z(lib, angle, x, y, z):
-    norm = mag.xy_z(lib, angle, x, y, z)
+def xy_z(lib, x, y, z):
+    norm = mag.xy_z(lib, x, y, z)
     return (
         lib.nan_to_num(x / norm, nan=0),
         lib.nan_to_num(y / norm, nan=0),
@@ -26,28 +26,28 @@ def xy_z(lib, angle, x, y, z):
     )
 
 
-def xy_theta(lib, angle, x, y, theta):
-    norm = mag.xy_theta(lib, angle, x, y, theta)
+def xy_theta(lib, x, y, theta):
+    norm = mag.xy_theta(lib, x, y, theta)
     return (lib.nan_to_num(x / norm, nan=0), lib.nan_to_num(y / norm, nan=0), theta)
 
 
-def xy_eta(lib, angle, x, y, eta):
-    norm = mag.xy_eta(lib, angle, x, y, eta)
+def xy_eta(lib, x, y, eta):
+    norm = mag.xy_eta(lib, x, y, eta)
     return (lib.nan_to_num(x / norm, nan=0), lib.nan_to_num(y / norm, nan=0), eta)
 
 
-def rhophi_z(lib, angle, rho, phi, z):
-    norm = rhophi_z(lib, angle, rho, phi, z)
+def rhophi_z(lib, rho, phi, z):
+    norm = mag.rhophi_z(lib, rho, phi, z)
     return (lib.nan_to_num(rho / norm, nan=0), phi, lib.nan_to_num(z / norm, nan=0))
 
 
-def rhophi_theta(lib, angle, rho, phi, theta):
-    norm = rhophi_theta(lib, angle, rho, phi, theta)
+def rhophi_theta(lib, rho, phi, theta):
+    norm = mag.rhophi_theta(lib, rho, phi, theta)
     return (lib.nan_to_num(rho / norm, nan=0), phi, theta)
 
 
-def rhophi_eta(lib, angle, rho, phi, eta):
-    norm = rhophi_eta(lib, angle, rho, phi, eta)
+def rhophi_eta(lib, rho, phi, eta):
+    norm = mag.rhophi_eta(lib, rho, phi, eta)
     return (lib.nan_to_num(rho / norm, nan=0), phi, eta)
 
 
@@ -65,13 +65,13 @@ dispatch_map = {
 }
 
 
-def dispatch(angle, v):
+def dispatch(v):
     function, *returns = dispatch_map[
         aztype(v),
         ltype(v),
     ]
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
-            function(v.lib, angle, *v.azimuthal.elements, *v.longitudinal.elements),
+            function(v.lib, *v.azimuthal.elements, *v.longitudinal.elements),
             returns,
         )

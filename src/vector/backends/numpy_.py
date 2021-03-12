@@ -74,6 +74,27 @@ def _has(array, names):
     return all(x in dtype_names for x in names)
 
 
+def _toarrays(result):
+    istuple = True
+    if not isinstance(result, tuple):
+        istuple = False
+        result = (result,)
+    result = tuple(
+        x if isinstance(x, numpy.ndarray) else numpy.array([x], numpy.float64)
+        for x in result
+    )
+    if istuple:
+        return result
+    else:
+        return result[0]
+
+
+def _length(result):
+    if not isinstance(result, tuple):
+        result = (result,)
+    return max(len(x) for x in result)
+
+
 class CoordinatesNumpy:
     lib = numpy
 
@@ -322,12 +343,13 @@ class VectorNumpy2D(
         elif returns == [vector.geometry.AzimuthalXY] or returns == [
             vector.geometry.AzimuthalRhoPhi
         ]:
+            result = _toarrays(result)
             dtype = []
             i = 0
             for name in _coordinate_class_to_names[returns[0]]:
                 dtype.append((name, result[i].dtype))
                 i += 1
-            out = numpy.empty(result[0].shape, dtype=dtype)
+            out = numpy.empty(_length(result), dtype=dtype)
             i = 0
             for name in _coordinate_class_to_names[returns[0]]:
                 out[name] = result[i]
@@ -401,6 +423,7 @@ class VectorNumpy3D(
         elif returns == [vector.geometry.AzimuthalXY] or returns == [
             vector.geometry.AzimuthalRhoPhi
         ]:
+            result = _toarrays(result)
             dtype = []
             i = 0
             for name in _coordinate_class_to_names[returns[0]]:
@@ -408,7 +431,7 @@ class VectorNumpy3D(
                 i += 1
             for name in _coordinate_class_to_names[vector.geometry.ltype(self)]:
                 dtype.append((name, self.dtype[name]))
-            out = numpy.empty(result[0].shape, dtype=dtype)
+            out = numpy.empty(_length(result), dtype=dtype)
             i = 0
             for name in _coordinate_class_to_names[returns[0]]:
                 out[name] = result[i]
@@ -424,6 +447,7 @@ class VectorNumpy3D(
             and isinstance(returns[1], type)
             and issubclass(returns[1], vector.geometry.Longitudinal)
         ):
+            result = _toarrays(result)
             dtype = []
             i = 0
             for name in _coordinate_class_to_names[returns[0]]:
@@ -432,7 +456,7 @@ class VectorNumpy3D(
             for name in _coordinate_class_to_names[returns[1]]:
                 dtype.append((name, result[i].dtype))
                 i += 1
-            out = numpy.empty(result[0].shape, dtype=dtype)
+            out = numpy.empty(_length(result), dtype=dtype)
             i = 0
             for name in _coordinate_class_to_names[returns[0]]:
                 out[name] = result[i]
@@ -521,6 +545,7 @@ class VectorNumpy4D(
         elif returns == [vector.geometry.AzimuthalXY] or returns == [
             vector.geometry.AzimuthalRhoPhi
         ]:
+            result = _toarrays(result)
             dtype = []
             for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
                 dtype.append((name, result[i].dtype))
@@ -528,7 +553,7 @@ class VectorNumpy4D(
                 dtype.append((name, self.dtype[name]))
             for name in _coordinate_class_to_names[vector.geometry.ttype(self)]:
                 dtype.append((name, self.dtype[name]))
-            out = numpy.empty(result[0].shape, dtype=dtype)
+            out = numpy.empty(_length(result), dtype=dtype)
             for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
                 out[name] = result[i]
             for name in _coordinate_class_to_names[vector.geometry.ltype(self)]:
@@ -544,6 +569,7 @@ class VectorNumpy4D(
             and isinstance(returns[1], type)
             and issubclass(returns[1], vector.geometry.Longitudinal)
         ):
+            result = _toarrays(result)
             dtype = []
             i = 0
             for name in _coordinate_class_to_names[returns[0]]:
@@ -554,7 +580,7 @@ class VectorNumpy4D(
                 i += 1
             for name in _coordinate_class_to_names[vector.geometry.ttype(self)]:
                 dtype.append((name, self.dtype[name]))
-            out = numpy.empty(result[0].shape, dtype=dtype)
+            out = numpy.empty(_length(result), dtype=dtype)
             i = 0
             for name in _coordinate_class_to_names[returns[0]]:
                 out[name] = result[i]
@@ -573,6 +599,7 @@ class VectorNumpy4D(
             and isinstance(returns[1], type)
             and issubclass(returns[1], vector.geometry.Longitudinal)
         ):
+            result = _toarrays(result)
             dtype = []
             i = 0
             for name in _coordinate_class_to_names[returns[0]]:
@@ -591,7 +618,7 @@ class VectorNumpy4D(
                     i += 1
             elif returns[2] is not None:
                 raise AssertionError(repr(type(returns[2])))
-            out = numpy.empty(result[0].shape, dtype=dtype)
+            out = numpy.empty(_length(result), dtype=dtype)
             i = 0
             for name in _coordinate_class_to_names[returns[0]]:
                 out[name] = result[i]

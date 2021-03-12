@@ -9,12 +9,12 @@ from vector.compute.planar import rho
 from vector.geometry import AzimuthalRhoPhi, AzimuthalXY, aztype
 
 
-def xy(lib, angle, x, y):
-    norm = rho.xy(lib, angle, x, y)
+def xy(lib, x, y):
+    norm = rho.xy(lib, x, y)
     return (lib.nan_to_num(x / norm, nan=0), lib.nan_to_num(y / norm, nan=0))
 
 
-def rhophi(lib, angle, rho, phi):
+def rhophi(lib, rho, phi):
     return (1, phi)
 
 
@@ -24,9 +24,9 @@ dispatch_map = {
 }
 
 
-def dispatch(angle, v):
+def dispatch(v):
     function, *returns = dispatch_map[
         aztype(v),
     ]
     with numpy.errstate(all="ignore"):
-        return v._wrap_result(function(v.lib, angle, *v.azimuthal.elements), returns)
+        return v._wrap_result(function(v.lib, *v.azimuthal.elements), returns)
