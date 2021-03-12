@@ -221,6 +221,16 @@ class Lorentz(Spatial):
         "rapidity docs"
         return vector.compute.lorentz.rapidity.dispatch(self)
 
+    @property
+    def Et(self):
+        "Et docs"
+        return vector.compute.lorentz.Et.dispatch(self)
+
+    @property
+    def Et2(self):
+        "Et2 docs"
+        return vector.compute.lorentz.Et2.dispatch(self)
+
     def transform4D(self, obj):
         "transform4D docs"
         return vector.compute.lorentz.transform4D.dispatch(obj, self)

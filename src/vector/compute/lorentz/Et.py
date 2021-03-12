@@ -5,8 +5,7 @@
 
 import numpy
 
-from vector.compute.lorentz import t
-from vector.compute.spatial import z
+from vector.compute.lorentz import Et2, t
 from vector.geometry import (
     AzimuthalRhoPhi,
     AzimuthalXY,
@@ -22,7 +21,7 @@ from vector.geometry import (
 
 
 def xy_z_t(lib, x, y, z, t):
-    return 0.5 * lib.log((t + z) / (t - z))
+    return lib.sqrt(Et2.xy_z_t(lib, x, y, z, t))
 
 
 def xy_z_tau(lib, x, y, z, tau):
@@ -30,27 +29,24 @@ def xy_z_tau(lib, x, y, z, tau):
 
 
 def xy_theta_t(lib, x, y, theta, t):
-    return xy_z_t(lib, x, y, z.xy_theta(lib, x, y, theta), t)
+    return t * lib.sin(theta)
 
 
 def xy_theta_tau(lib, x, y, theta, tau):
-    return xy_z_t(
-        lib, x, y, z.xy_theta(lib, x, y, theta), t.xy_theta_tau(lib, x, y, theta, tau)
-    )
+    return xy_theta_t(lib, x, y, theta, t.xy_theta_tau(lib, x, y, theta, tau))
 
 
 def xy_eta_t(lib, x, y, eta, t):
-    return xy_z_t(lib, x, y, z.xy_eta(lib, x, y, eta), t)
+    expmeta = lib.exp(-eta)
+    return t * (2 / (expmeta + 1 / expmeta))
 
 
 def xy_eta_tau(lib, x, y, eta, tau):
-    return xy_z_t(
-        lib, x, y, z.xy_eta(lib, x, y, eta), t.xy_eta_tau(lib, x, y, eta, tau)
-    )
+    return xy_eta_t(lib, x, y, eta, t.xy_eta_tau(lib, x, y, eta, tau))
 
 
 def rhophi_z_t(lib, rho, phi, z, t):
-    return 0.5 * lib.log((t + z) / (t - z))
+    return t * rho / lib.sqrt(rho ** 2 + z ** 2)
 
 
 def rhophi_z_tau(lib, rho, phi, z, tau):
@@ -58,31 +54,22 @@ def rhophi_z_tau(lib, rho, phi, z, tau):
 
 
 def rhophi_theta_t(lib, rho, phi, theta, t):
-    return rhophi_z_t(lib, rho, phi, z.rhophi_theta(lib, rho, phi, theta), t)
+    return t * lib.sin(theta)
 
 
 def rhophi_theta_tau(lib, rho, phi, theta, tau):
-    return rhophi_z_t(
-        lib,
-        rho,
-        phi,
-        z.rhophi_theta(lib, rho, phi, theta),
-        t.rhophi_theta_tau(lib, rho, phi, theta, tau),
+    return rhophi_theta_t(
+        lib, rho, phi, theta, t.rhophi_theta_tau(lib, rho, phi, theta, tau)
     )
 
 
 def rhophi_eta_t(lib, rho, phi, eta, t):
-    return rhophi_z_t(lib, rho, phi, z.rhophi_eta(lib, rho, phi, eta), t)
+    expmeta = lib.exp(-eta)
+    return t * (2 / (expmeta + 1 / expmeta))
 
 
 def rhophi_eta_tau(lib, rho, phi, eta, tau):
-    return rhophi_z_t(
-        lib,
-        rho,
-        phi,
-        z.rhophi_eta(lib, rho, phi, eta),
-        t.rhophi_eta_tau(lib, rho, phi, eta, tau),
-    )
+    return rhophi_eta_t(lib, rho, phi, eta, t.rhophi_eta_tau(lib, rho, phi, eta, tau))
 
 
 dispatch_map = {
