@@ -34,7 +34,7 @@ def xy_z_tau(lib, gamma, x, y, z, tau):
     bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
     zee = z
     tee = t.xy_z_tau(lib, x, y, z, tau)
-    return (x, y, gam * zee + bgam * tee, bgam * zee + gam * tee)
+    return (x, y, gam * zee + bgam * tee, tau)
 
 
 def xy_theta_t(lib, gamma, x, y, theta, t):
@@ -50,7 +50,7 @@ def xy_theta_tau(lib, gamma, x, y, theta, tau):
     bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
     zee = z.xy_theta(lib, x, y, theta)
     tee = t.xy_theta_tau(lib, x, y, theta, tau)
-    return (x, y, gam * zee + bgam * tee, bgam * zee + gam * tee)
+    return (x, y, gam * zee + bgam * tee, tau)
 
 
 def xy_eta_t(lib, gamma, x, y, eta, t):
@@ -66,7 +66,7 @@ def xy_eta_tau(lib, gamma, x, y, eta, tau):
     bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
     zee = z.xy_eta(lib, x, y, eta)
     tee = t.xy_eta_tau(lib, x, y, eta, tau)
-    return (x, y, gam * zee + bgam * tee, bgam * zee + gam * tee)
+    return (x, y, gam * zee + bgam * tee, tau)
 
 
 def rhophi_z_t(lib, gamma, rho, phi, z, t):
@@ -82,7 +82,7 @@ def rhophi_z_tau(lib, gamma, rho, phi, z, tau):
     bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
     zee = z
     tee = t.rhophi_z_tau(lib, rho, phi, z, tau)
-    return (rho, phi, gam * zee + bgam * tee, bgam * zee + gam * tee)
+    return (rho, phi, gam * zee + bgam * tee, tau)
 
 
 def rhophi_theta_t(lib, gamma, rho, phi, theta, t):
@@ -98,7 +98,7 @@ def rhophi_theta_tau(lib, gamma, rho, phi, theta, tau):
     bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
     zee = z.rhophi_theta(lib, rho, phi, theta)
     tee = t.rhophi_theta_tau(lib, rho, phi, theta, tau)
-    return (rho, phi, gam * zee + bgam * tee, bgam * zee + gam * tee)
+    return (rho, phi, gam * zee + bgam * tee, tau)
 
 
 def rhophi_eta_t(lib, gamma, rho, phi, eta, t):
@@ -114,7 +114,7 @@ def rhophi_eta_tau(lib, gamma, rho, phi, eta, tau):
     bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
     zee = z.rhophi_eta(lib, rho, phi, eta)
     tee = t.rhophi_eta_tau(lib, rho, phi, eta, tau)
-    return (rho, phi, gam * zee + bgam * tee, bgam * zee + gam * tee)
+    return (rho, phi, gam * zee + bgam * tee, tau)
 
 
 dispatch_map = {
@@ -128,7 +128,7 @@ dispatch_map = {
         xy_z_tau,
         AzimuthalXY,
         LongitudinalZ,
-        TemporalT,
+        TemporalTau,
     ),
     (AzimuthalXY, LongitudinalTheta, TemporalT): (
         xy_theta_t,
@@ -140,7 +140,7 @@ dispatch_map = {
         xy_theta_tau,
         AzimuthalXY,
         LongitudinalZ,
-        TemporalT,
+        TemporalTau,
     ),
     (AzimuthalXY, LongitudinalEta, TemporalT): (
         xy_eta_t,
@@ -152,7 +152,7 @@ dispatch_map = {
         xy_eta_tau,
         AzimuthalXY,
         LongitudinalZ,
-        TemporalT,
+        TemporalTau,
     ),
     (AzimuthalRhoPhi, LongitudinalZ, TemporalT): (
         rhophi_z_t,
@@ -164,7 +164,7 @@ dispatch_map = {
         rhophi_z_tau,
         AzimuthalRhoPhi,
         LongitudinalZ,
-        TemporalT,
+        TemporalTau,
     ),
     (AzimuthalRhoPhi, LongitudinalTheta, TemporalT): (
         rhophi_theta_t,
@@ -176,7 +176,7 @@ dispatch_map = {
         rhophi_theta_tau,
         AzimuthalRhoPhi,
         LongitudinalZ,
-        TemporalT,
+        TemporalTau,
     ),
     (AzimuthalRhoPhi, LongitudinalEta, TemporalT): (
         rhophi_eta_t,
@@ -188,7 +188,7 @@ dispatch_map = {
         rhophi_eta_tau,
         AzimuthalRhoPhi,
         LongitudinalZ,
-        TemporalT,
+        TemporalTau,
     ),
 }
 

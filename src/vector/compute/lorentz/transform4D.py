@@ -24,7 +24,7 @@ from vector.geometry import (
 # Rotation is only computed in Cartesian coordinates; the rest are conversions.
 
 
-def cartesian(
+def cartesian_t(
     lib, xx, xy, xz, xt, yx, yy, yz, yt, zx, zy, zz, zt, tx, ty, tz, tt, x, y, z, t
 ):
     xp = xx * x + xy * y + xz * z + xt * t
@@ -34,9 +34,17 @@ def cartesian(
     return (xp, yp, zp, tp)
 
 
+def cartesian_tau(lib, xx, xy, xz, xt, yx, yy, yz, yt, zx, zy, zz, zt, x, y, z, tau):
+    tee = t.xy_z_tau(lib, x, y, z, tau)
+    xp = xx * x + xy * y + xz * z + xt * tee
+    yp = yx * x + yy * y + yz * z + yt * tee
+    zp = zx * x + zy * y + zz * z + zt * tee
+    return (xp, yp, zp, tau)
+
+
 dispatch_map = {
     (AzimuthalXY, LongitudinalZ, TemporalT): (
-        cartesian,
+        cartesian_t,
         AzimuthalXY,
         LongitudinalZ,
         TemporalT,

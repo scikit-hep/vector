@@ -5,7 +5,7 @@
 
 import numpy
 
-from vector.compute.lorentz import t, transform4D
+from vector.compute.lorentz import transform4D
 from vector.compute.planar import x, y
 from vector.compute.spatial import z
 from vector.geometry import (
@@ -22,7 +22,7 @@ from vector.geometry import (
 )
 
 
-def cartesian(lib, x1, y1, z1, t1, betax, betay, betaz):
+def cartesian_t(lib, x1, y1, z1, t1, betax, betay, betaz):
     bp2 = betax ** 2 + betay ** 2 + betaz ** 2
     gamma = 1 / lib.sqrt(1 - bp2)
     bgam = gamma ** 2 / (1 + gamma)
@@ -42,7 +42,7 @@ def cartesian(lib, x1, y1, z1, t1, betax, betay, betaz):
     ty = yt
     tz = zt
     tt = gamma
-    return transform4D.cartesian(
+    return transform4D.cartesian_t(
         lib,
         xx,
         xy,
@@ -67,26 +67,81 @@ def cartesian(lib, x1, y1, z1, t1, betax, betay, betaz):
     )
 
 
-def cartesian_xy_z(lib, x1, y1, z1, t1, x2, y2, z2):
-    return cartesian(lib, x1, y1, z1, t1, x2, y2, z2)
+def cartesian_tau(lib, x1, y1, z1, tau1, betax, betay, betaz):
+    bp2 = betax ** 2 + betay ** 2 + betaz ** 2
+    gamma = 1 / lib.sqrt(1 - bp2)
+    bgam = gamma ** 2 / (1 + gamma)
+    xx = 1 + bgam * betax * betax
+    yy = 1 + bgam * betay * betay
+    zz = 1 + bgam * betaz * betaz
+    xy = bgam * betax * betay
+    xz = bgam * betax * betaz
+    yz = bgam * betay * betaz
+    yx = xy
+    zx = xz
+    zy = yz
+    xt = gamma * betax
+    yt = gamma * betay
+    zt = gamma * betaz
+    return transform4D.cartesian_tau(
+        lib,
+        xx,
+        xy,
+        xz,
+        xt,
+        yx,
+        yy,
+        yz,
+        yt,
+        zx,
+        zy,
+        zz,
+        zt,
+        x1,
+        y1,
+        z1,
+        tau1,
+    )
 
 
-def cartesian_xy_theta(lib, x1, y1, z1, t1, x2, y2, theta2):
-    return cartesian(lib, x1, y1, z1, t1, x2, y2, z.xy_theta(lib, x2, y2, theta2))
+def cartesian_t_xy_z(lib, x1, y1, z1, t1, x2, y2, z2):
+    return cartesian_t(lib, x1, y1, z1, t1, x2, y2, z2)
 
 
-def cartesian_xy_eta(lib, x1, y1, z1, t1, x2, y2, eta2):
-    return cartesian(lib, x1, y1, z1, t1, x2, y2, z.xy_eta(lib, x2, y2, eta2))
+def cartesian_tau_xy_z(lib, x1, y1, z1, tau1, x2, y2, z2):
+    return cartesian_tau(lib, x1, y1, z1, tau1, x2, y2, z2)
 
 
-def cartesian_rhophi_z(lib, x1, y1, z1, t1, rho2, phi2, z2):
-    return cartesian(
+def cartesian_t_xy_theta(lib, x1, y1, z1, t1, x2, y2, theta2):
+    return cartesian_t(lib, x1, y1, z1, t1, x2, y2, z.xy_theta(lib, x2, y2, theta2))
+
+
+def cartesian_tau_xy_theta(lib, x1, y1, z1, tau1, x2, y2, theta2):
+    return cartesian_tau(lib, x1, y1, z1, tau1, x2, y2, z.xy_theta(lib, x2, y2, theta2))
+
+
+def cartesian_t_xy_eta(lib, x1, y1, z1, t1, x2, y2, eta2):
+    return cartesian_t(lib, x1, y1, z1, t1, x2, y2, z.xy_eta(lib, x2, y2, eta2))
+
+
+def cartesian_tau_xy_eta(lib, x1, y1, z1, tau1, x2, y2, eta2):
+    return cartesian_tau(lib, x1, y1, z1, tau1, x2, y2, z.xy_eta(lib, x2, y2, eta2))
+
+
+def cartesian_t_rhophi_z(lib, x1, y1, z1, t1, rho2, phi2, z2):
+    return cartesian_t(
         lib, x1, y1, z1, t1, x.rhophi(lib, rho2, phi2), y.rhophi(lib, rho2, phi2), z2
     )
 
 
-def cartesian_rhophi_theta(lib, x1, y1, z1, t1, rho2, phi2, theta2):
-    return cartesian(
+def cartesian_tau_rhophi_z(lib, x1, y1, z1, tau1, rho2, phi2, z2):
+    return cartesian_tau(
+        lib, x1, y1, z1, tau1, x.rhophi(lib, rho2, phi2), y.rhophi(lib, rho2, phi2), z2
+    )
+
+
+def cartesian_t_rhophi_theta(lib, x1, y1, z1, t1, rho2, phi2, theta2):
+    return cartesian_t(
         lib,
         x1,
         y1,
@@ -98,8 +153,21 @@ def cartesian_rhophi_theta(lib, x1, y1, z1, t1, rho2, phi2, theta2):
     )
 
 
-def cartesian_rhophi_eta(lib, x1, y1, z1, t1, rho2, phi2, eta2):
-    return cartesian(
+def cartesian_tau_rhophi_theta(lib, x1, y1, z1, tau1, rho2, phi2, theta2):
+    return cartesian_tau(
+        lib,
+        x1,
+        y1,
+        z1,
+        tau1,
+        x.rhophi(lib, rho2, phi2),
+        y.rhophi(lib, rho2, phi2),
+        z.rhophi_theta(lib, rho2, phi2, theta2),
+    )
+
+
+def cartesian_t_rhophi_eta(lib, x1, y1, z1, t1, rho2, phi2, eta2):
+    return cartesian_t(
         lib,
         x1,
         y1,
@@ -111,12 +179,31 @@ def cartesian_rhophi_eta(lib, x1, y1, z1, t1, rho2, phi2, eta2):
     )
 
 
+def cartesian_tau_rhophi_eta(lib, x1, y1, z1, tau1, rho2, phi2, eta2):
+    return cartesian_tau(
+        lib,
+        x1,
+        y1,
+        z1,
+        tau1,
+        x.rhophi(lib, rho2, phi2),
+        y.rhophi(lib, rho2, phi2),
+        z.rhophi_eta(lib, rho2, phi2, eta2),
+    )
+
+
 dispatch_map = {
     (AzimuthalXY, LongitudinalZ, TemporalT, AzimuthalXY, LongitudinalZ): (
-        cartesian_xy_z,
+        cartesian_t_xy_z,
         AzimuthalXY,
         LongitudinalZ,
         TemporalT,
+    ),
+    (AzimuthalXY, LongitudinalZ, TemporalTau, AzimuthalXY, LongitudinalZ): (
+        cartesian_tau_xy_z,
+        AzimuthalXY,
+        LongitudinalZ,
+        TemporalTau,
     ),
     (
         AzimuthalXY,
@@ -124,12 +211,25 @@ dispatch_map = {
         TemporalT,
         AzimuthalXY,
         LongitudinalTheta,
-    ): (cartesian_xy_theta, AzimuthalXY, LongitudinalZ, TemporalT),
+    ): (cartesian_t_xy_theta, AzimuthalXY, LongitudinalZ, TemporalT),
+    (
+        AzimuthalXY,
+        LongitudinalZ,
+        TemporalTau,
+        AzimuthalXY,
+        LongitudinalTheta,
+    ): (cartesian_tau_xy_theta, AzimuthalXY, LongitudinalZ, TemporalTau),
     (AzimuthalXY, LongitudinalZ, TemporalT, AzimuthalXY, LongitudinalEta): (
-        cartesian_xy_eta,
+        cartesian_t_xy_eta,
         AzimuthalXY,
         LongitudinalZ,
         TemporalT,
+    ),
+    (AzimuthalXY, LongitudinalZ, TemporalTau, AzimuthalXY, LongitudinalEta): (
+        cartesian_tau_xy_eta,
+        AzimuthalXY,
+        LongitudinalZ,
+        TemporalTau,
     ),
     (
         AzimuthalXY,
@@ -137,21 +237,42 @@ dispatch_map = {
         TemporalT,
         AzimuthalRhoPhi,
         LongitudinalZ,
-    ): (cartesian_rhophi_z, AzimuthalXY, LongitudinalZ, TemporalT),
+    ): (cartesian_t_rhophi_z, AzimuthalXY, LongitudinalZ, TemporalT),
+    (
+        AzimuthalXY,
+        LongitudinalZ,
+        TemporalTau,
+        AzimuthalRhoPhi,
+        LongitudinalZ,
+    ): (cartesian_tau_rhophi_z, AzimuthalXY, LongitudinalZ, TemporalTau),
     (
         AzimuthalXY,
         LongitudinalZ,
         TemporalT,
         AzimuthalRhoPhi,
         LongitudinalTheta,
-    ): (cartesian_rhophi_theta, AzimuthalXY, LongitudinalZ, TemporalT),
+    ): (cartesian_t_rhophi_theta, AzimuthalXY, LongitudinalZ, TemporalT),
+    (
+        AzimuthalXY,
+        LongitudinalZ,
+        TemporalTau,
+        AzimuthalRhoPhi,
+        LongitudinalTheta,
+    ): (cartesian_tau_rhophi_theta, AzimuthalXY, LongitudinalZ, TemporalTau),
     (
         AzimuthalXY,
         LongitudinalZ,
         TemporalT,
         AzimuthalRhoPhi,
         LongitudinalEta,
-    ): (cartesian_rhophi_eta, AzimuthalXY, LongitudinalZ, TemporalT),
+    ): (cartesian_t_rhophi_eta, AzimuthalXY, LongitudinalZ, TemporalT),
+    (
+        AzimuthalXY,
+        LongitudinalZ,
+        TemporalTau,
+        AzimuthalRhoPhi,
+        LongitudinalEta,
+    ): (cartesian_tau_rhophi_eta, AzimuthalXY, LongitudinalZ, TemporalTau),
 }
 
 
@@ -166,45 +287,21 @@ def make_conversion(azimuthal1, longitudinal1, temporal1, azimuthal2, longitudin
             to_y = y.xy
             if longitudinal1 is LongitudinalZ:
                 to_z = z.xy_z
-                if temporal1 is TemporalT:
-                    to_t = t.xy_z_t
-                elif temporal1 is TemporalTau:
-                    to_t = t.xy_z_tau
             elif longitudinal1 is LongitudinalTheta:
                 to_z = z.xy_theta
-                if temporal1 is TemporalT:
-                    to_t = t.xy_theta_t
-                elif temporal1 is TemporalTau:
-                    to_t = t.xy_theta_tau
             elif longitudinal1 is LongitudinalEta:
                 to_z = z.xy_eta
-                if temporal1 is TemporalT:
-                    to_t = t.xy_eta_t
-                elif temporal1 is TemporalTau:
-                    to_t = t.xy_eta_tau
         elif azimuthal1 is AzimuthalRhoPhi:
             to_x = x.rhophi
             to_y = y.rhophi
             if longitudinal1 is LongitudinalZ:
                 to_z = z.rhophi_z
-                if temporal1 is TemporalT:
-                    to_t = t.rhophi_z_t
-                elif temporal1 is TemporalTau:
-                    to_t = t.rhophi_z_tau
             elif longitudinal1 is LongitudinalTheta:
                 to_z = z.rhophi_theta
-                if temporal1 is TemporalT:
-                    to_t = t.rhophi_theta_t
-                elif temporal1 is TemporalTau:
-                    to_t = t.rhophi_theta_tau
             elif longitudinal1 is LongitudinalEta:
                 to_z = z.rhophi_eta
-                if temporal1 is TemporalT:
-                    to_t = t.rhophi_eta_t
-                elif temporal1 is TemporalTau:
-                    to_t = t.rhophi_eta_tau
         cartesian, azout, lout, tout = dispatch_map[
-            AzimuthalXY, LongitudinalZ, TemporalT, azimuthal2, longitudinal2
+            AzimuthalXY, LongitudinalZ, temporal1, azimuthal2, longitudinal2
         ]
 
         def f(lib, coord11, coord12, coord13, coord14, coord21, coord22, coord23):
@@ -213,7 +310,7 @@ def make_conversion(azimuthal1, longitudinal1, temporal1, azimuthal2, longitudin
                 to_x(lib, coord11, coord12),
                 to_y(lib, coord11, coord12),
                 to_z(lib, coord11, coord12, coord13),
-                to_t(lib, coord11, coord12, coord13, coord14),
+                coord14,
                 coord21,
                 coord22,
                 coord23,
