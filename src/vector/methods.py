@@ -265,6 +265,10 @@ class Lorentz(Spatial):
         "boost_p4 docs"
         return vector.compute.lorentz.boost_p4.dispatch(self, p4)
 
+    def boost_beta3(self, beta3):
+        "boost_beta3 docs"
+        return vector.compute.lorentz.boost_beta3.dispatch(self, beta3)
+
 
 class Momentum:
     pass
