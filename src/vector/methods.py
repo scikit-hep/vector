@@ -269,6 +269,15 @@ class Lorentz(Spatial):
         "boost_beta3 docs"
         return vector.compute.lorentz.boost_beta3.dispatch(self, beta3)
 
+    def boostZ(self, beta=None, gamma=None):
+        "boostZ docs"
+        if beta is not None and gamma is None:
+            return vector.compute.lorentz.boostZ_beta.dispatch(beta, self)
+        elif beta is None and gamma is not None:
+            return vector.compute.lorentz.boostZ_gamma.dispatch(gamma, self)
+        else:
+            raise TypeError("specify 'beta' xor 'gamma', not both or neither")
+
 
 class Momentum:
     pass
