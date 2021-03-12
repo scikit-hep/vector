@@ -154,14 +154,19 @@ class VectorObject2D(VectorObject, vector.methods.Planar, vector.geometry.Vector
         return "vector.generic(" + ", ".join(out) + ")"
 
     def _wrap_result(self, result, returns):
+        if isinstance(self, type):
+            cls = self
+        else:
+            cls = type(self)
+
         if returns == [float]:
             return result
 
         elif returns == [vector.geometry.AzimuthalXY]:
-            return type(self)(AzimuthalObjectXY(*result))
+            return cls(AzimuthalObjectXY(*result))
 
         elif returns == [vector.geometry.AzimuthalRhoPhi]:
-            return type(self)(AzimuthalObjectRhoPhi(*result))
+            return cls(AzimuthalObjectRhoPhi(*result))
 
         else:
             raise AssertionError(repr(returns))
@@ -221,14 +226,19 @@ class VectorObject3D(VectorObject, vector.methods.Spatial, vector.geometry.Vecto
         return "vector.generic(" + ", ".join(out) + ")"
 
     def _wrap_result(self, result, returns):
+        if isinstance(self, type):
+            cls = self
+        else:
+            cls = type(self)
+
         if returns == [float]:
             return result
 
         elif returns == [vector.geometry.AzimuthalXY]:
-            return type(self)(AzimuthalObjectXY(*result), self.longitudinal)
+            return cls(AzimuthalObjectXY(*result), self.longitudinal)
 
         elif returns == [vector.geometry.AzimuthalRhoPhi]:
-            return type(self)(AzimuthalObjectRhoPhi(*result), self.longitudinal)
+            return cls(AzimuthalObjectRhoPhi(*result), self.longitudinal)
 
         elif (
             (len(returns) == 2 or (len(returns) == 3 and returns[2] is None))
@@ -251,7 +261,7 @@ class VectorObject3D(VectorObject, vector.methods.Spatial, vector.geometry.Vecto
                 longitudinal = LongitudinalObjectEta(result[2])
             else:
                 raise AssertionError(repr(returns[1]))
-            return type(self)(azimuthal, longitudinal)
+            return cls(azimuthal, longitudinal)
 
         else:
             raise AssertionError(repr(returns))
@@ -379,18 +389,19 @@ class VectorObject4D(VectorObject, vector.methods.Lorentz, vector.geometry.Vecto
         return "vector.generic(" + ", ".join(out) + ")"
 
     def _wrap_result(self, result, returns):
+        if isinstance(self, type):
+            cls = self
+        else:
+            cls = type(self)
+
         if returns == [float]:
             return result
 
         elif returns == [vector.geometry.AzimuthalXY]:
-            return type(self)(
-                AzimuthalObjectXY(*result), self.longitudinal, self.temporal
-            )
+            return cls(AzimuthalObjectXY(*result), self.longitudinal, self.temporal)
 
         elif returns == [vector.geometry.AzimuthalRhoPhi]:
-            return type(self)(
-                AzimuthalObjectRhoPhi(*result), self.longitudinal, self.temporal
-            )
+            return cls(AzimuthalObjectRhoPhi(*result), self.longitudinal, self.temporal)
 
         elif (
             len(returns) == 2
@@ -413,7 +424,7 @@ class VectorObject4D(VectorObject, vector.methods.Lorentz, vector.geometry.Vecto
                 longitudinal = LongitudinalObjectEta(result[2])
             else:
                 raise AssertionError(repr(returns[1]))
-            return type(self)(azimuthal, longitudinal, self.temporal)
+            return cls(azimuthal, longitudinal, self.temporal)
 
         elif (
             len(returns) == 3
@@ -446,7 +457,7 @@ class VectorObject4D(VectorObject, vector.methods.Lorentz, vector.geometry.Vecto
             else:
                 raise AssertionError(repr(returns[2]))
             if is_4d:
-                return type(self)(azimuthal, longitudinal, temporal)
+                return cls(azimuthal, longitudinal, temporal)
             else:
                 return self.ProjectionClass3D(azimuthal, longitudinal)
 

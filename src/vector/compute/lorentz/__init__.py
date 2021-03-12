@@ -4,6 +4,7 @@
 # or https://github.com/scikit-hep/vector for details.
 
 import vector.compute.lorentz.beta  # noqa: F401
+import vector.compute.lorentz.boost_p4  # noqa: F401
 import vector.compute.lorentz.dot  # noqa: F401
 import vector.compute.lorentz.Et  # noqa: F401
 import vector.compute.lorentz.Et2  # noqa: F401

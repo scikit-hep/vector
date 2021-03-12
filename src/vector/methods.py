@@ -261,6 +261,10 @@ class Lorentz(Spatial):
         "dot docs"
         return vector.compute.lorentz.dot.dispatch(self, other)
 
+    def boost_p4(self, p4):
+        "boost_p4 docs"
+        return vector.compute.lorentz.boost_p4.dispatch(self, p4)
+
 
 class Momentum:
     pass
