@@ -16,7 +16,7 @@ def test():
         vector.backends.object_.LongitudinalObjectZ(3),
         vector.backends.object_.TemporalObjectT(4),
     )
-    out = vec.boostZ(gamma=-3)
+    out = vec.boostZ(beta=-0.9428090415820634)
     assert out.x == pytest.approx(1)
     assert out.y == pytest.approx(2)
     assert out.z == pytest.approx(-2.313708498984761)
@@ -37,7 +37,7 @@ def test():
         "rhophietatau",
     ):
         tvec = getattr(vec, "to_" + t1)()
-        out = tvec.boostZ(gamma=-3)
+        out = tvec.boostZ(beta=-0.9428090415820634)
         assert out.x == pytest.approx(1)
         assert out.y == pytest.approx(2)
         assert out.z == pytest.approx(-2.313708498984761)
