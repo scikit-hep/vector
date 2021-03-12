@@ -216,6 +216,11 @@ class Lorentz(Spatial):
         "gamma docs"
         return vector.compute.lorentz.gamma.dispatch(self)
 
+    @property
+    def rapidity(self):
+        "rapidity docs"
+        return vector.compute.lorentz.rapidity.dispatch(self)
+
     def transform4D(self, obj):
         "transform4D docs"
         return vector.compute.lorentz.transform4D.dispatch(obj, self)
