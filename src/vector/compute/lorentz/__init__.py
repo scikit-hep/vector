@@ -8,6 +8,8 @@ import vector.compute.lorentz.dot  # noqa: F401
 import vector.compute.lorentz.Et  # noqa: F401
 import vector.compute.lorentz.Et2  # noqa: F401
 import vector.compute.lorentz.gamma  # noqa: F401
+import vector.compute.lorentz.Mt  # noqa: F401
+import vector.compute.lorentz.Mt2  # noqa: F401
 import vector.compute.lorentz.rapidity  # noqa: F401
 import vector.compute.lorentz.t  # noqa: F401
 import vector.compute.lorentz.t2  # noqa: F401
