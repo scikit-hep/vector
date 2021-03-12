@@ -56,6 +56,10 @@ class Planar:
         "transform2D docs"
         return vector.compute.planar.transform2D.dispatch(obj, self)
 
+    def unit(self, other):
+        "unit docs"
+        return vector.compute.planar.unit.dispatch(self, other)
+
     def dot(self, other):
         "dot docs"
         return vector.compute.planar.dot.dispatch(self, other)
@@ -175,6 +179,10 @@ class Spatial(Planar):
         "transform3D docs"
         return vector.compute.spatial.transform3D.dispatch(obj, self)
 
+    def unit(self, other):
+        "unit docs"
+        return vector.compute.spatial.unit.dispatch(self, other)
+
     def dot(self, other):
         "dot docs"
         return vector.compute.spatial.dot.dispatch(self, other)
@@ -244,6 +252,10 @@ class Lorentz(Spatial):
     def transform4D(self, obj):
         "transform4D docs"
         return vector.compute.lorentz.transform4D.dispatch(obj, self)
+
+    def unit(self, other):
+        "unit docs"
+        return vector.compute.lorentz.unit.dispatch(self, other)
 
     def dot(self, other):
         "dot docs"
