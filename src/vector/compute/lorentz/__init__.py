@@ -6,10 +6,12 @@
 import vector.compute.lorentz.beta  # noqa: F401
 import vector.compute.lorentz.boost_beta3  # noqa: F401
 import vector.compute.lorentz.boost_p4  # noqa: F401
-import vector.compute.lorentz.boostZ_beta  # noqa: F401
-import vector.compute.lorentz.boostZ_gamma  # noqa: F401
 import vector.compute.lorentz.boostX_beta  # noqa: F401
 import vector.compute.lorentz.boostX_gamma  # noqa: F401
+import vector.compute.lorentz.boostY_beta  # noqa: F401
+import vector.compute.lorentz.boostY_gamma  # noqa: F401
+import vector.compute.lorentz.boostZ_beta  # noqa: F401
+import vector.compute.lorentz.boostZ_gamma  # noqa: F401
 import vector.compute.lorentz.dot  # noqa: F401
 import vector.compute.lorentz.Et  # noqa: F401
 import vector.compute.lorentz.Et2  # noqa: F401

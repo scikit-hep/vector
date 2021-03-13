@@ -278,6 +278,15 @@ class Lorentz(Spatial):
         else:
             raise TypeError("specify 'beta' xor 'gamma', not both or neither")
 
+    def boostY(self, beta=None, gamma=None):
+        "boostY docs"
+        if beta is not None and gamma is None:
+            return vector.compute.lorentz.boostY_beta.dispatch(beta, self)
+        elif beta is None and gamma is not None:
+            return vector.compute.lorentz.boostY_gamma.dispatch(gamma, self)
+        else:
+            raise TypeError("specify 'beta' xor 'gamma', not both or neither")
+
     def boostZ(self, beta=None, gamma=None):
         "boostZ docs"
         if beta is not None and gamma is None:

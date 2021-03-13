@@ -22,124 +22,124 @@ from vector.geometry import (
 )
 
 
-def xy_z_t(lib, gamma, x, y, z, t):
-    gam = lib.absolute(gamma)
-    bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
+def xy_z_t(lib, beta, x, y, z, t):
+    gam = (1 - beta ** 2) ** -0.5
+    bgam = beta * gam
     exx = x
     why = y
     zee = z
     tee = t
-    return (gam * exx + bgam * tee, why, zee, bgam * exx + gam * tee)
+    return (exx, gam * why + bgam * tee, zee, bgam * why + gam * tee)
 
 
-def xy_z_tau(lib, gamma, x, y, z, tau):
-    gam = lib.absolute(gamma)
-    bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
+def xy_z_tau(lib, beta, x, y, z, tau):
+    gam = (1 - beta ** 2) ** -0.5
+    bgam = beta * gam
     exx = x
     why = y
     zee = z
     tee = t.xy_z_tau(lib, x, y, z, tau)
-    return (gam * exx + bgam * tee, why, zee, tau)
+    return (exx, gam * why + bgam * tee, zee, tau)
 
 
-def xy_theta_t(lib, gamma, x, y, theta, t):
-    gam = lib.absolute(gamma)
-    bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
+def xy_theta_t(lib, beta, x, y, theta, t):
+    gam = (1 - beta ** 2) ** -0.5
+    bgam = beta * gam
     exx = x
     why = y
     zee = z.xy_theta(lib, x, y, theta)
     tee = t
-    return (gam * exx + bgam * tee, why, zee, bgam * exx + gam * tee)
+    return (exx, gam * why + bgam * tee, zee, bgam * why + gam * tee)
 
 
-def xy_theta_tau(lib, gamma, x, y, theta, tau):
-    gam = lib.absolute(gamma)
-    bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
+def xy_theta_tau(lib, beta, x, y, theta, tau):
+    gam = (1 - beta ** 2) ** -0.5
+    bgam = beta * gam
     exx = x
     why = y
     zee = z.xy_theta(lib, x, y, theta)
     tee = t.xy_theta_tau(lib, x, y, theta, tau)
-    return (gam * exx + bgam * tee, why, zee, tau)
+    return (exx, gam * why + bgam * tee, zee, tau)
 
 
-def xy_eta_t(lib, gamma, x, y, eta, t):
-    gam = lib.absolute(gamma)
-    bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
+def xy_eta_t(lib, beta, x, y, eta, t):
+    gam = (1 - beta ** 2) ** -0.5
+    bgam = beta * gam
     exx = x
     why = y
     zee = z.xy_eta(lib, x, y, eta)
     tee = t
-    return (gam * exx + bgam * tee, why, zee, bgam * exx + gam * tee)
+    return (exx, gam * why + bgam * tee, zee, bgam * why + gam * tee)
 
 
-def xy_eta_tau(lib, gamma, x, y, eta, tau):
-    gam = lib.absolute(gamma)
-    bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
+def xy_eta_tau(lib, beta, x, y, eta, tau):
+    gam = (1 - beta ** 2) ** -0.5
+    bgam = beta * gam
     exx = x
     why = y
     zee = z.xy_eta(lib, x, y, eta)
     tee = t.xy_eta_tau(lib, x, y, eta, tau)
-    return (gam * exx + bgam * tee, why, zee, tau)
+    return (exx, gam * why + bgam * tee, zee, tau)
 
 
-def rhophi_z_t(lib, gamma, rho, phi, z, t):
-    gam = lib.absolute(gamma)
-    bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
+def rhophi_z_t(lib, beta, rho, phi, z, t):
+    gam = (1 - beta ** 2) ** -0.5
+    bgam = beta * gam
     exx = x.rhophi(lib, rho, phi)
     why = y.rhophi(lib, rho, phi)
     zee = z
     tee = t
-    return (gam * exx + bgam * tee, why, zee, bgam * exx + gam * tee)
+    return (exx, gam * why + bgam * tee, zee, bgam * why + gam * tee)
 
 
-def rhophi_z_tau(lib, gamma, rho, phi, z, tau):
-    gam = lib.absolute(gamma)
-    bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
+def rhophi_z_tau(lib, beta, rho, phi, z, tau):
+    gam = (1 - beta ** 2) ** -0.5
+    bgam = beta * gam
     exx = x.rhophi(lib, rho, phi)
     why = y.rhophi(lib, rho, phi)
     zee = z
     tee = t.rhophi_z_tau(lib, rho, phi, z, tau)
-    return (gam * exx + bgam * tee, why, zee, tau)
+    return (exx, gam * why + bgam * tee, zee, tau)
 
 
-def rhophi_theta_t(lib, gamma, rho, phi, theta, t):
-    gam = lib.absolute(gamma)
-    bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
+def rhophi_theta_t(lib, beta, rho, phi, theta, t):
+    gam = (1 - beta ** 2) ** -0.5
+    bgam = beta * gam
     exx = x.rhophi(lib, rho, phi)
     why = y.rhophi(lib, rho, phi)
     zee = z.rhophi_theta(lib, rho, phi, theta)
     tee = t
-    return (gam * exx + bgam * tee, why, zee, bgam * exx + gam * tee)
+    return (exx, gam * why + bgam * tee, zee, bgam * why + gam * tee)
 
 
-def rhophi_theta_tau(lib, gamma, rho, phi, theta, tau):
-    gam = lib.absolute(gamma)
-    bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
+def rhophi_theta_tau(lib, beta, rho, phi, theta, tau):
+    gam = (1 - beta ** 2) ** -0.5
+    bgam = beta * gam
     exx = x.rhophi(lib, rho, phi)
     why = y.rhophi(lib, rho, phi)
     zee = z.rhophi_theta(lib, rho, phi, theta)
     tee = t.rhophi_theta_tau(lib, rho, phi, theta, tau)
-    return (gam * exx + bgam * tee, why, zee, tau)
+    return (exx, gam * why + bgam * tee, zee, tau)
 
 
-def rhophi_eta_t(lib, gamma, rho, phi, eta, t):
-    gam = lib.absolute(gamma)
-    bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
+def rhophi_eta_t(lib, beta, rho, phi, eta, t):
+    gam = (1 - beta ** 2) ** -0.5
+    bgam = beta * gam
     exx = x.rhophi(lib, rho, phi)
     why = y.rhophi(lib, rho, phi)
     zee = z.rhophi_eta(lib, rho, phi, eta)
     tee = t
-    return (gam * exx + bgam * tee, why, zee, bgam * exx + gam * tee)
+    return (exx, gam * why + bgam * tee, zee, bgam * why + gam * tee)
 
 
-def rhophi_eta_tau(lib, gamma, rho, phi, eta, tau):
-    gam = lib.absolute(gamma)
-    bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
+def rhophi_eta_tau(lib, beta, rho, phi, eta, tau):
+    gam = (1 - beta ** 2) ** -0.5
+    bgam = beta * gam
     exx = x.rhophi(lib, rho, phi)
     why = y.rhophi(lib, rho, phi)
     zee = z.rhophi_eta(lib, rho, phi, eta)
     tee = t.rhophi_eta_tau(lib, rho, phi, eta, tau)
-    return (gam * exx + bgam * tee, why, zee, tau)
+    return (exx, gam * why + bgam * tee, zee, tau)
 
 
 dispatch_map = {
@@ -218,7 +218,7 @@ dispatch_map = {
 }
 
 
-def dispatch(gamma, v):
+def dispatch(beta, v):
     function, *returns = dispatch_map[
         aztype(v),
         ltype(v),
@@ -228,7 +228,7 @@ def dispatch(gamma, v):
         return v._wrap_result(
             function(
                 v.lib,
-                gamma,
+                beta,
                 *v.azimuthal.elements,
                 *v.longitudinal.elements,
                 *v.temporal.elements

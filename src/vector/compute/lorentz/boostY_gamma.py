@@ -29,7 +29,7 @@ def xy_z_t(lib, gamma, x, y, z, t):
     why = y
     zee = z
     tee = t
-    return (gam * exx + bgam * tee, why, zee, bgam * exx + gam * tee)
+    return (exx, gam * why + bgam * tee, zee, bgam * why + gam * tee)
 
 
 def xy_z_tau(lib, gamma, x, y, z, tau):
@@ -39,7 +39,7 @@ def xy_z_tau(lib, gamma, x, y, z, tau):
     why = y
     zee = z
     tee = t.xy_z_tau(lib, x, y, z, tau)
-    return (gam * exx + bgam * tee, why, zee, tau)
+    return (exx, gam * why + bgam * tee, zee, tau)
 
 
 def xy_theta_t(lib, gamma, x, y, theta, t):
@@ -49,7 +49,7 @@ def xy_theta_t(lib, gamma, x, y, theta, t):
     why = y
     zee = z.xy_theta(lib, x, y, theta)
     tee = t
-    return (gam * exx + bgam * tee, why, zee, bgam * exx + gam * tee)
+    return (exx, gam * why + bgam * tee, zee, bgam * why + gam * tee)
 
 
 def xy_theta_tau(lib, gamma, x, y, theta, tau):
@@ -59,7 +59,7 @@ def xy_theta_tau(lib, gamma, x, y, theta, tau):
     why = y
     zee = z.xy_theta(lib, x, y, theta)
     tee = t.xy_theta_tau(lib, x, y, theta, tau)
-    return (gam * exx + bgam * tee, why, zee, tau)
+    return (exx, gam * why + bgam * tee, zee, tau)
 
 
 def xy_eta_t(lib, gamma, x, y, eta, t):
@@ -69,7 +69,7 @@ def xy_eta_t(lib, gamma, x, y, eta, t):
     why = y
     zee = z.xy_eta(lib, x, y, eta)
     tee = t
-    return (gam * exx + bgam * tee, why, zee, bgam * exx + gam * tee)
+    return (exx, gam * why + bgam * tee, zee, bgam * why + gam * tee)
 
 
 def xy_eta_tau(lib, gamma, x, y, eta, tau):
@@ -79,7 +79,7 @@ def xy_eta_tau(lib, gamma, x, y, eta, tau):
     why = y
     zee = z.xy_eta(lib, x, y, eta)
     tee = t.xy_eta_tau(lib, x, y, eta, tau)
-    return (gam * exx + bgam * tee, why, zee, tau)
+    return (exx, gam * why + bgam * tee, zee, tau)
 
 
 def rhophi_z_t(lib, gamma, rho, phi, z, t):
@@ -89,7 +89,7 @@ def rhophi_z_t(lib, gamma, rho, phi, z, t):
     why = y.rhophi(lib, rho, phi)
     zee = z
     tee = t
-    return (gam * exx + bgam * tee, why, zee, bgam * exx + gam * tee)
+    return (exx, gam * why + bgam * tee, zee, bgam * why + gam * tee)
 
 
 def rhophi_z_tau(lib, gamma, rho, phi, z, tau):
@@ -99,7 +99,7 @@ def rhophi_z_tau(lib, gamma, rho, phi, z, tau):
     why = y.rhophi(lib, rho, phi)
     zee = z
     tee = t.rhophi_z_tau(lib, rho, phi, z, tau)
-    return (gam * exx + bgam * tee, why, zee, tau)
+    return (exx, gam * why + bgam * tee, zee, tau)
 
 
 def rhophi_theta_t(lib, gamma, rho, phi, theta, t):
@@ -109,7 +109,7 @@ def rhophi_theta_t(lib, gamma, rho, phi, theta, t):
     why = y.rhophi(lib, rho, phi)
     zee = z.rhophi_theta(lib, rho, phi, theta)
     tee = t
-    return (gam * exx + bgam * tee, why, zee, bgam * exx + gam * tee)
+    return (exx, gam * why + bgam * tee, zee, bgam * why + gam * tee)
 
 
 def rhophi_theta_tau(lib, gamma, rho, phi, theta, tau):
@@ -119,7 +119,7 @@ def rhophi_theta_tau(lib, gamma, rho, phi, theta, tau):
     why = y.rhophi(lib, rho, phi)
     zee = z.rhophi_theta(lib, rho, phi, theta)
     tee = t.rhophi_theta_tau(lib, rho, phi, theta, tau)
-    return (gam * exx + bgam * tee, why, zee, tau)
+    return (exx, gam * why + bgam * tee, zee, tau)
 
 
 def rhophi_eta_t(lib, gamma, rho, phi, eta, t):
@@ -129,7 +129,7 @@ def rhophi_eta_t(lib, gamma, rho, phi, eta, t):
     why = y.rhophi(lib, rho, phi)
     zee = z.rhophi_eta(lib, rho, phi, eta)
     tee = t
-    return (gam * exx + bgam * tee, why, zee, bgam * exx + gam * tee)
+    return (exx, gam * why + bgam * tee, zee, bgam * why + gam * tee)
 
 
 def rhophi_eta_tau(lib, gamma, rho, phi, eta, tau):
@@ -139,7 +139,7 @@ def rhophi_eta_tau(lib, gamma, rho, phi, eta, tau):
     why = y.rhophi(lib, rho, phi)
     zee = z.rhophi_eta(lib, rho, phi, eta)
     tee = t.rhophi_eta_tau(lib, rho, phi, eta, tau)
-    return (gam * exx + bgam * tee, why, zee, tau)
+    return (exx, gam * why + bgam * tee, zee, tau)
 
 
 dispatch_map = {

@@ -5,9 +5,9 @@
 
 import numpy
 
+from vector.compute.lorentz import t
 from vector.compute.planar import x, y
 from vector.compute.spatial import z
-from vector.compute.lorentz import t, transform4D
 from vector.geometry import (
     AzimuthalRhoPhi,
     AzimuthalXY,
