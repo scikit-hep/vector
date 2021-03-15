@@ -130,6 +130,16 @@ class TemporalObjectTau(typing.NamedTuple):
 TemporalObjectTau.__bases__ = (TemporalObject, vector.geometry.TemporalTau, tuple)
 
 
+_repr_generic_to_momentum = {
+    "x": "px",
+    "y": "pz",
+    "rho": "pt",
+    "z": "pz",
+    "t": "E",
+    "tau": "mass",
+}
+
+
 class VectorObject2D(VectorObject, vector.methods.Planar, vector.geometry.Vector2D):
     __slots__ = ("azimuthal",)
 
@@ -177,7 +187,8 @@ class MomentumObject2D(vector.methods.PlanarMomentum, VectorObject2D):
         aznames = _coordinate_class_to_names[vector.geometry.aztype(self)]
         out = []
         for x in aznames:
-            out.append(f"{x}={getattr(self.azimuthal, x)}")
+            y = _repr_generic_to_momentum.get(x, x)
+            out.append(f"{y}={getattr(self.azimuthal, x)}")
         return "vector.momentum(" + ", ".join(out) + ")"
 
 
@@ -275,9 +286,11 @@ class MomentumObject3D(vector.methods.SpatialMomentum, VectorObject3D):
         lnames = _coordinate_class_to_names[vector.geometry.ltype(self)]
         out = []
         for x in aznames:
-            out.append(f"{x}={getattr(self.azimuthal, x)}")
+            y = _repr_generic_to_momentum.get(x, x)
+            out.append(f"{y}={getattr(self.azimuthal, x)}")
         for x in lnames:
-            out.append(f"{x}={getattr(self.longitudinal, x)}")
+            y = _repr_generic_to_momentum.get(x, x)
+            out.append(f"{y}={getattr(self.longitudinal, x)}")
         return "vector.momentum(" + ", ".join(out) + ")"
 
 
@@ -475,11 +488,14 @@ class MomentumObject4D(vector.methods.LorentzMomentum, VectorObject4D):
         tnames = _coordinate_class_to_names[vector.geometry.ttype(self)]
         out = []
         for x in aznames:
-            out.append(f"{x}={getattr(self.azimuthal, x)}")
+            y = _repr_generic_to_momentum.get(x, x)
+            out.append(f"{y}={getattr(self.azimuthal, x)}")
         for x in lnames:
-            out.append(f"{x}={getattr(self.longitudinal, x)}")
+            y = _repr_generic_to_momentum.get(x, x)
+            out.append(f"{y}={getattr(self.longitudinal, x)}")
         for x in tnames:
-            out.append(f"{x}={getattr(self.temporal, x)}")
+            y = _repr_generic_to_momentum.get(x, x)
+            out.append(f"{y}={getattr(self.temporal, x)}")
         return "vector.momentum(" + ", ".join(out) + ")"
 
 
@@ -562,6 +578,35 @@ def generic(**coordinates):
 
 def momentum(**coordinates):
     "momentum docs"
+    generic_coordinates = {}
+    if "px" in coordinates:
+        generic_coordinates["x"] = coordinates.pop("px")
+    if "py" in coordinates:
+        generic_coordinates["y"] = coordinates.pop("py")
+    if "pt" in coordinates:
+        generic_coordinates["rho"] = coordinates.pop("pt")
+    if "pz" in coordinates:
+        generic_coordinates["z"] = coordinates.pop("pz")
+    if "E" in coordinates:
+        generic_coordinates["t"] = coordinates.pop("E")
+    if "e" in coordinates and "t" not in generic_coordinates:
+        generic_coordinates["t"] = coordinates.pop("e")
+    if "energy" in coordinates and "t" not in generic_coordinates:
+        generic_coordinates["t"] = coordinates.pop("energy")
+    if "M" in coordinates:
+        generic_coordinates["tau"] = coordinates.pop("M")
+    if "m" in coordinates and "tau" not in generic_coordinates:
+        generic_coordinates["tau"] = coordinates.pop("m")
+    if "mass" in coordinates and "tau" not in generic_coordinates:
+        generic_coordinates["tau"] = coordinates.pop("mass")
+    for x in list(coordinates):
+        if x not in generic_coordinates:
+            generic_coordinates[x] = coordinates.pop(x)
+    if len(coordinates) != 0:
+        raise TypeError(
+            "duplicate coordinates (through momentum-aliases): "
+            + ", ".join(repr(x) for x in coordinates)
+        )
     return _gather_coordinates(
-        MomentumObject2D, MomentumObject3D, MomentumObject4D, coordinates
+        MomentumObject2D, MomentumObject3D, MomentumObject4D, generic_coordinates
     )

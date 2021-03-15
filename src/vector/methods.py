@@ -253,26 +253,6 @@ class Lorentz(Spatial):
         "rapidity docs"
         return vector.compute.lorentz.rapidity.dispatch(self)
 
-    @property
-    def Et(self):
-        "Et docs"
-        return vector.compute.lorentz.Et.dispatch(self)
-
-    @property
-    def Et2(self):
-        "Et2 docs"
-        return vector.compute.lorentz.Et2.dispatch(self)
-
-    @property
-    def Mt(self):
-        "Mt docs"
-        return vector.compute.lorentz.Mt.dispatch(self)
-
-    @property
-    def Mt2(self):
-        "Mt2 docs"
-        return vector.compute.lorentz.Mt2.dispatch(self)
-
     def transform4D(self, obj):
         "transform4D docs"
         return vector.compute.lorentz.transform4D.dispatch(obj, self)
@@ -304,6 +284,18 @@ class Lorentz(Spatial):
     def boost_beta3(self, beta3):
         "boost_beta3 docs"
         return vector.compute.lorentz.boost_beta3.dispatch(self, beta3)
+
+    def boost(self, booster):
+        "boost docs"
+        if isinstance(booster, vector.geometry.Vector3D):
+            return vector.compute.lorentz.boost_beta3.dispatch(self, booster)
+        elif isinstance(booster, vector.geometry.Vector4D):
+            return vector.compute.lorentz.boost_p4.dispatch(self, booster)
+        else:
+            raise TypeError(
+                "specify a Vector3D to boost by beta (velocity with c=1) or "
+                "a Vector4D to boost by a momentum 4-vector"
+            )
 
     def boostX(self, beta=None, gamma=None):
         "boostX docs"
@@ -339,6 +331,16 @@ class Momentum:
 
 class PlanarMomentum(Momentum):
     @property
+    def px(self):
+        "px docs"
+        return self.x
+
+    @property
+    def py(self):
+        "py docs"
+        return self.y
+
+    @property
     def pt(self):
         "pt docs"
         return self.rho
@@ -350,6 +352,11 @@ class PlanarMomentum(Momentum):
 
 
 class SpatialMomentum(PlanarMomentum):
+    @property
+    def pz(self):
+        "pz docs"
+        return self.z
+
     @property
     def pseudorapidity(self):
         "pseudorapidity docs"
@@ -408,9 +415,19 @@ class LorentzMomentum(SpatialMomentum):
         return self.tau2
 
     @property
+    def Et(self):
+        "Et docs"
+        return vector.compute.lorentz.Et.dispatch(self)
+
+    @property
     def transverse_energy(self):
         "transverse_energy docs"
         return self.Et
+
+    @property
+    def Et2(self):
+        "Et2 docs"
+        return vector.compute.lorentz.Et2.dispatch(self)
 
     @property
     def transverse_energy2(self):
@@ -418,9 +435,19 @@ class LorentzMomentum(SpatialMomentum):
         return self.Et2
 
     @property
+    def Mt(self):
+        "Mt docs"
+        return vector.compute.lorentz.Mt.dispatch(self)
+
+    @property
     def transverse_mass(self):
         "transverse_mass docs"
         return self.mt
+
+    @property
+    def Mt2(self):
+        "Mt2 docs"
+        return vector.compute.lorentz.Mt2.dispatch(self)
 
     @property
     def transverse_mass2(self):
