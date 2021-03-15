@@ -22,7 +22,7 @@ def xy_z(lib, x, y, z):
 
 
 def xy_theta(lib, x, y, theta):
-    return lib.sqrt(x ** 2 + y ** 2) / lib.sin(theta)
+    return lib.sqrt(x ** 2 + y ** 2) / lib.absolute(lib.sin(theta))
 
 
 def xy_eta(lib, x, y, eta):
@@ -36,7 +36,7 @@ def rhophi_z(lib, rho, phi, z):
 
 
 def rhophi_theta(lib, rho, phi, theta):
-    return rho / lib.sin(theta)
+    return rho / lib.absolute(lib.sin(theta))
 
 
 def rhophi_eta(lib, rho, phi, eta):

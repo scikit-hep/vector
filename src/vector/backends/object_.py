@@ -159,7 +159,7 @@ class VectorObject2D(VectorObject, vector.methods.Planar, vector.geometry.Vector
         else:
             cls = type(self)
 
-        if returns == [float]:
+        if returns == [float] or returns == [bool]:
             return result
 
         elif returns == [vector.geometry.AzimuthalXY]:
@@ -231,7 +231,7 @@ class VectorObject3D(VectorObject, vector.methods.Spatial, vector.geometry.Vecto
         else:
             cls = type(self)
 
-        if returns == [float]:
+        if returns == [float] or returns == [bool]:
             return result
 
         elif returns == [vector.geometry.AzimuthalXY]:
@@ -394,7 +394,7 @@ class VectorObject4D(VectorObject, vector.methods.Lorentz, vector.geometry.Vecto
         else:
             cls = type(self)
 
-        if returns == [float]:
+        if returns == [float] or returns == [bool]:
             return result
 
         elif returns == [vector.geometry.AzimuthalXY]:

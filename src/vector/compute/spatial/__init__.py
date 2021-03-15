@@ -12,6 +12,9 @@ import vector.compute.spatial.deltaR  # noqa: F401
 import vector.compute.spatial.deltaR2  # noqa: F401
 import vector.compute.spatial.dot  # noqa: F401
 import vector.compute.spatial.eta  # noqa: F401
+import vector.compute.spatial.is_antiparallel  # noqa: F401
+import vector.compute.spatial.is_parallel  # noqa: F401
+import vector.compute.spatial.is_perpendicular  # noqa: F401
 import vector.compute.spatial.mag  # noqa: F401
 import vector.compute.spatial.mag2  # noqa: F401
 import vector.compute.spatial.rotate_axis  # noqa: F401

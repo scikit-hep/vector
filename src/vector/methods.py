@@ -56,6 +56,18 @@ class Planar:
         "transform2D docs"
         return vector.compute.planar.transform2D.dispatch(obj, self)
 
+    def is_parallel(self, other, tolerance=1e-5):
+        "is_parallel docs (note: this 'parallel' requires same direction)"
+        return vector.compute.planar.is_parallel.dispatch(tolerance, self, other)
+
+    def is_antiparallel(self, other, tolerance=1e-5):
+        "is_antiparallel docs"
+        return vector.compute.planar.is_antiparallel.dispatch(tolerance, self, other)
+
+    def is_perpendicular(self, other, tolerance=1e-5):
+        "is_perpendicular docs"
+        return vector.compute.planar.is_perpendicular.dispatch(tolerance, self, other)
+
     def unit(self):
         "unit docs"
         return vector.compute.planar.unit.dispatch(self)
@@ -179,6 +191,18 @@ class Spatial(Planar):
         "transform3D docs"
         return vector.compute.spatial.transform3D.dispatch(obj, self)
 
+    def is_parallel(self, other, tolerance=1e-5):
+        "is_parallel docs (note: this 'parallel' requires same direction)"
+        return vector.compute.spatial.is_parallel.dispatch(tolerance, self, other)
+
+    def is_antiparallel(self, other, tolerance=1e-5):
+        "is_antiparallel docs"
+        return vector.compute.spatial.is_antiparallel.dispatch(tolerance, self, other)
+
+    def is_perpendicular(self, other, tolerance=1e-5):
+        "is_perpendicular docs"
+        return vector.compute.spatial.is_perpendicular.dispatch(tolerance, self, other)
+
     def unit(self):
         "unit docs"
         return vector.compute.spatial.unit.dispatch(self)
@@ -252,6 +276,18 @@ class Lorentz(Spatial):
     def transform4D(self, obj):
         "transform4D docs"
         return vector.compute.lorentz.transform4D.dispatch(obj, self)
+
+    def is_timelike(self, tolerance=0):
+        "is_timelike docs"
+        return vector.compute.lorentz.is_timelike.dispatch(tolerance, self)
+
+    def is_spacelike(self, tolerance=0):
+        "is_spacelike docs"
+        return vector.compute.lorentz.is_spacelike.dispatch(tolerance, self)
+
+    def is_lightlike(self, tolerance=1e-5):
+        "is_timelike docs"
+        return vector.compute.lorentz.is_lightlike.dispatch(tolerance, self)
 
     def unit(self):
         "unit docs"

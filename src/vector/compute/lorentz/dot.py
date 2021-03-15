@@ -97,7 +97,7 @@ def make_conversion(
                 to_t2 = t.rhophi_eta_tau
 
     def f(lib, coord11, coord12, coord13, coord14, coord21, coord22, coord23, coord24):
-        return (
+        return lib.absolute(
             to_t1(lib, coord11, coord12, coord13, coord14)
             * to_t2(lib, coord21, coord22, coord23, coord24)
         ) - spatial_dot(lib, coord11, coord12, coord13, coord21, coord22, coord23)

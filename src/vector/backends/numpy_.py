@@ -337,7 +337,7 @@ class VectorNumpy2D(
         return self.view(self._azimuthal_type)
 
     def _wrap_result(self, result, returns):
-        if returns == [float]:
+        if returns == [float] or returns == [bool]:
             return result
 
         elif returns == [vector.geometry.AzimuthalXY] or returns == [
@@ -417,7 +417,7 @@ class VectorNumpy3D(
         return _getitem(self, where)
 
     def _wrap_result(self, result, returns):
-        if returns == [float]:
+        if returns == [float] or returns == [bool]:
             return result
 
         elif returns == [vector.geometry.AzimuthalXY] or returns == [
@@ -539,7 +539,7 @@ class VectorNumpy4D(
         return _getitem(self, where)
 
     def _wrap_result(self, result, returns):
-        if returns == [float]:
+        if returns == [float] or returns == [bool]:
             return result
 
         elif returns == [vector.geometry.AzimuthalXY] or returns == [
