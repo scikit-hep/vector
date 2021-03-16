@@ -11,9 +11,35 @@ from .backends.numpy_ import (  # noqa: 401
     VectorNumpy2D,
     VectorNumpy3D,
     VectorNumpy4D,
+    array,
 )
-from .backends.object_ import generic, momentum  # noqa: 401
-from .geometry import Vector2D, Vector3D, Vector4D  # noqa: 401
+from .backends.object_ import (  # noqa: 401
+    MomentumObject2D,
+    MomentumObject3D,
+    MomentumObject4D,
+    VectorObject2D,
+    VectorObject3D,
+    VectorObject4D,
+    obj,
+)
+from .geometry import (  # noqa: 401
+    Azimuthal,
+    AzimuthalRhoPhi,
+    AzimuthalXY,
+    Coordinates,
+    Longitudinal,
+    LongitudinalEta,
+    LongitudinalTheta,
+    LongitudinalZ,
+    Temporal,
+    TemporalT,
+    TemporalTau,
+    Vector,
+    Vector2D,
+    Vector3D,
+    Vector4D,
+)
+from .methods import Momentum  # noqa: 401
 
 # from .version import version as __version__
 

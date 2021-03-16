@@ -397,3 +397,50 @@ _coordinate_class_to_names = {
     TemporalT: ("t",),
     TemporalTau: ("tau",),
 }
+
+
+_repr_generic_to_momentum = {
+    "x": "px",
+    "y": "py",
+    "rho": "pt",
+    "z": "pz",
+    "t": "E",
+    "tau": "mass",
+}
+
+
+_repr_momentum_to_generic = {
+    "px": "x",
+    "py": "y",
+    "pt": "rho",
+    "pz": "z",
+    "E": "t",
+    "e": "t",
+    "energy": "t",
+    "M": "tau",
+    "m": "tau",
+    "mass": "tau",
+}
+
+
+_coordinate_order = [
+    "x",
+    "px",
+    "y",
+    "py",
+    "rho",
+    "pt",
+    "phi",
+    "z",
+    "pz",
+    "theta",
+    "eta",
+    "t",
+    "E",
+    "e",
+    "energy",
+    "tau",
+    "M",
+    "m",
+    "mass",
+]

@@ -3,6 +3,8 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+import collections.abc
+
 import numpy
 
 import vector.backends.object_
@@ -11,12 +13,54 @@ import vector.compute.planar
 import vector.compute.spatial
 import vector.geometry
 import vector.methods
-from vector.geometry import _coordinate_class_to_names
+from vector.geometry import (
+    _coordinate_class_to_names,
+    _coordinate_order,
+    _repr_generic_to_momentum,
+    _repr_momentum_to_generic,
+)
 
 
-def _getitem(array, where):
+def _array_from_columns(columns):
+    if len(columns) == 0:
+        raise ValueError("no columns have been provided")
+    names = list(columns.keys())
+    names.sort(
+        key=lambda x: _coordinate_order.index(x)
+        if x in _coordinate_order
+        else float("inf")
+    )
+
+    dtype = []
+    shape = None
+    for x in names:
+        if hasattr(columns[x], "dtype"):
+            thisdtype = (x, columns[x].dtype)
+        else:
+            thisdtype = (x, numpy.float64)
+
+        if hasattr(columns[x], "shape"):
+            thisshape = columns[x].shape
+        elif isinstance(columns[x], collections.abc.Sized):
+            thisshape = (len(columns[x]),)
+        else:
+            raise TypeError(f"column {repr(x)} has no length")
+
+        dtype.append(thisdtype)
+        if shape is None:
+            shape = thisshape
+        elif shape != thisshape:
+            raise ValueError(f"column {repr(x)} has a different shape than the others")
+
+    array = numpy.ones(shape, dtype)
+    for x in names:
+        array[x] = columns[x]
+    return array
+
+
+def _getitem(array, where, is_momentum):
     if isinstance(where, str):
-        return array.view(numpy.ndarray)[where]
+        return array.view(numpy.ndarray)[_repr_momentum_to_generic.get(where, where)]
     else:
         out = numpy.ndarray.__getitem__(array, where)
         if isinstance(out, numpy.void):
@@ -60,11 +104,17 @@ def _getitem(array, where):
             return out
 
 
-def _array_repr(array):
+def _array_repr(array, is_momentum):
     name = type(array).__name__
-    return name + repr(array.view(numpy.ndarray))[5:].replace(
-        "\n     ", "\n" + " " * len(name)
-    )
+    array = array.view(numpy.ndarray)
+    if is_momentum:
+        array = array.view(
+            [
+                (_repr_generic_to_momentum.get(x, x), array.dtype[x])
+                for x in array.dtype.names
+            ]
+        )
+    return name + repr(array)[5:].replace("\n     ", "\n" + " " * len(name))
 
 
 def _has(array, names):
@@ -89,10 +139,18 @@ def _toarrays(result):
         return result[0]
 
 
-def _length(result):
+def _shape_of(result):
     if not isinstance(result, tuple):
         result = (result,)
-    return max(len(x) for x in result)
+    shape = None
+    for x in result:
+        if hasattr(x, "shape"):
+            thisshape = list(x.shape)
+        elif isinstance(x, collections.abc.Sized):
+            thisshape = [len(x)]
+        if shape is None or thisshape[0] > shape[0]:
+            shape = thisshape
+    return tuple(shape)
 
 
 class CoordinatesNumpy:
@@ -141,7 +199,7 @@ class AzimuthalNumpyXY(AzimuthalNumpy, vector.geometry.AzimuthalXY, numpy.ndarra
         return self["y"]
 
     def __getitem__(self, where):
-        return _getitem(self, where)
+        return _getitem(self, where, False)
 
 
 class AzimuthalNumpyRhoPhi(
@@ -172,7 +230,7 @@ class AzimuthalNumpyRhoPhi(
         return self["phi"]
 
     def __getitem__(self, where):
-        return _getitem(self, where)
+        return _getitem(self, where, False)
 
 
 class LongitudinalNumpyZ(
@@ -199,7 +257,7 @@ class LongitudinalNumpyZ(
         return self["z"]
 
     def __getitem__(self, where):
-        return _getitem(self, where)
+        return _getitem(self, where, False)
 
 
 class LongitudinalNumpyTheta(
@@ -226,7 +284,7 @@ class LongitudinalNumpyTheta(
         return self["theta"]
 
     def __getitem__(self, where):
-        return _getitem(self, where)
+        return _getitem(self, where, False)
 
 
 class LongitudinalNumpyEta(
@@ -253,7 +311,7 @@ class LongitudinalNumpyEta(
         return self["eta"]
 
     def __getitem__(self, where):
-        return _getitem(self, where)
+        return _getitem(self, where, False)
 
 
 class TemporalNumpyT(TemporalNumpy, vector.geometry.TemporalT, numpy.ndarray):
@@ -278,7 +336,7 @@ class TemporalNumpyT(TemporalNumpy, vector.geometry.TemporalT, numpy.ndarray):
         return self["t"]
 
     def __getitem__(self, where):
-        return _getitem(self, where)
+        return _getitem(self, where, False)
 
 
 class TemporalNumpyTau(TemporalNumpy, vector.geometry.TemporalTau, numpy.ndarray):
@@ -303,7 +361,7 @@ class TemporalNumpyTau(TemporalNumpy, vector.geometry.TemporalTau, numpy.ndarray
         return self["tau"]
 
     def __getitem__(self, where):
-        return _getitem(self, where)
+        return _getitem(self, where, False)
 
 
 class VectorNumpy2D(
@@ -313,7 +371,11 @@ class VectorNumpy2D(
     ObjectClass = vector.backends.object_.VectorObject2D
 
     def __new__(cls, *args, **kwargs):
-        return numpy.array(*args, **kwargs).view(cls)
+        if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
+            array = _array_from_columns(args[0])
+        else:
+            array = numpy.array(*args, **kwargs)
+        return array.view(cls)
 
     def __array_finalize__(self, obj):
         if _has(self, ("x", "y")):
@@ -330,7 +392,7 @@ class VectorNumpy2D(
         return str(self.view(numpy.ndarray))
 
     def __repr__(self):
-        return _array_repr(self)
+        return _array_repr(self, False)
 
     @property
     def azimuthal(self):
@@ -349,7 +411,7 @@ class VectorNumpy2D(
             for name in _coordinate_class_to_names[returns[0]]:
                 dtype.append((name, result[i].dtype))
                 i += 1
-            out = numpy.empty(_length(result), dtype=dtype)
+            out = numpy.empty(_shape_of(result), dtype=dtype)
             i = 0
             for name in _coordinate_class_to_names[returns[0]]:
                 out[name] = result[i]
@@ -360,11 +422,31 @@ class VectorNumpy2D(
             raise AssertionError(repr(returns))
 
     def __getitem__(self, where):
-        return _getitem(self, where)
+        return _getitem(self, where, False)
 
 
 class MomentumNumpy2D(vector.methods.PlanarMomentum, VectorNumpy2D):
     ObjectClass = vector.backends.object_.MomentumObject2D
+
+    def __array_finalize__(self, obj):
+        self.dtype.names = [
+            _repr_momentum_to_generic.get(x, x) for x in self.dtype.names
+        ]
+        if _has(self, ("x", "y")):
+            self._azimuthal_type = AzimuthalNumpyXY
+        elif _has(self, ("rho", "phi")):
+            self._azimuthal_type = AzimuthalNumpyRhoPhi
+        else:
+            raise TypeError(
+                f"{type(self).__name__} must have a structured dtype containing "
+                'fields ("x", "y") or ("rho", "phi") or ("px", "py") or ("pt", "phi")'
+            )
+
+    def __repr__(self):
+        return _array_repr(self, True)
+
+    def __getitem__(self, where):
+        return _getitem(self, where, True)
 
 
 class VectorNumpy3D(
@@ -375,7 +457,11 @@ class VectorNumpy3D(
     ProjectionClass2D = VectorNumpy2D
 
     def __new__(cls, *args, **kwargs):
-        return numpy.array(*args, **kwargs).view(cls)
+        if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
+            array = _array_from_columns(args[0])
+        else:
+            array = numpy.array(*args, **kwargs)
+        return array.view(cls)
 
     def __array_finalize__(self, obj):
         if _has(self, ("x", "y")):
@@ -403,7 +489,7 @@ class VectorNumpy3D(
         return str(self.view(numpy.ndarray))
 
     def __repr__(self):
-        return _array_repr(self)
+        return _array_repr(self, False)
 
     @property
     def azimuthal(self):
@@ -412,9 +498,6 @@ class VectorNumpy3D(
     @property
     def longitudinal(self):
         return self.view(self._longitudinal_type)
-
-    def __getitem__(self, where):
-        return _getitem(self, where)
 
     def _wrap_result(self, result, returns):
         if returns == [float] or returns == [bool]:
@@ -431,7 +514,7 @@ class VectorNumpy3D(
                 i += 1
             for name in _coordinate_class_to_names[vector.geometry.ltype(self)]:
                 dtype.append((name, self.dtype[name]))
-            out = numpy.empty(_length(result), dtype=dtype)
+            out = numpy.empty(_shape_of(result), dtype=dtype)
             i = 0
             for name in _coordinate_class_to_names[returns[0]]:
                 out[name] = result[i]
@@ -456,7 +539,7 @@ class VectorNumpy3D(
             for name in _coordinate_class_to_names[returns[1]]:
                 dtype.append((name, result[i].dtype))
                 i += 1
-            out = numpy.empty(_length(result), dtype=dtype)
+            out = numpy.empty(_shape_of(result), dtype=dtype)
             i = 0
             for name in _coordinate_class_to_names[returns[0]]:
                 out[name] = result[i]
@@ -469,10 +552,44 @@ class VectorNumpy3D(
         else:
             raise AssertionError(repr(returns))
 
+    def __getitem__(self, where):
+        return _getitem(self, where, False)
+
 
 class MomentumNumpy3D(vector.methods.SpatialMomentum, VectorNumpy3D):
     ObjectClass = vector.backends.object_.MomentumObject3D
     ProjectionClass2D = MomentumNumpy2D
+
+    def __array_finalize__(self, obj):
+        self.dtype.names = [
+            _repr_momentum_to_generic.get(x, x) for x in self.dtype.names
+        ]
+        if _has(self, ("x", "y")):
+            self._azimuthal_type = AzimuthalNumpyXY
+        elif _has(self, ("rho", "phi")):
+            self._azimuthal_type = AzimuthalNumpyRhoPhi
+        else:
+            raise TypeError(
+                f"{type(self).__name__} must have a structured dtype containing "
+                'fields ("x", "y") or ("rho", "phi") or ("px", "py") or ("pt", "phi")'
+            )
+        if _has(self, ("z",)):
+            self._longitudinal_type = LongitudinalNumpyZ
+        elif _has(self, ("theta",)):
+            self._longitudinal_type = LongitudinalNumpyTheta
+        elif _has(self, ("eta",)):
+            self._longitudinal_type = LongitudinalNumpyEta
+        else:
+            raise TypeError(
+                f"{type(self).__name__} must have a structured dtype containing "
+                'field "z" or "theta" or "eta" or "pz"'
+            )
+
+    def __repr__(self):
+        return _array_repr(self, True)
+
+    def __getitem__(self, where):
+        return _getitem(self, where, True)
 
 
 class VectorNumpy4D(
@@ -484,7 +601,11 @@ class VectorNumpy4D(
     ProjectionClass3D = VectorNumpy3D
 
     def __new__(cls, *args, **kwargs):
-        return numpy.array(*args, **kwargs).view(cls)
+        if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
+            array = _array_from_columns(args[0])
+        else:
+            array = numpy.array(*args, **kwargs)
+        return array.view(cls)
 
     def __array_finalize__(self, obj):
         if _has(self, ("x", "y")):
@@ -521,7 +642,7 @@ class VectorNumpy4D(
         return str(self.view(numpy.ndarray))
 
     def __repr__(self):
-        return _array_repr(self)
+        return _array_repr(self, False)
 
     @property
     def azimuthal(self):
@@ -534,9 +655,6 @@ class VectorNumpy4D(
     @property
     def temporal(self):
         return self.view(self._temporal_type)
-
-    def __getitem__(self, where):
-        return _getitem(self, where)
 
     def _wrap_result(self, result, returns):
         if returns == [float] or returns == [bool]:
@@ -553,7 +671,7 @@ class VectorNumpy4D(
                 dtype.append((name, self.dtype[name]))
             for name in _coordinate_class_to_names[vector.geometry.ttype(self)]:
                 dtype.append((name, self.dtype[name]))
-            out = numpy.empty(_length(result), dtype=dtype)
+            out = numpy.empty(_shape_of(result), dtype=dtype)
             for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
                 out[name] = result[i]
             for name in _coordinate_class_to_names[vector.geometry.ltype(self)]:
@@ -580,7 +698,7 @@ class VectorNumpy4D(
                 i += 1
             for name in _coordinate_class_to_names[vector.geometry.ttype(self)]:
                 dtype.append((name, self.dtype[name]))
-            out = numpy.empty(_length(result), dtype=dtype)
+            out = numpy.empty(_shape_of(result), dtype=dtype)
             i = 0
             for name in _coordinate_class_to_names[returns[0]]:
                 out[name] = result[i]
@@ -618,7 +736,7 @@ class VectorNumpy4D(
                     i += 1
             elif returns[2] is not None:
                 raise AssertionError(repr(type(returns[2])))
-            out = numpy.empty(_length(result), dtype=dtype)
+            out = numpy.empty(_shape_of(result), dtype=dtype)
             i = 0
             for name in _coordinate_class_to_names[returns[0]]:
                 out[name] = result[i]
@@ -637,8 +755,83 @@ class VectorNumpy4D(
         else:
             raise AssertionError(repr(returns))
 
+    def __getitem__(self, where):
+        return _getitem(self, where, False)
+
 
 class MomentumNumpy4D(vector.methods.LorentzMomentum, VectorNumpy4D):
     ObjectClass = vector.backends.object_.MomentumObject4D
     ProjectionClass2D = MomentumNumpy2D
     ProjectionClass3D = MomentumNumpy3D
+
+    def __array_finalize__(self, obj):
+        self.dtype.names = [
+            _repr_momentum_to_generic.get(x, x) for x in self.dtype.names
+        ]
+        if _has(self, ("x", "y")):
+            self._azimuthal_type = AzimuthalNumpyXY
+        elif _has(self, ("rho", "phi")):
+            self._azimuthal_type = AzimuthalNumpyRhoPhi
+        else:
+            raise TypeError(
+                f"{type(self).__name__} must have a structured dtype containing "
+                'fields ("x", "y") or ("rho", "phi") or ("px", "py") or ("pt", "phi")'
+            )
+        if _has(self, ("z",)):
+            self._longitudinal_type = LongitudinalNumpyZ
+        elif _has(self, ("theta",)):
+            self._longitudinal_type = LongitudinalNumpyTheta
+        elif _has(self, ("eta",)):
+            self._longitudinal_type = LongitudinalNumpyEta
+        else:
+            raise TypeError(
+                f"{type(self).__name__} must have a structured dtype containing "
+                'field "z" or "theta" or "eta" or "pz"'
+            )
+        if _has(self, ("t",)):
+            self._temporal_type = TemporalNumpyT
+        elif _has(self, ("tau",)):
+            self._temporal_type = TemporalNumpyTau
+        else:
+            raise TypeError(
+                f"{type(self).__name__} must have a structured dtype containing "
+                'field "t" or "tau" or "E" or "e" or "energy" or "M" or "m" or "mass"'
+            )
+
+    def __repr__(self):
+        return _array_repr(self, True)
+
+    def __getitem__(self, where):
+        return _getitem(self, where, True)
+
+
+def array(*args, **kwargs):
+    "array docs"
+    names = None
+    if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
+        names = args[0].keys()
+    elif "dtype" in kwargs:
+        names = numpy.dtype(kwargs["dtype"]).names
+    elif len(args) >= 2:
+        names = numpy.dtyp(args[1]).names
+    if names is None:
+        names = ()
+
+    is_momentum = any(x in _repr_momentum_to_generic for x in names)
+    if any(x in ("t", "E", "e", "energy", "tau", "M", "m", "mass") for x in names):
+        if is_momentum:
+            cls = MomentumNumpy4D
+        else:
+            cls = VectorNumpy4D
+    elif any(x in ("z", "pz", "theta", "eta") for x in names):
+        if is_momentum:
+            cls = MomentumNumpy3D
+        else:
+            cls = VectorNumpy3D
+    else:
+        if is_momentum:
+            cls = MomentumNumpy2D
+        else:
+            cls = VectorNumpy2D
+
+    return cls(*args, **kwargs)
