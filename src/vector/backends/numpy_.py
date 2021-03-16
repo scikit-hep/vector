@@ -72,7 +72,7 @@ def _array_from_columns(columns):
         elif shape != thisshape:
             raise ValueError(f"column {repr(x)} has a different shape than the others")
 
-    array = numpy.ones(shape, dtype)
+    array = numpy.empty(shape, dtype)
     for x in names:
         array[x] = columns[x]
     return array
@@ -796,7 +796,7 @@ def array(*args, **kwargs):
     elif "dtype" in kwargs:
         names = numpy.dtype(kwargs["dtype"]).names
     elif len(args) >= 2:
-        names = numpy.dtyp(args[1]).names
+        names = numpy.dtype(args[1]).names
     if names is None:
         names = ()
 

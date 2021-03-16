@@ -22,6 +22,7 @@ import vector.compute.lorentz.is_timelike  # noqa: F401
 import vector.compute.lorentz.Mt  # noqa: F401
 import vector.compute.lorentz.Mt2  # noqa: F401
 import vector.compute.lorentz.rapidity  # noqa: F401
+import vector.compute.lorentz.scale  # noqa: F401
 import vector.compute.lorentz.t  # noqa: F401
 import vector.compute.lorentz.t2  # noqa: F401
 import vector.compute.lorentz.tau  # noqa: F401

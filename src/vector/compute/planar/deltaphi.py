@@ -9,20 +9,24 @@ from vector.compute.planar import phi
 from vector.methods import AzimuthalRhoPhi, AzimuthalXY, _aztype
 
 
+def rectify(lib, phi):
+    return (phi + lib.pi) % (2 * lib.pi) - lib.pi
+
+
 def xy_xy(lib, x1, y1, x2, y2):
-    return (phi.xy(lib, x1, y1) - phi.xy(lib, x2, y2) + lib.pi) % (2 * lib.pi) - lib.pi
+    return rectify(lib, phi.xy(lib, x1, y1) - phi.xy(lib, x2, y2))
 
 
 def xy_rhophi(lib, x1, y1, rho2, phi2):
-    return (phi.xy(lib, x1, y1) - phi2 + lib.pi) % (2 * lib.pi) - lib.pi
+    return rectify(lib, phi.xy(lib, x1, y1) - phi2)
 
 
 def rhophi_xy(lib, rho1, phi1, x2, y2):
-    return (phi1 - phi.xy(lib, x2, y2) + lib.pi) % (2 * lib.pi) - lib.pi
+    return rectify(lib, phi1 - phi.xy(lib, x2, y2))
 
 
 def rhophi_rhophi(lib, rho1, phi1, rho2, phi2):
-    return (phi1 - phi2 + lib.pi) % (2 * lib.pi) - lib.pi
+    return rectify(lib, phi1 - phi2)
 
 
 dispatch_map = {

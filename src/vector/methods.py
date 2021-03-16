@@ -539,6 +539,12 @@ class Planar:
 
         return dot.dispatch(self, other)
 
+    def scale(self, factor):
+        "scale docs"
+        from .compute.planar import scale
+
+        return scale.dispatch(factor, self)
+
 
 class Spatial(Planar):
     @property
@@ -718,6 +724,12 @@ class Spatial(Planar):
 
         return dot.dispatch(self, other)
 
+    def scale(self, factor):
+        "scale docs"
+        from .compute.spatial import scale
+
+        return scale.dispatch(factor, self)
+
 
 class Lorentz(Spatial):
     @property
@@ -773,48 +785,6 @@ class Lorentz(Spatial):
         from .compute.lorentz import rapidity
 
         return rapidity.dispatch(self)
-
-    def transform4D(self, obj):
-        "transform4D docs"
-        from .compute.lorentz import transform4D
-
-        return transform4D.dispatch(obj, self)
-
-    def is_timelike(self, tolerance=0):
-        "is_timelike docs"
-        from .compute.lorentz import is_timelike
-
-        return is_timelike.dispatch(tolerance, self)
-
-    def is_spacelike(self, tolerance=0):
-        "is_spacelike docs"
-        from .compute.lorentz import is_spacelike
-
-        return is_spacelike.dispatch(tolerance, self)
-
-    def is_lightlike(self, tolerance=1e-5):
-        "is_timelike docs"
-        from .compute.lorentz import is_lightlike
-
-        return is_lightlike.dispatch(tolerance, self)
-
-    def to_beta3(self):
-        "to_beta3 docs"
-        from .compute.lorentz import to_beta3
-
-        return to_beta3.dispatch(self)
-
-    def unit(self):
-        "unit docs"
-        from .compute.lorentz import unit
-
-        return unit.dispatch(self)
-
-    def dot(self, other):
-        "dot docs"
-        from .compute.lorentz import dot
-
-        return dot.dispatch(self, other)
 
     def boost_p4(self, p4):
         "boost_p4 docs"
@@ -874,6 +844,54 @@ class Lorentz(Spatial):
             return boostZ_gamma.dispatch(gamma, self)
         else:
             raise TypeError("specify 'beta' xor 'gamma', not both or neither")
+
+    def transform4D(self, obj):
+        "transform4D docs"
+        from .compute.lorentz import transform4D
+
+        return transform4D.dispatch(obj, self)
+
+    def to_beta3(self):
+        "to_beta3 docs"
+        from .compute.lorentz import to_beta3
+
+        return to_beta3.dispatch(self)
+
+    def is_timelike(self, tolerance=0):
+        "is_timelike docs"
+        from .compute.lorentz import is_timelike
+
+        return is_timelike.dispatch(tolerance, self)
+
+    def is_spacelike(self, tolerance=0):
+        "is_spacelike docs"
+        from .compute.lorentz import is_spacelike
+
+        return is_spacelike.dispatch(tolerance, self)
+
+    def is_lightlike(self, tolerance=1e-5):
+        "is_timelike docs"
+        from .compute.lorentz import is_lightlike
+
+        return is_lightlike.dispatch(tolerance, self)
+
+    def unit(self):
+        "unit docs"
+        from .compute.lorentz import unit
+
+        return unit.dispatch(self)
+
+    def dot(self, other):
+        "dot docs"
+        from .compute.lorentz import dot
+
+        return dot.dispatch(self, other)
+
+    def scale(self, factor):
+        "scale docs"
+        from .compute.lorentz import scale
+
+        return scale.dispatch(factor, self)
 
 
 class Momentum:

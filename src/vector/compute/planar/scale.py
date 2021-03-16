@@ -12,14 +12,15 @@ def rectify(lib, phi):
     return (phi + lib.pi) % (2 * lib.pi) - lib.pi
 
 
-def xy(lib, angle, x, y):
-    s = lib.sin(angle)
-    c = lib.cos(angle)
-    return c * x - s * y, s * x + c * y
+def xy(lib, factor, x, y):
+    return (x * factor, y * factor)
 
 
-def rhophi(lib, angle, rho, phi):
-    return rho, rectify(lib, phi + angle)
+def rhophi(lib, factor, rho, phi):
+    absfactor = lib.absolute(factor)
+    sign = lib.sign(factor)
+    turn_if_negative = -0.5 * (sign - 1) * lib.pi
+    return (rho * absfactor, rectify(lib, phi + turn_if_negative))
 
 
 dispatch_map = {
@@ -28,9 +29,9 @@ dispatch_map = {
 }
 
 
-def dispatch(angle, v):
+def dispatch(factor, v):
     function, *returns = dispatch_map[
         _aztype(v),
     ]
     with numpy.errstate(all="ignore"):
-        return v._wrap_result(function(v.lib, angle, *v.azimuthal.elements), returns)
+        return v._wrap_result(function(v.lib, factor, *v.azimuthal.elements), returns)
