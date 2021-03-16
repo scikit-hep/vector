@@ -26,5 +26,6 @@ import vector.compute.lorentz.t  # noqa: F401
 import vector.compute.lorentz.t2  # noqa: F401
 import vector.compute.lorentz.tau  # noqa: F401
 import vector.compute.lorentz.tau2  # noqa: F401
+import vector.compute.lorentz.to_beta3  # noqa: F401
 import vector.compute.lorentz.transform4D  # noqa: F401
 import vector.compute.lorentz.unit  # noqa: F401

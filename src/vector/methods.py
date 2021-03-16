@@ -269,6 +269,10 @@ class Lorentz(Spatial):
         "is_timelike docs"
         return vector.compute.lorentz.is_lightlike.dispatch(tolerance, self)
 
+    def to_beta3(self):
+        "to_beta3 docs"
+        return vector.compute.lorentz.to_beta3.dispatch(self)
+
     def unit(self):
         "unit docs"
         return vector.compute.lorentz.unit.dispatch(self)
