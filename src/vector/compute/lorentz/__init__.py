@@ -13,14 +13,17 @@ import vector.compute.lorentz.boostY_gamma  # noqa: F401
 import vector.compute.lorentz.boostZ_beta  # noqa: F401
 import vector.compute.lorentz.boostZ_gamma  # noqa: F401
 import vector.compute.lorentz.dot  # noqa: F401
+import vector.compute.lorentz.equal  # noqa: F401
 import vector.compute.lorentz.Et  # noqa: F401
 import vector.compute.lorentz.Et2  # noqa: F401
 import vector.compute.lorentz.gamma  # noqa: F401
 import vector.compute.lorentz.is_lightlike  # noqa: F401
 import vector.compute.lorentz.is_spacelike  # noqa: F401
 import vector.compute.lorentz.is_timelike  # noqa: F401
+import vector.compute.lorentz.isclose  # noqa: F401
 import vector.compute.lorentz.Mt  # noqa: F401
 import vector.compute.lorentz.Mt2  # noqa: F401
+import vector.compute.lorentz.not_equal  # noqa: F401
 import vector.compute.lorentz.rapidity  # noqa: F401
 import vector.compute.lorentz.scale  # noqa: F401
 import vector.compute.lorentz.t  # noqa: F401

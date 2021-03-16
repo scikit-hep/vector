@@ -545,6 +545,24 @@ class Planar:
 
         return scale.dispatch(factor, self)
 
+    def equal(self, other):
+        "equal docs"
+        from .compute.planar import equal
+
+        return equal.dispatch(self, other)
+
+    def not_equal(self, other):
+        "not_equal docs"
+        from .compute.planar import not_equal
+
+        return not_equal.dispatch(self, other)
+
+    def isclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
+        "isclose docs"
+        from .compute.planar import isclose
+
+        return isclose.dispatch(rtol, atol, equal_nan, self, other)
+
 
 class Spatial(Planar):
     @property
@@ -730,6 +748,24 @@ class Spatial(Planar):
 
         return scale.dispatch(factor, self)
 
+    def equal(self, other):
+        "equal docs"
+        from .compute.spatial import equal
+
+        return equal.dispatch(self, other)
+
+    def not_equal(self, other):
+        "not_equal docs"
+        from .compute.spatial import not_equal
+
+        return not_equal.dispatch(self, other)
+
+    def isclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
+        "isclose docs"
+        from .compute.spatial import isclose
+
+        return isclose.dispatch(rtol, atol, equal_nan, self, other)
+
 
 class Lorentz(Spatial):
     @property
@@ -892,6 +928,24 @@ class Lorentz(Spatial):
         from .compute.lorentz import scale
 
         return scale.dispatch(factor, self)
+
+    def equal(self, other):
+        "equal docs"
+        from .compute.lorentz import equal
+
+        return equal.dispatch(self, other)
+
+    def not_equal(self, other):
+        "not_equal docs"
+        from .compute.lorentz import not_equal
+
+        return not_equal.dispatch(self, other)
+
+    def isclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
+        "isclose docs"
+        from .compute.lorentz import isclose
+
+        return isclose.dispatch(rtol, atol, equal_nan, self, other)
 
 
 class Momentum:

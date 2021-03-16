@@ -5,9 +5,12 @@
 
 import vector.compute.planar.deltaphi  # noqa: F401
 import vector.compute.planar.dot  # noqa: F401
+import vector.compute.planar.equal  # noqa: F401
 import vector.compute.planar.is_antiparallel  # noqa: F401
 import vector.compute.planar.is_parallel  # noqa: F401
 import vector.compute.planar.is_perpendicular  # noqa: F401
+import vector.compute.planar.isclose  # noqa: F401
+import vector.compute.planar.not_equal  # noqa: F401
 import vector.compute.planar.phi  # noqa: F401
 import vector.compute.planar.rho  # noqa: F401
 import vector.compute.planar.rho2  # noqa: F401
