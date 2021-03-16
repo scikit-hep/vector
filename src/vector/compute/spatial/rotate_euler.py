@@ -7,14 +7,14 @@ import numpy
 
 from vector.compute.planar import x, y
 from vector.compute.spatial import z
-from vector.geometry import (
+from vector.methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
     LongitudinalEta,
     LongitudinalTheta,
     LongitudinalZ,
-    aztype,
-    ltype,
+    _aztype,
+    _ltype,
 )
 
 # Rotation is only computed in Cartesian coordinates; the rest are conversions.
@@ -262,8 +262,8 @@ for azimuthal in (AzimuthalXY, AzimuthalRhoPhi):
 
 def dispatch(phi, theta, psi, order, v):
     function, *returns = dispatch_map[
-        aztype(v),
-        ltype(v),
+        _aztype(v),
+        _ltype(v),
         order,
     ]
     with numpy.errstate(all="ignore"):

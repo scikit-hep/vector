@@ -6,14 +6,14 @@
 import numpy
 
 from vector.compute.spatial import mag, theta
-from vector.geometry import (
+from vector.methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
     LongitudinalEta,
     LongitudinalTheta,
     LongitudinalZ,
-    aztype,
-    ltype,
+    _aztype,
+    _ltype,
 )
 
 
@@ -53,8 +53,8 @@ dispatch_map = {
 
 def dispatch(v):
     function, *returns = dispatch_map[
-        aztype(v),
-        ltype(v),
+        _aztype(v),
+        _ltype(v),
     ]
     with numpy.errstate(all="ignore"):
         return v._wrap_result(

@@ -6,7 +6,6 @@
 import pytest
 
 import vector.backends.object_
-import vector.geometry
 
 
 def test_spatial_object():

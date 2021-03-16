@@ -11,13 +11,33 @@ import vector.backends.object_
 import vector.compute.lorentz
 import vector.compute.planar
 import vector.compute.spatial
-import vector.geometry
-import vector.methods
-from vector.geometry import (
+from vector.methods import (
+    Azimuthal,
+    AzimuthalRhoPhi,
+    AzimuthalXY,
+    Longitudinal,
+    LongitudinalEta,
+    LongitudinalTheta,
+    LongitudinalZ,
+    Lorentz,
+    LorentzMomentum,
+    Planar,
+    PlanarMomentum,
+    Spatial,
+    SpatialMomentum,
+    Temporal,
+    TemporalT,
+    TemporalTau,
+    Vector2D,
+    Vector3D,
+    Vector4D,
+    _aztype,
     _coordinate_class_to_names,
     _coordinate_order,
+    _ltype,
     _repr_generic_to_momentum,
     _repr_momentum_to_generic,
+    _ttype,
 )
 
 
@@ -67,30 +87,15 @@ def _getitem(array, where, is_momentum):
             azimuthal, longitudinal, temporal = None, None, None
             if hasattr(array, "_azimuthal_type"):
                 azimuthal = array._azimuthal_type.ObjectClass(
-                    *[
-                        out[x]
-                        for x in _coordinate_class_to_names[
-                            vector.geometry.aztype(array)
-                        ]
-                    ]
+                    *[out[x] for x in _coordinate_class_to_names[_aztype(array)]]
                 )
             if hasattr(array, "_longitudinal_type"):
                 longitudinal = array._longitudinal_type.ObjectClass(
-                    *[
-                        out[x]
-                        for x in _coordinate_class_to_names[
-                            vector.geometry.ltype(array)
-                        ]
-                    ]
+                    *[out[x] for x in _coordinate_class_to_names[_ltype(array)]]
                 )
             if hasattr(array, "_temporal_type"):
                 temporal = array._temporal_type.ObjectClass(
-                    *[
-                        out[x]
-                        for x in _coordinate_class_to_names[
-                            vector.geometry.ttype(array)
-                        ]
-                    ]
+                    *[out[x] for x in _coordinate_class_to_names[_ttype(array)]]
                 )
             if temporal is not None:
                 return array.ObjectClass(azimuthal, longitudinal, temporal)
@@ -173,7 +178,7 @@ class VectorNumpy:
     pass
 
 
-class AzimuthalNumpyXY(AzimuthalNumpy, vector.geometry.AzimuthalXY, numpy.ndarray):
+class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, numpy.ndarray):
     ObjectClass = vector.backends.object_.AzimuthalObjectXY
 
     def __new__(cls, *args, **kwargs):
@@ -202,9 +207,7 @@ class AzimuthalNumpyXY(AzimuthalNumpy, vector.geometry.AzimuthalXY, numpy.ndarra
         return _getitem(self, where, False)
 
 
-class AzimuthalNumpyRhoPhi(
-    AzimuthalNumpy, vector.geometry.AzimuthalRhoPhi, numpy.ndarray
-):
+class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, numpy.ndarray):
     ObjectClass = vector.backends.object_.AzimuthalObjectRhoPhi
 
     def __new__(cls, *args, **kwargs):
@@ -233,9 +236,7 @@ class AzimuthalNumpyRhoPhi(
         return _getitem(self, where, False)
 
 
-class LongitudinalNumpyZ(
-    LongitudinalNumpy, vector.geometry.LongitudinalZ, numpy.ndarray
-):
+class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, numpy.ndarray):
     ObjectClass = vector.backends.object_.LongitudinalObjectZ
 
     def __new__(cls, *args, **kwargs):
@@ -260,9 +261,7 @@ class LongitudinalNumpyZ(
         return _getitem(self, where, False)
 
 
-class LongitudinalNumpyTheta(
-    LongitudinalNumpy, vector.geometry.LongitudinalTheta, numpy.ndarray
-):
+class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, numpy.ndarray):
     ObjectClass = vector.backends.object_.LongitudinalObjectTheta
 
     def __new__(cls, *args, **kwargs):
@@ -287,9 +286,7 @@ class LongitudinalNumpyTheta(
         return _getitem(self, where, False)
 
 
-class LongitudinalNumpyEta(
-    LongitudinalNumpy, vector.geometry.LongitudinalEta, numpy.ndarray
-):
+class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, numpy.ndarray):
     ObjectClass = vector.backends.object_.LongitudinalObjectEta
 
     def __new__(cls, *args, **kwargs):
@@ -314,7 +311,7 @@ class LongitudinalNumpyEta(
         return _getitem(self, where, False)
 
 
-class TemporalNumpyT(TemporalNumpy, vector.geometry.TemporalT, numpy.ndarray):
+class TemporalNumpyT(TemporalNumpy, TemporalT, numpy.ndarray):
     ObjectClass = vector.backends.object_.TemporalObjectT
 
     def __new__(cls, *args, **kwargs):
@@ -339,7 +336,7 @@ class TemporalNumpyT(TemporalNumpy, vector.geometry.TemporalT, numpy.ndarray):
         return _getitem(self, where, False)
 
 
-class TemporalNumpyTau(TemporalNumpy, vector.geometry.TemporalTau, numpy.ndarray):
+class TemporalNumpyTau(TemporalNumpy, TemporalTau, numpy.ndarray):
     ObjectClass = vector.backends.object_.TemporalObjectTau
 
     def __new__(cls, *args, **kwargs):
@@ -364,9 +361,7 @@ class TemporalNumpyTau(TemporalNumpy, vector.geometry.TemporalTau, numpy.ndarray
         return _getitem(self, where, False)
 
 
-class VectorNumpy2D(
-    VectorNumpy, vector.methods.Planar, vector.geometry.Vector2D, numpy.ndarray
-):
+class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):
     lib = numpy
     ObjectClass = vector.backends.object_.VectorObject2D
 
@@ -402,9 +397,7 @@ class VectorNumpy2D(
         if returns == [float] or returns == [bool]:
             return result
 
-        elif returns == [vector.geometry.AzimuthalXY] or returns == [
-            vector.geometry.AzimuthalRhoPhi
-        ]:
+        elif returns == [AzimuthalXY] or returns == [AzimuthalRhoPhi]:
             result = _toarrays(result)
             dtype = []
             i = 0
@@ -425,7 +418,7 @@ class VectorNumpy2D(
         return _getitem(self, where, False)
 
 
-class MomentumNumpy2D(vector.methods.PlanarMomentum, VectorNumpy2D):
+class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):
     ObjectClass = vector.backends.object_.MomentumObject2D
 
     def __array_finalize__(self, obj):
@@ -449,9 +442,7 @@ class MomentumNumpy2D(vector.methods.PlanarMomentum, VectorNumpy2D):
         return _getitem(self, where, True)
 
 
-class VectorNumpy3D(
-    VectorNumpy, vector.methods.Spatial, vector.geometry.Vector3D, numpy.ndarray
-):
+class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
     lib = numpy
     ObjectClass = vector.backends.object_.VectorObject3D
     ProjectionClass2D = VectorNumpy2D
@@ -503,32 +494,30 @@ class VectorNumpy3D(
         if returns == [float] or returns == [bool]:
             return result
 
-        elif returns == [vector.geometry.AzimuthalXY] or returns == [
-            vector.geometry.AzimuthalRhoPhi
-        ]:
+        elif returns == [AzimuthalXY] or returns == [AzimuthalRhoPhi]:
             result = _toarrays(result)
             dtype = []
             i = 0
             for name in _coordinate_class_to_names[returns[0]]:
                 dtype.append((name, result[i].dtype))
                 i += 1
-            for name in _coordinate_class_to_names[vector.geometry.ltype(self)]:
+            for name in _coordinate_class_to_names[_ltype(self)]:
                 dtype.append((name, self.dtype[name]))
             out = numpy.empty(_shape_of(result), dtype=dtype)
             i = 0
             for name in _coordinate_class_to_names[returns[0]]:
                 out[name] = result[i]
                 i += 1
-            for name in _coordinate_class_to_names[vector.geometry.ltype(self)]:
+            for name in _coordinate_class_to_names[_ltype(self)]:
                 out[name] = self[name]
             return out.view(type(self))
 
         elif (
             (len(returns) == 2 or (len(returns) == 3 and returns[2] is None))
             and isinstance(returns[0], type)
-            and issubclass(returns[0], vector.geometry.Azimuthal)
+            and issubclass(returns[0], Azimuthal)
             and isinstance(returns[1], type)
-            and issubclass(returns[1], vector.geometry.Longitudinal)
+            and issubclass(returns[1], Longitudinal)
         ):
             result = _toarrays(result)
             dtype = []
@@ -556,7 +545,7 @@ class VectorNumpy3D(
         return _getitem(self, where, False)
 
 
-class MomentumNumpy3D(vector.methods.SpatialMomentum, VectorNumpy3D):
+class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):
     ObjectClass = vector.backends.object_.MomentumObject3D
     ProjectionClass2D = MomentumNumpy2D
 
@@ -592,9 +581,7 @@ class MomentumNumpy3D(vector.methods.SpatialMomentum, VectorNumpy3D):
         return _getitem(self, where, True)
 
 
-class VectorNumpy4D(
-    VectorNumpy, vector.methods.Lorentz, vector.geometry.Vector4D, numpy.ndarray
-):
+class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
     lib = numpy
     ObjectClass = vector.backends.object_.VectorObject4D
     ProjectionClass2D = VectorNumpy2D
@@ -660,32 +647,30 @@ class VectorNumpy4D(
         if returns == [float] or returns == [bool]:
             return result
 
-        elif returns == [vector.geometry.AzimuthalXY] or returns == [
-            vector.geometry.AzimuthalRhoPhi
-        ]:
+        elif returns == [AzimuthalXY] or returns == [AzimuthalRhoPhi]:
             result = _toarrays(result)
             dtype = []
             for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
                 dtype.append((name, result[i].dtype))
-            for name in _coordinate_class_to_names[vector.geometry.ltype(self)]:
+            for name in _coordinate_class_to_names[_ltype(self)]:
                 dtype.append((name, self.dtype[name]))
-            for name in _coordinate_class_to_names[vector.geometry.ttype(self)]:
+            for name in _coordinate_class_to_names[_ttype(self)]:
                 dtype.append((name, self.dtype[name]))
             out = numpy.empty(_shape_of(result), dtype=dtype)
             for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
                 out[name] = result[i]
-            for name in _coordinate_class_to_names[vector.geometry.ltype(self)]:
+            for name in _coordinate_class_to_names[_ltype(self)]:
                 out[name] = self[name]
-            for name in _coordinate_class_to_names[vector.geometry.ttype(self)]:
+            for name in _coordinate_class_to_names[_ttype(self)]:
                 out[name] = self[name]
             return out.view(type(self))
 
         elif (
             len(returns) == 2
             and isinstance(returns[0], type)
-            and issubclass(returns[0], vector.geometry.Azimuthal)
+            and issubclass(returns[0], Azimuthal)
             and isinstance(returns[1], type)
-            and issubclass(returns[1], vector.geometry.Longitudinal)
+            and issubclass(returns[1], Longitudinal)
         ):
             result = _toarrays(result)
             dtype = []
@@ -696,7 +681,7 @@ class VectorNumpy4D(
             for name in _coordinate_class_to_names[returns[1]]:
                 dtype.append((name, result[i].dtype))
                 i += 1
-            for name in _coordinate_class_to_names[vector.geometry.ttype(self)]:
+            for name in _coordinate_class_to_names[_ttype(self)]:
                 dtype.append((name, self.dtype[name]))
             out = numpy.empty(_shape_of(result), dtype=dtype)
             i = 0
@@ -706,16 +691,16 @@ class VectorNumpy4D(
             for name in _coordinate_class_to_names[returns[1]]:
                 out[name] = result[i]
                 i += 1
-            for name in _coordinate_class_to_names[vector.geometry.ttype(self)]:
+            for name in _coordinate_class_to_names[_ttype(self)]:
                 out[name] = self[name]
             return out.view(type(self))
 
         elif (
             len(returns) == 3
             and isinstance(returns[0], type)
-            and issubclass(returns[0], vector.geometry.Azimuthal)
+            and issubclass(returns[0], Azimuthal)
             and isinstance(returns[1], type)
-            and issubclass(returns[1], vector.geometry.Longitudinal)
+            and issubclass(returns[1], Longitudinal)
         ):
             result = _toarrays(result)
             dtype = []
@@ -727,9 +712,7 @@ class VectorNumpy4D(
                 dtype.append((name, result[i].dtype))
                 i += 1
             is_4d = False
-            if isinstance(returns[2], type) and issubclass(
-                returns[2], vector.geometry.Temporal
-            ):
+            if isinstance(returns[2], type) and issubclass(returns[2], Temporal):
                 is_4d = True
                 for name in _coordinate_class_to_names[returns[2]]:
                     dtype.append((name, result[i].dtype))
@@ -759,7 +742,7 @@ class VectorNumpy4D(
         return _getitem(self, where, False)
 
 
-class MomentumNumpy4D(vector.methods.LorentzMomentum, VectorNumpy4D):
+class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):
     ObjectClass = vector.backends.object_.MomentumObject4D
     ProjectionClass2D = MomentumNumpy2D
     ProjectionClass3D = MomentumNumpy3D

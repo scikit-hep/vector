@@ -22,7 +22,7 @@ from .backends.object_ import (  # noqa: 401
     VectorObject4D,
     obj,
 )
-from .geometry import (  # noqa: 401
+from .methods import (  # noqa: 401
     Azimuthal,
     AzimuthalRhoPhi,
     AzimuthalXY,
@@ -31,6 +31,7 @@ from .geometry import (  # noqa: 401
     LongitudinalEta,
     LongitudinalTheta,
     LongitudinalZ,
+    Momentum,
     Temporal,
     TemporalT,
     TemporalTau,
@@ -39,7 +40,6 @@ from .geometry import (  # noqa: 401
     Vector3D,
     Vector4D,
 )
-from .methods import Momentum  # noqa: 401
 
 # from .version import version as __version__
 

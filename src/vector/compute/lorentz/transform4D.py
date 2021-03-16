@@ -8,7 +8,7 @@ import numpy
 from vector.compute.lorentz import t
 from vector.compute.planar import x, y
 from vector.compute.spatial import z
-from vector.geometry import (
+from vector.methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
     LongitudinalEta,
@@ -16,9 +16,9 @@ from vector.geometry import (
     LongitudinalZ,
     TemporalT,
     TemporalTau,
-    aztype,
-    ltype,
-    ttype,
+    _aztype,
+    _ltype,
+    _ttype,
 )
 
 # Rotation is only computed in Cartesian coordinates; the rest are conversions.
@@ -158,9 +158,9 @@ for azimuthal in (AzimuthalXY, AzimuthalRhoPhi):
 
 def dispatch(obj, v):
     function, *returns = dispatch_map[
-        aztype(v),
-        ltype(v),
-        ttype(v),
+        _aztype(v),
+        _ltype(v),
+        _ttype(v),
     ]
     with numpy.errstate(all="ignore"):
         return v._wrap_result(

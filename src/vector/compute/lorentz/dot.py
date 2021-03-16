@@ -7,7 +7,7 @@ import numpy
 
 from vector.compute.lorentz import t
 from vector.compute.spatial import dot
-from vector.geometry import (
+from vector.methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
     LongitudinalEta,
@@ -15,9 +15,9 @@ from vector.geometry import (
     LongitudinalZ,
     TemporalT,
     TemporalTau,
-    aztype,
-    ltype,
-    ttype,
+    _aztype,
+    _ltype,
+    _ttype,
 )
 
 dispatch_map = {}
@@ -133,12 +133,12 @@ def dispatch(v1, v2):
             f"cannot use {v1} (requires {v1.lib}) and {v2} (requires {v1.lib}) together"
         )
     function, *returns = dispatch_map[
-        aztype(v1),
-        ltype(v1),
-        ttype(v1),
-        aztype(v2),
-        ltype(v2),
-        ttype(v2),
+        _aztype(v1),
+        _ltype(v1),
+        _ttype(v1),
+        _aztype(v2),
+        _ltype(v2),
+        _ttype(v2),
     ]
     with numpy.errstate(all="ignore"):
         return v1._wrap_result(

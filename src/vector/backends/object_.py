@@ -7,12 +7,31 @@ import typing
 
 import numpy
 
-import vector.compute.lorentz
-import vector.compute.planar
-import vector.compute.spatial
-import vector.geometry
-import vector.methods
-from vector.geometry import _coordinate_class_to_names, _repr_generic_to_momentum
+from vector.methods import (
+    Azimuthal,
+    AzimuthalRhoPhi,
+    AzimuthalXY,
+    Longitudinal,
+    LongitudinalEta,
+    LongitudinalTheta,
+    LongitudinalZ,
+    Lorentz,
+    LorentzMomentum,
+    Planar,
+    PlanarMomentum,
+    Spatial,
+    SpatialMomentum,
+    TemporalT,
+    TemporalTau,
+    Vector2D,
+    Vector3D,
+    Vector4D,
+    _aztype,
+    _coordinate_class_to_names,
+    _ltype,
+    _repr_generic_to_momentum,
+    _ttype,
+)
 
 
 class CoordinatesObject:
@@ -44,7 +63,7 @@ class AzimuthalObjectXY(typing.NamedTuple):
         return (self.x, self.y)
 
 
-AzimuthalObjectXY.__bases__ = (AzimuthalObject, vector.geometry.AzimuthalXY, tuple)
+AzimuthalObjectXY.__bases__ = (AzimuthalObject, AzimuthalXY, tuple)
 
 
 class AzimuthalObjectRhoPhi(typing.NamedTuple):
@@ -56,11 +75,7 @@ class AzimuthalObjectRhoPhi(typing.NamedTuple):
         return (self.rho, self.phi)
 
 
-AzimuthalObjectRhoPhi.__bases__ = (
-    AzimuthalObject,
-    vector.geometry.AzimuthalRhoPhi,
-    tuple,
-)
+AzimuthalObjectRhoPhi.__bases__ = (AzimuthalObject, AzimuthalRhoPhi, tuple)
 
 
 class LongitudinalObjectZ(typing.NamedTuple):
@@ -71,11 +86,7 @@ class LongitudinalObjectZ(typing.NamedTuple):
         return (self.z,)
 
 
-LongitudinalObjectZ.__bases__ = (
-    LongitudinalObject,
-    vector.geometry.LongitudinalZ,
-    tuple,
-)
+LongitudinalObjectZ.__bases__ = (LongitudinalObject, LongitudinalZ, tuple)
 
 
 class LongitudinalObjectTheta(typing.NamedTuple):
@@ -86,11 +97,7 @@ class LongitudinalObjectTheta(typing.NamedTuple):
         return (self.theta,)
 
 
-LongitudinalObjectTheta.__bases__ = (
-    LongitudinalObject,
-    vector.geometry.LongitudinalTheta,
-    tuple,
-)
+LongitudinalObjectTheta.__bases__ = (LongitudinalObject, LongitudinalTheta, tuple)
 
 
 class LongitudinalObjectEta(typing.NamedTuple):
@@ -101,11 +108,7 @@ class LongitudinalObjectEta(typing.NamedTuple):
         return (self.eta,)
 
 
-LongitudinalObjectEta.__bases__ = (
-    LongitudinalObject,
-    vector.geometry.LongitudinalEta,
-    tuple,
-)
+LongitudinalObjectEta.__bases__ = (LongitudinalObject, LongitudinalEta, tuple)
 
 
 class TemporalObjectT(typing.NamedTuple):
@@ -116,7 +119,7 @@ class TemporalObjectT(typing.NamedTuple):
         return (self.t,)
 
 
-TemporalObjectT.__bases__ = (TemporalObject, vector.geometry.TemporalT, tuple)
+TemporalObjectT.__bases__ = (TemporalObject, TemporalT, tuple)
 
 
 class TemporalObjectTau(typing.NamedTuple):
@@ -127,10 +130,10 @@ class TemporalObjectTau(typing.NamedTuple):
         return (self.tau,)
 
 
-TemporalObjectTau.__bases__ = (TemporalObject, vector.geometry.TemporalTau, tuple)
+TemporalObjectTau.__bases__ = (TemporalObject, TemporalTau, tuple)
 
 
-class VectorObject2D(VectorObject, vector.methods.Planar, vector.geometry.Vector2D):
+class VectorObject2D(VectorObject, Planar, Vector2D):
     __slots__ = ("azimuthal",)
 
     lib = numpy
@@ -147,7 +150,7 @@ class VectorObject2D(VectorObject, vector.methods.Planar, vector.geometry.Vector
         self.azimuthal = azimuthal
 
     def __repr__(self):
-        aznames = _coordinate_class_to_names[vector.geometry.aztype(self)]
+        aznames = _coordinate_class_to_names[_aztype(self)]
         out = []
         for x in aznames:
             out.append(f"{x}={getattr(self.azimuthal, x)}")
@@ -162,19 +165,19 @@ class VectorObject2D(VectorObject, vector.methods.Planar, vector.geometry.Vector
         if returns == [float] or returns == [bool]:
             return result
 
-        elif returns == [vector.geometry.AzimuthalXY]:
+        elif returns == [AzimuthalXY]:
             return cls(AzimuthalObjectXY(*result))
 
-        elif returns == [vector.geometry.AzimuthalRhoPhi]:
+        elif returns == [AzimuthalRhoPhi]:
             return cls(AzimuthalObjectRhoPhi(*result))
 
         else:
             raise AssertionError(repr(returns))
 
 
-class MomentumObject2D(vector.methods.PlanarMomentum, VectorObject2D):
+class MomentumObject2D(PlanarMomentum, VectorObject2D):
     def __repr__(self):
-        aznames = _coordinate_class_to_names[vector.geometry.aztype(self)]
+        aznames = _coordinate_class_to_names[_aztype(self)]
         out = []
         for x in aznames:
             y = _repr_generic_to_momentum.get(x, x)
@@ -182,7 +185,7 @@ class MomentumObject2D(vector.methods.PlanarMomentum, VectorObject2D):
         return "vector.obj(" + ", ".join(out) + ")"
 
 
-class VectorObject3D(VectorObject, vector.methods.Spatial, vector.geometry.Vector3D):
+class VectorObject3D(VectorObject, Spatial, Vector3D):
     __slots__ = ("azimuthal", "longitudinal")
 
     lib = numpy
@@ -217,8 +220,8 @@ class VectorObject3D(VectorObject, vector.methods.Spatial, vector.geometry.Vecto
         self.longitudinal = longitudinal
 
     def __repr__(self):
-        aznames = _coordinate_class_to_names[vector.geometry.aztype(self)]
-        lnames = _coordinate_class_to_names[vector.geometry.ltype(self)]
+        aznames = _coordinate_class_to_names[_aztype(self)]
+        lnames = _coordinate_class_to_names[_ltype(self)]
         out = []
         for x in aznames:
             out.append(f"{x}={getattr(self.azimuthal, x)}")
@@ -235,30 +238,30 @@ class VectorObject3D(VectorObject, vector.methods.Spatial, vector.geometry.Vecto
         if returns == [float] or returns == [bool]:
             return result
 
-        elif returns == [vector.geometry.AzimuthalXY]:
+        elif returns == [AzimuthalXY]:
             return cls(AzimuthalObjectXY(*result), self.longitudinal)
 
-        elif returns == [vector.geometry.AzimuthalRhoPhi]:
+        elif returns == [AzimuthalRhoPhi]:
             return cls(AzimuthalObjectRhoPhi(*result), self.longitudinal)
 
         elif (
             (len(returns) == 2 or (len(returns) == 3 and returns[2] is None))
             and isinstance(returns[0], type)
-            and issubclass(returns[0], vector.geometry.Azimuthal)
+            and issubclass(returns[0], Azimuthal)
             and isinstance(returns[1], type)
-            and issubclass(returns[1], vector.geometry.Longitudinal)
+            and issubclass(returns[1], Longitudinal)
         ):
-            if returns[0] is vector.geometry.AzimuthalXY:
+            if returns[0] is AzimuthalXY:
                 azimuthal = AzimuthalObjectXY(result[0], result[1])
-            elif returns[0] is vector.geometry.AzimuthalRhoPhi:
+            elif returns[0] is AzimuthalRhoPhi:
                 azimuthal = AzimuthalObjectRhoPhi(result[0], result[1])
             else:
                 raise AssertionError(repr(returns[0]))
-            if returns[1] is vector.geometry.LongitudinalZ:
+            if returns[1] is LongitudinalZ:
                 longitudinal = LongitudinalObjectZ(result[2])
-            elif returns[1] is vector.geometry.LongitudinalTheta:
+            elif returns[1] is LongitudinalTheta:
                 longitudinal = LongitudinalObjectTheta(result[2])
-            elif returns[1] is vector.geometry.LongitudinalEta:
+            elif returns[1] is LongitudinalEta:
                 longitudinal = LongitudinalObjectEta(result[2])
             else:
                 raise AssertionError(repr(returns[1]))
@@ -268,12 +271,12 @@ class VectorObject3D(VectorObject, vector.methods.Spatial, vector.geometry.Vecto
             raise AssertionError(repr(returns))
 
 
-class MomentumObject3D(vector.methods.SpatialMomentum, VectorObject3D):
+class MomentumObject3D(SpatialMomentum, VectorObject3D):
     ProjectionClass2D = MomentumObject2D
 
     def __repr__(self):
-        aznames = _coordinate_class_to_names[vector.geometry.aztype(self)]
-        lnames = _coordinate_class_to_names[vector.geometry.ltype(self)]
+        aznames = _coordinate_class_to_names[_aztype(self)]
+        lnames = _coordinate_class_to_names[_ltype(self)]
         out = []
         for x in aznames:
             y = _repr_generic_to_momentum.get(x, x)
@@ -284,7 +287,7 @@ class MomentumObject3D(vector.methods.SpatialMomentum, VectorObject3D):
         return "vector.obj(" + ", ".join(out) + ")"
 
 
-class VectorObject4D(VectorObject, vector.methods.Lorentz, vector.geometry.Vector4D):
+class VectorObject4D(VectorObject, Lorentz, Vector4D):
     __slots__ = ("azimuthal", "longitudinal", "temporal")
 
     lib = numpy
@@ -379,9 +382,9 @@ class VectorObject4D(VectorObject, vector.methods.Lorentz, vector.geometry.Vecto
         self.temporal = temporal
 
     def __repr__(self):
-        aznames = _coordinate_class_to_names[vector.geometry.aztype(self)]
-        lnames = _coordinate_class_to_names[vector.geometry.ltype(self)]
-        tnames = _coordinate_class_to_names[vector.geometry.ttype(self)]
+        aznames = _coordinate_class_to_names[_aztype(self)]
+        lnames = _coordinate_class_to_names[_ltype(self)]
+        tnames = _coordinate_class_to_names[_ttype(self)]
         out = []
         for x in aznames:
             out.append(f"{x}={getattr(self.azimuthal, x)}")
@@ -400,30 +403,30 @@ class VectorObject4D(VectorObject, vector.methods.Lorentz, vector.geometry.Vecto
         if returns == [float] or returns == [bool]:
             return result
 
-        elif returns == [vector.geometry.AzimuthalXY]:
+        elif returns == [AzimuthalXY]:
             return cls(AzimuthalObjectXY(*result), self.longitudinal, self.temporal)
 
-        elif returns == [vector.geometry.AzimuthalRhoPhi]:
+        elif returns == [AzimuthalRhoPhi]:
             return cls(AzimuthalObjectRhoPhi(*result), self.longitudinal, self.temporal)
 
         elif (
             len(returns) == 2
             and isinstance(returns[0], type)
-            and issubclass(returns[0], vector.geometry.Azimuthal)
+            and issubclass(returns[0], Azimuthal)
             and isinstance(returns[1], type)
-            and issubclass(returns[1], vector.geometry.Longitudinal)
+            and issubclass(returns[1], Longitudinal)
         ):
-            if returns[0] is vector.geometry.AzimuthalXY:
+            if returns[0] is AzimuthalXY:
                 azimuthal = AzimuthalObjectXY(result[0], result[1])
-            elif returns[0] is vector.geometry.AzimuthalRhoPhi:
+            elif returns[0] is AzimuthalRhoPhi:
                 azimuthal = AzimuthalObjectRhoPhi(result[0], result[1])
             else:
                 raise AssertionError(repr(returns[0]))
-            if returns[1] is vector.geometry.LongitudinalZ:
+            if returns[1] is LongitudinalZ:
                 longitudinal = LongitudinalObjectZ(result[2])
-            elif returns[1] is vector.geometry.LongitudinalTheta:
+            elif returns[1] is LongitudinalTheta:
                 longitudinal = LongitudinalObjectTheta(result[2])
-            elif returns[1] is vector.geometry.LongitudinalEta:
+            elif returns[1] is LongitudinalEta:
                 longitudinal = LongitudinalObjectEta(result[2])
             else:
                 raise AssertionError(repr(returns[1]))
@@ -432,28 +435,28 @@ class VectorObject4D(VectorObject, vector.methods.Lorentz, vector.geometry.Vecto
         elif (
             len(returns) == 3
             and isinstance(returns[0], type)
-            and issubclass(returns[0], vector.geometry.Azimuthal)
+            and issubclass(returns[0], Azimuthal)
             and isinstance(returns[1], type)
-            and issubclass(returns[1], vector.geometry.Longitudinal)
+            and issubclass(returns[1], Longitudinal)
         ):
-            if returns[0] is vector.geometry.AzimuthalXY:
+            if returns[0] is AzimuthalXY:
                 azimuthal = AzimuthalObjectXY(result[0], result[1])
-            elif returns[0] is vector.geometry.AzimuthalRhoPhi:
+            elif returns[0] is AzimuthalRhoPhi:
                 azimuthal = AzimuthalObjectRhoPhi(result[0], result[1])
             else:
                 raise AssertionError(repr(returns[0]))
-            if returns[1] is vector.geometry.LongitudinalZ:
+            if returns[1] is LongitudinalZ:
                 longitudinal = LongitudinalObjectZ(result[2])
-            elif returns[1] is vector.geometry.LongitudinalTheta:
+            elif returns[1] is LongitudinalTheta:
                 longitudinal = LongitudinalObjectTheta(result[2])
-            elif returns[1] is vector.geometry.LongitudinalEta:
+            elif returns[1] is LongitudinalEta:
                 longitudinal = LongitudinalObjectEta(result[2])
             else:
                 raise AssertionError(repr(returns[1]))
             is_4d = True
-            if returns[2] is vector.geometry.TemporalT:
+            if returns[2] is TemporalT:
                 temporal = TemporalObjectT(result[3])
-            elif returns[2] is vector.geometry.TemporalTau:
+            elif returns[2] is TemporalTau:
                 temporal = TemporalObjectTau(result[3])
             elif returns[2] is None:
                 is_4d = False
@@ -468,14 +471,14 @@ class VectorObject4D(VectorObject, vector.methods.Lorentz, vector.geometry.Vecto
             raise AssertionError(repr(returns))
 
 
-class MomentumObject4D(vector.methods.LorentzMomentum, VectorObject4D):
+class MomentumObject4D(LorentzMomentum, VectorObject4D):
     ProjectionClass2D = MomentumObject2D
     ProjectionClass3D = MomentumObject3D
 
     def __repr__(self):
-        aznames = _coordinate_class_to_names[vector.geometry.aztype(self)]
-        lnames = _coordinate_class_to_names[vector.geometry.ltype(self)]
-        tnames = _coordinate_class_to_names[vector.geometry.ttype(self)]
+        aznames = _coordinate_class_to_names[_aztype(self)]
+        lnames = _coordinate_class_to_names[_ltype(self)]
+        tnames = _coordinate_class_to_names[_ttype(self)]
         out = []
         for x in aznames:
             y = _repr_generic_to_momentum.get(x, x)

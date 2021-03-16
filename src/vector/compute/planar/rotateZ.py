@@ -5,7 +5,7 @@
 
 import numpy
 
-from vector.geometry import AzimuthalRhoPhi, AzimuthalXY, aztype
+from vector.methods import AzimuthalRhoPhi, AzimuthalXY, _aztype
 
 
 def xy(lib, angle, x, y):
@@ -26,7 +26,7 @@ dispatch_map = {
 
 def dispatch(angle, v):
     function, *returns = dispatch_map[
-        aztype(v),
+        _aztype(v),
     ]
     with numpy.errstate(all="ignore"):
         return v._wrap_result(function(v.lib, angle, *v.azimuthal.elements), returns)

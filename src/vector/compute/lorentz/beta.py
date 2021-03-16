@@ -7,7 +7,7 @@ import numpy
 
 from vector.compute.lorentz import t
 from vector.compute.spatial import mag
-from vector.geometry import (
+from vector.methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
     LongitudinalEta,
@@ -15,9 +15,9 @@ from vector.geometry import (
     LongitudinalZ,
     TemporalT,
     TemporalTau,
-    aztype,
-    ltype,
-    ttype,
+    _aztype,
+    _ltype,
+    _ttype,
 )
 
 
@@ -100,9 +100,9 @@ dispatch_map = {
 
 def dispatch(v):
     function, *returns = dispatch_map[
-        aztype(v),
-        ltype(v),
-        ttype(v),
+        _aztype(v),
+        _ltype(v),
+        _ttype(v),
     ]
     with numpy.errstate(all="ignore"):
         return v._wrap_result(

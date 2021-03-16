@@ -6,7 +6,7 @@
 import numpy
 
 from vector.compute.planar import dot, rho
-from vector.geometry import AzimuthalRhoPhi, AzimuthalXY, aztype
+from vector.methods import AzimuthalRhoPhi, AzimuthalXY, _aztype
 
 dispatch_map = {}
 
@@ -39,8 +39,8 @@ def dispatch(tolerance, v1, v2):
             f"cannot use {v1} (requires {v1.lib}) and {v2} (requires {v1.lib}) together"
         )
     function, *returns = dispatch_map[
-        aztype(v1),
-        aztype(v2),
+        _aztype(v1),
+        _aztype(v2),
     ]
     with numpy.errstate(all="ignore"):
         return v1._wrap_result(

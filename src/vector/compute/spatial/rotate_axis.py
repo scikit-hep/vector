@@ -7,14 +7,14 @@ import numpy
 
 from vector.compute.planar import x, y
 from vector.compute.spatial import z
-from vector.geometry import (
+from vector.methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
     LongitudinalEta,
     LongitudinalTheta,
     LongitudinalZ,
-    aztype,
-    ltype,
+    _aztype,
+    _ltype,
 )
 
 # Rotation is only computed in Cartesian coordinates; the rest are conversions.
@@ -134,10 +134,10 @@ def dispatch(angle, v1, v2):
             f"cannot use {v1} (requires {v1.lib}) and {v2} (requires {v1.lib}) together"
         )
     function, *returns = dispatch_map[
-        aztype(v1),
-        ltype(v1),
-        aztype(v2),
-        ltype(v2),
+        _aztype(v1),
+        _ltype(v1),
+        _aztype(v2),
+        _ltype(v2),
     ]
     with numpy.errstate(all="ignore"):
         return v1._wrap_result(
