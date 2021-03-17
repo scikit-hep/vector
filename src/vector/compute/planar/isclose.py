@@ -6,7 +6,7 @@
 import numpy
 
 from vector.compute.planar import x, y
-from vector.methods import AzimuthalRhoPhi, AzimuthalXY, _aztype
+from vector.methods import AzimuthalRhoPhi, AzimuthalXY, _aztype, _handler
 
 # Policy: turn (rho, phi) into (x, y)
 #         (if not already the same)
@@ -70,7 +70,7 @@ def dispatch(rtol, atol, equal_nan, v1, v2):
         _aztype(v2),
     ]
     with numpy.errstate(all="ignore"):
-        return v1._wrap_result(
+        return _handler((v1, v2))._wrap_result(
             function(
                 v1.lib,
                 rtol,

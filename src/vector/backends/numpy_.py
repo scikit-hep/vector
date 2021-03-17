@@ -33,6 +33,7 @@ from vector.methods import (
     _aztype,
     _coordinate_class_to_names,
     _coordinate_order,
+    _handler,
     _ltype,
     _repr_generic_to_momentum,
     _repr_momentum_to_generic,
@@ -205,13 +206,19 @@ class VectorNumpy:
         return numpy.not_equal(self, other)
 
     def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
+        if not isinstance(_handler(inputs), VectorNumpy):
+            # Let the array-of-vectors object handle it.
+            return NotImplemented
+
         if isinstance(self, Vector2D):
             from vector.compute.planar import add, dot, equal, not_equal
             from vector.compute.planar import rho as absolute
+            from vector.compute.planar import rho2 as absolute2
             from vector.compute.planar import scale, subtract
         elif isinstance(self, Vector3D):
             from vector.compute.spatial import add, dot, equal
             from vector.compute.spatial import mag as absolute
+            from vector.compute.spatial import mag2 as absolute2
             from vector.compute.spatial import not_equal, scale, subtract
         elif isinstance(self, Vector4D):
             from vector.compute.lorentz import (
@@ -223,32 +230,40 @@ class VectorNumpy:
                 subtract,
             )
             from vector.compute.lorentz import tau as absolute
+            from vector.compute.lorentz import tau2 as absolute2
 
         outputs = kwargs.get("out", ())
+        if any(not isinstance(x, VectorNumpy) for x in outputs):
+            raise TypeError(
+                "ufunc operating on VectorNumpys can only fill another VectorNumpy "
+                "with 'out' keyword"
+            )
 
-        if ufunc is numpy.absolute:
+        if ufunc is numpy.absolute and len(inputs) == 1:
             result = absolute.dispatch(inputs[0])
             for output in outputs:
                 for name in output.dtype.names:
                     output[name] = result[name]
             return result
 
-        elif ufunc is numpy.add:
+        elif ufunc is numpy.add and len(inputs) == 2:
             result = add.dispatch(inputs[0], inputs[1])
             for output in outputs:
                 for name in output.dtype.names:
                     output[name] = result[name]
             return result
 
-        elif ufunc is numpy.subtract:
+        elif ufunc is numpy.subtract and len(inputs) == 2:
             result = subtract.dispatch(inputs[0], inputs[1])
             for output in outputs:
                 for name in output.dtype.names:
                     output[name] = result[name]
             return result
 
-        elif ufunc is numpy.multiply and not isinstance(
-            inputs[0], (Vector, Coordinates)
+        elif (
+            ufunc is numpy.multiply
+            and not isinstance(inputs[0], (Vector, Coordinates))
+            and len(inputs) == 2
         ):
             result = scale.dispatch(inputs[0], inputs[1])
             for output in outputs:
@@ -256,8 +271,10 @@ class VectorNumpy:
                     output[name] = result[name]
             return result
 
-        elif ufunc is numpy.multiply and not isinstance(
-            inputs[1], (Vector, Coordinates)
+        elif (
+            ufunc is numpy.multiply
+            and not isinstance(inputs[1], (Vector, Coordinates))
+            and len(inputs) == 2
         ):
             result = scale.dispatch(inputs[1], inputs[0])
             for output in outputs:
@@ -265,22 +282,24 @@ class VectorNumpy:
                     output[name] = result[name]
             return result
 
-        elif ufunc is numpy.negative:
+        elif ufunc is numpy.negative and len(inputs) == 1:
             result = scale.dispatch(-1, inputs[0])
             for output in outputs:
                 for name in output.dtype.names:
                     output[name] = result[name]
             return result
 
-        elif ufunc is numpy.positive:
+        elif ufunc is numpy.positive and len(inputs) == 1:
             result = inputs[0]
             for output in outputs:
                 for name in output.dtype.names:
                     output[name] = result[name]
             return result
 
-        elif ufunc is numpy.true_divide and not isinstance(
-            inputs[1], (Vector, Coordinates)
+        elif (
+            ufunc is numpy.true_divide
+            and not isinstance(inputs[1], (Vector, Coordinates))
+            and len(inputs) == 2
         ):
             result = scale.dispatch(1 / inputs[1], inputs[0])
             for output in outputs:
@@ -288,49 +307,53 @@ class VectorNumpy:
                     output[name] = result[name]
             return result
 
-        elif ufunc is numpy.power and not isinstance(inputs[1], (Vector, Coordinates)):
+        elif (
+            ufunc is numpy.power
+            and not isinstance(inputs[1], (Vector, Coordinates))
+            and len(inputs) == 2
+        ):
             result = absolute.dispatch(inputs[0]) ** inputs[1]
             for output in outputs:
                 for name in output.dtype.names:
                     output[name] = result[name]
             return result
 
-        elif ufunc is numpy.square:
-            result = absolute.dispatch(inputs[0]) ** 2
+        elif ufunc is numpy.square and len(inputs) == 1:
+            result = absolute2.dispatch(inputs[0])
             for output in outputs:
                 for name in output.dtype.names:
                     output[name] = result[name]
             return result
 
-        elif ufunc is numpy.sqrt:
+        elif ufunc is numpy.sqrt and len(inputs) == 1:
             result = numpy.sqrt(absolute.dispatch(inputs[0]))
             for output in outputs:
                 for name in output.dtype.names:
                     output[name] = result[name]
             return result
 
-        elif ufunc is numpy.cbrt:
+        elif ufunc is numpy.cbrt and len(inputs) == 1:
             result = numpy.cbrt(absolute.dispatch(inputs[0]))
             for output in outputs:
                 for name in output.dtype.names:
                     output[name] = result[name]
             return result
 
-        elif ufunc is numpy.matmul:
+        elif ufunc is numpy.matmul and len(inputs) == 2:
             result = dot.dispatch(inputs[0], inputs[1])
             for output in outputs:
                 for name in output.dtype.names:
                     output[name] = result[name]
             return result
 
-        elif ufunc is numpy.equal:
+        elif ufunc is numpy.equal and len(inputs) == 2:
             result = equal.dispatch(inputs[0], inputs[1])
             for output in outputs:
                 for name in output.dtype.names:
                     output[name] = result[name]
             return result
 
-        elif ufunc is numpy.not_equal:
+        elif ufunc is numpy.not_equal and len(inputs) == 2:
             result = not_equal.dispatch(inputs[0], inputs[1])
             for output in outputs:
                 for name in output.dtype.names:

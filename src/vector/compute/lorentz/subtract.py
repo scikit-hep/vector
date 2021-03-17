@@ -16,6 +16,7 @@ from vector.methods import (
     TemporalT,
     TemporalTau,
     _aztype,
+    _handler,
     _ltype,
     _ttype,
 )
@@ -182,7 +183,7 @@ def dispatch(v1, v2):
         _ttype(v2),
     ]
     with numpy.errstate(all="ignore"):
-        return v1._wrap_result(
+        return _handler((v1, v2))._wrap_result(
             function(
                 v1.lib,
                 *v1.azimuthal.elements,

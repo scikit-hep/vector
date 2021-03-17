@@ -6,7 +6,7 @@
 import numpy
 
 from vector.compute.planar import x, y
-from vector.methods import AzimuthalRhoPhi, AzimuthalXY, _aztype
+from vector.methods import AzimuthalRhoPhi, AzimuthalXY, _aztype, _handler
 
 
 def xy_xy(lib, x1, y1, x2, y2):
@@ -43,6 +43,6 @@ def dispatch(v1, v2):
         _aztype(v2),
     ]
     with numpy.errstate(all="ignore"):
-        return v1._wrap_result(
+        return _handler((v1, v2))._wrap_result(
             function(v1.lib, *v1.azimuthal.elements, *v2.azimuthal.elements), returns
         )

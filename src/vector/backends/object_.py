@@ -11,6 +11,7 @@ from vector.methods import (
     Azimuthal,
     AzimuthalRhoPhi,
     AzimuthalXY,
+    Coordinates,
     Longitudinal,
     LongitudinalEta,
     LongitudinalTheta,
@@ -23,11 +24,13 @@ from vector.methods import (
     SpatialMomentum,
     TemporalT,
     TemporalTau,
+    Vector,
     Vector2D,
     Vector3D,
     Vector4D,
     _aztype,
     _coordinate_class_to_names,
+    _handler,
     _ltype,
     _repr_generic_to_momentum,
     _ttype,
@@ -50,69 +53,235 @@ class TemporalObject(CoordinatesObject):
     pass
 
 
-class VectorObject:
-    def allclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
-        raise AssertionError("FIXME")
+def _replace_data(obj, result):
+    if not isinstance(result, VectorObject):
+        raise TypeError(f"can only assign a single vector to {type(obj).__name__}")
 
+    if isinstance(obj.azimuthal, AzimuthalObjectXY):
+        obj.azimuthal = AzimuthalObjectXY(result.x, result.y)
+    elif isinstance(obj.azimuthal, AzimuthalObjectRhoPhi):
+        obj.azimuthal = AzimuthalObjectRhoPhi(result.rho, result.phi)
+    else:
+        raise AssertionError(type(obj))
+
+    if hasattr(obj, "longitudinal"):
+        if isinstance(obj.longitudinal, LongitudinalObjectZ):
+            obj.longitudinal = LongitudinalObjectZ(result.z)
+        elif isinstance(obj.longitudinal, LongitudinalObjectTheta):
+            obj.longitudinal = LongitudinalObjectTheta(result.theta)
+        elif isinstance(obj.longitudinal, LongitudinalObjectEta):
+            obj.longitudinal = LongitudinalObjectEta(result.eta)
+        else:
+            raise AssertionError(type(obj))
+
+    if hasattr(obj, "temporal"):
+        if isinstance(obj.temporal, TemporalObjectT):
+            obj.temporal = TemporalObjectT(result.t)
+        elif isinstance(obj.temporal, TemporalObjectTau):
+            obj.temporal = TemporalObjectTau(result.tau)
+        else:
+            raise AssertionError(type(obj))
+
+    return obj
+
+
+class VectorObject:
     def __eq__(self, other):
-        raise AssertionError("FIXME")
+        return numpy.equal(self, other)
 
     def __ne__(self, other):
-        raise AssertionError("FIXME")
+        return numpy.not_equal(self, other)
 
     def __abs__(self):
-        raise AssertionError("FIXME")
+        return numpy.absolute(self)
 
     def __add__(self, other):
-        raise AssertionError("FIXME")
-
-    def __iadd__(self, other):
-        raise AssertionError("FIXME")
+        return numpy.add(self, other)
 
     def __radd__(self, other):
-        raise AssertionError("FIXME")
+        return numpy.add(other, self)
+
+    def __iadd__(self, other):
+        return _replace_data(self, numpy.add(self, other))
 
     def __sub__(self, other):
-        raise AssertionError("FIXME")
-
-    def __isub__(self, other):
-        raise AssertionError("FIXME")
+        return numpy.subtract(self, other)
 
     def __rsub__(self, other):
-        raise AssertionError("FIXME")
+        return numpy.subtract(other, self)
+
+    def __isub__(self, other):
+        return _replace_data(self, numpy.subtract(self, other))
 
     def __mul__(self, other):
-        raise AssertionError("FIXME")
-
-    def __imul__(self, other):
-        raise AssertionError("FIXME")
+        return numpy.multiply(self, other)
 
     def __rmul__(self, other):
-        raise AssertionError("FIXME")
+        return numpy.multiply(other, self)
+
+    def __imul__(self, other):
+        return _replace_data(self, numpy.multiply(self, other))
 
     def __neg__(self):
-        raise AssertionError("FIXME")
+        return numpy.negative(self)
 
     def __pos__(self):
-        raise AssertionError("FIXME")
+        return numpy.positive(self)
 
     def __truediv__(self, other):
-        raise AssertionError("FIXME")
-
-    def __itruediv__(self, other):
-        raise AssertionError("FIXME")
+        return numpy.true_divide(self, other)
 
     def __rtruediv__(self, other):
-        raise AssertionError("FIXME")
+        return numpy.true_divide(other, self)
+
+    def __itruediv__(self, other):
+        return _replace_data(self, numpy.true_divide(self, other))
 
     def __pow__(self, other):
-        raise AssertionError("FIXME")
+        return numpy.power(self, other)
 
-    def __ipow__(self, other):
-        raise AssertionError("FIXME")
+    def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
+        if not isinstance(_handler(inputs), VectorObject):
+            # Let the array-of-vectors object handle it.
+            return NotImplemented
 
-    def __rpow__(self, other):
-        raise AssertionError("FIXME")
+        if isinstance(self, Vector2D):
+            from vector.compute.planar import add, dot, equal, not_equal
+            from vector.compute.planar import rho as absolute
+            from vector.compute.planar import rho2 as absolute2
+            from vector.compute.planar import scale, subtract
+        elif isinstance(self, Vector3D):
+            from vector.compute.spatial import add, dot, equal
+            from vector.compute.spatial import mag as absolute
+            from vector.compute.spatial import mag2 as absolute2
+            from vector.compute.spatial import not_equal, scale, subtract
+        elif isinstance(self, Vector4D):
+            from vector.compute.lorentz import (
+                add,
+                dot,
+                equal,
+                not_equal,
+                scale,
+                subtract,
+            )
+            from vector.compute.lorentz import tau as absolute
+            from vector.compute.lorentz import tau2 as absolute2
+
+        outputs = kwargs.get("out", ())
+        if any(not isinstance(x, VectorObject) for x in outputs):
+            raise TypeError(
+                "ufunc operating on VectorObjects can only fill another VectorObject "
+                "with 'out' keyword"
+            )
+
+        if ufunc is numpy.absolute and len(inputs) == 1:
+            result = absolute.dispatch(inputs[0])
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif ufunc is numpy.add and len(inputs) == 2:
+            result = add.dispatch(inputs[0], inputs[1])
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif ufunc is numpy.subtract and len(inputs) == 2:
+            result = subtract.dispatch(inputs[0], inputs[1])
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif (
+            ufunc is numpy.multiply
+            and not isinstance(inputs[0], (Vector, Coordinates))
+            and len(inputs) == 2
+        ):
+            result = scale.dispatch(inputs[0], inputs[1])
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif (
+            ufunc is numpy.multiply
+            and not isinstance(inputs[1], (Vector, Coordinates))
+            and len(inputs) == 2
+        ):
+            result = scale.dispatch(inputs[1], inputs[0])
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif ufunc is numpy.negative and len(inputs) == 1:
+            result = scale.dispatch(-1, inputs[0])
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif ufunc is numpy.positive and len(inputs) == 1:
+            result = inputs[0]
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif (
+            ufunc is numpy.true_divide
+            and not isinstance(inputs[1], (Vector, Coordinates))
+            and len(inputs) == 2
+        ):
+            result = scale.dispatch(1 / inputs[1], inputs[0])
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif (
+            ufunc is numpy.power
+            and not isinstance(inputs[1], (Vector, Coordinates))
+            and len(inputs) == 2
+        ):
+            result = absolute.dispatch(inputs[0]) ** inputs[1]
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif ufunc is numpy.square and len(inputs) == 1:
+            result = absolute2.dispatch(inputs[0])
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif ufunc is numpy.sqrt and len(inputs) == 1:
+            result = numpy.sqrt(absolute.dispatch(inputs[0]))
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif ufunc is numpy.cbrt and len(inputs) == 1:
+            result = numpy.cbrt(absolute.dispatch(inputs[0]))
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif ufunc is numpy.matmul and len(inputs) == 2:
+            result = dot.dispatch(inputs[0], inputs[1])
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif ufunc is numpy.equal and len(inputs) == 2:
+            result = equal.dispatch(inputs[0], inputs[1])
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif ufunc is numpy.not_equal and len(inputs) == 2:
+            result = not_equal.dispatch(inputs[0], inputs[1])
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        else:
+            return NotImplemented
 
 
 class AzimuthalObjectXY(typing.NamedTuple):
@@ -235,6 +404,38 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
         else:
             raise AssertionError(repr(returns))
 
+    @property
+    def x(self):
+        return super().x
+
+    @x.setter
+    def x(self, x):
+        self.azimuthal = AzimuthalObjectXY(x, self.y)
+
+    @property
+    def y(self):
+        return super().y
+
+    @y.setter
+    def y(self, y):
+        self.azimuthal = AzimuthalObjectXY(self.x, y)
+
+    @property
+    def rho(self):
+        return super().rho
+
+    @rho.setter
+    def rho(self, rho):
+        self.azimuthal = AzimuthalObjectRhoPhi(rho, self.phi)
+
+    @property
+    def phi(self):
+        return super().phi
+
+    @phi.setter
+    def phi(self, phi):
+        self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)
+
 
 class MomentumObject2D(PlanarMomentum, VectorObject2D):
     def __repr__(self):
@@ -244,6 +445,30 @@ class MomentumObject2D(PlanarMomentum, VectorObject2D):
             y = _repr_generic_to_momentum.get(x, x)
             out.append(f"{y}={getattr(self.azimuthal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
+
+    @property
+    def px(self):
+        return super().px
+
+    @px.setter
+    def px(self, px):
+        self.azimuthal = AzimuthalObjectXY(px, self.py)
+
+    @property
+    def py(self):
+        return super().py
+
+    @py.setter
+    def py(self, py):
+        self.azimuthal = AzimuthalObjectXY(self.px, py)
+
+    @property
+    def pt(self):
+        return super().pt
+
+    @pt.setter
+    def pt(self, pt):
+        self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)
 
 
 class VectorObject3D(VectorObject, Spatial, Vector3D):
@@ -331,6 +556,62 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         else:
             raise AssertionError(repr(returns))
 
+    @property
+    def x(self):
+        return super().x
+
+    @x.setter
+    def x(self, x):
+        self.azimuthal = AzimuthalObjectXY(x, self.y)
+
+    @property
+    def y(self):
+        return super().y
+
+    @y.setter
+    def y(self, y):
+        self.azimuthal = AzimuthalObjectXY(self.x, y)
+
+    @property
+    def rho(self):
+        return super().rho
+
+    @rho.setter
+    def rho(self, rho):
+        self.azimuthal = AzimuthalObjectRhoPhi(rho, self.phi)
+
+    @property
+    def phi(self):
+        return super().phi
+
+    @phi.setter
+    def phi(self, phi):
+        self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)
+
+    @property
+    def z(self):
+        return super().z
+
+    @z.setter
+    def z(self, z):
+        self.longitudinal = LongitudinalObjectZ(z)
+
+    @property
+    def theta(self):
+        return super().theta
+
+    @theta.setter
+    def theta(self, theta):
+        self.longitudinal = LongitudinalObjectTheta(theta)
+
+    @property
+    def eta(self):
+        return super().eta
+
+    @eta.setter
+    def eta(self, eta):
+        self.longitudinal = LongitudinalObjectEta(eta)
+
 
 class MomentumObject3D(SpatialMomentum, VectorObject3D):
     ProjectionClass2D = MomentumObject2D
@@ -346,6 +627,38 @@ class MomentumObject3D(SpatialMomentum, VectorObject3D):
             y = _repr_generic_to_momentum.get(x, x)
             out.append(f"{y}={getattr(self.longitudinal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
+
+    @property
+    def px(self):
+        return super().px
+
+    @px.setter
+    def px(self, px):
+        self.azimuthal = AzimuthalObjectXY(px, self.py)
+
+    @property
+    def py(self):
+        return super().py
+
+    @py.setter
+    def py(self, py):
+        self.azimuthal = AzimuthalObjectXY(self.px, py)
+
+    @property
+    def pt(self):
+        return super().pt
+
+    @pt.setter
+    def pt(self, pt):
+        self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)
+
+    @property
+    def pz(self):
+        return super().pz
+
+    @pz.setter
+    def pz(self, pz):
+        self.longitudinal = LongitudinalObjectZ(pz)
 
 
 class VectorObject4D(VectorObject, Lorentz, Vector4D):
@@ -531,6 +844,78 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         else:
             raise AssertionError(repr(returns))
 
+    @property
+    def x(self):
+        return super().x
+
+    @x.setter
+    def x(self, x):
+        self.azimuthal = AzimuthalObjectXY(x, self.y)
+
+    @property
+    def y(self):
+        return super().y
+
+    @y.setter
+    def y(self, y):
+        self.azimuthal = AzimuthalObjectXY(self.x, y)
+
+    @property
+    def rho(self):
+        return super().rho
+
+    @rho.setter
+    def rho(self, rho):
+        self.azimuthal = AzimuthalObjectRhoPhi(rho, self.phi)
+
+    @property
+    def phi(self):
+        return super().phi
+
+    @phi.setter
+    def phi(self, phi):
+        self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)
+
+    @property
+    def z(self):
+        return super().z
+
+    @z.setter
+    def z(self, z):
+        self.longitudinal = LongitudinalObjectZ(z)
+
+    @property
+    def theta(self):
+        return super().theta
+
+    @theta.setter
+    def theta(self, theta):
+        self.longitudinal = LongitudinalObjectTheta(theta)
+
+    @property
+    def eta(self):
+        return super().eta
+
+    @eta.setter
+    def eta(self, eta):
+        self.longitudinal = LongitudinalObjectEta(eta)
+
+    @property
+    def t(self):
+        return super().t
+
+    @t.setter
+    def t(self, t):
+        self.temporal = TemporalObjectT(t)
+
+    @property
+    def tau(self):
+        return super().tau
+
+    @tau.setter
+    def tau(self, tau):
+        self.temporal = TemporalObjectTau(tau)
+
 
 class MomentumObject4D(LorentzMomentum, VectorObject4D):
     ProjectionClass2D = MomentumObject2D
@@ -551,6 +936,86 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
             y = _repr_generic_to_momentum.get(x, x)
             out.append(f"{y}={getattr(self.temporal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
+
+    @property
+    def px(self):
+        return super().px
+
+    @px.setter
+    def px(self, px):
+        self.azimuthal = AzimuthalObjectXY(px, self.py)
+
+    @property
+    def py(self):
+        return super().py
+
+    @py.setter
+    def py(self, py):
+        self.azimuthal = AzimuthalObjectXY(self.px, py)
+
+    @property
+    def pt(self):
+        return super().pt
+
+    @pt.setter
+    def pt(self, pt):
+        self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)
+
+    @property
+    def pz(self):
+        return super().pz
+
+    @pz.setter
+    def pz(self, pz):
+        self.longitudinal = LongitudinalObjectZ(pz)
+
+    @property
+    def E(self):
+        return super().E
+
+    @E.setter
+    def E(self, E):
+        self.temporal = TemporalObjectT(E)
+
+    @property
+    def e(self):
+        return super().e
+
+    @e.setter
+    def e(self, e):
+        self.temporal = TemporalObjectT(e)
+
+    @property
+    def energy(self):
+        return super().energy
+
+    @energy.setter
+    def energy(self, energy):
+        self.temporal = TemporalObjectT(energy)
+
+    @property
+    def M(self):
+        return super().M
+
+    @M.setter
+    def M(self, M):
+        self.temporal = TemporalObjectTau(M)
+
+    @property
+    def m(self):
+        return super().m
+
+    @m.setter
+    def m(self, m):
+        self.temporal = TemporalObjectTau(m)
+
+    @property
+    def mass(self):
+        return super().mass
+
+    @mass.setter
+    def mass(self, mass):
+        self.temporal = TemporalObjectTau(mass)
 
 
 def _gather_coordinates(planar_class, spatial_class, lorentz_class, coordinates):

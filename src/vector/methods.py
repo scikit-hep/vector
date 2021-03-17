@@ -1120,3 +1120,21 @@ class LorentzMomentum(SpatialMomentum):
     def transverse_mass2(self):
         "transverse_mass2 docs"
         return self.mt2
+
+
+def _handler(objects):
+    from .backends.numpy_ import VectorNumpy
+    from .backends.object_ import VectorObject
+    from .methods import Vector
+
+    handler = None
+    for obj in objects:
+        if isinstance(obj, Vector):
+            if handler is None:
+                handler = obj
+            elif isinstance(obj, VectorObject):
+                pass
+            elif isinstance(obj, VectorNumpy):
+                handler = obj
+
+    return handler
