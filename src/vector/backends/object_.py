@@ -140,6 +140,9 @@ class VectorObject:
     def __pow__(self, other):
         return numpy.power(self, other)
 
+    def __matmul__(self, other):
+        return numpy.matmul(self, other)
+
     def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
         if not isinstance(_handler(inputs), VectorObject):
             # Let the array-of-vectors object handle it.
