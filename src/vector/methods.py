@@ -1120,3 +1120,42 @@ class LorentzMomentum(SpatialMomentum):
     def transverse_mass2(self):
         "transverse_mass2 docs"
         return self.mt2
+
+
+def _lib_of(objects):
+    lib = None
+    for obj in objects:
+        if isinstance(obj, Vector):
+            if lib is None:
+                lib = obj.lib
+            elif lib is not obj.lib:
+                raise TypeError(
+                    f"cannot use {lib} and {obj.lib} in the same calculation"
+                )
+    return lib
+
+
+def _from_signature(name, dispatch_map, signature):
+    result = dispatch_map.get(signature)
+    if result is None:
+        raise TypeError(
+            f"function {repr('.'.join(name.split('.')[-2:]))} has no signature {signature}"
+        )
+    return result
+
+
+def _handler(objects):
+    from .backends.numpy_ import VectorNumpy
+    from .backends.object_ import VectorObject
+
+    handler = None
+    for obj in objects:
+        if isinstance(obj, Vector):
+            if handler is None:
+                handler = obj
+            elif isinstance(obj, VectorObject):
+                pass
+            elif isinstance(obj, VectorNumpy):
+                handler = obj
+
+    return handler

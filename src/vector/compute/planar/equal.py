@@ -6,7 +6,14 @@
 import numpy
 
 from vector.compute.planar import x, y
-from vector.methods import AzimuthalRhoPhi, AzimuthalXY, _aztype
+from vector.methods import (
+    AzimuthalRhoPhi,
+    AzimuthalXY,
+    _aztype,
+    _from_signature,
+    _handler,
+    _lib_of,
+)
 
 # Policy: turn (rho, phi) into (x, y)
 #         (if not already the same)
@@ -39,18 +46,18 @@ dispatch_map = {
 
 
 def dispatch(v1, v2):
-    if v1.lib is not v2.lib:
-        raise TypeError(
-            f"cannot use {v1} (requires {v1.lib}) and {v2} (requires {v1.lib}) together"
-        )
-    function, *returns = dispatch_map[
-        _aztype(v1),
-        _aztype(v2),
-    ]
+    function, *returns = _from_signature(
+        __name__,
+        dispatch_map,
+        (
+            _aztype(v1),
+            _aztype(v2),
+        ),
+    )
     with numpy.errstate(all="ignore"):
-        return v1._wrap_result(
+        return _handler((v1, v2))._wrap_result(
             function(
-                v1.lib,
+                _lib_of((v1, v2)),
                 *v1.azimuthal.elements,
                 *v2.azimuthal.elements,
             ),

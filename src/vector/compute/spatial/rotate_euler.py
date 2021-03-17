@@ -14,6 +14,7 @@ from vector.methods import (
     LongitudinalTheta,
     LongitudinalZ,
     _aztype,
+    _from_signature,
     _ltype,
 )
 
@@ -261,11 +262,15 @@ for azimuthal in (AzimuthalXY, AzimuthalRhoPhi):
 
 
 def dispatch(phi, theta, psi, order, v):
-    function, *returns = dispatch_map[
-        _aztype(v),
-        _ltype(v),
-        order,
-    ]
+    function, *returns = _from_signature(
+        __name__,
+        dispatch_map,
+        (
+            _aztype(v),
+            _ltype(v),
+            order,
+        ),
+    )
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
             function(

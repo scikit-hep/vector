@@ -12,6 +12,7 @@ from vector.methods import (
     LongitudinalTheta,
     LongitudinalZ,
     _aztype,
+    _from_signature,
     _ltype,
 )
 
@@ -71,10 +72,14 @@ dispatch_map = {
 
 
 def dispatch(factor, v):
-    function, *returns = dispatch_map[
-        _aztype(v),
-        _ltype(v),
-    ]
+    function, *returns = _from_signature(
+        __name__,
+        dispatch_map,
+        (
+            _aztype(v),
+            _ltype(v),
+        ),
+    )
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
             function(v.lib, factor, *v.azimuthal.elements, *v.longitudinal.elements),
