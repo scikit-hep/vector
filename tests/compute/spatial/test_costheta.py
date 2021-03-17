@@ -11,7 +11,7 @@ import vector.backends.object_
 
 
 def test_xy_z():
-    vec = vector.backends.object_.SpatialVectorObject(
+    vec = vector.backends.object_.VectorObject3D(
         vector.backends.object_.AzimuthalObjectXY(3, 4),
         vector.backends.object_.LongitudinalObjectZ(10),
     )
@@ -19,7 +19,7 @@ def test_xy_z():
 
 
 def test_xy_theta():
-    vec = vector.backends.object_.SpatialVectorObject(
+    vec = vector.backends.object_.VectorObject3D(
         vector.backends.object_.AzimuthalObjectXY(3, 4),
         vector.backends.object_.LongitudinalObjectTheta(0.4636476090008061),
     )
@@ -27,7 +27,7 @@ def test_xy_theta():
 
 
 def test_xy_eta():
-    vec = vector.backends.object_.SpatialVectorObject(
+    vec = vector.backends.object_.VectorObject3D(
         vector.backends.object_.AzimuthalObjectXY(3, 4),
         vector.backends.object_.LongitudinalObjectEta(1.4436354751788103),
     )
@@ -35,7 +35,7 @@ def test_xy_eta():
 
 
 def test_rhophi_z():
-    vec = vector.backends.object_.SpatialVectorObject(
+    vec = vector.backends.object_.VectorObject3D(
         vector.backends.object_.AzimuthalObjectRhoPhi(5, 0),
         vector.backends.object_.LongitudinalObjectZ(10),
     )
@@ -43,7 +43,7 @@ def test_rhophi_z():
 
 
 def test_rhophi_theta():
-    vec = vector.backends.object_.SpatialVectorObject(
+    vec = vector.backends.object_.VectorObject3D(
         vector.backends.object_.AzimuthalObjectRhoPhi(5, 0),
         vector.backends.object_.LongitudinalObjectTheta(0.4636476090008061),
     )
@@ -51,7 +51,7 @@ def test_rhophi_theta():
 
 
 def test_rhophi_eta():
-    vec = vector.backends.object_.SpatialVectorObject(
+    vec = vector.backends.object_.VectorObject3D(
         vector.backends.object_.AzimuthalObjectRhoPhi(5, 0),
         vector.backends.object_.LongitudinalObjectEta(1.4436354751788103),
     )

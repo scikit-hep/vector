@@ -6,14 +6,14 @@
 import numpy
 
 from vector.compute.spatial import costheta
-from vector.geometry import (
+from vector.methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
     LongitudinalEta,
     LongitudinalTheta,
     LongitudinalZ,
-    aztype,
-    ltype,
+    _aztype,
+    _ltype,
 )
 
 
@@ -42,21 +42,21 @@ def rhophi_eta(lib, rho, phi, eta):
 
 
 dispatch_map = {
-    (AzimuthalXY, LongitudinalZ): xy_z,
-    (AzimuthalXY, LongitudinalTheta): xy_theta,
-    (AzimuthalXY, LongitudinalEta): xy_eta,
-    (AzimuthalRhoPhi, LongitudinalZ): rhophi_z,
-    (AzimuthalRhoPhi, LongitudinalTheta): rhophi_theta,
-    (AzimuthalRhoPhi, LongitudinalEta): rhophi_eta,
+    (AzimuthalXY, LongitudinalZ): (xy_z, float),
+    (AzimuthalXY, LongitudinalTheta): (xy_theta, float),
+    (AzimuthalXY, LongitudinalEta): (xy_eta, float),
+    (AzimuthalRhoPhi, LongitudinalZ): (rhophi_z, float),
+    (AzimuthalRhoPhi, LongitudinalTheta): (rhophi_theta, float),
+    (AzimuthalRhoPhi, LongitudinalEta): (rhophi_eta, float),
 }
 
 
 def dispatch(v):
+    function, *returns = dispatch_map[
+        _aztype(v),
+        _ltype(v),
+    ]
     with numpy.errstate(all="ignore"):
-        return v.lib.nan_to_num(
-            dispatch_map[
-                aztype(v),
-                ltype(v),
-            ](v.lib, *v.azimuthal.elements, *v.longitudinal.elements),
-            nan=0.0,
+        return v._wrap_result(
+            function(v.lib, *v.azimuthal.elements, *v.longitudinal.elements), returns
         )
