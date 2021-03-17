@@ -365,27 +365,27 @@ class TemporalTau(Temporal):
 
 
 def _aztype(obj):
-    for t in type(obj.azimuthal).__mro__:
-        if t in (AzimuthalXY, AzimuthalRhoPhi):
-            return t
-    else:
-        return None
+    if hasattr(obj, "azimuthal"):
+        for t in type(obj.azimuthal).__mro__:
+            if t in (AzimuthalXY, AzimuthalRhoPhi):
+                return t
+    return None
 
 
 def _ltype(obj):
-    for t in type(obj.longitudinal).__mro__:
-        if t in (LongitudinalZ, LongitudinalTheta, LongitudinalEta):
-            return t
-    else:
-        return None
+    if hasattr(obj, "longitudinal"):
+        for t in type(obj.longitudinal).__mro__:
+            if t in (LongitudinalZ, LongitudinalTheta, LongitudinalEta):
+                return t
+    return None
 
 
 def _ttype(obj):
-    for t in type(obj.temporal).__mro__:
-        if t in (TemporalT, TemporalTau):
-            return t
-    else:
-        return None
+    if hasattr(obj, "temporal"):
+        for t in type(obj.temporal).__mro__:
+            if t in (TemporalT, TemporalTau):
+                return t
+    return None
 
 
 _coordinate_class_to_names = {

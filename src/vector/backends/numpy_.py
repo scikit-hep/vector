@@ -8,13 +8,11 @@ import collections.abc
 import numpy
 
 import vector.backends.object_
-import vector.compute.lorentz
-import vector.compute.planar
-import vector.compute.spatial
 from vector.methods import (
     Azimuthal,
     AzimuthalRhoPhi,
     AzimuthalXY,
+    Coordinates,
     Longitudinal,
     LongitudinalEta,
     LongitudinalTheta,
@@ -28,6 +26,7 @@ from vector.methods import (
     Temporal,
     TemporalT,
     TemporalTau,
+    Vector,
     Vector2D,
     Vector3D,
     Vector4D,
@@ -78,9 +77,30 @@ def _array_from_columns(columns):
     return array
 
 
+def _setitem(array, where, what, is_momentum):
+    if isinstance(where, str):
+        if is_momentum:
+            where = _repr_momentum_to_generic.get(where, where)
+        array.view(numpy.ndarray)[where] = what
+    else:
+        if hasattr(what, "dtype") and what.dtype.names is not None:
+            tofill = array[where]
+            for name in what.dtype.names:
+                if is_momentum:
+                    generic = _repr_momentum_to_generic.get(name, name)
+                tofill[generic] = what[name]
+        else:
+            raise TypeError(
+                "right-hand side of assignment must be a structured array with "
+                "the same fields as " + type(array).__name__
+            )
+
+
 def _getitem(array, where, is_momentum):
     if isinstance(where, str):
-        return array.view(numpy.ndarray)[_repr_momentum_to_generic.get(where, where)]
+        if is_momentum:
+            where = _repr_momentum_to_generic.get(where, where)
+        return array.view(numpy.ndarray)[where]
     else:
         out = numpy.ndarray.__getitem__(array, where)
         if isinstance(out, numpy.void):
@@ -175,7 +195,158 @@ class TemporalNumpy(CoordinatesNumpy):
 
 
 class VectorNumpy:
-    pass
+    def allclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
+        return self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan).all()
+
+    def __eq__(self, other):
+        return numpy.equal(self, other)
+
+    def __ne__(self, other):
+        return numpy.not_equal(self, other)
+
+    def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
+        if isinstance(self, Vector2D):
+            from vector.compute.planar import add, dot, equal, not_equal
+            from vector.compute.planar import rho as absolute
+            from vector.compute.planar import scale, subtract
+        elif isinstance(self, Vector3D):
+            from vector.compute.spatial import add, dot, equal
+            from vector.compute.spatial import mag as absolute
+            from vector.compute.spatial import not_equal, scale, subtract
+        elif isinstance(self, Vector4D):
+            from vector.compute.lorentz import (
+                add,
+                dot,
+                equal,
+                not_equal,
+                scale,
+                subtract,
+            )
+            from vector.compute.lorentz import tau as absolute
+
+        outputs = kwargs.get("out", ())
+
+        if ufunc is numpy.absolute:
+            result = absolute.dispatch(inputs[0])
+            for output in outputs:
+                for name in output.dtype.names:
+                    output[name] = result[name]
+            return result
+
+        elif ufunc is numpy.add:
+            result = add.dispatch(inputs[0], inputs[1])
+            for output in outputs:
+                for name in output.dtype.names:
+                    output[name] = result[name]
+            return result
+
+        elif ufunc is numpy.subtract:
+            result = subtract.dispatch(inputs[0], inputs[1])
+            for output in outputs:
+                for name in output.dtype.names:
+                    output[name] = result[name]
+            return result
+
+        elif ufunc is numpy.multiply and not isinstance(
+            inputs[0], (Vector, Coordinates)
+        ):
+            result = scale.dispatch(inputs[0], inputs[1])
+            for output in outputs:
+                for name in output.dtype.names:
+                    output[name] = result[name]
+            return result
+
+        elif ufunc is numpy.multiply and not isinstance(
+            inputs[1], (Vector, Coordinates)
+        ):
+            result = scale.dispatch(inputs[1], inputs[0])
+            for output in outputs:
+                for name in output.dtype.names:
+                    output[name] = result[name]
+            return result
+
+        elif ufunc is numpy.negative:
+            result = scale.dispatch(-1, inputs[0])
+            for output in outputs:
+                for name in output.dtype.names:
+                    output[name] = result[name]
+            return result
+
+        elif ufunc is numpy.positive:
+            result = inputs[0]
+            for output in outputs:
+                for name in output.dtype.names:
+                    output[name] = result[name]
+            return result
+
+        elif ufunc is numpy.true_divide and not isinstance(
+            inputs[1], (Vector, Coordinates)
+        ):
+            result = scale.dispatch(1 / inputs[1], inputs[0])
+            for output in outputs:
+                for name in output.dtype.names:
+                    output[name] = result[name]
+            return result
+
+        elif ufunc is numpy.power and not isinstance(inputs[1], (Vector, Coordinates)):
+            result = absolute.dispatch(inputs[0]) ** inputs[1]
+            for output in outputs:
+                for name in output.dtype.names:
+                    output[name] = result[name]
+            return result
+
+        elif ufunc is numpy.square:
+            result = absolute.dispatch(inputs[0]) ** 2
+            for output in outputs:
+                for name in output.dtype.names:
+                    output[name] = result[name]
+            return result
+
+        elif ufunc is numpy.sqrt:
+            result = numpy.sqrt(absolute.dispatch(inputs[0]))
+            for output in outputs:
+                for name in output.dtype.names:
+                    output[name] = result[name]
+            return result
+
+        elif ufunc is numpy.cbrt:
+            result = numpy.cbrt(absolute.dispatch(inputs[0]))
+            for output in outputs:
+                for name in output.dtype.names:
+                    output[name] = result[name]
+            return result
+
+        elif ufunc is numpy.matmul:
+            result = dot.dispatch(inputs[0], inputs[1])
+            for output in outputs:
+                for name in output.dtype.names:
+                    output[name] = result[name]
+            return result
+
+        elif ufunc is numpy.equal:
+            result = equal.dispatch(inputs[0], inputs[1])
+            for output in outputs:
+                for name in output.dtype.names:
+                    output[name] = result[name]
+            return result
+
+        elif ufunc is numpy.not_equal:
+            result = not_equal.dispatch(inputs[0], inputs[1])
+            for output in outputs:
+                for name in output.dtype.names:
+                    output[name] = result[name]
+            return result
+
+        else:
+            return NotImplemented
+
+    def __array_function__(self, func, types, args, kwargs):
+        if func is numpy.isclose:
+            return type(self).isclose(*args, **kwargs)
+        elif func is numpy.allclose:
+            return type(self).allclose(*args, **kwargs)
+        else:
+            return NotImplemented
 
 
 class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, numpy.ndarray):
@@ -417,6 +588,9 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):
     def __getitem__(self, where):
         return _getitem(self, where, False)
 
+    def __setitem__(self, where, what):
+        return _setitem(self, where, what, False)
+
 
 class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):
     ObjectClass = vector.backends.object_.MomentumObject2D
@@ -440,6 +614,9 @@ class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):
 
     def __getitem__(self, where):
         return _getitem(self, where, True)
+
+    def __setitem__(self, where, what):
+        return _setitem(self, where, what, True)
 
 
 class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
@@ -544,6 +721,9 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
     def __getitem__(self, where):
         return _getitem(self, where, False)
 
+    def __setitem__(self, where, what):
+        return _setitem(self, where, what, False)
+
 
 class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):
     ObjectClass = vector.backends.object_.MomentumObject3D
@@ -579,6 +759,9 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):
 
     def __getitem__(self, where):
         return _getitem(self, where, True)
+
+    def __setitem__(self, where, what):
+        return _setitem(self, where, what, True)
 
 
 class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
@@ -741,6 +924,9 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
     def __getitem__(self, where):
         return _getitem(self, where, False)
 
+    def __setitem__(self, where, what):
+        return _setitem(self, where, what, False)
+
 
 class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):
     ObjectClass = vector.backends.object_.MomentumObject4D
@@ -786,6 +972,9 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):
 
     def __getitem__(self, where):
         return _getitem(self, where, True)
+
+    def __setitem__(self, where, what):
+        return _setitem(self, where, what, True)
 
 
 def array(*args, **kwargs):

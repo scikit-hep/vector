@@ -51,7 +51,68 @@ class TemporalObject(CoordinatesObject):
 
 
 class VectorObject:
-    pass
+    def allclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
+        raise AssertionError("FIXME")
+
+    def __eq__(self, other):
+        raise AssertionError("FIXME")
+
+    def __ne__(self, other):
+        raise AssertionError("FIXME")
+
+    def __abs__(self):
+        raise AssertionError("FIXME")
+
+    def __add__(self, other):
+        raise AssertionError("FIXME")
+
+    def __iadd__(self, other):
+        raise AssertionError("FIXME")
+
+    def __radd__(self, other):
+        raise AssertionError("FIXME")
+
+    def __sub__(self, other):
+        raise AssertionError("FIXME")
+
+    def __isub__(self, other):
+        raise AssertionError("FIXME")
+
+    def __rsub__(self, other):
+        raise AssertionError("FIXME")
+
+    def __mul__(self, other):
+        raise AssertionError("FIXME")
+
+    def __imul__(self, other):
+        raise AssertionError("FIXME")
+
+    def __rmul__(self, other):
+        raise AssertionError("FIXME")
+
+    def __neg__(self):
+        raise AssertionError("FIXME")
+
+    def __pos__(self):
+        raise AssertionError("FIXME")
+
+    def __truediv__(self, other):
+        raise AssertionError("FIXME")
+
+    def __itruediv__(self, other):
+        raise AssertionError("FIXME")
+
+    def __rtruediv__(self, other):
+        raise AssertionError("FIXME")
+
+    def __pow__(self, other):
+        raise AssertionError("FIXME")
+
+    def __ipow__(self, other):
+        raise AssertionError("FIXME")
+
+    def __rpow__(self, other):
+        raise AssertionError("FIXME")
 
 
 class AzimuthalObjectXY(typing.NamedTuple):
