@@ -6,7 +6,14 @@
 import numpy
 
 from vector.compute.planar import dot, rho
-from vector.methods import AzimuthalRhoPhi, AzimuthalXY, _from_signature, _aztype, _handler, _lib_of
+from vector.methods import (
+    AzimuthalRhoPhi,
+    AzimuthalXY,
+    _aztype,
+    _from_signature,
+    _handler,
+    _lib_of,
+)
 
 dispatch_map = {}
 
@@ -34,10 +41,14 @@ for azimuthal1 in (AzimuthalXY, AzimuthalRhoPhi):
 
 
 def dispatch(tolerance, v1, v2):
-    function, *returns = _from_signature(__name__, dispatch_map, (
-        _aztype(v1),
-        _aztype(v2),
-    ))
+    function, *returns = _from_signature(
+        __name__,
+        dispatch_map,
+        (
+            _aztype(v1),
+            _aztype(v2),
+        ),
+    )
     with numpy.errstate(all="ignore"):
         return _handler((v1, v2))._wrap_result(
             function(

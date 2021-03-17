@@ -13,8 +13,10 @@ from vector.methods import (
     LongitudinalEta,
     LongitudinalTheta,
     LongitudinalZ,
-    _from_signature, _aztype,
-    _handler, _lib_of,
+    _aztype,
+    _from_signature,
+    _handler,
+    _lib_of,
     _ltype,
 )
 
@@ -109,12 +111,16 @@ for azimuthal1 in (AzimuthalXY, AzimuthalRhoPhi):
 
 
 def dispatch(v1, v2):
-    function, *returns = _from_signature(__name__, dispatch_map, (
-        _aztype(v1),
-        _ltype(v1),
-        _aztype(v2),
-        _ltype(v2),
-    ))
+    function, *returns = _from_signature(
+        __name__,
+        dispatch_map,
+        (
+            _aztype(v1),
+            _ltype(v1),
+            _aztype(v2),
+            _ltype(v2),
+        ),
+    )
     with numpy.errstate(all="ignore"):
         return _handler((v1, v2))._wrap_result(
             function(

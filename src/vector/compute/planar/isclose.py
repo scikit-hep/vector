@@ -6,7 +6,14 @@
 import numpy
 
 from vector.compute.planar import x, y
-from vector.methods import AzimuthalRhoPhi, AzimuthalXY, _from_signature, _aztype, _handler, _lib_of
+from vector.methods import (
+    AzimuthalRhoPhi,
+    AzimuthalXY,
+    _aztype,
+    _from_signature,
+    _handler,
+    _lib_of,
+)
 
 # Policy: turn (rho, phi) into (x, y)
 #         (if not already the same)
@@ -61,10 +68,14 @@ dispatch_map = {
 
 
 def dispatch(rtol, atol, equal_nan, v1, v2):
-    function, *returns = _from_signature(__name__, dispatch_map, (
-        _aztype(v1),
-        _aztype(v2),
-    ))
+    function, *returns = _from_signature(
+        __name__,
+        dispatch_map,
+        (
+            _aztype(v1),
+            _aztype(v2),
+        ),
+    )
     with numpy.errstate(all="ignore"):
         return _handler((v1, v2))._wrap_result(
             function(

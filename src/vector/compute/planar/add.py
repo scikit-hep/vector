@@ -6,7 +6,14 @@
 import numpy
 
 from vector.compute.planar import x, y
-from vector.methods import AzimuthalRhoPhi, AzimuthalXY, _from_signature, _aztype, _handler, _lib_of
+from vector.methods import (
+    AzimuthalRhoPhi,
+    AzimuthalXY,
+    _aztype,
+    _from_signature,
+    _handler,
+    _lib_of,
+)
 
 
 def rectify(lib, phi):
@@ -46,11 +53,16 @@ dispatch_map = {
 
 
 def dispatch(v1, v2):
-    function, *returns = _from_signature(__name__, dispatch_map, (
-        _aztype(v1),
-        _aztype(v2),
-    ))
+    function, *returns = _from_signature(
+        __name__,
+        dispatch_map,
+        (
+            _aztype(v1),
+            _aztype(v2),
+        ),
+    )
     with numpy.errstate(all="ignore"):
         return _handler((v1, v2))._wrap_result(
-            function(_lib_of((v1, v2)), *v1.azimuthal.elements, *v2.azimuthal.elements), returns
+            function(_lib_of((v1, v2)), *v1.azimuthal.elements, *v2.azimuthal.elements),
+            returns,
         )
