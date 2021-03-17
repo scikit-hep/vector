@@ -13,7 +13,7 @@ from vector.methods import (
     LongitudinalEta,
     LongitudinalTheta,
     LongitudinalZ,
-    _aztype,
+    _from_signature, _aztype,
     _ltype,
 )
 
@@ -94,10 +94,10 @@ for azimuthal in (AzimuthalXY, AzimuthalRhoPhi):
 
 
 def dispatch(u, i, j, k, vec):
-    function, *returns = dispatch_map[
+    function, *returns = _from_signature(__name__, dispatch_map, (
         _aztype(vec),
         _ltype(vec),
-    ]
+    ))
     with numpy.errstate(all="ignore"):
         return vec._wrap_result(
             function(

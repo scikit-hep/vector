@@ -13,8 +13,8 @@ from vector.methods import (
     LongitudinalEta,
     LongitudinalTheta,
     LongitudinalZ,
-    _aztype,
-    _handler,
+    _from_signature, _aztype,
+    _handler, _lib_of,
     _ltype,
 )
 
@@ -130,20 +130,16 @@ for azimuthal1 in (AzimuthalXY, AzimuthalRhoPhi):
 
 
 def dispatch(angle, v1, v2):
-    if v1.lib is not v2.lib:
-        raise TypeError(
-            f"cannot use {v1} (requires {v1.lib}) and {v2} (requires {v1.lib}) together"
-        )
-    function, *returns = dispatch_map[
+    function, *returns = _from_signature(__name__, dispatch_map, (
         _aztype(v1),
         _ltype(v1),
         _aztype(v2),
         _ltype(v2),
-    ]
+    ))
     with numpy.errstate(all="ignore"):
         return _handler((v1, v2))._wrap_result(
             function(
-                v1.lib,
+                _lib_of((v1, v2)),
                 angle,
                 *v1.azimuthal.elements,
                 *v1.longitudinal.elements,

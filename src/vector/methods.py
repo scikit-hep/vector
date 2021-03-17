@@ -1122,10 +1122,32 @@ class LorentzMomentum(SpatialMomentum):
         return self.mt2
 
 
+def _lib_of(objects):
+    lib = None
+    for obj in objects:
+        if isinstance(obj, Vector):
+            if lib is None:
+                lib = obj.lib
+            elif lib is not obj.lib:
+                raise TypeError(
+                    f"cannot use {v1} (requires {v1.lib}) and {v2} (requires {v1.lib}) "
+                    "in the same calculation"
+                )
+    return lib
+
+
+def _from_signature(name, dispatch_map, signature):
+    result = dispatch_map.get(signature)
+    if result is None:
+        raise TypeError(
+            f"function {repr('.'.join(name.split('.')[-2:]))} has no signature {signature}"
+        )
+    return result
+
+
 def _handler(objects):
     from .backends.numpy_ import VectorNumpy
     from .backends.object_ import VectorObject
-    from .methods import Vector
 
     handler = None
     for obj in objects:

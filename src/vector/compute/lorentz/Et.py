@@ -14,6 +14,7 @@ from vector.methods import (
     LongitudinalZ,
     TemporalT,
     TemporalTau,
+    _from_signature,
     _aztype,
     _ltype,
     _ttype,
@@ -89,11 +90,11 @@ dispatch_map = {
 
 
 def dispatch(v):
-    function, *returns = dispatch_map[
+    function, *returns = _from_signature(__name__, dispatch_map, (
         _aztype(v),
         _ltype(v),
         _ttype(v),
-    ]
+    ))
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
             function(
