@@ -1130,8 +1130,7 @@ def _lib_of(objects):
                 lib = obj.lib
             elif lib is not obj.lib:
                 raise TypeError(
-                    f"cannot use {v1} (requires {v1.lib}) and {v2} (requires {v1.lib}) "
-                    "in the same calculation"
+                    f"cannot use {lib} and {obj.lib} in the same calculation"
                 )
     return lib
 
