@@ -539,6 +539,18 @@ class Planar:
 
         return dot.dispatch(self, other)
 
+    def add(self, other):
+        "add docs"
+        from .compute.planar import add
+
+        return add.dispatch(self, other)
+
+    def subtract(self, other):
+        "subtract docs"
+        from .compute.planar import subtract
+
+        return subtract.dispatch(self, other)
+
     def scale(self, factor):
         "scale docs"
         from .compute.planar import scale
@@ -742,6 +754,18 @@ class Spatial(Planar):
 
         return dot.dispatch(self, other)
 
+    def add(self, other):
+        "add docs"
+        from .compute.spatial import add
+
+        return add.dispatch(self, other)
+
+    def subtract(self, other):
+        "subtract docs"
+        from .compute.spatial import subtract
+
+        return subtract.dispatch(self, other)
+
     def scale(self, factor):
         "scale docs"
         from .compute.spatial import scale
@@ -922,6 +946,18 @@ class Lorentz(Spatial):
         from .compute.lorentz import dot
 
         return dot.dispatch(self, other)
+
+    def add(self, other):
+        "add docs"
+        from .compute.lorentz import add
+
+        return add.dispatch(self, other)
+
+    def subtract(self, other):
+        "subtract docs"
+        from .compute.lorentz import subtract
+
+        return subtract.dispatch(self, other)
 
     def scale(self, factor):
         "scale docs"

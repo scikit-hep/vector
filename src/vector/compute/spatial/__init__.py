@@ -3,6 +3,7 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+import vector.compute.spatial.add  # noqa: F401
 import vector.compute.spatial.costheta  # noqa: F401
 import vector.compute.spatial.cottheta  # noqa: F401
 import vector.compute.spatial.cross  # noqa: F401
@@ -26,6 +27,7 @@ import vector.compute.spatial.rotate_quaternion  # noqa: F401
 import vector.compute.spatial.rotateX  # noqa: F401
 import vector.compute.spatial.rotateY  # noqa: F401
 import vector.compute.spatial.scale  # noqa: F401
+import vector.compute.spatial.subtract  # noqa: F401
 import vector.compute.spatial.theta  # noqa: F401
 import vector.compute.spatial.transform3D  # noqa: F401
 import vector.compute.spatial.unit  # noqa: F401
