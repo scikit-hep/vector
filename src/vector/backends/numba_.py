@@ -7,14 +7,7 @@ import numba
 import numba.core.typing
 import numba.core.typing.ctypes_utils
 
-from vector.backends.object_ import (
-    MomentumObject2D,
-    MomentumObject3D,
-    MomentumObject4D,
-    VectorObject2D,
-    VectorObject3D,
-    VectorObject4D,
-)
+from vector.backends.object_ import VectorObject2D
 
 
 class VectorObject2DType(numba.types.Type):

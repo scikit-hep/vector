@@ -5,15 +5,12 @@
 
 import sys
 
-import numpy
 import pytest
 
 import vector
 
 numba = pytest.importorskip("numba")
-
-
-import vector.backends.numba_
+pytest.importorskip("vector.backends.numba_")
 
 
 def test_namedtuples():
@@ -42,7 +39,7 @@ def test_VectorObject2DType():
     assert (sys.getrefcount(obj), sys.getrefcount(obj.azimuthal)) == (2, 2)
 
     class_refs = None
-    for i in range(10):
+    for _ in range(10):
         zero(obj)
         assert (sys.getrefcount(obj), sys.getrefcount(obj.azimuthal)) == (2, 2)
         if class_refs is None:
@@ -50,7 +47,7 @@ def test_VectorObject2DType():
         assert class_refs + 1 == sys.getrefcount(vector.backends.object_.VectorObject2D)
 
     class_refs = None
-    for i in range(10):
+    for _ in range(10):
         a = one(obj)
         assert (sys.getrefcount(obj), sys.getrefcount(obj.azimuthal)) == (2, 2)
         assert (sys.getrefcount(a), sys.getrefcount(a.azimuthal)) == (2, 2)
@@ -59,7 +56,7 @@ def test_VectorObject2DType():
         assert class_refs + 1 == sys.getrefcount(vector.backends.object_.VectorObject2D)
 
     class_refs = None
-    for i in range(10):
+    for _ in range(10):
         a, b = two(obj)
         assert (sys.getrefcount(obj), sys.getrefcount(obj.azimuthal)) == (2, 2)
         assert (
