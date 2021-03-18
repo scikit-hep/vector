@@ -53,7 +53,9 @@ def VectorObject2D_unbox(typ, obj, c):
 @numba.extending.box(VectorObject2DType)
 def VectorObject2D_box(typ, val, c):
     VectorObject2D_obj = c.pyapi.unserialize(c.pyapi.serialize_object(VectorObject2D))
-    proxyin = numba.core.cgutils.create_struct_proxy(typ)(c.context, c.builder, value=val)
+    proxyin = numba.core.cgutils.create_struct_proxy(typ)(
+        c.context, c.builder, value=val
+    )
     azimuthal_obj = c.pyapi.from_native_value(typ.azimuthaltype, proxyin.azimuthal)
     output_obj = c.pyapi.call_function_objargs(VectorObject2D_obj, (azimuthal_obj,))
     c.pyapi.decref(VectorObject2D_obj)

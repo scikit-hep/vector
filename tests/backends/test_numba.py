@@ -5,11 +5,10 @@
 
 import sys
 
-import pytest
 import numpy
+import pytest
 
 import vector
-
 
 numba = pytest.importorskip("numba")
 
@@ -63,7 +62,12 @@ def test_VectorObject2DType():
     for i in range(10):
         a, b = two(obj)
         assert (sys.getrefcount(obj), sys.getrefcount(obj.azimuthal)) == (2, 2)
-        assert (sys.getrefcount(a), sys.getrefcount(a.azimuthal), sys.getrefcount(b), sys.getrefcount(b.azimuthal)) == (2, 2, 2, 2)
+        assert (
+            sys.getrefcount(a),
+            sys.getrefcount(a.azimuthal),
+            sys.getrefcount(b),
+            sys.getrefcount(b.azimuthal),
+        ) == (2, 2, 2, 2)
         if class_refs is None:
             class_refs = sys.getrefcount(vector.backends.object_.VectorObject2D)
         assert class_refs + 1 == sys.getrefcount(vector.backends.object_.VectorObject2D)
