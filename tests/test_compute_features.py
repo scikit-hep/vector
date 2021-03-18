@@ -13,7 +13,6 @@ import vector.compute.lorentz
 import vector.compute.planar
 import vector.compute.spatial
 
-
 uncompyle6 = pytest.importorskip("uncompyle6")
 spark_parser = pytest.importorskip("spark_parser")
 
