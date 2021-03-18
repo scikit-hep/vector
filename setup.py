@@ -13,13 +13,9 @@ extras = {
         'numba>=0.50; python_version>="3" and python_version<"3.9"',
         "scikit-hep-testdata>=0.2.0",
         "pytest>=4.6",
-        "uncompyle6>=3.7.4",
-        "spark-parser>=1.8.9",
     ],
     "test": [
         "pytest>=4.6",
-        "uncompyle6>=3.7.4",
-        "spark-parser>=1.8.9",
     ],
 }
 

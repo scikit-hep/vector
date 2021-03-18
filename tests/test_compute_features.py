@@ -8,12 +8,15 @@ import inspect
 import sys
 
 import pytest
-import spark_parser
-import uncompyle6
 
 import vector.compute.lorentz
 import vector.compute.planar
 import vector.compute.spatial
+
+
+uncompyle6 = pytest.importorskip("uncompyle6")
+spark_parser = pytest.importorskip("spark_parser")
+
 
 Context = collections.namedtuple("Context", ["name", "closure"])
 
@@ -59,6 +62,12 @@ functions = dict(
 @pytest.mark.parametrize("signature", functions.keys())
 def test(signature):
     analyze_function(functions[signature])
+
+
+# def test():
+#     for signature, function in functions.items():
+#         print(signature)
+#         analyze_function(function)
 
 
 def analyze_function(function):
