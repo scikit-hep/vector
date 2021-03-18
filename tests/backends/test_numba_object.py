@@ -25,6 +25,10 @@ def test_namedtuples():
 
 
 def test_VectorObject2DType():
+    # These tests verify that the reference counts for Python objects touched in
+    # the lowered Numba code do not increase or decrease with the number of times
+    # the function is run.
+
     @numba.njit
     def zero(obj):
         return None
@@ -72,8 +76,32 @@ def test_VectorObject2DType():
         assert class_refs + 1 == sys.getrefcount(vector.backends.object_.VectorObject2D)
 
 
+def test_VectorObject2D_constructor():
+    @numba.njit
+    def constructXY():
+        return vector.backends.object_.VectorObject2D(
+            vector.backends.object_.AzimuthalObjectXY(1.1, 2.2)
+        )
+
+    @numba.njit
+    def constructRhoPhi():
+        return vector.backends.object_.VectorObject2D(
+            vector.backends.object_.AzimuthalObjectRhoPhi(1.1, 2.2)
+        )
+
+    out = constructXY()
+    assert isinstance(out, vector.backends.object_.VectorObject2D)
+    assert out.x == pytest.approx(1.1)
+    assert out.y == pytest.approx(2.2)
+
+    out = constructRhoPhi()
+    assert isinstance(out, vector.backends.object_.VectorObject2D)
+    assert out.rho == pytest.approx(1.1)
+    assert out.phi == pytest.approx(2.2)
+
+
 def test_property_float():
-    @numba.jit(nopython=True)
+    @numba.njit
     def get_x(v):
         return v.x
 

@@ -8,29 +8,34 @@ import numba.core.typing
 import numba.core.typing.ctypes_utils
 import numpy
 
-import vector.backends.object_
 from vector.backends.numba_ import numba_modules
-from vector.methods import (
-    AzimuthalRhoPhi,
-    AzimuthalXY,
-    LongitudinalEta,
-    LongitudinalTheta,
-    LongitudinalZ,
-    TemporalT,
-    TemporalTau,
-    _from_signature,
+from vector.backends.object_ import (
+    AzimuthalObject,
+    LongitudinalObject,
+    TemporalObject,
+    VectorObject2D,
 )
+from vector.methods import AzimuthalXY, _from_signature
 
 # Since CoordinateObjects are NamedTuples, we get their types wrapped for free.
-coordtype = {
-    numba.typeof(vector.backends.object_.AzimuthalObjectXY): AzimuthalXY,
-    numba.typeof(vector.backends.object_.AzimuthalObjectRhoPhi): AzimuthalRhoPhi,
-    numba.typeof(vector.backends.object_.LongitudinalObjectZ): LongitudinalZ,
-    numba.typeof(vector.backends.object_.LongitudinalObjectTheta): LongitudinalTheta,
-    numba.typeof(vector.backends.object_.LongitudinalObjectEta): LongitudinalEta,
-    numba.typeof(vector.backends.object_.TemporalObjectT): TemporalT,
-    numba.typeof(vector.backends.object_.TemporalObjectTau): TemporalTau,
-}
+
+
+def is_azimuthaltype(typ):
+    return isinstance(typ, numba.types.NamedUniTuple) and issubclass(
+        typ.instance_class, AzimuthalObject
+    )
+
+
+def is_longitudinaltype(typ):
+    return isinstance(typ, numba.types.NamedUniTuple) and issubclass(
+        typ.instance_class, LongitudinalObject
+    )
+
+
+def is_temporaltype(typ):
+    return isinstance(typ, numba.types.NamedUniTuple) and issubclass(
+        typ.instance_class, TemporalObject
+    )
 
 
 class VectorObject2DType(numba.types.Type):
@@ -48,12 +53,30 @@ class VectorObject2DModel(numba.extending.models.StructModel):
         super().__init__(dmm, fe_type, members)
 
 
-@numba.extending.typeof_impl.register(vector.backends.object_.VectorObject2D)
+@numba.extending.typeof_impl.register(VectorObject2D)
 def VectorObject2D_typeof(val, c):
     return VectorObject2DType(numba.typeof(val.azimuthal))
 
 
 numba.extending.make_attribute_wrapper(VectorObject2DType, "azimuthal", "azimuthal")
+
+
+@numba.extending.type_callable(VectorObject2D)
+def VectorObject2D_constructor_typer(context):
+    def typer(azimuthaltype):
+        if is_azimuthaltype(azimuthaltype):
+            return VectorObject2DType(azimuthaltype)
+
+    return typer
+
+
+@numba.extending.lower_builtin(VectorObject2D, numba.types.Type)
+@numba.extending.lower_builtin(VectorObject2D, numba.types.Type)
+def VectorObject2D_constructor(context, builder, sig, args):
+    typ = sig.return_type
+    proxyout = numba.core.cgutils.create_struct_proxy(typ)(context, builder)
+    proxyout.azimuthal = args[0]
+    return proxyout._getvalue()
 
 
 @numba.extending.unbox(VectorObject2DType)
@@ -68,9 +91,7 @@ def VectorObject2D_unbox(typ, obj, c):
 
 @numba.extending.box(VectorObject2DType)
 def VectorObject2D_box(typ, val, c):
-    VectorObject2D_obj = c.pyapi.unserialize(
-        c.pyapi.serialize_object(vector.backends.object_.VectorObject2D)
-    )
+    VectorObject2D_obj = c.pyapi.unserialize(c.pyapi.serialize_object(VectorObject2D))
     proxyin = numba.core.cgutils.create_struct_proxy(typ)(
         c.context, c.builder, value=val
     )

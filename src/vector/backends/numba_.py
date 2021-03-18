@@ -3,6 +3,7 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+import sys
 import types
 import typing
 
@@ -16,7 +17,7 @@ import vector.compute.spatial
 def make_dispatcher(function, new_module):
     new_function = types.FunctionType(
         function.__code__,
-        new_module.__dict__,
+        new_module.__dict__,  # make the function's surrounding scope the new module
         function.__name__,
         function.__defaults__,
         function.__closure__,
@@ -24,22 +25,32 @@ def make_dispatcher(function, new_module):
     return numba.jit(nopython=True)(new_function)
 
 
-scope = [
+names_and_modules = [
     ("planar", vector.compute.planar),
     ("spatial", vector.compute.spatial),
     ("lorentz", vector.compute.lorentz),
 ]
 
 numba_modules: typing.Any = {}
-for groupname, module in scope:
+
+# Make a copy of all the vector.compute.* modules to be wrapped as CPUDispatchers,
+# leaving the originals untouched so they still work in TensorFlow/JAX/Torch/whatever.
+for groupname, module in names_and_modules:
     numba_modules[groupname] = {}
     for modname, submodule in module.__dict__.items():
         if isinstance(submodule, types.ModuleType) and submodule.__name__.startswith(
             "vector.compute."
         ):
-            new_module = types.ModuleType("<dynamic>")
+            # Dynamically created modules need to be in sys.modules for Numba.
+            new_name = submodule.__name__.replace(
+                "vector.compute.", "vector.compute.numba."
+            )
+            new_module = types.ModuleType(new_name)
+            sys.modules[new_name] = new_module
             numba_modules[groupname][modname] = {None: new_module}
             copied = {}
+
+            # Copy (and Numbafy) all the functions defined in this module except "dispatch".
             for name, obj in submodule.__dict__.items():
                 if (
                     isinstance(obj, types.FunctionType)
@@ -50,6 +61,8 @@ for groupname, module in scope:
                     copied[obj] = copied_function
                     setattr(new_module, name, copied_function)
 
+            # Copy (and Numbafy) all the functions in the dispatch_map that aren't
+            # defined at module-level.
             for key, value in getattr(submodule, "dispatch_map").items():
                 function, *returns = value
                 if function not in copied:
@@ -59,7 +72,9 @@ for groupname, module in scope:
                     [copied[function]] + returns
                 )
 
-for groupname, module in scope:
+# Now do a second pass, in which references to other modules in the old set are
+# replaced with the corresponding modules in the new set.
+for groupname, module in names_and_modules:
     for modname, submodule in module.__dict__.items():
         if isinstance(submodule, types.ModuleType) and submodule.__name__.startswith(
             "vector.compute."
