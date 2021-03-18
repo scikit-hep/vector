@@ -14,7 +14,9 @@ extras = {
         "scikit-hep-testdata>=0.2.0",
         "pytest>=4.6",
     ],
-    "test": ["pytest>=4.6"],
+    "test": [
+        "pytest>=4.6",
+    ],
 }
 
 extras["all"] = sum(extras.values(), [])

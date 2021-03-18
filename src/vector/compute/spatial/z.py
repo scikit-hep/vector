@@ -23,7 +23,7 @@ def xy_z(lib, x, y, z):
 
 
 def xy_theta(lib, x, y, theta):
-    return lib.nan_to_num(rho.xy(lib, x, y) / lib.tan(theta), 0.0)
+    return lib.nan_to_num(rho.xy(lib, x, y) / lib.tan(theta), nan=0.0)
 
 
 def xy_eta(lib, x, y, eta):
@@ -35,7 +35,7 @@ def rhophi_z(lib, rho, phi, z):
 
 
 def rhophi_theta(lib, rho, phi, theta):
-    return lib.nan_to_num(rho / lib.tan(theta), 0.0)
+    return lib.nan_to_num(rho / lib.tan(theta), nan=0.0)
 
 
 def rhophi_eta(lib, rho, phi, eta):
