@@ -3,54 +3,74 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+import types
+import typing
+
 import numba
-import numba.core.typing
-import numba.core.typing.ctypes_utils
 
-from vector.backends.object_ import VectorObject2D
-
-
-class VectorObject2DType(numba.types.Type):
-    def __init__(self, azimuthaltype):
-        super().__init__(name=f"VectorObject2DType({azimuthaltype})")
-        self.azimuthaltype = azimuthaltype
+import vector.compute.lorentz
+import vector.compute.planar
+import vector.compute.spatial
 
 
-@numba.extending.register_model(VectorObject2DType)
-class VectorObject2DModel(numba.extending.models.StructModel):
-    def __init__(self, dmm, fe_type):
-        members = [
-            ("azimuthal", fe_type.azimuthaltype),
-        ]
-        super().__init__(dmm, fe_type, members)
-
-
-@numba.extending.typeof_impl.register(VectorObject2D)
-def VectorObject2D_typeof(val, c):
-    return VectorObject2DType(numba.typeof(val.azimuthal))
-
-
-numba.extending.make_attribute_wrapper(VectorObject2DType, "azimuthal", "azimuthal")
-
-
-@numba.extending.unbox(VectorObject2DType)
-def VectorObject2D_unbox(typ, obj, c):
-    azimuthal_obj = c.pyapi.object_getattr_string(obj, "azimuthal")
-    proxyout = numba.core.cgutils.create_struct_proxy(typ)(c.context, c.builder)
-    proxyout.azimuthal = c.pyapi.to_native_value(typ.azimuthaltype, azimuthal_obj).value
-    c.pyapi.decref(azimuthal_obj)
-    is_error = numba.core.cgutils.is_not_null(c.builder, c.pyapi.err_occurred())
-    return numba.extending.NativeValue(proxyout._getvalue(), is_error)
-
-
-@numba.extending.box(VectorObject2DType)
-def VectorObject2D_box(typ, val, c):
-    VectorObject2D_obj = c.pyapi.unserialize(c.pyapi.serialize_object(VectorObject2D))
-    proxyin = numba.core.cgutils.create_struct_proxy(typ)(
-        c.context, c.builder, value=val
+def make_dispatcher(function, new_module):
+    new_function = types.FunctionType(
+        function.__code__,
+        new_module.__dict__,
+        function.__name__,
+        function.__defaults__,
+        function.__closure__,
     )
-    azimuthal_obj = c.pyapi.from_native_value(typ.azimuthaltype, proxyin.azimuthal)
-    output_obj = c.pyapi.call_function_objargs(VectorObject2D_obj, (azimuthal_obj,))
-    c.pyapi.decref(VectorObject2D_obj)
-    c.pyapi.decref(azimuthal_obj)
-    return output_obj
+    return numba.jit(nopython=True)(new_function)
+
+
+scope = [
+    ("planar", vector.compute.planar),
+    ("spatial", vector.compute.spatial),
+    ("lorentz", vector.compute.lorentz),
+]
+
+numba_modules: typing.Any = {}
+for groupname, module in scope:
+    numba_modules[groupname] = {}
+    for modname, submodule in module.__dict__.items():
+        if isinstance(submodule, types.ModuleType) and submodule.__name__.startswith(
+            "vector.compute."
+        ):
+            new_module = types.ModuleType("<dynamic>")
+            numba_modules[groupname][modname] = {None: new_module}
+            copied = {}
+            for name, obj in submodule.__dict__.items():
+                if (
+                    isinstance(obj, types.FunctionType)
+                    and name != "dispatch"
+                    and obj.__module__ == submodule.__name__
+                ):
+                    copied_function = make_dispatcher(obj, new_module)
+                    copied[obj] = copied_function
+                    setattr(new_module, name, copied_function)
+
+            for key, value in getattr(submodule, "dispatch_map").items():
+                function, *returns = value
+                if function not in copied:
+                    copied_function = make_dispatcher(function, new_module)
+                    copied[function] = copied_function
+                numba_modules[groupname][modname][key] = tuple(
+                    [copied[function]] + returns
+                )
+
+for groupname, module in scope:
+    for modname, submodule in module.__dict__.items():
+        if isinstance(submodule, types.ModuleType) and submodule.__name__.startswith(
+            "vector.compute."
+        ):
+            for name, refmodule in submodule.__dict__.items():
+                if isinstance(
+                    refmodule, types.ModuleType
+                ) and refmodule.__name__.startswith("vector.compute."):
+                    splitname = refmodule.__name__.split(".")
+                    setattr(
+                        numba_modules[groupname][modname][None],
+                        name,
+                        numba_modules[splitname[2]][splitname[3]][None],
+                    )

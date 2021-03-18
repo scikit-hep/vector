@@ -5,12 +5,14 @@
 
 import sys
 
+import numpy
 import pytest
 
 import vector
+import vector.backends.object_
 
 numba = pytest.importorskip("numba")
-pytest.importorskip("vector.backends.numba_")
+pytest.importorskip("vector.backends.numba_object")
 
 
 def test_namedtuples():
@@ -23,15 +25,15 @@ def test_namedtuples():
 
 
 def test_VectorObject2DType():
-    @numba.njit(debug=True)
+    @numba.njit
     def zero(obj):
         return None
 
-    @numba.njit(debug=True)
+    @numba.njit
     def one(obj):
         return obj
 
-    @numba.njit(debug=True)
+    @numba.njit
     def two(obj):
         return obj, obj
 
@@ -68,3 +70,21 @@ def test_VectorObject2DType():
         if class_refs is None:
             class_refs = sys.getrefcount(vector.backends.object_.VectorObject2D)
         assert class_refs + 1 == sys.getrefcount(vector.backends.object_.VectorObject2D)
+
+
+def test_property_float():
+    @numba.jit(nopython=True)
+    def get_x(v):
+        return v.x
+
+    assert get_x(vector.obj(x=1.1, y=2)) == pytest.approx(1.1)
+
+
+def test_method_float():
+    @numba.njit
+    def get_deltaphi(v1, v2):
+        return v1.deltaphi(v2)
+
+    assert get_deltaphi(vector.obj(x=1, y=0), vector.obj(x=0, y=1)) == pytest.approx(
+        -numpy.pi / 2
+    )
