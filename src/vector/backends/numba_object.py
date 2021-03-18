@@ -11,6 +11,7 @@ import numpy
 from vector.backends.numba_ import numba_modules
 from vector.backends.object_ import (
     AzimuthalObject,
+    AzimuthalObjectXY,
     LongitudinalObject,
     TemporalObject,
     VectorObject2D,
@@ -103,13 +104,13 @@ def VectorObject2D_box(typ, val, c):
 
 
 @numba.extending.overload_attribute(VectorObject2DType, "x")
-def VectorObject2D_x(vec):
+def VectorObject2D_x(v):
     function, *returns = _from_signature(
         "", numba_modules["planar"]["x"], (AzimuthalXY,)
     )
 
-    def VectorObject2D_x_impl(vec):
-        return function(numpy, vec.azimuthal.x, vec.azimuthal.y)
+    def VectorObject2D_x_impl(v):
+        return function(numpy, v.azimuthal.x, v.azimuthal.y)
 
     return VectorObject2D_x_impl
 
@@ -127,3 +128,17 @@ def VectorObject2D_deltaphi(v1, v2):
             )
 
         return VectorObject2D_deltaphi_impl
+
+
+@numba.extending.overload_method(VectorObject2DType, "rotateZ")
+def VectorObject2D_rotateZ(v, angle):
+    if isinstance(angle, (numba.types.Integer, numba.types.Float)):
+        function, *returns = _from_signature(
+            "", numba_modules["planar"]["rotateZ"], (AzimuthalXY,)
+        )
+
+        def VectorObject2D_rotateZ_impl(v, angle):
+            x, y = function(numpy, angle, v.azimuthal.x, v.azimuthal.y)
+            return VectorObject2D(AzimuthalObjectXY(x, y))
+
+        return VectorObject2D_rotateZ_impl

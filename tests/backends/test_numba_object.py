@@ -116,3 +116,14 @@ def test_method_float():
     assert get_deltaphi(vector.obj(x=1, y=0), vector.obj(x=0, y=1)) == pytest.approx(
         -numpy.pi / 2
     )
+
+
+def test_method_vector():
+    @numba.njit
+    def get_rotateZ(v, angle):
+        return v.rotateZ(angle)
+
+    out = get_rotateZ(vector.obj(x=1, y=0), 0.1)
+    assert isinstance(out, vector.backends.object_.VectorObject2D)
+    assert out.x == pytest.approx(0.9950041652780258)
+    assert out.y == pytest.approx(0.09983341664682815)
