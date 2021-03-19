@@ -372,8 +372,12 @@ def MomentumObject4D_constructor_typer(context):
     return typer
 
 
-@numba.extending.lower_builtin(VectorObject4D, numba.types.Type, numba.types.Type, numba.types.Type)
-@numba.extending.lower_builtin(MomentumObject4D, numba.types.Type, numba.types.Type, numba.types.Type)
+@numba.extending.lower_builtin(
+    VectorObject4D, numba.types.Type, numba.types.Type, numba.types.Type
+)
+@numba.extending.lower_builtin(
+    MomentumObject4D, numba.types.Type, numba.types.Type, numba.types.Type
+)
 def VectorObject4D_constructor_impl(context, builder, sig, args):
     typ = sig.return_type
     proxyout = numba.core.cgutils.create_struct_proxy(typ)(context, builder)
