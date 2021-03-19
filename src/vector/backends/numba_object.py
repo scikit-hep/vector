@@ -81,16 +81,31 @@ def numba_ttype(typ):
     raise AssertionError
 
 
+coord_object_type = {
+    AzimuthalXY: AzimuthalObjectXY,
+    AzimuthalRhoPhi: AzimuthalObjectRhoPhi,
+    LongitudinalZ: LongitudinalObjectZ,
+    LongitudinalTheta: LongitudinalObjectTheta,
+    LongitudinalEta: LongitudinalObjectEta,
+    TemporalT: TemporalObjectT,
+    TemporalTau: TemporalObjectTau,
+}
+
+
 # VectorObject2D (and momentum) ###############################################
 
 
 class VectorObject2DType(numba.types.Type):
+    instance_class = VectorObject2D
+
     def __init__(self, azimuthaltype):
         super().__init__(name=f"VectorObject2DType({azimuthaltype})")
         self.azimuthaltype = azimuthaltype
 
 
 class MomentumObject2DType(VectorObject2DType):
+    instance_class = MomentumObject2D
+
     def __init__(self, azimuthaltype):
         super().__init__(azimuthaltype)
         self.name = f"MomentumObject2DType({azimuthaltype})"
@@ -183,6 +198,8 @@ def VectorObject2D_box(typ, val, c):
 
 
 class VectorObject3DType(numba.types.Type):
+    instance_class = VectorObject3D
+
     def __init__(self, azimuthaltype, longitudinaltype):
         super().__init__(
             name=f"VectorObject3DType({azimuthaltype}, {longitudinaltype})"
@@ -192,6 +209,8 @@ class VectorObject3DType(numba.types.Type):
 
 
 class MomentumObject3DType(VectorObject3DType):
+    instance_class = MomentumObject3D
+
     def __init__(self, azimuthaltype, longitudinaltype):
         super().__init__(azimuthaltype, longitudinaltype)
         self.name = f"MomentumObject3DType({azimuthaltype}, {longitudinaltype})"
@@ -309,6 +328,8 @@ def VectorObject3D_box(typ, val, c):
 
 
 class VectorObject4DType(numba.types.Type):
+    instance_class = VectorObject4D
+
     def __init__(self, azimuthaltype, longitudinaltype, temporaltype):
         super().__init__(
             name=f"VectorObject4DType({azimuthaltype}, {longitudinaltype}, {temporaltype})"
@@ -319,6 +340,8 @@ class VectorObject4DType(numba.types.Type):
 
 
 class MomentumObject4DType(VectorObject4DType):
+    instance_class = MomentumObject4D
+
     def __init__(self, azimuthaltype, longitudinaltype, temporaltype):
         super().__init__(azimuthaltype, longitudinaltype, temporaltype)
         self.name = (
@@ -1072,22 +1095,187 @@ for propertyname in lorentz_momentum_properties:
     for vectortype in (MomentumObject4DType,):
         add_lorentz_property(vectortype, propertyname)
 
+planar_binary_methods = ["deltaphi"]
+spatial_binary_methods = ["deltaangle", "deltaeta", "deltaR", "deltaR2"]
+lorentz_binary_methods = ["boost_p4"]
+general_binary_methods = ["dot", "add", "subtract", "equal", "not_equal"]
 
-@numba.extending.overload_method(VectorObject2DType, "deltaphi")
-def VectorObject2D_deltaphi(v1, v2):
-    if isinstance(v2, VectorObject2DType):
+
+def add_binary_method(vectortype, groupname, methodname):
+    @numba.extending.overload_method(vectortype, methodname)
+    def overloader(v1, v2):
+        if issubclass(vectortype, VectorObject2DType):
+            signature = (numba_aztype(v1), numba_aztype(v2))
+            coord11 = getcoord1[numba_aztype(v1)]
+            coord12 = getcoord2[numba_aztype(v1)]
+            coord21 = getcoord1[numba_aztype(v2)]
+            coord22 = getcoord2[numba_aztype(v2)]
+
+        elif issubclass(vectortype, VectorObject3DType):
+            signature = (
+                numba_aztype(v1),
+                numba_ltype(v1),
+                numba_aztype(v2),
+                numba_ltype(v2),
+            )
+            coord11 = getcoord1[numba_aztype(v1)]
+            coord12 = getcoord2[numba_aztype(v1)]
+            coord13 = getcoord1[numba_ltype(v1)]
+            coord21 = getcoord1[numba_aztype(v2)]
+            coord22 = getcoord2[numba_aztype(v2)]
+            coord23 = getcoord1[numba_ltype(v2)]
+
+        elif issubclass(vectortype, VectorObject4DType):
+            signature = (
+                numba_aztype(v1),
+                numba_ltype(v1),
+                numba_ttype(v1),
+                numba_aztype(v2),
+                numba_ltype(v2),
+                numba_ttype(v2),
+            )
+            coord11 = getcoord1[numba_aztype(v1)]
+            coord12 = getcoord2[numba_aztype(v1)]
+            coord13 = getcoord1[numba_ltype(v1)]
+            coord14 = getcoord1[numba_ttype(v1)]
+            coord21 = getcoord1[numba_aztype(v2)]
+            coord22 = getcoord2[numba_aztype(v2)]
+            coord23 = getcoord1[numba_ltype(v2)]
+            coord24 = getcoord1[numba_ttype(v2)]
+
         function, *returns = _from_signature(
-            "",
-            numba_modules["planar"]["deltaphi"],
-            (numba_aztype(v1), numba_aztype(v2)),
+            "", numba_modules[groupname][methodname], signature
         )
 
-        def VectorObject2D_deltaphi_impl(v1, v2):
-            return function(
-                numpy, v1.azimuthal.x, v1.azimuthal.y, v2.azimuthal.x, v2.azimuthal.y
-            )
+        if returns == [bool] or returns == [float]:
+            if issubclass(vectortype, VectorObject2DType):
 
-        return VectorObject2D_deltaphi_impl
+                def overloader_impl(v1, v2):
+                    return function(
+                        numpy, coord11(v1), coord12(v1), coord21(v2), coord22(v2)
+                    )
+
+            elif issubclass(vectortype, VectorObject3DType):
+
+                def overloader_impl(v1, v2):
+                    return function(
+                        numpy,
+                        coord11(v1),
+                        coord12(v1),
+                        coord13(v1),
+                        coord21(v2),
+                        coord22(v2),
+                        coord23(v2),
+                    )
+
+            elif issubclass(vectortype, VectorObject4DType):
+
+                def overloader_impl(v1, v2):
+                    return function(
+                        numpy,
+                        coord11(v1),
+                        coord12(v1),
+                        coord13(v1),
+                        coord14(v1),
+                        coord21(v2),
+                        coord22(v2),
+                        coord23(v2),
+                        coord24(v2),
+                    )
+
+        else:
+            instance_class = vectortype.instance_class
+
+            if issubclass(vectortype, VectorObject2DType):
+                azcoords = coord_object_type[returns[0]]
+
+                def overloader_impl(v1, v2):
+                    out1, out2 = function(
+                        numpy, coord11(v1), coord12(v1), coord21(v2), coord22(v2)
+                    )
+                    return instance_class(azcoords(out1, out2))
+
+            elif issubclass(vectortype, VectorObject3DType):
+                azcoords = coord_object_type[returns[0]]
+                lcoords = coord_object_type[returns[1]]
+
+                def overloader_impl(v1, v2):
+                    out1, out2, out3 = function(
+                        numpy,
+                        coord11(v1),
+                        coord12(v1),
+                        coord13(v1),
+                        coord21(v2),
+                        coord22(v2),
+                        coord23(v2),
+                    )
+                    return instance_class(azcoords(out1, out2), lcoords(out3))
+
+            elif issubclass(vectortype, VectorObject4DType):
+                azcoords = coord_object_type[returns[0]]
+                lcoords = coord_object_type[returns[1]]
+                tcoords = coord_object_type[returns[2]]
+
+                def overloader_impl(v1, v2):
+                    out1, out2, out3, out4 = function(
+                        numpy,
+                        coord11(v1),
+                        coord12(v1),
+                        coord13(v1),
+                        coord14(v1),
+                        coord21(v2),
+                        coord22(v2),
+                        coord23(v2),
+                        coord24(v2),
+                    )
+                    return instance_class(
+                        azcoords(out1, out2), lcoords(out3), tcoords(out4)
+                    )
+
+        return overloader_impl
+
+
+for methodname in planar_binary_methods:
+    for vectortype in (
+        VectorObject2DType,
+        MomentumObject2DType,
+        VectorObject3DType,
+        MomentumObject3DType,
+        VectorObject4DType,
+        MomentumObject4DType,
+    ):
+        add_binary_method(vectortype, "planar", methodname)
+
+for methodname in spatial_binary_methods:
+    for vectortype in (
+        VectorObject3DType,
+        MomentumObject3DType,
+        VectorObject4DType,
+        MomentumObject4DType,
+    ):
+        add_binary_method(vectortype, "spatial", methodname)
+
+for methodname in lorentz_binary_methods:
+    for vectortype in (
+        VectorObject4DType,
+        MomentumObject4DType,
+    ):
+        add_binary_method(vectortype, "lorentz", methodname)
+
+for methodname in general_binary_methods:
+    for vectortype in (VectorObject2DType, MomentumObject2DType):
+        add_binary_method(vectortype, "planar", methodname)
+
+for methodname in general_binary_methods:
+    for vectortype in (VectorObject3DType, MomentumObject3DType):
+        add_binary_method(vectortype, "spatial", methodname)
+
+for methodname in general_binary_methods:
+    for vectortype in (VectorObject4DType, MomentumObject4DType):
+        add_binary_method(vectortype, "lorentz", methodname)
+
+
+# TODO: the rest are special in one way or another. They need to be overloaded individually.
 
 
 @numba.extending.overload_method(VectorObject2DType, "rotateZ")

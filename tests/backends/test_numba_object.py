@@ -453,7 +453,7 @@ def test_property_float():
     )
 
 
-def test_method_float():
+def test_planar_method_float():
     @numba.njit
     def get_deltaphi(v1, v2):
         return v1.deltaphi(v2)
@@ -469,7 +469,34 @@ def test_method_float():
     ) == pytest.approx(-numpy.pi / 2)
 
 
+def test_spatial_method_float():
+    @numba.njit
+    def get_deltaeta(v1, v2):
+        return v1.deltaeta(v2)
+
+    assert get_deltaeta(
+        vector.obj(x=1, y=0, eta=2.5), vector.obj(x=0, y=1, eta=1)
+    ) == pytest.approx(1.5)
+
+
 def test_method_vector():
+    @numba.njit
+    def get_add(v1, v2):
+        return v1.add(v2)
+
+    out = get_add(vector.obj(x=1.1, y=2.2), vector.obj(x=3, y=4))
+    assert isinstance(out, vector.backends.object_.VectorObject2D)
+    assert out.x == pytest.approx(4.1)
+    assert out.y == pytest.approx(6.2)
+
+    out = get_add(vector.obj(x=1.1, y=2.2, z=3.3), vector.obj(x=3, y=4, z=5))
+    assert isinstance(out, vector.backends.object_.VectorObject3D)
+    assert out.x == pytest.approx(4.1)
+    assert out.y == pytest.approx(6.2)
+    assert out.z == pytest.approx(8.3)
+
+
+def test_rotate():
     @numba.njit
     def get_rotateZ(v, angle):
         return v.rotateZ(angle)
