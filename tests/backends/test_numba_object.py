@@ -405,8 +405,52 @@ def test_property_float():
     def get_x(v):
         return v.x
 
+    @numba.njit
+    def get_z(v):
+        return v.z
+
+    @numba.njit
+    def get_t(v):
+        return v.t
+
+    @numba.njit
+    def get_Et(v):
+        return v.Et
+
     assert get_x(vector.obj(x=1.1, y=2)) == pytest.approx(1.1)
     assert get_x(vector.obj(px=1.1, py=2)) == pytest.approx(1.1)
+    assert get_x(vector.obj(x=1.1, y=2, z=3)) == pytest.approx(1.1)
+    assert get_x(vector.obj(px=1.1, py=2, pz=3)) == pytest.approx(1.1)
+    assert get_x(vector.obj(x=1.1, y=2, z=3, t=4)) == pytest.approx(1.1)
+    assert get_x(vector.obj(px=1.1, py=2, pz=3, E=4)) == pytest.approx(1.1)
+
+    assert get_x(vector.obj(rho=1, phi=0)) == pytest.approx(1)
+    assert get_x(vector.obj(rho=1, phi=numpy.pi / 4)) == pytest.approx(
+        1 / numpy.sqrt(2)
+    )
+    assert get_x(vector.obj(rho=1, phi=numpy.pi / 2)) == pytest.approx(0)
+
+    with pytest.raises(numba.TypingError):
+        get_z(vector.obj(x=1, y=2))
+    assert get_z(vector.obj(x=1, y=2, z=3)) == pytest.approx(3)
+    assert get_z(vector.obj(px=1, py=2, pz=3)) == pytest.approx(3)
+
+    with pytest.raises(numba.TypingError):
+        get_t(vector.obj(x=1, y=2))
+    with pytest.raises(numba.TypingError):
+        get_t(vector.obj(x=1, y=2, z=3))
+    assert get_t(vector.obj(x=1, y=2, z=3, t=4)) == pytest.approx(4)
+    assert get_t(vector.obj(px=1, py=2, pz=3, E=4)) == pytest.approx(4)
+
+    with pytest.raises(numba.TypingError):
+        get_Et(vector.obj(x=1, y=2))
+    with pytest.raises(numba.TypingError):
+        get_Et(vector.obj(x=1, y=2, z=3))
+    with pytest.raises(numba.TypingError):
+        get_Et(vector.obj(x=1, y=2, z=3, t=4))
+    assert get_Et(vector.obj(px=1, py=2, pz=3, E=4)) == pytest.approx(
+        numpy.sqrt(4 ** 2 * (1 ** 2 + 2 ** 2) / (1 ** 2 + 2 ** 2 + 3 ** 2))
+    )
 
 
 def test_method_float():

@@ -28,7 +28,16 @@ from vector.backends.object_ import (
     VectorObject3D,
     VectorObject4D,
 )
-from vector.methods import AzimuthalXY, _from_signature
+from vector.methods import (
+    AzimuthalRhoPhi,
+    AzimuthalXY,
+    LongitudinalEta,
+    LongitudinalTheta,
+    LongitudinalZ,
+    TemporalT,
+    TemporalTau,
+    _from_signature,
+)
 
 # Since CoordinateObjects are NamedTuples, we get their types wrapped for free.
 
@@ -49,6 +58,27 @@ def is_temporaltype(typ):
     return isinstance(
         typ, (numba.types.NamedTuple, numba.types.NamedUniTuple)
     ) and issubclass(typ.instance_class, TemporalObject)
+
+
+def numba_aztype(typ):
+    for t in typ.azimuthaltype.instance_class.__mro__:
+        if t in (AzimuthalXY, AzimuthalRhoPhi):
+            return t
+    raise AssertionError
+
+
+def numba_ltype(typ):
+    for t in typ.longitudinaltype.instance_class.__mro__:
+        if t in (LongitudinalZ, LongitudinalTheta, LongitudinalEta):
+            return t
+    raise AssertionError
+
+
+def numba_ttype(typ):
+    for t in typ.temporaltype.instance_class.__mro__:
+        if t in (TemporalT, TemporalTau):
+            return t
+    raise AssertionError
 
 
 # VectorObject2D (and momentum) ###############################################
@@ -893,23 +923,163 @@ def vector_obj(
 # properties and methods ######################################################
 
 
-@numba.extending.overload_attribute(VectorObject2DType, "x")
-def VectorObject2D_x(v):
-    function, *returns = _from_signature(
-        "", numba_modules["planar"]["x"], (AzimuthalXY,)
-    )
+@numba.jit(nopython=True)
+def azimuthalxy_coord1(v):
+    return v.azimuthal.x
 
-    def VectorObject2D_x_impl(v):
-        return function(numpy, v.azimuthal.x, v.azimuthal.y)
 
-    return VectorObject2D_x_impl
+@numba.jit(nopython=True)
+def azimuthalxy_coord2(v):
+    return v.azimuthal.y
+
+
+@numba.jit(nopython=True)
+def azimuthalrhophi_coord1(v):
+    return v.azimuthal.rho
+
+
+@numba.jit(nopython=True)
+def azimuthalrhophi_coord2(v):
+    return v.azimuthal.phi
+
+
+@numba.jit(nopython=True)
+def longitudinalz_coord1(v):
+    return v.longitudinal.z
+
+
+@numba.jit(nopython=True)
+def longitudinaltheta_coord1(v):
+    return v.longitudinal.theta
+
+
+@numba.jit(nopython=True)
+def longitudinaleta_coord1(v):
+    return v.longitudinal.eta
+
+
+@numba.jit(nopython=True)
+def temporalt_coord1(v):
+    return v.temporal.t
+
+
+@numba.jit(nopython=True)
+def temporaltau_coord1(v):
+    return v.temporal.tau
+
+
+getcoord1 = {
+    AzimuthalXY: azimuthalxy_coord1,
+    AzimuthalRhoPhi: azimuthalrhophi_coord1,
+    LongitudinalZ: longitudinalz_coord1,
+    LongitudinalTheta: longitudinaltheta_coord1,
+    LongitudinalEta: longitudinaleta_coord1,
+    TemporalT: temporalt_coord1,
+    TemporalTau: temporaltau_coord1,
+}
+
+getcoord2 = {
+    AzimuthalXY: azimuthalxy_coord2,
+    AzimuthalRhoPhi: azimuthalrhophi_coord2,
+}
+
+planar_properties = ["x", "y", "rho", "rho2", "phi"]
+spatial_properties = ["z", "theta", "eta", "costheta", "cottheta", "mag", "mag2"]
+lorentz_properties = ["t", "t2", "tau", "tau2", "beta", "gamma", "rapidity"]
+lorentz_momentum_properties = ["Et", "Et2", "Mt", "Mt2"]
+
+
+def add_planar_property(vectortype, propertyname):
+    @numba.extending.overload_attribute(vectortype, propertyname)
+    def overloader(v):
+        function, *returns = _from_signature(
+            "", numba_modules["planar"][propertyname], (numba_aztype(v),)
+        )
+        coord1 = getcoord1[numba_aztype(v)]
+        coord2 = getcoord2[numba_aztype(v)]
+
+        def overloader_impl(v):
+            return function(numpy, coord1(v), coord2(v))
+
+        return overloader_impl
+
+
+def add_spatial_property(vectortype, propertyname):
+    @numba.extending.overload_attribute(vectortype, propertyname)
+    def overloader(v):
+        function, *returns = _from_signature(
+            "",
+            numba_modules["spatial"][propertyname],
+            (numba_aztype(v), numba_ltype(v)),
+        )
+        coord1 = getcoord1[numba_aztype(v)]
+        coord2 = getcoord2[numba_aztype(v)]
+        coord3 = getcoord1[numba_ltype(v)]
+
+        def overloader_impl(v):
+            return function(numpy, coord1(v), coord2(v), coord3(v))
+
+        return overloader_impl
+
+
+def add_lorentz_property(vectortype, propertyname):
+    @numba.extending.overload_attribute(vectortype, propertyname)
+    def overloader(v):
+        function, *returns = _from_signature(
+            "",
+            numba_modules["lorentz"][propertyname],
+            (numba_aztype(v), numba_ltype(v), numba_ttype(v)),
+        )
+        coord1 = getcoord1[numba_aztype(v)]
+        coord2 = getcoord2[numba_aztype(v)]
+        coord3 = getcoord1[numba_ltype(v)]
+        coord4 = getcoord1[numba_ttype(v)]
+
+        def overloader_impl(v):
+            return function(numpy, coord1(v), coord2(v), coord3(v), coord4(v))
+
+        return overloader_impl
+
+
+for propertyname in planar_properties:
+    for vectortype in (
+        VectorObject2DType,
+        MomentumObject2DType,
+        VectorObject3DType,
+        MomentumObject3DType,
+        VectorObject4DType,
+        MomentumObject4DType,
+    ):
+        add_planar_property(vectortype, propertyname)
+
+for propertyname in spatial_properties:
+    for vectortype in (
+        VectorObject3DType,
+        MomentumObject3DType,
+        VectorObject4DType,
+        MomentumObject4DType,
+    ):
+        add_spatial_property(vectortype, propertyname)
+
+for propertyname in lorentz_properties:
+    for vectortype in (
+        VectorObject4DType,
+        MomentumObject4DType,
+    ):
+        add_lorentz_property(vectortype, propertyname)
+
+for propertyname in lorentz_momentum_properties:
+    for vectortype in (MomentumObject4DType,):
+        add_lorentz_property(vectortype, propertyname)
 
 
 @numba.extending.overload_method(VectorObject2DType, "deltaphi")
 def VectorObject2D_deltaphi(v1, v2):
     if isinstance(v2, VectorObject2DType):
         function, *returns = _from_signature(
-            "", numba_modules["planar"]["deltaphi"], (AzimuthalXY, AzimuthalXY)
+            "",
+            numba_modules["planar"]["deltaphi"],
+            (numba_aztype(v1), numba_aztype(v2)),
         )
 
         def VectorObject2D_deltaphi_impl(v1, v2):
@@ -924,7 +1094,7 @@ def VectorObject2D_deltaphi(v1, v2):
 def VectorObject2D_rotateZ(v, angle):
     if isinstance(angle, (numba.types.Integer, numba.types.Float)):
         function, *returns = _from_signature(
-            "", numba_modules["planar"]["rotateZ"], (AzimuthalXY,)
+            "", numba_modules["planar"]["rotateZ"], (numba_aztype(v),)
         )
 
         if isinstance(v, MomentumObject2DType):
