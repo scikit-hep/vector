@@ -80,24 +80,35 @@ def test_VectorObject2D_constructor():
     @numba.njit
     def constructXY():
         return vector.backends.object_.VectorObject2D(
-            vector.backends.object_.AzimuthalObjectXY(1.1, 2.2)
+            vector.backends.object_.AzimuthalObjectXY(1, 2.2)
         )
 
     @numba.njit
     def constructRhoPhi():
         return vector.backends.object_.VectorObject2D(
-            vector.backends.object_.AzimuthalObjectRhoPhi(1.1, 2.2)
+            vector.backends.object_.AzimuthalObjectRhoPhi(1, 2.2)
         )
 
     out = constructXY()
     assert isinstance(out, vector.backends.object_.VectorObject2D)
-    assert out.x == pytest.approx(1.1)
+    assert out.x == pytest.approx(1)
     assert out.y == pytest.approx(2.2)
 
     out = constructRhoPhi()
     assert isinstance(out, vector.backends.object_.VectorObject2D)
-    assert out.rho == pytest.approx(1.1)
+    assert out.rho == pytest.approx(1)
     assert out.phi == pytest.approx(2.2)
+
+
+def test_factory():
+    @numba.njit
+    def vector_xy():
+        return vector.obj(x=2, y=3.3)
+
+    out = vector_xy()
+    assert isinstance(out, vector.backends.object_.VectorObject2D)
+    assert out.x == pytest.approx(2)
+    assert out.y == pytest.approx(3.3)
 
 
 def test_property_float():
