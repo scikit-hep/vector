@@ -51,6 +51,9 @@ def is_temporaltype(typ):
     ) and issubclass(typ.instance_class, TemporalObject)
 
 
+# VectorObject2D (and momentum) ###############################################
+
+
 class VectorObject2DType(numba.types.Type):
     def __init__(self, azimuthaltype):
         super().__init__(name=f"VectorObject2DType({azimuthaltype})")
@@ -90,6 +93,10 @@ def VectorObject2D_constructor_typer(context):
     def typer(azimuthaltype):
         if is_azimuthaltype(azimuthaltype):
             return VectorObject2DType(azimuthaltype)
+        else:
+            raise numba.TypingError(
+                "VectorObject2D constructor requires an AzimuthalObject as its argument"
+            )
 
     return typer
 
@@ -99,6 +106,10 @@ def MomentumObject2D_constructor_typer(context):
     def typer(azimuthaltype):
         if is_azimuthaltype(azimuthaltype):
             return MomentumObject2DType(azimuthaltype)
+        else:
+            raise numba.TypingError(
+                "MomentumObject2D constructor requires an AzimuthalObject as its argument"
+            )
 
     return typer
 
@@ -136,6 +147,285 @@ def VectorObject2D_box(typ, val, c):
     c.pyapi.decref(cls_obj)
     c.pyapi.decref(azimuthal_obj)
     return output_obj
+
+
+# VectorObject3D (and momentum) ###############################################
+
+
+class VectorObject3DType(numba.types.Type):
+    def __init__(self, azimuthaltype, longitudinaltype):
+        super().__init__(
+            name=f"VectorObject3DType({azimuthaltype}, {longitudinaltype})"
+        )
+        self.azimuthaltype = azimuthaltype
+        self.longitudinaltype = longitudinaltype
+
+
+class MomentumObject3DType(VectorObject3DType):
+    def __init__(self, azimuthaltype, longitudinaltype):
+        super().__init__(azimuthaltype, longitudinaltype)
+        self.name = f"MomentumObject3DType({azimuthaltype}, {longitudinaltype})"
+
+
+@numba.extending.register_model(VectorObject3DType)
+@numba.extending.register_model(MomentumObject3DType)
+class VectorObject3DModel(numba.extending.models.StructModel):
+    def __init__(self, dmm, fe_type):
+        members = [
+            ("azimuthal", fe_type.azimuthaltype),
+            ("longitudinal", fe_type.longitudinaltype),
+        ]
+        super().__init__(dmm, fe_type, members)
+
+
+@numba.extending.typeof_impl.register(VectorObject3D)
+def VectorObject3D_typeof(val, c):
+    if isinstance(val, MomentumObject3D):
+        return MomentumObject3DType(
+            numba.typeof(val.azimuthal), numba.typeof(val.longitudinal)
+        )
+    else:
+        return VectorObject3DType(
+            numba.typeof(val.azimuthal), numba.typeof(val.longitudinal)
+        )
+
+
+numba.extending.make_attribute_wrapper(VectorObject3DType, "azimuthal", "azimuthal")
+numba.extending.make_attribute_wrapper(
+    VectorObject3DType, "longitudinal", "longitudinal"
+)
+numba.extending.make_attribute_wrapper(MomentumObject3DType, "azimuthal", "azimuthal")
+numba.extending.make_attribute_wrapper(
+    MomentumObject3DType, "longitudinal", "longitudinal"
+)
+
+
+@numba.extending.type_callable(VectorObject3D)
+def VectorObject3D_constructor_typer(context):
+    def typer(azimuthaltype, longitudinaltype):
+        if is_azimuthaltype(azimuthaltype) and is_longitudinaltype(longitudinaltype):
+            return VectorObject3DType(azimuthaltype, longitudinaltype)
+        else:
+            raise numba.TypingError(
+                "VectorObject3D constructor requires an AzimuthalObject and a "
+                "LongitudinalObject as its arguments"
+            )
+
+    return typer
+
+
+@numba.extending.type_callable(MomentumObject3D)
+def MomentumObject3D_constructor_typer(context):
+    def typer(azimuthaltype, longitudinaltype):
+        if is_azimuthaltype(azimuthaltype) and is_longitudinaltype(longitudinaltype):
+            return MomentumObject3DType(azimuthaltype, longitudinaltype)
+        else:
+            raise numba.TypingError(
+                "MomentumObject3D constructor requires an AzimuthalObject and a "
+                "LongitudinalObject as its arguments"
+            )
+
+    return typer
+
+
+@numba.extending.lower_builtin(VectorObject3D, numba.types.Type, numba.types.Type)
+@numba.extending.lower_builtin(MomentumObject3D, numba.types.Type, numba.types.Type)
+def VectorObject3D_constructor_impl(context, builder, sig, args):
+    typ = sig.return_type
+    proxyout = numba.core.cgutils.create_struct_proxy(typ)(context, builder)
+    proxyout.azimuthal = args[0]
+    proxyout.longitudinal = args[1]
+    return proxyout._getvalue()
+
+
+@numba.extending.unbox(VectorObject3DType)
+def VectorObject3D_unbox(typ, obj, c):
+    azimuthal_obj = c.pyapi.object_getattr_string(obj, "azimuthal")
+    longitudinal_obj = c.pyapi.object_getattr_string(obj, "longitudinal")
+    proxyout = numba.core.cgutils.create_struct_proxy(typ)(c.context, c.builder)
+    proxyout.azimuthal = c.pyapi.to_native_value(typ.azimuthaltype, azimuthal_obj).value
+    proxyout.longitudinal = c.pyapi.to_native_value(
+        typ.longitudinaltype, longitudinal_obj
+    ).value
+    c.pyapi.decref(azimuthal_obj)
+    c.pyapi.decref(longitudinal_obj)
+    is_error = numba.core.cgutils.is_not_null(c.builder, c.pyapi.err_occurred())
+    return numba.extending.NativeValue(proxyout._getvalue(), is_error)
+
+
+@numba.extending.box(VectorObject3DType)
+def VectorObject3D_box(typ, val, c):
+    if isinstance(typ, MomentumObject3DType):
+        cls_obj = c.pyapi.unserialize(c.pyapi.serialize_object(MomentumObject3D))
+    else:
+        cls_obj = c.pyapi.unserialize(c.pyapi.serialize_object(VectorObject3D))
+    proxyin = numba.core.cgutils.create_struct_proxy(typ)(
+        c.context, c.builder, value=val
+    )
+    azimuthal_obj = c.pyapi.from_native_value(typ.azimuthaltype, proxyin.azimuthal)
+    longitudinal_obj = c.pyapi.from_native_value(
+        typ.longitudinaltype, proxyin.longitudinal
+    )
+    output_obj = c.pyapi.call_function_objargs(
+        cls_obj, (azimuthal_obj, longitudinal_obj)
+    )
+    c.pyapi.decref(cls_obj)
+    c.pyapi.decref(azimuthal_obj)
+    c.pyapi.decref(longitudinal_obj)
+    return output_obj
+
+
+# VectorObject4D (and momentum) ###############################################
+
+
+class VectorObject4DType(numba.types.Type):
+    def __init__(self, azimuthaltype, longitudinaltype, temporaltype):
+        super().__init__(
+            name=f"VectorObject4DType({azimuthaltype}, {longitudinaltype}, {temporaltype})"
+        )
+        self.azimuthaltype = azimuthaltype
+        self.longitudinaltype = longitudinaltype
+        self.temporaltype = temporaltype
+
+
+class MomentumObject4DType(VectorObject4DType):
+    def __init__(self, azimuthaltype, longitudinaltype, temporaltype):
+        super().__init__(azimuthaltype, longitudinaltype, temporaltype)
+        self.name = (
+            f"MomentumObject4DType({azimuthaltype}, {longitudinaltype}, {temporaltype})"
+        )
+
+
+@numba.extending.register_model(VectorObject4DType)
+@numba.extending.register_model(MomentumObject4DType)
+class VectorObject4DModel(numba.extending.models.StructModel):
+    def __init__(self, dmm, fe_type):
+        members = [
+            ("azimuthal", fe_type.azimuthaltype),
+            ("longitudinal", fe_type.longitudinaltype),
+            ("temporal", fe_type.temporaltype),
+        ]
+        super().__init__(dmm, fe_type, members)
+
+
+@numba.extending.typeof_impl.register(VectorObject4D)
+def VectorObject4D_typeof(val, c):
+    if isinstance(val, MomentumObject4D):
+        return MomentumObject4DType(
+            numba.typeof(val.azimuthal),
+            numba.typeof(val.longitudinal),
+            numba.typeof(val.temporal),
+        )
+    else:
+        return VectorObject4DType(
+            numba.typeof(val.azimuthal),
+            numba.typeof(val.longitudinal),
+            numba.typeof(val.temporal),
+        )
+
+
+numba.extending.make_attribute_wrapper(VectorObject4DType, "azimuthal", "azimuthal")
+numba.extending.make_attribute_wrapper(
+    VectorObject4DType, "longitudinal", "longitudinal"
+)
+numba.extending.make_attribute_wrapper(VectorObject4DType, "temporal", "temporal")
+numba.extending.make_attribute_wrapper(MomentumObject4DType, "azimuthal", "azimuthal")
+numba.extending.make_attribute_wrapper(
+    MomentumObject4DType, "longitudinal", "longitudinal"
+)
+numba.extending.make_attribute_wrapper(MomentumObject4DType, "temporal", "temporal")
+
+
+@numba.extending.type_callable(VectorObject4D)
+def VectorObject4D_constructor_typer(context):
+    def typer(azimuthaltype, longitudinaltype, temporaltype):
+        if (
+            is_azimuthaltype(azimuthaltype)
+            and is_temporaltype(temporaltype)
+            and is_temporaltype(temporaltype)
+        ):
+            return VectorObject4DType(azimuthaltype, longitudinaltype, temporaltype)
+        else:
+            raise numba.TypingError(
+                "VectorObject4D constructor requires an AzimuthalObject and a "
+                "LongitudinalObject and a TemporalObject as its arguments"
+            )
+
+    return typer
+
+
+@numba.extending.type_callable(MomentumObject4D)
+def MomentumObject4D_constructor_typer(context):
+    def typer(azimuthaltype, longitudinaltype, temporaltype):
+        if (
+            is_azimuthaltype(azimuthaltype)
+            and is_temporaltype(temporaltype)
+            and is_temporaltype(temporaltype)
+        ):
+            return MomentumObject4DType(azimuthaltype, longitudinaltype, temporaltype)
+        else:
+            raise numba.TypingError(
+                "MomentumObject4D constructor requires an AzimuthalObject and a "
+                "LongitudinalObject and a TemporalObject as its arguments"
+            )
+
+    return typer
+
+
+@numba.extending.lower_builtin(VectorObject4D, numba.types.Type, numba.types.Type, numba.types.Type)
+@numba.extending.lower_builtin(MomentumObject4D, numba.types.Type, numba.types.Type, numba.types.Type)
+def VectorObject4D_constructor_impl(context, builder, sig, args):
+    typ = sig.return_type
+    proxyout = numba.core.cgutils.create_struct_proxy(typ)(context, builder)
+    proxyout.azimuthal = args[0]
+    proxyout.longitudinal = args[1]
+    proxyout.temporal = args[2]
+    return proxyout._getvalue()
+
+
+@numba.extending.unbox(VectorObject4DType)
+def VectorObject4D_unbox(typ, obj, c):
+    azimuthal_obj = c.pyapi.object_getattr_string(obj, "azimuthal")
+    longitudinal_obj = c.pyapi.object_getattr_string(obj, "longitudinal")
+    temporal_obj = c.pyapi.object_getattr_string(obj, "temporal")
+    proxyout = numba.core.cgutils.create_struct_proxy(typ)(c.context, c.builder)
+    proxyout.azimuthal = c.pyapi.to_native_value(typ.azimuthaltype, azimuthal_obj).value
+    proxyout.longitudinal = c.pyapi.to_native_value(
+        typ.longitudinaltype, longitudinal_obj
+    ).value
+    proxyout.temporal = c.pyapi.to_native_value(typ.temporaltype, temporal_obj).value
+    c.pyapi.decref(azimuthal_obj)
+    c.pyapi.decref(longitudinal_obj)
+    c.pyapi.decref(temporal_obj)
+    is_error = numba.core.cgutils.is_not_null(c.builder, c.pyapi.err_occurred())
+    return numba.extending.NativeValue(proxyout._getvalue(), is_error)
+
+
+@numba.extending.box(VectorObject4DType)
+def VectorObject4D_box(typ, val, c):
+    if isinstance(typ, MomentumObject4DType):
+        cls_obj = c.pyapi.unserialize(c.pyapi.serialize_object(MomentumObject4D))
+    else:
+        cls_obj = c.pyapi.unserialize(c.pyapi.serialize_object(VectorObject4D))
+    proxyin = numba.core.cgutils.create_struct_proxy(typ)(
+        c.context, c.builder, value=val
+    )
+    azimuthal_obj = c.pyapi.from_native_value(typ.azimuthaltype, proxyin.azimuthal)
+    longitudinal_obj = c.pyapi.from_native_value(
+        typ.longitudinaltype, proxyin.longitudinal
+    )
+    temporal_obj = c.pyapi.from_native_value(typ.temporaltype, proxyin.temporal)
+    output_obj = c.pyapi.call_function_objargs(
+        cls_obj, (azimuthal_obj, longitudinal_obj, temporal_obj)
+    )
+    c.pyapi.decref(cls_obj)
+    c.pyapi.decref(azimuthal_obj)
+    c.pyapi.decref(longitudinal_obj)
+    c.pyapi.decref(temporal_obj)
+    return output_obj
+
+
+# vector.obj factory function #################################################
 
 
 @numba.jit(nopython=True)
@@ -594,6 +884,9 @@ def vector_obj(
         )
 
     return vector_obj_impl
+
+
+# properties and methods ######################################################
 
 
 @numba.extending.overload_attribute(VectorObject2DType, "x")
