@@ -12,7 +12,9 @@ import vector
 import vector.backends.object_
 
 numba = pytest.importorskip("numba")
-pytest.importorskip("vector.backends.numba_object")
+
+
+import vector.backends.numba_object  # noqa: E402
 
 
 def test_namedtuples():
