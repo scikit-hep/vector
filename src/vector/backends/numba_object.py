@@ -57,7 +57,14 @@ class VectorObject2DType(numba.types.Type):
         self.azimuthaltype = azimuthaltype
 
 
+class MomentumObject2DType(VectorObject2DType):
+    def __init__(self, azimuthaltype):
+        super().__init__(azimuthaltype)
+        self.name = f"MomentumObject2DType({azimuthaltype})"
+
+
 @numba.extending.register_model(VectorObject2DType)
+@numba.extending.register_model(MomentumObject2DType)
 class VectorObject2DModel(numba.extending.models.StructModel):
     def __init__(self, dmm, fe_type):
         members = [
@@ -68,10 +75,14 @@ class VectorObject2DModel(numba.extending.models.StructModel):
 
 @numba.extending.typeof_impl.register(VectorObject2D)
 def VectorObject2D_typeof(val, c):
-    return VectorObject2DType(numba.typeof(val.azimuthal))
+    if isinstance(val, MomentumObject2D):
+        return MomentumObject2DType(numba.typeof(val.azimuthal))
+    else:
+        return VectorObject2DType(numba.typeof(val.azimuthal))
 
 
 numba.extending.make_attribute_wrapper(VectorObject2DType, "azimuthal", "azimuthal")
+numba.extending.make_attribute_wrapper(MomentumObject2DType, "azimuthal", "azimuthal")
 
 
 @numba.extending.type_callable(VectorObject2D)
@@ -83,12 +94,48 @@ def VectorObject2D_constructor_typer(context):
     return typer
 
 
+@numba.extending.type_callable(MomentumObject2D)
+def MomentumObject2D_constructor_typer(context):
+    def typer(azimuthaltype):
+        if is_azimuthaltype(azimuthaltype):
+            return MomentumObject2DType(azimuthaltype)
+
+    return typer
+
+
 @numba.extending.lower_builtin(VectorObject2D, numba.types.Type)
+@numba.extending.lower_builtin(MomentumObject2D, numba.types.Type)
 def VectorObject2D_constructor_impl(context, builder, sig, args):
     typ = sig.return_type
     proxyout = numba.core.cgutils.create_struct_proxy(typ)(context, builder)
     proxyout.azimuthal = args[0]
     return proxyout._getvalue()
+
+
+@numba.extending.unbox(VectorObject2DType)
+def VectorObject2D_unbox(typ, obj, c):
+    azimuthal_obj = c.pyapi.object_getattr_string(obj, "azimuthal")
+    proxyout = numba.core.cgutils.create_struct_proxy(typ)(c.context, c.builder)
+    proxyout.azimuthal = c.pyapi.to_native_value(typ.azimuthaltype, azimuthal_obj).value
+    c.pyapi.decref(azimuthal_obj)
+    is_error = numba.core.cgutils.is_not_null(c.builder, c.pyapi.err_occurred())
+    return numba.extending.NativeValue(proxyout._getvalue(), is_error)
+
+
+@numba.extending.box(VectorObject2DType)
+def VectorObject2D_box(typ, val, c):
+    if isinstance(typ, MomentumObject2DType):
+        cls_obj = c.pyapi.unserialize(c.pyapi.serialize_object(MomentumObject2D))
+    else:
+        cls_obj = c.pyapi.unserialize(c.pyapi.serialize_object(VectorObject2D))
+    proxyin = numba.core.cgutils.create_struct_proxy(typ)(
+        c.context, c.builder, value=val
+    )
+    azimuthal_obj = c.pyapi.from_native_value(typ.azimuthaltype, proxyin.azimuthal)
+    output_obj = c.pyapi.call_function_objargs(cls_obj, (azimuthal_obj,))
+    c.pyapi.decref(cls_obj)
+    c.pyapi.decref(azimuthal_obj)
+    return output_obj
 
 
 @numba.jit(nopython=True)
@@ -549,29 +596,6 @@ def vector_obj(
     return vector_obj_impl
 
 
-@numba.extending.unbox(VectorObject2DType)
-def VectorObject2D_unbox(typ, obj, c):
-    azimuthal_obj = c.pyapi.object_getattr_string(obj, "azimuthal")
-    proxyout = numba.core.cgutils.create_struct_proxy(typ)(c.context, c.builder)
-    proxyout.azimuthal = c.pyapi.to_native_value(typ.azimuthaltype, azimuthal_obj).value
-    c.pyapi.decref(azimuthal_obj)
-    is_error = numba.core.cgutils.is_not_null(c.builder, c.pyapi.err_occurred())
-    return numba.extending.NativeValue(proxyout._getvalue(), is_error)
-
-
-@numba.extending.box(VectorObject2DType)
-def VectorObject2D_box(typ, val, c):
-    VectorObject2D_obj = c.pyapi.unserialize(c.pyapi.serialize_object(VectorObject2D))
-    proxyin = numba.core.cgutils.create_struct_proxy(typ)(
-        c.context, c.builder, value=val
-    )
-    azimuthal_obj = c.pyapi.from_native_value(typ.azimuthaltype, proxyin.azimuthal)
-    output_obj = c.pyapi.call_function_objargs(VectorObject2D_obj, (azimuthal_obj,))
-    c.pyapi.decref(VectorObject2D_obj)
-    c.pyapi.decref(azimuthal_obj)
-    return output_obj
-
-
 @numba.extending.overload_attribute(VectorObject2DType, "x")
 def VectorObject2D_x(v):
     function, *returns = _from_signature(
@@ -606,8 +630,16 @@ def VectorObject2D_rotateZ(v, angle):
             "", numba_modules["planar"]["rotateZ"], (AzimuthalXY,)
         )
 
-        def VectorObject2D_rotateZ_impl(v, angle):
-            x, y = function(numpy, angle, v.azimuthal.x, v.azimuthal.y)
-            return VectorObject2D(AzimuthalObjectXY(x, y))
+        if isinstance(v, MomentumObject2DType):
+
+            def VectorObject2D_rotateZ_impl(v, angle):
+                x, y = function(numpy, angle, v.azimuthal.x, v.azimuthal.y)
+                return MomentumObject2D(AzimuthalObjectXY(x, y))
+
+        else:
+
+            def VectorObject2D_rotateZ_impl(v, angle):
+                x, y = function(numpy, angle, v.azimuthal.x, v.azimuthal.y)
+                return VectorObject2D(AzimuthalObjectXY(x, y))
 
         return VectorObject2D_rotateZ_impl

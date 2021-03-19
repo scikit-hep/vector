@@ -75,27 +75,55 @@ def test_VectorObject2DType():
             class_refs = sys.getrefcount(vector.backends.object_.VectorObject2D)
         assert class_refs + 1 == sys.getrefcount(vector.backends.object_.VectorObject2D)
 
+    obj = vector.obj(px=1, py=2)
+    out = one(obj)
+    assert isinstance(out, vector.backends.object_.MomentumObject2D)
+    assert out.x == pytest.approx(1)
+    assert out.y == pytest.approx(2)
+
 
 def test_VectorObject2D_constructor():
     @numba.njit
-    def constructXY():
+    def vector_xy():
         return vector.backends.object_.VectorObject2D(
             vector.backends.object_.AzimuthalObjectXY(1, 2.2)
         )
 
     @numba.njit
-    def constructRhoPhi():
+    def vector_rhophi():
         return vector.backends.object_.VectorObject2D(
             vector.backends.object_.AzimuthalObjectRhoPhi(1, 2.2)
         )
 
-    out = constructXY()
+    @numba.njit
+    def momentum_xy():
+        return vector.backends.object_.MomentumObject2D(
+            vector.backends.object_.AzimuthalObjectXY(1, 2.2)
+        )
+
+    @numba.njit
+    def momentum_rhophi():
+        return vector.backends.object_.MomentumObject2D(
+            vector.backends.object_.AzimuthalObjectRhoPhi(1, 2.2)
+        )
+
+    out = vector_xy()
     assert isinstance(out, vector.backends.object_.VectorObject2D)
     assert out.x == pytest.approx(1)
     assert out.y == pytest.approx(2.2)
 
-    out = constructRhoPhi()
+    out = vector_rhophi()
     assert isinstance(out, vector.backends.object_.VectorObject2D)
+    assert out.rho == pytest.approx(1)
+    assert out.phi == pytest.approx(2.2)
+
+    out = momentum_xy()
+    assert isinstance(out, vector.backends.object_.MomentumObject2D)
+    assert out.x == pytest.approx(1)
+    assert out.y == pytest.approx(2.2)
+
+    out = momentum_rhophi()
+    assert isinstance(out, vector.backends.object_.MomentumObject2D)
     assert out.rho == pytest.approx(1)
     assert out.phi == pytest.approx(2.2)
 
@@ -105,8 +133,17 @@ def test_factory():
     def vector_xy():
         return vector.obj(x=2, y=3.3)
 
+    @numba.njit
+    def momentum_xy():
+        return vector.obj(px=2, py=3.3)
+
     out = vector_xy()
     assert isinstance(out, vector.backends.object_.VectorObject2D)
+    assert out.x == pytest.approx(2)
+    assert out.y == pytest.approx(3.3)
+
+    out = momentum_xy()
+    assert isinstance(out, vector.backends.object_.MomentumObject2D)
     assert out.x == pytest.approx(2)
     assert out.y == pytest.approx(3.3)
 
@@ -117,6 +154,7 @@ def test_property_float():
         return v.x
 
     assert get_x(vector.obj(x=1.1, y=2)) == pytest.approx(1.1)
+    assert get_x(vector.obj(px=1.1, py=2)) == pytest.approx(1.1)
 
 
 def test_method_float():
@@ -127,6 +165,12 @@ def test_method_float():
     assert get_deltaphi(vector.obj(x=1, y=0), vector.obj(x=0, y=1)) == pytest.approx(
         -numpy.pi / 2
     )
+    assert get_deltaphi(vector.obj(x=1, y=0), vector.obj(px=0, py=1)) == pytest.approx(
+        -numpy.pi / 2
+    )
+    assert get_deltaphi(
+        vector.obj(px=1, py=0), vector.obj(px=0, py=1)
+    ) == pytest.approx(-numpy.pi / 2)
 
 
 def test_method_vector():
@@ -136,5 +180,10 @@ def test_method_vector():
 
     out = get_rotateZ(vector.obj(x=1, y=0), 0.1)
     assert isinstance(out, vector.backends.object_.VectorObject2D)
+    assert out.x == pytest.approx(0.9950041652780258)
+    assert out.y == pytest.approx(0.09983341664682815)
+
+    out = get_rotateZ(vector.obj(px=1, py=0), 0.1)
+    assert isinstance(out, vector.backends.object_.MomentumObject2D)
     assert out.x == pytest.approx(0.9950041652780258)
     assert out.y == pytest.approx(0.09983341664682815)
