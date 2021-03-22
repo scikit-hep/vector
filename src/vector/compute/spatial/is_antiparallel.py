@@ -61,6 +61,7 @@ def dispatch(tolerance, v1, v2):
     )
     with numpy.errstate(all="ignore"):
         return _handler((v1, v2))._wrap_result(
+            type(_handler((v1, v2))),
             function(
                 _lib_of((v1, v2)),
                 tolerance,

@@ -105,6 +105,7 @@ def dispatch(u, i, j, k, vec):
     )
     with numpy.errstate(all="ignore"):
         return vec._wrap_result(
+            type(vec),
             function(
                 vec.lib, u, i, j, k, *vec.azimuthal.elements, *vec.longitudinal.elements
             ),

@@ -56,6 +56,7 @@ def dispatch(tolerance, v):
     )
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
+            type(v),
             function(
                 v.lib,
                 tolerance,

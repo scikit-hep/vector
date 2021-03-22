@@ -31,4 +31,4 @@ dispatch_map = {
 def dispatch(angle, v):
     function, *returns = _from_signature(__name__, dispatch_map, (_aztype(v),))
     with numpy.errstate(all="ignore"):
-        return v._wrap_result(function(v.lib, angle, *v.azimuthal.elements), returns)
+        return v._wrap_result(type(v), function(v.lib, angle, *v.azimuthal.elements), returns)

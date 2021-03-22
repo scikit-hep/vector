@@ -29,6 +29,7 @@ def dispatch(obj, v):
     function, *returns = _from_signature(__name__, dispatch_map, (_aztype(v),))
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
+            type(v),
             function(
                 v.lib, obj["xx"], obj["xy"], obj["yx"], obj["yy"], *v.azimuthal.elements
             ),

@@ -67,5 +67,5 @@ def dispatch(v):
     )
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
-            function(v.lib, *v.azimuthal.elements, *v.longitudinal.elements), returns
+            type(v), function(v.lib, *v.azimuthal.elements, *v.longitudinal.elements), returns
         )

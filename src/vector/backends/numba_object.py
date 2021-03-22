@@ -27,6 +27,7 @@ from vector.backends.object_ import (
     VectorObject2D,
     VectorObject3D,
     VectorObject4D,
+    _coord_object_type,
 )
 from vector.methods import (
     AzimuthalRhoPhi,
@@ -79,17 +80,6 @@ def numba_ttype(typ):
         if t in (TemporalT, TemporalTau):
             return t
     raise AssertionError
-
-
-coord_object_type = {
-    AzimuthalXY: AzimuthalObjectXY,
-    AzimuthalRhoPhi: AzimuthalObjectRhoPhi,
-    LongitudinalZ: LongitudinalObjectZ,
-    LongitudinalTheta: LongitudinalObjectTheta,
-    LongitudinalEta: LongitudinalObjectEta,
-    TemporalT: TemporalObjectT,
-    TemporalTau: TemporalObjectTau,
-}
 
 
 # VectorObject2D (and momentum) ###############################################
@@ -1187,7 +1177,7 @@ def add_binary_method(vectortype, groupname, methodname):
             instance_class = vectortype.instance_class
 
             if issubclass(vectortype, VectorObject2DType):
-                azcoords = coord_object_type[returns[0]]
+                azcoords = _coord_object_type[returns[0]]
 
                 def overloader_impl(v1, v2):
                     out1, out2 = function(
@@ -1196,8 +1186,8 @@ def add_binary_method(vectortype, groupname, methodname):
                     return instance_class(azcoords(out1, out2))
 
             elif issubclass(vectortype, VectorObject3DType):
-                azcoords = coord_object_type[returns[0]]
-                lcoords = coord_object_type[returns[1]]
+                azcoords = _coord_object_type[returns[0]]
+                lcoords = _coord_object_type[returns[1]]
 
                 def overloader_impl(v1, v2):
                     out1, out2, out3 = function(
@@ -1212,9 +1202,9 @@ def add_binary_method(vectortype, groupname, methodname):
                     return instance_class(azcoords(out1, out2), lcoords(out3))
 
             elif issubclass(vectortype, VectorObject4DType):
-                azcoords = coord_object_type[returns[0]]
-                lcoords = coord_object_type[returns[1]]
-                tcoords = coord_object_type[returns[2]]
+                azcoords = _coord_object_type[returns[0]]
+                lcoords = _coord_object_type[returns[1]]
+                tcoords = _coord_object_type[returns[2]]
 
                 def overloader_impl(v1, v2):
                     out1, out2, out3, out4 = function(

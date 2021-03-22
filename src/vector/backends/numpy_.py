@@ -586,7 +586,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):
     def azimuthal(self):
         return self.view(self._azimuthal_type)
 
-    def _wrap_result(self, result, returns):
+    def _wrap_result(self, cls, result, returns):
         if returns == [float] or returns == [bool]:
             return result
 
@@ -602,7 +602,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):
             for name in _coordinate_class_to_names[returns[0]]:
                 out[name] = result[i]
                 i += 1
-            return out.view(type(self))
+            return out.view(cls)
 
         else:
             raise AssertionError(repr(returns))
@@ -687,7 +687,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
     def longitudinal(self):
         return self.view(self._longitudinal_type)
 
-    def _wrap_result(self, result, returns):
+    def _wrap_result(self, cls, result, returns):
         if returns == [float] or returns == [bool]:
             return result
 
@@ -707,7 +707,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
                 i += 1
             for name in _coordinate_class_to_names[_ltype(self)]:
                 out[name] = self[name]
-            return out.view(type(self))
+            return out.view(cls)
 
         elif (
             (len(returns) == 2 or (len(returns) == 3 and returns[2] is None))
@@ -733,7 +733,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
             for name in _coordinate_class_to_names[returns[1]]:
                 out[name] = result[i]
                 i += 1
-            return out.view(type(self))
+            return out.view(cls)
 
         else:
             raise AssertionError(repr(returns))
@@ -842,7 +842,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
     def temporal(self):
         return self.view(self._temporal_type)
 
-    def _wrap_result(self, result, returns):
+    def _wrap_result(self, cls, result, returns):
         if returns == [float] or returns == [bool]:
             return result
 
@@ -862,7 +862,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
                 out[name] = self[name]
             for name in _coordinate_class_to_names[_ttype(self)]:
                 out[name] = self[name]
-            return out.view(type(self))
+            return out.view(cls)
 
         elif (
             len(returns) == 2
@@ -892,7 +892,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
                 i += 1
             for name in _coordinate_class_to_names[_ttype(self)]:
                 out[name] = self[name]
-            return out.view(type(self))
+            return out.view(cls)
 
         elif (
             len(returns) == 3
@@ -930,7 +930,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
                 for name in _coordinate_class_to_names[returns[2]]:
                     out[name] = result[i]
                     i += 1
-                return out.view(type(self))
+                return out.view(cls)
             else:
                 return out.view(self.ProjectionClass3D)
 

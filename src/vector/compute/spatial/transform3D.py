@@ -115,6 +115,7 @@ def dispatch(obj, v):
     )
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
+            type(v),
             function(
                 v.lib,
                 obj["xx"],

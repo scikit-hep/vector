@@ -22,6 +22,7 @@ from vector.methods import (
     PlanarMomentum,
     Spatial,
     SpatialMomentum,
+    Temporal,
     TemporalT,
     TemporalTau,
     Vector,
@@ -51,6 +52,96 @@ class LongitudinalObject(CoordinatesObject):
 
 class TemporalObject(CoordinatesObject):
     pass
+
+
+class AzimuthalObjectXY(typing.NamedTuple):
+    x: float
+    y: float
+
+    @property
+    def elements(self):
+        return (self.x, self.y)
+
+
+AzimuthalObjectXY.__bases__ = (AzimuthalObject, AzimuthalXY, tuple)
+
+
+class AzimuthalObjectRhoPhi(typing.NamedTuple):
+    rho: float
+    phi: float
+
+    @property
+    def elements(self):
+        return (self.rho, self.phi)
+
+
+AzimuthalObjectRhoPhi.__bases__ = (AzimuthalObject, AzimuthalRhoPhi, tuple)
+
+
+class LongitudinalObjectZ(typing.NamedTuple):
+    z: float
+
+    @property
+    def elements(self):
+        return (self.z,)
+
+
+LongitudinalObjectZ.__bases__ = (LongitudinalObject, LongitudinalZ, tuple)
+
+
+class LongitudinalObjectTheta(typing.NamedTuple):
+    theta: float
+
+    @property
+    def elements(self):
+        return (self.theta,)
+
+
+LongitudinalObjectTheta.__bases__ = (LongitudinalObject, LongitudinalTheta, tuple)
+
+
+class LongitudinalObjectEta(typing.NamedTuple):
+    eta: float
+
+    @property
+    def elements(self):
+        return (self.eta,)
+
+
+LongitudinalObjectEta.__bases__ = (LongitudinalObject, LongitudinalEta, tuple)
+
+
+class TemporalObjectT(typing.NamedTuple):
+    t: float
+
+    @property
+    def elements(self):
+        return (self.t,)
+
+
+TemporalObjectT.__bases__ = (TemporalObject, TemporalT, tuple)
+
+
+class TemporalObjectTau(typing.NamedTuple):
+    tau: float
+
+    @property
+    def elements(self):
+        return (self.tau,)
+
+
+TemporalObjectTau.__bases__ = (TemporalObject, TemporalTau, tuple)
+
+
+_coord_object_type = {
+    AzimuthalXY: AzimuthalObjectXY,
+    AzimuthalRhoPhi: AzimuthalObjectRhoPhi,
+    LongitudinalZ: LongitudinalObjectZ,
+    LongitudinalTheta: LongitudinalObjectTheta,
+    LongitudinalEta: LongitudinalObjectEta,
+    TemporalT: TemporalObjectT,
+    TemporalTau: TemporalObjectTau,
+}
 
 
 def _replace_data(obj, result):
@@ -289,85 +380,6 @@ class VectorObject:
             return NotImplemented
 
 
-class AzimuthalObjectXY(typing.NamedTuple):
-    x: float
-    y: float
-
-    @property
-    def elements(self):
-        return (self.x, self.y)
-
-
-AzimuthalObjectXY.__bases__ = (AzimuthalObject, AzimuthalXY, tuple)
-
-
-class AzimuthalObjectRhoPhi(typing.NamedTuple):
-    rho: float
-    phi: float
-
-    @property
-    def elements(self):
-        return (self.rho, self.phi)
-
-
-AzimuthalObjectRhoPhi.__bases__ = (AzimuthalObject, AzimuthalRhoPhi, tuple)
-
-
-class LongitudinalObjectZ(typing.NamedTuple):
-    z: float
-
-    @property
-    def elements(self):
-        return (self.z,)
-
-
-LongitudinalObjectZ.__bases__ = (LongitudinalObject, LongitudinalZ, tuple)
-
-
-class LongitudinalObjectTheta(typing.NamedTuple):
-    theta: float
-
-    @property
-    def elements(self):
-        return (self.theta,)
-
-
-LongitudinalObjectTheta.__bases__ = (LongitudinalObject, LongitudinalTheta, tuple)
-
-
-class LongitudinalObjectEta(typing.NamedTuple):
-    eta: float
-
-    @property
-    def elements(self):
-        return (self.eta,)
-
-
-LongitudinalObjectEta.__bases__ = (LongitudinalObject, LongitudinalEta, tuple)
-
-
-class TemporalObjectT(typing.NamedTuple):
-    t: float
-
-    @property
-    def elements(self):
-        return (self.t,)
-
-
-TemporalObjectT.__bases__ = (TemporalObject, TemporalT, tuple)
-
-
-class TemporalObjectTau(typing.NamedTuple):
-    tau: float
-
-    @property
-    def elements(self):
-        return (self.tau,)
-
-
-TemporalObjectTau.__bases__ = (TemporalObject, TemporalTau, tuple)
-
-
 class VectorObject2D(VectorObject, Planar, Vector2D):
     __slots__ = ("azimuthal",)
 
@@ -389,20 +401,54 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             out.append(f"{x}={getattr(self.azimuthal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
-    def _wrap_result(self, result, returns):
-        if isinstance(self, type):
-            cls = self
-        else:
-            cls = type(self)
-
+    def _wrap_result(self, cls, result, returns):
         if returns == [float] or returns == [bool]:
             return result
 
-        elif returns == [AzimuthalXY]:
-            return cls(AzimuthalObjectXY(*result))
+        elif (
+            len(returns) == 1
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+        ):
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            return cls(azcoords)
 
-        elif returns == [AzimuthalRhoPhi]:
-            return cls(AzimuthalObjectRhoPhi(*result))
+        elif (
+            len(returns) == 2
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+        ):
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            lcoords = _coord_object_type[returns[1]](result[2])
+            return cls(azcoords, lcoords)
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and returns[2] is None
+        ):
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            lcoords = _coord_object_type[returns[1]](result[2])
+            return cls(azcoords, lcoords)
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and isinstance(returns[2], type)
+            and issubclass(returns[2], Temporal)
+        ):
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            lcoords = _coord_object_type[returns[1]](result[2])
+            tcoords = _coord_object_type[returns[2]](result[3])
+            return cls(azcoords, lcoords, tcoords)
 
         else:
             raise AssertionError(repr(returns))
@@ -515,43 +561,54 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             out.append(f"{x}={getattr(self.longitudinal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
-    def _wrap_result(self, result, returns):
-        if isinstance(self, type):
-            cls = self
-        else:
-            cls = type(self)
-
+    def _wrap_result(self, cls, result, returns):
         if returns == [float] or returns == [bool]:
             return result
 
-        elif returns == [AzimuthalXY]:
-            return cls(AzimuthalObjectXY(*result), self.longitudinal)
-
-        elif returns == [AzimuthalRhoPhi]:
-            return cls(AzimuthalObjectRhoPhi(*result), self.longitudinal)
+        elif (
+            len(returns) == 1
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+        ):
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            return cls(azcoords, self.longitudinal)
 
         elif (
-            (len(returns) == 2 or (len(returns) == 3 and returns[2] is None))
+            len(returns) == 2
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
             and isinstance(returns[1], type)
             and issubclass(returns[1], Longitudinal)
         ):
-            if returns[0] is AzimuthalXY:
-                azimuthal = AzimuthalObjectXY(result[0], result[1])
-            elif returns[0] is AzimuthalRhoPhi:
-                azimuthal = AzimuthalObjectRhoPhi(result[0], result[1])
-            else:
-                raise AssertionError(repr(returns[0]))
-            if returns[1] is LongitudinalZ:
-                longitudinal = LongitudinalObjectZ(result[2])
-            elif returns[1] is LongitudinalTheta:
-                longitudinal = LongitudinalObjectTheta(result[2])
-            elif returns[1] is LongitudinalEta:
-                longitudinal = LongitudinalObjectEta(result[2])
-            else:
-                raise AssertionError(repr(returns[1]))
-            return cls(azimuthal, longitudinal)
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            lcoords = _coord_object_type[returns[1]](result[2])
+            return cls(azcoords, lcoords)
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and returns[2] is None
+        ):
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            lcoords = _coord_object_type[returns[1]](result[2])
+            return cls(azcoords, lcoords)
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and isinstance(returns[2], type)
+            and issubclass(returns[2], Temporal)
+        ):
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            lcoords = _coord_object_type[returns[1]](result[2])
+            tcoords = _coord_object_type[returns[2]](result[3])
+            return cls(azcoords, lcoords, tcoords)
 
         else:
             raise AssertionError(repr(returns))
@@ -762,20 +819,17 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             out.append(f"{x}={getattr(self.temporal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
-    def _wrap_result(self, result, returns):
-        if isinstance(self, type):
-            cls = self
-        else:
-            cls = type(self)
-
+    def _wrap_result(self, cls, result, returns):
         if returns == [float] or returns == [bool]:
             return result
 
-        elif returns == [AzimuthalXY]:
-            return cls(AzimuthalObjectXY(*result), self.longitudinal, self.temporal)
-
-        elif returns == [AzimuthalRhoPhi]:
-            return cls(AzimuthalObjectRhoPhi(*result), self.longitudinal, self.temporal)
+        elif (
+            len(returns) == 1
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+        ):
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            return cls(azcoords, self.longitudinal, self.temporal)
 
         elif (
             len(returns) == 2
@@ -784,21 +838,9 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             and isinstance(returns[1], type)
             and issubclass(returns[1], Longitudinal)
         ):
-            if returns[0] is AzimuthalXY:
-                azimuthal = AzimuthalObjectXY(result[0], result[1])
-            elif returns[0] is AzimuthalRhoPhi:
-                azimuthal = AzimuthalObjectRhoPhi(result[0], result[1])
-            else:
-                raise AssertionError(repr(returns[0]))
-            if returns[1] is LongitudinalZ:
-                longitudinal = LongitudinalObjectZ(result[2])
-            elif returns[1] is LongitudinalTheta:
-                longitudinal = LongitudinalObjectTheta(result[2])
-            elif returns[1] is LongitudinalEta:
-                longitudinal = LongitudinalObjectEta(result[2])
-            else:
-                raise AssertionError(repr(returns[1]))
-            return cls(azimuthal, longitudinal, self.temporal)
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            lcoords = _coord_object_type[returns[1]](result[2])
+            return cls(azcoords, lcoords, self.temporal)
 
         elif (
             len(returns) == 3
@@ -806,34 +848,25 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             and issubclass(returns[0], Azimuthal)
             and isinstance(returns[1], type)
             and issubclass(returns[1], Longitudinal)
+            and returns[2] is None
         ):
-            if returns[0] is AzimuthalXY:
-                azimuthal = AzimuthalObjectXY(result[0], result[1])
-            elif returns[0] is AzimuthalRhoPhi:
-                azimuthal = AzimuthalObjectRhoPhi(result[0], result[1])
-            else:
-                raise AssertionError(repr(returns[0]))
-            if returns[1] is LongitudinalZ:
-                longitudinal = LongitudinalObjectZ(result[2])
-            elif returns[1] is LongitudinalTheta:
-                longitudinal = LongitudinalObjectTheta(result[2])
-            elif returns[1] is LongitudinalEta:
-                longitudinal = LongitudinalObjectEta(result[2])
-            else:
-                raise AssertionError(repr(returns[1]))
-            is_4d = True
-            if returns[2] is TemporalT:
-                temporal = TemporalObjectT(result[3])
-            elif returns[2] is TemporalTau:
-                temporal = TemporalObjectTau(result[3])
-            elif returns[2] is None:
-                is_4d = False
-            else:
-                raise AssertionError(repr(returns[2]))
-            if is_4d:
-                return cls(azimuthal, longitudinal, temporal)
-            else:
-                return self.ProjectionClass3D(azimuthal, longitudinal)
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            lcoords = _coord_object_type[returns[1]](result[2])
+            return cls.ProjectionClass3D(azcoords, lcoords)
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and isinstance(returns[2], type)
+            and issubclass(returns[2], Temporal)
+        ):
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            lcoords = _coord_object_type[returns[1]](result[2])
+            tcoords = _coord_object_type[returns[2]](result[3])
+            return cls(azcoords, lcoords, tcoords)
 
         else:
             raise AssertionError(repr(returns))
