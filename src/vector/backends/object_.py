@@ -86,6 +86,8 @@ def _replace_data(obj, result):
 
 
 class VectorObject:
+    lib = numpy
+
     def __eq__(self, other):
         return numpy.equal(self, other)
 
@@ -369,8 +371,6 @@ TemporalObjectTau.__bases__ = (TemporalObject, TemporalTau, tuple)
 class VectorObject2D(VectorObject, Planar, Vector2D):
     __slots__ = ("azimuthal",)
 
-    lib = numpy
-
     @classmethod
     def from_xy(cls, x, y):
         return cls(AzimuthalObjectXY(x, y))
@@ -476,9 +476,6 @@ class MomentumObject2D(PlanarMomentum, VectorObject2D):
 
 class VectorObject3D(VectorObject, Spatial, Vector3D):
     __slots__ = ("azimuthal", "longitudinal")
-
-    lib = numpy
-    ProjectionClass2D = VectorObject2D
 
     @classmethod
     def from_xyz(cls, x, y, z):
@@ -617,8 +614,6 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
 
 
 class MomentumObject3D(SpatialMomentum, VectorObject3D):
-    ProjectionClass2D = MomentumObject2D
-
     def __repr__(self):
         aznames = _coordinate_class_to_names[_aztype(self)]
         lnames = _coordinate_class_to_names[_ltype(self)]
@@ -666,10 +661,6 @@ class MomentumObject3D(SpatialMomentum, VectorObject3D):
 
 class VectorObject4D(VectorObject, Lorentz, Vector4D):
     __slots__ = ("azimuthal", "longitudinal", "temporal")
-
-    lib = numpy
-    ProjectionClass2D = VectorObject2D
-    ProjectionClass3D = VectorObject3D
 
     @classmethod
     def from_xyzt(cls, x, y, z, t):
@@ -921,9 +912,6 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
 
 class MomentumObject4D(LorentzMomentum, VectorObject4D):
-    ProjectionClass2D = MomentumObject2D
-    ProjectionClass3D = MomentumObject3D
-
     def __repr__(self):
         aznames = _coordinate_class_to_names[_aztype(self)]
         lnames = _coordinate_class_to_names[_ltype(self)]
@@ -1141,3 +1129,28 @@ def obj(**coordinates):
         return _gather_coordinates(
             VectorObject2D, VectorObject3D, VectorObject4D, generic_coordinates
         )
+
+
+VectorObject2D.ProjectionClass2D = VectorObject2D
+VectorObject2D.ProjectionClass3D = VectorObject3D
+VectorObject2D.ProjectionClass4D = VectorObject4D
+
+MomentumObject2D.ProjectionClass2D = MomentumObject2D
+MomentumObject2D.ProjectionClass3D = MomentumObject3D
+MomentumObject2D.ProjectionClass4D = MomentumObject4D
+
+VectorObject3D.ProjectionClass2D = VectorObject2D
+VectorObject3D.ProjectionClass3D = VectorObject3D
+VectorObject3D.ProjectionClass4D = VectorObject4D
+
+MomentumObject3D.ProjectionClass2D = MomentumObject2D
+MomentumObject3D.ProjectionClass3D = MomentumObject3D
+MomentumObject3D.ProjectionClass4D = MomentumObject4D
+
+VectorObject4D.ProjectionClass2D = VectorObject2D
+VectorObject4D.ProjectionClass3D = VectorObject3D
+VectorObject4D.ProjectionClass4D = VectorObject4D
+
+MomentumObject4D.ProjectionClass2D = MomentumObject2D
+MomentumObject4D.ProjectionClass3D = MomentumObject3D
+MomentumObject4D.ProjectionClass4D = MomentumObject4D

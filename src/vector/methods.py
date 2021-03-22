@@ -4,6 +4,141 @@
 # or https://github.com/scikit-hep/vector for details.
 
 
+class Coordinates:
+    pass
+
+
+class Azimuthal(Coordinates):
+    @property
+    def elements(self):
+        "azimuthal elements docs"
+        raise AssertionError
+
+
+class Longitudinal(Coordinates):
+    @property
+    def elements(self):
+        "longitudinal elements docs"
+        raise AssertionError
+
+
+class Temporal(Coordinates):
+    @property
+    def elements(self):
+        "temporal elements docs"
+        raise AssertionError
+
+
+class AzimuthalXY(Azimuthal):
+    pass
+
+
+class AzimuthalRhoPhi(Azimuthal):
+    pass
+
+
+class LongitudinalZ(Longitudinal):
+    pass
+
+
+class LongitudinalTheta(Longitudinal):
+    pass
+
+
+class LongitudinalEta(Longitudinal):
+    pass
+
+
+class TemporalT(Temporal):
+    pass
+
+
+class TemporalTau(Temporal):
+    pass
+
+
+def _aztype(obj):
+    if hasattr(obj, "azimuthal"):
+        for t in type(obj.azimuthal).__mro__:
+            if t in (AzimuthalXY, AzimuthalRhoPhi):
+                return t
+    return None
+
+
+def _ltype(obj):
+    if hasattr(obj, "longitudinal"):
+        for t in type(obj.longitudinal).__mro__:
+            if t in (LongitudinalZ, LongitudinalTheta, LongitudinalEta):
+                return t
+    return None
+
+
+def _ttype(obj):
+    if hasattr(obj, "temporal"):
+        for t in type(obj.temporal).__mro__:
+            if t in (TemporalT, TemporalTau):
+                return t
+    return None
+
+
+_coordinate_class_to_names = {
+    AzimuthalXY: ("x", "y"),
+    AzimuthalRhoPhi: ("rho", "phi"),
+    LongitudinalZ: ("z",),
+    LongitudinalTheta: ("theta",),
+    LongitudinalEta: ("eta",),
+    TemporalT: ("t",),
+    TemporalTau: ("tau",),
+}
+
+
+_repr_generic_to_momentum = {
+    "x": "px",
+    "y": "py",
+    "rho": "pt",
+    "z": "pz",
+    "t": "E",
+    "tau": "mass",
+}
+
+
+_repr_momentum_to_generic = {
+    "px": "x",
+    "py": "y",
+    "pt": "rho",
+    "pz": "z",
+    "E": "t",
+    "e": "t",
+    "energy": "t",
+    "M": "tau",
+    "m": "tau",
+    "mass": "tau",
+}
+
+
+_coordinate_order = [
+    "x",
+    "px",
+    "y",
+    "py",
+    "rho",
+    "pt",
+    "phi",
+    "z",
+    "pz",
+    "theta",
+    "eta",
+    "t",
+    "E",
+    "e",
+    "energy",
+    "tau",
+    "M",
+    "m",
+    "mass",
+]
+
+
 class Vector:
     pass
 
@@ -311,139 +446,34 @@ class Vector4D(Vector):
         )
 
 
-class Coordinates:
-    pass
+def _compute_module_of(one, two, nontemporal=False):
+    if not isinstance(one, Vector):
+        raise TypeError(f"{repr(one)} is not a Vector")
+    if not isinstance(two, Vector):
+        raise TypeError(f"{repr(two)} is not a Vector")
 
+    if isinstance(one, Vector2D):
+        import vector.compute.planar
+        return vector.compute.planar
 
-class Azimuthal(Coordinates):
-    @property
-    def elements(self):
-        "azimuthal elements docs"
-        raise AssertionError
+    elif isinstance(one, Vector3D):
+        if isinstance(two, Vector2D):
+            import vector.compute.planar
+            return vector.compute.planar
+        else:
+            import vector.compute.spatial
+            return vector.compute.spatial
 
-
-class Longitudinal(Coordinates):
-    @property
-    def elements(self):
-        "longitudinal elements docs"
-        raise AssertionError
-
-
-class Temporal(Coordinates):
-    @property
-    def elements(self):
-        "temporal elements docs"
-        raise AssertionError
-
-
-class AzimuthalXY(Azimuthal):
-    pass
-
-
-class AzimuthalRhoPhi(Azimuthal):
-    pass
-
-
-class LongitudinalZ(Longitudinal):
-    pass
-
-
-class LongitudinalTheta(Longitudinal):
-    pass
-
-
-class LongitudinalEta(Longitudinal):
-    pass
-
-
-class TemporalT(Temporal):
-    pass
-
-
-class TemporalTau(Temporal):
-    pass
-
-
-def _aztype(obj):
-    if hasattr(obj, "azimuthal"):
-        for t in type(obj.azimuthal).__mro__:
-            if t in (AzimuthalXY, AzimuthalRhoPhi):
-                return t
-    return None
-
-
-def _ltype(obj):
-    if hasattr(obj, "longitudinal"):
-        for t in type(obj.longitudinal).__mro__:
-            if t in (LongitudinalZ, LongitudinalTheta, LongitudinalEta):
-                return t
-    return None
-
-
-def _ttype(obj):
-    if hasattr(obj, "temporal"):
-        for t in type(obj.temporal).__mro__:
-            if t in (TemporalT, TemporalTau):
-                return t
-    return None
-
-
-_coordinate_class_to_names = {
-    AzimuthalXY: ("x", "y"),
-    AzimuthalRhoPhi: ("rho", "phi"),
-    LongitudinalZ: ("z",),
-    LongitudinalTheta: ("theta",),
-    LongitudinalEta: ("eta",),
-    TemporalT: ("t",),
-    TemporalTau: ("tau",),
-}
-
-
-_repr_generic_to_momentum = {
-    "x": "px",
-    "y": "py",
-    "rho": "pt",
-    "z": "pz",
-    "t": "E",
-    "tau": "mass",
-}
-
-
-_repr_momentum_to_generic = {
-    "px": "x",
-    "py": "y",
-    "pt": "rho",
-    "pz": "z",
-    "E": "t",
-    "e": "t",
-    "energy": "t",
-    "M": "tau",
-    "m": "tau",
-    "mass": "tau",
-}
-
-
-_coordinate_order = [
-    "x",
-    "px",
-    "y",
-    "py",
-    "rho",
-    "pt",
-    "phi",
-    "z",
-    "pz",
-    "theta",
-    "eta",
-    "t",
-    "E",
-    "e",
-    "energy",
-    "tau",
-    "M",
-    "m",
-    "mass",
-]
+    elif isinstance(one, Vector4D):
+        if isinstance(two, Vector2D):
+            import vector.compute.planar
+            return vector.compute.planar
+        elif isinstance(two, Vector3D) or nontemporal:
+            import vector.compute.spatial
+            return vector.compute.spatial
+        else:
+            import vector.compute.lorentz
+            return vector.compute.lorentz
 
 
 class Planar:
@@ -513,19 +543,28 @@ class Planar:
         "is_parallel docs (note: this 'parallel' requires same direction)"
         from .compute.planar import is_parallel
 
-        return is_parallel.dispatch(tolerance, self, other)
+        if not isinstance(other, Vector2D):
+            return self.to_Vector3D().is_parallel(other, tolerance=tolerance)
+        else:
+            return is_parallel.dispatch(tolerance, self, other)
 
     def is_antiparallel(self, other, tolerance=1e-5):
         "is_antiparallel docs"
         from .compute.planar import is_antiparallel
 
-        return is_antiparallel.dispatch(tolerance, self, other)
+        if not isinstance(other, Vector2D):
+            return self.to_Vector3D().is_antiparallel(other, tolerance=tolerance)
+        else:
+            return is_antiparallel.dispatch(tolerance, self, other)
 
     def is_perpendicular(self, other, tolerance=1e-5):
         "is_perpendicular docs"
         from .compute.planar import is_perpendicular
 
-        return is_perpendicular.dispatch(tolerance, self, other)
+        if not isinstance(other, Vector2D):
+            return self.to_Vector3D().is_perpendicular(other, tolerance=tolerance)
+        else:
+            return is_perpendicular.dispatch(tolerance, self, other)
 
     def unit(self):
         "unit docs"
@@ -535,21 +574,18 @@ class Planar:
 
     def dot(self, other):
         "dot docs"
-        from .compute.planar import dot
-
-        return dot.dispatch(self, other)
+        module = _compute_module_of(self, other)
+        return module.dot.dispatch(self, other)
 
     def add(self, other):
         "add docs"
-        from .compute.planar import add
-
-        return add.dispatch(self, other)
+        module = _compute_module_of(self, other)
+        return module.add.dispatch(self, other)
 
     def subtract(self, other):
         "subtract docs"
-        from .compute.planar import subtract
-
-        return subtract.dispatch(self, other)
+        module = _compute_module_of(self, other)
+        return module.subtract.dispatch(self, other)
 
     def scale(self, factor):
         "scale docs"
@@ -561,18 +597,30 @@ class Planar:
         "equal docs"
         from .compute.planar import equal
 
+        if not isinstance(other, Vector2D):
+            raise TypeError(
+                f"{repr(self)} and {repr(other)} do not have the same dimension"
+            )
         return equal.dispatch(self, other)
 
     def not_equal(self, other):
         "not_equal docs"
         from .compute.planar import not_equal
 
+        if not isinstance(other, Vector2D):
+            raise TypeError(
+                f"{repr(self)} and {repr(other)} do not have the same dimension"
+            )
         return not_equal.dispatch(self, other)
 
     def isclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
         "isclose docs"
         from .compute.planar import isclose
 
+        if not isinstance(other, Vector2D):
+            raise TypeError(
+                f"{repr(self)} and {repr(other)} do not have the same dimension"
+            )
         return isclose.dispatch(rtol, atol, equal_nan, self, other)
 
 
@@ -728,19 +776,28 @@ class Spatial(Planar):
         "is_parallel docs (note: this 'parallel' requires same direction)"
         from .compute.spatial import is_parallel
 
-        return is_parallel.dispatch(tolerance, self, other)
+        if isinstance(other, Vector2D):
+            return is_parallel.dispatch(tolerance, self, other.to_Vector3D())
+        else:
+            return is_parallel.dispatch(tolerance, self, other)
 
     def is_antiparallel(self, other, tolerance=1e-5):
         "is_antiparallel docs"
         from .compute.spatial import is_antiparallel
 
-        return is_antiparallel.dispatch(tolerance, self, other)
+        if isinstance(other, Vector2D):
+            return is_antiparallel.dispatch(tolerance, self, other.to_Vector3D())
+        else:
+            return is_antiparallel.dispatch(tolerance, self, other)
 
     def is_perpendicular(self, other, tolerance=1e-5):
         "is_perpendicular docs"
         from .compute.spatial import is_perpendicular
 
-        return is_perpendicular.dispatch(tolerance, self, other)
+        if isinstance(other, Vector2D):
+            return is_perpendicular.dispatch(tolerance, self, other.to_Vector3D())
+        else:
+            return is_perpendicular.dispatch(tolerance, self, other)
 
     def unit(self):
         "unit docs"
@@ -750,21 +807,18 @@ class Spatial(Planar):
 
     def dot(self, other):
         "dot docs"
-        from .compute.spatial import dot
-
-        return dot.dispatch(self, other)
+        module = _compute_module_of(self, other)
+        return module.dot.dispatch(self, other)
 
     def add(self, other):
         "add docs"
-        from .compute.spatial import add
-
-        return add.dispatch(self, other)
+        module = _compute_module_of(self, other)
+        return module.add.dispatch(self, other)
 
     def subtract(self, other):
         "subtract docs"
-        from .compute.spatial import subtract
-
-        return subtract.dispatch(self, other)
+        module = _compute_module_of(self, other)
+        return module.subtract.dispatch(self, other)
 
     def scale(self, factor):
         "scale docs"
@@ -776,18 +830,30 @@ class Spatial(Planar):
         "equal docs"
         from .compute.spatial import equal
 
+        if not isinstance(other, Vector3D):
+            raise TypeError(
+                f"{repr(self)} and {repr(other)} do not have the same dimension"
+            )
         return equal.dispatch(self, other)
 
     def not_equal(self, other):
         "not_equal docs"
         from .compute.spatial import not_equal
 
+        if not isinstance(other, Vector3D):
+            raise TypeError(
+                f"{repr(self)} and {repr(other)} do not have the same dimension"
+            )
         return not_equal.dispatch(self, other)
 
     def isclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
         "isclose docs"
         from .compute.spatial import isclose
 
+        if not isinstance(other, Vector3D):
+            raise TypeError(
+                f"{repr(self)} and {repr(other)} do not have the same dimension"
+            )
         return isclose.dispatch(rtol, atol, equal_nan, self, other)
 
 
@@ -943,21 +1009,18 @@ class Lorentz(Spatial):
 
     def dot(self, other):
         "dot docs"
-        from .compute.lorentz import dot
-
-        return dot.dispatch(self, other)
+        module = _compute_module_of(self, other)
+        return module.dot.dispatch(self, other)
 
     def add(self, other):
         "add docs"
-        from .compute.lorentz import add
-
-        return add.dispatch(self, other)
+        module = _compute_module_of(self, other)
+        return module.add.dispatch(self, other)
 
     def subtract(self, other):
         "subtract docs"
-        from .compute.lorentz import subtract
-
-        return subtract.dispatch(self, other)
+        module = _compute_module_of(self, other)
+        return module.subtract.dispatch(self, other)
 
     def scale(self, factor):
         "scale docs"
@@ -969,18 +1032,30 @@ class Lorentz(Spatial):
         "equal docs"
         from .compute.lorentz import equal
 
+        if not isinstance(other, Vector4D):
+            raise TypeError(
+                f"{repr(self)} and {repr(other)} do not have the same dimension"
+            )
         return equal.dispatch(self, other)
 
     def not_equal(self, other):
         "not_equal docs"
         from .compute.lorentz import not_equal
 
+        if not isinstance(other, Vector4D):
+            raise TypeError(
+                f"{repr(self)} and {repr(other)} do not have the same dimension"
+            )
         return not_equal.dispatch(self, other)
 
     def isclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
         "isclose docs"
         from .compute.lorentz import isclose
 
+        if not isinstance(other, Vector4D):
+            raise TypeError(
+                f"{repr(self)} and {repr(other)} do not have the same dimension"
+            )
         return isclose.dispatch(rtol, atol, equal_nan, self, other)
 
 

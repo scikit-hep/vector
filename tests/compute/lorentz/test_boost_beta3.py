@@ -7,7 +7,6 @@ import pytest
 
 import vector.backends.numpy_
 import vector.backends.object_
-import vector.geometry
 
 
 def test():

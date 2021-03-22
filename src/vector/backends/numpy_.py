@@ -196,6 +196,8 @@ class TemporalNumpy(CoordinatesNumpy):
 
 
 class VectorNumpy:
+    lib = numpy
+
     def allclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
         return self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan).all()
 
@@ -556,9 +558,6 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, numpy.ndarray):
 
 
 class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):
-    lib = numpy
-    ObjectClass = vector.backends.object_.VectorObject2D
-
     def __new__(cls, *args, **kwargs):
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             array = _array_from_columns(args[0])
@@ -643,9 +642,7 @@ class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):
 
 
 class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
-    lib = numpy
     ObjectClass = vector.backends.object_.VectorObject3D
-    ProjectionClass2D = VectorNumpy2D
 
     def __new__(cls, *args, **kwargs):
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
@@ -750,7 +747,6 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
 
 class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):
     ObjectClass = vector.backends.object_.MomentumObject3D
-    ProjectionClass2D = MomentumNumpy2D
 
     def __array_finalize__(self, obj):
         self.dtype.names = [
@@ -788,10 +784,7 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):
 
 
 class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
-    lib = numpy
     ObjectClass = vector.backends.object_.VectorObject4D
-    ProjectionClass2D = VectorNumpy2D
-    ProjectionClass3D = VectorNumpy3D
 
     def __new__(cls, *args, **kwargs):
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
@@ -953,8 +946,6 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
 
 class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):
     ObjectClass = vector.backends.object_.MomentumObject4D
-    ProjectionClass2D = MomentumNumpy2D
-    ProjectionClass3D = MomentumNumpy3D
 
     def __array_finalize__(self, obj):
         self.dtype.names = [
@@ -1030,3 +1021,28 @@ def array(*args, **kwargs):
             cls = VectorNumpy2D
 
     return cls(*args, **kwargs)
+
+
+VectorNumpy2D.ProjectionClass2D = VectorNumpy2D
+VectorNumpy2D.ProjectionClass3D = VectorNumpy3D
+VectorNumpy2D.ProjectionClass4D = VectorNumpy4D
+
+MomentumNumpy2D.ProjectionClass2D = MomentumNumpy2D
+MomentumNumpy2D.ProjectionClass3D = MomentumNumpy3D
+MomentumNumpy2D.ProjectionClass4D = MomentumNumpy4D
+
+VectorNumpy3D.ProjectionClass2D = VectorNumpy2D
+VectorNumpy3D.ProjectionClass3D = VectorNumpy3D
+VectorNumpy3D.ProjectionClass4D = VectorNumpy4D
+
+MomentumNumpy3D.ProjectionClass2D = MomentumNumpy2D
+MomentumNumpy3D.ProjectionClass3D = MomentumNumpy3D
+MomentumNumpy3D.ProjectionClass4D = MomentumNumpy4D
+
+VectorNumpy4D.ProjectionClass2D = VectorNumpy2D
+VectorNumpy4D.ProjectionClass3D = VectorNumpy3D
+VectorNumpy4D.ProjectionClass4D = VectorNumpy4D
+
+MomentumNumpy4D.ProjectionClass2D = MomentumNumpy2D
+MomentumNumpy4D.ProjectionClass3D = MomentumNumpy3D
+MomentumNumpy4D.ProjectionClass4D = MomentumNumpy4D
