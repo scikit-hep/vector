@@ -57,7 +57,11 @@ def test_M2(constructor, coordinates):
     )
 
 # Run the same tests within hypothesis
+<<<<<<< HEAD
 @given(constructor=st.tuples(st.floats(min_value=-10e7, max_value=10e7), st.floats(min_value=-10e7, max_value=10e7), st.floats(min_value=-10e7, max_value=10e7), st.floats(min_value=-10e7, max_value=10e7)) | st.tuples(st.integers(min_value=-10e7, max_value=10e7), st.integers(min_value=-10e7, max_value=10e7), st.integers(min_value=-10e7, max_value=10e7), st.integers(min_value=-10e7, max_value=10e7)))
+=======
+@given(constructor=st.tuples(st.floats(), st.floats(), st.floats(), st.floats()) | st.tuples(st.integers(), st.integers(), st.integers(), st.integers()))
+>>>>>>> test fixture and hypothesis
 def test_fuzz_M2(constructor, coordinates):
     assert ROOT.Math.PxPyPzEVector(*constructor).M2() == pytest.approx(
         getattr(
@@ -76,7 +80,11 @@ def test_M(constructor, coordinates):
     )
 
 # Run the same tests within hypothesis
+<<<<<<< HEAD
 @given(constructor=st.tuples(st.floats(min_value=-10e7, max_value=10e7), st.floats(min_value=-10e7, max_value=10e7), st.floats(min_value=-10e7, max_value=10e7), st.floats(min_value=-10e7, max_value=10e7)) | st.tuples(st.integers(min_value=-10e7, max_value=10e7), st.integers(min_value=-10e7, max_value=10e7), st.integers(min_value=-10e7, max_value=10e7), st.integers(min_value=-10e7, max_value=10e7)))
+=======
+@given(constructor=st.tuples(st.floats(), st.floats(), st.floats(), st.floats()) | st.tuples(st.integers(), st.integers(), st.integers(), st.integers()))
+>>>>>>> test fixture and hypothesis
 def test_fuzz_M(constructor, coordinates):
     assert ROOT.Math.PxPyPzEVector(*constructor).M() == pytest.approx(
         getattr(
@@ -88,6 +96,7 @@ def test_fuzz_M(constructor, coordinates):
 # Dot
 @pytest.mark.parametrize("constructor", constructor)
 def test_Dot(constructor, coordinates):
+<<<<<<< HEAD
     v1 = getattr(
         vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
     )()
@@ -161,4 +170,28 @@ def test_Minus(constructor, coordinates):
         getattr(
             vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
         )().minus
+=======
+    assert ROOT.Math.PxPyPzEVector(*constructor).Dot(ROOT.Math.PxPyPzEVector(*constructor)) == pytest.approx(
+        getattr(
+            vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
+        )().dot(
+        getattr(
+            vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
+        )())
+    )
+
+# Run the same test within hypothesis
+@given(constructor1=st.tuples(st.floats(), st.floats(), st.floats(), st.floats())
+                    | st.tuples(st.integers(), st.integers(), st.integers(), st.integers()),
+       constructor2=st.tuples(st.floats(), st.floats(), st.floats(), st.floats())
+                    | st.tuples(st.integers(), st.integers(), st.integers(), st.integers()))
+def test_fizz_Dot(constructor1, constructor2, coordinates):
+    assert ROOT.Math.PxPyPzEVector(*constructor1).Dot(ROOT.Math.PxPyPzEVector(*constructor2)) == pytest.approx(
+        getattr(
+            vector.obj(**dict(zip(["x", "y", "z", "t"], constructor1))), coordinates
+        )().dot(
+        getattr(
+            vector.obj(**dict(zip(["x", "y", "z", "t"], constructor2))), coordinates
+        )())
+>>>>>>> test fixture and hypothesis
     )
