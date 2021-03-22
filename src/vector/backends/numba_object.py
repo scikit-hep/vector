@@ -35,6 +35,7 @@ from vector.methods import (
     LongitudinalEta,
     LongitudinalTheta,
     LongitudinalZ,
+    Momentum,
     TemporalT,
     TemporalTau,
     _from_signature,
@@ -1006,7 +1007,7 @@ def add_planar_property(vectortype, propertyname):
     @numba.extending.overload_attribute(vectortype, propertyname)
     def overloader(v):
         function, *returns = _from_signature(
-            "", numba_modules["planar"][propertyname], (numba_aztype(v),)
+            propertyname, numba_modules["planar"][propertyname], (numba_aztype(v),)
         )
         coord1 = getcoord1[numba_aztype(v)]
         coord2 = getcoord2[numba_aztype(v)]
@@ -1021,7 +1022,7 @@ def add_spatial_property(vectortype, propertyname):
     @numba.extending.overload_attribute(vectortype, propertyname)
     def overloader(v):
         function, *returns = _from_signature(
-            "",
+            propertyname,
             numba_modules["spatial"][propertyname],
             (numba_aztype(v), numba_ltype(v)),
         )
@@ -1039,7 +1040,7 @@ def add_lorentz_property(vectortype, propertyname):
     @numba.extending.overload_attribute(vectortype, propertyname)
     def overloader(v):
         function, *returns = _from_signature(
-            "",
+            propertyname,
             numba_modules["lorentz"][propertyname],
             (numba_aztype(v), numba_ltype(v), numba_ttype(v)),
         )
@@ -1091,17 +1092,45 @@ lorentz_binary_methods = ["boost_p4"]
 general_binary_methods = ["dot", "add", "subtract", "equal", "not_equal"]
 
 
-def add_binary_method(vectortype, groupname, methodname):
+def min_dimension_of(v1, v2):
+    if isinstance(v1, VectorObject2DType):
+        return "planar"
+    elif isinstance(v1, VectorObject3DType):
+        if isinstance(v2, VectorObject2DType):
+            return "planar"
+        else:
+            return "spatial"
+    else:
+        if isinstance(v2, VectorObject2DType):
+            return "planar"
+        elif isinstance(v2, VectorObject3DType):
+            return "spatial"
+        else:
+            return "lorentz"
+
+
+def flavor_of(v1, v2):
+    if issubclass(v1.instance_class, Momentum) and issubclass(
+        v2.instance_class, Momentum
+    ):
+        return v1.instance_class
+    else:
+        return v1.instance_class.GenericClass
+
+
+def add_binary_method(vectortype, methodname):
     @numba.extending.overload_method(vectortype, methodname)
     def overloader(v1, v2):
-        if issubclass(vectortype, VectorObject2DType):
+        groupname = min_dimension_of(v1, v2)
+
+        if groupname == "planar":
             signature = (numba_aztype(v1), numba_aztype(v2))
             coord11 = getcoord1[numba_aztype(v1)]
             coord12 = getcoord2[numba_aztype(v1)]
             coord21 = getcoord1[numba_aztype(v2)]
             coord22 = getcoord2[numba_aztype(v2)]
 
-        elif issubclass(vectortype, VectorObject3DType):
+        elif groupname == "spatial":
             signature = (
                 numba_aztype(v1),
                 numba_ltype(v1),
@@ -1115,7 +1144,7 @@ def add_binary_method(vectortype, groupname, methodname):
             coord22 = getcoord2[numba_aztype(v2)]
             coord23 = getcoord1[numba_ltype(v2)]
 
-        elif issubclass(vectortype, VectorObject4DType):
+        elif groupname == "lorentz":
             signature = (
                 numba_aztype(v1),
                 numba_ltype(v1),
@@ -1134,18 +1163,20 @@ def add_binary_method(vectortype, groupname, methodname):
             coord24 = getcoord1[numba_ttype(v2)]
 
         function, *returns = _from_signature(
-            "", numba_modules[groupname][methodname], signature
+            groupname + "." + methodname,
+            numba_modules[groupname][methodname],
+            signature,
         )
 
         if returns == [bool] or returns == [float]:
-            if issubclass(vectortype, VectorObject2DType):
+            if groupname == "planar":
 
                 def overloader_impl(v1, v2):
                     return function(
                         numpy, coord11(v1), coord12(v1), coord21(v2), coord22(v2)
                     )
 
-            elif issubclass(vectortype, VectorObject3DType):
+            elif groupname == "spatial":
 
                 def overloader_impl(v1, v2):
                     return function(
@@ -1158,7 +1189,7 @@ def add_binary_method(vectortype, groupname, methodname):
                         coord23(v2),
                     )
 
-            elif issubclass(vectortype, VectorObject4DType):
+            elif groupname == "lorentz":
 
                 def overloader_impl(v1, v2):
                     return function(
@@ -1174,9 +1205,8 @@ def add_binary_method(vectortype, groupname, methodname):
                     )
 
         else:
-            instance_class = vectortype.instance_class
-
-            if issubclass(vectortype, VectorObject2DType):
+            if groupname == "planar":
+                instance_class = flavor_of(v1, v2).ProjectionClass2D
                 azcoords = _coord_object_type[returns[0]]
 
                 def overloader_impl(v1, v2):
@@ -1185,7 +1215,8 @@ def add_binary_method(vectortype, groupname, methodname):
                     )
                     return instance_class(azcoords(out1, out2))
 
-            elif issubclass(vectortype, VectorObject3DType):
+            elif groupname == "spatial":
+                instance_class = flavor_of(v1, v2).ProjectionClass3D
                 azcoords = _coord_object_type[returns[0]]
                 lcoords = _coord_object_type[returns[1]]
 
@@ -1201,7 +1232,8 @@ def add_binary_method(vectortype, groupname, methodname):
                     )
                     return instance_class(azcoords(out1, out2), lcoords(out3))
 
-            elif issubclass(vectortype, VectorObject4DType):
+            elif groupname == "lorentz":
+                instance_class = flavor_of(v1, v2).ProjectionClass4D
                 azcoords = _coord_object_type[returns[0]]
                 lcoords = _coord_object_type[returns[1]]
                 tcoords = _coord_object_type[returns[2]]
@@ -1234,7 +1266,7 @@ for methodname in planar_binary_methods:
         VectorObject4DType,
         MomentumObject4DType,
     ):
-        add_binary_method(vectortype, "planar", methodname)
+        add_binary_method(vectortype, methodname)
 
 for methodname in spatial_binary_methods:
     for vectortype in (
@@ -1243,26 +1275,26 @@ for methodname in spatial_binary_methods:
         VectorObject4DType,
         MomentumObject4DType,
     ):
-        add_binary_method(vectortype, "spatial", methodname)
+        add_binary_method(vectortype, methodname)
 
 for methodname in lorentz_binary_methods:
     for vectortype in (
         VectorObject4DType,
         MomentumObject4DType,
     ):
-        add_binary_method(vectortype, "lorentz", methodname)
+        add_binary_method(vectortype, methodname)
 
 for methodname in general_binary_methods:
     for vectortype in (VectorObject2DType, MomentumObject2DType):
-        add_binary_method(vectortype, "planar", methodname)
+        add_binary_method(vectortype, methodname)
 
 for methodname in general_binary_methods:
     for vectortype in (VectorObject3DType, MomentumObject3DType):
-        add_binary_method(vectortype, "spatial", methodname)
+        add_binary_method(vectortype, methodname)
 
 for methodname in general_binary_methods:
     for vectortype in (VectorObject4DType, MomentumObject4DType):
-        add_binary_method(vectortype, "lorentz", methodname)
+        add_binary_method(vectortype, methodname)
 
 
 # TODO: the rest are special in one way or another. They need to be overloaded individually.

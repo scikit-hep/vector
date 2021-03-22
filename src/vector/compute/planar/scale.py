@@ -5,7 +5,13 @@
 
 import numpy
 
-from vector.methods import AzimuthalRhoPhi, AzimuthalXY, _aztype, _from_signature
+from vector.methods import (
+    AzimuthalRhoPhi,
+    AzimuthalXY,
+    _aztype,
+    _flavor_of,
+    _from_signature,
+)
 
 
 def rectify(lib, phi):
@@ -33,5 +39,5 @@ def dispatch(factor, v):
     function, *returns = _from_signature(__name__, dispatch_map, (_aztype(v),))
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
-            type(v), function(v.lib, factor, *v.azimuthal.elements), returns
+            _flavor_of(v), function(v.lib, factor, *v.azimuthal.elements), returns
         )

@@ -6,7 +6,13 @@
 import numpy
 
 from vector.compute.planar import x, y
-from vector.methods import AzimuthalRhoPhi, AzimuthalXY, _aztype, _from_signature
+from vector.methods import (
+    AzimuthalRhoPhi,
+    AzimuthalXY,
+    _aztype,
+    _flavor_of,
+    _from_signature,
+)
 
 # Rotation is only computed in Cartesian coordinates; the rest are conversions.
 
@@ -29,7 +35,7 @@ def dispatch(obj, v):
     function, *returns = _from_signature(__name__, dispatch_map, (_aztype(v),))
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
-            type(v),
+            _flavor_of(v),
             function(
                 v.lib, obj["xx"], obj["xy"], obj["yx"], obj["yy"], *v.azimuthal.elements
             ),

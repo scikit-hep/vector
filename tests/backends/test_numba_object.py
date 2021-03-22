@@ -491,8 +491,81 @@ def test_method_vector():
     assert out.x == pytest.approx(4.1)
     assert out.y == pytest.approx(6.2)
 
+    out = get_add(vector.obj(x=1.1, y=2.2), vector.obj(x=3, y=4, z=5))
+    assert isinstance(out, vector.backends.object_.VectorObject2D)
+    assert out.x == pytest.approx(4.1)
+    assert out.y == pytest.approx(6.2)
+
+    out = get_add(vector.obj(x=1.1, y=2.2, z=3.3), vector.obj(x=3, y=4))
+    assert isinstance(out, vector.backends.object_.VectorObject2D)
+    assert out.x == pytest.approx(4.1)
+    assert out.y == pytest.approx(6.2)
+
     out = get_add(vector.obj(x=1.1, y=2.2, z=3.3), vector.obj(x=3, y=4, z=5))
     assert isinstance(out, vector.backends.object_.VectorObject3D)
+    assert out.x == pytest.approx(4.1)
+    assert out.y == pytest.approx(6.2)
+    assert out.z == pytest.approx(8.3)
+
+    out = get_add(vector.obj(px=1.1, py=2.2), vector.obj(px=3, py=4))
+    assert isinstance(out, vector.backends.object_.MomentumObject2D)
+    assert out.x == pytest.approx(4.1)
+    assert out.y == pytest.approx(6.2)
+
+    out = get_add(vector.obj(px=1.1, py=2.2), vector.obj(px=3, py=4, pz=5))
+    assert isinstance(out, vector.backends.object_.MomentumObject2D)
+    assert out.x == pytest.approx(4.1)
+    assert out.y == pytest.approx(6.2)
+
+    out = get_add(vector.obj(px=1.1, py=2.2, pz=3.3), vector.obj(px=3, py=4))
+    assert isinstance(out, vector.backends.object_.MomentumObject2D)
+    assert out.x == pytest.approx(4.1)
+    assert out.y == pytest.approx(6.2)
+
+    out = get_add(vector.obj(px=1.1, py=2.2, pz=3.3), vector.obj(px=3, py=4, pz=5))
+    assert isinstance(out, vector.backends.object_.MomentumObject3D)
+    assert out.x == pytest.approx(4.1)
+    assert out.y == pytest.approx(6.2)
+    assert out.z == pytest.approx(8.3)
+
+    out = get_add(vector.obj(x=1.1, y=2.2), vector.obj(px=3, py=4))
+    assert not isinstance(out, vector.backends.object_.MomentumObject2D)
+    assert out.x == pytest.approx(4.1)
+    assert out.y == pytest.approx(6.2)
+
+    out = get_add(vector.obj(x=1.1, y=2.2), vector.obj(px=3, py=4, pz=5))
+    assert not isinstance(out, vector.backends.object_.MomentumObject2D)
+    assert out.x == pytest.approx(4.1)
+    assert out.y == pytest.approx(6.2)
+
+    out = get_add(vector.obj(x=1.1, y=2.2, z=3.3), vector.obj(px=3, py=4))
+    assert not isinstance(out, vector.backends.object_.MomentumObject2D)
+    assert out.x == pytest.approx(4.1)
+    assert out.y == pytest.approx(6.2)
+
+    out = get_add(vector.obj(x=1.1, y=2.2, z=3.3), vector.obj(px=3, py=4, pz=5))
+    assert not isinstance(out, vector.backends.object_.MomentumObject3D)
+    assert out.x == pytest.approx(4.1)
+    assert out.y == pytest.approx(6.2)
+    assert out.z == pytest.approx(8.3)
+
+    out = get_add(vector.obj(px=1.1, py=2.2), vector.obj(x=3, y=4))
+    assert not isinstance(out, vector.backends.object_.MomentumObject2D)
+    assert out.x == pytest.approx(4.1)
+    assert out.y == pytest.approx(6.2)
+
+    out = get_add(vector.obj(px=1.1, py=2.2), vector.obj(x=3, y=4, z=5))
+    assert not isinstance(out, vector.backends.object_.MomentumObject2D)
+    assert out.x == pytest.approx(4.1)
+    assert out.y == pytest.approx(6.2)
+
+    out = get_add(vector.obj(px=1.1, py=2.2, pz=3.3), vector.obj(x=3, y=4))
+    assert not isinstance(out, vector.backends.object_.MomentumObject2D)
+    assert out.x == pytest.approx(4.1)
+    assert out.y == pytest.approx(6.2)
+
+    out = get_add(vector.obj(px=1.1, py=2.2, pz=3.3), vector.obj(x=3, y=4, z=5))
+    assert not isinstance(out, vector.backends.object_.MomentumObject3D)
     assert out.x == pytest.approx(4.1)
     assert out.y == pytest.approx(6.2)
     assert out.z == pytest.approx(8.3)

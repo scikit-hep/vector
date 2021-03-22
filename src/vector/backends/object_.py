@@ -31,7 +31,7 @@ from vector.methods import (
     Vector4D,
     _aztype,
     _coordinate_class_to_names,
-    _handler,
+    _handler_of,
     _ltype,
     _repr_generic_to_momentum,
     _ttype,
@@ -182,6 +182,7 @@ class VectorObject:
     ProjectionClass2D: typing.Any
     ProjectionClass3D: typing.Any
     ProjectionClass4D: typing.Any
+    GenericClass: typing.Any
 
     def __eq__(self, other):
         return numpy.equal(self, other)
@@ -241,7 +242,7 @@ class VectorObject:
         return numpy.matmul(self, other)
 
     def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
-        if not isinstance(_handler(inputs), VectorObject):
+        if not isinstance(_handler_of(*inputs), VectorObject):
             # Let the array-of-vectors object handle it.
             return NotImplemented
 
@@ -1198,23 +1199,29 @@ def obj(**coordinates):
 VectorObject2D.ProjectionClass2D = VectorObject2D
 VectorObject2D.ProjectionClass3D = VectorObject3D
 VectorObject2D.ProjectionClass4D = VectorObject4D
+VectorObject2D.GenericClass = VectorObject2D
 
 MomentumObject2D.ProjectionClass2D = MomentumObject2D
 MomentumObject2D.ProjectionClass3D = MomentumObject3D
 MomentumObject2D.ProjectionClass4D = MomentumObject4D
+MomentumObject2D.GenericClass = VectorObject2D
 
 VectorObject3D.ProjectionClass2D = VectorObject2D
 VectorObject3D.ProjectionClass3D = VectorObject3D
 VectorObject3D.ProjectionClass4D = VectorObject4D
+VectorObject3D.GenericClass = VectorObject3D
 
 MomentumObject3D.ProjectionClass2D = MomentumObject2D
 MomentumObject3D.ProjectionClass3D = MomentumObject3D
 MomentumObject3D.ProjectionClass4D = MomentumObject4D
+MomentumObject3D.GenericClass = VectorObject3D
 
 VectorObject4D.ProjectionClass2D = VectorObject2D
 VectorObject4D.ProjectionClass3D = VectorObject3D
 VectorObject4D.ProjectionClass4D = VectorObject4D
+VectorObject4D.GenericClass = VectorObject4D
 
 MomentumObject4D.ProjectionClass2D = MomentumObject2D
 MomentumObject4D.ProjectionClass3D = MomentumObject3D
 MomentumObject4D.ProjectionClass4D = MomentumObject4D
+MomentumObject4D.GenericClass = VectorObject4D

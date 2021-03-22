@@ -1263,7 +1263,7 @@ class LorentzMomentum(SpatialMomentum):
         return self.mt2
 
 
-def _lib_of(objects):
+def _lib_of(*objects):
     lib = None
     for obj in objects:
         if isinstance(obj, Vector):
@@ -1285,7 +1285,7 @@ def _from_signature(name, dispatch_map, signature):
     return result
 
 
-def _handler(objects):
+def _handler_of(*objects):
     from .backends.numpy_ import VectorNumpy
     from .backends.object_ import VectorObject
 
@@ -1300,3 +1300,26 @@ def _handler(objects):
                 handler = obj
 
     return handler
+
+
+def _flavor_of(*objects):
+    from .backends.numpy_ import VectorNumpy
+    from .backends.object_ import VectorObject
+
+    handler = None
+    is_momentum = True
+    for obj in objects:
+        if isinstance(obj, Vector):
+            if not isinstance(obj, Momentum):
+                is_momentum = False
+            if handler is None:
+                handler = obj
+            elif isinstance(obj, VectorObject):
+                pass
+            elif isinstance(obj, VectorNumpy):
+                handler = obj
+
+    if is_momentum:
+        return type(handler)
+    else:
+        return handler.GenericClass
