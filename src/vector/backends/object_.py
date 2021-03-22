@@ -421,6 +421,15 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             len(returns) == 2
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
+            and returns[1] is None
+        ):
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            return cls.ProjectionClass2D(azcoords)
+
+        elif (
+            len(returns) == 2
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
             and isinstance(returns[1], type)
             and issubclass(returns[1], Longitudinal)
         ):
@@ -576,6 +585,15 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             return cls.ProjectionClass3D(azcoords, self.longitudinal)
+
+        elif (
+            len(returns) == 2
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and returns[1] is None
+        ):
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            return cls.ProjectionClass2D(azcoords)
 
         elif (
             len(returns) == 2
@@ -834,6 +852,15 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             return cls.ProjectionClass4D(azcoords, self.longitudinal, self.temporal)
+
+        elif (
+            len(returns) == 2
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and returns[1] is None
+        ):
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            return cls.ProjectionClass2D(azcoords)
 
         elif (
             len(returns) == 2
