@@ -16,6 +16,10 @@ constructor = [
     (0, 0, 0, 0),
 #    (0, 0, 1, 0), # theta == 0.0
 #    (0, 0, -1, 0),
+    (0, 0, 1, 0),
+    (0, 0, 0, 4294967296),
+    (0, 4294967296, 0, 0),
+###>>>>>>> handle nan and overflow errors, add failing test cases
     (0, 0, 0, 10),
     (0, 0, 0, -10),
     (1, 2, 3, 0),
@@ -42,6 +46,9 @@ coordinate_list = [
     "to_rhophietatau",
 ]
 
+def isNaN(num):
+    return num!=num
+
 @pytest.fixture(scope="module", params=coordinate_list)
 def coordinates(request):
     return request.param
@@ -63,11 +70,27 @@ def test_M2(constructor, coordinates):
 @given(constructor=st.tuples(st.floats(), st.floats(), st.floats(), st.floats()) | st.tuples(st.integers(), st.integers(), st.integers(), st.integers()))
 >>>>>>> test fixture and hypothesis
 def test_fuzz_M2(constructor, coordinates):
-    assert ROOT.Math.PxPyPzEVector(*constructor).M2() == pytest.approx(
-        getattr(
+    try:
+        ref_result = ROOT.Math.PxPyPzEVector(*constructor).M2()
+        if isNaN(ref_result):
+            assert isNaN(getattr(
+                vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
+            )().tau2
+        )
+        else:
+            assert ref_result == pytest.approx(
+                getattr(
+                    vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
+                )().tau2
+            )
+    except OverflowError:
+        try:
+            getattr(
             vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
         )().tau2
-    )
+            raise ValueError
+        except OverflowError:
+            return None
 
 # Run a test that compares ROOT's 'M()' with vector's 'tau' for all cases.
 # Mass is tau (or mass)
@@ -86,11 +109,27 @@ def test_M(constructor, coordinates):
 @given(constructor=st.tuples(st.floats(), st.floats(), st.floats(), st.floats()) | st.tuples(st.integers(), st.integers(), st.integers(), st.integers()))
 >>>>>>> test fixture and hypothesis
 def test_fuzz_M(constructor, coordinates):
-    assert ROOT.Math.PxPyPzEVector(*constructor).M() == pytest.approx(
-        getattr(
-            vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
-        )().tau
-    )
+    try:
+        ref_result = ROOT.Math.PxPyPzEVector(*constructor).M()
+        if isNaN(ref_result):
+            assert isNaN(getattr(
+                vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
+            )().tau
+        )
+        else:
+            assert ref_result == pytest.approx(
+                getattr(
+                    vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
+                )().tau
+            )
+    except OverflowError:
+        try:
+            getattr(
+                vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
+            )().tau
+            raise ValueError
+        except OverflowError:
+            return None
 
 # Run a test that compares ROOT's 'Dot()' with vector's 'dot' for all cases.
 # Dot
@@ -186,6 +225,7 @@ def test_Minus(constructor, coordinates):
        constructor2=st.tuples(st.floats(), st.floats(), st.floats(), st.floats())
                     | st.tuples(st.integers(), st.integers(), st.integers(), st.integers()))
 def test_fizz_Dot(constructor1, constructor2, coordinates):
+<<<<<<< HEAD
     assert ROOT.Math.PxPyPzEVector(*constructor1).Dot(ROOT.Math.PxPyPzEVector(*constructor2)) == pytest.approx(
         getattr(
             vector.obj(**dict(zip(["x", "y", "z", "t"], constructor1))), coordinates
@@ -195,3 +235,35 @@ def test_fizz_Dot(constructor1, constructor2, coordinates):
         )())
 >>>>>>> test fixture and hypothesis
     )
+=======
+    try:
+        ref_result = ROOT.Math.PxPyPzEVector(*constructor1).Dot(ROOT.Math.PxPyPzEVector(*constructor2))
+        if isNaN(ref_result):
+            assert isNaN(getattr(
+                vector.obj(**dict(zip(["x", "y", "z", "t"], constructor1))), coordinates
+                )().dot(
+                getattr(
+                vector.obj(**dict(zip(["x", "y", "z", "t"], constructor2))), coordinates
+                )())
+            )
+        else:
+            assert ref_result == pytest.approx(
+                getattr(
+                    vector.obj(**dict(zip(["x", "y", "z", "t"], constructor1))), coordinates
+                    )().dot(
+                    getattr(
+                    vector.obj(**dict(zip(["x", "y", "z", "t"], constructor2))), coordinates
+                    )())
+        )
+    except OverflowError:
+        try:
+            getattr(
+                vector.obj(**dict(zip(["x", "y", "z", "t"], constructor1))), coordinates
+                )().dot(
+                getattr(
+                vector.obj(**dict(zip(["x", "y", "z", "t"], constructor2))), coordinates
+                )())
+            raise ValueError
+        except OverflowError:
+            return None
+>>>>>>> handle nan and overflow errors, add failing test cases
