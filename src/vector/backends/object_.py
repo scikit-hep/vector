@@ -179,6 +179,10 @@ def _replace_data(obj, result):
 class VectorObject:
     lib = numpy
 
+    ProjectionClass2D: typing.Any
+    ProjectionClass3D: typing.Any
+    ProjectionClass4D: typing.Any
+
     def __eq__(self, other):
         return numpy.equal(self, other)
 
@@ -411,7 +415,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             and issubclass(returns[0], Azimuthal)
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
-            return cls(azcoords)
+            return cls.ProjectionClass2D(azcoords)
 
         elif (
             len(returns) == 2
@@ -422,7 +426,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             lcoords = _coord_object_type[returns[1]](result[2])
-            return cls(azcoords, lcoords)
+            return cls.ProjectionClass3D(azcoords, lcoords)
 
         elif (
             len(returns) == 3
@@ -434,7 +438,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             lcoords = _coord_object_type[returns[1]](result[2])
-            return cls(azcoords, lcoords)
+            return cls.ProjectionClass3D(azcoords, lcoords)
 
         elif (
             len(returns) == 3
@@ -448,7 +452,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             lcoords = _coord_object_type[returns[1]](result[2])
             tcoords = _coord_object_type[returns[2]](result[3])
-            return cls(azcoords, lcoords, tcoords)
+            return cls.ProjectionClass4D(azcoords, lcoords, tcoords)
 
         else:
             raise AssertionError(repr(returns))
@@ -571,7 +575,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             and issubclass(returns[0], Azimuthal)
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
-            return cls(azcoords, self.longitudinal)
+            return cls.ProjectionClass3D(azcoords, self.longitudinal)
 
         elif (
             len(returns) == 2
@@ -582,7 +586,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             lcoords = _coord_object_type[returns[1]](result[2])
-            return cls(azcoords, lcoords)
+            return cls.ProjectionClass3D(azcoords, lcoords)
 
         elif (
             len(returns) == 3
@@ -594,7 +598,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             lcoords = _coord_object_type[returns[1]](result[2])
-            return cls(azcoords, lcoords)
+            return cls.ProjectionClass3D(azcoords, lcoords)
 
         elif (
             len(returns) == 3
@@ -608,7 +612,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             lcoords = _coord_object_type[returns[1]](result[2])
             tcoords = _coord_object_type[returns[2]](result[3])
-            return cls(azcoords, lcoords, tcoords)
+            return cls.ProjectionClass4D(azcoords, lcoords, tcoords)
 
         else:
             raise AssertionError(repr(returns))
@@ -829,7 +833,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             and issubclass(returns[0], Azimuthal)
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
-            return cls(azcoords, self.longitudinal, self.temporal)
+            return cls.ProjectionClass4D(azcoords, self.longitudinal, self.temporal)
 
         elif (
             len(returns) == 2
@@ -840,7 +844,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             lcoords = _coord_object_type[returns[1]](result[2])
-            return cls(azcoords, lcoords, self.temporal)
+            return cls.ProjectionClass4D(azcoords, lcoords, self.temporal)
 
         elif (
             len(returns) == 3
@@ -866,7 +870,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             lcoords = _coord_object_type[returns[1]](result[2])
             tcoords = _coord_object_type[returns[2]](result[3])
-            return cls(azcoords, lcoords, tcoords)
+            return cls.ProjectionClass4D(azcoords, lcoords, tcoords)
 
         else:
             raise AssertionError(repr(returns))

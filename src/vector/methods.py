@@ -372,7 +372,9 @@ class Vector2D(Vector):
         "to_xy docs"
         from .compute.planar import x, y
 
-        return self._wrap_result(type(self), (x.dispatch(self), y.dispatch(self)), [AzimuthalXY])
+        return self._wrap_result(
+            type(self), (x.dispatch(self), y.dispatch(self)), [AzimuthalXY]
+        )
 
     def to_rhophi(self):
         "to_rhophi docs"
@@ -696,25 +698,31 @@ def _compute_module_of(one, two, nontemporal=False):
 
     if isinstance(one, Vector2D):
         import vector.compute.planar
+
         return vector.compute.planar
 
     elif isinstance(one, Vector3D):
         if isinstance(two, Vector2D):
             import vector.compute.planar
+
             return vector.compute.planar
         else:
             import vector.compute.spatial
+
             return vector.compute.spatial
 
     elif isinstance(one, Vector4D):
         if isinstance(two, Vector2D):
             import vector.compute.planar
+
             return vector.compute.planar
         elif isinstance(two, Vector3D) or nontemporal:
             import vector.compute.spatial
+
             return vector.compute.spatial
         else:
             import vector.compute.lorentz
+
             return vector.compute.lorentz
 
 

@@ -32,4 +32,6 @@ dispatch_map = {
 def dispatch(factor, v):
     function, *returns = _from_signature(__name__, dispatch_map, (_aztype(v),))
     with numpy.errstate(all="ignore"):
-        return v._wrap_result(type(v), function(v.lib, factor, *v.azimuthal.elements), returns)
+        return v._wrap_result(
+            type(v), function(v.lib, factor, *v.azimuthal.elements), returns
+        )

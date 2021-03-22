@@ -590,7 +590,11 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):
         if returns == [float] or returns == [bool]:
             return result
 
-        elif returns == [AzimuthalXY] or returns == [AzimuthalRhoPhi]:
+        elif (
+            len(returns) == 1
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+        ):
             result = _toarrays(result)
             dtype = []
             i = 0
@@ -602,7 +606,94 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):
             for name in _coordinate_class_to_names[returns[0]]:
                 out[name] = result[i]
                 i += 1
-            return out.view(cls)
+            return out.view(cls.ProjectionClass2D)
+
+        elif (
+            len(returns) == 2
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+        ):
+            result = _toarrays(result)
+            dtype = []
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            out = numpy.empty(_shape_of(result), dtype=dtype)
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                out[name] = result[i]
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                out[name] = result[i]
+                i += 1
+            return out.view(cls.ProjectionClass3D)
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and returns[2] is None
+        ):
+            result = _toarrays(result)
+            dtype = []
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            out = numpy.empty(_shape_of(result), dtype=dtype)
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                out[name] = result[i]
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                out[name] = result[i]
+                i += 1
+            return out.view(cls.ProjectionClass3D)
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and isinstance(returns[2], type)
+            and issubclass(returns[2], Temporal)
+        ):
+            result = _toarrays(result)
+            dtype = []
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            for name in _coordinate_class_to_names[returns[2]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            out = numpy.empty(_shape_of(result), dtype=dtype)
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                out[name] = result[i]
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                out[name] = result[i]
+                i += 1
+            for name in _coordinate_class_to_names[returns[2]]:
+                out[name] = result[i]
+                i += 1
+            return out.view(cls.ProjectionClass4D)
 
         else:
             raise AssertionError(repr(returns))
@@ -691,7 +782,11 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
         if returns == [float] or returns == [bool]:
             return result
 
-        elif returns == [AzimuthalXY] or returns == [AzimuthalRhoPhi]:
+        elif (
+            len(returns) == 1
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+        ):
             result = _toarrays(result)
             dtype = []
             i = 0
@@ -707,10 +802,10 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
                 i += 1
             for name in _coordinate_class_to_names[_ltype(self)]:
                 out[name] = self[name]
-            return out.view(cls)
+            return out.view(cls.ProjectionClass3D)
 
         elif (
-            (len(returns) == 2 or (len(returns) == 3 and returns[2] is None))
+            len(returns) == 2
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
             and isinstance(returns[1], type)
@@ -733,7 +828,68 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
             for name in _coordinate_class_to_names[returns[1]]:
                 out[name] = result[i]
                 i += 1
-            return out.view(cls)
+            return out.view(cls.ProjectionClass3D)
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and returns[2] is None
+        ):
+            result = _toarrays(result)
+            dtype = []
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            out = numpy.empty(_shape_of(result), dtype=dtype)
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                out[name] = result[i]
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                out[name] = result[i]
+                i += 1
+            return out.view(cls.ProjectionClass3D)
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and isinstance(returns[2], type)
+            and issubclass(returns[2], Temporal)
+        ):
+            result = _toarrays(result)
+            dtype = []
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            for name in _coordinate_class_to_names[returns[2]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            out = numpy.empty(_shape_of(result), dtype=dtype)
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                out[name] = result[i]
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                out[name] = result[i]
+                i += 1
+            for name in _coordinate_class_to_names[returns[2]]:
+                out[name] = result[i]
+                i += 1
+            return out.view(cls.ProjectionClass4D)
 
         else:
             raise AssertionError(repr(returns))
@@ -846,23 +1002,31 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
         if returns == [float] or returns == [bool]:
             return result
 
-        elif returns == [AzimuthalXY] or returns == [AzimuthalRhoPhi]:
+        elif (
+            len(returns) == 1
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+        ):
             result = _toarrays(result)
             dtype = []
-            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
                 dtype.append((name, result[i].dtype))
+                i += 1
             for name in _coordinate_class_to_names[_ltype(self)]:
                 dtype.append((name, self.dtype[name]))
             for name in _coordinate_class_to_names[_ttype(self)]:
                 dtype.append((name, self.dtype[name]))
             out = numpy.empty(_shape_of(result), dtype=dtype)
-            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
                 out[name] = result[i]
+                i += 1
             for name in _coordinate_class_to_names[_ltype(self)]:
                 out[name] = self[name]
             for name in _coordinate_class_to_names[_ttype(self)]:
                 out[name] = self[name]
-            return out.view(cls)
+            return out.view(cls.ProjectionClass4D)
 
         elif (
             len(returns) == 2
@@ -892,7 +1056,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
                 i += 1
             for name in _coordinate_class_to_names[_ttype(self)]:
                 out[name] = self[name]
-            return out.view(cls)
+            return out.view(cls.ProjectionClass4D)
 
         elif (
             len(returns) == 3
@@ -900,6 +1064,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
             and issubclass(returns[0], Azimuthal)
             and isinstance(returns[1], type)
             and issubclass(returns[1], Longitudinal)
+            and returns[2] is None
         ):
             result = _toarrays(result)
             dtype = []
@@ -910,14 +1075,6 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
             for name in _coordinate_class_to_names[returns[1]]:
                 dtype.append((name, result[i].dtype))
                 i += 1
-            is_4d = False
-            if isinstance(returns[2], type) and issubclass(returns[2], Temporal):
-                is_4d = True
-                for name in _coordinate_class_to_names[returns[2]]:
-                    dtype.append((name, result[i].dtype))
-                    i += 1
-            elif returns[2] is not None:
-                raise AssertionError(repr(type(returns[2])))
             out = numpy.empty(_shape_of(result), dtype=dtype)
             i = 0
             for name in _coordinate_class_to_names[returns[0]]:
@@ -926,13 +1083,41 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
             for name in _coordinate_class_to_names[returns[1]]:
                 out[name] = result[i]
                 i += 1
-            if is_4d:
-                for name in _coordinate_class_to_names[returns[2]]:
-                    out[name] = result[i]
-                    i += 1
-                return out.view(cls)
-            else:
-                return out.view(self.ProjectionClass3D)
+            return out.view(cls.ProjectionClass3D)
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and isinstance(returns[2], type)
+            and issubclass(returns[2], Temporal)
+        ):
+            result = _toarrays(result)
+            dtype = []
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            for name in _coordinate_class_to_names[returns[2]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            out = numpy.empty(_shape_of(result), dtype=dtype)
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                out[name] = result[i]
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                out[name] = result[i]
+                i += 1
+            for name in _coordinate_class_to_names[returns[2]]:
+                out[name] = result[i]
+                i += 1
+            return out.view(cls.ProjectionClass4D)
 
         else:
             raise AssertionError(repr(returns))
