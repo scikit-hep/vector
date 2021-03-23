@@ -1732,3 +1732,64 @@ def add_rotateZ(vectortype):
 
 for vectortype in (VectorObject2DType, VectorObject3DType, VectorObject4DType):
     add_rotateZ(vectortype)
+
+
+def add_transform2D(vectortype):
+    @numba.extending.overload_method(vectortype, "transform2D")
+    def overloader(v, obj):
+        function, *returns = _from_signature(
+            "", numba_modules["planar"]["transform2D"], (numba_aztype(v),)
+        )
+
+        instance_class = v.instance_class
+        coord11 = getcoord1[numba_aztype(v)]
+        coord12 = getcoord2[numba_aztype(v)]
+        azcoords = _coord_object_type[returns[0]]
+
+        if issubclass(vectortype, VectorObject2DType):
+
+            def overloader_impl(v, obj):
+                out1, out2 = function(
+                    numpy,
+                    obj["xx"],
+                    obj["xy"],
+                    obj["yx"],
+                    obj["yy"],
+                    coord11(v),
+                    coord12(v),
+                )
+                return instance_class(azcoords(out1, out2))
+
+        elif issubclass(vectortype, VectorObject3DType):
+
+            def overloader_impl(v, obj):
+                out1, out2 = function(
+                    numpy,
+                    obj["xx"],
+                    obj["xy"],
+                    obj["yx"],
+                    obj["yy"],
+                    coord11(v),
+                    coord12(v),
+                )
+                return instance_class(azcoords(out1, out2), v.longitudinal)
+
+        elif issubclass(vectortype, VectorObject4DType):
+
+            def overloader_impl(v, obj):
+                out1, out2 = function(
+                    numpy,
+                    obj["xx"],
+                    obj["xy"],
+                    obj["yx"],
+                    obj["yy"],
+                    coord11(v),
+                    coord12(v),
+                )
+                return instance_class(azcoords(out1, out2), v.longitudinal, v.temporal)
+
+        return overloader_impl
+
+
+for vectortype in (VectorObject2DType, VectorObject3DType, VectorObject4DType):
+    add_transform2D(vectortype)

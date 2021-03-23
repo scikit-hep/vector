@@ -22,7 +22,9 @@ def cartesian(lib, xx, xy, yx, yy, x, y):
 
 
 def rhophi(lib, xx, xy, yx, yy, rho, phi):
-    return cartesian(lib, xx, xy, yx, yy, x.rhophi(rho, phi), y.rhophi(rho, phi))
+    return cartesian(
+        lib, xx, xy, yx, yy, x.rhophi(lib, rho, phi), y.rhophi(lib, rho, phi)
+    )
 
 
 dispatch_map = {

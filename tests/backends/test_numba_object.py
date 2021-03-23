@@ -924,3 +924,31 @@ def test_method_rotateZ():
     assert out.x == pytest.approx(0.9950041652780258)
     assert out.y == pytest.approx(0.09983341664682815)
     assert out.z == pytest.approx(2.2)
+
+
+def test_method_transform2D():
+    @numba.njit
+    def get_transform2D(v, obj):
+        return v.transform2D(obj)
+
+    obj = numba.typed.Dict()
+    obj["xx"] = numpy.cos(0.1)
+    obj["xy"] = -numpy.sin(0.1)
+    obj["yx"] = numpy.sin(0.1)
+    obj["yy"] = numpy.cos(0.1)
+
+    out = get_transform2D(vector.obj(x=1, y=0), obj)
+    assert isinstance(out, vector.backends.object_.VectorObject2D)
+    assert out.x == pytest.approx(0.9950041652780258)
+    assert out.y == pytest.approx(0.09983341664682815)
+
+    out = get_transform2D(vector.obj(rho=1, phi=0), obj)
+    assert isinstance(out, vector.backends.object_.VectorObject2D)
+    assert out.rho == pytest.approx(1)
+    assert out.phi == pytest.approx(0.1)
+
+    out = get_transform2D(vector.obj(x=1, y=0, z=2.2), obj)
+    assert isinstance(out, vector.backends.object_.VectorObject3D)
+    assert out.x == pytest.approx(0.9950041652780258)
+    assert out.y == pytest.approx(0.09983341664682815)
+    assert out.z == pytest.approx(2.2)
