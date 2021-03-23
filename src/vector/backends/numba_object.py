@@ -997,6 +997,125 @@ getcoord2 = {
     AzimuthalRhoPhi: azimuthalrhophi_coord2,
 }
 
+
+@numba.extending.overload_method(VectorObject2DType, "to_Vector2D")
+def VectorObject2D_to_Vector2D(v):
+    def VectorObject2D_to_Vector2D_impl(v):
+        return v
+
+    return VectorObject2D_to_Vector2D_impl
+
+
+@numba.extending.overload_method(VectorObject2DType, "to_Vector3D")
+def VectorObject2D_to_Vector3D(v):
+    if issubclass(v.instance_class, Momentum):
+
+        def VectorObject2D_to_Vector3D_impl(v):
+            return MomentumObject3D(v.azimuthal, LongitudinalObjectZ(0.0))
+
+    else:
+
+        def VectorObject2D_to_Vector3D_impl(v):
+            return VectorObject3D(v.azimuthal, LongitudinalObjectZ(0.0))
+
+    return VectorObject2D_to_Vector3D_impl
+
+
+@numba.extending.overload_method(VectorObject2DType, "to_Vector4D")
+def VectorObject2D_to_Vector4D(v):
+    if issubclass(v.instance_class, Momentum):
+
+        def VectorObject2D_to_Vector4D_impl(v):
+            return MomentumObject4D(
+                v.azimuthal, LongitudinalObjectZ(0.0), TemporalObjectT(0.0)
+            )
+
+    else:
+
+        def VectorObject2D_to_Vector4D_impl(v):
+            return VectorObject4D(
+                v.azimuthal, LongitudinalObjectZ(0.0), TemporalObjectT(0.0)
+            )
+
+    return VectorObject2D_to_Vector4D_impl
+
+
+@numba.extending.overload_method(VectorObject3DType, "to_Vector2D")
+def VectorObject3D_to_Vector2D(v):
+    if issubclass(v.instance_class, Momentum):
+
+        def VectorObject3D_to_Vector2D_impl(v):
+            return MomentumObject2D(v.azimuthal)
+
+    else:
+
+        def VectorObject3D_to_Vector2D_impl(v):
+            return VectorObject2D(v.azimuthal)
+
+    return VectorObject3D_to_Vector2D_impl
+
+
+@numba.extending.overload_method(VectorObject3DType, "to_Vector3D")
+def VectorObject3D_to_Vector3D(v):
+    def VectorObject3D_to_Vector3D_impl(v):
+        return v
+
+    return VectorObject3D_to_Vector3D_impl
+
+
+@numba.extending.overload_method(VectorObject3DType, "to_Vector4D")
+def VectorObject3D_to_Vector4D(v):
+    if issubclass(v.instance_class, Momentum):
+
+        def VectorObject3D_to_Vector4D_impl(v):
+            return MomentumObject4D(v.azimuthal, v.longitudinal, TemporalObjectT(0.0))
+
+    else:
+
+        def VectorObject3D_to_Vector4D_impl(v):
+            return VectorObject4D(v.azimuthal, v.longitudinal, TemporalObjectT(0.0))
+
+    return VectorObject3D_to_Vector4D_impl
+
+
+@numba.extending.overload_method(VectorObject4DType, "to_Vector2D")
+def VectorObject4D_to_Vector2D(v):
+    if issubclass(v.instance_class, Momentum):
+
+        def VectorObject4D_to_Vector2D_impl(v):
+            return MomentumObject2D(v.azimuthal)
+
+    else:
+
+        def VectorObject4D_to_Vector2D_impl(v):
+            return VectorObject2D(v.azimuthal)
+
+    return VectorObject4D_to_Vector2D_impl
+
+
+@numba.extending.overload_method(VectorObject4DType, "to_Vector3D")
+def VectorObject4D_to_Vector3D(v):
+    if issubclass(v.instance_class, Momentum):
+
+        def VectorObject4D_to_Vector3D_impl(v):
+            return MomentumObject3D(v.azimuthal, v.longitudinal)
+
+    else:
+
+        def VectorObject4D_to_Vector3D_impl(v):
+            return VectorObject3D(v.azimuthal, v.longitudinal)
+
+    return VectorObject4D_to_Vector3D_impl
+
+
+@numba.extending.overload_method(VectorObject4DType, "to_Vector4D")
+def VectorObject4D_to_Vector4D(v):
+    def VectorObject4D_to_Vector4D_impl(v):
+        return v
+
+    return VectorObject4D_to_Vector4D_impl
+
+
 planar_properties = ["x", "y", "rho", "rho2", "phi"]
 spatial_properties = ["z", "theta", "eta", "costheta", "cottheta", "mag", "mag2"]
 lorentz_properties = ["t", "t2", "tau", "tau2", "beta", "gamma", "rapidity"]

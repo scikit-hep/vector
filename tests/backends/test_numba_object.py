@@ -280,6 +280,92 @@ def test_VectorObject_constructor():
     assert out.tau == pytest.approx(4)
 
 
+def test_projections():
+    @numba.njit
+    def to_Vector2D(x):
+        return x.to_Vector2D()
+
+    @numba.njit
+    def to_Vector3D(x):
+        return x.to_Vector3D()
+
+    @numba.njit
+    def to_Vector4D(x):
+        return x.to_Vector4D()
+
+    assert isinstance(
+        to_Vector2D(vector.obj(x=1.1, y=2.2)), vector.backends.object_.VectorObject2D
+    )
+    assert isinstance(
+        to_Vector2D(vector.obj(x=1.1, y=2.2, z=3.3)),
+        vector.backends.object_.VectorObject2D,
+    )
+    assert isinstance(
+        to_Vector2D(vector.obj(x=1.1, y=2.2, z=3.3, t=4.4)),
+        vector.backends.object_.VectorObject2D,
+    )
+    assert isinstance(
+        to_Vector2D(vector.obj(px=1.1, py=2.2)),
+        vector.backends.object_.MomentumObject2D,
+    )
+    assert isinstance(
+        to_Vector2D(vector.obj(px=1.1, py=2.2, pz=3.3)),
+        vector.backends.object_.MomentumObject2D,
+    )
+    assert isinstance(
+        to_Vector2D(vector.obj(px=1.1, py=2.2, pz=3.3, E=4.4)),
+        vector.backends.object_.MomentumObject2D,
+    )
+
+    assert isinstance(
+        to_Vector3D(vector.obj(x=1.1, y=2.2)), vector.backends.object_.VectorObject3D
+    )
+    assert isinstance(
+        to_Vector3D(vector.obj(x=1.1, y=2.2, z=3.3)),
+        vector.backends.object_.VectorObject3D,
+    )
+    assert isinstance(
+        to_Vector3D(vector.obj(x=1.1, y=2.2, z=3.3, t=4.4)),
+        vector.backends.object_.VectorObject3D,
+    )
+    assert isinstance(
+        to_Vector3D(vector.obj(px=1.1, py=2.2)),
+        vector.backends.object_.MomentumObject3D,
+    )
+    assert isinstance(
+        to_Vector3D(vector.obj(px=1.1, py=2.2, pz=3.3)),
+        vector.backends.object_.MomentumObject3D,
+    )
+    assert isinstance(
+        to_Vector3D(vector.obj(px=1.1, py=2.2, pz=3.3, E=4.4)),
+        vector.backends.object_.MomentumObject3D,
+    )
+
+    assert isinstance(
+        to_Vector4D(vector.obj(x=1.1, y=2.2)), vector.backends.object_.VectorObject4D
+    )
+    assert isinstance(
+        to_Vector4D(vector.obj(x=1.1, y=2.2, z=3.3)),
+        vector.backends.object_.VectorObject4D,
+    )
+    assert isinstance(
+        to_Vector4D(vector.obj(x=1.1, y=2.2, z=3.3, t=4.4)),
+        vector.backends.object_.VectorObject4D,
+    )
+    assert isinstance(
+        to_Vector4D(vector.obj(px=1.1, py=2.2)),
+        vector.backends.object_.MomentumObject4D,
+    )
+    assert isinstance(
+        to_Vector4D(vector.obj(px=1.1, py=2.2, pz=3.3)),
+        vector.backends.object_.MomentumObject4D,
+    )
+    assert isinstance(
+        to_Vector4D(vector.obj(px=1.1, py=2.2, pz=3.3, E=4.4)),
+        vector.backends.object_.MomentumObject4D,
+    )
+
+
 def test_factory():
     @numba.njit
     def vector_xy():
