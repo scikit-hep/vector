@@ -1698,26 +1698,26 @@ def add_rotateZ(vectortype):
             )
 
             instance_class = v.instance_class
-            coord11 = getcoord1[numba_aztype(v)]
-            coord12 = getcoord2[numba_aztype(v)]
+            coord1 = getcoord1[numba_aztype(v)]
+            coord2 = getcoord2[numba_aztype(v)]
             azcoords = _coord_object_type[returns[0]]
 
             if issubclass(vectortype, VectorObject2DType):
 
                 def overloader_impl(v, angle):
-                    out1, out2 = function(numpy, angle, coord11(v), coord12(v))
+                    out1, out2 = function(numpy, angle, coord1(v), coord2(v))
                     return instance_class(azcoords(out1, out2))
 
             elif issubclass(vectortype, VectorObject3DType):
 
                 def overloader_impl(v, angle):
-                    out1, out2 = function(numpy, angle, coord11(v), coord12(v))
+                    out1, out2 = function(numpy, angle, coord1(v), coord2(v))
                     return instance_class(azcoords(out1, out2), v.longitudinal)
 
             elif issubclass(vectortype, VectorObject4DType):
 
                 def overloader_impl(v, angle):
-                    out1, out2 = function(numpy, angle, coord11(v), coord12(v))
+                    out1, out2 = function(numpy, angle, coord1(v), coord2(v))
                     return instance_class(
                         azcoords(out1, out2), v.longitudinal, v.temporal
                     )
@@ -1742,8 +1742,8 @@ def add_transform2D(vectortype):
         )
 
         instance_class = v.instance_class
-        coord11 = getcoord1[numba_aztype(v)]
-        coord12 = getcoord2[numba_aztype(v)]
+        coord1 = getcoord1[numba_aztype(v)]
+        coord2 = getcoord2[numba_aztype(v)]
         azcoords = _coord_object_type[returns[0]]
 
         if issubclass(vectortype, VectorObject2DType):
@@ -1755,8 +1755,8 @@ def add_transform2D(vectortype):
                     obj["xy"],
                     obj["yx"],
                     obj["yy"],
-                    coord11(v),
-                    coord12(v),
+                    coord1(v),
+                    coord2(v),
                 )
                 return instance_class(azcoords(out1, out2))
 
@@ -1769,8 +1769,8 @@ def add_transform2D(vectortype):
                     obj["xy"],
                     obj["yx"],
                     obj["yy"],
-                    coord11(v),
-                    coord12(v),
+                    coord1(v),
+                    coord2(v),
                 )
                 return instance_class(azcoords(out1, out2), v.longitudinal)
 
@@ -1783,8 +1783,8 @@ def add_transform2D(vectortype):
                     obj["xy"],
                     obj["yx"],
                     obj["yy"],
-                    coord11(v),
-                    coord12(v),
+                    coord1(v),
+                    coord2(v),
                 )
                 return instance_class(azcoords(out1, out2), v.longitudinal, v.temporal)
 
@@ -1793,3 +1793,67 @@ def add_transform2D(vectortype):
 
 for vectortype in (VectorObject2DType, VectorObject3DType, VectorObject4DType):
     add_transform2D(vectortype)
+
+
+@numba.extending.overload_method(VectorObject2DType, "unit")
+def VectorObject2DType_unit(v):
+    function, *returns = _from_signature(
+        "", numba_modules["planar"]["unit"], (numba_aztype(v),)
+    )
+
+    instance_class = v.instance_class
+    coord1 = getcoord1[numba_aztype(v)]
+    coord2 = getcoord2[numba_aztype(v)]
+    azcoords = _coord_object_type[returns[0]]
+
+    def VectorObject2DType_unit_impl(v):
+        out1, out2 = function(numpy, coord1(v), coord2(v))
+        return instance_class(azcoords(out1, out2))
+
+    return VectorObject2DType_unit_impl
+
+
+@numba.extending.overload_method(VectorObject3DType, "unit")
+def VectorObject3DType_unit(v):
+    function, *returns = _from_signature(
+        "", numba_modules["spatial"]["unit"], (numba_aztype(v), numba_ltype(v))
+    )
+
+    instance_class = v.instance_class
+    coord1 = getcoord1[numba_aztype(v)]
+    coord2 = getcoord2[numba_aztype(v)]
+    coord3 = getcoord1[numba_ltype(v)]
+    azcoords = _coord_object_type[returns[0]]
+    lcoords = _coord_object_type[returns[1]]
+
+    def VectorObject3DType_unit_impl(v):
+        out1, out2, out3 = function(numpy, coord1(v), coord2(v), coord3(v))
+        return instance_class(azcoords(out1, out2), lcoords(out3))
+
+    return VectorObject3DType_unit_impl
+
+
+@numba.extending.overload_method(VectorObject4DType, "unit")
+def VectorObject4DType_unit(v):
+    function, *returns = _from_signature(
+        "",
+        numba_modules["lorentz"]["unit"],
+        (numba_aztype(v), numba_ltype(v), numba_ttype(v)),
+    )
+
+    instance_class = v.instance_class
+    coord1 = getcoord1[numba_aztype(v)]
+    coord2 = getcoord2[numba_aztype(v)]
+    coord3 = getcoord1[numba_ltype(v)]
+    coord4 = getcoord1[numba_ttype(v)]
+    azcoords = _coord_object_type[returns[0]]
+    lcoords = _coord_object_type[returns[1]]
+    tcoords = _coord_object_type[returns[2]]
+
+    def VectorObject4DType_unit_impl(v):
+        out1, out2, out3, out4 = function(
+            numpy, coord1(v), coord2(v), coord3(v), coord4(v)
+        )
+        return instance_class(azcoords(out1, out2), lcoords(out3), tcoords(out4))
+
+    return VectorObject4DType_unit_impl

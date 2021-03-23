@@ -952,3 +952,27 @@ def test_method_transform2D():
     assert out.x == pytest.approx(0.9950041652780258)
     assert out.y == pytest.approx(0.09983341664682815)
     assert out.z == pytest.approx(2.2)
+
+
+def test_method_unit():
+    @numba.njit
+    def get_unit(v):
+        return v.unit()
+
+    out = get_unit(vector.obj(x=1, y=1))
+    assert isinstance(out, vector.backends.object_.VectorObject2D)
+    assert out.x == pytest.approx(1 / numpy.sqrt(2))
+    assert out.y == pytest.approx(1 / numpy.sqrt(2))
+
+    out = get_unit(vector.obj(x=1, y=1, z=1))
+    assert isinstance(out, vector.backends.object_.VectorObject3D)
+    assert out.x == pytest.approx(1 / numpy.sqrt(3))
+    assert out.y == pytest.approx(1 / numpy.sqrt(3))
+    assert out.z == pytest.approx(1 / numpy.sqrt(3))
+
+    out = get_unit(vector.obj(x=1, y=1, z=1, t=1))
+    assert isinstance(out, vector.backends.object_.VectorObject4D)
+    assert out.x == pytest.approx(1 / numpy.sqrt(2))
+    assert out.y == pytest.approx(1 / numpy.sqrt(2))
+    assert out.z == pytest.approx(1 / numpy.sqrt(2))
+    assert out.t == pytest.approx(1 / numpy.sqrt(2))
