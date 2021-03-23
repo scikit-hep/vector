@@ -970,67 +970,6 @@ def vector_obj(
 # properties and methods ######################################################
 
 
-@numba.jit(nopython=True)
-def azimuthalxy_coord1(v):
-    return v.azimuthal.x
-
-
-@numba.jit(nopython=True)
-def azimuthalxy_coord2(v):
-    return v.azimuthal.y
-
-
-@numba.jit(nopython=True)
-def azimuthalrhophi_coord1(v):
-    return v.azimuthal.rho
-
-
-@numba.jit(nopython=True)
-def azimuthalrhophi_coord2(v):
-    return v.azimuthal.phi
-
-
-@numba.jit(nopython=True)
-def longitudinalz_coord1(v):
-    return v.longitudinal.z
-
-
-@numba.jit(nopython=True)
-def longitudinaltheta_coord1(v):
-    return v.longitudinal.theta
-
-
-@numba.jit(nopython=True)
-def longitudinaleta_coord1(v):
-    return v.longitudinal.eta
-
-
-@numba.jit(nopython=True)
-def temporalt_coord1(v):
-    return v.temporal.t
-
-
-@numba.jit(nopython=True)
-def temporaltau_coord1(v):
-    return v.temporal.tau
-
-
-getcoord1 = {
-    AzimuthalXY: azimuthalxy_coord1,
-    AzimuthalRhoPhi: azimuthalrhophi_coord1,
-    LongitudinalZ: longitudinalz_coord1,
-    LongitudinalTheta: longitudinaltheta_coord1,
-    LongitudinalEta: longitudinaleta_coord1,
-    TemporalT: temporalt_coord1,
-    TemporalTau: temporaltau_coord1,
-}
-
-getcoord2 = {
-    AzimuthalXY: azimuthalxy_coord2,
-    AzimuthalRhoPhi: azimuthalrhophi_coord2,
-}
-
-
 @numba.extending.overload_method(VectorObject2DType, "to_Vector2D")
 def VectorObject2D_to_Vector2D(v):
     def VectorObject2D_to_Vector2D_impl(v):
@@ -1311,6 +1250,67 @@ for vectortype in (VectorObject2DType, VectorObject3DType, VectorObject4DType):
                     add_coordinate_change(
                         vectortype, azcoordtype, lcoordtype, tcoordtype
                     )
+
+
+@numba.jit(nopython=True)
+def azimuthalxy_coord1(v):
+    return v.azimuthal.x
+
+
+@numba.jit(nopython=True)
+def azimuthalxy_coord2(v):
+    return v.azimuthal.y
+
+
+@numba.jit(nopython=True)
+def azimuthalrhophi_coord1(v):
+    return v.azimuthal.rho
+
+
+@numba.jit(nopython=True)
+def azimuthalrhophi_coord2(v):
+    return v.azimuthal.phi
+
+
+@numba.jit(nopython=True)
+def longitudinalz_coord1(v):
+    return v.longitudinal.z
+
+
+@numba.jit(nopython=True)
+def longitudinaltheta_coord1(v):
+    return v.longitudinal.theta
+
+
+@numba.jit(nopython=True)
+def longitudinaleta_coord1(v):
+    return v.longitudinal.eta
+
+
+@numba.jit(nopython=True)
+def temporalt_coord1(v):
+    return v.temporal.t
+
+
+@numba.jit(nopython=True)
+def temporaltau_coord1(v):
+    return v.temporal.tau
+
+
+getcoord1 = {
+    AzimuthalXY: azimuthalxy_coord1,
+    AzimuthalRhoPhi: azimuthalrhophi_coord1,
+    LongitudinalZ: longitudinalz_coord1,
+    LongitudinalTheta: longitudinaltheta_coord1,
+    LongitudinalEta: longitudinaleta_coord1,
+    TemporalT: temporalt_coord1,
+    TemporalTau: temporaltau_coord1,
+}
+
+getcoord2 = {
+    AzimuthalXY: azimuthalxy_coord2,
+    AzimuthalRhoPhi: azimuthalrhophi_coord2,
+}
 
 planar_properties = ["x", "y", "rho", "rho2", "phi"]
 spatial_properties = ["z", "theta", "eta", "costheta", "cottheta", "mag", "mag2"]
@@ -1686,26 +1686,49 @@ for methodname in tolerance_methods:
     add_tolerance_method(VectorObject4DType, methodname)
 
 
-# TODO: the rest are special in one way or another. They need to be overloaded individually.
+# the rest are special in one way or another ##################################
 
 
-@numba.extending.overload_method(VectorObject2DType, "rotateZ")
-def VectorObject2D_rotateZ(v, angle):
-    if isinstance(angle, (numba.types.Integer, numba.types.Float)):
-        function, *returns = _from_signature(
-            "", numba_modules["planar"]["rotateZ"], (numba_aztype(v),)
-        )
+def add_rotateZ(vectortype):
+    @numba.extending.overload_method(vectortype, "rotateZ")
+    def overloader(v, angle):
+        if isinstance(angle, (numba.types.Integer, numba.types.Float)):
+            function, *returns = _from_signature(
+                "", numba_modules["planar"]["rotateZ"], (numba_aztype(v),)
+            )
 
-        if isinstance(v, MomentumObject2DType):
+            instance_class = v.instance_class
+            coord11 = getcoord1[numba_aztype(v)]
+            coord12 = getcoord2[numba_aztype(v)]
+            azcoords = _coord_object_type[returns[0]]
 
-            def VectorObject2D_rotateZ_impl(v, angle):
-                x, y = function(numpy, angle, v.azimuthal.x, v.azimuthal.y)
-                return MomentumObject2D(AzimuthalObjectXY(x, y))
+            if issubclass(vectortype, VectorObject2DType):
+
+                def overloader_impl(v, angle):
+                    out1, out2 = function(numpy, angle, coord11(v), coord12(v))
+                    return instance_class(azcoords(out1, out2))
+
+            elif issubclass(vectortype, VectorObject3DType):
+
+                def overloader_impl(v, angle):
+                    out1, out2 = function(numpy, angle, coord11(v), coord12(v))
+                    return instance_class(azcoords(out1, out2), v.longitudinal)
+
+            elif issubclass(vectortype, VectorObject4DType):
+
+                def overloader_impl(v, angle):
+                    out1, out2 = function(numpy, angle, coord11(v), coord12(v))
+                    return instance_class(
+                        azcoords(out1, out2), v.longitudinal, v.temporal
+                    )
+
+            return overloader_impl
 
         else:
+            raise numba.TypingError(
+                "'angle' must be an integer or a floating-point number"
+            )
 
-            def VectorObject2D_rotateZ_impl(v, angle):
-                x, y = function(numpy, angle, v.azimuthal.x, v.azimuthal.y)
-                return VectorObject2D(AzimuthalObjectXY(x, y))
 
-        return VectorObject2D_rotateZ_impl
+for vectortype in (VectorObject2DType, VectorObject3DType, VectorObject4DType):
+    add_rotateZ(vectortype)
