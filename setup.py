@@ -10,7 +10,7 @@ extras = {
     "dev": [
         "awkward>=1.0.0",
         "uproot>=4.0.0",
-        'numba>=0.50; python_version>="3" and python_version<"3.9"',
+        'numba>=0.50; python_version>="3.7" and python_version<"3.9"',
         "scikit-hep-testdata>=0.2.0",
         "pytest>=4.6",
     ],
