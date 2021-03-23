@@ -593,7 +593,19 @@ def test_method_add():
     assert out.z == pytest.approx(8.3)
 
 
-def test_rotate():
+def test_method_isparallel():
+    @numba.njit
+    def get_isparallel(v1, v2):
+        return v1.is_parallel(v2)
+
+    assert get_isparallel(vector.obj(px=1.1, py=2.2), vector.obj(px=2.2, py=4.4))
+
+    assert get_isparallel(
+        vector.obj(px=1.1, py=2.2, pz=3.3), vector.obj(px=2.2, py=4.4, pz=6.6)
+    )
+
+
+def test_method_rotateZ():
     @numba.njit
     def get_rotateZ(v, angle):
         return v.rotateZ(angle)

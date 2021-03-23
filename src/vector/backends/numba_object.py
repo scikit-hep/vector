@@ -1311,6 +1311,84 @@ for methodname in general_binary_methods:
         add_binary_method(vectortype, None, methodname)
 
 
+tolerance_methods = ["is_parallel", "is_antiparallel", "is_perpendicular"]
+
+
+def add_tolerance_method(vectortype, methodname):
+    @numba.extending.overload_method(vectortype, methodname)
+    def overloader(v1, v2, tolerance=1e-5):
+        if issubclass(vectortype, VectorObject2DType):
+            groupname = "planar"
+            signature = (numba_aztype(v1), numba_aztype(v2))
+            coord11 = getcoord1[numba_aztype(v1)]
+            coord12 = getcoord2[numba_aztype(v1)]
+            coord21 = getcoord1[numba_aztype(v2)]
+            coord22 = getcoord2[numba_aztype(v2)]
+
+        elif issubclass(vectortype, (VectorObject3DType, VectorObject4DType)):
+            groupname = "spatial"
+            signature = (
+                numba_aztype(v1),
+                numba_ltype(v1),
+                numba_aztype(v2),
+                numba_ltype(v2),
+            )
+            coord11 = getcoord1[numba_aztype(v1)]
+            coord12 = getcoord2[numba_aztype(v1)]
+            coord13 = getcoord1[numba_ltype(v1)]
+            coord21 = getcoord1[numba_aztype(v2)]
+            coord22 = getcoord2[numba_aztype(v2)]
+            coord23 = getcoord1[numba_ltype(v2)]
+
+        function, *returns = _from_signature(
+            groupname + "." + methodname,
+            numba_modules[groupname][methodname],
+            signature,
+        )
+
+        if returns == [bool] or returns == [float]:
+            if issubclass(vectortype, VectorObject2DType):
+
+                def overloader_impl(v1, v2, tolerance=1e-5):
+                    return function(
+                        numpy,
+                        tolerance,
+                        coord11(v1),
+                        coord12(v1),
+                        coord21(v2),
+                        coord22(v2),
+                    )
+
+            elif issubclass(vectortype, (VectorObject3DType, VectorObject4DType)):
+
+                def overloader_impl(v1, v2, tolerance=1e-5):
+                    return function(
+                        numpy,
+                        tolerance,
+                        coord11(v1),
+                        coord12(v1),
+                        coord13(v1),
+                        coord21(v2),
+                        coord22(v2),
+                        coord23(v2),
+                    )
+
+        return overloader_impl
+
+
+for methodname in tolerance_methods:
+    for vectortype in (VectorObject2DType, MomentumObject2DType):
+        add_tolerance_method(vectortype, methodname)
+
+for methodname in tolerance_methods:
+    for vectortype in (VectorObject3DType, MomentumObject3DType):
+        add_tolerance_method(vectortype, methodname)
+
+for methodname in tolerance_methods:
+    for vectortype in (VectorObject4DType, MomentumObject4DType):
+        add_tolerance_method(vectortype, methodname)
+
+
 # TODO: the rest are special in one way or another. They need to be overloaded individually.
 
 

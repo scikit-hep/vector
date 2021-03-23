@@ -15,12 +15,15 @@ import vector.compute.spatial
 
 
 def make_dispatcher(function, new_module):
+    closure = None
+    if function.__closure__ is not None:
+        closure = tuple(types.CellType(x.cell_contents) for x in function.__closure__)
     new_function = types.FunctionType(
         function.__code__,
         new_module.__dict__,  # make the function's surrounding scope the new module
         function.__name__,
         function.__defaults__,
-        function.__closure__,
+        closure,
     )
     return numba.jit(nopython=True)(new_function)
 
@@ -32,6 +35,8 @@ names_and_modules = [
 ]
 
 numba_modules: typing.Any = {}
+
+copied: typing.Any = {}
 
 # Make a copy of all the vector.compute.* modules to be wrapped as CPUDispatchers,
 # leaving the originals untouched so they still work in TensorFlow/JAX/Torch/whatever.
@@ -48,7 +53,6 @@ for groupname, module in names_and_modules:
             new_module = types.ModuleType(new_name)
             sys.modules[new_name] = new_module
             numba_modules[groupname][modname] = {None: new_module}
-            copied = {}
 
             # Copy (and Numbafy) all the functions defined in this module except "dispatch".
             for name, obj in submodule.__dict__.items():
@@ -89,3 +93,11 @@ for groupname, module in names_and_modules:
                         name,
                         numba_modules[splitname[2]][splitname[3]][None],
                     )
+
+# Now do a third pass, in which any closures of a function over other functions
+# get mapped to the corresponding Numba CPUDispatcher instead.
+for copied_function in copied.values():
+    if copied_function.py_func.__closure__ is not None:
+        for cell in copied_function.py_func.__closure__:
+            if cell.cell_contents in copied:
+                cell.cell_contents = copied[cell.cell_contents]
