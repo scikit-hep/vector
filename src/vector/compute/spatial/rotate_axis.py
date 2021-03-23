@@ -137,15 +137,15 @@ def dispatch(angle, v1, v2):
         __name__,
         dispatch_map,
         (
-            _aztype(v1),
+            _aztype(v1),  # v1 is the axis about which we're rotating
             _ltype(v1),
-            _aztype(v2),
+            _aztype(v2),  # v2 is the primary vector, the one being rotated
             _ltype(v2),
         ),
     )
     with numpy.errstate(all="ignore"):
-        return _handler_of(v1, v2)._wrap_result(
-            _flavor_of(v1, v2),
+        return _handler_of(v2)._wrap_result(  # note: _handler_of(v2)
+            _flavor_of(v2),  # note: _flavor_of(v2)
             function(
                 _lib_of(v1, v2),
                 angle,

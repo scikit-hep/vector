@@ -2210,3 +2210,59 @@ def VectorObject34DType_rotateY(v, angle):
 
     else:
         raise numba.TypingError("'angle' must be an integer or a floating-point number")
+
+
+@numba.extending.overload_method(VectorObject3DType, "rotate_axis")
+@numba.extending.overload_method(VectorObject4DType, "rotate_axis")
+def VectorObject34DType_rotate_axis(v, axis, angle):
+    if isinstance(angle, (numba.types.Integer, numba.types.Float)):
+        function, *returns = _from_signature(
+            "",
+            numba_modules["spatial"]["rotate_axis"],
+            (numba_aztype(axis), numba_ltype(axis), numba_aztype(v), numba_ltype(v)),
+        )
+
+        instance_class = v.instance_class
+        coord11 = getcoord1[numba_aztype(axis)]
+        coord12 = getcoord2[numba_aztype(axis)]
+        coord13 = getcoord1[numba_ltype(axis)]
+        coord21 = getcoord1[numba_aztype(v)]
+        coord22 = getcoord2[numba_aztype(v)]
+        coord23 = getcoord1[numba_ltype(v)]
+        azcoords = _coord_object_type[returns[0]]
+        lcoords = _coord_object_type[returns[1]]
+
+        if isinstance(v, VectorObject3DType):
+
+            def VectorObject34DType_rotate_axis(v, axis, angle):
+                out1, out2, out3 = function(
+                    numpy,
+                    angle,
+                    coord11(axis),
+                    coord12(axis),
+                    coord13(axis),
+                    coord21(v),
+                    coord22(v),
+                    coord23(v),
+                )
+                return instance_class(azcoords(out1, out2), lcoords(out3))
+
+        else:
+
+            def VectorObject34DType_rotate_axis(v, axis, angle):
+                out1, out2, out3 = function(
+                    numpy,
+                    angle,
+                    coord11(axis),
+                    coord12(axis),
+                    coord13(axis),
+                    coord21(v),
+                    coord22(v),
+                    coord23(v),
+                )
+                return instance_class(azcoords(out1, out2), lcoords(out3), v.temporal)
+
+        return VectorObject34DType_rotate_axis
+
+    else:
+        raise numba.TypingError("'angle' must be an integer or a floating-point number")

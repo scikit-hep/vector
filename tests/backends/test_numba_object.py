@@ -1088,3 +1088,43 @@ def test_method_rotateY():
     assert out.y == pytest.approx(0.2)
     assert out.z == pytest.approx(0.2659333305877411)
     assert out.t == pytest.approx(0.4)
+
+
+def test_method_rotate_axis():
+    @numba.njit
+    def get_rotate_axis(vec, axis):
+        return vec.rotate_axis(axis, 0.25)
+
+    axis = vector.obj(x=0.1, y=0.2, z=0.3)
+    vec = vector.obj(x=0.4, y=0.5, z=0.6)
+    out = get_rotate_axis(vec, axis)
+    assert isinstance(out, vector.backends.object_.VectorObject3D)
+    assert out.x == pytest.approx(0.37483425404335763)
+    assert out.y == pytest.approx(0.5383405688588193)
+    assert out.z == pytest.approx(0.5828282027463345)
+
+    axis = vector.obj(x=0.1, y=0.2, z=0.3)
+    vec = vector.obj(x=0.4, y=0.5, z=0.6, t=999)
+    out = get_rotate_axis(vec, axis)
+    assert isinstance(out, vector.backends.object_.VectorObject4D)
+    assert out.x == pytest.approx(0.37483425404335763)
+    assert out.y == pytest.approx(0.5383405688588193)
+    assert out.z == pytest.approx(0.5828282027463345)
+    assert out.t == pytest.approx(999)
+
+    axis = vector.obj(x=0.1, y=0.2, z=0.3, t=999)
+    vec = vector.obj(x=0.4, y=0.5, z=0.6)
+    out = get_rotate_axis(vec, axis)
+    assert isinstance(out, vector.backends.object_.VectorObject3D)
+    assert out.x == pytest.approx(0.37483425404335763)
+    assert out.y == pytest.approx(0.5383405688588193)
+    assert out.z == pytest.approx(0.5828282027463345)
+
+    axis = vector.obj(x=0.1, y=0.2, z=0.3, t=999)
+    vec = vector.obj(x=0.4, y=0.5, z=0.6, t=999)
+    out = get_rotate_axis(vec, axis)
+    assert isinstance(out, vector.backends.object_.VectorObject4D)
+    assert out.x == pytest.approx(0.37483425404335763)
+    assert out.y == pytest.approx(0.5383405688588193)
+    assert out.z == pytest.approx(0.5828282027463345)
+    assert out.t == pytest.approx(999)
