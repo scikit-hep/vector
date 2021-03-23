@@ -41,6 +41,41 @@ from vector.methods import (
     _from_signature,
 )
 
+# This needs to go into Numba itself.
+
+
+@numba.extending.overload(numpy.nan_to_num)
+def nan_to_num(x, copy=True, nan=0.0, posinf=None, neginf=None):
+    if isinstance(x, numba.types.Array):
+
+        def nan_to_num_impl(x, copy=True, nan=0.0, posinf=None, neginf=None):
+            if copy:
+                out = numpy.copy(x).reshape(-1)
+            else:
+                out = x.reshape(-1)
+            for i in range(len(out)):
+                if numpy.isnan(out[i]):
+                    out[i] = nan
+                if posinf is not None and numpy.isinf(out[i]) and out[i] > 0:
+                    out[i] = posinf
+                if neginf is not None and numpy.isinf(out[i]) and out[i] < 0:
+                    out[i] = neginf
+            return out.reshape(x.shape)
+
+    else:
+
+        def nan_to_num_impl(x, copy=True, nan=0.0, posinf=None, neginf=None):
+            if numpy.isnan(x):
+                return nan
+            if posinf is not None and numpy.isinf(x) and x > 0:
+                return posinf
+            if neginf is not None and numpy.isinf(x) and x < 0:
+                return neginf
+            return x
+
+    return nan_to_num_impl
+
+
 # Since CoordinateObjects are NamedTuples, we get their types wrapped for free.
 
 
@@ -1115,6 +1150,169 @@ def VectorObject4D_to_Vector4D(v):
 
     return VectorObject4D_to_Vector4D_impl
 
+
+@numba.jit(nopython=True)
+def make_AzimuthalObjectXY(v):
+    return AzimuthalObjectXY(v.x, v.y)
+
+
+@numba.jit(nopython=True)
+def make_AzimuthalObjectRhoPhi(v):
+    return AzimuthalObjectRhoPhi(v.rho, v.phi)
+
+
+@numba.jit(nopython=True)
+def make_LongitudinalObjectZ(v):
+    return LongitudinalObjectZ(v.z)
+
+
+@numba.jit(nopython=True)
+def make_LongitudinalObjectZ_zero(v):
+    return LongitudinalObjectZ(0.0)
+
+
+@numba.jit(nopython=True)
+def make_LongitudinalObjectTheta(v):
+    return LongitudinalObjectTheta(v.theta)
+
+
+@numba.jit(nopython=True)
+def make_LongitudinalObjectTheta_zero(v):
+    return LongitudinalObjectTheta(0.0)
+
+
+@numba.jit(nopython=True)
+def make_LongitudinalObjectEta(v):
+    return LongitudinalObjectEta(v.eta)
+
+
+@numba.jit(nopython=True)
+def make_LongitudinalObjectEta_zero(v):
+    return LongitudinalObjectEta(0.0)
+
+
+@numba.jit(nopython=True)
+def make_TemporalObjectT(v):
+    return TemporalObjectT(v.t)
+
+
+@numba.jit(nopython=True)
+def make_TemporalObjectT_zero(v):
+    return TemporalObjectT(0.0)
+
+
+@numba.jit(nopython=True)
+def make_TemporalObjectTau(v):
+    return TemporalObjectTau(v.tau)
+
+
+@numba.jit(nopython=True)
+def make_TemporalObjectTau_zero(v):
+    return TemporalObjectTau(0.0)
+
+
+make_coordobject = {
+    (VectorObject2DType, AzimuthalObjectXY): make_AzimuthalObjectXY,
+    (VectorObject3DType, AzimuthalObjectXY): make_AzimuthalObjectXY,
+    (VectorObject4DType, AzimuthalObjectXY): make_AzimuthalObjectXY,
+    (VectorObject2DType, AzimuthalObjectRhoPhi): make_AzimuthalObjectRhoPhi,
+    (VectorObject3DType, AzimuthalObjectRhoPhi): make_AzimuthalObjectRhoPhi,
+    (VectorObject4DType, AzimuthalObjectRhoPhi): make_AzimuthalObjectRhoPhi,
+    (VectorObject2DType, LongitudinalObjectZ): make_LongitudinalObjectZ_zero,
+    (VectorObject3DType, LongitudinalObjectZ): make_LongitudinalObjectZ,
+    (VectorObject4DType, LongitudinalObjectZ): make_LongitudinalObjectZ,
+    (VectorObject2DType, LongitudinalObjectTheta): make_LongitudinalObjectTheta_zero,
+    (VectorObject3DType, LongitudinalObjectTheta): make_LongitudinalObjectTheta,
+    (VectorObject4DType, LongitudinalObjectTheta): make_LongitudinalObjectTheta,
+    (VectorObject2DType, LongitudinalObjectEta): make_LongitudinalObjectEta_zero,
+    (VectorObject3DType, LongitudinalObjectEta): make_LongitudinalObjectEta,
+    (VectorObject4DType, LongitudinalObjectEta): make_LongitudinalObjectEta,
+    (VectorObject2DType, TemporalObjectT): make_TemporalObjectT_zero,
+    (VectorObject3DType, TemporalObjectT): make_TemporalObjectT_zero,
+    (VectorObject4DType, TemporalObjectT): make_TemporalObjectT,
+    (VectorObject2DType, TemporalObjectTau): make_TemporalObjectTau_zero,
+    (VectorObject3DType, TemporalObjectTau): make_TemporalObjectTau_zero,
+    (VectorObject4DType, TemporalObjectTau): make_TemporalObjectTau,
+}
+
+
+def add_coordinate_change(vectortype, azcoordtype, lcoordtype, tcoordtype):
+    methodname = "to_"
+    if azcoordtype is AzimuthalObjectXY:
+        methodname += "xy"
+    elif azcoordtype is AzimuthalObjectRhoPhi:
+        methodname += "rhophi"
+    if lcoordtype is LongitudinalObjectZ:
+        methodname += "z"
+    if lcoordtype is LongitudinalObjectTheta:
+        methodname += "theta"
+    if lcoordtype is LongitudinalObjectEta:
+        methodname += "eta"
+    if tcoordtype is TemporalObjectT:
+        methodname += "t"
+    if tcoordtype is TemporalObjectTau:
+        methodname += "tau"
+
+    @numba.extending.overload_method(vectortype, methodname)
+    def overloader(v):
+        if lcoordtype is None and tcoordtype is None:
+            azcoords = make_coordobject[vectortype, azcoordtype]
+
+            if issubclass(v.instance_class, Momentum):
+
+                def overloader_impl(v):
+                    return MomentumObject2D(azcoords(v))
+
+            else:
+
+                def overloader_impl(v):
+                    return VectorObject2D(azcoords(v))
+
+        elif tcoordtype is None:
+            azcoords = make_coordobject[vectortype, azcoordtype]
+            lcoords = make_coordobject[vectortype, lcoordtype]
+
+            if issubclass(v.instance_class, Momentum):
+
+                def overloader_impl(v):
+                    return MomentumObject3D(azcoords(v), lcoords(v))
+
+            else:
+
+                def overloader_impl(v):
+                    return VectorObject3D(azcoords(v), lcoords(v))
+
+        else:
+            azcoords = make_coordobject[vectortype, azcoordtype]
+            lcoords = make_coordobject[vectortype, lcoordtype]
+            tcoords = make_coordobject[vectortype, tcoordtype]
+
+            if issubclass(v.instance_class, Momentum):
+
+                def overloader_impl(v):
+                    return MomentumObject4D(azcoords(v), lcoords(v), tcoords(v))
+
+            else:
+
+                def overloader_impl(v):
+                    return VectorObject4D(azcoords(v), lcoords(v), tcoords(v))
+
+        return overloader_impl
+
+
+for vectortype in (VectorObject2DType, VectorObject3DType, VectorObject4DType):
+    for azcoordtype in (AzimuthalObjectXY, AzimuthalObjectRhoPhi):
+        for lcoordtype in (
+            None,
+            LongitudinalObjectZ,
+            LongitudinalObjectTheta,
+            LongitudinalObjectEta,
+        ):
+            for tcoordtype in (None, TemporalObjectT, TemporalObjectTau):
+                if not (lcoordtype is None and tcoordtype is not None):
+                    add_coordinate_change(
+                        vectortype, azcoordtype, lcoordtype, tcoordtype
+                    )
 
 planar_properties = ["x", "y", "rho", "rho2", "phi"]
 spatial_properties = ["z", "theta", "eta", "costheta", "cottheta", "mag", "mag2"]

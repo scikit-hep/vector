@@ -366,6 +366,211 @@ def test_projections():
     )
 
 
+def test_conversions():
+    @numba.njit
+    def to_xy(x):
+        return x.to_xy()
+
+    @numba.njit
+    def to_rhophi(x):
+        return x.to_rhophi()
+
+    @numba.njit
+    def to_xyz(x):
+        return x.to_xyz()
+
+    @numba.njit
+    def to_rhophiz(x):
+        return x.to_rhophiz()
+
+    @numba.njit
+    def to_xytheta(x):
+        return x.to_xytheta()
+
+    @numba.njit
+    def to_rhophitheta(x):
+        return x.to_rhophitheta()
+
+    @numba.njit
+    def to_xyeta(x):
+        return x.to_xyeta()
+
+    @numba.njit
+    def to_rhophieta(x):
+        return x.to_rhophieta()
+
+    @numba.njit
+    def to_xyzt(x):
+        return x.to_xyzt()
+
+    @numba.njit
+    def to_rhophizt(x):
+        return x.to_rhophizt()
+
+    @numba.njit
+    def to_xythetat(x):
+        return x.to_xythetat()
+
+    @numba.njit
+    def to_rhophithetat(x):
+        return x.to_rhophithetat()
+
+    @numba.njit
+    def to_xyetat(x):
+        return x.to_xyetat()
+
+    @numba.njit
+    def to_rhophietat(x):
+        return x.to_rhophietat()
+
+    @numba.njit
+    def to_xyztau(x):
+        return x.to_xyztau()
+
+    @numba.njit
+    def to_rhophiztau(x):
+        return x.to_rhophiztau()
+
+    @numba.njit
+    def to_xythetatau(x):
+        return x.to_xythetatau()
+
+    @numba.njit
+    def to_rhophithetatau(x):
+        return x.to_rhophithetatau()
+
+    @numba.njit
+    def to_xyetatau(x):
+        return x.to_xyetatau()
+
+    @numba.njit
+    def to_rhophietatau(x):
+        return x.to_rhophietatau()
+
+    for v in (
+        vector.obj(x=1.1, y=2.2),
+        vector.obj(px=1.1, py=2.2),
+        vector.obj(x=1.1, y=2.2, z=3.3),
+        vector.obj(px=1.1, py=2.2, pz=3.3),
+        vector.obj(x=1.1, y=2.2, z=3.3, t=4.4),
+        vector.obj(px=1.1, py=2.2, pz=3.3, E=4.4),
+    ):
+        print(v)
+
+        out = to_xy(v)
+        assert isinstance(out, vector.backends.object_.VectorObject2D)
+        if isinstance(v, vector.methods.Momentum):
+            assert isinstance(out, vector.backends.object_.MomentumObject2D)
+        assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectXY)
+        assert out.x == pytest.approx(1.1)
+        assert out.y == pytest.approx(2.2)
+
+        out = to_rhophi(v)
+        assert isinstance(out, vector.backends.object_.VectorObject2D)
+        if isinstance(v, vector.methods.Momentum):
+            assert isinstance(out, vector.backends.object_.MomentumObject2D)
+        assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectRhoPhi)
+        assert out.x == pytest.approx(1.1)
+        assert out.y == pytest.approx(2.2)
+
+        out = to_xyz(v)
+        assert isinstance(out, vector.backends.object_.VectorObject3D)
+        if isinstance(v, vector.methods.Momentum):
+            assert isinstance(out, vector.backends.object_.MomentumObject3D)
+        assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectXY)
+        assert isinstance(out.longitudinal, vector.backends.object_.LongitudinalObjectZ)
+        assert out.x == pytest.approx(1.1)
+        assert out.y == pytest.approx(2.2)
+        if isinstance(v, vector.backends.object_.VectorObject2D):
+            assert out.z == pytest.approx(0)
+        else:
+            assert out.z == pytest.approx(3.3)
+
+        out = to_rhophiz(v)
+        assert isinstance(out, vector.backends.object_.VectorObject3D)
+        if isinstance(v, vector.methods.Momentum):
+            assert isinstance(out, vector.backends.object_.MomentumObject3D)
+        assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectRhoPhi)
+        assert isinstance(out.longitudinal, vector.backends.object_.LongitudinalObjectZ)
+        assert out.x == pytest.approx(1.1)
+        assert out.y == pytest.approx(2.2)
+        if isinstance(v, vector.backends.object_.VectorObject2D):
+            assert out.z == pytest.approx(0)
+        else:
+            assert out.z == pytest.approx(3.3)
+
+        out = to_xytheta(v)
+        assert isinstance(out, vector.backends.object_.VectorObject3D)
+        if isinstance(v, vector.methods.Momentum):
+            assert isinstance(out, vector.backends.object_.MomentumObject3D)
+        assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectXY)
+        assert isinstance(
+            out.longitudinal, vector.backends.object_.LongitudinalObjectTheta
+        )
+        assert out.x == pytest.approx(1.1)
+        assert out.y == pytest.approx(2.2)
+        if isinstance(v, vector.backends.object_.VectorObject2D):
+            assert out.theta == pytest.approx(0)
+        else:
+            assert out.z == pytest.approx(3.3)
+
+        out = to_rhophitheta(v)
+        assert isinstance(out, vector.backends.object_.VectorObject3D)
+        if isinstance(v, vector.methods.Momentum):
+            assert isinstance(out, vector.backends.object_.MomentumObject3D)
+        assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectRhoPhi)
+        assert isinstance(
+            out.longitudinal, vector.backends.object_.LongitudinalObjectTheta
+        )
+        assert out.x == pytest.approx(1.1)
+        assert out.y == pytest.approx(2.2)
+        if isinstance(v, vector.backends.object_.VectorObject2D):
+            assert out.theta == pytest.approx(0)
+        else:
+            assert out.z == pytest.approx(3.3)
+
+        out = to_xyeta(v)
+        assert isinstance(out, vector.backends.object_.VectorObject3D)
+        if isinstance(v, vector.methods.Momentum):
+            assert isinstance(out, vector.backends.object_.MomentumObject3D)
+        assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectXY)
+        assert isinstance(
+            out.longitudinal, vector.backends.object_.LongitudinalObjectEta
+        )
+        assert out.x == pytest.approx(1.1)
+        assert out.y == pytest.approx(2.2)
+        if isinstance(v, vector.backends.object_.VectorObject2D):
+            assert out.eta == pytest.approx(0)
+        else:
+            assert out.z == pytest.approx(3.3)
+
+        out = to_rhophietatau(v)
+        assert isinstance(out, vector.backends.object_.VectorObject4D)
+        if isinstance(v, vector.methods.Momentum):
+            assert isinstance(out, vector.backends.object_.MomentumObject4D)
+        assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectRhoPhi)
+        assert isinstance(
+            out.longitudinal, vector.backends.object_.LongitudinalObjectEta
+        )
+        assert isinstance(out.temporal, vector.backends.object_.TemporalObjectTau)
+        assert out.x == pytest.approx(1.1)
+        assert out.y == pytest.approx(2.2)
+        if isinstance(v, vector.backends.object_.VectorObject2D):
+            assert out.eta == pytest.approx(0)
+        else:
+            assert out.z == pytest.approx(3.3)
+        if isinstance(
+            v,
+            (
+                vector.backends.object_.VectorObject2D,
+                vector.backends.object_.VectorObject3D,
+            ),
+        ):
+            assert out.tau == pytest.approx(0)
+        else:
+            assert out.t == pytest.approx(4.4)
+
+
 def test_factory():
     @numba.njit
     def vector_xy():
