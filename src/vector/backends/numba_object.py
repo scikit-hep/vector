@@ -2136,3 +2136,77 @@ def VectorObject34DType_cross(v1, v2):
         )
 
     return VectorObject34DType_cross_impl
+
+
+@numba.extending.overload_method(VectorObject3DType, "rotateX")
+@numba.extending.overload_method(VectorObject4DType, "rotateX")
+def VectorObject34DType_rotateX(v, angle):
+    if isinstance(angle, (numba.types.Integer, numba.types.Float)):
+        function, *returns = _from_signature(
+            "", numba_modules["spatial"]["rotateX"], (numba_aztype(v), numba_ltype(v))
+        )
+
+        instance_class = v.instance_class
+        coord1 = getcoord1[numba_aztype(v)]
+        coord2 = getcoord2[numba_aztype(v)]
+        coord3 = getcoord1[numba_ltype(v)]
+        azcoords = _coord_object_type[returns[0]]
+        lcoords = _coord_object_type[returns[1]]
+
+        if isinstance(v, VectorObject3DType):
+
+            def VectorObject34DType_rotateX_impl(v, angle):
+                out1, out2, out3 = function(
+                    numpy, angle, coord1(v), coord2(v), coord3(v)
+                )
+                return instance_class(azcoords(out1, out2), lcoords(out3))
+
+        else:
+
+            def VectorObject34DType_rotateX_impl(v, angle):
+                out1, out2, out3 = function(
+                    numpy, angle, coord1(v), coord2(v), coord3(v)
+                )
+                return instance_class(azcoords(out1, out2), lcoords(out3), v.temporal)
+
+        return VectorObject34DType_rotateX_impl
+
+    else:
+        raise numba.TypingError("'angle' must be an integer or a floating-point number")
+
+
+@numba.extending.overload_method(VectorObject3DType, "rotateY")
+@numba.extending.overload_method(VectorObject4DType, "rotateY")
+def VectorObject34DType_rotateY(v, angle):
+    if isinstance(angle, (numba.types.Integer, numba.types.Float)):
+        function, *returns = _from_signature(
+            "", numba_modules["spatial"]["rotateY"], (numba_aztype(v), numba_ltype(v))
+        )
+
+        instance_class = v.instance_class
+        coord1 = getcoord1[numba_aztype(v)]
+        coord2 = getcoord2[numba_aztype(v)]
+        coord3 = getcoord1[numba_ltype(v)]
+        azcoords = _coord_object_type[returns[0]]
+        lcoords = _coord_object_type[returns[1]]
+
+        if isinstance(v, VectorObject3DType):
+
+            def VectorObject34DType_rotateY_impl(v, angle):
+                out1, out2, out3 = function(
+                    numpy, angle, coord1(v), coord2(v), coord3(v)
+                )
+                return instance_class(azcoords(out1, out2), lcoords(out3))
+
+        else:
+
+            def VectorObject34DType_rotateY_impl(v, angle):
+                out1, out2, out3 = function(
+                    numpy, angle, coord1(v), coord2(v), coord3(v)
+                )
+                return instance_class(azcoords(out1, out2), lcoords(out3), v.temporal)
+
+        return VectorObject34DType_rotateY_impl
+
+    else:
+        raise numba.TypingError("'angle' must be an integer or a floating-point number")

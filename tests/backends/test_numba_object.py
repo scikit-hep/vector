@@ -1050,3 +1050,41 @@ def test_method_cross():
     assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectXY)
     assert isinstance(out.longitudinal, vector.backends.object_.LongitudinalObjectZ)
     assert (out.x, out.y, out.z) == pytest.approx((-0.03, 0.06, -0.03))
+
+
+def test_method_rotateX():
+    @numba.njit
+    def get_rotateX(v):
+        return v.rotateX(0.25)
+
+    out = get_rotateX(vector.obj(x=0.1, y=0.2, z=0.3))
+    assert isinstance(out, vector.backends.object_.VectorObject3D)
+    assert out.x == pytest.approx(0.1)
+    assert out.y == pytest.approx(0.1195612965657721)
+    assert out.z == pytest.approx(0.340154518364098)
+
+    out = get_rotateX(vector.obj(x=0.1, y=0.2, z=0.3, t=0.4))
+    assert isinstance(out, vector.backends.object_.VectorObject4D)
+    assert out.x == pytest.approx(0.1)
+    assert out.y == pytest.approx(0.1195612965657721)
+    assert out.z == pytest.approx(0.340154518364098)
+    assert out.t == pytest.approx(0.4)
+
+
+def test_method_rotateY():
+    @numba.njit
+    def get_rotateY(v):
+        return v.rotateY(0.25)
+
+    out = get_rotateY(vector.obj(x=0.1, y=0.2, z=0.3))
+    assert isinstance(out, vector.backends.object_.VectorObject3D)
+    assert out.x == pytest.approx(0.17111242994742137)
+    assert out.y == pytest.approx(0.2)
+    assert out.z == pytest.approx(0.2659333305877411)
+
+    out = get_rotateY(vector.obj(x=0.1, y=0.2, z=0.3, t=0.4))
+    assert isinstance(out, vector.backends.object_.VectorObject4D)
+    assert out.x == pytest.approx(0.17111242994742137)
+    assert out.y == pytest.approx(0.2)
+    assert out.z == pytest.approx(0.2659333305877411)
+    assert out.t == pytest.approx(0.4)
