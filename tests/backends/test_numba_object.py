@@ -976,3 +976,27 @@ def test_method_unit():
     assert out.y == pytest.approx(1 / numpy.sqrt(2))
     assert out.z == pytest.approx(1 / numpy.sqrt(2))
     assert out.t == pytest.approx(1 / numpy.sqrt(2))
+
+
+def test_method_scale():
+    @numba.njit
+    def get_scale(v):
+        return v.scale(2)
+
+    out = get_scale(vector.obj(x=1.1, y=2.2))
+    assert isinstance(out, vector.backends.object_.VectorObject2D)
+    assert out.x == pytest.approx(2.2)
+    assert out.y == pytest.approx(4.4)
+
+    out = get_scale(vector.obj(x=1.1, y=2.2, z=3.3))
+    assert isinstance(out, vector.backends.object_.VectorObject3D)
+    assert out.x == pytest.approx(2.2)
+    assert out.y == pytest.approx(4.4)
+    assert out.z == pytest.approx(6.6)
+
+    out = get_scale(vector.obj(x=1.1, y=2.2, z=3.3, t=4.4))
+    assert isinstance(out, vector.backends.object_.VectorObject4D)
+    assert out.x == pytest.approx(2.2)
+    assert out.y == pytest.approx(4.4)
+    assert out.z == pytest.approx(6.6)
+    assert out.t == pytest.approx(8.8)

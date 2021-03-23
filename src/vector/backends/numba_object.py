@@ -1857,3 +1857,85 @@ def VectorObject4DType_unit(v):
         return instance_class(azcoords(out1, out2), lcoords(out3), tcoords(out4))
 
     return VectorObject4DType_unit_impl
+
+
+@numba.extending.overload_method(VectorObject2DType, "scale")
+def VectorObject2DType_scale(v, factor):
+    if isinstance(factor, (numba.types.Integer, numba.types.Float)):
+        function, *returns = _from_signature(
+            "", numba_modules["planar"]["scale"], (numba_aztype(v),)
+        )
+
+        instance_class = v.instance_class
+        coord1 = getcoord1[numba_aztype(v)]
+        coord2 = getcoord2[numba_aztype(v)]
+        azcoords = _coord_object_type[returns[0]]
+
+        def VectorObject2DType_scale_impl(v, factor):
+            out1, out2 = function(numpy, factor, coord1(v), coord2(v))
+            return instance_class(azcoords(out1, out2))
+
+        return VectorObject2DType_scale_impl
+
+    else:
+        raise numba.TypingError(
+            "'factor' must be an integer or a floating-point number"
+        )
+
+
+@numba.extending.overload_method(VectorObject3DType, "scale")
+def VectorObject3DType_scale(v, factor):
+    if isinstance(factor, (numba.types.Integer, numba.types.Float)):
+        function, *returns = _from_signature(
+            "", numba_modules["spatial"]["scale"], (numba_aztype(v), numba_ltype(v))
+        )
+
+        instance_class = v.instance_class
+        coord1 = getcoord1[numba_aztype(v)]
+        coord2 = getcoord2[numba_aztype(v)]
+        coord3 = getcoord1[numba_ltype(v)]
+        azcoords = _coord_object_type[returns[0]]
+        lcoords = _coord_object_type[returns[1]]
+
+        def VectorObject3DType_scale_impl(v, factor):
+            out1, out2, out3 = function(numpy, factor, coord1(v), coord2(v), coord3(v))
+            return instance_class(azcoords(out1, out2), lcoords(out3))
+
+        return VectorObject3DType_scale_impl
+
+    else:
+        raise numba.TypingError(
+            "'factor' must be an integer or a floating-point number"
+        )
+
+
+@numba.extending.overload_method(VectorObject4DType, "scale")
+def VectorObject4DType_scale(v, factor):
+    if isinstance(factor, (numba.types.Integer, numba.types.Float)):
+        function, *returns = _from_signature(
+            "",
+            numba_modules["lorentz"]["scale"],
+            (numba_aztype(v), numba_ltype(v), numba_ttype(v)),
+        )
+
+        instance_class = v.instance_class
+        coord1 = getcoord1[numba_aztype(v)]
+        coord2 = getcoord2[numba_aztype(v)]
+        coord3 = getcoord1[numba_ltype(v)]
+        coord4 = getcoord1[numba_ttype(v)]
+        azcoords = _coord_object_type[returns[0]]
+        lcoords = _coord_object_type[returns[1]]
+        tcoords = _coord_object_type[returns[2]]
+
+        def VectorObject4DType_scale_impl(v, factor):
+            out1, out2, out3, out4 = function(
+                numpy, factor, coord1(v), coord2(v), coord3(v), coord4(v)
+            )
+            return instance_class(azcoords(out1, out2), lcoords(out3), tcoords(out4))
+
+        return VectorObject4DType_scale_impl
+
+    else:
+        raise numba.TypingError(
+            "'factor' must be an integer or a floating-point number"
+        )
