@@ -1014,3 +1014,39 @@ def test_method_scale():
     assert out.y == pytest.approx(4.4)
     assert out.z == pytest.approx(6.6)
     assert out.t == pytest.approx(8.8)
+
+
+def test_method_cross():
+    @numba.njit
+    def get_cross(v1, v2):
+        return v1.cross(v2)
+
+    out = get_cross(vector.obj(x=0.1, y=0.2, z=0.3), vector.obj(x=0.4, y=0.5, z=0.6))
+    assert isinstance(out, vector.backends.object_.VectorObject3D)
+    assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectXY)
+    assert isinstance(out.longitudinal, vector.backends.object_.LongitudinalObjectZ)
+    assert (out.x, out.y, out.z) == pytest.approx((-0.03, 0.06, -0.03))
+
+    out = get_cross(
+        vector.obj(x=0.1, y=0.2, z=0.3, t=999), vector.obj(x=0.4, y=0.5, z=0.6)
+    )
+    assert isinstance(out, vector.backends.object_.VectorObject3D)
+    assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectXY)
+    assert isinstance(out.longitudinal, vector.backends.object_.LongitudinalObjectZ)
+    assert (out.x, out.y, out.z) == pytest.approx((-0.03, 0.06, -0.03))
+
+    out = get_cross(
+        vector.obj(x=0.1, y=0.2, z=0.3), vector.obj(x=0.4, y=0.5, z=0.6, t=999)
+    )
+    assert isinstance(out, vector.backends.object_.VectorObject3D)
+    assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectXY)
+    assert isinstance(out.longitudinal, vector.backends.object_.LongitudinalObjectZ)
+    assert (out.x, out.y, out.z) == pytest.approx((-0.03, 0.06, -0.03))
+
+    out = get_cross(
+        vector.obj(x=0.1, y=0.2, z=0.3, t=999), vector.obj(x=0.4, y=0.5, z=0.6, t=999)
+    )
+    assert isinstance(out, vector.backends.object_.VectorObject3D)
+    assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectXY)
+    assert isinstance(out.longitudinal, vector.backends.object_.LongitudinalObjectZ)
+    assert (out.x, out.y, out.z) == pytest.approx((-0.03, 0.06, -0.03))

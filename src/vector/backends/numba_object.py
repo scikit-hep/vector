@@ -2081,3 +2081,58 @@ def VectorObject4DType_scale(v, factor):
         raise numba.TypingError(
             "'factor' must be an integer or a floating-point number"
         )
+
+
+@numba.extending.overload_method(VectorObject3DType, "cross")
+@numba.extending.overload_method(VectorObject4DType, "cross")
+def VectorObject34DType_cross(v1, v2):
+    if isinstance(v1, VectorObject3DType) and isinstance(v2, VectorObject3DType):
+        function, *returns = _from_signature(
+            "",
+            numba_modules["spatial"]["cross"],
+            (numba_aztype(v1), numba_ltype(v1), numba_aztype(v2), numba_ltype(v2)),
+        )
+
+        instance_class = flavor_of(v1, v2).ProjectionClass3D
+        coord11 = getcoord1[numba_aztype(v1)]
+        coord12 = getcoord2[numba_aztype(v1)]
+        coord13 = getcoord1[numba_ltype(v1)]
+        coord21 = getcoord1[numba_aztype(v2)]
+        coord22 = getcoord2[numba_aztype(v2)]
+        coord23 = getcoord1[numba_ltype(v2)]
+        azcoords = _coord_object_type[returns[0]]
+        lcoords = _coord_object_type[returns[1]]
+
+        def VectorObject34DType_cross_impl(v1, v2):
+            out1, out2, out3 = function(
+                numpy,
+                coord11(v1),
+                coord12(v1),
+                coord13(v1),
+                coord21(v2),
+                coord22(v2),
+                coord23(v2),
+            )
+            return instance_class(azcoords(out1, out2), lcoords(out3))
+
+    elif isinstance(v1, VectorObject3DType) and isinstance(v2, VectorObject4DType):
+
+        def VectorObject34DType_cross_impl(v1, v2):
+            return v1.cross(v2.to_Vector3D())
+
+    elif isinstance(v1, VectorObject4DType) and isinstance(v2, VectorObject3DType):
+
+        def VectorObject34DType_cross_impl(v1, v2):
+            return v1.to_Vector3D().cross(v2)
+
+    elif isinstance(v1, VectorObject4DType) and isinstance(v2, VectorObject4DType):
+
+        def VectorObject34DType_cross_impl(v1, v2):
+            return v1.to_Vector3D().cross(v2.to_Vector3D())
+
+    else:
+        raise numba.TypingError(
+            "both vectors in 'cross' must be 3D or 4D (result is 3D)"
+        )
+
+    return VectorObject34DType_cross_impl
