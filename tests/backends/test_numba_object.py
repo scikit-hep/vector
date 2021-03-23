@@ -889,10 +889,18 @@ def test_method_isparallel():
     def get_isparallel(v1, v2):
         return v1.is_parallel(v2)
 
+    assert get_isparallel(vector.obj(x=1.1, y=2.2), vector.obj(x=2.2, y=4.4))
+
+    assert get_isparallel(vector.obj(x=1.1, y=2.2), vector.obj(px=2.2, py=4.4))
+
     assert get_isparallel(vector.obj(px=1.1, py=2.2), vector.obj(px=2.2, py=4.4))
 
+    assert get_isparallel(vector.obj(x=1.1, y=2.2), vector.obj(x=2.2, y=4.4, z=0.0))
+
+    assert get_isparallel(vector.obj(x=1.1, y=2.2, z=0.0), vector.obj(x=2.2, y=4.4))
+
     assert get_isparallel(
-        vector.obj(px=1.1, py=2.2, pz=3.3), vector.obj(px=2.2, py=4.4, pz=6.6)
+        vector.obj(x=1.1, y=2.2, z=3.3), vector.obj(x=2.2, y=4.4, z=6.6)
     )
 
 

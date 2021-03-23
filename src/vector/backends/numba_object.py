@@ -41,10 +41,8 @@ from vector.methods import (
     _from_signature,
 )
 
-# This needs to go into Numba itself.
 
-
-@numba.extending.overload(numpy.nan_to_num)
+@numba.extending.overload(numpy.nan_to_num)  # FIXME: This needs to go into Numba!
 def nan_to_num(x, copy=True, nan=0.0, posinf=None, neginf=None):
     if isinstance(x, numba.types.Array):
 
@@ -1373,30 +1371,15 @@ def add_lorentz_property(vectortype, propertyname):
 
 
 for propertyname in planar_properties:
-    for vectortype in (
-        VectorObject2DType,
-        MomentumObject2DType,
-        VectorObject3DType,
-        MomentumObject3DType,
-        VectorObject4DType,
-        MomentumObject4DType,
-    ):
+    for vectortype in (VectorObject2DType, VectorObject3DType, VectorObject4DType):
         add_planar_property(vectortype, propertyname)
 
 for propertyname in spatial_properties:
-    for vectortype in (
-        VectorObject3DType,
-        MomentumObject3DType,
-        VectorObject4DType,
-        MomentumObject4DType,
-    ):
+    for vectortype in (VectorObject3DType, VectorObject4DType):
         add_spatial_property(vectortype, propertyname)
 
 for propertyname in lorentz_properties:
-    for vectortype in (
-        VectorObject4DType,
-        MomentumObject4DType,
-    ):
+    for vectortype in (VectorObject4DType,):
         add_lorentz_property(vectortype, propertyname)
 
 for propertyname in lorentz_momentum_properties:
@@ -1589,43 +1572,25 @@ def add_binary_method(vectortype, gn, methodname):
 
 
 for methodname in planar_binary_methods:
-    for vectortype in (
-        VectorObject2DType,
-        MomentumObject2DType,
-        VectorObject3DType,
-        MomentumObject3DType,
-        VectorObject4DType,
-        MomentumObject4DType,
-    ):
+    for vectortype in (VectorObject2DType, VectorObject3DType, VectorObject4DType):
         add_binary_method(vectortype, "planar", methodname)
 
 for methodname in spatial_binary_methods:
-    for vectortype in (
-        VectorObject3DType,
-        MomentumObject3DType,
-        VectorObject4DType,
-        MomentumObject4DType,
-    ):
+    for vectortype in (VectorObject3DType, VectorObject4DType):
         add_binary_method(vectortype, "spatial", methodname)
 
 for methodname in lorentz_binary_methods:
-    for vectortype in (
-        VectorObject4DType,
-        MomentumObject4DType,
-    ):
+    for vectortype in (VectorObject4DType,):
         add_binary_method(vectortype, "lorentz", methodname)
 
 for methodname in general_binary_methods:
-    for vectortype in (VectorObject2DType, MomentumObject2DType):
-        add_binary_method(vectortype, None, methodname)
+    add_binary_method(VectorObject2DType, None, methodname)
 
 for methodname in general_binary_methods:
-    for vectortype in (VectorObject3DType, MomentumObject3DType):
-        add_binary_method(vectortype, None, methodname)
+    add_binary_method(VectorObject3DType, None, methodname)
 
 for methodname in general_binary_methods:
-    for vectortype in (VectorObject4DType, MomentumObject4DType):
-        add_binary_method(vectortype, None, methodname)
+    add_binary_method(VectorObject4DType, None, methodname)
 
 
 tolerance_methods = ["is_parallel", "is_antiparallel", "is_perpendicular"]
@@ -1634,6 +1599,24 @@ tolerance_methods = ["is_parallel", "is_antiparallel", "is_perpendicular"]
 def add_tolerance_method(vectortype, methodname):
     @numba.extending.overload_method(vectortype, methodname)
     def overloader(v1, v2, tolerance=1e-5):
+        if isinstance(v1, VectorObject2DType) and not isinstance(
+            v2, VectorObject2DType
+        ):
+
+            def overloader_impl(v1, v2, tolerance=1e-5):
+                return v1.to_Vector3D().is_parallel(v2, tolerance=tolerance)
+
+            return overloader_impl
+
+        if not isinstance(v1, VectorObject2DType) and isinstance(
+            v2, VectorObject2DType
+        ):
+
+            def overloader_impl(v1, v2, tolerance=1e-5):
+                return v1.is_parallel(v2.to_Vector3D(), tolerance=tolerance)
+
+            return overloader_impl
+
         if issubclass(vectortype, VectorObject2DType):
             groupname = "planar"
             signature = (numba_aztype(v1), numba_aztype(v2))
@@ -1694,16 +1677,13 @@ def add_tolerance_method(vectortype, methodname):
 
 
 for methodname in tolerance_methods:
-    for vectortype in (VectorObject2DType, MomentumObject2DType):
-        add_tolerance_method(vectortype, methodname)
+    add_tolerance_method(VectorObject2DType, methodname)
 
 for methodname in tolerance_methods:
-    for vectortype in (VectorObject3DType, MomentumObject3DType):
-        add_tolerance_method(vectortype, methodname)
+    add_tolerance_method(VectorObject3DType, methodname)
 
 for methodname in tolerance_methods:
-    for vectortype in (VectorObject4DType, MomentumObject4DType):
-        add_tolerance_method(vectortype, methodname)
+    add_tolerance_method(VectorObject4DType, methodname)
 
 
 # TODO: the rest are special in one way or another. They need to be overloaded individually.
