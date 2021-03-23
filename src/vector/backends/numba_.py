@@ -14,10 +14,29 @@ import vector.compute.planar
 import vector.compute.spatial
 
 
+def make_cell(cell_contents):
+    if hasattr(types, "CellType"):
+        return types.CellType(cell_contents)
+
+    else:
+
+        def f():
+            z = 123
+
+            def g():
+                return z
+
+            return g
+
+        h = f()
+        h.__closure__[0].cell_contents = cell_contents
+        return h.__closure__[0]
+
+
 def make_dispatcher(function, new_module):
     closure = None
     if function.__closure__ is not None:
-        closure = tuple(types.CellType(x.cell_contents) for x in function.__closure__)
+        closure = tuple(make_cell(x.cell_contents) for x in function.__closure__)
     new_function = types.FunctionType(
         function.__code__,
         new_module.__dict__,  # make the function's surrounding scope the new module
