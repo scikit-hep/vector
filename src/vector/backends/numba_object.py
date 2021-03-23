@@ -74,6 +74,39 @@ def nan_to_num(x, copy=True, nan=0.0, posinf=None, neginf=None):
     return nan_to_num_impl
 
 
+@numba.extending.overload(numpy.isclose)  # FIXME: This needs to go into Numba!
+def isclose(a, b, rtol=1e-05, atol=1e-08, equal_nan=False):
+    if isinstance(a, numba.types.Array) and isinstance(b, numba.types.Array):
+
+        def isclose_impl(a, b, rtol=1e-05, atol=1e-08, equal_nan=False):
+            a, b = numpy.broadcast_arrays(a, b)
+            x = a.reshape(-1)
+            y = b.astype(numpy.float64).reshape(-1)
+            out = numpy.zeros(len(x), numpy.bool_)
+            for i in range(len(out)):
+                if numpy.isnan(x[i]) and numpy.isnan(y[i]):
+                    out[i] = equal_nan
+                elif numpy.isinf(x[i]) and numpy.isinf(y[i]):
+                    out[i] = (x[i] > 0) == (y[i] > 0)
+                else:
+                    out[i] = abs(x[i] - y[i]) <= atol + rtol * abs(y[i])
+            return out.reshape(a.shape)
+
+    else:
+
+        def isclose_impl(a, b, rtol=1e-05, atol=1e-08, equal_nan=False):
+            x = a
+            y = numpy.float64(b)
+            if numpy.isnan(x) and numpy.isnan(y):
+                return equal_nan
+            elif numpy.isinf(x) and numpy.isinf(y):
+                return (x > 0) == (y > 0)
+            else:
+                return abs(x - y) <= atol + rtol * abs(y)
+
+    return isclose_impl
+
+
 # Since CoordinateObjects are NamedTuples, we get their types wrapped for free.
 
 
@@ -1646,32 +1679,31 @@ def add_tolerance_method(vectortype, methodname):
             signature,
         )
 
-        if returns == [bool] or returns == [float]:
-            if issubclass(vectortype, VectorObject2DType):
+        if issubclass(vectortype, VectorObject2DType):
 
-                def overloader_impl(v1, v2, tolerance=1e-5):
-                    return function(
-                        numpy,
-                        tolerance,
-                        coord11(v1),
-                        coord12(v1),
-                        coord21(v2),
-                        coord22(v2),
-                    )
+            def overloader_impl(v1, v2, tolerance=1e-5):
+                return function(
+                    numpy,
+                    tolerance,
+                    coord11(v1),
+                    coord12(v1),
+                    coord21(v2),
+                    coord22(v2),
+                )
 
-            elif issubclass(vectortype, (VectorObject3DType, VectorObject4DType)):
+        elif issubclass(vectortype, (VectorObject3DType, VectorObject4DType)):
 
-                def overloader_impl(v1, v2, tolerance=1e-5):
-                    return function(
-                        numpy,
-                        tolerance,
-                        coord11(v1),
-                        coord12(v1),
-                        coord13(v1),
-                        coord21(v2),
-                        coord22(v2),
-                        coord23(v2),
-                    )
+            def overloader_impl(v1, v2, tolerance=1e-5):
+                return function(
+                    numpy,
+                    tolerance,
+                    coord11(v1),
+                    coord12(v1),
+                    coord13(v1),
+                    coord21(v2),
+                    coord22(v2),
+                    coord23(v2),
+                )
 
         return overloader_impl
 
@@ -1684,6 +1716,116 @@ for methodname in tolerance_methods:
 
 for methodname in tolerance_methods:
     add_tolerance_method(VectorObject4DType, methodname)
+
+
+def add_isclose_method(vectortype):
+    @numba.extending.overload_method(vectortype, "isclose")
+    def overloader(v1, v2, rtol=1e-05, atol=1e-08, equal_nan=False):
+        if isinstance(v1, VectorObject2DType) and isinstance(v2, VectorObject2DType):
+            groupname = "planar"
+            signature = (numba_aztype(v1), numba_aztype(v2))
+            coord11 = getcoord1[numba_aztype(v1)]
+            coord12 = getcoord2[numba_aztype(v1)]
+            coord21 = getcoord1[numba_aztype(v2)]
+            coord22 = getcoord2[numba_aztype(v2)]
+
+        elif isinstance(v1, VectorObject3DType) and isinstance(v2, VectorObject3DType):
+            groupname = "spatial"
+            signature = (
+                numba_aztype(v1),
+                numba_ltype(v1),
+                numba_aztype(v2),
+                numba_ltype(v2),
+            )
+            coord11 = getcoord1[numba_aztype(v1)]
+            coord12 = getcoord2[numba_aztype(v1)]
+            coord13 = getcoord1[numba_ltype(v1)]
+            coord21 = getcoord1[numba_aztype(v2)]
+            coord22 = getcoord2[numba_aztype(v2)]
+            coord23 = getcoord1[numba_ltype(v2)]
+
+        elif isinstance(v1, VectorObject4DType) and isinstance(v2, VectorObject4DType):
+            groupname = "lorentz"
+            signature = (
+                numba_aztype(v1),
+                numba_ltype(v1),
+                numba_ttype(v1),
+                numba_aztype(v2),
+                numba_ltype(v2),
+                numba_ttype(v2),
+            )
+            coord11 = getcoord1[numba_aztype(v1)]
+            coord12 = getcoord2[numba_aztype(v1)]
+            coord13 = getcoord1[numba_ltype(v1)]
+            coord14 = getcoord1[numba_ttype(v1)]
+            coord21 = getcoord1[numba_aztype(v2)]
+            coord22 = getcoord2[numba_aztype(v2)]
+            coord23 = getcoord1[numba_ltype(v2)]
+            coord24 = getcoord1[numba_ttype(v2)]
+
+        else:
+            raise numba.TypingError("vectors do not have the same dimension")
+
+        function, *returns = _from_signature(
+            groupname + ".isclose",
+            numba_modules[groupname]["isclose"],
+            signature,
+        )
+
+        if isinstance(v1, VectorObject2DType) and isinstance(v2, VectorObject2DType):
+
+            def overloader_impl(v1, v2, rtol=1e-05, atol=1e-08, equal_nan=False):
+                return function(
+                    numpy,
+                    rtol,
+                    atol,
+                    equal_nan,
+                    coord11(v1),
+                    coord12(v1),
+                    coord21(v2),
+                    coord22(v2),
+                )
+
+        elif isinstance(v1, VectorObject3DType) and isinstance(v2, VectorObject3DType):
+
+            def overloader_impl(v1, v2, rtol=1e-05, atol=1e-08, equal_nan=False):
+                return function(
+                    numpy,
+                    rtol,
+                    atol,
+                    equal_nan,
+                    coord11(v1),
+                    coord12(v1),
+                    coord13(v1),
+                    coord21(v2),
+                    coord22(v2),
+                    coord23(v2),
+                )
+
+        elif isinstance(v1, VectorObject4DType) and isinstance(v2, VectorObject4DType):
+
+            def overloader_impl(v1, v2, rtol=1e-05, atol=1e-08, equal_nan=False):
+                return function(
+                    numpy,
+                    rtol,
+                    atol,
+                    equal_nan,
+                    coord11(v1),
+                    coord12(v1),
+                    coord13(v1),
+                    coord14(v1),
+                    coord21(v2),
+                    coord22(v2),
+                    coord23(v2),
+                    coord24(v2),
+                )
+
+        return overloader_impl
+
+
+add_isclose_method(VectorObject2DType)
+add_isclose_method(VectorObject3DType)
+add_isclose_method(VectorObject4DType)
 
 
 # the rest are special in one way or another ##################################

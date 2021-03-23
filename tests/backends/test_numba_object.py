@@ -904,6 +904,20 @@ def test_method_isparallel():
     )
 
 
+def test_method_isclose():
+    @numba.njit
+    def get_isclose(v1, v2):
+        return v1.isclose(v2)
+
+    assert get_isclose(vector.obj(x=1.1, y=2.2), vector.obj(x=1.1, y=2.2))
+
+    assert get_isclose(vector.obj(x=1.1, y=2.2, z=3.3), vector.obj(x=1.1, y=2.2, z=3.3))
+
+    assert get_isclose(
+        vector.obj(x=1.1, y=2.2, z=3.3, t=4.4), vector.obj(x=1.1, y=2.2, z=3.3, t=4.4)
+    )
+
+
 def test_method_rotateZ():
     @numba.njit
     def get_rotateZ(v, angle):
