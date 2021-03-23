@@ -481,7 +481,29 @@ def test_spatial_method_float():
     ) == pytest.approx(1.5)
 
 
-def test_method_vector():
+def test_method_deltaphi():
+    @numba.njit
+    def get_deltaphi(v1, v2):
+        return v1.deltaphi(v2)
+
+    assert get_deltaphi(
+        vector.obj(rho=1.1, phi=2.2), vector.obj(rho=3, phi=4)
+    ) == pytest.approx(2.2 - 4)
+
+    assert get_deltaphi(
+        vector.obj(rho=1.1, phi=2.2), vector.obj(rho=3, phi=4, z=5)
+    ) == pytest.approx(2.2 - 4)
+
+    assert get_deltaphi(
+        vector.obj(rho=1.1, phi=2.2, z=3.3), vector.obj(rho=3, phi=4)
+    ) == pytest.approx(2.2 - 4)
+
+    assert get_deltaphi(
+        vector.obj(rho=1.1, phi=2.2, z=3.3), vector.obj(rho=3, phi=4, z=5)
+    ) == pytest.approx(2.2 - 4)
+
+
+def test_method_add():
     @numba.njit
     def get_add(v1, v2):
         return v1.add(v2)
