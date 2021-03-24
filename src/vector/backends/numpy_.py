@@ -34,7 +34,6 @@ from vector.methods import (
     _coordinate_order,
     _handler_of,
     _ltype,
-    _repr_generic_to_momentum,
     _repr_momentum_to_generic,
     _ttype,
 )
@@ -132,13 +131,6 @@ def _getitem(array, where, is_momentum):
 def _array_repr(array, is_momentum):
     name = type(array).__name__
     array = array.view(numpy.ndarray)
-    if is_momentum:
-        array = array.view(
-            [
-                (_repr_generic_to_momentum.get(x, x), array.dtype[x])
-                for x in array.dtype.names
-            ]
-        )
     return name + repr(array)[5:].replace("\n     ", "\n" + " " * len(name))
 
 
@@ -192,6 +184,189 @@ class LongitudinalNumpy(CoordinatesNumpy):
 
 class TemporalNumpy(CoordinatesNumpy):
     pass
+
+
+class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, numpy.ndarray):
+    ObjectClass = vector.backends.object_.AzimuthalObjectXY
+
+    def __new__(cls, *args, **kwargs):
+        return numpy.array(*args, **kwargs).view(cls)
+
+    def __array_finalize__(self, obj):
+        if not _has(self, ("x", "y")):
+            raise TypeError(
+                f"{type(self).__name__} must have a structured dtype containing "
+                'fields ("x", "y")'
+            )
+
+    @property
+    def elements(self):
+        return (self["x"], self["y"])
+
+    @property
+    def x(self):
+        return self["x"]
+
+    @property
+    def y(self):
+        return self["y"]
+
+    def __getitem__(self, where):
+        return _getitem(self, where, False)
+
+
+class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, numpy.ndarray):
+    ObjectClass = vector.backends.object_.AzimuthalObjectRhoPhi
+
+    def __new__(cls, *args, **kwargs):
+        return numpy.array(*args, **kwargs).view(cls)
+
+    def __array_finalize__(self, obj):
+        if not _has(self, ("rho", "phi")):
+            raise TypeError(
+                f"{type(self).__name__} must have a structured dtype containing "
+                'fields ("rho", "phi")'
+            )
+
+    @property
+    def elements(self):
+        return (self["rho"], self["phi"])
+
+    @property
+    def rho(self):
+        return self["rho"]
+
+    @property
+    def phi(self):
+        return self["phi"]
+
+    def __getitem__(self, where):
+        return _getitem(self, where, False)
+
+
+class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, numpy.ndarray):
+    ObjectClass = vector.backends.object_.LongitudinalObjectZ
+
+    def __new__(cls, *args, **kwargs):
+        return numpy.array(*args, **kwargs).view(cls)
+
+    def __array_finalize__(self, obj):
+        if not _has(self, ("z",)):
+            raise TypeError(
+                f"{type(self).__name__} must have a structured dtype containing "
+                'field "z"'
+            )
+
+    @property
+    def elements(self):
+        return (self["z"],)
+
+    @property
+    def z(self):
+        return self["z"]
+
+    def __getitem__(self, where):
+        return _getitem(self, where, False)
+
+
+class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, numpy.ndarray):
+    ObjectClass = vector.backends.object_.LongitudinalObjectTheta
+
+    def __new__(cls, *args, **kwargs):
+        return numpy.array(*args, **kwargs).view(cls)
+
+    def __array_finalize__(self, obj):
+        if not _has(self, ("theta",)):
+            raise TypeError(
+                f"{type(self).__name__} must have a structured dtype containing "
+                'field "theta"'
+            )
+
+    @property
+    def elements(self):
+        return (self["theta"],)
+
+    @property
+    def theta(self):
+        return self["theta"]
+
+    def __getitem__(self, where):
+        return _getitem(self, where, False)
+
+
+class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, numpy.ndarray):
+    ObjectClass = vector.backends.object_.LongitudinalObjectEta
+
+    def __new__(cls, *args, **kwargs):
+        return numpy.array(*args, **kwargs).view(cls)
+
+    def __array_finalize__(self, obj):
+        if not _has(self, ("eta",)):
+            raise TypeError(
+                f"{type(self).__name__} must have a structured dtype containing "
+                'field "eta"'
+            )
+
+    @property
+    def elements(self):
+        return (self["eta"],)
+
+    @property
+    def eta(self):
+        return self["eta"]
+
+    def __getitem__(self, where):
+        return _getitem(self, where, False)
+
+
+class TemporalNumpyT(TemporalNumpy, TemporalT, numpy.ndarray):
+    ObjectClass = vector.backends.object_.TemporalObjectT
+
+    def __new__(cls, *args, **kwargs):
+        return numpy.array(*args, **kwargs).view(cls)
+
+    def __array_finalize__(self, obj):
+        if not _has(self, ("t",)):
+            raise TypeError(
+                f"{type(self).__name__} must have a structured dtype containing "
+                'field "t"'
+            )
+
+    @property
+    def elements(self):
+        return (self["t"],)
+
+    @property
+    def t(self):
+        return self["t"]
+
+    def __getitem__(self, where):
+        return _getitem(self, where, False)
+
+
+class TemporalNumpyTau(TemporalNumpy, TemporalTau, numpy.ndarray):
+    ObjectClass = vector.backends.object_.TemporalObjectTau
+
+    def __new__(cls, *args, **kwargs):
+        return numpy.array(*args, **kwargs).view(cls)
+
+    def __array_finalize__(self, obj):
+        if not _has(self, ("tau",)):
+            raise TypeError(
+                f"{type(self).__name__} must have a structured dtype containing "
+                'field "tau"'
+            )
+
+    @property
+    def elements(self):
+        return (self["tau"],)
+
+    @property
+    def tau(self):
+        return self["tau"]
+
+    def __getitem__(self, where):
+        return _getitem(self, where, False)
 
 
 class VectorNumpy:
@@ -398,189 +573,6 @@ class VectorNumpy:
             return type(self).allclose(*args, **kwargs)
         else:
             return NotImplemented
-
-
-class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, numpy.ndarray):
-    ObjectClass = vector.backends.object_.AzimuthalObjectXY
-
-    def __new__(cls, *args, **kwargs):
-        return numpy.array(*args, **kwargs).view(cls)
-
-    def __array_finalize__(self, obj):
-        if not _has(self, ("x", "y")):
-            raise TypeError(
-                f"{type(self).__name__} must have a structured dtype containing "
-                'fields ("x", "y")'
-            )
-
-    @property
-    def elements(self):
-        return (self["x"], self["y"])
-
-    @property
-    def x(self):
-        return self["x"]
-
-    @property
-    def y(self):
-        return self["y"]
-
-    def __getitem__(self, where):
-        return _getitem(self, where, False)
-
-
-class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, numpy.ndarray):
-    ObjectClass = vector.backends.object_.AzimuthalObjectRhoPhi
-
-    def __new__(cls, *args, **kwargs):
-        return numpy.array(*args, **kwargs).view(cls)
-
-    def __array_finalize__(self, obj):
-        if not _has(self, ("rho", "phi")):
-            raise TypeError(
-                f"{type(self).__name__} must have a structured dtype containing "
-                'fields ("rho", "phi")'
-            )
-
-    @property
-    def elements(self):
-        return (self["rho"], self["phi"])
-
-    @property
-    def rho(self):
-        return self["rho"]
-
-    @property
-    def phi(self):
-        return self["phi"]
-
-    def __getitem__(self, where):
-        return _getitem(self, where, False)
-
-
-class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, numpy.ndarray):
-    ObjectClass = vector.backends.object_.LongitudinalObjectZ
-
-    def __new__(cls, *args, **kwargs):
-        return numpy.array(*args, **kwargs).view(cls)
-
-    def __array_finalize__(self, obj):
-        if not _has(self, ("z",)):
-            raise TypeError(
-                f"{type(self).__name__} must have a structured dtype containing "
-                'field "z"'
-            )
-
-    @property
-    def elements(self):
-        return (self["z"],)
-
-    @property
-    def z(self):
-        return self["z"]
-
-    def __getitem__(self, where):
-        return _getitem(self, where, False)
-
-
-class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, numpy.ndarray):
-    ObjectClass = vector.backends.object_.LongitudinalObjectTheta
-
-    def __new__(cls, *args, **kwargs):
-        return numpy.array(*args, **kwargs).view(cls)
-
-    def __array_finalize__(self, obj):
-        if not _has(self, ("theta",)):
-            raise TypeError(
-                f"{type(self).__name__} must have a structured dtype containing "
-                'field "theta"'
-            )
-
-    @property
-    def elements(self):
-        return (self["theta"],)
-
-    @property
-    def theta(self):
-        return self["theta"]
-
-    def __getitem__(self, where):
-        return _getitem(self, where, False)
-
-
-class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, numpy.ndarray):
-    ObjectClass = vector.backends.object_.LongitudinalObjectEta
-
-    def __new__(cls, *args, **kwargs):
-        return numpy.array(*args, **kwargs).view(cls)
-
-    def __array_finalize__(self, obj):
-        if not _has(self, ("eta",)):
-            raise TypeError(
-                f"{type(self).__name__} must have a structured dtype containing "
-                'field "eta"'
-            )
-
-    @property
-    def elements(self):
-        return (self["eta"],)
-
-    @property
-    def eta(self):
-        return self["eta"]
-
-    def __getitem__(self, where):
-        return _getitem(self, where, False)
-
-
-class TemporalNumpyT(TemporalNumpy, TemporalT, numpy.ndarray):
-    ObjectClass = vector.backends.object_.TemporalObjectT
-
-    def __new__(cls, *args, **kwargs):
-        return numpy.array(*args, **kwargs).view(cls)
-
-    def __array_finalize__(self, obj):
-        if not _has(self, ("t",)):
-            raise TypeError(
-                f"{type(self).__name__} must have a structured dtype containing "
-                'field "t"'
-            )
-
-    @property
-    def elements(self):
-        return (self["t"],)
-
-    @property
-    def t(self):
-        return self["t"]
-
-    def __getitem__(self, where):
-        return _getitem(self, where, False)
-
-
-class TemporalNumpyTau(TemporalNumpy, TemporalTau, numpy.ndarray):
-    ObjectClass = vector.backends.object_.TemporalObjectTau
-
-    def __new__(cls, *args, **kwargs):
-        return numpy.array(*args, **kwargs).view(cls)
-
-    def __array_finalize__(self, obj):
-        if not _has(self, ("tau",)):
-            raise TypeError(
-                f"{type(self).__name__} must have a structured dtype containing "
-                'field "tau"'
-            )
-
-    @property
-    def elements(self):
-        return (self["tau"],)
-
-    @property
-    def tau(self):
-        return self["tau"]
-
-    def __getitem__(self, where):
-        return _getitem(self, where, False)
 
 
 class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):
