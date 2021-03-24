@@ -1156,6 +1156,48 @@ def test_method_rotate_quaternion():
     assert out.z == pytest.approx(0.246)
 
 
+def test_method_boost():
+    @numba.njit
+    def get_boost_p4(vec, p4):
+        return vec.boost_p4(p4)
+
+    @numba.njit
+    def get_boost_beta3(vec, beta3):
+        return vec.boost_beta3(beta3)
+
+    @numba.njit
+    def get_boost(vec, booster):
+        return vec.boost(booster)
+
+    out = get_boost_p4(vector.obj(x=1, y=2, z=3, t=4), vector.obj(x=5, y=6, z=7, t=15))
+    assert out.x == pytest.approx(3.5537720741941676)
+    assert out.y == pytest.approx(5.0645264890330015)
+    assert out.z == pytest.approx(6.575280903871835)
+    assert out.t == pytest.approx(9.138547120755076)
+
+    out = get_boost_beta3(
+        vector.obj(x=1, y=2, z=3, t=4), vector.obj(x=5 / 15, y=6 / 15, z=7 / 15)
+    )
+    assert out.x == pytest.approx(3.5537720741941676)
+    assert out.y == pytest.approx(5.0645264890330015)
+    assert out.z == pytest.approx(6.575280903871835)
+    assert out.t == pytest.approx(9.138547120755076)
+
+    out = get_boost(vector.obj(x=1, y=2, z=3, t=4), vector.obj(x=5, y=6, z=7, t=15))
+    assert out.x == pytest.approx(3.5537720741941676)
+    assert out.y == pytest.approx(5.0645264890330015)
+    assert out.z == pytest.approx(6.575280903871835)
+    assert out.t == pytest.approx(9.138547120755076)
+
+    out = get_boost(
+        vector.obj(x=1, y=2, z=3, t=4), vector.obj(x=5 / 15, y=6 / 15, z=7 / 15)
+    )
+    assert out.x == pytest.approx(3.5537720741941676)
+    assert out.y == pytest.approx(5.0645264890330015)
+    assert out.z == pytest.approx(6.575280903871835)
+    assert out.t == pytest.approx(9.138547120755076)
+
+
 def test_method_boostX():
     @numba.njit
     def get_boostX_beta(vec, beta):

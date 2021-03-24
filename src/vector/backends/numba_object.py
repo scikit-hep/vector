@@ -2467,6 +2467,114 @@ def VectorObject34DType_transform3D(v, obj):
     return VectorObject34DType_transform3D_impl
 
 
+@numba.extending.overload_method(VectorObject4DType, "boost_p4")
+def VectorObject4DType_boost_p4(v, p4):
+    function, *returns = _from_signature(
+        "",
+        numba_modules["lorentz"]["boost_p4"],
+        (
+            numba_aztype(v),
+            numba_ltype(v),
+            numba_ttype(v),
+            numba_aztype(p4),
+            numba_ltype(p4),
+            numba_ttype(p4),
+        ),
+    )
+
+    instance_class = v.instance_class
+    coord11 = getcoord1[numba_aztype(v)]
+    coord12 = getcoord2[numba_aztype(v)]
+    coord13 = getcoord1[numba_ltype(v)]
+    coord14 = getcoord1[numba_ttype(v)]
+    coord21 = getcoord1[numba_aztype(p4)]
+    coord22 = getcoord2[numba_aztype(p4)]
+    coord23 = getcoord1[numba_ltype(p4)]
+    coord24 = getcoord1[numba_ttype(p4)]
+    azcoords = _coord_object_type[returns[0]]
+    lcoords = _coord_object_type[returns[1]]
+    tcoords = _coord_object_type[returns[2]]
+
+    def VectorObject4DType_boost_p4_impl(v, p4):
+        out1, out2, out3, out4 = function(
+            numpy,
+            coord11(v),
+            coord12(v),
+            coord13(v),
+            coord14(v),
+            coord21(p4),
+            coord22(p4),
+            coord23(p4),
+            coord24(p4),
+        )
+        return instance_class(azcoords(out1, out2), lcoords(out3), tcoords(out4))
+
+    return VectorObject4DType_boost_p4_impl
+
+
+@numba.extending.overload_method(VectorObject4DType, "boost_beta3")
+def VectorObject4DType_boost_beta3(v, beta3):
+    function, *returns = _from_signature(
+        "",
+        numba_modules["lorentz"]["boost_beta3"],
+        (
+            numba_aztype(v),
+            numba_ltype(v),
+            numba_ttype(v),
+            numba_aztype(beta3),
+            numba_ltype(beta3),
+        ),
+    )
+
+    instance_class = v.instance_class
+    coord11 = getcoord1[numba_aztype(v)]
+    coord12 = getcoord2[numba_aztype(v)]
+    coord13 = getcoord1[numba_ltype(v)]
+    coord14 = getcoord1[numba_ttype(v)]
+    coord21 = getcoord1[numba_aztype(beta3)]
+    coord22 = getcoord2[numba_aztype(beta3)]
+    coord23 = getcoord1[numba_ltype(beta3)]
+    azcoords = _coord_object_type[returns[0]]
+    lcoords = _coord_object_type[returns[1]]
+    tcoords = _coord_object_type[returns[2]]
+
+    def VectorObject4DType_boost_beta3_impl(v, beta3):
+        out1, out2, out3, out4 = function(
+            numpy,
+            coord11(v),
+            coord12(v),
+            coord13(v),
+            coord14(v),
+            coord21(beta3),
+            coord22(beta3),
+            coord23(beta3),
+        )
+        return instance_class(azcoords(out1, out2), lcoords(out3), tcoords(out4))
+
+    return VectorObject4DType_boost_beta3_impl
+
+
+@numba.extending.overload_method(VectorObject4DType, "boost")
+def VectorObject4DType_boost(v, booster):
+    if isinstance(booster, VectorObject3DType):
+
+        def VectorObject4DType_boost_impl(v, booster):
+            return v.boost_beta3(booster)
+
+    elif isinstance(booster, VectorObject4DType):
+
+        def VectorObject4DType_boost_impl(v, booster):
+            return v.boost_p4(booster)
+
+    else:
+        raise numba.TypingError(
+            "specify a Vector3D to boost by beta (velocity with c=1) or "
+            "a Vector4D to boost by a momentum 4-vector"
+        )
+
+    return VectorObject4DType_boost_impl
+
+
 def add_boostXYZ(methodname):
     @numba.extending.overload_method(VectorObject4DType, methodname)
     def VectorObject4DType_boostXYZ(v, beta=None, gamma=None):
