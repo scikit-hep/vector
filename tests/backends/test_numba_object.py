@@ -1154,3 +1154,15 @@ def test_method_rotate_quaternion():
     assert out.x == pytest.approx(0.078)
     assert out.y == pytest.approx(0.18)
     assert out.z == pytest.approx(0.246)
+
+
+def test_method_to_beta3():
+    @numba.njit
+    def get_to_beta3(vec):
+        return vec.to_beta3()
+
+    out = get_to_beta3(vector.obj(x=3, y=4, z=10, t=20))
+    assert isinstance(out, vector.backends.object_.VectorObject3D)
+    assert out.x == pytest.approx(3 / 20)
+    assert out.y == pytest.approx(4 / 20)
+    assert out.z == pytest.approx(10 / 20)

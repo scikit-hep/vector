@@ -1421,7 +1421,6 @@ for propertyname in lorentz_momentum_properties:
 
 planar_binary_methods = ["deltaphi"]
 spatial_binary_methods = ["deltaangle", "deltaeta", "deltaR", "deltaR2"]
-lorentz_binary_methods = ["boost_p4"]
 general_binary_methods = ["dot", "add", "subtract", "equal", "not_equal"]
 
 
@@ -1611,10 +1610,6 @@ for methodname in planar_binary_methods:
 for methodname in spatial_binary_methods:
     for vectortype in (VectorObject3DType, VectorObject4DType):
         add_binary_method(vectortype, "spatial", methodname)
-
-for methodname in lorentz_binary_methods:
-    for vectortype in (VectorObject4DType,):
-        add_binary_method(vectortype, "lorentz", methodname)
 
 for methodname in general_binary_methods:
     add_binary_method(VectorObject2DType, None, methodname)
@@ -2470,3 +2465,32 @@ def VectorObject34DType_transform3D(v, obj):
             return instance_class(azcoords(out1, out2), lcoords(out3), v.temporal)
 
     return VectorObject34DType_transform3D_impl
+
+
+@numba.extending.overload_method(VectorObject4DType, "to_beta3")
+def VectorObject4DType_to_beta3(v):
+    function, *returns = _from_signature(
+        "",
+        numba_modules["lorentz"]["to_beta3"],
+        (numba_aztype(v), numba_ltype(v), numba_ttype(v)),
+    )
+
+    instance_class = v.instance_class.ProjectionClass3D
+    coord1 = getcoord1[numba_aztype(v)]
+    coord2 = getcoord2[numba_aztype(v)]
+    coord3 = getcoord1[numba_ltype(v)]
+    coord4 = getcoord1[numba_ttype(v)]
+    azcoords = _coord_object_type[returns[0]]
+    lcoords = _coord_object_type[returns[1]]
+
+    def VectorObject4DType_to_beta3_impl(v):
+        out1, out2, out3 = function(
+            numpy,
+            coord1(v),
+            coord2(v),
+            coord3(v),
+            coord4(v),
+        )
+        return instance_class(azcoords(out1, out2), lcoords(out3))
+
+    return VectorObject4DType_to_beta3_impl
