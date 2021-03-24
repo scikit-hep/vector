@@ -6,7 +6,6 @@
 import operator
 
 import numba
-import numba.core.typing.templates
 import numpy
 
 import vector
