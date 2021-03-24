@@ -2810,3 +2810,175 @@ def VectorObject4DType_is_lightlike(v, tolerance=1e-5):
         )
 
     return VectorObject4DType_is_lightlike_impl
+
+
+@numba.extending.overload_attribute(MomentumObject2DType, "px")
+@numba.extending.overload_attribute(MomentumObject3DType, "px")
+@numba.extending.overload_attribute(MomentumObject4DType, "px")
+def MomentumObject234DType_px(v):
+    def MomentumObject234DType_px_impl(v):
+        return v.x
+
+    return MomentumObject234DType_px_impl
+
+
+@numba.extending.overload_attribute(MomentumObject2DType, "py")
+@numba.extending.overload_attribute(MomentumObject3DType, "py")
+@numba.extending.overload_attribute(MomentumObject4DType, "py")
+def MomentumObject234DType_py(v):
+    def MomentumObject234DType_py_impl(v):
+        return v.y
+
+    return MomentumObject234DType_py_impl
+
+
+@numba.extending.overload_attribute(MomentumObject2DType, "pt")
+@numba.extending.overload_attribute(MomentumObject3DType, "pt")
+@numba.extending.overload_attribute(MomentumObject4DType, "pt")
+def MomentumObject234DType_pt(v):
+    def MomentumObject234DType_pt_impl(v):
+        return v.rho
+
+    return MomentumObject234DType_pt_impl
+
+
+@numba.extending.overload_attribute(MomentumObject2DType, "pt2")
+@numba.extending.overload_attribute(MomentumObject3DType, "pt2")
+@numba.extending.overload_attribute(MomentumObject4DType, "pt2")
+def MomentumObject234DType_pt2(v):
+    def MomentumObject234DType_pt2_impl(v):
+        return v.rho2
+
+    return MomentumObject234DType_pt2_impl
+
+
+@numba.extending.overload_attribute(MomentumObject3DType, "pz")
+@numba.extending.overload_attribute(MomentumObject4DType, "pz")
+def MomentumObject34DType_pz(v):
+    def MomentumObject34DType_pz_impl(v):
+        return v.z
+
+    return MomentumObject34DType_pz_impl
+
+
+@numba.extending.overload_attribute(MomentumObject3DType, "pseudorapidity")
+@numba.extending.overload_attribute(MomentumObject4DType, "pseudorapidity")
+def MomentumObject34DType_pseudorapidity(v):
+    def MomentumObject34DType_pseudorapidity_impl(v):
+        return v.eta
+
+    return MomentumObject34DType_pseudorapidity_impl
+
+
+@numba.extending.overload_attribute(MomentumObject3DType, "p")
+@numba.extending.overload_attribute(MomentumObject4DType, "p")
+def MomentumObject34DType_p(v):
+    def MomentumObject34DType_p_impl(v):
+        return v.mag
+
+    return MomentumObject34DType_p_impl
+
+
+@numba.extending.overload_attribute(MomentumObject3DType, "p2")
+@numba.extending.overload_attribute(MomentumObject4DType, "p2")
+def MomentumObject34DType_p2(v):
+    def MomentumObject34DType_p2_impl(v):
+        return v.mag2
+
+    return MomentumObject34DType_p2_impl
+
+
+@numba.extending.overload_attribute(MomentumObject4DType, "E")
+def MomentumObject4DType_E(v):
+    def MomentumObject4DType_E_impl(v):
+        return v.t
+
+    return MomentumObject4DType_E_impl
+
+
+@numba.extending.overload_attribute(MomentumObject4DType, "energy")
+def MomentumObject4DType_energy(v):
+    def MomentumObject4DType_energy_impl(v):
+        return v.t
+
+    return MomentumObject4DType_energy_impl
+
+
+@numba.extending.overload_attribute(MomentumObject4DType, "E2")
+def MomentumObject4DType_E2(v):
+    def MomentumObject4DType_E2_impl(v):
+        return v.t2
+
+    return MomentumObject4DType_E2_impl
+
+
+@numba.extending.overload_attribute(MomentumObject4DType, "energy2")
+def MomentumObject4DType_energy2(v):
+    def MomentumObject4DType_energy2_impl(v):
+        return v.t2
+
+    return MomentumObject4DType_energy2_impl
+
+
+@numba.extending.overload_attribute(MomentumObject4DType, "m")
+def MomentumObject4DType_m(v):
+    def MomentumObject4DType_m_impl(v):
+        return v.tau
+
+    return MomentumObject4DType_m_impl
+
+
+@numba.extending.overload_attribute(MomentumObject4DType, "mass")
+def MomentumObject4DType_mass(v):
+    def MomentumObject4DType_mass_impl(v):
+        return v.tau
+
+    return MomentumObject4DType_mass_impl
+
+
+@numba.extending.overload_attribute(MomentumObject4DType, "m2")
+def MomentumObject4DType_m2(v):
+    def MomentumObject4DType_m2_impl(v):
+        return v.tau2
+
+    return MomentumObject4DType_m2_impl
+
+
+@numba.extending.overload_attribute(MomentumObject4DType, "mass2")
+def MomentumObject4DType_mass2(v):
+    def MomentumObject4DType_mass2_impl(v):
+        return v.tau2
+
+    return MomentumObject4DType_mass2_impl
+
+
+@numba.extending.overload_attribute(MomentumObject4DType, "transverse_energy")
+def MomentumObject4DType_transverse_energy(v):
+    def MomentumObject4DType_transverse_energy_impl(v):
+        return v.Et
+
+    return MomentumObject4DType_transverse_energy_impl
+
+
+@numba.extending.overload_attribute(MomentumObject4DType, "transverse_energy2")
+def MomentumObject4DType_transverse_energy2(v):
+    def MomentumObject4DType_transverse_energy2_impl(v):
+        return v.Et2
+
+    return MomentumObject4DType_transverse_energy2_impl
+
+
+@numba.extending.overload_attribute(MomentumObject4DType, "transverse_mass")
+def MomentumObject4DType_transverse_mass(v):
+    def MomentumObject4DType_transverse_mass_impl(v):
+        return v.Mt
+
+    return MomentumObject4DType_transverse_mass_impl
+
+
+@numba.extending.overload_attribute(MomentumObject4DType, "transverse_mass2")
+def MomentumObject4DType_transverse_mass2(v):
+    def MomentumObject4DType_transverse_mass2_impl(v):
+        return v.Mt2
+
+    return MomentumObject4DType_transverse_mass2_impl

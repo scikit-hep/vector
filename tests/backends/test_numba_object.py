@@ -1302,3 +1302,13 @@ def test_method_timespacelight_like():
     assert get_is_timelike(vector.obj(x=3, y=4, z=0, t=10))
     assert get_is_lightlike(vector.obj(x=3, y=4, z=0, t=5))
     assert get_is_spacelike(vector.obj(x=3, y=4, z=0, t=2))
+
+
+def test_momentum_alias():
+    @numba.njit
+    def get_px(v):
+        return v.px
+
+    assert get_px(vector.obj(px=3, py=4)) == pytest.approx(3)
+    with pytest.raises(numba.TypingError):
+        get_px(vector.obj(x=3, y=4))
