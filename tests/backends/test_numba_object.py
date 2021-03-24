@@ -1141,3 +1141,16 @@ def test_method_rotate_euler():
     assert out.x == pytest.approx(0.5956646364506655)
     assert out.y == pytest.approx(0.409927258162962)
     assert out.z == pytest.approx(0.4971350761081869)
+
+
+def test_method_rotate_quaternion():
+    @numba.njit
+    def get_rotate_quaternion(vec, u, i, j, k):
+        return vec.rotate_quaternion(u, i, j, k)
+
+    vec = vector.obj(x=0.5, y=0.6, z=0.7)
+    out = get_rotate_quaternion(vec, 0.1, 0.2, 0.3, 0.4)
+    assert isinstance(out, vector.backends.object_.VectorObject3D)
+    assert out.x == pytest.approx(0.078)
+    assert out.y == pytest.approx(0.18)
+    assert out.z == pytest.approx(0.246)

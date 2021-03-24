@@ -2320,3 +2320,153 @@ def VectorObject34DType_rotate_euler(v, phi, theta, psi, order="zxz"):
         raise numba.TypingError(
             "'phi', 'theta', and 'psi' must be integers or floating-point numbers"
         )
+
+
+@numba.extending.overload_method(VectorObject3DType, "rotate_nautical")
+@numba.extending.overload_method(VectorObject4DType, "rotate_nautical")
+def VectorObject34DType_rotate_nautical(v, yaw, pitch, roll):
+    if (
+        isinstance(yaw, (numba.types.Integer, numba.types.Float))
+        and isinstance(pitch, (numba.types.Integer, numba.types.Float))
+        and isinstance(roll, (numba.types.Integer, numba.types.Float))
+    ):
+        function, *returns = _from_signature(
+            "",
+            numba_modules["spatial"]["rotate_euler"],
+            (numba_aztype(v), numba_ltype(v), "zyx"),
+        )
+
+        instance_class = v.instance_class
+        coord1 = getcoord1[numba_aztype(v)]
+        coord2 = getcoord2[numba_aztype(v)]
+        coord3 = getcoord1[numba_ltype(v)]
+        azcoords = _coord_object_type[returns[0]]
+        lcoords = _coord_object_type[returns[1]]
+
+        if isinstance(v, VectorObject3DType):
+
+            def VectorObject34DType_rotate_nautical_impl(v, yaw, pitch, roll):
+                out1, out2, out3 = function(
+                    numpy, roll, pitch, yaw, coord1(v), coord2(v), coord3(v)
+                )
+                return instance_class(azcoords(out1, out2), lcoords(out3))
+
+        else:
+
+            def VectorObject34DType_rotate_nautical_impl(v, yaw, pitch, roll):
+                out1, out2, out3 = function(
+                    numpy, roll, pitch, yaw, coord1(v), coord2(v), coord3(v)
+                )
+                return instance_class(azcoords(out1, out2), lcoords(out3), v.temporal)
+
+        return VectorObject34DType_rotate_nautical_impl
+
+    else:
+        raise numba.TypingError(
+            "'yaw', 'pitch', and 'roll' must be integers or floating-point numbers"
+        )
+
+
+@numba.extending.overload_method(VectorObject3DType, "rotate_quaternion")
+@numba.extending.overload_method(VectorObject4DType, "rotate_quaternion")
+def VectorObject34DType_rotate_quaternion(v, u, i, j, k):
+    if (
+        isinstance(u, (numba.types.Integer, numba.types.Float))
+        and isinstance(i, (numba.types.Integer, numba.types.Float))
+        and isinstance(j, (numba.types.Integer, numba.types.Float))
+        and isinstance(k, (numba.types.Integer, numba.types.Float))
+    ):
+        function, *returns = _from_signature(
+            "",
+            numba_modules["spatial"]["rotate_quaternion"],
+            (numba_aztype(v), numba_ltype(v)),
+        )
+
+        instance_class = v.instance_class
+        coord1 = getcoord1[numba_aztype(v)]
+        coord2 = getcoord2[numba_aztype(v)]
+        coord3 = getcoord1[numba_ltype(v)]
+        azcoords = _coord_object_type[returns[0]]
+        lcoords = _coord_object_type[returns[1]]
+
+        if isinstance(v, VectorObject3DType):
+
+            def VectorObject34DType_rotate_quaternion_impl(v, u, i, j, k):
+                out1, out2, out3 = function(
+                    numpy, u, i, j, k, coord1(v), coord2(v), coord3(v)
+                )
+                return instance_class(azcoords(out1, out2), lcoords(out3))
+
+        else:
+
+            def VectorObject34DType_rotate_quaternion_impl(v, u, i, j, k):
+                out1, out2, out3 = function(
+                    numpy, u, i, j, k, coord1(v), coord2(v), coord3(v)
+                )
+                return instance_class(azcoords(out1, out2), lcoords(out3), v.temporal)
+
+        return VectorObject34DType_rotate_quaternion_impl
+
+    else:
+        raise numba.TypingError(
+            "'u', 'i', 'j', and 'k' must be integers or floating-point numbers"
+        )
+
+
+@numba.extending.overload_method(VectorObject3DType, "transform3D")
+@numba.extending.overload_method(VectorObject4DType, "transform3D")
+def VectorObject34DType_transform3D(v, obj):
+    function, *returns = _from_signature(
+        "",
+        numba_modules["spatial"]["transform3D"],
+        (numba_aztype(v), numba_ltype(v)),
+    )
+
+    instance_class = v.instance_class
+    coord1 = getcoord1[numba_aztype(v)]
+    coord2 = getcoord2[numba_aztype(v)]
+    coord3 = getcoord1[numba_ltype(v)]
+    azcoords = _coord_object_type[returns[0]]
+    lcoords = _coord_object_type[returns[1]]
+
+    if isinstance(v, VectorObject3DType):
+
+        def VectorObject34DType_transform3D_impl(v, obj):
+            out1, out2, out3 = function(
+                numpy,
+                obj["xx"],
+                obj["xy"],
+                obj["xz"],
+                obj["yx"],
+                obj["yy"],
+                obj["yz"],
+                obj["zx"],
+                obj["zy"],
+                obj["zz"],
+                coord1(v),
+                coord2(v),
+                coord3(v),
+            )
+            return instance_class(azcoords(out1, out2), lcoords(out3))
+
+    else:
+
+        def VectorObject34DType_transform3D_impl(v, obj):
+            out1, out2, out3 = function(
+                numpy,
+                obj["xx"],
+                obj["xy"],
+                obj["xz"],
+                obj["yx"],
+                obj["yy"],
+                obj["yz"],
+                obj["zx"],
+                obj["zy"],
+                obj["zz"],
+                coord1(v),
+                coord2(v),
+                coord3(v),
+            )
+            return instance_class(azcoords(out1, out2), lcoords(out3), v.temporal)
+
+    return VectorObject34DType_transform3D_impl
