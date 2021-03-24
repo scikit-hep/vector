@@ -506,6 +506,17 @@ class Vector4D(Vector):
     pass
 
 
+def dim(v):
+    if isinstance(v, Vector2D):
+        return 2
+    elif isinstance(v, Vector3D):
+        return 3
+    elif isinstance(v, Vector4D):
+        return 4
+    else:
+        raise TypeError(f"{repr(v)} is not a vector.Vector")
+
+
 def _compute_module_of(one, two, nontemporal=False):
     if not isinstance(one, Vector):
         raise TypeError(f"{repr(one)} is not a Vector")
@@ -663,7 +674,7 @@ class Planar:
         "equal docs"
         from .compute.planar import equal
 
-        if not isinstance(other, Vector2D):
+        if dim(self) != dim(other):
             raise TypeError(
                 f"{repr(self)} and {repr(other)} do not have the same dimension"
             )
@@ -673,7 +684,7 @@ class Planar:
         "not_equal docs"
         from .compute.planar import not_equal
 
-        if not isinstance(other, Vector2D):
+        if dim(self) != dim(other):
             raise TypeError(
                 f"{repr(self)} and {repr(other)} do not have the same dimension"
             )
@@ -683,7 +694,7 @@ class Planar:
         "isclose docs"
         from .compute.planar import isclose
 
-        if not isinstance(other, Vector2D):
+        if dim(self) != dim(other):
             raise TypeError(
                 f"{repr(self)} and {repr(other)} do not have the same dimension"
             )
@@ -896,7 +907,7 @@ class Spatial(Planar):
         "equal docs"
         from .compute.spatial import equal
 
-        if not isinstance(other, Vector3D):
+        if dim(self) != dim(other):
             raise TypeError(
                 f"{repr(self)} and {repr(other)} do not have the same dimension"
             )
@@ -906,7 +917,7 @@ class Spatial(Planar):
         "not_equal docs"
         from .compute.spatial import not_equal
 
-        if not isinstance(other, Vector3D):
+        if dim(self) != dim(other):
             raise TypeError(
                 f"{repr(self)} and {repr(other)} do not have the same dimension"
             )
@@ -916,7 +927,7 @@ class Spatial(Planar):
         "isclose docs"
         from .compute.spatial import isclose
 
-        if not isinstance(other, Vector3D):
+        if dim(self) != dim(other):
             raise TypeError(
                 f"{repr(self)} and {repr(other)} do not have the same dimension"
             )
@@ -1098,7 +1109,7 @@ class Lorentz(Spatial):
         "equal docs"
         from .compute.lorentz import equal
 
-        if not isinstance(other, Vector4D):
+        if dim(self) != dim(other):
             raise TypeError(
                 f"{repr(self)} and {repr(other)} do not have the same dimension"
             )
@@ -1108,7 +1119,7 @@ class Lorentz(Spatial):
         "not_equal docs"
         from .compute.lorentz import not_equal
 
-        if not isinstance(other, Vector4D):
+        if dim(self) != dim(other):
             raise TypeError(
                 f"{repr(self)} and {repr(other)} do not have the same dimension"
             )
@@ -1118,7 +1129,7 @@ class Lorentz(Spatial):
         "isclose docs"
         from .compute.lorentz import isclose
 
-        if not isinstance(other, Vector4D):
+        if dim(self) != dim(other):
             raise TypeError(
                 f"{repr(self)} and {repr(other)} do not have the same dimension"
             )

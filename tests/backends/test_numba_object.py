@@ -1312,3 +1312,91 @@ def test_momentum_alias():
     assert get_px(vector.obj(px=3, py=4)) == pytest.approx(3)
     with pytest.raises(numba.TypingError):
         get_px(vector.obj(x=3, y=4))
+
+
+def test_operator_abs():
+    @numba.njit
+    def get_abs(v):
+        return abs(v)
+
+    assert get_abs(vector.obj(x=3, y=4)) == pytest.approx(5)
+
+    assert get_abs(vector.obj(x=3, y=4, z=5)) == pytest.approx(numpy.sqrt(50))
+
+    assert get_abs(vector.obj(x=3, y=4, z=5, tau=100)) == pytest.approx(100)
+
+
+def test_operator_neg():
+    @numba.njit
+    def get_neg(v):
+        return -v
+
+    @numba.njit
+    def get_pos(v):
+        return +v
+
+    out = get_neg(vector.obj(x=3, y=4))
+    assert out.x == -3
+    assert out.y == -4
+
+    out = get_pos(vector.obj(x=3, y=4))
+    assert out.x == 3
+    assert out.y == 4
+
+
+def test_operator_truth():
+    @numba.njit
+    def get_true(v):
+        if v:
+            return True
+        else:
+            return False
+
+    @numba.njit
+    def get_false(v):
+        if not v:
+            return True
+        else:
+            return False
+
+    assert not get_true(vector.obj(x=0, y=0))
+    assert get_true(vector.obj(x=0, y=0.1))
+
+    assert not get_true(vector.obj(x=0, y=0, z=0))
+    assert get_true(vector.obj(x=0, y=0, z=0.1))
+
+    assert not get_true(vector.obj(x=0, y=0, z=0, t=0))
+    assert get_true(vector.obj(x=0, y=0, z=0.1, t=0))
+    assert get_true(vector.obj(x=0, y=0, z=0, t=0.1))
+    assert get_true(vector.obj(x=0, y=0, z=10, t=10))
+
+    assert get_false(vector.obj(x=0, y=0))
+    assert not get_false(vector.obj(x=0, y=0.1))
+
+    assert get_false(vector.obj(x=0, y=0, z=0))
+    assert not get_false(vector.obj(x=0, y=0, z=0.1))
+
+    assert get_false(vector.obj(x=0, y=0, z=0, t=0))
+    assert not get_false(vector.obj(x=0, y=0, z=0.1, t=0))
+    assert not get_false(vector.obj(x=0, y=0, z=0, t=0.1))
+    assert not get_false(vector.obj(x=0, y=0, z=10, t=10))
+
+
+def test_operator_eq():
+    @numba.njit
+    def get_eq(v1, v2):
+        return v1 == v2
+
+    @numba.njit
+    def get_ne(v1, v2):
+        return v1 != v2
+
+    assert get_eq(vector.obj(x=3, y=4), vector.obj(px=3, py=4))
+    assert not get_eq(vector.obj(x=3, y=4), vector.obj(x=4, y=3))
+    with pytest.raises(numba.TypingError):
+        get_eq(vector.obj(x=3, y=4), vector.obj(x=3, y=4, z=99))
+
+    assert not get_ne(vector.obj(x=3, y=4), vector.obj(px=3, py=4))
+    assert get_ne(vector.obj(x=3, y=4), vector.obj(x=4, y=3))
+    with pytest.raises(numba.TypingError):
+        get_ne(vector.obj(x=3, y=4), vector.obj(x=3, y=4, z=99))

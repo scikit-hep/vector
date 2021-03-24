@@ -3,9 +3,10 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+import operator
+
 import numba
-import numba.core.typing
-import numba.core.typing.ctypes_utils
+import numba.core.typing.templates
 import numpy
 
 import vector
@@ -1424,21 +1425,13 @@ spatial_binary_methods = ["deltaangle", "deltaeta", "deltaR", "deltaR2"]
 general_binary_methods = ["dot", "add", "subtract", "equal", "not_equal"]
 
 
-def min_dimension_of(v1, v2):
-    if isinstance(v1, VectorObject2DType):
+def dimension_of(v):
+    if isinstance(v, VectorObject2DType):
         return 2
-    elif isinstance(v1, VectorObject3DType):
-        if isinstance(v2, VectorObject2DType):
-            return 2
-        else:
-            return 3
-    else:
-        if isinstance(v2, VectorObject2DType):
-            return 2
-        elif isinstance(v2, VectorObject3DType):
-            return 3
-        else:
-            return 4
+    elif isinstance(v, VectorObject3DType):
+        return 3
+    elif isinstance(v, VectorObject4DType):
+        return 3
 
 
 def flavor_of(v1, v2):
@@ -1455,7 +1448,14 @@ def add_binary_method(vectortype, gn, methodname):
     def overloader(v1, v2):
         groupname = gn
 
-        min_dimension = min_dimension_of(v1, v2)
+        min_dimension = min(dimension_of(v1), dimension_of(v2))
+
+        if (methodname == "equal" or methodname == "not_equal") and dimension_of(
+            v1
+        ) != dimension_of(v2):
+            raise numba.TypingError(
+                f"{type(v1).__name__} and {type(v2).__name__} do not have the same dimension"
+            )
 
         if min_dimension == 2:
             if groupname is None:
@@ -1759,7 +1759,9 @@ def add_isclose_method(vectortype):
             coord24 = getcoord1[numba_ttype(v2)]
 
         else:
-            raise numba.TypingError("vectors do not have the same dimension")
+            raise numba.TypingError(
+                f"{type(v1).__name__} and {type(v2).__name__} do not have the same dimension"
+            )
 
         function, *returns = _from_signature(
             groupname + ".isclose",
@@ -2812,6 +2814,9 @@ def VectorObject4DType_is_lightlike(v, tolerance=1e-5):
     return VectorObject4DType_is_lightlike_impl
 
 
+# momentum aliases ############################################################
+
+
 @numba.extending.overload_attribute(MomentumObject2DType, "px")
 @numba.extending.overload_attribute(MomentumObject3DType, "px")
 @numba.extending.overload_attribute(MomentumObject4DType, "px")
@@ -2982,3 +2987,108 @@ def MomentumObject4DType_transverse_mass2(v):
         return v.Mt2
 
     return MomentumObject4DType_transverse_mass2_impl
+
+
+# unary operator overloading ##################################################
+
+
+@numba.extending.overload(abs)
+def operator_abs(v):
+    if isinstance(v, VectorObject2DType):
+
+        def operator_abs_impl(v):
+            return v.rho
+
+        return operator_abs_impl
+
+    elif isinstance(v, VectorObject3DType):
+
+        def operator_abs_impl(v):
+            return v.mag
+
+        return operator_abs_impl
+
+    elif isinstance(v, VectorObject4DType):
+
+        def operator_abs_impl(v):
+            return v.tau
+
+        return operator_abs_impl
+
+
+@numba.extending.overload(operator.neg)
+def operator_neg(v):
+    if isinstance(v, (VectorObject2DType, VectorObject3DType, VectorObject4DType)):
+
+        def operator_neg_impl(v):
+            return v.scale(-1)
+
+        return operator_neg_impl
+
+
+@numba.extending.overload(operator.pos)
+def operator_pos(v):
+    if isinstance(v, (VectorObject2DType, VectorObject3DType, VectorObject4DType)):
+
+        def operator_pos_impl(v):
+            return v
+
+        return operator_pos_impl
+
+
+@numba.extending.overload(bool)
+def operator_truth(v):
+    if isinstance(v, VectorObject2DType):
+
+        def operator_truth_impl(v):
+            return v.rho2 != 0
+
+        return operator_truth_impl
+
+    elif isinstance(v, VectorObject3DType):
+
+        def operator_truth_impl(v):
+            return v.mag2 != 0
+
+        return operator_truth_impl
+
+    elif isinstance(v, VectorObject4DType) and issubclass(
+        v.temporaltype.instance_class, TemporalT
+    ):
+
+        def operator_truth_impl(v):
+            return v.mag2 != 0 or v.t != 0
+
+        return operator_truth_impl
+
+    elif isinstance(v, VectorObject4DType) and issubclass(
+        v.temporaltype.instance_class, TemporalTau
+    ):
+
+        def operator_truth_impl(v):
+            return v.mag2 != 0 or v.tau != 0
+
+        return operator_truth_impl
+
+
+@numba.extending.overload(operator.eq)
+def operator_eq(v1, v2):
+    if isinstance(v1, (VectorObject2DType, VectorObject3DType, VectorObject4DType)):
+
+        def operator_eq_impl(v1, v2):
+            return v1.equal(v2)
+
+        return operator_eq_impl
+
+
+@numba.extending.overload(operator.ne)
+def operator_ne(v1, v2):
+    if isinstance(v1, (VectorObject2DType, VectorObject3DType, VectorObject4DType)):
+
+        def operator_ne_impl(v1, v2):
+            return v1.not_equal(v2)
+
+        return operator_ne_impl
+
+
+# binary operator overloading #################################################

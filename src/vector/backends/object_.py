@@ -11,7 +11,6 @@ from vector.methods import (
     Azimuthal,
     AzimuthalRhoPhi,
     AzimuthalXY,
-    Coordinates,
     Longitudinal,
     LongitudinalEta,
     LongitudinalTheta,
@@ -243,143 +242,178 @@ class VectorObject:
 
     def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
         if not isinstance(_handler_of(*inputs), VectorObject):
-            # Let the array-of-vectors object handle it.
+            # Let a higher-precedence backend handle it.
             return NotImplemented
-
-        if isinstance(self, Vector2D):
-            from vector.compute.planar import add, dot, equal, not_equal
-            from vector.compute.planar import rho as absolute
-            from vector.compute.planar import rho2 as absolute2
-            from vector.compute.planar import scale, subtract
-        elif isinstance(self, Vector3D):
-            from vector.compute.spatial import add, dot, equal
-            from vector.compute.spatial import mag as absolute
-            from vector.compute.spatial import mag2 as absolute2
-            from vector.compute.spatial import not_equal, scale, subtract
-        elif isinstance(self, Vector4D):
-            from vector.compute.lorentz import (
-                add,
-                dot,
-                equal,
-                not_equal,
-                scale,
-                subtract,
-            )
-            from vector.compute.lorentz import tau as absolute
-            from vector.compute.lorentz import tau2 as absolute2
 
         outputs = kwargs.get("out", ())
         if any(not isinstance(x, VectorObject) for x in outputs):
             raise TypeError(
-                "ufunc operating on VectorObjects can only fill another VectorObject "
-                "with 'out' keyword"
+                "ufunc operating on VectorObjects can only use the 'out' keyword "
+                "with another VectorObject"
             )
 
-        if ufunc is numpy.absolute and len(inputs) == 1:
-            result = absolute.dispatch(inputs[0])
+        if (
+            ufunc is numpy.absolute
+            and len(inputs) == 1
+            and isinstance(inputs[0], Vector)
+        ):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.absolute' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            if isinstance(inputs[0], Vector2D):
+                return inputs[0].rho
+            elif isinstance(inputs[0], Vector3D):
+                return inputs[0].mag
+            elif isinstance(inputs[0], Vector4D):
+                return inputs[0].tau
+
+        elif (
+            ufunc is numpy.add
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and isinstance(inputs[1], Vector)
+        ):
+            result = inputs[0].add(inputs[1])
             for output in outputs:
                 _replace_data(output, result)
             return result
 
-        elif ufunc is numpy.add and len(inputs) == 2:
-            result = add.dispatch(inputs[0], inputs[1])
-            for output in outputs:
-                _replace_data(output, result)
-            return result
-
-        elif ufunc is numpy.subtract and len(inputs) == 2:
-            result = subtract.dispatch(inputs[0], inputs[1])
+        elif (
+            ufunc is numpy.subtract
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and isinstance(inputs[1], Vector)
+        ):
+            result = inputs[0].subtract(inputs[1])
             for output in outputs:
                 _replace_data(output, result)
             return result
 
         elif (
             ufunc is numpy.multiply
-            and not isinstance(inputs[0], (Vector, Coordinates))
             and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and not isinstance(inputs[1], Vector)
         ):
-            result = scale.dispatch(inputs[0], inputs[1])
+            result = inputs[0].scale(inputs[1])
             for output in outputs:
                 _replace_data(output, result)
             return result
 
         elif (
             ufunc is numpy.multiply
-            and not isinstance(inputs[1], (Vector, Coordinates))
             and len(inputs) == 2
+            and not isinstance(inputs[0], Vector)
+            and isinstance(inputs[1], Vector)
         ):
-            result = scale.dispatch(inputs[1], inputs[0])
+            result = inputs[1].scale(inputs[0])
             for output in outputs:
                 _replace_data(output, result)
             return result
 
-        elif ufunc is numpy.negative and len(inputs) == 1:
-            result = scale.dispatch(-1, inputs[0])
+        elif (
+            ufunc is numpy.negative
+            and len(inputs) == 1
+            and isinstance(inputs[0], Vector)
+        ):
+            result = inputs[0].scale(-1)
             for output in outputs:
                 _replace_data(output, result)
             return result
 
-        elif ufunc is numpy.positive and len(inputs) == 1:
-            result = inputs[0]
-            for output in outputs:
-                _replace_data(output, result)
-            return result
+        elif (
+            ufunc is numpy.positive
+            and len(inputs) == 1
+            and isinstance(inputs[0], Vector)
+        ):
+            return inputs[0]
 
         elif (
             ufunc is numpy.true_divide
-            and not isinstance(inputs[1], (Vector, Coordinates))
             and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and not isinstance(inputs[1], Vector)
         ):
-            result = scale.dispatch(1 / inputs[1], inputs[0])
+            result = inputs[0].scale(1 / inputs[1])
             for output in outputs:
                 _replace_data(output, result)
             return result
 
         elif (
             ufunc is numpy.power
-            and not isinstance(inputs[1], (Vector, Coordinates))
             and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and not isinstance(inputs[1], Vector)
         ):
-            result = absolute.dispatch(inputs[0]) ** inputs[1]
+            result = numpy.absolute(inputs[0]) ** inputs[1]
             for output in outputs:
                 _replace_data(output, result)
             return result
 
-        elif ufunc is numpy.square and len(inputs) == 1:
-            result = absolute2.dispatch(inputs[0])
-            for output in outputs:
-                _replace_data(output, result)
-            return result
+        elif (
+            ufunc is numpy.square and len(inputs) == 1 and isinstance(inputs[0], Vector)
+        ):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.square' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            if isinstance(inputs[0], Vector2D):
+                return inputs[0].rho2
+            elif isinstance(inputs[0], Vector3D):
+                return inputs[0].mag2
+            elif isinstance(inputs[0], Vector4D):
+                return inputs[0].tau2
 
-        elif ufunc is numpy.sqrt and len(inputs) == 1:
-            result = numpy.sqrt(absolute.dispatch(inputs[0]))
-            for output in outputs:
-                _replace_data(output, result)
-            return result
+        elif ufunc is numpy.sqrt and len(inputs) == 1 and isinstance(inputs[0], Vector):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.sqrt' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            return numpy.sqrt(numpy.absolute(inputs[0]))
 
-        elif ufunc is numpy.cbrt and len(inputs) == 1:
-            result = numpy.cbrt(absolute.dispatch(inputs[0]))
-            for output in outputs:
-                _replace_data(output, result)
-            return result
+        elif ufunc is numpy.cbrt and len(inputs) == 1 and isinstance(inputs[0], Vector):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.cbrt' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            return numpy.cbrt(numpy.absolute(inputs[0]))
 
-        elif ufunc is numpy.matmul and len(inputs) == 2:
-            result = dot.dispatch(inputs[0], inputs[1])
-            for output in outputs:
-                _replace_data(output, result)
-            return result
+        elif (
+            ufunc is numpy.matmul
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and isinstance(inputs[1], Vector)
+        ):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.matmul' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            return inputs[0].dot(inputs[1])
 
-        elif ufunc is numpy.equal and len(inputs) == 2:
-            result = equal.dispatch(inputs[0], inputs[1])
-            for output in outputs:
-                _replace_data(output, result)
-            return result
+        elif (
+            ufunc is numpy.equal
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and isinstance(inputs[1], Vector)
+        ):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.equal' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            return inputs[0].equal(inputs[1])
 
-        elif ufunc is numpy.not_equal and len(inputs) == 2:
-            result = not_equal.dispatch(inputs[0], inputs[1])
-            for output in outputs:
-                _replace_data(output, result)
-            return result
+        elif (
+            ufunc is numpy.not_equal
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and isinstance(inputs[1], Vector)
+        ):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.equal' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            return inputs[0].not_equal(inputs[1])
 
         else:
             return NotImplemented
