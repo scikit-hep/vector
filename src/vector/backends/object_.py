@@ -11,7 +11,6 @@ from vector.methods import (
     Azimuthal,
     AzimuthalRhoPhi,
     AzimuthalXY,
-    Coordinates,
     Longitudinal,
     LongitudinalEta,
     LongitudinalTheta,
@@ -22,6 +21,7 @@ from vector.methods import (
     PlanarMomentum,
     Spatial,
     SpatialMomentum,
+    Temporal,
     TemporalT,
     TemporalTau,
     Vector,
@@ -30,7 +30,7 @@ from vector.methods import (
     Vector4D,
     _aztype,
     _coordinate_class_to_names,
-    _handler,
+    _handler_of,
     _ltype,
     _repr_generic_to_momentum,
     _ttype,
@@ -51,240 +51,6 @@ class LongitudinalObject(CoordinatesObject):
 
 class TemporalObject(CoordinatesObject):
     pass
-
-
-def _replace_data(obj, result):
-    if not isinstance(result, VectorObject):
-        raise TypeError(f"can only assign a single vector to {type(obj).__name__}")
-
-    if isinstance(obj.azimuthal, AzimuthalObjectXY):
-        obj.azimuthal = AzimuthalObjectXY(result.x, result.y)
-    elif isinstance(obj.azimuthal, AzimuthalObjectRhoPhi):
-        obj.azimuthal = AzimuthalObjectRhoPhi(result.rho, result.phi)
-    else:
-        raise AssertionError(type(obj))
-
-    if hasattr(obj, "longitudinal"):
-        if isinstance(obj.longitudinal, LongitudinalObjectZ):
-            obj.longitudinal = LongitudinalObjectZ(result.z)
-        elif isinstance(obj.longitudinal, LongitudinalObjectTheta):
-            obj.longitudinal = LongitudinalObjectTheta(result.theta)
-        elif isinstance(obj.longitudinal, LongitudinalObjectEta):
-            obj.longitudinal = LongitudinalObjectEta(result.eta)
-        else:
-            raise AssertionError(type(obj))
-
-    if hasattr(obj, "temporal"):
-        if isinstance(obj.temporal, TemporalObjectT):
-            obj.temporal = TemporalObjectT(result.t)
-        elif isinstance(obj.temporal, TemporalObjectTau):
-            obj.temporal = TemporalObjectTau(result.tau)
-        else:
-            raise AssertionError(type(obj))
-
-    return obj
-
-
-class VectorObject:
-    def __eq__(self, other):
-        return numpy.equal(self, other)
-
-    def __ne__(self, other):
-        return numpy.not_equal(self, other)
-
-    def __abs__(self):
-        return numpy.absolute(self)
-
-    def __add__(self, other):
-        return numpy.add(self, other)
-
-    def __radd__(self, other):
-        return numpy.add(other, self)
-
-    def __iadd__(self, other):
-        return _replace_data(self, numpy.add(self, other))
-
-    def __sub__(self, other):
-        return numpy.subtract(self, other)
-
-    def __rsub__(self, other):
-        return numpy.subtract(other, self)
-
-    def __isub__(self, other):
-        return _replace_data(self, numpy.subtract(self, other))
-
-    def __mul__(self, other):
-        return numpy.multiply(self, other)
-
-    def __rmul__(self, other):
-        return numpy.multiply(other, self)
-
-    def __imul__(self, other):
-        return _replace_data(self, numpy.multiply(self, other))
-
-    def __neg__(self):
-        return numpy.negative(self)
-
-    def __pos__(self):
-        return numpy.positive(self)
-
-    def __truediv__(self, other):
-        return numpy.true_divide(self, other)
-
-    def __rtruediv__(self, other):
-        return numpy.true_divide(other, self)
-
-    def __itruediv__(self, other):
-        return _replace_data(self, numpy.true_divide(self, other))
-
-    def __pow__(self, other):
-        return numpy.power(self, other)
-
-    def __matmul__(self, other):
-        return numpy.matmul(self, other)
-
-    def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
-        if not isinstance(_handler(inputs), VectorObject):
-            # Let the array-of-vectors object handle it.
-            return NotImplemented
-
-        if isinstance(self, Vector2D):
-            from vector.compute.planar import add, dot, equal, not_equal
-            from vector.compute.planar import rho as absolute
-            from vector.compute.planar import rho2 as absolute2
-            from vector.compute.planar import scale, subtract
-        elif isinstance(self, Vector3D):
-            from vector.compute.spatial import add, dot, equal
-            from vector.compute.spatial import mag as absolute
-            from vector.compute.spatial import mag2 as absolute2
-            from vector.compute.spatial import not_equal, scale, subtract
-        elif isinstance(self, Vector4D):
-            from vector.compute.lorentz import (
-                add,
-                dot,
-                equal,
-                not_equal,
-                scale,
-                subtract,
-            )
-            from vector.compute.lorentz import tau as absolute
-            from vector.compute.lorentz import tau2 as absolute2
-
-        outputs = kwargs.get("out", ())
-        if any(not isinstance(x, VectorObject) for x in outputs):
-            raise TypeError(
-                "ufunc operating on VectorObjects can only fill another VectorObject "
-                "with 'out' keyword"
-            )
-
-        if ufunc is numpy.absolute and len(inputs) == 1:
-            result = absolute.dispatch(inputs[0])
-            for output in outputs:
-                _replace_data(output, result)
-            return result
-
-        elif ufunc is numpy.add and len(inputs) == 2:
-            result = add.dispatch(inputs[0], inputs[1])
-            for output in outputs:
-                _replace_data(output, result)
-            return result
-
-        elif ufunc is numpy.subtract and len(inputs) == 2:
-            result = subtract.dispatch(inputs[0], inputs[1])
-            for output in outputs:
-                _replace_data(output, result)
-            return result
-
-        elif (
-            ufunc is numpy.multiply
-            and not isinstance(inputs[0], (Vector, Coordinates))
-            and len(inputs) == 2
-        ):
-            result = scale.dispatch(inputs[0], inputs[1])
-            for output in outputs:
-                _replace_data(output, result)
-            return result
-
-        elif (
-            ufunc is numpy.multiply
-            and not isinstance(inputs[1], (Vector, Coordinates))
-            and len(inputs) == 2
-        ):
-            result = scale.dispatch(inputs[1], inputs[0])
-            for output in outputs:
-                _replace_data(output, result)
-            return result
-
-        elif ufunc is numpy.negative and len(inputs) == 1:
-            result = scale.dispatch(-1, inputs[0])
-            for output in outputs:
-                _replace_data(output, result)
-            return result
-
-        elif ufunc is numpy.positive and len(inputs) == 1:
-            result = inputs[0]
-            for output in outputs:
-                _replace_data(output, result)
-            return result
-
-        elif (
-            ufunc is numpy.true_divide
-            and not isinstance(inputs[1], (Vector, Coordinates))
-            and len(inputs) == 2
-        ):
-            result = scale.dispatch(1 / inputs[1], inputs[0])
-            for output in outputs:
-                _replace_data(output, result)
-            return result
-
-        elif (
-            ufunc is numpy.power
-            and not isinstance(inputs[1], (Vector, Coordinates))
-            and len(inputs) == 2
-        ):
-            result = absolute.dispatch(inputs[0]) ** inputs[1]
-            for output in outputs:
-                _replace_data(output, result)
-            return result
-
-        elif ufunc is numpy.square and len(inputs) == 1:
-            result = absolute2.dispatch(inputs[0])
-            for output in outputs:
-                _replace_data(output, result)
-            return result
-
-        elif ufunc is numpy.sqrt and len(inputs) == 1:
-            result = numpy.sqrt(absolute.dispatch(inputs[0]))
-            for output in outputs:
-                _replace_data(output, result)
-            return result
-
-        elif ufunc is numpy.cbrt and len(inputs) == 1:
-            result = numpy.cbrt(absolute.dispatch(inputs[0]))
-            for output in outputs:
-                _replace_data(output, result)
-            return result
-
-        elif ufunc is numpy.matmul and len(inputs) == 2:
-            result = dot.dispatch(inputs[0], inputs[1])
-            for output in outputs:
-                _replace_data(output, result)
-            return result
-
-        elif ufunc is numpy.equal and len(inputs) == 2:
-            result = equal.dispatch(inputs[0], inputs[1])
-            for output in outputs:
-                _replace_data(output, result)
-            return result
-
-        elif ufunc is numpy.not_equal and len(inputs) == 2:
-            result = not_equal.dispatch(inputs[0], inputs[1])
-            for output in outputs:
-                _replace_data(output, result)
-            return result
-
-        else:
-            return NotImplemented
 
 
 class AzimuthalObjectXY(typing.NamedTuple):
@@ -366,10 +132,295 @@ class TemporalObjectTau(typing.NamedTuple):
 TemporalObjectTau.__bases__ = (TemporalObject, TemporalTau, tuple)
 
 
+_coord_object_type = {
+    AzimuthalXY: AzimuthalObjectXY,
+    AzimuthalRhoPhi: AzimuthalObjectRhoPhi,
+    LongitudinalZ: LongitudinalObjectZ,
+    LongitudinalTheta: LongitudinalObjectTheta,
+    LongitudinalEta: LongitudinalObjectEta,
+    TemporalT: TemporalObjectT,
+    TemporalTau: TemporalObjectTau,
+}
+
+
+def _replace_data(obj, result):
+    if not isinstance(result, VectorObject):
+        raise TypeError(f"can only assign a single vector to {type(obj).__name__}")
+
+    if isinstance(obj.azimuthal, AzimuthalObjectXY):
+        obj.azimuthal = AzimuthalObjectXY(result.x, result.y)
+    elif isinstance(obj.azimuthal, AzimuthalObjectRhoPhi):
+        obj.azimuthal = AzimuthalObjectRhoPhi(result.rho, result.phi)
+    else:
+        raise AssertionError(type(obj))
+
+    if hasattr(obj, "longitudinal"):
+        if isinstance(obj.longitudinal, LongitudinalObjectZ):
+            obj.longitudinal = LongitudinalObjectZ(result.z)
+        elif isinstance(obj.longitudinal, LongitudinalObjectTheta):
+            obj.longitudinal = LongitudinalObjectTheta(result.theta)
+        elif isinstance(obj.longitudinal, LongitudinalObjectEta):
+            obj.longitudinal = LongitudinalObjectEta(result.eta)
+        else:
+            raise AssertionError(type(obj))
+
+    if hasattr(obj, "temporal"):
+        if isinstance(obj.temporal, TemporalObjectT):
+            obj.temporal = TemporalObjectT(result.t)
+        elif isinstance(obj.temporal, TemporalObjectTau):
+            obj.temporal = TemporalObjectTau(result.tau)
+        else:
+            raise AssertionError(type(obj))
+
+    return obj
+
+
+class VectorObject:
+    lib = numpy
+
+    ProjectionClass2D: typing.Any
+    ProjectionClass3D: typing.Any
+    ProjectionClass4D: typing.Any
+    GenericClass: typing.Any
+
+    def __eq__(self, other):
+        return numpy.equal(self, other)
+
+    def __ne__(self, other):
+        return numpy.not_equal(self, other)
+
+    def __abs__(self):
+        return numpy.absolute(self)
+
+    def __add__(self, other):
+        return numpy.add(self, other)
+
+    def __radd__(self, other):
+        return numpy.add(other, self)
+
+    def __iadd__(self, other):
+        return _replace_data(self, numpy.add(self, other))
+
+    def __sub__(self, other):
+        return numpy.subtract(self, other)
+
+    def __rsub__(self, other):
+        return numpy.subtract(other, self)
+
+    def __isub__(self, other):
+        return _replace_data(self, numpy.subtract(self, other))
+
+    def __mul__(self, other):
+        return numpy.multiply(self, other)
+
+    def __rmul__(self, other):
+        return numpy.multiply(other, self)
+
+    def __imul__(self, other):
+        return _replace_data(self, numpy.multiply(self, other))
+
+    def __neg__(self):
+        return numpy.negative(self)
+
+    def __pos__(self):
+        return numpy.positive(self)
+
+    def __truediv__(self, other):
+        return numpy.true_divide(self, other)
+
+    def __rtruediv__(self, other):
+        return numpy.true_divide(other, self)
+
+    def __itruediv__(self, other):
+        return _replace_data(self, numpy.true_divide(self, other))
+
+    def __pow__(self, other):
+        return numpy.power(self, other)
+
+    def __matmul__(self, other):
+        return numpy.matmul(self, other)
+
+    def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
+        if not isinstance(_handler_of(*inputs), VectorObject):
+            # Let a higher-precedence backend handle it.
+            return NotImplemented
+
+        outputs = kwargs.get("out", ())
+        if any(not isinstance(x, VectorObject) for x in outputs):
+            raise TypeError(
+                "ufunc operating on VectorObjects can only use the 'out' keyword "
+                "with another VectorObject"
+            )
+
+        if (
+            ufunc is numpy.absolute
+            and len(inputs) == 1
+            and isinstance(inputs[0], Vector)
+        ):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.absolute' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            if isinstance(inputs[0], Vector2D):
+                return inputs[0].rho
+            elif isinstance(inputs[0], Vector3D):
+                return inputs[0].mag
+            elif isinstance(inputs[0], Vector4D):
+                return inputs[0].tau
+
+        elif (
+            ufunc is numpy.add
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and isinstance(inputs[1], Vector)
+        ):
+            result = inputs[0].add(inputs[1])
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif (
+            ufunc is numpy.subtract
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and isinstance(inputs[1], Vector)
+        ):
+            result = inputs[0].subtract(inputs[1])
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif (
+            ufunc is numpy.multiply
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and not isinstance(inputs[1], Vector)
+        ):
+            result = inputs[0].scale(inputs[1])
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif (
+            ufunc is numpy.multiply
+            and len(inputs) == 2
+            and not isinstance(inputs[0], Vector)
+            and isinstance(inputs[1], Vector)
+        ):
+            result = inputs[1].scale(inputs[0])
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif (
+            ufunc is numpy.negative
+            and len(inputs) == 1
+            and isinstance(inputs[0], Vector)
+        ):
+            result = inputs[0].scale(-1)
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif (
+            ufunc is numpy.positive
+            and len(inputs) == 1
+            and isinstance(inputs[0], Vector)
+        ):
+            return inputs[0]
+
+        elif (
+            ufunc is numpy.true_divide
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and not isinstance(inputs[1], Vector)
+        ):
+            result = inputs[0].scale(1 / inputs[1])
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif (
+            ufunc is numpy.power
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and not isinstance(inputs[1], Vector)
+        ):
+            result = numpy.absolute(inputs[0]) ** inputs[1]
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif (
+            ufunc is numpy.square and len(inputs) == 1 and isinstance(inputs[0], Vector)
+        ):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.square' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            if isinstance(inputs[0], Vector2D):
+                return inputs[0].rho2
+            elif isinstance(inputs[0], Vector3D):
+                return inputs[0].mag2
+            elif isinstance(inputs[0], Vector4D):
+                return inputs[0].tau2
+
+        elif ufunc is numpy.sqrt and len(inputs) == 1 and isinstance(inputs[0], Vector):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.sqrt' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            return numpy.sqrt(numpy.absolute(inputs[0]))
+
+        elif ufunc is numpy.cbrt and len(inputs) == 1 and isinstance(inputs[0], Vector):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.cbrt' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            return numpy.cbrt(numpy.absolute(inputs[0]))
+
+        elif (
+            ufunc is numpy.matmul
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and isinstance(inputs[1], Vector)
+        ):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.matmul' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            return inputs[0].dot(inputs[1])
+
+        elif (
+            ufunc is numpy.equal
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and isinstance(inputs[1], Vector)
+        ):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.equal' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            return inputs[0].equal(inputs[1])
+
+        elif (
+            ufunc is numpy.not_equal
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and isinstance(inputs[1], Vector)
+        ):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.equal' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            return inputs[0].not_equal(inputs[1])
+
+        else:
+            return NotImplemented
+
+
 class VectorObject2D(VectorObject, Planar, Vector2D):
     __slots__ = ("azimuthal",)
-
-    lib = numpy
 
     @classmethod
     def from_xy(cls, x, y):
@@ -389,20 +440,63 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             out.append(f"{x}={getattr(self.azimuthal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
-    def _wrap_result(self, result, returns):
-        if isinstance(self, type):
-            cls = self
-        else:
-            cls = type(self)
-
+    def _wrap_result(self, cls, result, returns):
         if returns == [float] or returns == [bool]:
             return result
 
-        elif returns == [AzimuthalXY]:
-            return cls(AzimuthalObjectXY(*result))
+        elif (
+            len(returns) == 1
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+        ):
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            return cls.ProjectionClass2D(azcoords)
 
-        elif returns == [AzimuthalRhoPhi]:
-            return cls(AzimuthalObjectRhoPhi(*result))
+        elif (
+            len(returns) == 2
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and returns[1] is None
+        ):
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            return cls.ProjectionClass2D(azcoords)
+
+        elif (
+            len(returns) == 2
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+        ):
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            lcoords = _coord_object_type[returns[1]](result[2])
+            return cls.ProjectionClass3D(azcoords, lcoords)
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and returns[2] is None
+        ):
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            lcoords = _coord_object_type[returns[1]](result[2])
+            return cls.ProjectionClass3D(azcoords, lcoords)
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and isinstance(returns[2], type)
+            and issubclass(returns[2], Temporal)
+        ):
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            lcoords = _coord_object_type[returns[1]](result[2])
+            tcoords = _coord_object_type[returns[2]](result[3])
+            return cls.ProjectionClass4D(azcoords, lcoords, tcoords)
 
         else:
             raise AssertionError(repr(returns))
@@ -477,9 +571,6 @@ class MomentumObject2D(PlanarMomentum, VectorObject2D):
 class VectorObject3D(VectorObject, Spatial, Vector3D):
     __slots__ = ("azimuthal", "longitudinal")
 
-    lib = numpy
-    ProjectionClass2D = VectorObject2D
-
     @classmethod
     def from_xyz(cls, x, y, z):
         return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z))
@@ -518,43 +609,63 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             out.append(f"{x}={getattr(self.longitudinal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
-    def _wrap_result(self, result, returns):
-        if isinstance(self, type):
-            cls = self
-        else:
-            cls = type(self)
-
+    def _wrap_result(self, cls, result, returns):
         if returns == [float] or returns == [bool]:
             return result
 
-        elif returns == [AzimuthalXY]:
-            return cls(AzimuthalObjectXY(*result), self.longitudinal)
-
-        elif returns == [AzimuthalRhoPhi]:
-            return cls(AzimuthalObjectRhoPhi(*result), self.longitudinal)
+        elif (
+            len(returns) == 1
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+        ):
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            return cls.ProjectionClass3D(azcoords, self.longitudinal)
 
         elif (
-            (len(returns) == 2 or (len(returns) == 3 and returns[2] is None))
+            len(returns) == 2
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and returns[1] is None
+        ):
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            return cls.ProjectionClass2D(azcoords)
+
+        elif (
+            len(returns) == 2
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
             and isinstance(returns[1], type)
             and issubclass(returns[1], Longitudinal)
         ):
-            if returns[0] is AzimuthalXY:
-                azimuthal = AzimuthalObjectXY(result[0], result[1])
-            elif returns[0] is AzimuthalRhoPhi:
-                azimuthal = AzimuthalObjectRhoPhi(result[0], result[1])
-            else:
-                raise AssertionError(repr(returns[0]))
-            if returns[1] is LongitudinalZ:
-                longitudinal = LongitudinalObjectZ(result[2])
-            elif returns[1] is LongitudinalTheta:
-                longitudinal = LongitudinalObjectTheta(result[2])
-            elif returns[1] is LongitudinalEta:
-                longitudinal = LongitudinalObjectEta(result[2])
-            else:
-                raise AssertionError(repr(returns[1]))
-            return cls(azimuthal, longitudinal)
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            lcoords = _coord_object_type[returns[1]](result[2])
+            return cls.ProjectionClass3D(azcoords, lcoords)
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and returns[2] is None
+        ):
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            lcoords = _coord_object_type[returns[1]](result[2])
+            return cls.ProjectionClass3D(azcoords, lcoords)
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and isinstance(returns[2], type)
+            and issubclass(returns[2], Temporal)
+        ):
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            lcoords = _coord_object_type[returns[1]](result[2])
+            tcoords = _coord_object_type[returns[2]](result[3])
+            return cls.ProjectionClass4D(azcoords, lcoords, tcoords)
 
         else:
             raise AssertionError(repr(returns))
@@ -617,8 +728,6 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
 
 
 class MomentumObject3D(SpatialMomentum, VectorObject3D):
-    ProjectionClass2D = MomentumObject2D
-
     def __repr__(self):
         aznames = _coordinate_class_to_names[_aztype(self)]
         lnames = _coordinate_class_to_names[_ltype(self)]
@@ -666,10 +775,6 @@ class MomentumObject3D(SpatialMomentum, VectorObject3D):
 
 class VectorObject4D(VectorObject, Lorentz, Vector4D):
     __slots__ = ("azimuthal", "longitudinal", "temporal")
-
-    lib = numpy
-    ProjectionClass2D = VectorObject2D
-    ProjectionClass3D = VectorObject3D
 
     @classmethod
     def from_xyzt(cls, x, y, z, t):
@@ -771,20 +876,26 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             out.append(f"{x}={getattr(self.temporal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
-    def _wrap_result(self, result, returns):
-        if isinstance(self, type):
-            cls = self
-        else:
-            cls = type(self)
-
+    def _wrap_result(self, cls, result, returns):
         if returns == [float] or returns == [bool]:
             return result
 
-        elif returns == [AzimuthalXY]:
-            return cls(AzimuthalObjectXY(*result), self.longitudinal, self.temporal)
+        elif (
+            len(returns) == 1
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+        ):
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            return cls.ProjectionClass4D(azcoords, self.longitudinal, self.temporal)
 
-        elif returns == [AzimuthalRhoPhi]:
-            return cls(AzimuthalObjectRhoPhi(*result), self.longitudinal, self.temporal)
+        elif (
+            len(returns) == 2
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and returns[1] is None
+        ):
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            return cls.ProjectionClass2D(azcoords)
 
         elif (
             len(returns) == 2
@@ -793,21 +904,9 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             and isinstance(returns[1], type)
             and issubclass(returns[1], Longitudinal)
         ):
-            if returns[0] is AzimuthalXY:
-                azimuthal = AzimuthalObjectXY(result[0], result[1])
-            elif returns[0] is AzimuthalRhoPhi:
-                azimuthal = AzimuthalObjectRhoPhi(result[0], result[1])
-            else:
-                raise AssertionError(repr(returns[0]))
-            if returns[1] is LongitudinalZ:
-                longitudinal = LongitudinalObjectZ(result[2])
-            elif returns[1] is LongitudinalTheta:
-                longitudinal = LongitudinalObjectTheta(result[2])
-            elif returns[1] is LongitudinalEta:
-                longitudinal = LongitudinalObjectEta(result[2])
-            else:
-                raise AssertionError(repr(returns[1]))
-            return cls(azimuthal, longitudinal, self.temporal)
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            lcoords = _coord_object_type[returns[1]](result[2])
+            return cls.ProjectionClass4D(azcoords, lcoords, self.temporal)
 
         elif (
             len(returns) == 3
@@ -815,34 +914,25 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             and issubclass(returns[0], Azimuthal)
             and isinstance(returns[1], type)
             and issubclass(returns[1], Longitudinal)
+            and returns[2] is None
         ):
-            if returns[0] is AzimuthalXY:
-                azimuthal = AzimuthalObjectXY(result[0], result[1])
-            elif returns[0] is AzimuthalRhoPhi:
-                azimuthal = AzimuthalObjectRhoPhi(result[0], result[1])
-            else:
-                raise AssertionError(repr(returns[0]))
-            if returns[1] is LongitudinalZ:
-                longitudinal = LongitudinalObjectZ(result[2])
-            elif returns[1] is LongitudinalTheta:
-                longitudinal = LongitudinalObjectTheta(result[2])
-            elif returns[1] is LongitudinalEta:
-                longitudinal = LongitudinalObjectEta(result[2])
-            else:
-                raise AssertionError(repr(returns[1]))
-            is_4d = True
-            if returns[2] is TemporalT:
-                temporal = TemporalObjectT(result[3])
-            elif returns[2] is TemporalTau:
-                temporal = TemporalObjectTau(result[3])
-            elif returns[2] is None:
-                is_4d = False
-            else:
-                raise AssertionError(repr(returns[2]))
-            if is_4d:
-                return cls(azimuthal, longitudinal, temporal)
-            else:
-                return self.ProjectionClass3D(azimuthal, longitudinal)
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            lcoords = _coord_object_type[returns[1]](result[2])
+            return cls.ProjectionClass3D(azcoords, lcoords)
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and isinstance(returns[2], type)
+            and issubclass(returns[2], Temporal)
+        ):
+            azcoords = _coord_object_type[returns[0]](result[0], result[1])
+            lcoords = _coord_object_type[returns[1]](result[2])
+            tcoords = _coord_object_type[returns[2]](result[3])
+            return cls.ProjectionClass4D(azcoords, lcoords, tcoords)
 
         else:
             raise AssertionError(repr(returns))
@@ -921,9 +1011,6 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
 
 class MomentumObject4D(LorentzMomentum, VectorObject4D):
-    ProjectionClass2D = MomentumObject2D
-    ProjectionClass3D = MomentumObject3D
-
     def __repr__(self):
         aznames = _coordinate_class_to_names[_aztype(self)]
         lnames = _coordinate_class_to_names[_ltype(self)]
@@ -1141,3 +1228,34 @@ def obj(**coordinates):
         return _gather_coordinates(
             VectorObject2D, VectorObject3D, VectorObject4D, generic_coordinates
         )
+
+
+VectorObject2D.ProjectionClass2D = VectorObject2D
+VectorObject2D.ProjectionClass3D = VectorObject3D
+VectorObject2D.ProjectionClass4D = VectorObject4D
+VectorObject2D.GenericClass = VectorObject2D
+
+MomentumObject2D.ProjectionClass2D = MomentumObject2D
+MomentumObject2D.ProjectionClass3D = MomentumObject3D
+MomentumObject2D.ProjectionClass4D = MomentumObject4D
+MomentumObject2D.GenericClass = VectorObject2D
+
+VectorObject3D.ProjectionClass2D = VectorObject2D
+VectorObject3D.ProjectionClass3D = VectorObject3D
+VectorObject3D.ProjectionClass4D = VectorObject4D
+VectorObject3D.GenericClass = VectorObject3D
+
+MomentumObject3D.ProjectionClass2D = MomentumObject2D
+MomentumObject3D.ProjectionClass3D = MomentumObject3D
+MomentumObject3D.ProjectionClass4D = MomentumObject4D
+MomentumObject3D.GenericClass = VectorObject3D
+
+VectorObject4D.ProjectionClass2D = VectorObject2D
+VectorObject4D.ProjectionClass3D = VectorObject3D
+VectorObject4D.ProjectionClass4D = VectorObject4D
+VectorObject4D.GenericClass = VectorObject4D
+
+MomentumObject4D.ProjectionClass2D = MomentumObject2D
+MomentumObject4D.ProjectionClass3D = MomentumObject3D
+MomentumObject4D.ProjectionClass4D = MomentumObject4D
+MomentumObject4D.GenericClass = VectorObject4D

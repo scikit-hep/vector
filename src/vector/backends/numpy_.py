@@ -12,7 +12,6 @@ from vector.methods import (
     Azimuthal,
     AzimuthalRhoPhi,
     AzimuthalXY,
-    Coordinates,
     Longitudinal,
     LongitudinalEta,
     LongitudinalTheta,
@@ -33,7 +32,7 @@ from vector.methods import (
     _aztype,
     _coordinate_class_to_names,
     _coordinate_order,
-    _handler,
+    _handler_of,
     _ltype,
     _repr_generic_to_momentum,
     _repr_momentum_to_generic,
@@ -196,6 +195,8 @@ class TemporalNumpy(CoordinatesNumpy):
 
 
 class VectorNumpy:
+    lib = numpy
+
     def allclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
         return self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan).all()
 
@@ -206,55 +207,52 @@ class VectorNumpy:
         return numpy.not_equal(self, other)
 
     def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
-        if not isinstance(_handler(inputs), VectorNumpy):
-            # Let the array-of-vectors object handle it.
+        if not isinstance(_handler_of(*inputs), VectorNumpy):
+            # Let a higher-precedence backend handle it.
             return NotImplemented
-
-        if isinstance(self, Vector2D):
-            from vector.compute.planar import add, dot, equal, not_equal
-            from vector.compute.planar import rho as absolute
-            from vector.compute.planar import rho2 as absolute2
-            from vector.compute.planar import scale, subtract
-        elif isinstance(self, Vector3D):
-            from vector.compute.spatial import add, dot, equal
-            from vector.compute.spatial import mag as absolute
-            from vector.compute.spatial import mag2 as absolute2
-            from vector.compute.spatial import not_equal, scale, subtract
-        elif isinstance(self, Vector4D):
-            from vector.compute.lorentz import (
-                add,
-                dot,
-                equal,
-                not_equal,
-                scale,
-                subtract,
-            )
-            from vector.compute.lorentz import tau as absolute
-            from vector.compute.lorentz import tau2 as absolute2
 
         outputs = kwargs.get("out", ())
         if any(not isinstance(x, VectorNumpy) for x in outputs):
             raise TypeError(
-                "ufunc operating on VectorNumpys can only fill another VectorNumpy "
-                "with 'out' keyword"
+                "ufunc operating on VectorNumpys can only use the 'out' keyword "
+                "with another VectorNumpy"
             )
 
-        if ufunc is numpy.absolute and len(inputs) == 1:
-            result = absolute.dispatch(inputs[0])
+        if (
+            ufunc is numpy.absolute
+            and len(inputs) == 1
+            and isinstance(inputs[0], Vector)
+        ):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.absolute' is scalar, cannot fill a VectorNumpy with 'out'"
+                )
+            if isinstance(inputs[0], Vector2D):
+                return inputs[0].rho
+            elif isinstance(inputs[0], Vector3D):
+                return inputs[0].mag
+            elif isinstance(inputs[0], Vector4D):
+                return inputs[0].tau
+
+        elif (
+            ufunc is numpy.add
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and isinstance(inputs[1], Vector)
+        ):
+            result = inputs[0].add(inputs[1])
             for output in outputs:
                 for name in output.dtype.names:
                     output[name] = result[name]
             return result
 
-        elif ufunc is numpy.add and len(inputs) == 2:
-            result = add.dispatch(inputs[0], inputs[1])
-            for output in outputs:
-                for name in output.dtype.names:
-                    output[name] = result[name]
-            return result
-
-        elif ufunc is numpy.subtract and len(inputs) == 2:
-            result = subtract.dispatch(inputs[0], inputs[1])
+        elif (
+            ufunc is numpy.subtract
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and isinstance(inputs[1], Vector)
+        ):
+            result = inputs[0].subtract(inputs[1])
             for output in outputs:
                 for name in output.dtype.names:
                     output[name] = result[name]
@@ -262,10 +260,11 @@ class VectorNumpy:
 
         elif (
             ufunc is numpy.multiply
-            and not isinstance(inputs[0], (Vector, Coordinates))
             and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and not isinstance(inputs[1], Vector)
         ):
-            result = scale.dispatch(inputs[0], inputs[1])
+            result = inputs[0].scale(inputs[1])
             for output in outputs:
                 for name in output.dtype.names:
                     output[name] = result[name]
@@ -273,35 +272,41 @@ class VectorNumpy:
 
         elif (
             ufunc is numpy.multiply
-            and not isinstance(inputs[1], (Vector, Coordinates))
             and len(inputs) == 2
+            and not isinstance(inputs[0], Vector)
+            and isinstance(inputs[1], Vector)
         ):
-            result = scale.dispatch(inputs[1], inputs[0])
+            result = inputs[1].scale(inputs[0])
             for output in outputs:
                 for name in output.dtype.names:
                     output[name] = result[name]
             return result
 
-        elif ufunc is numpy.negative and len(inputs) == 1:
-            result = scale.dispatch(-1, inputs[0])
+        elif (
+            ufunc is numpy.negative
+            and len(inputs) == 1
+            and isinstance(inputs[0], Vector)
+        ):
+            result = inputs[0].scale(-1)
             for output in outputs:
                 for name in output.dtype.names:
                     output[name] = result[name]
             return result
 
-        elif ufunc is numpy.positive and len(inputs) == 1:
-            result = inputs[0]
-            for output in outputs:
-                for name in output.dtype.names:
-                    output[name] = result[name]
-            return result
+        elif (
+            ufunc is numpy.positive
+            and len(inputs) == 1
+            and isinstance(inputs[0], Vector)
+        ):
+            return inputs[0]
 
         elif (
             ufunc is numpy.true_divide
-            and not isinstance(inputs[1], (Vector, Coordinates))
             and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and not isinstance(inputs[1], Vector)
         ):
-            result = scale.dispatch(1 / inputs[1], inputs[0])
+            result = inputs[0].scale(1 / inputs[1])
             for output in outputs:
                 for name in output.dtype.names:
                     output[name] = result[name]
@@ -309,56 +314,79 @@ class VectorNumpy:
 
         elif (
             ufunc is numpy.power
-            and not isinstance(inputs[1], (Vector, Coordinates))
             and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and not isinstance(inputs[1], Vector)
         ):
-            result = absolute.dispatch(inputs[0]) ** inputs[1]
+            result = numpy.absolute(inputs[0]) ** inputs[1]
             for output in outputs:
                 for name in output.dtype.names:
                     output[name] = result[name]
             return result
 
-        elif ufunc is numpy.square and len(inputs) == 1:
-            result = absolute2.dispatch(inputs[0])
-            for output in outputs:
-                for name in output.dtype.names:
-                    output[name] = result[name]
-            return result
+        elif (
+            ufunc is numpy.square and len(inputs) == 1 and isinstance(inputs[0], Vector)
+        ):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.square' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            if isinstance(inputs[0], Vector2D):
+                return inputs[0].rho2
+            elif isinstance(inputs[0], Vector3D):
+                return inputs[0].mag2
+            elif isinstance(inputs[0], Vector4D):
+                return inputs[0].tau2
 
-        elif ufunc is numpy.sqrt and len(inputs) == 1:
-            result = numpy.sqrt(absolute.dispatch(inputs[0]))
-            for output in outputs:
-                for name in output.dtype.names:
-                    output[name] = result[name]
-            return result
+        elif ufunc is numpy.sqrt and len(inputs) == 1 and isinstance(inputs[0], Vector):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.sqrt' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            return numpy.sqrt(numpy.absolute(inputs[0]))
 
-        elif ufunc is numpy.cbrt and len(inputs) == 1:
-            result = numpy.cbrt(absolute.dispatch(inputs[0]))
-            for output in outputs:
-                for name in output.dtype.names:
-                    output[name] = result[name]
-            return result
+        elif ufunc is numpy.cbrt and len(inputs) == 1 and isinstance(inputs[0], Vector):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.cbrt' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            return numpy.cbrt(numpy.absolute(inputs[0]))
 
-        elif ufunc is numpy.matmul and len(inputs) == 2:
-            result = dot.dispatch(inputs[0], inputs[1])
-            for output in outputs:
-                for name in output.dtype.names:
-                    output[name] = result[name]
-            return result
+        elif (
+            ufunc is numpy.matmul
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and isinstance(inputs[1], Vector)
+        ):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.matmul' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            return inputs[0].dot(inputs[1])
 
-        elif ufunc is numpy.equal and len(inputs) == 2:
-            result = equal.dispatch(inputs[0], inputs[1])
-            for output in outputs:
-                for name in output.dtype.names:
-                    output[name] = result[name]
-            return result
+        elif (
+            ufunc is numpy.equal
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and isinstance(inputs[1], Vector)
+        ):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.equal' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            return inputs[0].equal(inputs[1])
 
-        elif ufunc is numpy.not_equal and len(inputs) == 2:
-            result = not_equal.dispatch(inputs[0], inputs[1])
-            for output in outputs:
-                for name in output.dtype.names:
-                    output[name] = result[name]
-            return result
+        elif (
+            ufunc is numpy.not_equal
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and isinstance(inputs[1], Vector)
+        ):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.equal' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            return inputs[0].not_equal(inputs[1])
 
         else:
             return NotImplemented
@@ -556,9 +584,6 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, numpy.ndarray):
 
 
 class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):
-    lib = numpy
-    ObjectClass = vector.backends.object_.VectorObject2D
-
     def __new__(cls, *args, **kwargs):
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             array = _array_from_columns(args[0])
@@ -587,11 +612,15 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):
     def azimuthal(self):
         return self.view(self._azimuthal_type)
 
-    def _wrap_result(self, result, returns):
+    def _wrap_result(self, cls, result, returns):
         if returns == [float] or returns == [bool]:
             return result
 
-        elif returns == [AzimuthalXY] or returns == [AzimuthalRhoPhi]:
+        elif (
+            len(returns) == 1
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+        ):
             result = _toarrays(result)
             dtype = []
             i = 0
@@ -603,7 +632,113 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):
             for name in _coordinate_class_to_names[returns[0]]:
                 out[name] = result[i]
                 i += 1
-            return out.view(type(self))
+            return out.view(cls.ProjectionClass2D)
+
+        elif (
+            len(returns) == 2
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and returns[1] is None
+        ):
+            result = _toarrays(result)
+            dtype = []
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            out = numpy.empty(_shape_of(result), dtype=dtype)
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                out[name] = result[i]
+                i += 1
+            return out.view(cls.ProjectionClass2D)
+
+        elif (
+            len(returns) == 2
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+        ):
+            result = _toarrays(result)
+            dtype = []
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            out = numpy.empty(_shape_of(result), dtype=dtype)
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                out[name] = result[i]
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                out[name] = result[i]
+                i += 1
+            return out.view(cls.ProjectionClass3D)
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and returns[2] is None
+        ):
+            result = _toarrays(result)
+            dtype = []
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            out = numpy.empty(_shape_of(result), dtype=dtype)
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                out[name] = result[i]
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                out[name] = result[i]
+                i += 1
+            return out.view(cls.ProjectionClass3D)
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and isinstance(returns[2], type)
+            and issubclass(returns[2], Temporal)
+        ):
+            result = _toarrays(result)
+            dtype = []
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            for name in _coordinate_class_to_names[returns[2]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            out = numpy.empty(_shape_of(result), dtype=dtype)
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                out[name] = result[i]
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                out[name] = result[i]
+                i += 1
+            for name in _coordinate_class_to_names[returns[2]]:
+                out[name] = result[i]
+                i += 1
+            return out.view(cls.ProjectionClass4D)
 
         else:
             raise AssertionError(repr(returns))
@@ -643,9 +778,7 @@ class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):
 
 
 class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
-    lib = numpy
     ObjectClass = vector.backends.object_.VectorObject3D
-    ProjectionClass2D = VectorNumpy2D
 
     def __new__(cls, *args, **kwargs):
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
@@ -690,11 +823,15 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
     def longitudinal(self):
         return self.view(self._longitudinal_type)
 
-    def _wrap_result(self, result, returns):
+    def _wrap_result(self, cls, result, returns):
         if returns == [float] or returns == [bool]:
             return result
 
-        elif returns == [AzimuthalXY] or returns == [AzimuthalRhoPhi]:
+        elif (
+            len(returns) == 1
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+        ):
             result = _toarrays(result)
             dtype = []
             i = 0
@@ -710,10 +847,29 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
                 i += 1
             for name in _coordinate_class_to_names[_ltype(self)]:
                 out[name] = self[name]
-            return out.view(type(self))
+            return out.view(cls.ProjectionClass3D)
 
         elif (
-            (len(returns) == 2 or (len(returns) == 3 and returns[2] is None))
+            len(returns) == 2
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and returns[1] is None
+        ):
+            result = _toarrays(result)
+            dtype = []
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            out = numpy.empty(_shape_of(result), dtype=dtype)
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                out[name] = result[i]
+                i += 1
+            return out.view(cls.ProjectionClass2D)
+
+        elif (
+            len(returns) == 2
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
             and isinstance(returns[1], type)
@@ -736,7 +892,68 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
             for name in _coordinate_class_to_names[returns[1]]:
                 out[name] = result[i]
                 i += 1
-            return out.view(type(self))
+            return out.view(cls.ProjectionClass3D)
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and returns[2] is None
+        ):
+            result = _toarrays(result)
+            dtype = []
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            out = numpy.empty(_shape_of(result), dtype=dtype)
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                out[name] = result[i]
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                out[name] = result[i]
+                i += 1
+            return out.view(cls.ProjectionClass3D)
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and isinstance(returns[2], type)
+            and issubclass(returns[2], Temporal)
+        ):
+            result = _toarrays(result)
+            dtype = []
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            for name in _coordinate_class_to_names[returns[2]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            out = numpy.empty(_shape_of(result), dtype=dtype)
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                out[name] = result[i]
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                out[name] = result[i]
+                i += 1
+            for name in _coordinate_class_to_names[returns[2]]:
+                out[name] = result[i]
+                i += 1
+            return out.view(cls.ProjectionClass4D)
 
         else:
             raise AssertionError(repr(returns))
@@ -750,7 +967,6 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
 
 class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):
     ObjectClass = vector.backends.object_.MomentumObject3D
-    ProjectionClass2D = MomentumNumpy2D
 
     def __array_finalize__(self, obj):
         self.dtype.names = [
@@ -788,10 +1004,7 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):
 
 
 class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
-    lib = numpy
     ObjectClass = vector.backends.object_.VectorObject4D
-    ProjectionClass2D = VectorNumpy2D
-    ProjectionClass3D = VectorNumpy3D
 
     def __new__(cls, *args, **kwargs):
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
@@ -849,27 +1062,54 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
     def temporal(self):
         return self.view(self._temporal_type)
 
-    def _wrap_result(self, result, returns):
+    def _wrap_result(self, cls, result, returns):
         if returns == [float] or returns == [bool]:
             return result
 
-        elif returns == [AzimuthalXY] or returns == [AzimuthalRhoPhi]:
+        elif (
+            len(returns) == 1
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+        ):
             result = _toarrays(result)
             dtype = []
-            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
                 dtype.append((name, result[i].dtype))
+                i += 1
             for name in _coordinate_class_to_names[_ltype(self)]:
                 dtype.append((name, self.dtype[name]))
             for name in _coordinate_class_to_names[_ttype(self)]:
                 dtype.append((name, self.dtype[name]))
             out = numpy.empty(_shape_of(result), dtype=dtype)
-            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
                 out[name] = result[i]
+                i += 1
             for name in _coordinate_class_to_names[_ltype(self)]:
                 out[name] = self[name]
             for name in _coordinate_class_to_names[_ttype(self)]:
                 out[name] = self[name]
-            return out.view(type(self))
+            return out.view(cls.ProjectionClass4D)
+
+        elif (
+            len(returns) == 2
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and returns[1] is None
+        ):
+            result = _toarrays(result)
+            dtype = []
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            out = numpy.empty(_shape_of(result), dtype=dtype)
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                out[name] = result[i]
+                i += 1
+            return out.view(cls.ProjectionClass2D)
 
         elif (
             len(returns) == 2
@@ -899,7 +1139,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
                 i += 1
             for name in _coordinate_class_to_names[_ttype(self)]:
                 out[name] = self[name]
-            return out.view(type(self))
+            return out.view(cls.ProjectionClass4D)
 
         elif (
             len(returns) == 3
@@ -907,6 +1147,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
             and issubclass(returns[0], Azimuthal)
             and isinstance(returns[1], type)
             and issubclass(returns[1], Longitudinal)
+            and returns[2] is None
         ):
             result = _toarrays(result)
             dtype = []
@@ -917,14 +1158,6 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
             for name in _coordinate_class_to_names[returns[1]]:
                 dtype.append((name, result[i].dtype))
                 i += 1
-            is_4d = False
-            if isinstance(returns[2], type) and issubclass(returns[2], Temporal):
-                is_4d = True
-                for name in _coordinate_class_to_names[returns[2]]:
-                    dtype.append((name, result[i].dtype))
-                    i += 1
-            elif returns[2] is not None:
-                raise AssertionError(repr(type(returns[2])))
             out = numpy.empty(_shape_of(result), dtype=dtype)
             i = 0
             for name in _coordinate_class_to_names[returns[0]]:
@@ -933,13 +1166,41 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
             for name in _coordinate_class_to_names[returns[1]]:
                 out[name] = result[i]
                 i += 1
-            if is_4d:
-                for name in _coordinate_class_to_names[returns[2]]:
-                    out[name] = result[i]
-                    i += 1
-                return out.view(type(self))
-            else:
-                return out.view(self.ProjectionClass3D)
+            return out.view(cls.ProjectionClass3D)
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and isinstance(returns[2], type)
+            and issubclass(returns[2], Temporal)
+        ):
+            result = _toarrays(result)
+            dtype = []
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            for name in _coordinate_class_to_names[returns[2]]:
+                dtype.append((name, result[i].dtype))
+                i += 1
+            out = numpy.empty(_shape_of(result), dtype=dtype)
+            i = 0
+            for name in _coordinate_class_to_names[returns[0]]:
+                out[name] = result[i]
+                i += 1
+            for name in _coordinate_class_to_names[returns[1]]:
+                out[name] = result[i]
+                i += 1
+            for name in _coordinate_class_to_names[returns[2]]:
+                out[name] = result[i]
+                i += 1
+            return out.view(cls.ProjectionClass4D)
 
         else:
             raise AssertionError(repr(returns))
@@ -953,8 +1214,6 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
 
 class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):
     ObjectClass = vector.backends.object_.MomentumObject4D
-    ProjectionClass2D = MomentumNumpy2D
-    ProjectionClass3D = MomentumNumpy3D
 
     def __array_finalize__(self, obj):
         self.dtype.names = [
@@ -1030,3 +1289,34 @@ def array(*args, **kwargs):
             cls = VectorNumpy2D
 
     return cls(*args, **kwargs)
+
+
+VectorNumpy2D.ProjectionClass2D = VectorNumpy2D
+VectorNumpy2D.ProjectionClass3D = VectorNumpy3D
+VectorNumpy2D.ProjectionClass4D = VectorNumpy4D
+VectorNumpy2D.GenericClass = VectorNumpy2D
+
+MomentumNumpy2D.ProjectionClass2D = MomentumNumpy2D
+MomentumNumpy2D.ProjectionClass3D = MomentumNumpy3D
+MomentumNumpy2D.ProjectionClass4D = MomentumNumpy4D
+MomentumNumpy2D.GenericClass = VectorNumpy2D
+
+VectorNumpy3D.ProjectionClass2D = VectorNumpy2D
+VectorNumpy3D.ProjectionClass3D = VectorNumpy3D
+VectorNumpy3D.ProjectionClass4D = VectorNumpy4D
+VectorNumpy3D.GenericClass = VectorNumpy3D
+
+MomentumNumpy3D.ProjectionClass2D = MomentumNumpy2D
+MomentumNumpy3D.ProjectionClass3D = MomentumNumpy3D
+MomentumNumpy3D.ProjectionClass4D = MomentumNumpy4D
+MomentumNumpy3D.GenericClass = VectorNumpy3D
+
+VectorNumpy4D.ProjectionClass2D = VectorNumpy2D
+VectorNumpy4D.ProjectionClass3D = VectorNumpy3D
+VectorNumpy4D.ProjectionClass4D = VectorNumpy4D
+VectorNumpy4D.GenericClass = VectorNumpy4D
+
+MomentumNumpy4D.ProjectionClass2D = MomentumNumpy2D
+MomentumNumpy4D.ProjectionClass3D = MomentumNumpy3D
+MomentumNumpy4D.ProjectionClass4D = MomentumNumpy4D
+MomentumNumpy4D.GenericClass = VectorNumpy4D

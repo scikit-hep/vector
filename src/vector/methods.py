@@ -4,313 +4,6 @@
 # or https://github.com/scikit-hep/vector for details.
 
 
-class Vector:
-    pass
-
-
-class Vector2D(Vector):
-    def to_xy(self):
-        "to_xy docs"
-        from .compute.planar import x, y
-
-        return self._wrap_result((x.dispatch(self), y.dispatch(self)), [AzimuthalXY])
-
-    def to_rhophi(self):
-        "to_rhophi docs"
-        from .compute.planar import phi, rho
-
-        return self._wrap_result(
-            (rho.dispatch(self), phi.dispatch(self)), [AzimuthalRhoPhi]
-        )
-
-
-class Vector3D(Vector):
-    def to_Vector2D(self):
-        "to_Vector2D docs"
-        return self.ProjectionClass2D._wrap_result(
-            self.ProjectionClass2D, self.azimuthal.elements, [_aztype(self)]
-        )
-
-    def to_xy(self):
-        "to_xy docs, mention projection"
-        return self.to_Vector2D().to_xy()
-
-    def to_rhophi(self):
-        "to_rhophi docs, mention projection"
-        return self.to_Vector2D().to_rhophi()
-
-    def to_xyz(self):
-        "to_xyz docs"
-        from .compute.planar import x, y
-        from .compute.spatial import z
-
-        return self._wrap_result(
-            (x.dispatch(self), y.dispatch(self), z.dispatch(self)),
-            [AzimuthalXY, LongitudinalZ],
-        )
-
-    def to_xytheta(self):
-        "to_xytheta docs"
-        from .compute.planar import x, y
-        from .compute.spatial import theta
-
-        return self._wrap_result(
-            (x.dispatch(self), y.dispatch(self), theta.dispatch(self)),
-            [AzimuthalXY, LongitudinalTheta],
-        )
-
-    def to_xyeta(self):
-        "to_xyeta docs"
-        from .compute.planar import x, y
-        from .compute.spatial import eta
-
-        return self._wrap_result(
-            (x.dispatch(self), y.dispatch(self), eta.dispatch(self)),
-            [AzimuthalXY, LongitudinalEta],
-        )
-
-    def to_rhophiz(self):
-        "to_rhophiz docs"
-        from .compute.planar import phi, rho
-        from .compute.spatial import z
-
-        return self._wrap_result(
-            (rho.dispatch(self), phi.dispatch(self), z.dispatch(self)),
-            [AzimuthalRhoPhi, LongitudinalZ],
-        )
-
-    def to_rhophitheta(self):
-        "to_rhophitheta docs"
-        from .compute.planar import phi, rho
-        from .compute.spatial import theta
-
-        return self._wrap_result(
-            (rho.dispatch(self), phi.dispatch(self), theta.dispatch(self)),
-            [AzimuthalRhoPhi, LongitudinalTheta],
-        )
-
-    def to_rhophieta(self):
-        "to_rhophieta docs"
-        from .compute.planar import phi, rho
-        from .compute.spatial import eta
-
-        return self._wrap_result(
-            (rho.dispatch(self), phi.dispatch(self), eta.dispatch(self)),
-            [AzimuthalRhoPhi, LongitudinalEta],
-        )
-
-
-class Vector4D(Vector):
-    def to_Vector3D(self):
-        "to_Vector3D docs"
-        return self.ProjectionClass3D._wrap_result(
-            self.ProjectionClass3D,
-            self.azimuthal.elements + self.longitudinal.elements,
-            [_aztype(self), _ltype(self)],
-        )
-
-    def to_xyz(self):
-        "to_xyz docs, mention projection"
-        return self.to_Vector3D().to_xyz()
-
-    def to_xytheta(self):
-        "to_xytheta docs, mention projection"
-        return self.to_Vector3D().to_xytheta()
-
-    def to_xyeta(self):
-        "to_xyeta docs, mention projection"
-        return self.to_Vector3D().to_xyeta()
-
-    def to_rhophiz(self):
-        "to_rhophiz docs, mention projection"
-        return self.to_Vector3D().to_rhophiz()
-
-    def to_rhophitheta(self):
-        "to_rhophitheta docs, mention projection"
-        return self.to_Vector3D().to_rhophitheta()
-
-    def to_rhophieta(self):
-        "to_rhophieta docs, mention projection"
-        return self.to_Vector3D().to_rhophieta()
-
-    def to_xyzt(self):
-        "to_xyzt docs"
-        from .compute.lorentz import t
-        from .compute.planar import x, y
-        from .compute.spatial import z
-
-        return self._wrap_result(
-            (x.dispatch(self), y.dispatch(self), z.dispatch(self), t.dispatch(self)),
-            [AzimuthalXY, LongitudinalZ, TemporalT],
-        )
-
-    def to_xyztau(self):
-        "to_xyztau docs"
-        from .compute.lorentz import tau
-        from .compute.planar import x, y
-        from .compute.spatial import z
-
-        return self._wrap_result(
-            (x.dispatch(self), y.dispatch(self), z.dispatch(self), tau.dispatch(self)),
-            [AzimuthalXY, LongitudinalZ, TemporalTau],
-        )
-
-    def to_xythetat(self):
-        "to_xythetat docs"
-        from .compute.lorentz import t
-        from .compute.planar import x, y
-        from .compute.spatial import theta
-
-        return self._wrap_result(
-            (
-                x.dispatch(self),
-                y.dispatch(self),
-                theta.dispatch(self),
-                t.dispatch(self),
-            ),
-            [AzimuthalXY, LongitudinalTheta, TemporalT],
-        )
-
-    def to_xythetatau(self):
-        "to_xythetatau docs"
-        from .compute.lorentz import tau
-        from .compute.planar import x, y
-        from .compute.spatial import theta
-
-        return self._wrap_result(
-            (
-                x.dispatch(self),
-                y.dispatch(self),
-                theta.dispatch(self),
-                tau.dispatch(self),
-            ),
-            [AzimuthalXY, LongitudinalTheta, TemporalTau],
-        )
-
-    def to_xyetat(self):
-        "to_xyetat docs"
-        from .compute.lorentz import t
-        from .compute.planar import x, y
-        from .compute.spatial import eta
-
-        return self._wrap_result(
-            (x.dispatch(self), y.dispatch(self), eta.dispatch(self), t.dispatch(self)),
-            [AzimuthalXY, LongitudinalEta, TemporalT],
-        )
-
-    def to_xyetatau(self):
-        "to_xyetatau docs"
-        from .compute.lorentz import tau
-        from .compute.planar import x, y
-        from .compute.spatial import eta
-
-        return self._wrap_result(
-            (
-                x.dispatch(self),
-                y.dispatch(self),
-                eta.dispatch(self),
-                tau.dispatch(self),
-            ),
-            [AzimuthalXY, LongitudinalEta, TemporalTau],
-        )
-
-    def to_rhophizt(self):
-        "to_rhophizt docs"
-        from .compute.lorentz import t
-        from .compute.planar import phi, rho
-        from .compute.spatial import z
-
-        return self._wrap_result(
-            (
-                rho.dispatch(self),
-                phi.dispatch(self),
-                z.dispatch(self),
-                t.dispatch(self),
-            ),
-            [AzimuthalRhoPhi, LongitudinalZ, TemporalT],
-        )
-
-    def to_rhophiztau(self):
-        "to_rhophiztau docs"
-        from .compute.lorentz import tau
-        from .compute.planar import phi, rho
-        from .compute.spatial import z
-
-        return self._wrap_result(
-            (
-                rho.dispatch(self),
-                phi.dispatch(self),
-                z.dispatch(self),
-                tau.dispatch(self),
-            ),
-            [AzimuthalRhoPhi, LongitudinalZ, TemporalTau],
-        )
-
-    def to_rhophithetat(self):
-        "to_rhophithetat docs"
-        from .compute.lorentz import t
-        from .compute.planar import phi, rho
-        from .compute.spatial import theta
-
-        return self._wrap_result(
-            (
-                rho.dispatch(self),
-                phi.dispatch(self),
-                theta.dispatch(self),
-                t.dispatch(self),
-            ),
-            [AzimuthalRhoPhi, LongitudinalTheta, TemporalT],
-        )
-
-    def to_rhophithetatau(self):
-        "to_rhophithetatau docs"
-        from .compute.lorentz import tau
-        from .compute.planar import phi, rho
-        from .compute.spatial import theta
-
-        return self._wrap_result(
-            (
-                rho.dispatch(self),
-                phi.dispatch(self),
-                theta.dispatch(self),
-                tau.dispatch(self),
-            ),
-            [AzimuthalRhoPhi, LongitudinalTheta, TemporalTau],
-        )
-
-    def to_rhophietat(self):
-        "to_rhophietat docs"
-        from .compute.lorentz import t
-        from .compute.planar import phi, rho
-        from .compute.spatial import eta
-
-        return self._wrap_result(
-            (
-                rho.dispatch(self),
-                phi.dispatch(self),
-                eta.dispatch(self),
-                t.dispatch(self),
-            ),
-            [AzimuthalRhoPhi, LongitudinalEta, TemporalT],
-        )
-
-    def to_rhophietatau(self):
-        "to_rhophietatau docs"
-        from .compute.lorentz import tau
-        from .compute.planar import phi, rho
-        from .compute.spatial import eta
-
-        return self._wrap_result(
-            (
-                rho.dispatch(self),
-                phi.dispatch(self),
-                eta.dispatch(self),
-                tau.dispatch(self),
-            ),
-            [AzimuthalRhoPhi, LongitudinalEta, TemporalTau],
-        )
-
-
 class Coordinates:
     pass
 
@@ -446,6 +139,420 @@ _coordinate_order = [
 ]
 
 
+class Vector:
+    def to_Vector2D(self):
+        "to_Vector2D docs"
+        if isinstance(self, Vector2D):
+            return self
+        else:
+            return self._wrap_result(
+                type(self),
+                self.azimuthal.elements,
+                [_aztype(self), None],
+            )
+
+    def to_Vector3D(self):
+        "to_Vector3D docs"
+        if isinstance(self, Vector2D):
+            return self._wrap_result(
+                type(self),
+                self.azimuthal.elements + (0,),
+                [_aztype(self), LongitudinalZ, None],
+            )
+        elif isinstance(self, Vector3D):
+            return self
+        else:
+            return self._wrap_result(
+                type(self),
+                self.azimuthal.elements + self.longitudinal.elements,
+                [_aztype(self), _ltype(self), None],
+            )
+
+    def to_Vector4D(self):
+        "to_Vector4D docs"
+        if isinstance(self, Vector2D):
+            return self._wrap_result(
+                type(self),
+                self.azimuthal.elements + (0, 0),
+                [_aztype(self), LongitudinalZ, TemporalT],
+            )
+        elif isinstance(self, Vector3D):
+            return self._wrap_result(
+                type(self),
+                self.azimuthal.elements + self.longitudinal.elements + (0,),
+                [_aztype(self), _ltype(self), TemporalT],
+            )
+        else:
+            return self
+
+    def to_xy(self):
+        "to_xy docs"
+        from .compute import planar
+
+        return self._wrap_result(
+            type(self),
+            (planar.x.dispatch(self), planar.y.dispatch(self)),
+            [AzimuthalXY, None],
+        )
+
+    def to_rhophi(self):
+        "to_rhophi docs"
+        from .compute import planar
+
+        return self._wrap_result(
+            type(self),
+            (planar.rho.dispatch(self), planar.phi.dispatch(self)),
+            [AzimuthalRhoPhi, None],
+        )
+
+    def to_xyz(self):
+        "to_xyz docs"
+        from .compute import planar, spatial
+
+        lcoord = 0
+        if isinstance(self, (Vector3D, Vector4D)):
+            lcoord = spatial.z.dispatch(self)
+
+        return self._wrap_result(
+            type(self),
+            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord),
+            [AzimuthalXY, LongitudinalZ, None],
+        )
+
+    def to_xytheta(self):
+        "to_xytheta docs"
+        from .compute import planar, spatial
+
+        lcoord = 0
+        if isinstance(self, (Vector3D, Vector4D)):
+            lcoord = spatial.theta.dispatch(self)
+
+        return self._wrap_result(
+            type(self),
+            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord),
+            [AzimuthalXY, LongitudinalTheta, None],
+        )
+
+    def to_xyeta(self):
+        "to_xyeta docs"
+        from .compute import planar, spatial
+
+        lcoord = 0
+        if isinstance(self, (Vector3D, Vector4D)):
+            lcoord = spatial.eta.dispatch(self)
+
+        return self._wrap_result(
+            type(self),
+            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord),
+            [AzimuthalXY, LongitudinalEta, None],
+        )
+
+    def to_rhophiz(self):
+        "to_rhophiz docs"
+        from .compute import planar, spatial
+
+        lcoord = 0
+        if isinstance(self, (Vector3D, Vector4D)):
+            lcoord = spatial.z.dispatch(self)
+
+        return self._wrap_result(
+            type(self),
+            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord),
+            [AzimuthalRhoPhi, LongitudinalZ, None],
+        )
+
+    def to_rhophitheta(self):
+        "to_rhophitheta docs"
+        from .compute import planar, spatial
+
+        lcoord = 0
+        if isinstance(self, (Vector3D, Vector4D)):
+            lcoord = spatial.theta.dispatch(self)
+
+        return self._wrap_result(
+            type(self),
+            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord),
+            [AzimuthalRhoPhi, LongitudinalTheta, None],
+        )
+
+    def to_rhophieta(self):
+        "to_rhophieta docs"
+        from .compute import planar, spatial
+
+        lcoord = 0
+        if isinstance(self, (Vector3D, Vector4D)):
+            lcoord = spatial.eta.dispatch(self)
+
+        return self._wrap_result(
+            type(self),
+            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord),
+            [AzimuthalRhoPhi, LongitudinalEta, None],
+        )
+
+    def to_xyzt(self):
+        "to_xyzt docs"
+        from .compute import lorentz, planar, spatial
+
+        lcoord = 0
+        if isinstance(self, (Vector3D, Vector4D)):
+            lcoord = spatial.z.dispatch(self)
+        tcoord = 0
+        if isinstance(self, Vector4D):
+            tcoord = lorentz.t.dispatch(self)
+
+        return self._wrap_result(
+            type(self),
+            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord, tcoord),
+            [AzimuthalXY, LongitudinalZ, TemporalT],
+        )
+
+    def to_xyztau(self):
+        "to_xyztau docs"
+        from .compute import lorentz, planar, spatial
+
+        lcoord = 0
+        if isinstance(self, (Vector3D, Vector4D)):
+            lcoord = spatial.z.dispatch(self)
+        tcoord = 0
+        if isinstance(self, Vector4D):
+            tcoord = lorentz.tau.dispatch(self)
+
+        return self._wrap_result(
+            type(self),
+            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord, tcoord),
+            [AzimuthalXY, LongitudinalZ, TemporalTau],
+        )
+
+    def to_xythetat(self):
+        "to_xythetat docs"
+        from .compute import lorentz, planar, spatial
+
+        lcoord = 0
+        if isinstance(self, (Vector3D, Vector4D)):
+            lcoord = spatial.theta.dispatch(self)
+        tcoord = 0
+        if isinstance(self, Vector4D):
+            tcoord = lorentz.t.dispatch(self)
+
+        return self._wrap_result(
+            type(self),
+            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord, tcoord),
+            [AzimuthalXY, LongitudinalTheta, TemporalT],
+        )
+
+    def to_xythetatau(self):
+        "to_xythetatau docs"
+        from .compute import lorentz, planar, spatial
+
+        lcoord = 0
+        if isinstance(self, (Vector3D, Vector4D)):
+            lcoord = spatial.theta.dispatch(self)
+        tcoord = 0
+        if isinstance(self, Vector4D):
+            tcoord = lorentz.tau.dispatch(self)
+
+        return self._wrap_result(
+            type(self),
+            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord, tcoord),
+            [AzimuthalXY, LongitudinalTheta, TemporalTau],
+        )
+
+    def to_xyetat(self):
+        "to_xyetat docs"
+        from .compute import lorentz, planar, spatial
+
+        lcoord = 0
+        if isinstance(self, (Vector3D, Vector4D)):
+            lcoord = spatial.eta.dispatch(self)
+        tcoord = 0
+        if isinstance(self, Vector4D):
+            tcoord = lorentz.t.dispatch(self)
+
+        return self._wrap_result(
+            type(self),
+            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord, tcoord),
+            [AzimuthalXY, LongitudinalEta, TemporalT],
+        )
+
+    def to_xyetatau(self):
+        "to_xyetatau docs"
+        from .compute import lorentz, planar, spatial
+
+        lcoord = 0
+        if isinstance(self, (Vector3D, Vector4D)):
+            lcoord = spatial.eta.dispatch(self)
+        tcoord = 0
+        if isinstance(self, Vector4D):
+            tcoord = lorentz.tau.dispatch(self)
+
+        return self._wrap_result(
+            type(self),
+            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord, tcoord),
+            [AzimuthalXY, LongitudinalEta, TemporalTau],
+        )
+
+    def to_rhophizt(self):
+        "to_rhophizt docs"
+        from .compute import lorentz, planar, spatial
+
+        lcoord = 0
+        if isinstance(self, (Vector3D, Vector4D)):
+            lcoord = spatial.z.dispatch(self)
+        tcoord = 0
+        if isinstance(self, Vector4D):
+            tcoord = lorentz.t.dispatch(self)
+
+        return self._wrap_result(
+            type(self),
+            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord, tcoord),
+            [AzimuthalRhoPhi, LongitudinalZ, TemporalT],
+        )
+
+    def to_rhophiztau(self):
+        "to_rhophiztau docs"
+        from .compute import lorentz, planar, spatial
+
+        lcoord = 0
+        if isinstance(self, (Vector3D, Vector4D)):
+            lcoord = spatial.z.dispatch(self)
+        tcoord = 0
+        if isinstance(self, Vector4D):
+            tcoord = lorentz.tau.dispatch(self)
+
+        return self._wrap_result(
+            type(self),
+            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord, tcoord),
+            [AzimuthalRhoPhi, LongitudinalZ, TemporalTau],
+        )
+
+    def to_rhophithetat(self):
+        "to_rhophithetat docs"
+        from .compute import lorentz, planar, spatial
+
+        lcoord = 0
+        if isinstance(self, (Vector3D, Vector4D)):
+            lcoord = spatial.theta.dispatch(self)
+        tcoord = 0
+        if isinstance(self, Vector4D):
+            tcoord = lorentz.t.dispatch(self)
+
+        return self._wrap_result(
+            type(self),
+            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord, tcoord),
+            [AzimuthalRhoPhi, LongitudinalTheta, TemporalT],
+        )
+
+    def to_rhophithetatau(self):
+        "to_rhophithetatau docs"
+        from .compute import lorentz, planar, spatial
+
+        lcoord = 0
+        if isinstance(self, (Vector3D, Vector4D)):
+            lcoord = spatial.theta.dispatch(self)
+        tcoord = 0
+        if isinstance(self, Vector4D):
+            tcoord = lorentz.tau.dispatch(self)
+
+        return self._wrap_result(
+            type(self),
+            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord, tcoord),
+            [AzimuthalRhoPhi, LongitudinalTheta, TemporalTau],
+        )
+
+    def to_rhophietat(self):
+        "to_rhophietat docs"
+        from .compute import lorentz, planar, spatial
+
+        lcoord = 0
+        if isinstance(self, (Vector3D, Vector4D)):
+            lcoord = spatial.eta.dispatch(self)
+        tcoord = 0
+        if isinstance(self, Vector4D):
+            tcoord = lorentz.t.dispatch(self)
+
+        return self._wrap_result(
+            type(self),
+            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord, tcoord),
+            [AzimuthalRhoPhi, LongitudinalEta, TemporalT],
+        )
+
+    def to_rhophietatau(self):
+        "to_rhophietatau docs"
+        from .compute import lorentz, planar, spatial
+
+        lcoord = 0
+        if isinstance(self, (Vector3D, Vector4D)):
+            lcoord = spatial.eta.dispatch(self)
+        tcoord = 0
+        if isinstance(self, Vector4D):
+            tcoord = lorentz.tau.dispatch(self)
+
+        return self._wrap_result(
+            type(self),
+            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord, tcoord),
+            [AzimuthalRhoPhi, LongitudinalEta, TemporalTau],
+        )
+
+
+class Vector2D(Vector):
+    pass
+
+
+class Vector3D(Vector):
+    pass
+
+
+class Vector4D(Vector):
+    pass
+
+
+def dim(v):
+    if isinstance(v, Vector2D):
+        return 2
+    elif isinstance(v, Vector3D):
+        return 3
+    elif isinstance(v, Vector4D):
+        return 4
+    else:
+        raise TypeError(f"{repr(v)} is not a vector.Vector")
+
+
+def _compute_module_of(one, two, nontemporal=False):
+    if not isinstance(one, Vector):
+        raise TypeError(f"{repr(one)} is not a Vector")
+    if not isinstance(two, Vector):
+        raise TypeError(f"{repr(two)} is not a Vector")
+
+    if isinstance(one, Vector2D):
+        import vector.compute.planar
+
+        return vector.compute.planar
+
+    elif isinstance(one, Vector3D):
+        if isinstance(two, Vector2D):
+            import vector.compute.planar
+
+            return vector.compute.planar
+        else:
+            import vector.compute.spatial
+
+            return vector.compute.spatial
+
+    elif isinstance(one, Vector4D):
+        if isinstance(two, Vector2D):
+            import vector.compute.planar
+
+            return vector.compute.planar
+        elif isinstance(two, Vector3D) or nontemporal:
+            import vector.compute.spatial
+
+            return vector.compute.spatial
+        else:
+            import vector.compute.lorentz
+
+            return vector.compute.lorentz
+
+
 class Planar:
     @property
     def azimuthal(self):
@@ -513,19 +620,28 @@ class Planar:
         "is_parallel docs (note: this 'parallel' requires same direction)"
         from .compute.planar import is_parallel
 
-        return is_parallel.dispatch(tolerance, self, other)
+        if not isinstance(other, Vector2D):
+            return self.to_Vector3D().is_parallel(other, tolerance=tolerance)
+        else:
+            return is_parallel.dispatch(tolerance, self, other)
 
     def is_antiparallel(self, other, tolerance=1e-5):
         "is_antiparallel docs"
         from .compute.planar import is_antiparallel
 
-        return is_antiparallel.dispatch(tolerance, self, other)
+        if not isinstance(other, Vector2D):
+            return self.to_Vector3D().is_antiparallel(other, tolerance=tolerance)
+        else:
+            return is_antiparallel.dispatch(tolerance, self, other)
 
     def is_perpendicular(self, other, tolerance=1e-5):
         "is_perpendicular docs"
         from .compute.planar import is_perpendicular
 
-        return is_perpendicular.dispatch(tolerance, self, other)
+        if not isinstance(other, Vector2D):
+            return self.to_Vector3D().is_perpendicular(other, tolerance=tolerance)
+        else:
+            return is_perpendicular.dispatch(tolerance, self, other)
 
     def unit(self):
         "unit docs"
@@ -535,21 +651,18 @@ class Planar:
 
     def dot(self, other):
         "dot docs"
-        from .compute.planar import dot
-
-        return dot.dispatch(self, other)
+        module = _compute_module_of(self, other)
+        return module.dot.dispatch(self, other)
 
     def add(self, other):
         "add docs"
-        from .compute.planar import add
-
-        return add.dispatch(self, other)
+        module = _compute_module_of(self, other)
+        return module.add.dispatch(self, other)
 
     def subtract(self, other):
         "subtract docs"
-        from .compute.planar import subtract
-
-        return subtract.dispatch(self, other)
+        module = _compute_module_of(self, other)
+        return module.subtract.dispatch(self, other)
 
     def scale(self, factor):
         "scale docs"
@@ -561,18 +674,30 @@ class Planar:
         "equal docs"
         from .compute.planar import equal
 
+        if dim(self) != dim(other):
+            raise TypeError(
+                f"{repr(self)} and {repr(other)} do not have the same dimension"
+            )
         return equal.dispatch(self, other)
 
     def not_equal(self, other):
         "not_equal docs"
         from .compute.planar import not_equal
 
+        if dim(self) != dim(other):
+            raise TypeError(
+                f"{repr(self)} and {repr(other)} do not have the same dimension"
+            )
         return not_equal.dispatch(self, other)
 
     def isclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
         "isclose docs"
         from .compute.planar import isclose
 
+        if dim(self) != dim(other):
+            raise TypeError(
+                f"{repr(self)} and {repr(other)} do not have the same dimension"
+            )
         return isclose.dispatch(rtol, atol, equal_nan, self, other)
 
 
@@ -728,19 +853,28 @@ class Spatial(Planar):
         "is_parallel docs (note: this 'parallel' requires same direction)"
         from .compute.spatial import is_parallel
 
-        return is_parallel.dispatch(tolerance, self, other)
+        if isinstance(other, Vector2D):
+            return is_parallel.dispatch(tolerance, self, other.to_Vector3D())
+        else:
+            return is_parallel.dispatch(tolerance, self, other)
 
     def is_antiparallel(self, other, tolerance=1e-5):
         "is_antiparallel docs"
         from .compute.spatial import is_antiparallel
 
-        return is_antiparallel.dispatch(tolerance, self, other)
+        if isinstance(other, Vector2D):
+            return is_antiparallel.dispatch(tolerance, self, other.to_Vector3D())
+        else:
+            return is_antiparallel.dispatch(tolerance, self, other)
 
     def is_perpendicular(self, other, tolerance=1e-5):
         "is_perpendicular docs"
         from .compute.spatial import is_perpendicular
 
-        return is_perpendicular.dispatch(tolerance, self, other)
+        if isinstance(other, Vector2D):
+            return is_perpendicular.dispatch(tolerance, self, other.to_Vector3D())
+        else:
+            return is_perpendicular.dispatch(tolerance, self, other)
 
     def unit(self):
         "unit docs"
@@ -750,21 +884,18 @@ class Spatial(Planar):
 
     def dot(self, other):
         "dot docs"
-        from .compute.spatial import dot
-
-        return dot.dispatch(self, other)
+        module = _compute_module_of(self, other)
+        return module.dot.dispatch(self, other)
 
     def add(self, other):
         "add docs"
-        from .compute.spatial import add
-
-        return add.dispatch(self, other)
+        module = _compute_module_of(self, other)
+        return module.add.dispatch(self, other)
 
     def subtract(self, other):
         "subtract docs"
-        from .compute.spatial import subtract
-
-        return subtract.dispatch(self, other)
+        module = _compute_module_of(self, other)
+        return module.subtract.dispatch(self, other)
 
     def scale(self, factor):
         "scale docs"
@@ -776,18 +907,30 @@ class Spatial(Planar):
         "equal docs"
         from .compute.spatial import equal
 
+        if dim(self) != dim(other):
+            raise TypeError(
+                f"{repr(self)} and {repr(other)} do not have the same dimension"
+            )
         return equal.dispatch(self, other)
 
     def not_equal(self, other):
         "not_equal docs"
         from .compute.spatial import not_equal
 
+        if dim(self) != dim(other):
+            raise TypeError(
+                f"{repr(self)} and {repr(other)} do not have the same dimension"
+            )
         return not_equal.dispatch(self, other)
 
     def isclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
         "isclose docs"
         from .compute.spatial import isclose
 
+        if dim(self) != dim(other):
+            raise TypeError(
+                f"{repr(self)} and {repr(other)} do not have the same dimension"
+            )
         return isclose.dispatch(rtol, atol, equal_nan, self, other)
 
 
@@ -943,21 +1086,18 @@ class Lorentz(Spatial):
 
     def dot(self, other):
         "dot docs"
-        from .compute.lorentz import dot
-
-        return dot.dispatch(self, other)
+        module = _compute_module_of(self, other)
+        return module.dot.dispatch(self, other)
 
     def add(self, other):
         "add docs"
-        from .compute.lorentz import add
-
-        return add.dispatch(self, other)
+        module = _compute_module_of(self, other)
+        return module.add.dispatch(self, other)
 
     def subtract(self, other):
         "subtract docs"
-        from .compute.lorentz import subtract
-
-        return subtract.dispatch(self, other)
+        module = _compute_module_of(self, other)
+        return module.subtract.dispatch(self, other)
 
     def scale(self, factor):
         "scale docs"
@@ -969,18 +1109,30 @@ class Lorentz(Spatial):
         "equal docs"
         from .compute.lorentz import equal
 
+        if dim(self) != dim(other):
+            raise TypeError(
+                f"{repr(self)} and {repr(other)} do not have the same dimension"
+            )
         return equal.dispatch(self, other)
 
     def not_equal(self, other):
         "not_equal docs"
         from .compute.lorentz import not_equal
 
+        if dim(self) != dim(other):
+            raise TypeError(
+                f"{repr(self)} and {repr(other)} do not have the same dimension"
+            )
         return not_equal.dispatch(self, other)
 
     def isclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
         "isclose docs"
         from .compute.lorentz import isclose
 
+        if dim(self) != dim(other):
+            raise TypeError(
+                f"{repr(self)} and {repr(other)} do not have the same dimension"
+            )
         return isclose.dispatch(rtol, atol, equal_nan, self, other)
 
 
@@ -1122,7 +1274,7 @@ class LorentzMomentum(SpatialMomentum):
         return self.mt2
 
 
-def _lib_of(objects):
+def _lib_of(*objects):
     lib = None
     for obj in objects:
         if isinstance(obj, Vector):
@@ -1144,7 +1296,7 @@ def _from_signature(name, dispatch_map, signature):
     return result
 
 
-def _handler(objects):
+def _handler_of(*objects):
     from .backends.numpy_ import VectorNumpy
     from .backends.object_ import VectorObject
 
@@ -1159,3 +1311,26 @@ def _handler(objects):
                 handler = obj
 
     return handler
+
+
+def _flavor_of(*objects):
+    from .backends.numpy_ import VectorNumpy
+    from .backends.object_ import VectorObject
+
+    handler = None
+    is_momentum = True
+    for obj in objects:
+        if isinstance(obj, Vector):
+            if not isinstance(obj, Momentum):
+                is_momentum = False
+            if handler is None:
+                handler = obj
+            elif isinstance(obj, VectorObject):
+                pass
+            elif isinstance(obj, VectorNumpy):
+                handler = obj
+
+    if is_momentum:
+        return type(handler)
+    else:
+        return handler.GenericClass

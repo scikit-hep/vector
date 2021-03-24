@@ -14,8 +14,9 @@ from vector.methods import (
     LongitudinalTheta,
     LongitudinalZ,
     _aztype,
+    _flavor_of,
     _from_signature,
-    _handler,
+    _handler_of,
     _lib_of,
     _ltype,
 )
@@ -660,9 +661,10 @@ def dispatch(rtol, atol, equal_nan, v1, v2):
         ),
     )
     with numpy.errstate(all="ignore"):
-        return _handler((v1, v2))._wrap_result(
+        return _handler_of(v1, v2)._wrap_result(
+            _flavor_of(v1, v2),
             function(
-                _lib_of((v1, v2)),
+                _lib_of(v1, v2),
                 rtol,
                 atol,
                 equal_nan,

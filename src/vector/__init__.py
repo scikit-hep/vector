@@ -39,6 +39,7 @@ from .methods import (  # noqa: 401
     Vector2D,
     Vector3D,
     Vector4D,
+    dim,
 )
 
 # from .version import version as __version__

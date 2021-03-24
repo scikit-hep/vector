@@ -15,6 +15,7 @@ from vector.methods import (
     TemporalT,
     TemporalTau,
     _aztype,
+    _flavor_of,
     _from_signature,
     _ltype,
     _ttype,
@@ -97,6 +98,7 @@ def dispatch(v):
     )
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
+            _flavor_of(v),
             function(
                 v.lib,
                 *v.azimuthal.elements,

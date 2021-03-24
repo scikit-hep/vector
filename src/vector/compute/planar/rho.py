@@ -6,7 +6,13 @@
 import numpy
 
 from vector.compute.planar import rho2
-from vector.methods import AzimuthalRhoPhi, AzimuthalXY, _aztype, _from_signature
+from vector.methods import (
+    AzimuthalRhoPhi,
+    AzimuthalXY,
+    _aztype,
+    _flavor_of,
+    _from_signature,
+)
 
 
 def xy(lib, x, y):
@@ -26,4 +32,6 @@ dispatch_map = {
 def dispatch(v):
     function, *returns = _from_signature(__name__, dispatch_map, (_aztype(v),))
     with numpy.errstate(all="ignore"):
-        return v._wrap_result(function(v.lib, *v.azimuthal.elements), returns)
+        return v._wrap_result(
+            _flavor_of(v), function(v.lib, *v.azimuthal.elements), returns
+        )

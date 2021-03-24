@@ -14,6 +14,7 @@ from vector.methods import (
     LongitudinalTheta,
     LongitudinalZ,
     _aztype,
+    _flavor_of,
     _from_signature,
     _ltype,
 )
@@ -64,5 +65,7 @@ def dispatch(v):
     )
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
-            function(v.lib, *v.azimuthal.elements, *v.longitudinal.elements), returns
+            _flavor_of(v),
+            function(v.lib, *v.azimuthal.elements, *v.longitudinal.elements),
+            returns,
         )
