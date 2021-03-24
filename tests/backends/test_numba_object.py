@@ -1284,3 +1284,21 @@ def test_method_transform4D():
     assert out.y == pytest.approx(0.09983341664682815)
     assert out.z == pytest.approx(99)
     assert out.t == pytest.approx(123)
+
+
+def test_method_timespacelight_like():
+    @numba.njit
+    def get_is_timelike(v):
+        return v.is_timelike()
+
+    @numba.njit
+    def get_is_spacelike(v):
+        return v.is_spacelike()
+
+    @numba.njit
+    def get_is_lightlike(v):
+        return v.is_lightlike()
+
+    assert get_is_timelike(vector.obj(x=3, y=4, z=0, t=10))
+    assert get_is_lightlike(vector.obj(x=3, y=4, z=0, t=5))
+    assert get_is_spacelike(vector.obj(x=3, y=4, z=0, t=2))

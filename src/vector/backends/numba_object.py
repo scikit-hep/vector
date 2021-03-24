@@ -2732,3 +2732,81 @@ def VectorObject4DType_transform4D(v, obj):
         return instance_class(azcoords(out1, out2), lcoords(out3), tcoords(out4))
 
     return VectorObject4DType_transform4D_impl
+
+
+@numba.extending.overload_method(VectorObject4DType, "is_timelike")
+def VectorObject4DType_is_timelike(v, tolerance=0):
+    function, *returns = _from_signature(
+        "",
+        numba_modules["lorentz"]["is_timelike"],
+        (numba_aztype(v), numba_ltype(v), numba_ttype(v)),
+    )
+
+    coord1 = getcoord1[numba_aztype(v)]
+    coord2 = getcoord2[numba_aztype(v)]
+    coord3 = getcoord1[numba_ltype(v)]
+    coord4 = getcoord1[numba_ttype(v)]
+
+    def VectorObject4DType_is_timelike_impl(v, tolerance=0):
+        return function(
+            numpy,
+            tolerance,
+            coord1(v),
+            coord2(v),
+            coord3(v),
+            coord4(v),
+        )
+
+    return VectorObject4DType_is_timelike_impl
+
+
+@numba.extending.overload_method(VectorObject4DType, "is_spacelike")
+def VectorObject4DType_is_spacelike(v, tolerance=0):
+    function, *returns = _from_signature(
+        "",
+        numba_modules["lorentz"]["is_spacelike"],
+        (numba_aztype(v), numba_ltype(v), numba_ttype(v)),
+    )
+
+    coord1 = getcoord1[numba_aztype(v)]
+    coord2 = getcoord2[numba_aztype(v)]
+    coord3 = getcoord1[numba_ltype(v)]
+    coord4 = getcoord1[numba_ttype(v)]
+
+    def VectorObject4DType_is_spacelike_impl(v, tolerance=0):
+        return function(
+            numpy,
+            tolerance,
+            coord1(v),
+            coord2(v),
+            coord3(v),
+            coord4(v),
+        )
+
+    return VectorObject4DType_is_spacelike_impl
+
+
+@numba.extending.overload_method(VectorObject4DType, "is_lightlike")
+def VectorObject4DType_is_lightlike(v, tolerance=1e-5):
+    function, *returns = _from_signature(
+        "",
+        numba_modules["lorentz"]["is_lightlike"],
+        (numba_aztype(v), numba_ltype(v), numba_ttype(v)),
+    )
+
+    coord1 = getcoord1[numba_aztype(v)]
+    coord2 = getcoord2[numba_aztype(v)]
+    coord3 = getcoord1[numba_ltype(v)]
+    coord4 = getcoord1[numba_ttype(v)]
+
+    def VectorObject4DType_is_lightlike_impl(v, tolerance=1e-5):
+        return function(
+            numpy,
+            tolerance,
+            coord1(v),
+            coord2(v),
+            coord3(v),
+            coord4(v),
+        )
+
+    return VectorObject4DType_is_lightlike_impl
