@@ -1128,3 +1128,16 @@ def test_method_rotate_axis():
     assert out.y == pytest.approx(0.5383405688588193)
     assert out.z == pytest.approx(0.5828282027463345)
     assert out.t == pytest.approx(999)
+
+
+def test_method_rotate_euler():
+    @numba.njit
+    def get_rotate_euler(vec, phi, theta, psi):
+        return vec.rotate_euler(phi, theta, psi, order="zxz")
+
+    vec = vector.obj(x=0.4, y=0.5, z=0.6)
+    out = get_rotate_euler(vec, 0.1, 0.2, 0.3)
+    assert isinstance(out, vector.backends.object_.VectorObject3D)
+    assert out.x == pytest.approx(0.5956646364506655)
+    assert out.y == pytest.approx(0.409927258162962)
+    assert out.z == pytest.approx(0.4971350761081869)
