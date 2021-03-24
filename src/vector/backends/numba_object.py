@@ -2686,3 +2686,49 @@ def VectorObject4DType_to_beta3(v):
         return instance_class(azcoords(out1, out2), lcoords(out3))
 
     return VectorObject4DType_to_beta3_impl
+
+
+@numba.extending.overload_method(VectorObject4DType, "transform4D")
+def VectorObject4DType_transform4D(v, obj):
+    function, *returns = _from_signature(
+        "",
+        numba_modules["lorentz"]["transform4D"],
+        (numba_aztype(v), numba_ltype(v), numba_ttype(v)),
+    )
+
+    instance_class = v.instance_class
+    coord1 = getcoord1[numba_aztype(v)]
+    coord2 = getcoord2[numba_aztype(v)]
+    coord3 = getcoord1[numba_ltype(v)]
+    coord4 = getcoord1[numba_ttype(v)]
+    azcoords = _coord_object_type[returns[0]]
+    lcoords = _coord_object_type[returns[1]]
+    tcoords = _coord_object_type[returns[2]]
+
+    def VectorObject4DType_transform4D_impl(v, obj):
+        out1, out2, out3, out4 = function(
+            numpy,
+            obj["xx"],
+            obj["xy"],
+            obj["xz"],
+            obj["xt"],
+            obj["yx"],
+            obj["yy"],
+            obj["yz"],
+            obj["yt"],
+            obj["zx"],
+            obj["zy"],
+            obj["zz"],
+            obj["zt"],
+            obj["tx"],
+            obj["ty"],
+            obj["tz"],
+            obj["tt"],
+            coord1(v),
+            coord2(v),
+            coord3(v),
+            coord4(v),
+        )
+        return instance_class(azcoords(out1, out2), lcoords(out3), tcoords(out4))
+
+    return VectorObject4DType_transform4D_impl

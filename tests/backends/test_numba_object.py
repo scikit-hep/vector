@@ -1156,6 +1156,29 @@ def test_method_rotate_quaternion():
     assert out.z == pytest.approx(0.246)
 
 
+def test_method_transform3D():
+    @numba.njit
+    def get_transform3D(v, obj):
+        return v.transform3D(obj)
+
+    obj = numba.typed.Dict()
+    obj["xx"] = numpy.cos(0.1)
+    obj["xy"] = -numpy.sin(0.1)
+    obj["xz"] = 0
+    obj["yx"] = numpy.sin(0.1)
+    obj["yy"] = numpy.cos(0.1)
+    obj["yz"] = 0
+    obj["zx"] = 0
+    obj["zy"] = 0
+    obj["zz"] = 1
+
+    out = get_transform3D(vector.obj(x=1, y=0, z=99), obj)
+    assert isinstance(out, vector.backends.object_.VectorObject3D)
+    assert out.x == pytest.approx(0.9950041652780258)
+    assert out.y == pytest.approx(0.09983341664682815)
+    assert out.z == pytest.approx(99)
+
+
 def test_method_boost():
     @numba.njit
     def get_boost_p4(vec, p4):
@@ -1230,3 +1253,34 @@ def test_method_to_beta3():
     assert out.x == pytest.approx(3 / 20)
     assert out.y == pytest.approx(4 / 20)
     assert out.z == pytest.approx(10 / 20)
+
+
+def test_method_transform4D():
+    @numba.njit
+    def get_transform4D(v, obj):
+        return v.transform4D(obj)
+
+    obj = numba.typed.Dict()
+    obj["xx"] = numpy.cos(0.1)
+    obj["xy"] = -numpy.sin(0.1)
+    obj["xz"] = 0
+    obj["xt"] = 0
+    obj["yx"] = numpy.sin(0.1)
+    obj["yy"] = numpy.cos(0.1)
+    obj["yz"] = 0
+    obj["yt"] = 0
+    obj["zx"] = 0
+    obj["zy"] = 0
+    obj["zz"] = 1
+    obj["zt"] = 0
+    obj["tx"] = 0
+    obj["ty"] = 0
+    obj["tz"] = 0
+    obj["tt"] = 1
+
+    out = get_transform4D(vector.obj(x=1, y=0, z=99, t=123), obj)
+    assert isinstance(out, vector.backends.object_.VectorObject4D)
+    assert out.x == pytest.approx(0.9950041652780258)
+    assert out.y == pytest.approx(0.09983341664682815)
+    assert out.z == pytest.approx(99)
+    assert out.t == pytest.approx(123)
