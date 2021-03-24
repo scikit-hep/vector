@@ -16,10 +16,13 @@ constructor = [
     (0, 0, 0, 0),
 #    (0, 0, 1, 0), # theta == 0.0
 #    (0, 0, -1, 0),
+##<<<<<<< HEAD
     (0, 0, 1, 0),
     (0, 0, 0, 4294967296),
     (0, 4294967296, 0, 0),
 ###>>>>>>> handle nan and overflow errors, add failing test cases
+=======
+##>>>>>>> add XYVector tests for all its methods
     (0, 0, 0, 10),
     (0, 0, 0, -10),
     (1, 2, 3, 0),
@@ -46,9 +49,6 @@ coordinate_list = [
     "to_rhophietatau",
 ]
 
-def isNaN(num):
-    return num!=num
-
 @pytest.fixture(scope="module", params=coordinate_list)
 def coordinates(request):
     return request.param
@@ -65,32 +65,20 @@ def test_M2(constructor, coordinates):
 
 # Run the same tests within hypothesis
 <<<<<<< HEAD
+<<<<<<< HEAD
 @given(constructor=st.tuples(st.floats(min_value=-10e7, max_value=10e7), st.floats(min_value=-10e7, max_value=10e7), st.floats(min_value=-10e7, max_value=10e7), st.floats(min_value=-10e7, max_value=10e7)) | st.tuples(st.integers(min_value=-10e7, max_value=10e7), st.integers(min_value=-10e7, max_value=10e7), st.integers(min_value=-10e7, max_value=10e7), st.integers(min_value=-10e7, max_value=10e7)))
 =======
 @given(constructor=st.tuples(st.floats(), st.floats(), st.floats(), st.floats()) | st.tuples(st.integers(), st.integers(), st.integers(), st.integers()))
 >>>>>>> test fixture and hypothesis
+=======
+@given(constructor=st.tuples(st.floats(min_value=-10e7, max_value=10e7), st.floats(min_value=-10e7, max_value=10e7), st.floats(min_value=-10e7, max_value=10e7), st.floats(min_value=-10e7, max_value=10e7)) | st.tuples(st.integers(min_value=-10e7, max_value=10e7), st.integers(min_value=-10e7, max_value=10e7), st.integers(min_value=-10e7, max_value=10e7), st.integers(min_value=-10e7, max_value=10e7)))
+>>>>>>> add XYVector tests for all its methods
 def test_fuzz_M2(constructor, coordinates):
-    try:
-        ref_result = ROOT.Math.PxPyPzEVector(*constructor).M2()
-        if isNaN(ref_result):
-            assert isNaN(getattr(
-                vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
-            )().tau2
-        )
-        else:
-            assert ref_result == pytest.approx(
-                getattr(
-                    vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
-                )().tau2
-            )
-    except OverflowError:
-        try:
-            getattr(
+    assert ROOT.Math.PxPyPzEVector(*constructor).M2() == pytest.approx(
+        getattr(
             vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
         )().tau2
-            raise ValueError
-        except OverflowError:
-            return None
+    )
 
 # Run a test that compares ROOT's 'M()' with vector's 'tau' for all cases.
 # Mass is tau (or mass)
@@ -104,44 +92,36 @@ def test_M(constructor, coordinates):
 
 # Run the same tests within hypothesis
 <<<<<<< HEAD
+<<<<<<< HEAD
 @given(constructor=st.tuples(st.floats(min_value=-10e7, max_value=10e7), st.floats(min_value=-10e7, max_value=10e7), st.floats(min_value=-10e7, max_value=10e7), st.floats(min_value=-10e7, max_value=10e7)) | st.tuples(st.integers(min_value=-10e7, max_value=10e7), st.integers(min_value=-10e7, max_value=10e7), st.integers(min_value=-10e7, max_value=10e7), st.integers(min_value=-10e7, max_value=10e7)))
 =======
 @given(constructor=st.tuples(st.floats(), st.floats(), st.floats(), st.floats()) | st.tuples(st.integers(), st.integers(), st.integers(), st.integers()))
 >>>>>>> test fixture and hypothesis
+=======
+@given(constructor=st.tuples(st.floats(min_value=-10e7, max_value=10e7), st.floats(min_value=-10e7, max_value=10e7), st.floats(min_value=-10e7, max_value=10e7), st.floats(min_value=-10e7, max_value=10e7)) | st.tuples(st.integers(min_value=-10e7, max_value=10e7), st.integers(min_value=-10e7, max_value=10e7), st.integers(min_value=-10e7, max_value=10e7), st.integers(min_value=-10e7, max_value=10e7)))
+>>>>>>> add XYVector tests for all its methods
 def test_fuzz_M(constructor, coordinates):
-    try:
-        ref_result = ROOT.Math.PxPyPzEVector(*constructor).M()
-        if isNaN(ref_result):
-            assert isNaN(getattr(
-                vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
-            )().tau
-        )
-        else:
-            assert ref_result == pytest.approx(
-                getattr(
-                    vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
-                )().tau
-            )
-    except OverflowError:
-        try:
-            getattr(
-                vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
-            )().tau
-            raise ValueError
-        except OverflowError:
-            return None
+    assert ROOT.Math.PxPyPzEVector(*constructor).M() == pytest.approx(
+        getattr(
+            vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
+        )().tau
+    )
 
 # Run a test that compares ROOT's 'Dot()' with vector's 'dot' for all cases.
 # Dot
 @pytest.mark.parametrize("constructor", constructor)
 def test_Dot(constructor, coordinates):
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> add XYVector tests for all its methods
     v1 = getattr(
         vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
     )()
     v2 = getattr(
         vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
     )()
+<<<<<<< HEAD
     assert ROOT.Math.PxPyPzEVector(*constructor).Dot(ROOT.Math.PxPyPzEVector(*constructor)) == pytest.approx(
         v1.dot(v2)
     )
@@ -210,15 +190,49 @@ def test_Minus(constructor, coordinates):
             vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
         )().minus
 =======
+=======
+>>>>>>> add XYVector tests for all its methods
     assert ROOT.Math.PxPyPzEVector(*constructor).Dot(ROOT.Math.PxPyPzEVector(*constructor)) == pytest.approx(
-        getattr(
-            vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
-        )().dot(
-        getattr(
-            vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
-        )())
+        v1.dot(v2)
     )
 
+# Run the same test within hypothesis
+@given(constructor1=st.tuples(st.floats(min_value=-10e7, max_value=10e7), st.floats(min_value=-10e7, max_value=10e7), st.floats(min_value=-10e7, max_value=10e7), st.floats(min_value=-10e7, max_value=10e7))
+                    | st.tuples(st.integers(min_value=-10e7, max_value=10e7), st.integers(min_value=-10e7, max_value=10e7), st.integers(min_value=-10e7, max_value=10e7), st.integers(min_value=-10e7, max_value=10e7)),
+       constructor2=st.tuples(st.floats(min_value=-10e7, max_value=10e7), st.floats(min_value=-10e7, max_value=10e7), st.floats(min_value=-10e7, max_value=10e7), st.floats(min_value=-10e7, max_value=10e7))
+                    | st.tuples(st.integers(min_value=-10e7, max_value=10e7), st.integers(min_value=-10e7, max_value=10e7), st.integers(min_value=-10e7, max_value=10e7), st.integers(min_value=-10e7, max_value=10e7)))
+def test_fizz_Dot(constructor1, constructor2, coordinates):
+    v1 = getattr(
+        vector.obj(**dict(zip(["x", "y", "z", "t"], constructor1))), coordinates
+    )()
+    v2 = getattr(
+        vector.obj(**dict(zip(["x", "y", "z", "t"], constructor2))), coordinates
+    )()
+    assert ROOT.Math.PxPyPzEVector(*constructor1).Dot(ROOT.Math.PxPyPzEVector(*constructor2)) == pytest.approx(
+        v1.dot(v2)
+    )
+
+# Run a test that compares ROOT's 'Mt2()' with vector's 'mt2' for all cases.
+# Mt2 same for transverse mass: it's only on momentum vectors
+@pytest.mark.parametrize("constructor", constructor)
+def test_Mt2(constructor, coordinates):
+    assert ROOT.Math.PxPyPzEVector(*constructor).mt2() == pytest.approx(
+        getattr(
+            vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
+        )().mt2
+    )
+
+# Run a test that compares ROOT's 'Mt()' with vector's 'mt' for all cases.
+# Mt
+@pytest.mark.parametrize("constructor", constructor)
+def test_Mt(constructor, coordinates):
+    assert ROOT.Math.PxPyPzEVector(*constructor).mt() == pytest.approx(
+        getattr(
+            vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
+        )().mt
+    )
+
+<<<<<<< HEAD
 # Run the same test within hypothesis
 @given(constructor1=st.tuples(st.floats(), st.floats(), st.floats(), st.floats())
                     | st.tuples(st.integers(), st.integers(), st.integers(), st.integers()),
@@ -267,3 +281,33 @@ def test_fizz_Dot(constructor1, constructor2, coordinates):
         except OverflowError:
             return None
 >>>>>>> handle nan and overflow errors, add failing test cases
+=======
+# Run a test that compares ROOT's 'Mag2()' with vector's 'mag2' for all cases.
+# P2 is our mag2 (ROOT's 4D mag2 is the dot product with itself, what we call tau or mass)
+@pytest.mark.parametrize("constructor", constructor)
+def test_Mag2(constructor, coordinates):
+    assert ROOT.Math.PxPyPzEVector(*constructor).P2() == pytest.approx(
+        getattr(
+            vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
+        )().mag2
+    )
+
+# Run a test that compares ROOT's 'Mag()' with vector's 'mag' for all cases.
+# P is our mag (same deal)
+@pytest.mark.parametrize("constructor", constructor)
+def test_P2(constructor, coordinates):
+    assert ROOT.Math.PxPyPzEVector(*constructor).P() == pytest.approx(
+        getattr(
+            vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
+        )().mag
+    )
+
+# Run a test that compares ROOT's 'Minus()' with vector's 'mag' for all cases.
+@pytest.mark.parametrize("constructor", constructor)
+def test_Minus(constructor, coordinates):
+    assert ROOT.Math.PxPyPzEVector(*constructor).Minus() == pytest.approx(
+        getattr(
+            vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
+        )().minus
+    )
+>>>>>>> add XYVector tests for all its methods

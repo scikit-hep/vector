@@ -32,6 +32,7 @@ def xy_z(lib, x, y, z):
 
 
 def xy_theta(lib, x, y, theta):
+    # FIXME?: returns 'nan' when theta == 0.0
     return (x ** 2 + y ** 2) / lib.sin(theta) ** 2
 
 
