@@ -2467,6 +2467,90 @@ def VectorObject34DType_transform3D(v, obj):
     return VectorObject34DType_transform3D_impl
 
 
+def add_boostXYZ(methodname):
+    @numba.extending.overload_method(VectorObject4DType, methodname)
+    def VectorObject4DType_boostXYZ(v, beta=None, gamma=None):
+        if not isinstance(
+            beta, (type(None), numba.types.NoneType, numba.types.Omitted)
+        ) and isinstance(
+            gamma, (type(None), numba.types.NoneType, numba.types.Omitted)
+        ):
+            if not isinstance(beta, (numba.types.Integer, numba.types.Float)):
+                raise numba.TypingError(
+                    "'beta' must be an integer or a floating-point number"
+                )
+            function, *returns = _from_signature(
+                "",
+                numba_modules["lorentz"][methodname + "_beta"],
+                (numba_aztype(v), numba_ltype(v), numba_ttype(v)),
+            )
+
+        elif isinstance(
+            beta, (type(None), numba.types.NoneType, numba.types.Omitted)
+        ) and not isinstance(
+            gamma, (type(None), numba.types.NoneType, numba.types.Omitted)
+        ):
+            if not isinstance(gamma, (numba.types.Integer, numba.types.Float)):
+                raise numba.TypingError(
+                    "'gamma' must be an integer or a floating-point number"
+                )
+            function, *returns = _from_signature(
+                "",
+                numba_modules["lorentz"][methodname + "_gamma"],
+                (numba_aztype(v), numba_ltype(v), numba_ttype(v)),
+            )
+
+        else:
+            raise numba.TypingError("specify 'beta' xor 'gamma', not both or neither")
+
+        instance_class = v.instance_class
+        coord1 = getcoord1[numba_aztype(v)]
+        coord2 = getcoord2[numba_aztype(v)]
+        coord3 = getcoord1[numba_ltype(v)]
+        coord4 = getcoord1[numba_ttype(v)]
+        azcoords = _coord_object_type[returns[0]]
+        lcoords = _coord_object_type[returns[1]]
+        tcoords = _coord_object_type[returns[2]]
+
+        if not isinstance(
+            beta, (type(None), numba.types.NoneType, numba.types.Omitted)
+        ):
+
+            def VectorObject4DType_boostXYZ_impl(v, beta=None, gamma=None):
+                out1, out2, out3, out4 = function(
+                    numpy,
+                    beta,
+                    coord1(v),
+                    coord2(v),
+                    coord3(v),
+                    coord4(v),
+                )
+                return instance_class(
+                    azcoords(out1, out2), lcoords(out3), tcoords(out4)
+                )
+
+        else:
+
+            def VectorObject4DType_boostXYZ_impl(v, beta=None, gamma=None):
+                out1, out2, out3, out4 = function(
+                    numpy,
+                    gamma,
+                    coord1(v),
+                    coord2(v),
+                    coord3(v),
+                    coord4(v),
+                )
+                return instance_class(
+                    azcoords(out1, out2), lcoords(out3), tcoords(out4)
+                )
+
+        return VectorObject4DType_boostXYZ_impl
+
+
+for methodname in "boostX", "boostY", "boostZ":
+    add_boostXYZ(methodname)
+
+
 @numba.extending.overload_method(VectorObject4DType, "to_beta3")
 def VectorObject4DType_to_beta3(v):
     function, *returns = _from_signature(

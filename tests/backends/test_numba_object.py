@@ -1156,6 +1156,28 @@ def test_method_rotate_quaternion():
     assert out.z == pytest.approx(0.246)
 
 
+def test_method_boostX():
+    @numba.njit
+    def get_boostX_beta(vec, beta):
+        return vec.boostX(beta=beta)
+
+    @numba.njit
+    def get_boostX_gamma(vec, gamma):
+        return vec.boostX(gamma=gamma)
+
+    out = get_boostX_beta(vector.obj(x=3, y=2, z=1, t=4), -0.9428090415820634)
+    assert out.x == pytest.approx(-2.313708498984761)
+    assert out.y == pytest.approx(2)
+    assert out.z == pytest.approx(1)
+    assert out.t == pytest.approx(3.5147186257614287)
+
+    out = get_boostX_gamma(vector.obj(x=3, y=2, z=1, t=4), -3)
+    assert out.x == pytest.approx(-2.313708498984761)
+    assert out.y == pytest.approx(2)
+    assert out.z == pytest.approx(1)
+    assert out.t == pytest.approx(3.5147186257614287)
+
+
 def test_method_to_beta3():
     @numba.njit
     def get_to_beta3(vec):
