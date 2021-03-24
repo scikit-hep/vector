@@ -1400,3 +1400,84 @@ def test_operator_eq():
     assert get_ne(vector.obj(x=3, y=4), vector.obj(x=4, y=3))
     with pytest.raises(numba.TypingError):
         get_ne(vector.obj(x=3, y=4), vector.obj(x=3, y=4, z=99))
+
+
+def test_operator_add():
+    @numba.njit
+    def get_add(v1, v2):
+        return v1 + v2
+
+    @numba.njit
+    def get_subtract(v1, v2):
+        return v1 - v2
+
+    out = get_add(vector.obj(x=1, y=2), vector.obj(px=3, py=4))
+    assert isinstance(out, vector.backends.object_.VectorObject2D)
+    assert out.x == pytest.approx(4)
+    assert out.y == pytest.approx(6)
+
+    out = get_add(vector.obj(x=1, y=2), vector.obj(x=3, y=4, z=5))
+    assert isinstance(out, vector.backends.object_.VectorObject2D)
+    assert out.x == pytest.approx(4)
+    assert out.y == pytest.approx(6)
+
+    out = get_add(vector.obj(x=1, y=2, z=0), vector.obj(x=3, y=4, z=5))
+    assert isinstance(out, vector.backends.object_.VectorObject3D)
+    assert out.x == pytest.approx(4)
+    assert out.y == pytest.approx(6)
+    assert out.z == pytest.approx(5)
+
+    out = get_subtract(vector.obj(x=1, y=2), vector.obj(px=3, py=4))
+    assert isinstance(out, vector.backends.object_.VectorObject2D)
+    assert out.x == pytest.approx(-2)
+    assert out.y == pytest.approx(-2)
+
+
+def test_operator_mul():
+    @numba.njit
+    def get_mul(a, b):
+        return a * b
+
+    @numba.njit
+    def get_div(a, b):
+        return a / b
+
+    out = get_mul(vector.obj(x=1, y=2), 2)
+    assert isinstance(out, vector.backends.object_.VectorObject2D)
+    assert out.x == pytest.approx(2)
+    assert out.y == pytest.approx(4)
+
+    out = get_mul(2, vector.obj(x=1, y=2))
+    assert isinstance(out, vector.backends.object_.VectorObject2D)
+    assert out.x == pytest.approx(2)
+    assert out.y == pytest.approx(4)
+
+    out = get_div(vector.obj(x=1, y=2), 2)
+    assert isinstance(out, vector.backends.object_.VectorObject2D)
+    assert out.x == pytest.approx(0.5)
+    assert out.y == pytest.approx(1)
+
+    with pytest.raises(numba.TypingError):
+        get_div(2, vector.obj(x=1, y=2))
+
+
+def test_operator_pow():
+    @numba.njit
+    def get_pow(a, b):
+        return a ** b
+
+    @numba.njit
+    def get_square(a):
+        return a ** 2
+
+    assert get_pow(vector.obj(x=1, y=2), 4) == pytest.approx(25)
+
+    assert get_square(vector.obj(x=1, y=2)) == pytest.approx(5)
+
+
+def test_operator_matmul():
+    @numba.njit
+    def get_matmul(v1, v2):
+        return v1 @ v2
+
+    assert get_matmul(vector.obj(x=1, y=2), vector.obj(x=3, y=4)) == pytest.approx(11)

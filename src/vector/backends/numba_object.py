@@ -3071,9 +3071,14 @@ def operator_truth(v):
         return operator_truth_impl
 
 
+# binary operator overloading #################################################
+
+
 @numba.extending.overload(operator.eq)
 def operator_eq(v1, v2):
-    if isinstance(v1, (VectorObject2DType, VectorObject3DType, VectorObject4DType)):
+    if isinstance(
+        v1, (VectorObject2DType, VectorObject3DType, VectorObject4DType)
+    ) and isinstance(v2, (VectorObject2DType, VectorObject3DType, VectorObject4DType)):
 
         def operator_eq_impl(v1, v2):
             return v1.equal(v2)
@@ -3083,7 +3088,9 @@ def operator_eq(v1, v2):
 
 @numba.extending.overload(operator.ne)
 def operator_ne(v1, v2):
-    if isinstance(v1, (VectorObject2DType, VectorObject3DType, VectorObject4DType)):
+    if isinstance(
+        v1, (VectorObject2DType, VectorObject3DType, VectorObject4DType)
+    ) and isinstance(v2, (VectorObject2DType, VectorObject3DType, VectorObject4DType)):
 
         def operator_ne_impl(v1, v2):
             return v1.not_equal(v2)
@@ -3091,4 +3098,125 @@ def operator_ne(v1, v2):
         return operator_ne_impl
 
 
-# binary operator overloading #################################################
+@numba.extending.overload(operator.add)
+def operator_add(v1, v2):
+    if isinstance(
+        v1, (VectorObject2DType, VectorObject3DType, VectorObject4DType)
+    ) and isinstance(v2, (VectorObject2DType, VectorObject3DType, VectorObject4DType)):
+
+        def operator_add_impl(v1, v2):
+            return v1.add(v2)
+
+        return operator_add_impl
+
+
+@numba.extending.overload(operator.sub)
+def operator_sub(v1, v2):
+    if isinstance(
+        v1, (VectorObject2DType, VectorObject3DType, VectorObject4DType)
+    ) and isinstance(v2, (VectorObject2DType, VectorObject3DType, VectorObject4DType)):
+
+        def operator_sub_impl(v1, v2):
+            return v1.subtract(v2)
+
+        return operator_sub_impl
+
+
+@numba.extending.overload(operator.mul)
+def operator_mul(a, b):
+    if isinstance(
+        a, (VectorObject2DType, VectorObject3DType, VectorObject4DType)
+    ) and not isinstance(
+        b, (VectorObject2DType, VectorObject3DType, VectorObject4DType)
+    ):
+
+        def operator_mul_impl(a, b):
+            return a.scale(b)
+
+        return operator_mul_impl
+
+    elif not isinstance(
+        a, (VectorObject2DType, VectorObject3DType, VectorObject4DType)
+    ) and isinstance(b, (VectorObject2DType, VectorObject3DType, VectorObject4DType)):
+
+        def operator_mul_impl(a, b):
+            return b.scale(a)
+
+        return operator_mul_impl
+
+
+@numba.extending.overload(operator.truediv)
+def operator_truediv(a, b):
+    if isinstance(
+        a, (VectorObject2DType, VectorObject3DType, VectorObject4DType)
+    ) and not isinstance(
+        b, (VectorObject2DType, VectorObject3DType, VectorObject4DType)
+    ):
+
+        def operator_truediv_impl(a, b):
+            return a.scale(1.0 / b)
+
+        return operator_truediv_impl
+
+
+@numba.extending.overload(operator.pow)
+def operator_pow(a, b):
+    if (
+        isinstance(a, VectorObject2DType)
+        and isinstance(b, numba.types.Literal)
+        and b.literal_value == 2
+    ):
+
+        def operator_pow_impl(a, b):
+            return a.rho2
+
+        return operator_pow_impl
+
+    elif (
+        isinstance(a, VectorObject3DType)
+        and isinstance(b, numba.types.Literal)
+        and b.literal_value == 2
+    ):
+
+        def operator_pow_impl(a, b):
+            return a.mag2
+
+        return operator_pow_impl
+
+    elif (
+        isinstance(a, VectorObject4DType)
+        and isinstance(b, numba.types.Literal)
+        and b.literal_value == 2
+    ):
+
+        def operator_pow_impl(a, b):
+            return a.tau2
+
+        return operator_pow_impl
+
+    elif isinstance(
+        a, (VectorObject2DType, VectorObject3DType, VectorObject4DType)
+    ) and not isinstance(
+        b, (VectorObject2DType, VectorObject3DType, VectorObject4DType)
+    ):
+
+        def operator_pow_impl(a, b):
+            return abs(a) ** b
+
+        return operator_pow_impl
+
+
+if hasattr(operator, "matmul"):
+
+    @numba.extending.overload(operator.matmul)
+    def operator_matmul(v1, v2):
+        if isinstance(
+            v1, (VectorObject2DType, VectorObject3DType, VectorObject4DType)
+        ) and isinstance(
+            v2, (VectorObject2DType, VectorObject3DType, VectorObject4DType)
+        ):
+
+            def operator_matmul_impl(v1, v2):
+                return v1.dot(v2)
+
+            return operator_matmul_impl
