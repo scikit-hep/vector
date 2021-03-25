@@ -23,3 +23,13 @@ def test_basic():
 
     array = vector.Array([[{"pt": 1, "phi": 2}], [], [{"pt": 3, "phi": 4}]])
     assert isinstance(array, vector.backends.awkward_.MomentumArray2D)
+
+    array = vector.Array(
+        [
+            [{"x": 1, "y": 2, "z": 3, "wow": 99}],
+            [],
+            [{"x": 4, "y": 5, "z": 6, "wow": 123}],
+        ]
+    )
+    assert isinstance(array, vector.backends.awkward_.VectorArray3D)
+    assert array.wow.tolist() == [[99], [], [123]]

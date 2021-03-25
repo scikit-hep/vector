@@ -9,8 +9,10 @@ import awkward as ak
 import numpy
 
 from vector.methods import (
+    Azimuthal,
     AzimuthalRhoPhi,
     AzimuthalXY,
+    Longitudinal,
     LongitudinalEta,
     LongitudinalTheta,
     LongitudinalZ,
@@ -20,6 +22,7 @@ from vector.methods import (
     PlanarMomentum,
     Spatial,
     SpatialMomentum,
+    Temporal,
     TemporalT,
     TemporalTau,
     Vector2D,
@@ -170,8 +173,53 @@ class VectorAwkward2D(VectorAwkward, Planar, Vector2D):
         if returns == [float] or returns == [bool]:
             return result
 
-        else:
+        elif (
+            len(returns) == 1
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+        ):
             raise NotImplementedError
+
+        elif (
+            len(returns) == 2
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and returns[1] is None
+        ):
+            raise NotImplementedError
+
+        elif (
+            len(returns) == 2
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+        ):
+            raise NotImplementedError
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and returns[2] is None
+        ):
+            raise NotImplementedError
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and isinstance(returns[2], type)
+            and issubclass(returns[2], Temporal)
+        ):
+            raise NotImplementedError
+
+        else:
+            raise AssertionError(repr(returns))
 
 
 class MomentumAwkward2D(PlanarMomentum, VectorAwkward2D):
@@ -191,8 +239,53 @@ class VectorAwkward3D(VectorAwkward, Spatial, Vector3D):
         if returns == [float] or returns == [bool]:
             return result
 
-        else:
+        elif (
+            len(returns) == 1
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+        ):
             raise NotImplementedError
+
+        elif (
+            len(returns) == 2
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and returns[1] is None
+        ):
+            raise NotImplementedError
+
+        elif (
+            len(returns) == 2
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+        ):
+            raise NotImplementedError
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and returns[2] is None
+        ):
+            raise NotImplementedError
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and isinstance(returns[2], type)
+            and issubclass(returns[2], Temporal)
+        ):
+            raise NotImplementedError
+
+        else:
+            raise AssertionError(repr(returns))
 
 
 class MomentumAwkward3D(SpatialMomentum, VectorAwkward3D):
@@ -216,8 +309,53 @@ class VectorAwkward4D(VectorAwkward, Lorentz, Vector4D):
         if returns == [float] or returns == [bool]:
             return result
 
-        else:
+        elif (
+            len(returns) == 1
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+        ):
             raise NotImplementedError
+
+        elif (
+            len(returns) == 2
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and returns[1] is None
+        ):
+            raise NotImplementedError
+
+        elif (
+            len(returns) == 2
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+        ):
+            raise NotImplementedError
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and returns[2] is None
+        ):
+            raise NotImplementedError
+
+        elif (
+            len(returns) == 3
+            and isinstance(returns[0], type)
+            and issubclass(returns[0], Azimuthal)
+            and isinstance(returns[1], type)
+            and issubclass(returns[1], Longitudinal)
+            and isinstance(returns[2], type)
+            and issubclass(returns[2], Temporal)
+        ):
+            raise NotImplementedError
+
+        else:
+            raise AssertionError(repr(returns))
 
 
 class MomentumAwkward4D(LorentzMomentum, VectorAwkward4D):
@@ -343,6 +481,21 @@ class MomentumRecord4D(MomentumAwkward4D, ak.Record):
 
 behavior["Momentum4D"] = MomentumRecord4D
 
+
+_class_to_name = {
+    VectorArray2D: "Vector2D",
+    VectorRecord2D: "Vector2D",
+    VectorArray3D: "Vector3D",
+    VectorRecord3D: "Vector3D",
+    VectorArray4D: "Vector4D",
+    VectorRecord4D: "Vector4D",
+    MomentumArray2D: "Momentum2D",
+    MomentumRecord2D: "Momentum2D",
+    MomentumArray3D: "Momentum3D",
+    MomentumRecord3D: "Momentum3D",
+    MomentumArray4D: "Momentum4D",
+    MomentumRecord4D: "Momentum4D",
+}
 
 VectorArray2D.ProjectionClass2D = VectorArray2D
 VectorArray2D.ProjectionClass3D = VectorArray3D
