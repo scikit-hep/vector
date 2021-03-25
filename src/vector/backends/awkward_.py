@@ -3,6 +3,7 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+import numbers
 import typing
 
 import awkward as ak
@@ -493,6 +494,9 @@ class VectorArray2D(VectorAwkward2D, ak.Array):
     ProjectionClass4D: typing.Any
     GenericClass: typing.Any
 
+    def allclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
+        return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
+
 
 behavior["*", "Vector2D"] = VectorArray2D
 
@@ -512,6 +516,9 @@ class VectorArray3D(VectorAwkward3D, ak.Array):
     ProjectionClass3D: typing.Any
     ProjectionClass4D: typing.Any
     GenericClass: typing.Any
+
+    def allclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
+        return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
 
 behavior["*", "Vector3D"] = VectorArray3D
@@ -533,6 +540,9 @@ class VectorArray4D(VectorAwkward4D, ak.Array):
     ProjectionClass4D: typing.Any
     GenericClass: typing.Any
 
+    def allclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
+        return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
+
 
 behavior["*", "Vector4D"] = VectorArray4D
 
@@ -552,6 +562,9 @@ class MomentumArray2D(MomentumAwkward2D, ak.Array):
     ProjectionClass3D: typing.Any
     ProjectionClass4D: typing.Any
     GenericClass: typing.Any
+
+    def allclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
+        return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
 
 behavior["*", "Momentum2D"] = MomentumArray2D
@@ -573,6 +586,9 @@ class MomentumArray3D(MomentumAwkward3D, ak.Array):
     ProjectionClass4D: typing.Any
     GenericClass: typing.Any
 
+    def allclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
+        return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
+
 
 behavior["*", "Momentum3D"] = MomentumArray3D
 
@@ -593,6 +609,9 @@ class MomentumArray4D(MomentumAwkward4D, ak.Array):
     ProjectionClass4D: typing.Any
     GenericClass: typing.Any
 
+    def allclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
+        return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
+
 
 behavior["*", "Momentum4D"] = MomentumArray4D
 
@@ -605,6 +624,91 @@ class MomentumRecord4D(MomentumAwkward4D, ak.Record):
 
 
 behavior["Momentum4D"] = MomentumRecord4D
+
+behavior[numpy.absolute, "Vector2D"] = lambda v: v.rho
+behavior[numpy.absolute, "Vector3D"] = lambda v: v.mag
+behavior[numpy.absolute, "Vector4D"] = lambda v: v.tau
+behavior[numpy.absolute, "Momentum2D"] = lambda v: v.rho
+behavior[numpy.absolute, "Momentum3D"] = lambda v: v.mag
+behavior[numpy.absolute, "Momentum4D"] = lambda v: v.tau
+
+behavior[numpy.square, "Vector2D"] = lambda v: v.rho2
+behavior[numpy.square, "Vector3D"] = lambda v: v.mag2
+behavior[numpy.square, "Vector4D"] = lambda v: v.tau2
+behavior[numpy.square, "Momentum2D"] = lambda v: v.rho2
+behavior[numpy.square, "Momentum3D"] = lambda v: v.mag2
+behavior[numpy.square, "Momentum4D"] = lambda v: v.tau2
+
+behavior[numpy.sqrt, "Vector2D"] = lambda v: v.rho2 ** 0.25
+behavior[numpy.sqrt, "Vector3D"] = lambda v: v.mag2 ** 0.25
+behavior[numpy.sqrt, "Vector4D"] = lambda v: v.tau2 ** 0.25
+behavior[numpy.sqrt, "Momentum2D"] = lambda v: v.rho2 ** 0.25
+behavior[numpy.sqrt, "Momentum3D"] = lambda v: v.mag2 ** 0.25
+behavior[numpy.sqrt, "Momentum4D"] = lambda v: v.tau2 ** 0.25
+
+behavior[numpy.cbrt, "Vector2D"] = lambda v: v.rho2 ** 0.16666666666666666
+behavior[numpy.cbrt, "Vector3D"] = lambda v: v.mag2 ** 0.16666666666666666
+behavior[numpy.cbrt, "Vector4D"] = lambda v: v.tau2 ** 0.16666666666666666
+behavior[numpy.cbrt, "Momentum2D"] = lambda v: v.rho2 ** 0.16666666666666666
+behavior[numpy.cbrt, "Momentum3D"] = lambda v: v.mag2 ** 0.16666666666666666
+behavior[numpy.cbrt, "Momentum4D"] = lambda v: v.tau2 ** 0.16666666666666666
+
+behavior[numpy.power, "Vector2D", numbers.Real] = (
+    lambda v, expo: v.rho2 if expo == 2 else v.rho ** expo
+)
+behavior[numpy.power, "Vector3D", numbers.Real] = (
+    lambda v, expo: v.mag2 if expo == 2 else v.mag ** expo
+)
+behavior[numpy.power, "Vector4D", numbers.Real] = (
+    lambda v, expo: v.tau2 if expo == 2 else v.tau ** expo
+)
+behavior[numpy.power, "Momentum2D", numbers.Real] = (
+    lambda v, expo: v.rho2 if expo == 2 else v.rho ** expo
+)
+behavior[numpy.power, "Momentum3D", numbers.Real] = (
+    lambda v, expo: v.mag2 if expo == 2 else v.mag ** expo
+)
+behavior[numpy.power, "Momentum4D", numbers.Real] = (
+    lambda v, expo: v.tau2 if expo == 2 else v.tau ** expo
+)
+
+for left in (
+    "Vector2D",
+    "Vector3D",
+    "Vector4D",
+    "Momentum2D",
+    "Momentum3D",
+    "Momentum4D",
+):
+    for right in (
+        "Vector2D",
+        "Vector3D",
+        "Vector4D",
+        "Momentum2D",
+        "Momentum3D",
+        "Momentum4D",
+    ):
+        behavior[numpy.add, left, right] = lambda v1, v2: v1.add(v2)
+        behavior[numpy.subtract, left, right] = lambda v1, v2: v1.subtract(v2)
+        behavior[numpy.matmul, left, right] = lambda v1, v2: v1.dot(v2)
+        behavior[numpy.equal, left, right] = lambda v1, v2: v1.equal(v2)
+        behavior[numpy.not_equal, left, right] = lambda v1, v2: v1.not_equal(v2)
+
+for name in (
+    "Vector2D",
+    "Vector3D",
+    "Vector4D",
+    "Momentum2D",
+    "Momentum3D",
+    "Momentum4D",
+):
+    behavior[numpy.multiply, name, numbers.Real] = lambda v, factor: v.scale(factor)
+    behavior[numpy.multiply, numbers.Real, name] = lambda factor, v: v.scale(factor)
+    behavior[numpy.negative, name] = lambda v: v.scale(-1)
+    behavior[numpy.positive, name] = lambda v: v
+    behavior[numpy.true_divide, name, numbers.Real] = lambda v, denom: v.scale(
+        1 / denom
+    )
 
 VectorArray2D.ProjectionClass2D = VectorArray2D
 VectorArray2D.ProjectionClass3D = VectorArray3D

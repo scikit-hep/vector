@@ -518,14 +518,24 @@ class VectorNumpy:
                 raise TypeError(
                     "output of 'numpy.sqrt' is scalar, cannot fill a VectorObject with 'out'"
                 )
-            return numpy.sqrt(numpy.absolute(inputs[0]))
+            if isinstance(inputs[0], Vector2D):
+                return inputs[0].rho2 ** 0.25
+            elif isinstance(inputs[0], Vector3D):
+                return inputs[0].mag2 ** 0.25
+            elif isinstance(inputs[0], Vector4D):
+                return inputs[0].tau2 ** 0.25
 
         elif ufunc is numpy.cbrt and len(inputs) == 1 and isinstance(inputs[0], Vector):
             if len(outputs) != 0:
                 raise TypeError(
                     "output of 'numpy.cbrt' is scalar, cannot fill a VectorObject with 'out'"
                 )
-            return numpy.cbrt(numpy.absolute(inputs[0]))
+            if isinstance(inputs[0], Vector2D):
+                return inputs[0].rho2 ** 0.16666666666666666
+            elif isinstance(inputs[0], Vector3D):
+                return inputs[0].mag2 ** 0.16666666666666666
+            elif isinstance(inputs[0], Vector4D):
+                return inputs[0].tau2 ** 0.16666666666666666
 
         elif (
             ufunc is numpy.matmul
