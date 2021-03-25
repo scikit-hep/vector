@@ -18,6 +18,7 @@ from vector.methods import (
     LongitudinalZ,
     Lorentz,
     LorentzMomentum,
+    Momentum,
     Planar,
     PlanarMomentum,
     Spatial,
@@ -160,6 +161,23 @@ class TemporalAwkwardTau(TemporalAwkward, TemporalTau):
         return (self.tau,)
 
 
+def _class_to_name(cls):
+    if issubclass(cls, Momentum):
+        if issubclass(cls, Vector2D):
+            return "Momentum2D"
+        elif issubclass(cls, Vector3D):
+            return "Momentum3D"
+        elif issubclass(cls, Vector4D):
+            return "Momentum4D"
+    else:
+        if issubclass(cls, Vector2D):
+            return "Vector2D"
+        elif issubclass(cls, Vector3D):
+            return "Vector3D"
+        elif issubclass(cls, Vector4D):
+            return "Vector4D"
+
+
 class VectorAwkward:
     lib = numpy
 
@@ -203,8 +221,8 @@ class VectorAwkward:
 
             return ak.zip(
                 dict(zip(names, arrays)),
-                depth_limit=self.layout.purelist_depth,
-                with_name=_class_to_name[cls],
+                depth_limit=first.layout.purelist_depth,
+                with_name=_class_to_name(cls),
                 behavior=self.behavior,
             )
 
@@ -247,8 +265,8 @@ class VectorAwkward:
 
             return ak.zip(
                 dict(zip(names, arrays)),
-                depth_limit=self.layout.purelist_depth,
-                with_name=_class_to_name[cls.ProjectionClass2D],
+                depth_limit=first.layout.purelist_depth,
+                with_name=_class_to_name(cls.ProjectionClass2D),
                 behavior=self.behavior,
             )
 
@@ -298,8 +316,8 @@ class VectorAwkward:
 
             return ak.zip(
                 dict(zip(names, arrays)),
-                depth_limit=self.layout.purelist_depth,
-                with_name=_class_to_name[cls],
+                depth_limit=first.layout.purelist_depth,
+                with_name=_class_to_name(cls),
                 behavior=self.behavior,
             )
 
@@ -354,8 +372,8 @@ class VectorAwkward:
 
             return ak.zip(
                 dict(zip(names, arrays)),
-                depth_limit=self.layout.purelist_depth,
-                with_name=_class_to_name[cls.ProjectionClass3D],
+                depth_limit=first.layout.purelist_depth,
+                with_name=_class_to_name(cls.ProjectionClass3D),
                 behavior=self.behavior,
             )
 
@@ -418,8 +436,8 @@ class VectorAwkward:
 
             return ak.zip(
                 dict(zip(names, arrays)),
-                depth_limit=self.layout.purelist_depth,
-                with_name=_class_to_name[cls.ProjectionClass4D],
+                depth_limit=first.layout.purelist_depth,
+                with_name=_class_to_name(cls.ProjectionClass4D),
                 behavior=self.behavior,
             )
 
@@ -587,22 +605,6 @@ class MomentumRecord4D(MomentumAwkward4D, ak.Record):
 
 
 behavior["Momentum4D"] = MomentumRecord4D
-
-
-_class_to_name = {
-    VectorArray2D: "Vector2D",
-    VectorRecord2D: "Vector2D",
-    VectorArray3D: "Vector3D",
-    VectorRecord3D: "Vector3D",
-    VectorArray4D: "Vector4D",
-    VectorRecord4D: "Vector4D",
-    MomentumArray2D: "Momentum2D",
-    MomentumRecord2D: "Momentum2D",
-    MomentumArray3D: "Momentum3D",
-    MomentumRecord3D: "Momentum3D",
-    MomentumArray4D: "Momentum4D",
-    MomentumRecord4D: "Momentum4D",
-}
 
 VectorArray2D.ProjectionClass2D = VectorArray2D
 VectorArray2D.ProjectionClass3D = VectorArray3D

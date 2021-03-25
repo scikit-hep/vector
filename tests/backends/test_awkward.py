@@ -72,3 +72,77 @@ def test_projection():
         [],
         [{"x": 4, "y": 5, "z": 6, "t": 0, "wow": 123}],
     ]
+
+    out = array.to_rhophietatau()
+    assert isinstance(out, vector.backends.awkward_.VectorArray4D)
+    assert out.tolist() == [
+        [
+            {
+                "rho": 2.23606797749979,
+                "phi": 1.1071487177940904,
+                "eta": 1.1035868415601453,
+                "tau": 0,
+                "wow": 99,
+            }
+        ],
+        [],
+        [
+            {
+                "rho": 6.4031242374328485,
+                "phi": 0.8960553845713439,
+                "eta": 0.8361481196083127,
+                "tau": 0,
+                "wow": 123,
+            }
+        ],
+    ]
+
+
+def test_add():
+    one = vector.Array(
+        [[{"x": 1, "y": 1.1}, {"x": 2, "y": 2.2}], [], [{"x": 3, "y": 3.3}]]
+    )
+
+    two = vector.Array(
+        [{"x": 10, "y": 20}, {"x": 100, "y": 200}, {"x": 1000, "y": 2000}]
+    )
+    assert isinstance(one.add(two), vector.backends.awkward_.VectorArray2D)
+    assert isinstance(two.add(one), vector.backends.awkward_.VectorArray2D)
+    assert one.add(two).tolist() == [
+        [{"x": 11, "y": 21.1}, {"x": 12, "y": 22.2}],
+        [],
+        [{"x": 1003, "y": 2003.3}],
+    ]
+    assert two.add(one).tolist() == [
+        [{"x": 11, "y": 21.1}, {"x": 12, "y": 22.2}],
+        [],
+        [{"x": 1003, "y": 2003.3}],
+    ]
+
+    two = vector.array({"x": [10, 100, 1000], "y": [20, 200, 2000]})
+    assert isinstance(one.add(two), vector.backends.awkward_.VectorArray2D)
+    assert isinstance(two.add(one), vector.backends.awkward_.VectorArray2D)
+    assert one.add(two).tolist() == [
+        [{"x": 11, "y": 21.1}, {"x": 12, "y": 22.2}],
+        [],
+        [{"x": 1003, "y": 2003.3}],
+    ]
+    assert two.add(one).tolist() == [
+        [{"x": 11, "y": 21.1}, {"x": 12, "y": 22.2}],
+        [],
+        [{"x": 1003, "y": 2003.3}],
+    ]
+
+    two = vector.obj(x=10, y=20)
+    assert isinstance(one.add(two), vector.backends.awkward_.VectorArray2D)
+    assert isinstance(two.add(one), vector.backends.awkward_.VectorArray2D)
+    assert one.add(two).tolist() == [
+        [{"x": 11, "y": 21.1}, {"x": 12, "y": 22.2}],
+        [],
+        [{"x": 13, "y": 23.3}],
+    ]
+    assert two.add(one).tolist() == [
+        [{"x": 11, "y": 21.1}, {"x": 12, "y": 22.2}],
+        [],
+        [{"x": 13, "y": 23.3}],
+    ]

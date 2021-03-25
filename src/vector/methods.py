@@ -1321,18 +1321,22 @@ def _from_signature(name, dispatch_map, signature):
     return result
 
 
-def _handler_of(*objects):
-    from .backends.numpy_ import VectorNumpy
-    from .backends.object_ import VectorObject
+_handler_priority = [
+    "vector.backends.object_",
+    "vector.backends.numpy_",
+    "vector.backends.awkward_",
+]
 
+
+def _handler_of(*objects):
     handler = None
     for obj in objects:
         if isinstance(obj, Vector):
             if handler is None:
                 handler = obj
-            elif isinstance(obj, VectorObject):
-                pass
-            elif isinstance(obj, VectorNumpy):
+            elif _handler_priority.index(
+                type(obj).__module__
+            ) > _handler_priority.index(type(handler).__module__):
                 handler = obj
 
     return handler
