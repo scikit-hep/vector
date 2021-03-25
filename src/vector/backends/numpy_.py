@@ -604,7 +604,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):
     def azimuthal(self):
         return self.view(self._azimuthal_type)
 
-    def _wrap_result(self, cls, result, returns):
+    def _wrap_result(self, cls, result, returns, num_vecargs):
         if returns == [float] or returns == [bool]:
             return result
 
@@ -815,7 +815,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
     def longitudinal(self):
         return self.view(self._longitudinal_type)
 
-    def _wrap_result(self, cls, result, returns):
+    def _wrap_result(self, cls, result, returns, num_vecargs):
         if returns == [float] or returns == [bool]:
             return result
 
@@ -1054,7 +1054,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
     def temporal(self):
         return self.view(self._temporal_type)
 
-    def _wrap_result(self, cls, result, returns):
+    def _wrap_result(self, cls, result, returns, num_vecargs):
         if returns == [float] or returns == [bool]:
             return result
 

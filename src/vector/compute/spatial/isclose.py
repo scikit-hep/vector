@@ -674,4 +674,5 @@ def dispatch(rtol, atol, equal_nan, v1, v2):
                 *v2.longitudinal.elements,
             ),
             returns,
+            2,
         )

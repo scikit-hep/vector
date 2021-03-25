@@ -169,7 +169,7 @@ class VectorAwkward2D(VectorAwkward, Planar, Vector2D):
     def azimuthal(self):
         return AzimuthalAwkward.from_fields(self)
 
-    def _wrap_result(self, cls, result, returns):
+    def _wrap_result(self, cls, result, returns, num_vecargs):
         if returns == [float] or returns == [bool]:
             return result
 
@@ -235,7 +235,7 @@ class VectorAwkward3D(VectorAwkward, Spatial, Vector3D):
     def longitudinal(self):
         return LongitudinalAwkward.from_fields(self)
 
-    def _wrap_result(self, cls, result, returns):
+    def _wrap_result(self, cls, result, returns, num_vecargs):
         if returns == [float] or returns == [bool]:
             return result
 
@@ -305,7 +305,7 @@ class VectorAwkward4D(VectorAwkward, Lorentz, Vector4D):
     def temporal(self):
         return TemporalAwkward.from_fields(self)
 
-    def _wrap_result(self, cls, result, returns):
+    def _wrap_result(self, cls, result, returns, num_vecargs):
         if returns == [float] or returns == [bool]:
             return result
 

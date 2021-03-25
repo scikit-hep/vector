@@ -59,4 +59,5 @@ def dispatch(v1, v2):
             _flavor_of(v1, v2),
             function(_lib_of(v1, v2), *v1.azimuthal.elements, *v2.azimuthal.elements),
             returns,
+            2,
         )

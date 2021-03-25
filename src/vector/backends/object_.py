@@ -440,7 +440,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             out.append(f"{x}={getattr(self.azimuthal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
-    def _wrap_result(self, cls, result, returns):
+    def _wrap_result(self, cls, result, returns, num_vecargs):
         if returns == [float] or returns == [bool]:
             return result
 
@@ -609,7 +609,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             out.append(f"{x}={getattr(self.longitudinal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
-    def _wrap_result(self, cls, result, returns):
+    def _wrap_result(self, cls, result, returns, num_vecargs):
         if returns == [float] or returns == [bool]:
             return result
 
@@ -876,7 +876,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             out.append(f"{x}={getattr(self.temporal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
-    def _wrap_result(self, cls, result, returns):
+    def _wrap_result(self, cls, result, returns, num_vecargs):
         if returns == [float] or returns == [bool]:
             return result
 
