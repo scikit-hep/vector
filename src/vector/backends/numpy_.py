@@ -518,14 +518,24 @@ class VectorNumpy:
                 raise TypeError(
                     "output of 'numpy.sqrt' is scalar, cannot fill a VectorObject with 'out'"
                 )
-            return numpy.sqrt(numpy.absolute(inputs[0]))
+            if isinstance(inputs[0], Vector2D):
+                return inputs[0].rho2 ** 0.25
+            elif isinstance(inputs[0], Vector3D):
+                return inputs[0].mag2 ** 0.25
+            elif isinstance(inputs[0], Vector4D):
+                return inputs[0].tau2 ** 0.25
 
         elif ufunc is numpy.cbrt and len(inputs) == 1 and isinstance(inputs[0], Vector):
             if len(outputs) != 0:
                 raise TypeError(
                     "output of 'numpy.cbrt' is scalar, cannot fill a VectorObject with 'out'"
                 )
-            return numpy.cbrt(numpy.absolute(inputs[0]))
+            if isinstance(inputs[0], Vector2D):
+                return inputs[0].rho2 ** 0.16666666666666666
+            elif isinstance(inputs[0], Vector3D):
+                return inputs[0].mag2 ** 0.16666666666666666
+            elif isinstance(inputs[0], Vector4D):
+                return inputs[0].tau2 ** 0.16666666666666666
 
         elif (
             ufunc is numpy.matmul
@@ -604,7 +614,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):
     def azimuthal(self):
         return self.view(self._azimuthal_type)
 
-    def _wrap_result(self, cls, result, returns):
+    def _wrap_result(self, cls, result, returns, num_vecargs):
         if returns == [float] or returns == [bool]:
             return result
 
@@ -815,7 +825,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
     def longitudinal(self):
         return self.view(self._longitudinal_type)
 
-    def _wrap_result(self, cls, result, returns):
+    def _wrap_result(self, cls, result, returns, num_vecargs):
         if returns == [float] or returns == [bool]:
             return result
 
@@ -1054,7 +1064,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
     def temporal(self):
         return self.view(self._temporal_type)
 
-    def _wrap_result(self, cls, result, returns):
+    def _wrap_result(self, cls, result, returns, num_vecargs):
         if returns == [float] or returns == [bool]:
             return result
 
@@ -1252,7 +1262,7 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):
 
 
 def array(*args, **kwargs):
-    "array docs"
+    "vector.array docs"
     names = None
     if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
         names = args[0].keys()

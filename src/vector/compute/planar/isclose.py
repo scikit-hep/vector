@@ -89,4 +89,5 @@ def dispatch(rtol, atol, equal_nan, v1, v2):
                 *v2.azimuthal.elements,
             ),
             returns,
+            2,
         )

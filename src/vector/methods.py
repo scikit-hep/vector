@@ -149,6 +149,7 @@ class Vector:
                 type(self),
                 self.azimuthal.elements,
                 [_aztype(self), None],
+                1,
             )
 
     def to_Vector3D(self):
@@ -158,6 +159,7 @@ class Vector:
                 type(self),
                 self.azimuthal.elements + (0,),
                 [_aztype(self), LongitudinalZ, None],
+                1,
             )
         elif isinstance(self, Vector3D):
             return self
@@ -166,6 +168,7 @@ class Vector:
                 type(self),
                 self.azimuthal.elements + self.longitudinal.elements,
                 [_aztype(self), _ltype(self), None],
+                1,
             )
 
     def to_Vector4D(self):
@@ -175,12 +178,14 @@ class Vector:
                 type(self),
                 self.azimuthal.elements + (0, 0),
                 [_aztype(self), LongitudinalZ, TemporalT],
+                1,
             )
         elif isinstance(self, Vector3D):
             return self._wrap_result(
                 type(self),
                 self.azimuthal.elements + self.longitudinal.elements + (0,),
                 [_aztype(self), _ltype(self), TemporalT],
+                1,
             )
         else:
             return self
@@ -193,6 +198,7 @@ class Vector:
             type(self),
             (planar.x.dispatch(self), planar.y.dispatch(self)),
             [AzimuthalXY, None],
+            1,
         )
 
     def to_rhophi(self):
@@ -203,6 +209,7 @@ class Vector:
             type(self),
             (planar.rho.dispatch(self), planar.phi.dispatch(self)),
             [AzimuthalRhoPhi, None],
+            1,
         )
 
     def to_xyz(self):
@@ -217,6 +224,7 @@ class Vector:
             type(self),
             (planar.x.dispatch(self), planar.y.dispatch(self), lcoord),
             [AzimuthalXY, LongitudinalZ, None],
+            1,
         )
 
     def to_xytheta(self):
@@ -231,6 +239,7 @@ class Vector:
             type(self),
             (planar.x.dispatch(self), planar.y.dispatch(self), lcoord),
             [AzimuthalXY, LongitudinalTheta, None],
+            1,
         )
 
     def to_xyeta(self):
@@ -245,6 +254,7 @@ class Vector:
             type(self),
             (planar.x.dispatch(self), planar.y.dispatch(self), lcoord),
             [AzimuthalXY, LongitudinalEta, None],
+            1,
         )
 
     def to_rhophiz(self):
@@ -259,6 +269,7 @@ class Vector:
             type(self),
             (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord),
             [AzimuthalRhoPhi, LongitudinalZ, None],
+            1,
         )
 
     def to_rhophitheta(self):
@@ -273,6 +284,7 @@ class Vector:
             type(self),
             (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord),
             [AzimuthalRhoPhi, LongitudinalTheta, None],
+            1,
         )
 
     def to_rhophieta(self):
@@ -287,6 +299,7 @@ class Vector:
             type(self),
             (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord),
             [AzimuthalRhoPhi, LongitudinalEta, None],
+            1,
         )
 
     def to_xyzt(self):
@@ -304,6 +317,7 @@ class Vector:
             type(self),
             (planar.x.dispatch(self), planar.y.dispatch(self), lcoord, tcoord),
             [AzimuthalXY, LongitudinalZ, TemporalT],
+            1,
         )
 
     def to_xyztau(self):
@@ -321,6 +335,7 @@ class Vector:
             type(self),
             (planar.x.dispatch(self), planar.y.dispatch(self), lcoord, tcoord),
             [AzimuthalXY, LongitudinalZ, TemporalTau],
+            1,
         )
 
     def to_xythetat(self):
@@ -338,6 +353,7 @@ class Vector:
             type(self),
             (planar.x.dispatch(self), planar.y.dispatch(self), lcoord, tcoord),
             [AzimuthalXY, LongitudinalTheta, TemporalT],
+            1,
         )
 
     def to_xythetatau(self):
@@ -355,6 +371,7 @@ class Vector:
             type(self),
             (planar.x.dispatch(self), planar.y.dispatch(self), lcoord, tcoord),
             [AzimuthalXY, LongitudinalTheta, TemporalTau],
+            1,
         )
 
     def to_xyetat(self):
@@ -372,6 +389,7 @@ class Vector:
             type(self),
             (planar.x.dispatch(self), planar.y.dispatch(self), lcoord, tcoord),
             [AzimuthalXY, LongitudinalEta, TemporalT],
+            1,
         )
 
     def to_xyetatau(self):
@@ -389,6 +407,7 @@ class Vector:
             type(self),
             (planar.x.dispatch(self), planar.y.dispatch(self), lcoord, tcoord),
             [AzimuthalXY, LongitudinalEta, TemporalTau],
+            1,
         )
 
     def to_rhophizt(self):
@@ -406,6 +425,7 @@ class Vector:
             type(self),
             (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord, tcoord),
             [AzimuthalRhoPhi, LongitudinalZ, TemporalT],
+            1,
         )
 
     def to_rhophiztau(self):
@@ -423,6 +443,7 @@ class Vector:
             type(self),
             (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord, tcoord),
             [AzimuthalRhoPhi, LongitudinalZ, TemporalTau],
+            1,
         )
 
     def to_rhophithetat(self):
@@ -440,6 +461,7 @@ class Vector:
             type(self),
             (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord, tcoord),
             [AzimuthalRhoPhi, LongitudinalTheta, TemporalT],
+            1,
         )
 
     def to_rhophithetatau(self):
@@ -457,6 +479,7 @@ class Vector:
             type(self),
             (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord, tcoord),
             [AzimuthalRhoPhi, LongitudinalTheta, TemporalTau],
+            1,
         )
 
     def to_rhophietat(self):
@@ -474,6 +497,7 @@ class Vector:
             type(self),
             (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord, tcoord),
             [AzimuthalRhoPhi, LongitudinalEta, TemporalT],
+            1,
         )
 
     def to_rhophietatau(self):
@@ -491,6 +515,7 @@ class Vector:
             type(self),
             (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord, tcoord),
             [AzimuthalRhoPhi, LongitudinalEta, TemporalTau],
+            1,
         )
 
 
@@ -1296,18 +1321,22 @@ def _from_signature(name, dispatch_map, signature):
     return result
 
 
-def _handler_of(*objects):
-    from .backends.numpy_ import VectorNumpy
-    from .backends.object_ import VectorObject
+_handler_priority = [
+    "vector.backends.object_",
+    "vector.backends.numpy_",
+    "vector.backends.awkward_",
+]
 
+
+def _handler_of(*objects):
     handler = None
     for obj in objects:
         if isinstance(obj, Vector):
             if handler is None:
                 handler = obj
-            elif isinstance(obj, VectorObject):
-                pass
-            elif isinstance(obj, VectorNumpy):
+            elif _handler_priority.index(
+                type(obj).__module__
+            ) > _handler_priority.index(type(handler).__module__):
                 handler = obj
 
     return handler

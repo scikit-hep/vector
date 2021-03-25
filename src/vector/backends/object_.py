@@ -370,14 +370,24 @@ class VectorObject:
                 raise TypeError(
                     "output of 'numpy.sqrt' is scalar, cannot fill a VectorObject with 'out'"
                 )
-            return numpy.sqrt(numpy.absolute(inputs[0]))
+            if isinstance(inputs[0], Vector2D):
+                return inputs[0].rho2 ** 0.25
+            elif isinstance(inputs[0], Vector3D):
+                return inputs[0].mag2 ** 0.25
+            elif isinstance(inputs[0], Vector4D):
+                return inputs[0].tau2 ** 0.25
 
         elif ufunc is numpy.cbrt and len(inputs) == 1 and isinstance(inputs[0], Vector):
             if len(outputs) != 0:
                 raise TypeError(
                     "output of 'numpy.cbrt' is scalar, cannot fill a VectorObject with 'out'"
                 )
-            return numpy.cbrt(numpy.absolute(inputs[0]))
+            if isinstance(inputs[0], Vector2D):
+                return inputs[0].rho2 ** 0.16666666666666666
+            elif isinstance(inputs[0], Vector3D):
+                return inputs[0].mag2 ** 0.16666666666666666
+            elif isinstance(inputs[0], Vector4D):
+                return inputs[0].tau2 ** 0.16666666666666666
 
         elif (
             ufunc is numpy.matmul
@@ -440,7 +450,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             out.append(f"{x}={getattr(self.azimuthal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
-    def _wrap_result(self, cls, result, returns):
+    def _wrap_result(self, cls, result, returns, num_vecargs):
         if returns == [float] or returns == [bool]:
             return result
 
@@ -609,7 +619,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             out.append(f"{x}={getattr(self.longitudinal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
-    def _wrap_result(self, cls, result, returns):
+    def _wrap_result(self, cls, result, returns, num_vecargs):
         if returns == [float] or returns == [bool]:
             return result
 
@@ -876,7 +886,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             out.append(f"{x}={getattr(self.temporal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
-    def _wrap_result(self, cls, result, returns):
+    def _wrap_result(self, cls, result, returns, num_vecargs):
         if returns == [float] or returns == [bool]:
             return result
 
@@ -1179,7 +1189,7 @@ def _gather_coordinates(planar_class, spatial_class, lorentz_class, coordinates)
 
 
 def obj(**coordinates):
-    "obj docs"
+    "vector.obj docs"
     is_momentum = False
     generic_coordinates = {}
     if "px" in coordinates:

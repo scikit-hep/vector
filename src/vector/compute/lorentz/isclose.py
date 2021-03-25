@@ -220,4 +220,5 @@ def dispatch(rtol, atol, equal_nan, v1, v2):
                 *v2.temporal.elements,
             ),
             returns,
+            2,
         )
