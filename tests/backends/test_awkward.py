@@ -23,6 +23,7 @@ def test_basic():
 
     array = vector.Array([[{"pt": 1, "phi": 2}], [], [{"pt": 3, "phi": 4}]])
     assert isinstance(array, vector.backends.awkward_.MomentumArray2D)
+    assert array.pt.tolist() == [[1], [], [3]]
 
     array = vector.Array(
         [
