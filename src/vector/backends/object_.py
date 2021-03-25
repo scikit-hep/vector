@@ -1179,7 +1179,7 @@ def _gather_coordinates(planar_class, spatial_class, lorentz_class, coordinates)
 
 
 def obj(**coordinates):
-    "obj docs"
+    "vector.obj docs"
     is_momentum = False
     generic_coordinates = {}
     if "px" in coordinates:

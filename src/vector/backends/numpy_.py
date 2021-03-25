@@ -1252,7 +1252,7 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):
 
 
 def array(*args, **kwargs):
-    "array docs"
+    "vector.array docs"
     names = None
     if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
         names = args[0].keys()
