@@ -163,12 +163,6 @@ class TemporalAwkwardTau(TemporalAwkward, TemporalTau):
 class VectorAwkward:
     lib = numpy
 
-
-class VectorAwkward2D(VectorAwkward, Planar, Vector2D):
-    @property
-    def azimuthal(self):
-        return AzimuthalAwkward.from_fields(self)
-
     def _wrap_result(self, cls, result, returns, num_vecargs):
         if returns == [float] or returns == [bool]:
             return result
@@ -178,7 +172,41 @@ class VectorAwkward2D(VectorAwkward, Planar, Vector2D):
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
         ):
-            raise NotImplementedError
+            first = [x for x in result if isinstance(x, ak.Array)][0]
+            result = [
+                x if isinstance(x, ak.Array) else ak.broadcast_arrays(first, x)[1]
+                for x in result
+            ]
+
+            names = []
+            arrays = []
+            if returns[0] is AzimuthalXY:
+                names.extend(["x", "y"])
+                arrays.extend([result[0], result[1]])
+            elif returns[0] is AzimuthalRhoPhi:
+                names.extend(["rho", "phi"])
+                arrays.extend([result[0], result[1]])
+
+            fields = ak.fields(self)
+            if num_vecargs == 1:
+                for name in fields:
+                    if name not in ("x", "y", "rho", "phi"):
+                        names.append(name)
+                        arrays.append(self[name])
+
+            if "t" in fields or "tau" in fields:
+                cls = cls.ProjectionClass4D
+            elif "z" in fields or "theta" in fields or "eta" in fields:
+                cls = cls.ProjectionClass3D
+            else:
+                cls = cls.ProjectionClass2D
+
+            return ak.zip(
+                dict(zip(names, arrays)),
+                depth_limit=self.layout.purelist_depth,
+                with_name=_class_to_name[cls],
+                behavior=self.behavior,
+            )
 
         elif (
             len(returns) == 2
@@ -186,7 +214,43 @@ class VectorAwkward2D(VectorAwkward, Planar, Vector2D):
             and issubclass(returns[0], Azimuthal)
             and returns[1] is None
         ):
-            raise NotImplementedError
+            first = [x for x in result if isinstance(x, ak.Array)][0]
+            result = [
+                x if isinstance(x, ak.Array) else ak.broadcast_arrays(first, x)[1]
+                for x in result
+            ]
+
+            names = []
+            arrays = []
+            if returns[0] is AzimuthalXY:
+                names.extend(["x", "y"])
+                arrays.extend([result[0], result[1]])
+            elif returns[0] is AzimuthalRhoPhi:
+                names.extend(["rho", "phi"])
+                arrays.extend([result[0], result[1]])
+
+            if num_vecargs == 1:
+                for name in ak.fields(self):
+                    if name not in (
+                        "x",
+                        "y",
+                        "rho",
+                        "phi",
+                        "z",
+                        "theta",
+                        "eta",
+                        "t",
+                        "tau",
+                    ):
+                        names.append(name)
+                        arrays.append(self[name])
+
+            return ak.zip(
+                dict(zip(names, arrays)),
+                depth_limit=self.layout.purelist_depth,
+                with_name=_class_to_name[cls.ProjectionClass2D],
+                behavior=self.behavior,
+            )
 
         elif (
             len(returns) == 2
@@ -195,7 +259,49 @@ class VectorAwkward2D(VectorAwkward, Planar, Vector2D):
             and isinstance(returns[1], type)
             and issubclass(returns[1], Longitudinal)
         ):
-            raise NotImplementedError
+            first = [x for x in result if isinstance(x, ak.Array)][0]
+            result = [
+                x if isinstance(x, ak.Array) else ak.broadcast_arrays(first, x)[1]
+                for x in result
+            ]
+
+            names = []
+            arrays = []
+            if returns[0] is AzimuthalXY:
+                names.extend(["x", "y"])
+                arrays.extend([result[0], result[1]])
+            elif returns[0] is AzimuthalRhoPhi:
+                names.extend(["rho", "phi"])
+                arrays.extend([result[0], result[1]])
+
+            if returns[1] is LongitudinalZ:
+                names.append("z")
+                arrays.append(result[2])
+            elif returns[1] is LongitudinalTheta:
+                names.append("theta")
+                arrays.append(result[2])
+            elif returns[1] is LongitudinalEta:
+                names.append("eta")
+                arrays.append(result[2])
+
+            fields = ak.fields(self)
+            if num_vecargs == 1:
+                for name in fields:
+                    if name not in ("x", "y", "rho", "phi", "z", "theta", "eta"):
+                        names.append(name)
+                        arrays.append(self[name])
+
+            if "t" in fields or "tau" in fields:
+                cls = cls.ProjectionClass4D
+            else:
+                cls = cls.ProjectionClass3D
+
+            return ak.zip(
+                dict(zip(names, arrays)),
+                depth_limit=self.layout.purelist_depth,
+                with_name=_class_to_name[cls],
+                behavior=self.behavior,
+            )
 
         elif (
             len(returns) == 3
@@ -205,7 +311,53 @@ class VectorAwkward2D(VectorAwkward, Planar, Vector2D):
             and issubclass(returns[1], Longitudinal)
             and returns[2] is None
         ):
-            raise NotImplementedError
+            first = [x for x in result if isinstance(x, ak.Array)][0]
+            result = [
+                x if isinstance(x, ak.Array) else ak.broadcast_arrays(first, x)[1]
+                for x in result
+            ]
+
+            names = []
+            arrays = []
+            if returns[0] is AzimuthalXY:
+                names.extend(["x", "y"])
+                arrays.extend([result[0], result[1]])
+            elif returns[0] is AzimuthalRhoPhi:
+                names.extend(["rho", "phi"])
+                arrays.extend([result[0], result[1]])
+
+            if returns[1] is LongitudinalZ:
+                names.append("z")
+                arrays.append(result[2])
+            elif returns[1] is LongitudinalTheta:
+                names.append("theta")
+                arrays.append(result[2])
+            elif returns[1] is LongitudinalEta:
+                names.append("eta")
+                arrays.append(result[2])
+
+            if num_vecargs == 1:
+                for name in ak.fields(self):
+                    if name not in (
+                        "x",
+                        "y",
+                        "rho",
+                        "phi",
+                        "z",
+                        "theta",
+                        "eta",
+                        "t",
+                        "tau",
+                    ):
+                        names.append(name)
+                        arrays.append(self[name])
+
+            return ak.zip(
+                dict(zip(names, arrays)),
+                depth_limit=self.layout.purelist_depth,
+                with_name=_class_to_name[cls.ProjectionClass3D],
+                behavior=self.behavior,
+            )
 
         elif (
             len(returns) == 3
@@ -216,10 +368,69 @@ class VectorAwkward2D(VectorAwkward, Planar, Vector2D):
             and isinstance(returns[2], type)
             and issubclass(returns[2], Temporal)
         ):
-            raise NotImplementedError
+            first = [x for x in result if isinstance(x, ak.Array)][0]
+            result = [
+                x if isinstance(x, ak.Array) else ak.broadcast_arrays(first, x)[1]
+                for x in result
+            ]
+
+            names = []
+            arrays = []
+            if returns[0] is AzimuthalXY:
+                names.extend(["x", "y"])
+                arrays.extend([result[0], result[1]])
+            elif returns[0] is AzimuthalRhoPhi:
+                names.extend(["rho", "phi"])
+                arrays.extend([result[0], result[1]])
+
+            if returns[1] is LongitudinalZ:
+                names.append("z")
+                arrays.append(result[2])
+            elif returns[1] is LongitudinalTheta:
+                names.append("theta")
+                arrays.append(result[2])
+            elif returns[1] is LongitudinalEta:
+                names.append("eta")
+                arrays.append(result[2])
+
+            if returns[2] is TemporalT:
+                names.append("t")
+                arrays.append(result[3])
+            elif returns[2] is TemporalTau:
+                names.append("tau")
+                arrays.append(result[3])
+
+            if num_vecargs == 1:
+                for name in ak.fields(self):
+                    if name not in (
+                        "x",
+                        "y",
+                        "rho",
+                        "phi",
+                        "z",
+                        "theta",
+                        "eta",
+                        "t",
+                        "tau",
+                    ):
+                        names.append(name)
+                        arrays.append(self[name])
+
+            return ak.zip(
+                dict(zip(names, arrays)),
+                depth_limit=self.layout.purelist_depth,
+                with_name=_class_to_name[cls.ProjectionClass4D],
+                behavior=self.behavior,
+            )
 
         else:
             raise AssertionError(repr(returns))
+
+
+class VectorAwkward2D(VectorAwkward, Planar, Vector2D):
+    @property
+    def azimuthal(self):
+        return AzimuthalAwkward.from_fields(self)
 
 
 class MomentumAwkward2D(PlanarMomentum, VectorAwkward2D):
@@ -234,58 +445,6 @@ class VectorAwkward3D(VectorAwkward, Spatial, Vector3D):
     @property
     def longitudinal(self):
         return LongitudinalAwkward.from_fields(self)
-
-    def _wrap_result(self, cls, result, returns, num_vecargs):
-        if returns == [float] or returns == [bool]:
-            return result
-
-        elif (
-            len(returns) == 1
-            and isinstance(returns[0], type)
-            and issubclass(returns[0], Azimuthal)
-        ):
-            raise NotImplementedError
-
-        elif (
-            len(returns) == 2
-            and isinstance(returns[0], type)
-            and issubclass(returns[0], Azimuthal)
-            and returns[1] is None
-        ):
-            raise NotImplementedError
-
-        elif (
-            len(returns) == 2
-            and isinstance(returns[0], type)
-            and issubclass(returns[0], Azimuthal)
-            and isinstance(returns[1], type)
-            and issubclass(returns[1], Longitudinal)
-        ):
-            raise NotImplementedError
-
-        elif (
-            len(returns) == 3
-            and isinstance(returns[0], type)
-            and issubclass(returns[0], Azimuthal)
-            and isinstance(returns[1], type)
-            and issubclass(returns[1], Longitudinal)
-            and returns[2] is None
-        ):
-            raise NotImplementedError
-
-        elif (
-            len(returns) == 3
-            and isinstance(returns[0], type)
-            and issubclass(returns[0], Azimuthal)
-            and isinstance(returns[1], type)
-            and issubclass(returns[1], Longitudinal)
-            and isinstance(returns[2], type)
-            and issubclass(returns[2], Temporal)
-        ):
-            raise NotImplementedError
-
-        else:
-            raise AssertionError(repr(returns))
 
 
 class MomentumAwkward3D(SpatialMomentum, VectorAwkward3D):
@@ -304,58 +463,6 @@ class VectorAwkward4D(VectorAwkward, Lorentz, Vector4D):
     @property
     def temporal(self):
         return TemporalAwkward.from_fields(self)
-
-    def _wrap_result(self, cls, result, returns, num_vecargs):
-        if returns == [float] or returns == [bool]:
-            return result
-
-        elif (
-            len(returns) == 1
-            and isinstance(returns[0], type)
-            and issubclass(returns[0], Azimuthal)
-        ):
-            raise NotImplementedError
-
-        elif (
-            len(returns) == 2
-            and isinstance(returns[0], type)
-            and issubclass(returns[0], Azimuthal)
-            and returns[1] is None
-        ):
-            raise NotImplementedError
-
-        elif (
-            len(returns) == 2
-            and isinstance(returns[0], type)
-            and issubclass(returns[0], Azimuthal)
-            and isinstance(returns[1], type)
-            and issubclass(returns[1], Longitudinal)
-        ):
-            raise NotImplementedError
-
-        elif (
-            len(returns) == 3
-            and isinstance(returns[0], type)
-            and issubclass(returns[0], Azimuthal)
-            and isinstance(returns[1], type)
-            and issubclass(returns[1], Longitudinal)
-            and returns[2] is None
-        ):
-            raise NotImplementedError
-
-        elif (
-            len(returns) == 3
-            and isinstance(returns[0], type)
-            and issubclass(returns[0], Azimuthal)
-            and isinstance(returns[1], type)
-            and issubclass(returns[1], Longitudinal)
-            and isinstance(returns[2], type)
-            and issubclass(returns[2], Temporal)
-        ):
-            raise NotImplementedError
-
-        else:
-            raise AssertionError(repr(returns))
 
 
 class MomentumAwkward4D(LorentzMomentum, VectorAwkward4D):

@@ -33,3 +33,42 @@ def test_basic():
     )
     assert isinstance(array, vector.backends.awkward_.VectorArray3D)
     assert array.wow.tolist() == [[99], [], [123]]
+
+
+def test_rotateZ():
+    array = vector.Array([[{"pt": 1, "phi": 0}], [], [{"pt": 2, "phi": 1}]])
+    out = array.rotateZ(1)
+    assert isinstance(out, vector.backends.awkward_.MomentumArray2D)
+    assert out.tolist() == [[{"rho": 1, "phi": 1}], [], [{"rho": 2, "phi": 2}]]
+
+    array = vector.Array(
+        [[{"x": 1, "y": 0, "wow": 99}], [], [{"x": 2, "y": 1, "wow": 123}]]
+    )
+    out = array.rotateZ(0.1)
+    assert isinstance(out, vector.backends.awkward_.VectorArray2D)
+    assert out.wow.tolist() == [[99], [], [123]]
+
+
+def test_projection():
+    array = vector.Array(
+        [
+            [{"x": 1, "y": 2, "z": 3, "wow": 99}],
+            [],
+            [{"x": 4, "y": 5, "z": 6, "wow": 123}],
+        ]
+    )
+    out = array.to_Vector2D()
+    assert isinstance(out, vector.backends.awkward_.VectorArray2D)
+    assert out.tolist() == [
+        [{"x": 1, "y": 2, "wow": 99}],
+        [],
+        [{"x": 4, "y": 5, "wow": 123}],
+    ]
+
+    out = array.to_Vector4D()
+    assert isinstance(out, vector.backends.awkward_.VectorArray4D)
+    assert out.tolist() == [
+        [{"x": 1, "y": 2, "z": 3, "t": 0, "wow": 99}],
+        [],
+        [{"x": 4, "y": 5, "z": 6, "t": 0, "wow": 123}],
+    ]
