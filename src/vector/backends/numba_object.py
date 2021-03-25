@@ -2988,6 +2988,233 @@ def MomentumObject4DType_transverse_mass2(v):
     return MomentumObject4DType_transverse_mass2_impl
 
 
+# NumPy functions in Numba ####################################################
+
+
+@numba.extending.overload(numpy.absolute)
+def numpy_absolute(v):
+    if isinstance(v, VectorObject2DType):
+
+        def numpy_absolute_impl(v):
+            return v.rho
+
+        return numpy_absolute_impl
+
+    elif isinstance(v, VectorObject3DType):
+
+        def numpy_absolute_impl(v):
+            return v.mag
+
+        return numpy_absolute_impl
+
+    elif isinstance(v, VectorObject4DType):
+
+        def numpy_absolute_impl(v):
+            return v.tau
+
+        return numpy_absolute_impl
+
+
+@numba.extending.overload(numpy.square)
+def numpy_square(v):
+    if isinstance(v, VectorObject2DType):
+
+        def numpy_square_impl(v):
+            return v.rho2
+
+        return numpy_square_impl
+
+    elif isinstance(v, VectorObject3DType):
+
+        def numpy_square_impl(v):
+            return v.mag2
+
+        return numpy_square_impl
+
+    elif isinstance(v, VectorObject4DType):
+
+        def numpy_square_impl(v):
+            return v.tau2
+
+        return numpy_square_impl
+
+
+@numba.extending.overload(numpy.sqrt)
+def numpy_sqrt(v):
+    if isinstance(v, VectorObject2DType):
+
+        def numpy_sqrt_impl(v):
+            return v.rho2 ** 0.25
+
+        return numpy_sqrt_impl
+
+    elif isinstance(v, VectorObject3DType):
+
+        def numpy_sqrt_impl(v):
+            return v.mag2 ** 0.25
+
+        return numpy_sqrt_impl
+
+    elif isinstance(v, VectorObject4DType):
+
+        def numpy_sqrt_impl(v):
+            return v.tau2 ** 0.25
+
+        return numpy_sqrt_impl
+
+
+@numba.extending.overload(numpy.cbrt)
+def numpy_cbrt(v):
+    if isinstance(v, VectorObject2DType):
+
+        def numpy_cbrt_impl(v):
+            return v.rho2 ** 0.16666666666666666
+
+        return numpy_cbrt_impl
+
+    elif isinstance(v, VectorObject3DType):
+
+        def numpy_cbrt_impl(v):
+            return v.mag2 ** 0.16666666666666666
+
+        return numpy_cbrt_impl
+
+    elif isinstance(v, VectorObject4DType):
+
+        def numpy_cbrt_impl(v):
+            return v.tau2 ** 0.16666666666666666
+
+        return numpy_cbrt_impl
+
+
+@numba.extending.overload(numpy.power)
+def numpy_power(v, expo):
+    if isinstance(v, VectorObject2DType) and isinstance(
+        expo, (numba.types.Integer, numba.types.Float)
+    ):
+
+        def numpy_power_impl(v, expo):
+            if expo == 2:
+                return v.rho2
+            else:
+                return v.rho ** expo
+
+        return numpy_power_impl
+
+    elif isinstance(v, VectorObject3DType) and isinstance(
+        expo, (numba.types.Integer, numba.types.Float)
+    ):
+
+        def numpy_power_impl(v, expo):
+            if expo == 2:
+                return v.mag2
+            else:
+                return v.mag ** expo
+
+        return numpy_power_impl
+
+    elif isinstance(v, VectorObject4DType) and isinstance(
+        expo, (numba.types.Integer, numba.types.Float)
+    ):
+
+        def numpy_power_impl(v, expo):
+            if expo == 2:
+                return v.tau2
+            else:
+                return v.tau ** expo
+
+        return numpy_power_impl
+
+
+@numba.extending.overload(numpy.add)
+def numpy_add(v1, v2):
+    if isinstance(
+        v1, (VectorObject2DType, VectorObject3DType, VectorObject4DType)
+    ) and isinstance(v2, (VectorObject2DType, VectorObject3DType, VectorObject4DType)):
+
+        def numpy_add_impl(v1, v2):
+            return v1.add(v2)
+
+        return numpy_add_impl
+
+
+@numba.extending.overload(numpy.subtract)
+def numpy_subtract(v1, v2):
+    if isinstance(
+        v1, (VectorObject2DType, VectorObject3DType, VectorObject4DType)
+    ) and isinstance(v2, (VectorObject2DType, VectorObject3DType, VectorObject4DType)):
+
+        def numpy_subtract_impl(v1, v2):
+            return v1.subtract(v2)
+
+        return numpy_subtract_impl
+
+
+@numba.extending.overload(numpy.multiply)
+def numpy_multiply(a, b):
+    if isinstance(
+        a, (VectorObject2DType, VectorObject3DType, VectorObject4DType)
+    ) and isinstance(b, (numba.types.Integer, numba.types.Float)):
+
+        def numpy_multiply_impl(a, b):
+            return a.scale(b)
+
+        return numpy_multiply_impl
+
+    elif isinstance(a, (numba.types.Integer, numba.types.Float)) and isinstance(
+        b, (VectorObject2DType, VectorObject3DType, VectorObject4DType)
+    ):
+
+        def numpy_multiply_impl(a, b):
+            return b.scale(a)
+
+        return numpy_multiply_impl
+
+
+@numba.extending.overload(numpy.true_divide)
+def numpy_true_divide(a, b):
+    if isinstance(
+        a, (VectorObject2DType, VectorObject3DType, VectorObject4DType)
+    ) and isinstance(b, (numba.types.Integer, numba.types.Float)):
+
+        def numpy_true_divide_impl(a, b):
+            return a.scale(1 / b)
+
+        return numpy_true_divide_impl
+
+
+@numba.extending.overload(numpy.negative)
+def numpy_negative(v):
+    if isinstance(v, (VectorObject2DType, VectorObject3DType, VectorObject4DType)):
+
+        def numpy_negative_impl(v):
+            return v.scale(-1)
+
+        return numpy_negative_impl
+
+
+@numba.extending.overload(numpy.positive)
+def numpy_positive(v):
+    if isinstance(v, (VectorObject2DType, VectorObject3DType, VectorObject4DType)):
+
+        def numpy_positive_impl(v):
+            return v
+
+        return numpy_positive_impl
+
+
+@numba.extending.overload(numpy.matmul)
+def numpy_matmul(v1, v2):
+    if isinstance(
+        v1, (VectorObject2DType, VectorObject3DType, VectorObject4DType)
+    ) and isinstance(v2, (VectorObject2DType, VectorObject3DType, VectorObject4DType)):
+
+        def numpy_matmul_impl(v1, v2):
+            return v1.dot(v2)
+
+        return numpy_matmul_impl
+
+
 # unary operator overloading ##################################################
 
 

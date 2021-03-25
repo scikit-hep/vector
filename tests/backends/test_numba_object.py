@@ -1481,3 +1481,20 @@ def test_operator_matmul():
         return v1 @ v2
 
     assert get_matmul(vector.obj(x=1, y=2), vector.obj(x=3, y=4)) == pytest.approx(11)
+
+
+def test_numpy_functions():
+    @numba.njit
+    def get_absolute(v):
+        return numpy.absolute(v)
+
+    assert get_absolute(vector.obj(x=3, y=4)) == pytest.approx(5)
+
+    @numba.njit
+    def get_add(v1, v2):
+        return numpy.add(v1, v2)
+
+    out = get_add(vector.obj(x=3, y=4), vector.obj(x=10, y=20))
+    assert isinstance(out, vector.backends.object_.VectorObject2D)
+    assert out.x == pytest.approx(13)
+    assert out.y == pytest.approx(24)
