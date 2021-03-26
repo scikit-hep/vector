@@ -147,14 +147,15 @@ def _replace_data(obj, result):
     if not isinstance(result, VectorObject):
         raise TypeError(f"can only assign a single vector to {type(obj).__name__}")
 
-    if isinstance(obj.azimuthal, AzimuthalObjectXY):
-        obj.azimuthal = AzimuthalObjectXY(result.x, result.y)
-    elif isinstance(obj.azimuthal, AzimuthalObjectRhoPhi):
-        obj.azimuthal = AzimuthalObjectRhoPhi(result.rho, result.phi)
-    else:
-        raise AssertionError(type(obj))
+    if isinstance(result, (VectorObject2D, VectorObject3D, VectorObject4D)):
+        if isinstance(obj.azimuthal, AzimuthalObjectXY):
+            obj.azimuthal = AzimuthalObjectXY(result.x, result.y)
+        elif isinstance(obj.azimuthal, AzimuthalObjectRhoPhi):
+            obj.azimuthal = AzimuthalObjectRhoPhi(result.rho, result.phi)
+        else:
+            raise AssertionError(type(obj))
 
-    if hasattr(obj, "longitudinal"):
+    if isinstance(result, (VectorObject3D, VectorObject4D)):
         if isinstance(obj.longitudinal, LongitudinalObjectZ):
             obj.longitudinal = LongitudinalObjectZ(result.z)
         elif isinstance(obj.longitudinal, LongitudinalObjectTheta):
@@ -164,7 +165,7 @@ def _replace_data(obj, result):
         else:
             raise AssertionError(type(obj))
 
-    if hasattr(obj, "temporal"):
+    if isinstance(result, VectorObject4D):
         if isinstance(obj.temporal, TemporalObjectT):
             obj.temporal = TemporalObjectT(result.t)
         elif isinstance(obj.temporal, TemporalObjectTau):
@@ -175,13 +176,8 @@ def _replace_data(obj, result):
     return obj
 
 
-class VectorObject:
+class VectorObject(Vector):
     lib = numpy
-
-    ProjectionClass2D: typing.Any
-    ProjectionClass3D: typing.Any
-    ProjectionClass4D: typing.Any
-    GenericClass: typing.Any
 
     def __eq__(self, other):
         return numpy.equal(self, other)
@@ -432,6 +428,8 @@ class VectorObject:
 class VectorObject2D(VectorObject, Planar, Vector2D):
     __slots__ = ("azimuthal",)
 
+    azimuthal: typing.Any
+
     @classmethod
     def from_xy(cls, x, y):
         return cls(AzimuthalObjectXY(x, y))
@@ -580,6 +578,9 @@ class MomentumObject2D(PlanarMomentum, VectorObject2D):
 
 class VectorObject3D(VectorObject, Spatial, Vector3D):
     __slots__ = ("azimuthal", "longitudinal")
+
+    azimuthal: typing.Any
+    longitudinal: typing.Any
 
     @classmethod
     def from_xyz(cls, x, y, z):
@@ -785,6 +786,10 @@ class MomentumObject3D(SpatialMomentum, VectorObject3D):
 
 class VectorObject4D(VectorObject, Lorentz, Vector4D):
     __slots__ = ("azimuthal", "longitudinal", "temporal")
+
+    azimuthal: typing.Any
+    longitudinal: typing.Any
+    temporal: typing.Any
 
     @classmethod
     def from_xyzt(cls, x, y, z, t):
@@ -1078,14 +1083,6 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
         self.temporal = TemporalObjectT(E)
 
     @property
-    def e(self):
-        return super().e
-
-    @e.setter
-    def e(self, e):
-        self.temporal = TemporalObjectT(e)
-
-    @property
     def energy(self):
         return super().energy
 
@@ -1102,14 +1099,6 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
         self.temporal = TemporalObjectTau(M)
 
     @property
-    def m(self):
-        return super().m
-
-    @m.setter
-    def m(self, m):
-        self.temporal = TemporalObjectTau(m)
-
-    @property
     def mass(self):
         return super().mass
 
@@ -1119,7 +1108,10 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
 
 
 def _gather_coordinates(planar_class, spatial_class, lorentz_class, coordinates):
-    azimuthal = None
+    azimuthal: typing.Optional[
+        typing.Union[AzimuthalObjectXY, AzimuthalObjectRhoPhi]
+    ] = None
+
     if "x" in coordinates and "y" in coordinates:
         if "rho" in coordinates or "phi" in coordinates:
             raise TypeError("specify x= and y= or rho= and phi=, but not both")
@@ -1131,7 +1123,12 @@ def _gather_coordinates(planar_class, spatial_class, lorentz_class, coordinates)
             coordinates.pop("rho"), coordinates.pop("phi")
         )
 
-    longitudinal = None
+    longitudinal: typing.Optional[
+        typing.Union[
+            LongitudinalObjectZ, LongitudinalObjectTheta, LongitudinalObjectEta
+        ]
+    ] = None
+
     if "z" in coordinates:
         if "theta" in coordinates or "eta" in coordinates:
             raise TypeError("specify z= or theta= or eta=, but not more than one")
@@ -1145,7 +1142,8 @@ def _gather_coordinates(planar_class, spatial_class, lorentz_class, coordinates)
             raise TypeError("specify z= or theta= or eta=, but not more than one")
         longitudinal = LongitudinalObjectEta(coordinates.pop("eta"))
 
-    temporal = None
+    temporal: typing.Optional[typing.Union[TemporalObjectT, TemporalObjectTau]] = None
+
     if "t" in coordinates:
         if "tau" in coordinates:
             raise TypeError("specify t= or tau=, but not more than one")
@@ -1207,18 +1205,12 @@ def obj(**coordinates):
     if "E" in coordinates:
         is_momentum = True
         generic_coordinates["t"] = coordinates.pop("E")
-    if "e" in coordinates and "t" not in generic_coordinates:
-        is_momentum = True
-        generic_coordinates["t"] = coordinates.pop("e")
     if "energy" in coordinates and "t" not in generic_coordinates:
         is_momentum = True
         generic_coordinates["t"] = coordinates.pop("energy")
     if "M" in coordinates:
         is_momentum = True
         generic_coordinates["tau"] = coordinates.pop("M")
-    if "m" in coordinates and "tau" not in generic_coordinates:
-        is_momentum = True
-        generic_coordinates["tau"] = coordinates.pop("m")
     if "mass" in coordinates and "tau" not in generic_coordinates:
         is_momentum = True
         generic_coordinates["tau"] = coordinates.pop("mass")

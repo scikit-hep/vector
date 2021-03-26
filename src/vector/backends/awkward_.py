@@ -201,6 +201,8 @@ def _class_to_name(cls):
 class VectorAwkward:
     lib = numpy
 
+    __getitem__: typing.Any
+
     def _wrap_result(self, cls, result, returns, num_vecargs):
         if returns == [float] or returns == [bool]:
             return result
@@ -511,11 +513,6 @@ class MomentumAwkward4D(LorentzMomentum, VectorAwkward4D):
 
 
 class VectorArray2D(VectorAwkward2D, ak.Array):
-    ProjectionClass2D: typing.Any
-    ProjectionClass3D: typing.Any
-    ProjectionClass4D: typing.Any
-    GenericClass: typing.Any
-
     def allclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
@@ -524,21 +521,13 @@ behavior["*", "Vector2D"] = VectorArray2D
 
 
 class VectorRecord2D(VectorAwkward2D, ak.Record):
-    ProjectionClass2D: typing.Any
-    ProjectionClass3D: typing.Any
-    ProjectionClass4D: typing.Any
-    GenericClass: typing.Any
+    pass
 
 
 behavior["Vector2D"] = VectorRecord2D
 
 
 class VectorArray3D(VectorAwkward3D, ak.Array):
-    ProjectionClass2D: typing.Any
-    ProjectionClass3D: typing.Any
-    ProjectionClass4D: typing.Any
-    GenericClass: typing.Any
-
     def allclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
@@ -547,21 +536,13 @@ behavior["*", "Vector3D"] = VectorArray3D
 
 
 class VectorRecord3D(VectorAwkward3D, ak.Record):
-    ProjectionClass2D: typing.Any
-    ProjectionClass3D: typing.Any
-    ProjectionClass4D: typing.Any
-    GenericClass: typing.Any
+    pass
 
 
 behavior["Vector3D"] = VectorRecord3D
 
 
 class VectorArray4D(VectorAwkward4D, ak.Array):
-    ProjectionClass2D: typing.Any
-    ProjectionClass3D: typing.Any
-    ProjectionClass4D: typing.Any
-    GenericClass: typing.Any
-
     def allclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
@@ -570,21 +551,13 @@ behavior["*", "Vector4D"] = VectorArray4D
 
 
 class VectorRecord4D(VectorAwkward4D, ak.Record):
-    ProjectionClass2D: typing.Any
-    ProjectionClass3D: typing.Any
-    ProjectionClass4D: typing.Any
-    GenericClass: typing.Any
+    pass
 
 
 behavior["Vector4D"] = VectorRecord4D
 
 
 class MomentumArray2D(MomentumAwkward2D, ak.Array):
-    ProjectionClass2D: typing.Any
-    ProjectionClass3D: typing.Any
-    ProjectionClass4D: typing.Any
-    GenericClass: typing.Any
-
     def allclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
@@ -593,21 +566,13 @@ behavior["*", "Momentum2D"] = MomentumArray2D
 
 
 class MomentumRecord2D(MomentumAwkward2D, ak.Record):
-    ProjectionClass2D: typing.Any
-    ProjectionClass3D: typing.Any
-    ProjectionClass4D: typing.Any
-    GenericClass: typing.Any
+    pass
 
 
 behavior["Momentum2D"] = MomentumRecord2D
 
 
 class MomentumArray3D(MomentumAwkward3D, ak.Array):
-    ProjectionClass2D: typing.Any
-    ProjectionClass3D: typing.Any
-    ProjectionClass4D: typing.Any
-    GenericClass: typing.Any
-
     def allclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
@@ -616,21 +581,13 @@ behavior["*", "Momentum3D"] = MomentumArray3D
 
 
 class MomentumRecord3D(MomentumAwkward3D, ak.Record):
-    ProjectionClass2D: typing.Any
-    ProjectionClass3D: typing.Any
-    ProjectionClass4D: typing.Any
-    GenericClass: typing.Any
+    pass
 
 
 behavior["Momentum3D"] = MomentumRecord3D
 
 
 class MomentumArray4D(MomentumAwkward4D, ak.Array):
-    ProjectionClass2D: typing.Any
-    ProjectionClass3D: typing.Any
-    ProjectionClass4D: typing.Any
-    GenericClass: typing.Any
-
     def allclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
@@ -639,10 +596,7 @@ behavior["*", "Momentum4D"] = MomentumArray4D
 
 
 class MomentumRecord4D(MomentumAwkward4D, ak.Record):
-    ProjectionClass2D: typing.Any
-    ProjectionClass3D: typing.Any
-    ProjectionClass4D: typing.Any
-    GenericClass: typing.Any
+    pass
 
 
 behavior["Momentum4D"] = MomentumRecord4D

@@ -3,6 +3,8 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+import typing
+
 import numpy
 
 from vector.compute.lorentz import t, tau
@@ -24,7 +26,7 @@ from vector.methods import (
     _ttype,
 )
 
-dispatch_map = {}
+dispatch_map: typing.Any = {}
 
 
 def make_conversion(

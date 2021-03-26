@@ -3,6 +3,16 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+from .protocols import (
+    MomentumProtocolLorentz,
+    MomentumProtocolPlanar,
+    MomentumProtocolSpatial,
+    VectorProtocol,
+    VectorProtocolLorentz,
+    VectorProtocolPlanar,
+    VectorProtocolSpatial,
+)
+
 
 class Coordinates:
     pass
@@ -108,10 +118,8 @@ _repr_momentum_to_generic = {
     "pt": "rho",
     "pz": "z",
     "E": "t",
-    "e": "t",
     "energy": "t",
     "M": "tau",
-    "m": "tau",
     "mass": "tau",
 }
 
@@ -130,66 +138,14 @@ _coordinate_order = [
     "eta",
     "t",
     "E",
-    "e",
     "energy",
     "tau",
     "M",
-    "m",
     "mass",
 ]
 
 
-class Vector:
-    def to_Vector2D(self):
-        "to_Vector2D docs"
-        if isinstance(self, Vector2D):
-            return self
-        else:
-            return self._wrap_result(
-                type(self),
-                self.azimuthal.elements,
-                [_aztype(self), None],
-                1,
-            )
-
-    def to_Vector3D(self):
-        "to_Vector3D docs"
-        if isinstance(self, Vector2D):
-            return self._wrap_result(
-                type(self),
-                self.azimuthal.elements + (0,),
-                [_aztype(self), LongitudinalZ, None],
-                1,
-            )
-        elif isinstance(self, Vector3D):
-            return self
-        else:
-            return self._wrap_result(
-                type(self),
-                self.azimuthal.elements + self.longitudinal.elements,
-                [_aztype(self), _ltype(self), None],
-                1,
-            )
-
-    def to_Vector4D(self):
-        "to_Vector4D docs"
-        if isinstance(self, Vector2D):
-            return self._wrap_result(
-                type(self),
-                self.azimuthal.elements + (0, 0),
-                [_aztype(self), LongitudinalZ, TemporalT],
-                1,
-            )
-        elif isinstance(self, Vector3D):
-            return self._wrap_result(
-                type(self),
-                self.azimuthal.elements + self.longitudinal.elements + (0,),
-                [_aztype(self), _ltype(self), TemporalT],
-                1,
-            )
-        else:
-            return self
-
+class Vector(VectorProtocol):
     def to_xy(self):
         "to_xy docs"
         from .compute import planar
@@ -519,16 +475,76 @@ class Vector:
         )
 
 
-class Vector2D(Vector):
-    pass
+class Vector2D(Vector, VectorProtocolPlanar):
+    def to_Vector2D(self):
+        "to_Vector2D docs"
+        return self
+
+    def to_Vector3D(self):
+        "to_Vector3D docs"
+        return self._wrap_result(
+            type(self),
+            self.azimuthal.elements + (0,),
+            [_aztype(self), LongitudinalZ, None],
+            1,
+        )
+
+    def to_Vector4D(self):
+        "to_Vector4D docs"
+        return self._wrap_result(
+            type(self),
+            self.azimuthal.elements + (0, 0),
+            [_aztype(self), LongitudinalZ, TemporalT],
+            1,
+        )
 
 
-class Vector3D(Vector):
-    pass
+class Vector3D(Vector, VectorProtocolSpatial):
+    def to_Vector2D(self):
+        "to_Vector2D docs"
+        return self._wrap_result(
+            type(self),
+            self.azimuthal.elements,
+            [_aztype(self), None],
+            1,
+        )
+
+    def to_Vector3D(self):
+        "to_Vector3D docs"
+        return self
+
+    def to_Vector4D(self):
+        "to_Vector4D docs"
+        return self._wrap_result(
+            type(self),
+            self.azimuthal.elements + self.longitudinal.elements + (0,),
+            [_aztype(self), _ltype(self), TemporalT],
+            1,
+        )
 
 
-class Vector4D(Vector):
-    pass
+class Vector4D(Vector, VectorProtocolLorentz):
+    def to_Vector2D(self):
+        "to_Vector2D docs"
+        return self._wrap_result(
+            type(self),
+            self.azimuthal.elements,
+            [_aztype(self), None],
+            1,
+        )
+
+    def to_Vector3D(self):
+        "to_Vector3D docs"
+        return self._wrap_result(
+            type(self),
+            self.azimuthal.elements + self.longitudinal.elements,
+            [_aztype(self), _ltype(self), None],
+            1,
+        )
+
+    def to_Vector4D(self):
+        "to_Vector4D docs"
+        return self
 
 
 def dim(v):
@@ -578,7 +594,7 @@ def _compute_module_of(one, two, nontemporal=False):
             return vector.compute.lorentz
 
 
-class Planar:
+class Planar(VectorProtocolPlanar):
     @property
     def azimuthal(self):
         "azimuthal docs"
@@ -726,7 +742,7 @@ class Planar:
         return isclose.dispatch(rtol, atol, equal_nan, self, other)
 
 
-class Spatial(Planar):
+class Spatial(Planar, VectorProtocolSpatial):
     @property
     def longitudinal(self):
         "longitudinal docs"
@@ -959,7 +975,7 @@ class Spatial(Planar):
         return isclose.dispatch(rtol, atol, equal_nan, self, other)
 
 
-class Lorentz(Spatial):
+class Lorentz(Spatial, VectorProtocolLorentz):
     @property
     def temporal(self):
         "temporal docs"
@@ -1165,7 +1181,7 @@ class Momentum:
     pass
 
 
-class PlanarMomentum(Momentum):
+class PlanarMomentum(Momentum, MomentumProtocolPlanar):
     @property
     def px(self):
         "px docs"
@@ -1187,7 +1203,7 @@ class PlanarMomentum(Momentum):
         return self.rho2
 
 
-class SpatialMomentum(PlanarMomentum):
+class SpatialMomentum(PlanarMomentum, MomentumProtocolSpatial):
     @property
     def pz(self):
         "pz docs"
@@ -1209,7 +1225,7 @@ class SpatialMomentum(PlanarMomentum):
         return self.mag2
 
 
-class LorentzMomentum(SpatialMomentum):
+class LorentzMomentum(SpatialMomentum, MomentumProtocolLorentz):
     @property
     def E(self):
         "E docs"
@@ -1231,8 +1247,8 @@ class LorentzMomentum(SpatialMomentum):
         return self.t2
 
     @property
-    def m(self):
-        "m docs"
+    def M(self):
+        "M docs"
         return self.tau
 
     @property
@@ -1241,8 +1257,8 @@ class LorentzMomentum(SpatialMomentum):
         return self.tau
 
     @property
-    def m2(self):
-        "m2 docs"
+    def M2(self):
+        "M2 docs"
         return self.tau2
 
     @property
@@ -1284,7 +1300,7 @@ class LorentzMomentum(SpatialMomentum):
     @property
     def transverse_mass(self):
         "transverse_mass docs"
-        return self.mt
+        return self.Mt
 
     @property
     def Mt2(self):
@@ -1296,7 +1312,7 @@ class LorentzMomentum(SpatialMomentum):
     @property
     def transverse_mass2(self):
         "transverse_mass2 docs"
-        return self.mt2
+        return self.Mt2
 
 
 def _lib_of(*objects):
@@ -1358,6 +1374,8 @@ def _flavor_of(*objects):
                 pass
             elif isinstance(obj, VectorNumpy):
                 handler = obj
+
+    assert handler is not None
 
     if is_momentum:
         return type(handler)

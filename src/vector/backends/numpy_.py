@@ -167,6 +167,8 @@ def _shape_of(result):
             thisshape = [len(x)]
         if shape is None or thisshape[0] > shape[0]:
             shape = thisshape
+
+    assert shape is not None
     return tuple(shape)
 
 
@@ -369,7 +371,7 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, numpy.ndarray):
         return _getitem(self, where, False)
 
 
-class VectorNumpy:
+class VectorNumpy(Vector):
     lib = numpy
 
     def allclose(self, other, rtol=1e-05, atol=1e-08, equal_nan=False):
@@ -1248,7 +1250,7 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):
         else:
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype containing "
-                'field "t" or "tau" or "E" or "e" or "energy" or "M" or "m" or "mass"'
+                'field "t" or "tau" or "E" or "energy" or "M" or "mass"'
             )
 
     def __repr__(self):
@@ -1265,7 +1267,7 @@ def array(*args, **kwargs):
     "vector.array docs"
     names = None
     if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
-        names = args[0].keys()
+        names = tuple(args[0].keys())
     elif "dtype" in kwargs:
         names = numpy.dtype(kwargs["dtype"]).names
     elif len(args) >= 2:
@@ -1274,7 +1276,7 @@ def array(*args, **kwargs):
         names = ()
 
     is_momentum = any(x in _repr_momentum_to_generic for x in names)
-    if any(x in ("t", "E", "e", "energy", "tau", "M", "m", "mass") for x in names):
+    if any(x in ("t", "E", "energy", "tau", "M", "mass") for x in names):
         if is_momentum:
             cls = MomentumNumpy4D
         else:
