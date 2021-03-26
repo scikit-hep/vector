@@ -9,6 +9,19 @@ import typing
 import awkward as ak
 import numpy
 
+import vector
+from vector.backends.object_ import (
+    AzimuthalObjectRhoPhi,
+    AzimuthalObjectXY,
+    LongitudinalObjectEta,
+    LongitudinalObjectTheta,
+    LongitudinalObjectZ,
+    TemporalObjectT,
+    TemporalObjectTau,
+    VectorObject2D,
+    VectorObject3D,
+    VectorObject4D,
+)
 from vector.methods import (
     Azimuthal,
     AzimuthalRhoPhi,
@@ -33,6 +46,9 @@ from vector.methods import (
 )
 
 behavior: typing.Any = {}
+
+
+# coordinates classes are a formality for Awkward #############################
 
 
 class CoordinatesAwkward:
@@ -179,6 +195,9 @@ def _class_to_name(cls):
             return "Vector4D"
 
 
+# the vector class ############################################################
+
+
 class VectorAwkward:
     lib = numpy
 
@@ -224,7 +243,7 @@ class VectorAwkward:
                 dict(zip(names, arrays)),
                 depth_limit=first.layout.purelist_depth,
                 with_name=_class_to_name(cls),
-                behavior=self.behavior,
+                behavior=None if vector._awkward_registered else first.behavior,
             )
 
         elif (
@@ -268,7 +287,7 @@ class VectorAwkward:
                 dict(zip(names, arrays)),
                 depth_limit=first.layout.purelist_depth,
                 with_name=_class_to_name(cls.ProjectionClass2D),
-                behavior=self.behavior,
+                behavior=None if vector._awkward_registered else first.behavior,
             )
 
         elif (
@@ -319,7 +338,7 @@ class VectorAwkward:
                 dict(zip(names, arrays)),
                 depth_limit=first.layout.purelist_depth,
                 with_name=_class_to_name(cls),
-                behavior=self.behavior,
+                behavior=None if vector._awkward_registered else first.behavior,
             )
 
         elif (
@@ -375,7 +394,7 @@ class VectorAwkward:
                 dict(zip(names, arrays)),
                 depth_limit=first.layout.purelist_depth,
                 with_name=_class_to_name(cls.ProjectionClass3D),
-                behavior=self.behavior,
+                behavior=None if vector._awkward_registered else first.behavior,
             )
 
         elif (
@@ -439,7 +458,7 @@ class VectorAwkward:
                 dict(zip(names, arrays)),
                 depth_limit=first.layout.purelist_depth,
                 with_name=_class_to_name(cls.ProjectionClass4D),
-                behavior=self.behavior,
+                behavior=None if vector._awkward_registered else first.behavior,
             )
 
         else:
@@ -486,6 +505,9 @@ class VectorAwkward4D(VectorAwkward, Lorentz, Vector4D):
 
 class MomentumAwkward4D(LorentzMomentum, VectorAwkward4D):
     pass
+
+
+# ak.Array and ak.Record subclasses ###########################################
 
 
 class VectorArray2D(VectorAwkward2D, ak.Array):
@@ -625,6 +647,8 @@ class MomentumRecord4D(MomentumAwkward4D, ak.Record):
 
 behavior["Momentum4D"] = MomentumRecord4D
 
+# NumPy functions, which also affect operator overloading #####################
+
 behavior[numpy.absolute, "Vector2D"] = lambda v: v.rho
 behavior[numpy.absolute, "Vector3D"] = lambda v: v.mag
 behavior[numpy.absolute, "Vector4D"] = lambda v: v.tau
@@ -710,6 +734,8 @@ for name in (
         1 / denom
     )
 
+# class object cross-references ###############################################
+
 VectorArray2D.ProjectionClass2D = VectorArray2D
 VectorArray2D.ProjectionClass3D = VectorArray3D
 VectorArray2D.ProjectionClass4D = VectorArray4D
@@ -769,3 +795,236 @@ MomentumRecord4D.ProjectionClass2D = MomentumRecord2D
 MomentumRecord4D.ProjectionClass3D = MomentumRecord3D
 MomentumRecord4D.ProjectionClass4D = MomentumRecord4D
 MomentumRecord4D.GenericClass = VectorRecord4D
+
+
+# implementation of behaviors in Numba ########################################
+
+
+def _aztype_of(recordarraytype):
+    import numba
+
+    try:
+        x_index = recordarraytype.recordlookup.index("x")
+    except ValueError:
+        x_index = None
+    try:
+        y_index = recordarraytype.recordlookup.index("y")
+    except ValueError:
+        y_index = None
+    try:
+        rho_index = recordarraytype.recordlookup.index("rho")
+    except ValueError:
+        rho_index = None
+    try:
+        phi_index = recordarraytype.recordlookup.index("phi")
+    except ValueError:
+        phi_index = None
+
+    if x_index is not None and y_index is not None:
+        coord1 = recordarraytype.contenttypes[x_index].arraytype.dtype
+        coord2 = recordarraytype.contenttypes[y_index].arraytype.dtype
+        cls = AzimuthalObjectXY
+
+    elif rho_index is not None and phi_index is not None:
+        coord1 = recordarraytype.contenttypes[rho_index].arraytype.dtype
+        coord2 = recordarraytype.contenttypes[phi_index].arraytype.dtype
+        cls = AzimuthalObjectRhoPhi
+
+    else:
+        raise numba.TypingError(
+            f"{recordarraytype} is missing azimuthal fields: x/y or rho/phi"
+        )
+
+    return numba.typeof(cls(coord1.cast_python_value(0), coord2.cast_python_value(0)))
+
+
+def _ltype_of(recordarraytype):
+    import numba
+
+    try:
+        z_index = recordarraytype.recordlookup.index("z")
+    except ValueError:
+        z_index = None
+    try:
+        theta_index = recordarraytype.recordlookup.index("theta")
+    except ValueError:
+        theta_index = None
+    try:
+        eta_index = recordarraytype.recordlookup.index("eta")
+    except ValueError:
+        eta_index = None
+
+    if z_index is not None:
+        coord1 = recordarraytype.contenttypes[z_index].arraytype.dtype
+        cls = LongitudinalObjectZ
+
+    elif theta_index is not None:
+        coord1 = recordarraytype.contenttypes[theta_index].arraytype.dtype
+        cls = LongitudinalObjectTheta
+
+    elif eta_index is not None:
+        coord1 = recordarraytype.contenttypes[eta_index].arraytype.dtype
+        cls = LongitudinalObjectEta
+
+    else:
+        raise numba.TypingError(
+            f"{recordarraytype} is missing longitudinal fields: z or theta or eta"
+        )
+
+    return numba.typeof(cls(coord1.cast_python_value(0)))
+
+
+def _ttype_of(recordarraytype):
+    import numba
+
+    try:
+        t_index = recordarraytype.recordlookup.index("t")
+    except ValueError:
+        t_index = None
+    try:
+        tau_index = recordarraytype.recordlookup.index("tau")
+    except ValueError:
+        tau_index = None
+
+    if t_index is not None:
+        coord1 = recordarraytype.contenttypes[t_index].arraytype.dtype
+        cls = TemporalObjectT
+
+    elif tau_index is not None:
+        coord1 = recordarraytype.contenttypes[tau_index].arraytype.dtype
+        cls = TemporalObjectTau
+
+    else:
+        raise numba.TypingError(
+            f"{recordarraytype} is missing temporal fields: t or tau"
+        )
+
+    return numba.typeof(cls(coord1.cast_python_value(0)))
+
+
+def _numba_typer_Vector2D(viewtype):
+    import vector.backends.numba_object
+
+    return vector.backends.numba_object.VectorObject2DType(
+        _aztype_of(viewtype.arrayviewtype.type)
+    )
+
+
+def _numba_typer_Vector3D(viewtype):
+    import vector.backends.numba_object
+
+    return vector.backends.numba_object.VectorObject3DType(
+        _aztype_of(viewtype.arrayviewtype.type),
+        _ltype_of(viewtype.arrayviewtype.type),
+    )
+
+
+def _numba_typer_Vector4D(viewtype):
+    import vector.backends.numba_object
+
+    return vector.backends.numba_object.VectorObject4DType(
+        _aztype_of(viewtype.arrayviewtype.type),
+        _ltype_of(viewtype.arrayviewtype.type),
+        _ttype_of(viewtype.arrayviewtype.type),
+    )
+
+
+def _numba_typer_Momentum2D(viewtype):
+    import vector.backends.numba_object
+
+    return vector.backends.numba_object.MomentumObject2DType(
+        _aztype_of(viewtype.arrayviewtype.type)
+    )
+
+
+def _numba_typer_Momentum3D(viewtype):
+    import vector.backends.numba_object
+
+    return vector.backends.numba_object.MomentumObject3DType(
+        _aztype_of(viewtype.arrayviewtype.type),
+        _ltype_of(viewtype.arrayviewtype.type),
+    )
+
+
+def _numba_typer_Momentum4D(viewtype):
+    import vector.backends.numba_object
+
+    return vector.backends.numba_object.MomentumObject4DType(
+        _aztype_of(viewtype.arrayviewtype.type),
+        _ltype_of(viewtype.arrayviewtype.type),
+        _ttype_of(viewtype.arrayviewtype.type),
+    )
+
+
+def _numba_lower(context, builder, sig, args):
+    from vector.backends.numba_object import (
+        _awkward_numba_eta,
+        _awkward_numba_rhophi,
+        _awkward_numba_t,
+        _awkward_numba_tau,
+        _awkward_numba_theta,
+        _awkward_numba_xy,
+        _awkward_numba_z,
+    )
+
+    vectorcls = sig.return_type.instance_class
+
+    if issubclass(vectorcls, (VectorObject2D, VectorObject3D, VectorObject4D)):
+        if issubclass(sig.return_type.azimuthaltype.instance_class, AzimuthalXY):
+            azimuthal = _awkward_numba_xy
+        elif issubclass(sig.return_type.azimuthaltype.instance_class, AzimuthalRhoPhi):
+            azimuthal = _awkward_numba_rhophi
+
+    if issubclass(vectorcls, (VectorObject3D, VectorObject4D)):
+        if issubclass(sig.return_type.longitudinaltype.instance_class, LongitudinalZ):
+            longitudinal = _awkward_numba_z
+        elif issubclass(
+            sig.return_type.longitudinaltype.instance_class, LongitudinalTheta
+        ):
+            longitudinal = _awkward_numba_theta
+        elif issubclass(
+            sig.return_type.longitudinaltype.instance_class, LongitudinalEta
+        ):
+            longitudinal = _awkward_numba_eta
+
+    if issubclass(vectorcls, VectorObject4D):
+        if issubclass(sig.return_type.temporaltype.instance_class, TemporalT):
+            temporal = _awkward_numba_t
+        elif issubclass(sig.return_type.temporaltype.instance_class, TemporalTau):
+            temporal = _awkward_numba_tau
+
+    if issubclass(vectorcls, VectorObject2D):
+
+        def impl(record):
+            return vectorcls(azimuthal(record))
+
+    elif issubclass(vectorcls, VectorObject3D):
+
+        def impl(record):
+            return vectorcls(azimuthal(record), longitudinal(record))
+
+    elif issubclass(vectorcls, VectorObject4D):
+
+        def impl(record):
+            return vectorcls(azimuthal(record), longitudinal(record), temporal(record))
+
+    return context.compile_internal(builder, impl, sig, args)
+
+
+ak.behavior["__numba_typer__", "Vector2D"] = _numba_typer_Vector2D
+ak.behavior["__numba_typer__", "Vector3D"] = _numba_typer_Vector3D
+ak.behavior["__numba_typer__", "Vector4D"] = _numba_typer_Vector4D
+ak.behavior["__numba_typer__", "Momentum2D"] = _numba_typer_Momentum2D
+ak.behavior["__numba_typer__", "Momentum3D"] = _numba_typer_Momentum3D
+ak.behavior["__numba_typer__", "Momentum4D"] = _numba_typer_Momentum4D
+
+ak.behavior["__numba_lower__", "Vector2D"] = _numba_lower
+ak.behavior["__numba_lower__", "Vector3D"] = _numba_lower
+ak.behavior["__numba_lower__", "Vector4D"] = _numba_lower
+ak.behavior["__numba_lower__", "Momentum2D"] = _numba_lower
+ak.behavior["__numba_lower__", "Momentum3D"] = _numba_lower
+ak.behavior["__numba_lower__", "Momentum4D"] = _numba_lower
+
+
+# print("_numba_typer", viewtype.arrayviewtype.type.parameters["__record__"])
+# raise Exception

@@ -3446,3 +3446,41 @@ if hasattr(operator, "matmul"):
                 return v1.dot(v2)
 
             return operator_matmul_impl
+
+
+# helper functions for Awkward Numba backend ##################################
+
+
+@numba.jit(nopython=True)
+def _awkward_numba_xy(record):
+    return AzimuthalObjectXY(record["x"], record["y"])
+
+
+@numba.jit(nopython=True)
+def _awkward_numba_rhophi(record):
+    return AzimuthalObjectRhoPhi(record["rho"], record["phi"])
+
+
+@numba.jit(nopython=True)
+def _awkward_numba_z(record):
+    return LongitudinalObjectZ(record["z"])
+
+
+@numba.jit(nopython=True)
+def _awkward_numba_theta(record):
+    return LongitudinalObjectTheta(record["theta"])
+
+
+@numba.jit(nopython=True)
+def _awkward_numba_eta(record):
+    return LongitudinalObjectEta(record["eta"])
+
+
+@numba.jit(nopython=True)
+def _awkward_numba_t(record):
+    return TemporalObjectT(record["t"])
+
+
+@numba.jit(nopython=True)
+def _awkward_numba_tau(record):
+    return TemporalObjectTau(record["tau"])
