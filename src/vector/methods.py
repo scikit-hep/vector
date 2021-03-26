@@ -6,10 +6,15 @@
 import typing
 
 from .protocols import (
+    BoolCollection,
     MomentumProtocolLorentz,
     MomentumProtocolPlanar,
     MomentumProtocolSpatial,
+    SameVectorType,
     ScalarCollection,
+    TransformProtocol2D,
+    TransformProtocol3D,
+    TransformProtocol4D,
     VectorProtocol,
     VectorProtocolLorentz,
     VectorProtocolPlanar,
@@ -654,21 +659,21 @@ class Planar(VectorProtocolPlanar):
 
         return deltaphi.dispatch(self, other)
 
-    def rotateZ(self, angle: ScalarCollection) -> ScalarCollection:
+    def rotateZ(self: SameVectorType, angle: ScalarCollection) -> SameVectorType:
         "rotateZ docs"
         from .compute.planar import rotateZ
 
         return rotateZ.dispatch(angle, self)
 
-    def transform2D(self, obj: typing.Any) -> typing.Any:
+    def transform2D(self: SameVectorType, obj: TransformProtocol2D) -> SameVectorType:
         "transform2D docs"
         from .compute.planar import transform2D
 
         return transform2D.dispatch(obj, self)
 
     def is_parallel(
-        self, other: typing.Any, tolerance: typing.Any = 1e-5
-    ) -> typing.Any:
+        self, other: VectorProtocol, tolerance: float = 1e-5
+    ) -> BoolCollection:
         "is_parallel docs (note: this 'parallel' requires same direction)"
         from .compute.planar import is_parallel
 
@@ -678,8 +683,8 @@ class Planar(VectorProtocolPlanar):
             return is_parallel.dispatch(tolerance, self, other)
 
     def is_antiparallel(
-        self, other: typing.Any, tolerance: typing.Any = 1e-5
-    ) -> typing.Any:
+        self, other: VectorProtocol, tolerance: float = 1e-5
+    ) -> BoolCollection:
         "is_antiparallel docs"
         from .compute.planar import is_antiparallel
 
@@ -689,8 +694,8 @@ class Planar(VectorProtocolPlanar):
             return is_antiparallel.dispatch(tolerance, self, other)
 
     def is_perpendicular(
-        self, other: typing.Any, tolerance: typing.Any = 1e-5
-    ) -> typing.Any:
+        self, other: VectorProtocol, tolerance: float = 1e-5
+    ) -> BoolCollection:
         "is_perpendicular docs"
         from .compute.planar import is_perpendicular
 
@@ -699,34 +704,34 @@ class Planar(VectorProtocolPlanar):
         else:
             return is_perpendicular.dispatch(tolerance, self, other)
 
-    def unit(self) -> typing.Any:
+    def unit(self: SameVectorType) -> SameVectorType:
         "unit docs"
         from .compute.planar import unit
 
         return unit.dispatch(self)
 
-    def dot(self, other: typing.Any) -> typing.Any:
+    def dot(self, other: VectorProtocol) -> ScalarCollection:
         "dot docs"
         module = _compute_module_of(self, other)
         return module.dot.dispatch(self, other)
 
-    def add(self, other: typing.Any) -> typing.Any:
+    def add(self, other: VectorProtocol) -> VectorProtocol:
         "add docs"
         module = _compute_module_of(self, other)
         return module.add.dispatch(self, other)
 
-    def subtract(self, other: typing.Any) -> typing.Any:
+    def subtract(self, other: VectorProtocol) -> VectorProtocol:
         "subtract docs"
         module = _compute_module_of(self, other)
         return module.subtract.dispatch(self, other)
 
-    def scale(self, factor: typing.Any) -> typing.Any:
+    def scale(self: SameVectorType, factor: float) -> SameVectorType:
         "scale docs"
         from .compute.planar import scale
 
         return scale.dispatch(factor, self)
 
-    def equal(self, other: typing.Any) -> typing.Any:
+    def equal(self, other: VectorProtocol) -> BoolCollection:
         "equal docs"
         from .compute.planar import equal
 
@@ -736,7 +741,7 @@ class Planar(VectorProtocolPlanar):
             )
         return equal.dispatch(self, other)
 
-    def not_equal(self, other: typing.Any) -> typing.Any:
+    def not_equal(self, other: VectorProtocol) -> BoolCollection:
         "not_equal docs"
         from .compute.planar import not_equal
 
@@ -748,11 +753,11 @@ class Planar(VectorProtocolPlanar):
 
     def isclose(
         self,
-        other: typing.Any,
-        rtol: typing.Any = 1e-05,
-        atol: typing.Any = 1e-08,
-        equal_nan: typing.Any = False,
-    ) -> typing.Any:
+        other: VectorProtocol,
+        rtol: float = 1e-05,
+        atol: float = 1e-08,
+        equal_nan: bool = False,
+    ) -> BoolCollection:
         "isclose docs"
         from .compute.planar import isclose
 
@@ -770,61 +775,61 @@ class Spatial(Planar, VectorProtocolSpatial):
         raise AssertionError(repr(type(self)))
 
     @property
-    def z(self) -> typing.Any:
+    def z(self) -> ScalarCollection:
         "z docs"
         from .compute.spatial import z
 
         return z.dispatch(self)
 
     @property
-    def theta(self) -> typing.Any:
+    def theta(self) -> ScalarCollection:
         "theta docs"
         from .compute.spatial import theta
 
         return theta.dispatch(self)
 
     @property
-    def eta(self) -> typing.Any:
+    def eta(self) -> ScalarCollection:
         "eta docs"
         from .compute.spatial import eta
 
         return eta.dispatch(self)
 
     @property
-    def costheta(self) -> typing.Any:
+    def costheta(self) -> ScalarCollection:
         "costheta docs"
         from .compute.spatial import costheta
 
         return costheta.dispatch(self)
 
     @property
-    def cottheta(self) -> typing.Any:
+    def cottheta(self) -> ScalarCollection:
         "cottheta docs"
         from .compute.spatial import cottheta
 
         return cottheta.dispatch(self)
 
     @property
-    def mag(self) -> typing.Any:
+    def mag(self) -> ScalarCollection:
         "mag docs"
         from .compute.spatial import mag
 
         return mag.dispatch(self)
 
     @property
-    def mag2(self) -> typing.Any:
+    def mag2(self) -> ScalarCollection:
         "mag2 docs"
         from .compute.spatial import mag2
 
         return mag2.dispatch(self)
 
-    def cross(self, other: typing.Any) -> typing.Any:
+    def cross(self, other: VectorProtocol) -> VectorProtocolSpatial:
         "cross docs"
         from .compute.spatial import cross
 
         return cross.dispatch(self, other)
 
-    def deltaangle(self, other: typing.Any) -> typing.Any:
+    def deltaangle(self, other: VectorProtocol) -> ScalarCollection:
         """
         deltaangle docs
 
@@ -834,49 +839,51 @@ class Spatial(Planar, VectorProtocolSpatial):
 
         return deltaangle.dispatch(self, other)
 
-    def deltaeta(self, other: typing.Any) -> typing.Any:
+    def deltaeta(self, other: VectorProtocol) -> ScalarCollection:
         "deltaeta docs"
         from .compute.spatial import deltaeta
 
         return deltaeta.dispatch(self, other)
 
-    def deltaR(self, other: typing.Any) -> typing.Any:
+    def deltaR(self, other: VectorProtocol) -> ScalarCollection:
         "deltaR docs"
         from .compute.spatial import deltaR
 
         return deltaR.dispatch(self, other)
 
-    def deltaR2(self, other: typing.Any) -> typing.Any:
+    def deltaR2(self, other: VectorProtocol) -> ScalarCollection:
         "deltaR2 docs"
         from .compute.spatial import deltaR2
 
         return deltaR2.dispatch(self, other)
 
-    def rotateX(self, angle: typing.Any) -> typing.Any:
+    def rotateX(self: SameVectorType, angle: ScalarCollection) -> SameVectorType:
         "rotateX docs"
         from .compute.spatial import rotateX
 
         return rotateX.dispatch(angle, self)
 
-    def rotateY(self, angle: typing.Any) -> typing.Any:
+    def rotateY(self: SameVectorType, angle: ScalarCollection) -> SameVectorType:
         "rotateY docs"
         from .compute.spatial import rotateY
 
         return rotateY.dispatch(angle, self)
 
-    def rotate_axis(self, axis: typing.Any, angle: typing.Any) -> typing.Any:
+    def rotate_axis(
+        self: SameVectorType, axis: VectorProtocol, angle: ScalarCollection
+    ) -> SameVectorType:
         "rotate_axis docs"
         from .compute.spatial import rotate_axis
 
         return rotate_axis.dispatch(angle, axis, self)
 
     def rotate_euler(
-        self,
-        phi: typing.Any,
-        theta: typing.Any,
-        psi: typing.Any,
-        order: typing.Any = "zxz",
-    ) -> typing.Any:
+        self: SameVectorType,
+        phi: ScalarCollection,
+        theta: ScalarCollection,
+        psi: ScalarCollection,
+        order: str = "zxz",
+    ) -> SameVectorType:
         """
         rotate_euler docs
 
@@ -887,8 +894,11 @@ class Spatial(Planar, VectorProtocolSpatial):
         return rotate_euler.dispatch(phi, theta, psi, order.lower(), self)
 
     def rotate_nautical(
-        self, yaw: typing.Any, pitch: typing.Any, roll: typing.Any
-    ) -> typing.Any:
+        self: SameVectorType,
+        yaw: ScalarCollection,
+        pitch: ScalarCollection,
+        roll: ScalarCollection,
+    ) -> SameVectorType:
         """
         rotate_nautical docs
 
@@ -904,8 +914,12 @@ class Spatial(Planar, VectorProtocolSpatial):
         return rotate_euler.dispatch(roll, pitch, yaw, "zyx", self)
 
     def rotate_quaternion(
-        self, u: typing.Any, i: typing.Any, j: typing.Any, k: typing.Any
-    ) -> typing.Any:
+        self: SameVectorType,
+        u: ScalarCollection,
+        i: ScalarCollection,
+        j: ScalarCollection,
+        k: ScalarCollection,
+    ) -> SameVectorType:
         """
         rotate_quaternion docs
 
@@ -915,15 +929,15 @@ class Spatial(Planar, VectorProtocolSpatial):
 
         return rotate_quaternion.dispatch(u, i, j, k, self)
 
-    def transform3D(self, obj: typing.Any) -> typing.Any:
+    def transform3D(self: SameVectorType, obj: TransformProtocol3D) -> SameVectorType:
         "transform3D docs"
         from .compute.spatial import transform3D
 
         return transform3D.dispatch(obj, self)
 
     def is_parallel(
-        self, other: typing.Any, tolerance: typing.Any = 1e-5
-    ) -> typing.Any:
+        self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
+    ) -> BoolCollection:
         "is_parallel docs (note: this 'parallel' requires same direction)"
         from .compute.spatial import is_parallel
 
@@ -933,8 +947,8 @@ class Spatial(Planar, VectorProtocolSpatial):
             return is_parallel.dispatch(tolerance, self, other)
 
     def is_antiparallel(
-        self, other: typing.Any, tolerance: typing.Any = 1e-5
-    ) -> typing.Any:
+        self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
+    ) -> BoolCollection:
         "is_antiparallel docs"
         from .compute.spatial import is_antiparallel
 
@@ -944,8 +958,8 @@ class Spatial(Planar, VectorProtocolSpatial):
             return is_antiparallel.dispatch(tolerance, self, other)
 
     def is_perpendicular(
-        self, other: typing.Any, tolerance: typing.Any = 1e-5
-    ) -> typing.Any:
+        self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
+    ) -> BoolCollection:
         "is_perpendicular docs"
         from .compute.spatial import is_perpendicular
 
@@ -1132,7 +1146,7 @@ class Lorentz(Spatial, VectorProtocolLorentz):
         else:
             raise TypeError("specify 'beta' xor 'gamma', not both or neither")
 
-    def transform4D(self, obj: typing.Any) -> typing.Any:
+    def transform4D(self, obj: TransformProtocol4D) -> typing.Any:
         "transform4D docs"
         from .compute.lorentz import transform4D
 

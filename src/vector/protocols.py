@@ -3,12 +3,13 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+import sys
 import typing
 
-try:
-    from typing import TypedDict
-except ImportError:
+if sys.version_info < (3, 8):
     from typing_extensions import TypedDict
+else:
+    from typing import TypedDict
 
 
 class VectorProtocol:
@@ -155,18 +156,23 @@ class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
     transverse_mass2: typing.Any
 
 
+SameVectorType = typing.TypeVar("SameVectorType", bound="VectorProtocol")
+
 # Represents a number, a NumPy array, an Awkward Array, etc., of non-vectors.
 ScalarCollection = typing.Any
 
+# Represents a bool, a NumPy array of bools, an Awkward Array of bools, etc.
+BoolCollection = typing.Any
 
-class Transform2D(TypedDict):
+
+class TransformProtocol2D(TypedDict):
     xx: ScalarCollection
     xy: ScalarCollection
     yx: ScalarCollection
     yy: ScalarCollection
 
 
-class Transform3D(TypedDict):
+class TransformProtocol3D(TypedDict):
     xx: ScalarCollection
     xy: ScalarCollection
     xz: ScalarCollection
@@ -178,7 +184,7 @@ class Transform3D(TypedDict):
     zz: ScalarCollection
 
 
-class Transform4D(TypedDict):
+class TransformProtocol4D(TypedDict):
     xx: ScalarCollection
     xy: ScalarCollection
     xz: ScalarCollection
