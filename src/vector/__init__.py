@@ -3,6 +3,7 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+import typing
 
 from .backends.numpy_ import (  # noqa: 401
     MomentumNumpy2D,
@@ -45,7 +46,7 @@ from .methods import (  # noqa: 401
 # from .version import version as __version__
 
 
-def register_numba():
+def register_numba() -> None:
     import vector.backends.numba_numpy  # noqa: 401
     import vector.backends.numba_object  # noqa: 401
 
@@ -53,7 +54,7 @@ def register_numba():
 _awkward_registered = False
 
 
-def register_awkward():
+def register_awkward() -> None:
     import awkward
 
     import vector.backends.awkward_  # noqa: 401
@@ -63,7 +64,7 @@ def register_awkward():
     _awkward_registered = True
 
 
-def Array(*args, **kwargs):
+def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     "vector.Array docs"
     import awkward
 

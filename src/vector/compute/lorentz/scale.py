@@ -3,6 +3,8 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+# type: ignore
+
 import numpy
 
 from vector.compute.spatial import scale as scale3d

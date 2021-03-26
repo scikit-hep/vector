@@ -58,7 +58,7 @@ class AzimuthalObjectXY(typing.NamedTuple):
     y: float
 
     @property
-    def elements(self):
+    def elements(self) -> typing.Any:
         return (self.x, self.y)
 
 
@@ -70,7 +70,7 @@ class AzimuthalObjectRhoPhi(typing.NamedTuple):
     phi: float
 
     @property
-    def elements(self):
+    def elements(self) -> typing.Any:
         return (self.rho, self.phi)
 
 
@@ -81,7 +81,7 @@ class LongitudinalObjectZ(typing.NamedTuple):
     z: float
 
     @property
-    def elements(self):
+    def elements(self) -> typing.Any:
         return (self.z,)
 
 
@@ -92,7 +92,7 @@ class LongitudinalObjectTheta(typing.NamedTuple):
     theta: float
 
     @property
-    def elements(self):
+    def elements(self) -> typing.Any:
         return (self.theta,)
 
 
@@ -103,7 +103,7 @@ class LongitudinalObjectEta(typing.NamedTuple):
     eta: float
 
     @property
-    def elements(self):
+    def elements(self) -> typing.Any:
         return (self.eta,)
 
 
@@ -114,7 +114,7 @@ class TemporalObjectT(typing.NamedTuple):
     t: float
 
     @property
-    def elements(self):
+    def elements(self) -> typing.Any:
         return (self.t,)
 
 
@@ -125,7 +125,7 @@ class TemporalObjectTau(typing.NamedTuple):
     tau: float
 
     @property
-    def elements(self):
+    def elements(self) -> typing.Any:
         return (self.tau,)
 
 
@@ -143,7 +143,7 @@ _coord_object_type = {
 }
 
 
-def _replace_data(obj, result):
+def _replace_data(obj: typing.Any, result: typing.Any) -> typing.Any:
     if not isinstance(result, VectorObject):
         raise TypeError(f"can only assign a single vector to {type(obj).__name__}")
 
@@ -179,64 +179,70 @@ def _replace_data(obj, result):
 class VectorObject(Vector):
     lib = numpy
 
-    def __eq__(self, other):
+    def __eq__(self, other: typing.Any) -> typing.Any:
         return numpy.equal(self, other)
 
-    def __ne__(self, other):
+    def __ne__(self, other: typing.Any) -> typing.Any:
         return numpy.not_equal(self, other)
 
-    def __abs__(self):
+    def __abs__(self) -> typing.Any:
         return numpy.absolute(self)
 
-    def __add__(self, other):
+    def __add__(self, other: typing.Any) -> typing.Any:
         return numpy.add(self, other)
 
-    def __radd__(self, other):
+    def __radd__(self, other: typing.Any) -> typing.Any:
         return numpy.add(other, self)
 
-    def __iadd__(self, other):
+    def __iadd__(self, other: typing.Any) -> typing.Any:
         return _replace_data(self, numpy.add(self, other))
 
-    def __sub__(self, other):
+    def __sub__(self, other: typing.Any) -> typing.Any:
         return numpy.subtract(self, other)
 
-    def __rsub__(self, other):
+    def __rsub__(self, other: typing.Any) -> typing.Any:
         return numpy.subtract(other, self)
 
-    def __isub__(self, other):
+    def __isub__(self, other: typing.Any) -> typing.Any:
         return _replace_data(self, numpy.subtract(self, other))
 
-    def __mul__(self, other):
+    def __mul__(self, other: typing.Any) -> typing.Any:
         return numpy.multiply(self, other)
 
-    def __rmul__(self, other):
+    def __rmul__(self, other: typing.Any) -> typing.Any:
         return numpy.multiply(other, self)
 
-    def __imul__(self, other):
+    def __imul__(self, other: typing.Any) -> typing.Any:
         return _replace_data(self, numpy.multiply(self, other))
 
-    def __neg__(self):
+    def __neg__(self) -> typing.Any:
         return numpy.negative(self)
 
-    def __pos__(self):
+    def __pos__(self) -> typing.Any:
         return numpy.positive(self)
 
-    def __truediv__(self, other):
+    def __truediv__(self, other: typing.Any) -> typing.Any:
         return numpy.true_divide(self, other)
 
-    def __rtruediv__(self, other):
+    def __rtruediv__(self, other: typing.Any) -> typing.Any:
         return numpy.true_divide(other, self)
 
-    def __itruediv__(self, other):
+    def __itruediv__(self, other: typing.Any) -> typing.Any:
         return _replace_data(self, numpy.true_divide(self, other))
 
-    def __pow__(self, other):
+    def __pow__(self, other: typing.Any) -> typing.Any:
         return numpy.power(self, other)
 
-    def __matmul__(self, other):
+    def __matmul__(self, other: typing.Any) -> typing.Any:
         return numpy.matmul(self, other)
 
-    def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
+    def __array_ufunc__(
+        self,
+        ufunc: typing.Any,
+        method: typing.Any,
+        *inputs: typing.Any,
+        **kwargs: typing.Any,
+    ) -> typing.Any:
         if not isinstance(_handler_of(*inputs), VectorObject):
             # Let a higher-precedence backend handle it.
             return NotImplemented
@@ -431,24 +437,30 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
     azimuthal: typing.Any
 
     @classmethod
-    def from_xy(cls, x, y):
+    def from_xy(cls, x: typing.Any, y: typing.Any) -> typing.Any:
         return cls(AzimuthalObjectXY(x, y))
 
     @classmethod
-    def from_rhophi(cls, rho, phi):
+    def from_rhophi(cls, rho: typing.Any, phi: typing.Any) -> typing.Any:
         return cls(AzimuthalObjectRhoPhi(rho, phi))
 
-    def __init__(self, azimuthal):
+    def __init__(self, azimuthal: typing.Any) -> None:
         self.azimuthal = azimuthal
 
-    def __repr__(self):
+    def __repr__(self) -> typing.Any:
         aznames = _coordinate_class_to_names[_aztype(self)]
         out = []
         for x in aznames:
             out.append(f"{x}={getattr(self.azimuthal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
-    def _wrap_result(self, cls, result, returns, num_vecargs):
+    def _wrap_result(
+        self,
+        cls: typing.Any,
+        result: typing.Any,
+        returns: typing.Any,
+        num_vecargs: typing.Any,
+    ) -> typing.Any:
         if returns == [float] or returns == [bool]:
             return result
 
@@ -510,40 +522,40 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             raise AssertionError(repr(returns))
 
     @property
-    def x(self):
+    def x(self) -> typing.Any:
         return super().x
 
     @x.setter
-    def x(self, x):
+    def x(self, x: typing.Any) -> None:
         self.azimuthal = AzimuthalObjectXY(x, self.y)
 
     @property
-    def y(self):
+    def y(self) -> typing.Any:
         return super().y
 
     @y.setter
-    def y(self, y):
+    def y(self, y: typing.Any) -> None:
         self.azimuthal = AzimuthalObjectXY(self.x, y)
 
     @property
-    def rho(self):
+    def rho(self) -> typing.Any:
         return super().rho
 
     @rho.setter
-    def rho(self, rho):
+    def rho(self, rho: typing.Any) -> None:
         self.azimuthal = AzimuthalObjectRhoPhi(rho, self.phi)
 
     @property
-    def phi(self):
+    def phi(self) -> typing.Any:
         return super().phi
 
     @phi.setter
-    def phi(self, phi):
+    def phi(self, phi: typing.Any) -> None:
         self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)
 
 
 class MomentumObject2D(PlanarMomentum, VectorObject2D):
-    def __repr__(self):
+    def __repr__(self) -> typing.Any:
         aznames = _coordinate_class_to_names[_aztype(self)]
         out = []
         for x in aznames:
@@ -552,27 +564,27 @@ class MomentumObject2D(PlanarMomentum, VectorObject2D):
         return "vector.obj(" + ", ".join(out) + ")"
 
     @property
-    def px(self):
+    def px(self) -> typing.Any:
         return super().px
 
     @px.setter
-    def px(self, px):
+    def px(self, px: typing.Any) -> None:
         self.azimuthal = AzimuthalObjectXY(px, self.py)
 
     @property
-    def py(self):
+    def py(self) -> typing.Any:
         return super().py
 
     @py.setter
-    def py(self, py):
+    def py(self, py: typing.Any) -> None:
         self.azimuthal = AzimuthalObjectXY(self.px, py)
 
     @property
-    def pt(self):
+    def pt(self) -> typing.Any:
         return super().pt
 
     @pt.setter
-    def pt(self, pt):
+    def pt(self, pt: typing.Any) -> None:
         self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)
 
 
@@ -583,34 +595,42 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
     longitudinal: typing.Any
 
     @classmethod
-    def from_xyz(cls, x, y, z):
+    def from_xyz(cls, x: typing.Any, y: typing.Any, z: typing.Any) -> typing.Any:
         return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z))
 
     @classmethod
-    def from_xytheta(cls, x, y, theta):
+    def from_xytheta(
+        cls, x: typing.Any, y: typing.Any, theta: typing.Any
+    ) -> typing.Any:
         return cls(AzimuthalObjectXY(x, y), LongitudinalObjectTheta(theta))
 
     @classmethod
-    def from_xyeta(cls, x, y, eta):
+    def from_xyeta(cls, x: typing.Any, y: typing.Any, eta: typing.Any) -> typing.Any:
         return cls(AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta))
 
     @classmethod
-    def from_rhophiz(cls, rho, phi, z):
+    def from_rhophiz(
+        cls, rho: typing.Any, phi: typing.Any, z: typing.Any
+    ) -> typing.Any:
         return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectZ(z))
 
     @classmethod
-    def from_rhophitheta(cls, rho, phi, theta):
+    def from_rhophitheta(
+        cls, rho: typing.Any, phi: typing.Any, theta: typing.Any
+    ) -> typing.Any:
         return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectTheta(theta))
 
     @classmethod
-    def from_rhophieta(cls, rho, phi, eta):
+    def from_rhophieta(
+        cls, rho: typing.Any, phi: typing.Any, eta: typing.Any
+    ) -> typing.Any:
         return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectEta(eta))
 
-    def __init__(self, azimuthal, longitudinal):
+    def __init__(self, azimuthal: typing.Any, longitudinal: typing.Any) -> None:
         self.azimuthal = azimuthal
         self.longitudinal = longitudinal
 
-    def __repr__(self):
+    def __repr__(self) -> typing.Any:
         aznames = _coordinate_class_to_names[_aztype(self)]
         lnames = _coordinate_class_to_names[_ltype(self)]
         out = []
@@ -620,7 +640,13 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             out.append(f"{x}={getattr(self.longitudinal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
-    def _wrap_result(self, cls, result, returns, num_vecargs):
+    def _wrap_result(
+        self,
+        cls: typing.Any,
+        result: typing.Any,
+        returns: typing.Any,
+        num_vecargs: typing.Any,
+    ) -> typing.Any:
         if returns == [float] or returns == [bool]:
             return result
 
@@ -682,64 +708,64 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             raise AssertionError(repr(returns))
 
     @property
-    def x(self):
+    def x(self) -> typing.Any:
         return super().x
 
     @x.setter
-    def x(self, x):
+    def x(self, x: typing.Any) -> None:
         self.azimuthal = AzimuthalObjectXY(x, self.y)
 
     @property
-    def y(self):
+    def y(self) -> typing.Any:
         return super().y
 
     @y.setter
-    def y(self, y):
+    def y(self, y: typing.Any) -> None:
         self.azimuthal = AzimuthalObjectXY(self.x, y)
 
     @property
-    def rho(self):
+    def rho(self) -> typing.Any:
         return super().rho
 
     @rho.setter
-    def rho(self, rho):
+    def rho(self, rho: typing.Any) -> None:
         self.azimuthal = AzimuthalObjectRhoPhi(rho, self.phi)
 
     @property
-    def phi(self):
+    def phi(self) -> typing.Any:
         return super().phi
 
     @phi.setter
-    def phi(self, phi):
+    def phi(self, phi: typing.Any) -> None:
         self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)
 
     @property
-    def z(self):
+    def z(self) -> typing.Any:
         return super().z
 
     @z.setter
-    def z(self, z):
+    def z(self, z: typing.Any) -> None:
         self.longitudinal = LongitudinalObjectZ(z)
 
     @property
-    def theta(self):
+    def theta(self) -> typing.Any:
         return super().theta
 
     @theta.setter
-    def theta(self, theta):
+    def theta(self, theta: typing.Any) -> None:
         self.longitudinal = LongitudinalObjectTheta(theta)
 
     @property
-    def eta(self):
+    def eta(self) -> typing.Any:
         return super().eta
 
     @eta.setter
-    def eta(self, eta):
+    def eta(self, eta: typing.Any) -> None:
         self.longitudinal = LongitudinalObjectEta(eta)
 
 
 class MomentumObject3D(SpatialMomentum, VectorObject3D):
-    def __repr__(self):
+    def __repr__(self) -> typing.Any:
         aznames = _coordinate_class_to_names[_aztype(self)]
         lnames = _coordinate_class_to_names[_ltype(self)]
         out = []
@@ -752,35 +778,35 @@ class MomentumObject3D(SpatialMomentum, VectorObject3D):
         return "vector.obj(" + ", ".join(out) + ")"
 
     @property
-    def px(self):
+    def px(self) -> typing.Any:
         return super().px
 
     @px.setter
-    def px(self, px):
+    def px(self, px: typing.Any) -> None:
         self.azimuthal = AzimuthalObjectXY(px, self.py)
 
     @property
-    def py(self):
+    def py(self) -> typing.Any:
         return super().py
 
     @py.setter
-    def py(self, py):
+    def py(self, py: typing.Any) -> None:
         self.azimuthal = AzimuthalObjectXY(self.px, py)
 
     @property
-    def pt(self):
+    def pt(self) -> typing.Any:
         return super().pt
 
     @pt.setter
-    def pt(self, pt):
+    def pt(self, pt: typing.Any) -> None:
         self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)
 
     @property
-    def pz(self):
+    def pz(self) -> typing.Any:
         return super().pz
 
     @pz.setter
-    def pz(self, pz):
+    def pz(self, pz: typing.Any) -> None:
         self.longitudinal = LongitudinalObjectZ(pz)
 
 
@@ -792,23 +818,31 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
     temporal: typing.Any
 
     @classmethod
-    def from_xyzt(cls, x, y, z, t):
+    def from_xyzt(
+        cls, x: typing.Any, y: typing.Any, z: typing.Any, t: typing.Any
+    ) -> typing.Any:
         return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z), TemporalObjectT(t))
 
     @classmethod
-    def from_xyztau(cls, x, y, z, tau):
+    def from_xyztau(
+        cls, x: typing.Any, y: typing.Any, z: typing.Any, tau: typing.Any
+    ) -> typing.Any:
         return cls(
             AzimuthalObjectXY(x, y), LongitudinalObjectZ(z), TemporalObjectTau(tau)
         )
 
     @classmethod
-    def from_xythetat(cls, x, y, theta, t):
+    def from_xythetat(
+        cls, x: typing.Any, y: typing.Any, theta: typing.Any, t: typing.Any
+    ) -> typing.Any:
         return cls(
             AzimuthalObjectXY(x, y), LongitudinalObjectTheta(theta), TemporalObjectT(t)
         )
 
     @classmethod
-    def from_xythetatau(cls, x, y, theta, tau):
+    def from_xythetatau(
+        cls, x: typing.Any, y: typing.Any, theta: typing.Any, tau: typing.Any
+    ) -> typing.Any:
         return cls(
             AzimuthalObjectXY(x, y),
             LongitudinalObjectTheta(theta),
@@ -816,25 +850,33 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         )
 
     @classmethod
-    def from_xyetat(cls, x, y, eta, t):
+    def from_xyetat(
+        cls, x: typing.Any, y: typing.Any, eta: typing.Any, t: typing.Any
+    ) -> typing.Any:
         return cls(
             AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta), TemporalObjectT(t)
         )
 
     @classmethod
-    def from_xyetatau(cls, x, y, eta, tau):
+    def from_xyetatau(
+        cls, x: typing.Any, y: typing.Any, eta: typing.Any, tau: typing.Any
+    ) -> typing.Any:
         return cls(
             AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta), TemporalObjectTau(tau)
         )
 
     @classmethod
-    def from_rhophizt(cls, rho, phi, z, t):
+    def from_rhophizt(
+        cls, rho: typing.Any, phi: typing.Any, z: typing.Any, t: typing.Any
+    ) -> typing.Any:
         return cls(
             AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectZ(z), TemporalObjectT(t)
         )
 
     @classmethod
-    def from_rhophiztau(cls, rho, phi, z, tau):
+    def from_rhophiztau(
+        cls, rho: typing.Any, phi: typing.Any, z: typing.Any, tau: typing.Any
+    ) -> typing.Any:
         return cls(
             AzimuthalObjectRhoPhi(rho, phi),
             LongitudinalObjectZ(z),
@@ -842,7 +884,9 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         )
 
     @classmethod
-    def from_rhophithetat(cls, rho, phi, theta, t):
+    def from_rhophithetat(
+        cls, rho: typing.Any, phi: typing.Any, theta: typing.Any, t: typing.Any
+    ) -> typing.Any:
         return cls(
             AzimuthalObjectRhoPhi(rho, phi),
             LongitudinalObjectTheta(theta),
@@ -850,7 +894,9 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         )
 
     @classmethod
-    def from_rhophithetatau(cls, rho, phi, theta, tau):
+    def from_rhophithetatau(
+        cls, rho: typing.Any, phi: typing.Any, theta: typing.Any, tau: typing.Any
+    ) -> typing.Any:
         return cls(
             AzimuthalObjectRhoPhi(rho, phi),
             LongitudinalObjectTheta(theta),
@@ -858,7 +904,9 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         )
 
     @classmethod
-    def from_rhophietat(cls, rho, phi, eta, t):
+    def from_rhophietat(
+        cls, rho: typing.Any, phi: typing.Any, eta: typing.Any, t: typing.Any
+    ) -> typing.Any:
         return cls(
             AzimuthalObjectRhoPhi(rho, phi),
             LongitudinalObjectEta(eta),
@@ -866,19 +914,23 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         )
 
     @classmethod
-    def from_rhophietatau(cls, rho, phi, eta, tau):
+    def from_rhophietatau(
+        cls, rho: typing.Any, phi: typing.Any, eta: typing.Any, tau: typing.Any
+    ) -> typing.Any:
         return cls(
             AzimuthalObjectRhoPhi(rho, phi),
             LongitudinalObjectEta(eta),
             TemporalObjectTau(tau),
         )
 
-    def __init__(self, azimuthal, longitudinal, temporal):
+    def __init__(
+        self, azimuthal: typing.Any, longitudinal: typing.Any, temporal: typing.Any
+    ) -> None:
         self.azimuthal = azimuthal
         self.longitudinal = longitudinal
         self.temporal = temporal
 
-    def __repr__(self):
+    def __repr__(self) -> typing.Any:
         aznames = _coordinate_class_to_names[_aztype(self)]
         lnames = _coordinate_class_to_names[_ltype(self)]
         tnames = _coordinate_class_to_names[_ttype(self)]
@@ -891,7 +943,13 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             out.append(f"{x}={getattr(self.temporal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
-    def _wrap_result(self, cls, result, returns, num_vecargs):
+    def _wrap_result(
+        self,
+        cls: typing.Any,
+        result: typing.Any,
+        returns: typing.Any,
+        num_vecargs: typing.Any,
+    ) -> typing.Any:
         if returns == [float] or returns == [bool]:
             return result
 
@@ -953,80 +1011,80 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             raise AssertionError(repr(returns))
 
     @property
-    def x(self):
+    def x(self) -> typing.Any:
         return super().x
 
     @x.setter
-    def x(self, x):
+    def x(self, x: typing.Any) -> None:
         self.azimuthal = AzimuthalObjectXY(x, self.y)
 
     @property
-    def y(self):
+    def y(self) -> typing.Any:
         return super().y
 
     @y.setter
-    def y(self, y):
+    def y(self, y: typing.Any) -> None:
         self.azimuthal = AzimuthalObjectXY(self.x, y)
 
     @property
-    def rho(self):
+    def rho(self) -> typing.Any:
         return super().rho
 
     @rho.setter
-    def rho(self, rho):
+    def rho(self, rho: typing.Any) -> None:
         self.azimuthal = AzimuthalObjectRhoPhi(rho, self.phi)
 
     @property
-    def phi(self):
+    def phi(self) -> typing.Any:
         return super().phi
 
     @phi.setter
-    def phi(self, phi):
+    def phi(self, phi: typing.Any) -> None:
         self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)
 
     @property
-    def z(self):
+    def z(self) -> typing.Any:
         return super().z
 
     @z.setter
-    def z(self, z):
+    def z(self, z: typing.Any) -> None:
         self.longitudinal = LongitudinalObjectZ(z)
 
     @property
-    def theta(self):
+    def theta(self) -> typing.Any:
         return super().theta
 
     @theta.setter
-    def theta(self, theta):
+    def theta(self, theta: typing.Any) -> None:
         self.longitudinal = LongitudinalObjectTheta(theta)
 
     @property
-    def eta(self):
+    def eta(self) -> typing.Any:
         return super().eta
 
     @eta.setter
-    def eta(self, eta):
+    def eta(self, eta: typing.Any) -> None:
         self.longitudinal = LongitudinalObjectEta(eta)
 
     @property
-    def t(self):
+    def t(self) -> typing.Any:
         return super().t
 
     @t.setter
-    def t(self, t):
+    def t(self, t: typing.Any) -> None:
         self.temporal = TemporalObjectT(t)
 
     @property
-    def tau(self):
+    def tau(self) -> typing.Any:
         return super().tau
 
     @tau.setter
-    def tau(self, tau):
+    def tau(self, tau: typing.Any) -> None:
         self.temporal = TemporalObjectTau(tau)
 
 
 class MomentumObject4D(LorentzMomentum, VectorObject4D):
-    def __repr__(self):
+    def __repr__(self) -> typing.Any:
         aznames = _coordinate_class_to_names[_aztype(self)]
         lnames = _coordinate_class_to_names[_ltype(self)]
         tnames = _coordinate_class_to_names[_ttype(self)]
@@ -1043,71 +1101,76 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
         return "vector.obj(" + ", ".join(out) + ")"
 
     @property
-    def px(self):
+    def px(self) -> typing.Any:
         return super().px
 
     @px.setter
-    def px(self, px):
+    def px(self, px: typing.Any) -> None:
         self.azimuthal = AzimuthalObjectXY(px, self.py)
 
     @property
-    def py(self):
+    def py(self) -> typing.Any:
         return super().py
 
     @py.setter
-    def py(self, py):
+    def py(self, py: typing.Any) -> None:
         self.azimuthal = AzimuthalObjectXY(self.px, py)
 
     @property
-    def pt(self):
+    def pt(self) -> typing.Any:
         return super().pt
 
     @pt.setter
-    def pt(self, pt):
+    def pt(self, pt: typing.Any) -> None:
         self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)
 
     @property
-    def pz(self):
+    def pz(self) -> typing.Any:
         return super().pz
 
     @pz.setter
-    def pz(self, pz):
+    def pz(self, pz: typing.Any) -> None:
         self.longitudinal = LongitudinalObjectZ(pz)
 
     @property
-    def E(self):
+    def E(self) -> typing.Any:
         return super().E
 
     @E.setter
-    def E(self, E):
+    def E(self, E: typing.Any) -> None:
         self.temporal = TemporalObjectT(E)
 
     @property
-    def energy(self):
+    def energy(self) -> typing.Any:
         return super().energy
 
     @energy.setter
-    def energy(self, energy):
+    def energy(self, energy: typing.Any) -> None:
         self.temporal = TemporalObjectT(energy)
 
     @property
-    def M(self):
+    def M(self) -> typing.Any:
         return super().M
 
     @M.setter
-    def M(self, M):
+    def M(self, M: typing.Any) -> None:
         self.temporal = TemporalObjectTau(M)
 
     @property
-    def mass(self):
+    def mass(self) -> typing.Any:
         return super().mass
 
     @mass.setter
-    def mass(self, mass):
+    def mass(self, mass: typing.Any) -> None:
         self.temporal = TemporalObjectTau(mass)
 
 
-def _gather_coordinates(planar_class, spatial_class, lorentz_class, coordinates):
+def _gather_coordinates(
+    planar_class: typing.Any,
+    spatial_class: typing.Any,
+    lorentz_class: typing.Any,
+    coordinates: typing.Any,
+) -> typing.Any:
     azimuthal: typing.Optional[
         typing.Union[AzimuthalObjectXY, AzimuthalObjectRhoPhi]
     ] = None
@@ -1186,7 +1249,7 @@ def _gather_coordinates(planar_class, spatial_class, lorentz_class, coordinates)
     )
 
 
-def obj(**coordinates):
+def obj(**coordinates: typing.Any) -> typing.Any:
     "vector.obj docs"
     is_momentum = False
     generic_coordinates = {}
