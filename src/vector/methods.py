@@ -672,7 +672,7 @@ class Planar(VectorProtocolPlanar):
         return transform2D.dispatch(obj, self)
 
     def is_parallel(
-        self, other: VectorProtocol, tolerance: float = 1e-5
+        self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
     ) -> BoolCollection:
         "is_parallel docs (note: this 'parallel' requires same direction)"
         from .compute.planar import is_parallel
@@ -683,7 +683,7 @@ class Planar(VectorProtocolPlanar):
             return is_parallel.dispatch(tolerance, self, other)
 
     def is_antiparallel(
-        self, other: VectorProtocol, tolerance: float = 1e-5
+        self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
     ) -> BoolCollection:
         "is_antiparallel docs"
         from .compute.planar import is_antiparallel
@@ -694,7 +694,7 @@ class Planar(VectorProtocolPlanar):
             return is_antiparallel.dispatch(tolerance, self, other)
 
     def is_perpendicular(
-        self, other: VectorProtocol, tolerance: float = 1e-5
+        self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
     ) -> BoolCollection:
         "is_perpendicular docs"
         from .compute.planar import is_perpendicular
@@ -725,7 +725,7 @@ class Planar(VectorProtocolPlanar):
         module = _compute_module_of(self, other)
         return module.subtract.dispatch(self, other)
 
-    def scale(self: SameVectorType, factor: float) -> SameVectorType:
+    def scale(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
         "scale docs"
         from .compute.planar import scale
 
@@ -754,9 +754,9 @@ class Planar(VectorProtocolPlanar):
     def isclose(
         self,
         other: VectorProtocol,
-        rtol: float = 1e-05,
-        atol: float = 1e-08,
-        equal_nan: bool = False,
+        rtol: ScalarCollection = 1e-05,
+        atol: ScalarCollection = 1e-08,
+        equal_nan: BoolCollection = False,
     ) -> BoolCollection:
         "isclose docs"
         from .compute.planar import isclose
@@ -968,34 +968,34 @@ class Spatial(Planar, VectorProtocolSpatial):
         else:
             return is_perpendicular.dispatch(tolerance, self, other)
 
-    def unit(self) -> typing.Any:
+    def unit(self: SameVectorType) -> SameVectorType:
         "unit docs"
         from .compute.spatial import unit
 
         return unit.dispatch(self)
 
-    def dot(self, other: typing.Any) -> typing.Any:
+    def dot(self, other: VectorProtocol) -> ScalarCollection:
         "dot docs"
         module = _compute_module_of(self, other)
         return module.dot.dispatch(self, other)
 
-    def add(self, other: typing.Any) -> typing.Any:
+    def add(self, other: VectorProtocol) -> VectorProtocol:
         "add docs"
         module = _compute_module_of(self, other)
         return module.add.dispatch(self, other)
 
-    def subtract(self, other: typing.Any) -> typing.Any:
+    def subtract(self, other: VectorProtocol) -> VectorProtocol:
         "subtract docs"
         module = _compute_module_of(self, other)
         return module.subtract.dispatch(self, other)
 
-    def scale(self, factor: typing.Any) -> typing.Any:
+    def scale(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
         "scale docs"
         from .compute.spatial import scale
 
         return scale.dispatch(factor, self)
 
-    def equal(self, other: typing.Any) -> typing.Any:
+    def equal(self, other: VectorProtocol) -> BoolCollection:
         "equal docs"
         from .compute.spatial import equal
 
@@ -1005,7 +1005,7 @@ class Spatial(Planar, VectorProtocolSpatial):
             )
         return equal.dispatch(self, other)
 
-    def not_equal(self, other: typing.Any) -> typing.Any:
+    def not_equal(self, other: VectorProtocol) -> BoolCollection:
         "not_equal docs"
         from .compute.spatial import not_equal
 
@@ -1017,11 +1017,11 @@ class Spatial(Planar, VectorProtocolSpatial):
 
     def isclose(
         self,
-        other: typing.Any,
-        rtol: typing.Any = 1e-05,
-        atol: typing.Any = 1e-08,
-        equal_nan: typing.Any = False,
-    ) -> typing.Any:
+        other: VectorProtocol,
+        rtol: ScalarCollection = 1e-05,
+        atol: ScalarCollection = 1e-08,
+        equal_nan: BoolCollection = False,
+    ) -> BoolCollection:
         "isclose docs"
         from .compute.spatial import isclose
 
@@ -1039,67 +1039,69 @@ class Lorentz(Spatial, VectorProtocolLorentz):
         raise AssertionError(repr(type(self)))
 
     @property
-    def t(self) -> typing.Any:
+    def t(self) -> ScalarCollection:
         "t docs"
         from .compute.lorentz import t
 
         return t.dispatch(self)
 
     @property
-    def t2(self) -> typing.Any:
+    def t2(self) -> ScalarCollection:
         "t2 docs"
         from .compute.lorentz import t2
 
         return t2.dispatch(self)
 
     @property
-    def tau(self) -> typing.Any:
+    def tau(self) -> ScalarCollection:
         "tau docs"
         from .compute.lorentz import tau
 
         return tau.dispatch(self)
 
     @property
-    def tau2(self) -> typing.Any:
+    def tau2(self) -> ScalarCollection:
         "tau2 docs"
         from .compute.lorentz import tau2
 
         return tau2.dispatch(self)
 
     @property
-    def beta(self) -> typing.Any:
+    def beta(self) -> ScalarCollection:
         "beta docs"
         from .compute.lorentz import beta
 
         return beta.dispatch(self)
 
     @property
-    def gamma(self) -> typing.Any:
+    def gamma(self) -> ScalarCollection:
         "gamma docs"
         from .compute.lorentz import gamma
 
         return gamma.dispatch(self)
 
     @property
-    def rapidity(self) -> typing.Any:
+    def rapidity(self) -> ScalarCollection:
         "rapidity docs"
         from .compute.lorentz import rapidity
 
         return rapidity.dispatch(self)
 
-    def boost_p4(self, p4: typing.Any) -> typing.Any:
+    def boost_p4(self: SameVectorType, p4: VectorProtocolLorentz) -> SameVectorType:
         "boost_p4 docs"
         from .compute.lorentz import boost_p4
 
         return boost_p4.dispatch(self, p4)
 
-    def boost_beta3(self, beta3: typing.Any) -> typing.Any:
+    def boost_beta3(
+        self: SameVectorType, beta3: VectorProtocolSpatial
+    ) -> SameVectorType:
         "boost_beta3 docs"
         from .compute.lorentz import boost_beta3
 
         return boost_beta3.dispatch(self, beta3)
 
-    def boost(self, booster: typing.Any) -> typing.Any:
+    def boost(self: SameVectorType, booster: VectorProtocol) -> SameVectorType:
         "boost docs"
         from .compute.lorentz import boost_beta3, boost_p4
 
@@ -1113,7 +1115,11 @@ class Lorentz(Spatial, VectorProtocolLorentz):
                 "a Vector4D to boost by a momentum 4-vector"
             )
 
-    def boostX(self, beta: typing.Any = None, gamma: typing.Any = None) -> typing.Any:
+    def boostX(
+        self: SameVectorType,
+        beta: typing.Optional[ScalarCollection] = None,
+        gamma: typing.Optional[ScalarCollection] = None,
+    ) -> SameVectorType:
         "boostX docs"
         from .compute.lorentz import boostX_beta, boostX_gamma
 
@@ -1124,7 +1130,11 @@ class Lorentz(Spatial, VectorProtocolLorentz):
         else:
             raise TypeError("specify 'beta' xor 'gamma', not both or neither")
 
-    def boostY(self, beta: typing.Any = None, gamma: typing.Any = None) -> typing.Any:
+    def boostY(
+        self: SameVectorType,
+        beta: typing.Optional[ScalarCollection] = None,
+        gamma: typing.Optional[ScalarCollection] = None,
+    ) -> SameVectorType:
         "boostY docs"
         from .compute.lorentz import boostY_beta, boostY_gamma
 
@@ -1135,7 +1145,11 @@ class Lorentz(Spatial, VectorProtocolLorentz):
         else:
             raise TypeError("specify 'beta' xor 'gamma', not both or neither")
 
-    def boostZ(self, beta: typing.Any = None, gamma: typing.Any = None) -> typing.Any:
+    def boostZ(
+        self: SameVectorType,
+        beta: typing.Optional[ScalarCollection] = None,
+        gamma: typing.Optional[ScalarCollection] = None,
+    ) -> SameVectorType:
         "boostZ docs"
         from .compute.lorentz import boostZ_beta, boostZ_gamma
 
@@ -1146,64 +1160,64 @@ class Lorentz(Spatial, VectorProtocolLorentz):
         else:
             raise TypeError("specify 'beta' xor 'gamma', not both or neither")
 
-    def transform4D(self, obj: TransformProtocol4D) -> typing.Any:
+    def transform4D(self: SameVectorType, obj: TransformProtocol4D) -> SameVectorType:
         "transform4D docs"
         from .compute.lorentz import transform4D
 
         return transform4D.dispatch(obj, self)
 
-    def to_beta3(self) -> typing.Any:
+    def to_beta3(self) -> VectorProtocolSpatial:
         "to_beta3 docs"
         from .compute.lorentz import to_beta3
 
         return to_beta3.dispatch(self)
 
-    def is_timelike(self, tolerance: typing.Any = 0) -> typing.Any:
+    def is_timelike(self, tolerance: ScalarCollection = 0) -> BoolCollection:
         "is_timelike docs"
         from .compute.lorentz import is_timelike
 
         return is_timelike.dispatch(tolerance, self)
 
-    def is_spacelike(self, tolerance: typing.Any = 0) -> typing.Any:
+    def is_spacelike(self, tolerance: ScalarCollection = 0) -> BoolCollection:
         "is_spacelike docs"
         from .compute.lorentz import is_spacelike
 
         return is_spacelike.dispatch(tolerance, self)
 
-    def is_lightlike(self, tolerance: typing.Any = 1e-5) -> typing.Any:
+    def is_lightlike(self, tolerance: ScalarCollection = 1e-5) -> BoolCollection:
         "is_timelike docs"
         from .compute.lorentz import is_lightlike
 
         return is_lightlike.dispatch(tolerance, self)
 
-    def unit(self) -> typing.Any:
+    def unit(self: SameVectorType) -> SameVectorType:
         "unit docs"
         from .compute.lorentz import unit
 
         return unit.dispatch(self)
 
-    def dot(self, other: typing.Any) -> typing.Any:
+    def dot(self, other: VectorProtocol) -> ScalarCollection:
         "dot docs"
         module = _compute_module_of(self, other)
         return module.dot.dispatch(self, other)
 
-    def add(self, other: typing.Any) -> typing.Any:
+    def add(self, other: VectorProtocol) -> VectorProtocol:
         "add docs"
         module = _compute_module_of(self, other)
         return module.add.dispatch(self, other)
 
-    def subtract(self, other: typing.Any) -> typing.Any:
+    def subtract(self, other: VectorProtocol) -> VectorProtocol:
         "subtract docs"
         module = _compute_module_of(self, other)
         return module.subtract.dispatch(self, other)
 
-    def scale(self, factor: typing.Any) -> typing.Any:
+    def scale(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
         "scale docs"
         from .compute.lorentz import scale
 
         return scale.dispatch(factor, self)
 
-    def equal(self, other: typing.Any) -> typing.Any:
+    def equal(self, other: VectorProtocol) -> BoolCollection:
         "equal docs"
         from .compute.lorentz import equal
 
@@ -1213,7 +1227,7 @@ class Lorentz(Spatial, VectorProtocolLorentz):
             )
         return equal.dispatch(self, other)
 
-    def not_equal(self, other: typing.Any) -> typing.Any:
+    def not_equal(self, other: VectorProtocol) -> BoolCollection:
         "not_equal docs"
         from .compute.lorentz import not_equal
 
@@ -1225,11 +1239,11 @@ class Lorentz(Spatial, VectorProtocolLorentz):
 
     def isclose(
         self,
-        other: typing.Any,
-        rtol: typing.Any = 1e-05,
-        atol: typing.Any = 1e-08,
-        equal_nan: typing.Any = False,
-    ) -> typing.Any:
+        other: VectorProtocol,
+        rtol: ScalarCollection = 1e-05,
+        atol: ScalarCollection = 1e-08,
+        equal_nan: BoolCollection = False,
+    ) -> BoolCollection:
         "isclose docs"
         from .compute.lorentz import isclose
 
@@ -1246,139 +1260,139 @@ class Momentum:
 
 class PlanarMomentum(Momentum, MomentumProtocolPlanar):
     @property
-    def px(self) -> typing.Any:
+    def px(self) -> ScalarCollection:
         "px docs"
         return self.x
 
     @property
-    def py(self) -> typing.Any:
+    def py(self) -> ScalarCollection:
         "py docs"
         return self.y
 
     @property
-    def pt(self) -> typing.Any:
+    def pt(self) -> ScalarCollection:
         "pt docs"
         return self.rho
 
     @property
-    def pt2(self) -> typing.Any:
+    def pt2(self) -> ScalarCollection:
         "pt2 docs"
         return self.rho2
 
 
 class SpatialMomentum(PlanarMomentum, MomentumProtocolSpatial):
     @property
-    def pz(self) -> typing.Any:
+    def pz(self) -> ScalarCollection:
         "pz docs"
         return self.z
 
     @property
-    def pseudorapidity(self) -> typing.Any:
+    def pseudorapidity(self) -> ScalarCollection:
         "pseudorapidity docs"
         return self.eta
 
     @property
-    def p(self) -> typing.Any:
+    def p(self) -> ScalarCollection:
         "p docs"
         return self.mag
 
     @property
-    def p2(self) -> typing.Any:
+    def p2(self) -> ScalarCollection:
         "p2 docs"
         return self.mag2
 
 
 class LorentzMomentum(SpatialMomentum, MomentumProtocolLorentz):
     @property
-    def E(self) -> typing.Any:
+    def E(self) -> ScalarCollection:
         "E docs"
         return self.t
 
     @property
-    def energy(self) -> typing.Any:
+    def energy(self) -> ScalarCollection:
         "energy docs"
         return self.t
 
     @property
-    def E2(self) -> typing.Any:
+    def E2(self) -> ScalarCollection:
         "E2 docs"
         return self.t2
 
     @property
-    def energy2(self) -> typing.Any:
+    def energy2(self) -> ScalarCollection:
         "energy2 docs"
         return self.t2
 
     @property
-    def M(self) -> typing.Any:
+    def M(self) -> ScalarCollection:
         "M docs"
         return self.tau
 
     @property
-    def mass(self) -> typing.Any:
+    def mass(self) -> ScalarCollection:
         "mass docs"
         return self.tau
 
     @property
-    def M2(self) -> typing.Any:
+    def M2(self) -> ScalarCollection:
         "M2 docs"
         return self.tau2
 
     @property
-    def mass2(self) -> typing.Any:
+    def mass2(self) -> ScalarCollection:
         "mass2 docs"
         return self.tau2
 
     @property
-    def Et(self) -> typing.Any:
+    def Et(self) -> ScalarCollection:
         "Et docs"
         from .compute.lorentz import Et
 
         return Et.dispatch(self)
 
     @property
-    def transverse_energy(self) -> typing.Any:
+    def transverse_energy(self) -> ScalarCollection:
         "transverse_energy docs"
         return self.Et
 
     @property
-    def Et2(self) -> typing.Any:
+    def Et2(self) -> ScalarCollection:
         "Et2 docs"
         from .compute.lorentz import Et2
 
         return Et2.dispatch(self)
 
     @property
-    def transverse_energy2(self) -> typing.Any:
+    def transverse_energy2(self) -> ScalarCollection:
         "transverse_energy2 docs"
         return self.Et2
 
     @property
-    def Mt(self) -> typing.Any:
+    def Mt(self) -> ScalarCollection:
         "Mt docs"
         from .compute.lorentz import Mt
 
         return Mt.dispatch(self)
 
     @property
-    def transverse_mass(self) -> typing.Any:
+    def transverse_mass(self) -> ScalarCollection:
         "transverse_mass docs"
         return self.Mt
 
     @property
-    def Mt2(self) -> typing.Any:
+    def Mt2(self) -> ScalarCollection:
         "Mt2 docs"
         from .compute.lorentz import Mt2
 
         return Mt2.dispatch(self)
 
     @property
-    def transverse_mass2(self) -> typing.Any:
+    def transverse_mass2(self) -> ScalarCollection:
         "transverse_mass2 docs"
         return self.Mt2
 
 
-def _lib_of(*objects: VectorProtocol) -> typing.Any:  # NumPy-like module
+def _lib_of(*objects: VectorProtocol) -> Module:  # NumPy-like module
     lib = None
     for obj in objects:
         if isinstance(obj, Vector):

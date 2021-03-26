@@ -35,6 +35,7 @@ from vector.methods import (
     _repr_generic_to_momentum,
     _ttype,
 )
+from vector.protocols import SameVectorType, ScalarCollection, VectorProtocol
 
 
 class CoordinatesObject:
@@ -58,7 +59,7 @@ class AzimuthalObjectXY(typing.NamedTuple):
     y: float
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[ScalarCollection, ScalarCollection]:
         return (self.x, self.y)
 
 
@@ -70,7 +71,7 @@ class AzimuthalObjectRhoPhi(typing.NamedTuple):
     phi: float
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[ScalarCollection, ScalarCollection]:
         return (self.rho, self.phi)
 
 
@@ -81,7 +82,7 @@ class LongitudinalObjectZ(typing.NamedTuple):
     z: float
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[ScalarCollection]:
         return (self.z,)
 
 
@@ -92,7 +93,7 @@ class LongitudinalObjectTheta(typing.NamedTuple):
     theta: float
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[ScalarCollection]:
         return (self.theta,)
 
 
@@ -103,7 +104,7 @@ class LongitudinalObjectEta(typing.NamedTuple):
     eta: float
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[ScalarCollection]:
         return (self.eta,)
 
 
@@ -114,7 +115,7 @@ class TemporalObjectT(typing.NamedTuple):
     t: float
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[ScalarCollection]:
         return (self.t,)
 
 
@@ -125,7 +126,7 @@ class TemporalObjectTau(typing.NamedTuple):
     tau: float
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[ScalarCollection]:
         return (self.tau,)
 
 
@@ -185,55 +186,55 @@ class VectorObject(Vector):
     def __ne__(self, other: typing.Any) -> typing.Any:
         return numpy.not_equal(self, other)
 
-    def __abs__(self) -> typing.Any:
+    def __abs__(self) -> ScalarCollection:
         return numpy.absolute(self)
 
-    def __add__(self, other: typing.Any) -> typing.Any:
+    def __add__(self, other: VectorProtocol) -> VectorProtocol:
         return numpy.add(self, other)
 
-    def __radd__(self, other: typing.Any) -> typing.Any:
+    def __radd__(self, other: VectorProtocol) -> VectorProtocol:
         return numpy.add(other, self)
 
-    def __iadd__(self, other: typing.Any) -> typing.Any:
+    def __iadd__(self: SameVectorType, other: VectorProtocol) -> SameVectorType:
         return _replace_data(self, numpy.add(self, other))
 
-    def __sub__(self, other: typing.Any) -> typing.Any:
+    def __sub__(self, other: VectorProtocol) -> VectorProtocol:
         return numpy.subtract(self, other)
 
-    def __rsub__(self, other: typing.Any) -> typing.Any:
+    def __rsub__(self, other: VectorProtocol) -> VectorProtocol:
         return numpy.subtract(other, self)
 
-    def __isub__(self, other: typing.Any) -> typing.Any:
+    def __isub__(self: SameVectorType, other: VectorProtocol) -> SameVectorType:
         return _replace_data(self, numpy.subtract(self, other))
 
-    def __mul__(self, other: typing.Any) -> typing.Any:
+    def __mul__(self, other: ScalarCollection) -> VectorProtocol:
         return numpy.multiply(self, other)
 
-    def __rmul__(self, other: typing.Any) -> typing.Any:
+    def __rmul__(self, other: ScalarCollection) -> VectorProtocol:
         return numpy.multiply(other, self)
 
-    def __imul__(self, other: typing.Any) -> typing.Any:
+    def __imul__(self: SameVectorType, other: ScalarCollection) -> SameVectorType:
         return _replace_data(self, numpy.multiply(self, other))
 
-    def __neg__(self) -> typing.Any:
+    def __neg__(self: SameVectorType) -> SameVectorType:
         return numpy.negative(self)
 
-    def __pos__(self) -> typing.Any:
+    def __pos__(self: SameVectorType) -> SameVectorType:
         return numpy.positive(self)
 
-    def __truediv__(self, other: typing.Any) -> typing.Any:
+    def __truediv__(self, other: ScalarCollection) -> VectorProtocol:
         return numpy.true_divide(self, other)
 
-    def __rtruediv__(self, other: typing.Any) -> typing.Any:
+    def __rtruediv__(self, other: ScalarCollection) -> VectorProtocol:
         return numpy.true_divide(other, self)
 
-    def __itruediv__(self, other: typing.Any) -> typing.Any:
+    def __itruediv__(self: SameVectorType, other: ScalarCollection) -> VectorProtocol:
         return _replace_data(self, numpy.true_divide(self, other))
 
-    def __pow__(self, other: typing.Any) -> typing.Any:
+    def __pow__(self, other: ScalarCollection) -> ScalarCollection:
         return numpy.power(self, other)
 
-    def __matmul__(self, other: typing.Any) -> typing.Any:
+    def __matmul__(self, other: VectorProtocol) -> ScalarCollection:
         return numpy.matmul(self, other)
 
     def __array_ufunc__(
