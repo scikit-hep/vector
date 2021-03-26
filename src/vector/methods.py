@@ -22,21 +22,21 @@ class Coordinates:
 
 class Azimuthal(Coordinates):
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[typing.Any, typing.Any]:
         "azimuthal elements docs"
         raise AssertionError
 
 
 class Longitudinal(Coordinates):
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[typing.Any]:
         "longitudinal elements docs"
         raise AssertionError
 
 
 class Temporal(Coordinates):
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[typing.Any]:
         "temporal elements docs"
         raise AssertionError
 
@@ -69,28 +69,28 @@ class TemporalTau(Temporal):
     pass
 
 
-def _aztype(obj: typing.Any) -> typing.Any:
+def _aztype(obj: VectorProtocolPlanar) -> typing.Type[Coordinates]:
     if hasattr(obj, "azimuthal"):
         for t in type(obj.azimuthal).__mro__:
             if t in (AzimuthalXY, AzimuthalRhoPhi):
                 return t
-    return None
+    raise AssertionError(repr(obj))
 
 
-def _ltype(obj: typing.Any) -> typing.Any:
+def _ltype(obj: VectorProtocolSpatial) -> typing.Type[Coordinates]:
     if hasattr(obj, "longitudinal"):
         for t in type(obj.longitudinal).__mro__:
             if t in (LongitudinalZ, LongitudinalTheta, LongitudinalEta):
                 return t
-    return None
+    raise AssertionError(repr(obj))
 
 
-def _ttype(obj: typing.Any) -> typing.Any:
+def _ttype(obj: VectorProtocolLorentz) -> typing.Type[Coordinates]:
     if hasattr(obj, "temporal"):
         for t in type(obj.temporal).__mro__:
             if t in (TemporalT, TemporalTau):
                 return t
-    return None
+    raise AssertionError(repr(obj))
 
 
 _coordinate_class_to_names = {

@@ -14,6 +14,7 @@ numba = pytest.importorskip("numba")
 import vector.backends.numba_numpy  # noqa: E402
 
 
+@pytest.mark.numba
 def test_pass_through():
     @numba.njit
     def pass_through(obj):
