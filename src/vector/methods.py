@@ -9,11 +9,14 @@ from .protocols import (
     MomentumProtocolLorentz,
     MomentumProtocolPlanar,
     MomentumProtocolSpatial,
+    ScalarCollection,
     VectorProtocol,
     VectorProtocolLorentz,
     VectorProtocolPlanar,
     VectorProtocolSpatial,
 )
+
+Module = typing.Any  # returns a module, but we can't be specific about which one
 
 
 class Coordinates:
@@ -22,21 +25,21 @@ class Coordinates:
 
 class Azimuthal(Coordinates):
     @property
-    def elements(self) -> typing.Tuple[typing.Any, typing.Any]:
+    def elements(self) -> typing.Tuple[ScalarCollection, ScalarCollection]:
         "azimuthal elements docs"
         raise AssertionError
 
 
 class Longitudinal(Coordinates):
     @property
-    def elements(self) -> typing.Tuple[typing.Any]:
+    def elements(self) -> typing.Tuple[ScalarCollection]:
         "longitudinal elements docs"
         raise AssertionError
 
 
 class Temporal(Coordinates):
     @property
-    def elements(self) -> typing.Tuple[typing.Any]:
+    def elements(self) -> typing.Tuple[ScalarCollection]:
         "temporal elements docs"
         raise AssertionError
 
@@ -562,7 +565,7 @@ def dim(v: VectorProtocol) -> int:
 
 def _compute_module_of(
     one: VectorProtocol, two: VectorProtocol, nontemporal: bool = False
-) -> typing.Any:
+) -> Module:
     if not isinstance(one, Vector):
         raise TypeError(f"{repr(one)} is not a Vector")
     if not isinstance(two, Vector):
@@ -607,41 +610,41 @@ class Planar(VectorProtocolPlanar):
         raise AssertionError(repr(type(self)))
 
     @property
-    def x(self) -> typing.Any:
+    def x(self) -> ScalarCollection:
         "x docs"
         from .compute.planar import x
 
         return x.dispatch(self)
 
     @property
-    def y(self) -> typing.Any:
+    def y(self) -> ScalarCollection:
         "y docs"
         from .compute.planar import y
 
         return y.dispatch(self)
 
     @property
-    def rho(self) -> typing.Any:
+    def rho(self) -> ScalarCollection:
         "rho docs"
         from .compute.planar import rho
 
         return rho.dispatch(self)
 
     @property
-    def rho2(self) -> typing.Any:
+    def rho2(self) -> ScalarCollection:
         "rho2 docs"
         from .compute.planar import rho2
 
         return rho2.dispatch(self)
 
     @property
-    def phi(self) -> typing.Any:
+    def phi(self) -> ScalarCollection:
         "phi docs"
         from .compute.planar import phi
 
         return phi.dispatch(self)
 
-    def deltaphi(self, other: typing.Any) -> typing.Any:
+    def deltaphi(self, other: VectorProtocol) -> ScalarCollection:
         """
         deltaphi docs
 
@@ -651,7 +654,7 @@ class Planar(VectorProtocolPlanar):
 
         return deltaphi.dispatch(self, other)
 
-    def rotateZ(self, angle: typing.Any) -> typing.Any:
+    def rotateZ(self, angle: ScalarCollection) -> ScalarCollection:
         "rotateZ docs"
         from .compute.planar import rotateZ
 
@@ -1361,7 +1364,7 @@ class LorentzMomentum(SpatialMomentum, MomentumProtocolLorentz):
         return self.Mt2
 
 
-def _lib_of(*objects: VectorProtocol) -> typing.Any:
+def _lib_of(*objects: VectorProtocol) -> typing.Any:  # NumPy-like module
     lib = None
     for obj in objects:
         if isinstance(obj, Vector):

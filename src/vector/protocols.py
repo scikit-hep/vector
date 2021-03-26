@@ -5,6 +5,11 @@
 
 import typing
 
+try:
+    from typing import TypedDict
+except ImportError:
+    from typing_extensions import TypedDict
+
 
 class VectorProtocol:
     lib: typing.Any
@@ -148,3 +153,45 @@ class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
     transverse_mass: typing.Any
     Mt2: typing.Any
     transverse_mass2: typing.Any
+
+
+# Represents a number, a NumPy array, an Awkward Array, etc., of non-vectors.
+ScalarCollection = typing.Any
+
+
+class Transform2D(TypedDict):
+    xx: ScalarCollection
+    xy: ScalarCollection
+    yx: ScalarCollection
+    yy: ScalarCollection
+
+
+class Transform3D(TypedDict):
+    xx: ScalarCollection
+    xy: ScalarCollection
+    xz: ScalarCollection
+    yx: ScalarCollection
+    yy: ScalarCollection
+    yz: ScalarCollection
+    zx: ScalarCollection
+    zy: ScalarCollection
+    zz: ScalarCollection
+
+
+class Transform4D(TypedDict):
+    xx: ScalarCollection
+    xy: ScalarCollection
+    xz: ScalarCollection
+    xt: ScalarCollection
+    yx: ScalarCollection
+    yy: ScalarCollection
+    yz: ScalarCollection
+    yt: ScalarCollection
+    zx: ScalarCollection
+    zy: ScalarCollection
+    zz: ScalarCollection
+    zt: ScalarCollection
+    tx: ScalarCollection
+    ty: ScalarCollection
+    tz: ScalarCollection
+    tt: ScalarCollection
