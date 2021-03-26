@@ -5,20 +5,12 @@
 
 import typing
 
-from .protocols import (
+from ._typeutils import (
     BoolCollection,
-    MomentumProtocolLorentz,
-    MomentumProtocolPlanar,
-    MomentumProtocolSpatial,
-    SameVectorType,
     ScalarCollection,
     TransformProtocol2D,
     TransformProtocol3D,
     TransformProtocol4D,
-    VectorProtocol,
-    VectorProtocolLorentz,
-    VectorProtocolPlanar,
-    VectorProtocolSpatial,
 )
 
 Module = typing.Any  # returns a module, but we can't be specific about which one
@@ -77,87 +69,314 @@ class TemporalTau(Temporal):
     pass
 
 
-def _aztype(obj: VectorProtocolPlanar) -> typing.Type[Coordinates]:
-    if hasattr(obj, "azimuthal"):
-        for t in type(obj.azimuthal).__mro__:
-            if t in (AzimuthalXY, AzimuthalRhoPhi):
-                return t
-    raise AssertionError(repr(obj))
+SameVectorType = typing.TypeVar("SameVectorType", bound="VectorProtocol")
 
 
-def _ltype(obj: VectorProtocolSpatial) -> typing.Type[Coordinates]:
-    if hasattr(obj, "longitudinal"):
-        for t in type(obj.longitudinal).__mro__:
-            if t in (LongitudinalZ, LongitudinalTheta, LongitudinalEta):
-                return t
-    raise AssertionError(repr(obj))
+class VectorProtocol:
+    lib: Module
+
+    def _wrap_result(
+        self,
+        cls: typing.Any,
+        result: typing.Any,
+        returns: typing.Any,
+        num_vecargs: typing.Any,
+    ) -> typing.Any:
+        raise AssertionError
+
+    ProjectionClass2D: typing.Type["VectorProtocolPlanar"]
+    ProjectionClass3D: typing.Type["VectorProtocolSpatial"]
+    ProjectionClass4D: typing.Type["VectorProtocolLorentz"]
+    GenericClass: typing.Type["VectorProtocol"]
+
+    def to_Vector2D(self) -> "VectorProtocolPlanar":
+        "to_Vector2D docs"
+        raise AssertionError
+
+    def to_Vector3D(self) -> "VectorProtocolSpatial":
+        "to_Vector3D docs"
+        raise AssertionError
+
+    def to_Vector4D(self) -> "VectorProtocolLorentz":
+        "to_Vector4D docs"
+        raise AssertionError
+
+    def to_xy(self) -> "VectorProtocolPlanar":
+        "to_xy docs"
+        raise AssertionError
+
+    def to_rhophi(self) -> "VectorProtocolPlanar":
+        "to_rhophi docs"
+        raise AssertionError
+
+    def to_xyz(self) -> "VectorProtocolSpatial":
+        "to_xyz docs"
+        raise AssertionError
+
+    def to_xytheta(self) -> "VectorProtocolSpatial":
+        "to_xytheta docs"
+        raise AssertionError
+
+    def to_xyeta(self) -> "VectorProtocolSpatial":
+        "to_xyeta docs"
+        raise AssertionError
+
+    def to_rhophiz(self) -> "VectorProtocolSpatial":
+        "to_rhophiz docs"
+        raise AssertionError
+
+    def to_rhophitheta(self) -> "VectorProtocolSpatial":
+        "to_rhophitheta docs"
+        raise AssertionError
+
+    def to_rhophieta(self) -> "VectorProtocolSpatial":
+        "to_rhophieta docs"
+        raise AssertionError
+
+    def to_xyzt(self) -> "VectorProtocolLorentz":
+        "to_xyzt docs"
+        raise AssertionError
+
+    def to_xyztau(self) -> "VectorProtocolLorentz":
+        "to_xyztau docs"
+        raise AssertionError
+
+    def to_xythetat(self) -> "VectorProtocolLorentz":
+        "to_xythetat docs"
+        raise AssertionError
+
+    def to_xythetatau(self) -> "VectorProtocolLorentz":
+        "to_xythetatau docs"
+        raise AssertionError
+
+    def to_xyetat(self) -> "VectorProtocolLorentz":
+        "to_xyetat docs"
+        raise AssertionError
+
+    def to_xyetatau(self) -> "VectorProtocolLorentz":
+        "to_xyetatau docs"
+        raise AssertionError
+
+    def to_rhophizt(self) -> "VectorProtocolLorentz":
+        "to_rhophizt docs"
+        raise AssertionError
+
+    def to_rhophiztau(self) -> "VectorProtocolLorentz":
+        "to_rhophiztau docs"
+        raise AssertionError
+
+    def to_rhophithetat(self) -> "VectorProtocolLorentz":
+        "to_rhophithetat docs"
+        raise AssertionError
+
+    def to_rhophithetatau(self) -> "VectorProtocolLorentz":
+        "to_rhophithetatau docs"
+        raise AssertionError
+
+    def to_rhophietat(self) -> "VectorProtocolLorentz":
+        "to_rhophietat docs"
+        raise AssertionError
+
+    def to_rhophietatau(self) -> "VectorProtocolLorentz":
+        "to_rhophietatau docs"
+        raise AssertionError
+
+    def unit(self: SameVectorType) -> SameVectorType:
+        "unit docs"
+        raise AssertionError
+
+    def dot(self, other: "VectorProtocol") -> ScalarCollection:
+        "dot docs"
+        raise AssertionError
+
+    def add(self, other: "VectorProtocol") -> "VectorProtocol":
+        "add docs"
+        raise AssertionError
+
+    def subtract(self, other: "VectorProtocol") -> "VectorProtocol":
+        "subtract docs"
+        raise AssertionError
+
+    def scale(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
+        "scale docs"
+        raise AssertionError
+
+    def equal(self, other: "VectorProtocol") -> BoolCollection:
+        "equal docs"
+        raise AssertionError
+
+    def not_equal(self, other: "VectorProtocol") -> BoolCollection:
+        "not_equal docs"
+        raise AssertionError
+
+    def isclose(
+        self,
+        other: "VectorProtocol",
+        rtol: ScalarCollection = 1e-05,
+        atol: ScalarCollection = 1e-08,
+        equal_nan: BoolCollection = False,
+    ) -> BoolCollection:
+        "isclose docs"
+        raise AssertionError
 
 
-def _ttype(obj: VectorProtocolLorentz) -> typing.Type[Coordinates]:
-    if hasattr(obj, "temporal"):
-        for t in type(obj.temporal).__mro__:
-            if t in (TemporalT, TemporalTau):
-                return t
-    raise AssertionError(repr(obj))
+class VectorProtocolPlanar(VectorProtocol):
+    @property
+    def azimuthal(self) -> Azimuthal:
+        "azimuthal docs"
+        raise AssertionError
+
+    @property
+    def x(self) -> ScalarCollection:
+        "x docs"
+        raise AssertionError
+
+    @property
+    def y(self) -> ScalarCollection:
+        "y docs"
+        raise AssertionError
+
+    @property
+    def rho(self) -> ScalarCollection:
+        "rho docs"
+        raise AssertionError
+
+    @property
+    def rho2(self) -> ScalarCollection:
+        "rho2 docs"
+        raise AssertionError
+
+    @property
+    def phi(self) -> ScalarCollection:
+        "phi docs"
+        raise AssertionError
+
+    def deltaphi(self, other: VectorProtocol) -> ScalarCollection:
+        """
+        deltaphi docs
+
+        (it's the signed difference, not arccos(dot))
+        """
+        raise AssertionError
+
+    def rotateZ(self: SameVectorType, angle: ScalarCollection) -> SameVectorType:
+        "rotateZ docs"
+        raise AssertionError
+
+    def transform2D(self: SameVectorType, obj: TransformProtocol2D) -> SameVectorType:
+        "transform2D docs"
+        raise AssertionError
+
+    def is_parallel(
+        self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
+    ) -> BoolCollection:
+        "is_parallel docs (note: this 'parallel' requires same direction)"
+        raise AssertionError
+
+    def is_antiparallel(
+        self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
+    ) -> BoolCollection:
+        "is_antiparallel docs"
+        raise AssertionError
+
+    def is_perpendicular(
+        self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
+    ) -> BoolCollection:
+        "is_perpendicular docs"
+        raise AssertionError
 
 
-_coordinate_class_to_names = {
-    AzimuthalXY: ("x", "y"),
-    AzimuthalRhoPhi: ("rho", "phi"),
-    LongitudinalZ: ("z",),
-    LongitudinalTheta: ("theta",),
-    LongitudinalEta: ("eta",),
-    TemporalT: ("t",),
-    TemporalTau: ("tau",),
-}
+class VectorProtocolSpatial(VectorProtocolPlanar):
+    @property
+    def longitudinal(self) -> Longitudinal:
+        "longitudinal docs"
+        raise AssertionError
+
+    z: typing.Any
+    theta: typing.Any
+    eta: typing.Any
+    costheta: typing.Any
+    cottheta: typing.Any
+    mag: typing.Any
+    mag2: typing.Any
+    cross: typing.Any
+    deltaangle: typing.Any
+    deltaeta: typing.Any
+    deltaR: typing.Any
+    deltaR2: typing.Any
+    rotateX: typing.Any
+    rotateY: typing.Any
+    rotate_axis: typing.Any
+    rotate_euler: typing.Any
+    rotate_nautical: typing.Any
+    rotate_quaternion: typing.Any
+    transform3D: typing.Any
+    is_parallel: typing.Any
+    is_antiparallel: typing.Any
+    is_perpendicular: typing.Any
 
 
-_repr_generic_to_momentum = {
-    "x": "px",
-    "y": "py",
-    "rho": "pt",
-    "z": "pz",
-    "t": "E",
-    "tau": "mass",
-}
+class VectorProtocolLorentz(VectorProtocolSpatial):
+    @property
+    def temporal(self) -> Temporal:
+        "temporal docs"
+        raise AssertionError
+
+    t: typing.Any
+    t2: typing.Any
+    tau: typing.Any
+    tau2: typing.Any
+    beta: typing.Any
+    gamma: typing.Any
+    rapidity: typing.Any
+    boost_p4: typing.Any
+    boost_beta3: typing.Any
+    boost: typing.Any
+    boostX: typing.Any
+    boostY: typing.Any
+    boostZ: typing.Any
+    transform4D: typing.Any
+    to_beta3: typing.Any
+    is_timelike: typing.Any
+    is_spacelike: typing.Any
+    is_lightlike: typing.Any
 
 
-_repr_momentum_to_generic = {
-    "px": "x",
-    "py": "y",
-    "pt": "rho",
-    "pz": "z",
-    "E": "t",
-    "energy": "t",
-    "M": "tau",
-    "mass": "tau",
-}
+class MomentumProtocolPlanar(VectorProtocolPlanar):
+    px: typing.Any
+    py: typing.Any
+    pt: typing.Any
+    pt2: typing.Any
 
 
-_coordinate_order = [
-    "x",
-    "px",
-    "y",
-    "py",
-    "rho",
-    "pt",
-    "phi",
-    "z",
-    "pz",
-    "theta",
-    "eta",
-    "t",
-    "E",
-    "energy",
-    "tau",
-    "M",
-    "mass",
-]
+class MomentumProtocolSpatial(VectorProtocolSpatial, MomentumProtocolPlanar):
+    pz: typing.Any
+    pseudorapidity: typing.Any
+    p: typing.Any
+    p2: typing.Any
+
+
+class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
+    E: typing.Any
+    energy: typing.Any
+    E2: typing.Any
+    energy2: typing.Any
+    M: typing.Any
+    mass: typing.Any
+    M2: typing.Any
+    mass2: typing.Any
+    Et: typing.Any
+    transverse_energy: typing.Any
+    Et2: typing.Any
+    transverse_energy2: typing.Any
+    Mt: typing.Any
+    transverse_mass: typing.Any
+    Mt2: typing.Any
+    transverse_mass2: typing.Any
 
 
 class Vector(VectorProtocol):
     def to_xy(self) -> VectorProtocolPlanar:
-        "to_xy docs"
         from .compute import planar
 
         return self._wrap_result(
@@ -168,7 +387,6 @@ class Vector(VectorProtocol):
         )
 
     def to_rhophi(self) -> VectorProtocolPlanar:
-        "to_rhophi docs"
         from .compute import planar
 
         return self._wrap_result(
@@ -179,7 +397,6 @@ class Vector(VectorProtocol):
         )
 
     def to_xyz(self) -> VectorProtocolSpatial:
-        "to_xyz docs"
         from .compute import planar, spatial
 
         lcoord = 0
@@ -194,7 +411,6 @@ class Vector(VectorProtocol):
         )
 
     def to_xytheta(self) -> VectorProtocolSpatial:
-        "to_xytheta docs"
         from .compute import planar, spatial
 
         lcoord = 0
@@ -209,7 +425,6 @@ class Vector(VectorProtocol):
         )
 
     def to_xyeta(self) -> VectorProtocolSpatial:
-        "to_xyeta docs"
         from .compute import planar, spatial
 
         lcoord = 0
@@ -224,7 +439,6 @@ class Vector(VectorProtocol):
         )
 
     def to_rhophiz(self) -> VectorProtocolSpatial:
-        "to_rhophiz docs"
         from .compute import planar, spatial
 
         lcoord = 0
@@ -239,7 +453,6 @@ class Vector(VectorProtocol):
         )
 
     def to_rhophitheta(self) -> VectorProtocolSpatial:
-        "to_rhophitheta docs"
         from .compute import planar, spatial
 
         lcoord = 0
@@ -254,7 +467,6 @@ class Vector(VectorProtocol):
         )
 
     def to_rhophieta(self) -> VectorProtocolSpatial:
-        "to_rhophieta docs"
         from .compute import planar, spatial
 
         lcoord = 0
@@ -269,7 +481,6 @@ class Vector(VectorProtocol):
         )
 
     def to_xyzt(self) -> VectorProtocolLorentz:
-        "to_xyzt docs"
         from .compute import lorentz, planar, spatial
 
         lcoord = 0
@@ -287,7 +498,6 @@ class Vector(VectorProtocol):
         )
 
     def to_xyztau(self) -> VectorProtocolLorentz:
-        "to_xyztau docs"
         from .compute import lorentz, planar, spatial
 
         lcoord = 0
@@ -305,7 +515,6 @@ class Vector(VectorProtocol):
         )
 
     def to_xythetat(self) -> VectorProtocolLorentz:
-        "to_xythetat docs"
         from .compute import lorentz, planar, spatial
 
         lcoord = 0
@@ -323,7 +532,6 @@ class Vector(VectorProtocol):
         )
 
     def to_xythetatau(self) -> VectorProtocolLorentz:
-        "to_xythetatau docs"
         from .compute import lorentz, planar, spatial
 
         lcoord = 0
@@ -341,7 +549,6 @@ class Vector(VectorProtocol):
         )
 
     def to_xyetat(self) -> VectorProtocolLorentz:
-        "to_xyetat docs"
         from .compute import lorentz, planar, spatial
 
         lcoord = 0
@@ -359,7 +566,6 @@ class Vector(VectorProtocol):
         )
 
     def to_xyetatau(self) -> VectorProtocolLorentz:
-        "to_xyetatau docs"
         from .compute import lorentz, planar, spatial
 
         lcoord = 0
@@ -377,7 +583,6 @@ class Vector(VectorProtocol):
         )
 
     def to_rhophizt(self) -> VectorProtocolLorentz:
-        "to_rhophizt docs"
         from .compute import lorentz, planar, spatial
 
         lcoord = 0
@@ -395,7 +600,6 @@ class Vector(VectorProtocol):
         )
 
     def to_rhophiztau(self) -> VectorProtocolLorentz:
-        "to_rhophiztau docs"
         from .compute import lorentz, planar, spatial
 
         lcoord = 0
@@ -413,7 +617,6 @@ class Vector(VectorProtocol):
         )
 
     def to_rhophithetat(self) -> VectorProtocolLorentz:
-        "to_rhophithetat docs"
         from .compute import lorentz, planar, spatial
 
         lcoord = 0
@@ -431,7 +634,6 @@ class Vector(VectorProtocol):
         )
 
     def to_rhophithetatau(self) -> VectorProtocolLorentz:
-        "to_rhophithetatau docs"
         from .compute import lorentz, planar, spatial
 
         lcoord = 0
@@ -449,7 +651,6 @@ class Vector(VectorProtocol):
         )
 
     def to_rhophietat(self) -> VectorProtocolLorentz:
-        "to_rhophietat docs"
         from .compute import lorentz, planar, spatial
 
         lcoord = 0
@@ -467,7 +668,6 @@ class Vector(VectorProtocol):
         )
 
     def to_rhophietatau(self) -> VectorProtocolLorentz:
-        "to_rhophietatau docs"
         from .compute import lorentz, planar, spatial
 
         lcoord = 0
@@ -487,11 +687,9 @@ class Vector(VectorProtocol):
 
 class Vector2D(Vector, VectorProtocolPlanar):
     def to_Vector2D(self) -> VectorProtocolPlanar:
-        "to_Vector2D docs"
         return self
 
     def to_Vector3D(self) -> VectorProtocolSpatial:
-        "to_Vector3D docs"
         return self._wrap_result(
             type(self),
             self.azimuthal.elements + (0,),
@@ -500,7 +698,6 @@ class Vector2D(Vector, VectorProtocolPlanar):
         )
 
     def to_Vector4D(self) -> VectorProtocolLorentz:
-        "to_Vector4D docs"
         return self._wrap_result(
             type(self),
             self.azimuthal.elements + (0, 0),
@@ -511,7 +708,6 @@ class Vector2D(Vector, VectorProtocolPlanar):
 
 class Vector3D(Vector, VectorProtocolSpatial):
     def to_Vector2D(self) -> VectorProtocolPlanar:
-        "to_Vector2D docs"
         return self._wrap_result(
             type(self),
             self.azimuthal.elements,
@@ -520,11 +716,9 @@ class Vector3D(Vector, VectorProtocolSpatial):
         )
 
     def to_Vector3D(self) -> VectorProtocolSpatial:
-        "to_Vector3D docs"
         return self
 
     def to_Vector4D(self) -> VectorProtocolLorentz:
-        "to_Vector4D docs"
         return self._wrap_result(
             type(self),
             self.azimuthal.elements + self.longitudinal.elements + (0,),
@@ -535,7 +729,6 @@ class Vector3D(Vector, VectorProtocolSpatial):
 
 class Vector4D(Vector, VectorProtocolLorentz):
     def to_Vector2D(self) -> VectorProtocolPlanar:
-        "to_Vector2D docs"
         return self._wrap_result(
             type(self),
             self.azimuthal.elements,
@@ -544,7 +737,6 @@ class Vector4D(Vector, VectorProtocolLorentz):
         )
 
     def to_Vector3D(self) -> VectorProtocolSpatial:
-        "to_Vector3D docs"
         return self._wrap_result(
             type(self),
             self.azimuthal.elements + self.longitudinal.elements,
@@ -553,120 +745,51 @@ class Vector4D(Vector, VectorProtocolLorentz):
         )
 
     def to_Vector4D(self) -> VectorProtocolLorentz:
-        "to_Vector4D docs"
         return self
-
-
-def dim(v: VectorProtocol) -> int:
-    if isinstance(v, Vector2D):
-        return 2
-    elif isinstance(v, Vector3D):
-        return 3
-    elif isinstance(v, Vector4D):
-        return 4
-    else:
-        raise TypeError(f"{repr(v)} is not a vector.Vector")
-
-
-def _compute_module_of(
-    one: VectorProtocol, two: VectorProtocol, nontemporal: bool = False
-) -> Module:
-    if not isinstance(one, Vector):
-        raise TypeError(f"{repr(one)} is not a Vector")
-    if not isinstance(two, Vector):
-        raise TypeError(f"{repr(two)} is not a Vector")
-
-    if isinstance(one, Vector2D):
-        import vector.compute.planar
-
-        return vector.compute.planar
-
-    elif isinstance(one, Vector3D):
-        if isinstance(two, Vector2D):
-            import vector.compute.planar
-
-            return vector.compute.planar
-        else:
-            import vector.compute.spatial
-
-            return vector.compute.spatial
-
-    elif isinstance(one, Vector4D):
-        if isinstance(two, Vector2D):
-            import vector.compute.planar
-
-            return vector.compute.planar
-        elif isinstance(two, Vector3D) or nontemporal:
-            import vector.compute.spatial
-
-            return vector.compute.spatial
-        else:
-            import vector.compute.lorentz
-
-            return vector.compute.lorentz
-
-    raise AssertionError(repr(one))
 
 
 class Planar(VectorProtocolPlanar):
     @property
-    def azimuthal(self) -> Azimuthal:
-        "azimuthal docs"
-        raise AssertionError(repr(type(self)))
-
-    @property
     def x(self) -> ScalarCollection:
-        "x docs"
         from .compute.planar import x
 
         return x.dispatch(self)
 
     @property
     def y(self) -> ScalarCollection:
-        "y docs"
         from .compute.planar import y
 
         return y.dispatch(self)
 
     @property
     def rho(self) -> ScalarCollection:
-        "rho docs"
         from .compute.planar import rho
 
         return rho.dispatch(self)
 
     @property
     def rho2(self) -> ScalarCollection:
-        "rho2 docs"
         from .compute.planar import rho2
 
         return rho2.dispatch(self)
 
     @property
     def phi(self) -> ScalarCollection:
-        "phi docs"
         from .compute.planar import phi
 
         return phi.dispatch(self)
 
     def deltaphi(self, other: VectorProtocol) -> ScalarCollection:
-        """
-        deltaphi docs
-
-        (it's the signed difference, not arccos(dot))
-        """
         from .compute.planar import deltaphi
 
         return deltaphi.dispatch(self, other)
 
     def rotateZ(self: SameVectorType, angle: ScalarCollection) -> SameVectorType:
-        "rotateZ docs"
         from .compute.planar import rotateZ
 
         return rotateZ.dispatch(angle, self)
 
     def transform2D(self: SameVectorType, obj: TransformProtocol2D) -> SameVectorType:
-        "transform2D docs"
         from .compute.planar import transform2D
 
         return transform2D.dispatch(obj, self)
@@ -674,7 +797,6 @@ class Planar(VectorProtocolPlanar):
     def is_parallel(
         self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
     ) -> BoolCollection:
-        "is_parallel docs (note: this 'parallel' requires same direction)"
         from .compute.planar import is_parallel
 
         if not isinstance(other, Vector2D):
@@ -685,7 +807,6 @@ class Planar(VectorProtocolPlanar):
     def is_antiparallel(
         self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
     ) -> BoolCollection:
-        "is_antiparallel docs"
         from .compute.planar import is_antiparallel
 
         if not isinstance(other, Vector2D):
@@ -696,7 +817,6 @@ class Planar(VectorProtocolPlanar):
     def is_perpendicular(
         self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
     ) -> BoolCollection:
-        "is_perpendicular docs"
         from .compute.planar import is_perpendicular
 
         if not isinstance(other, Vector2D):
@@ -705,34 +825,28 @@ class Planar(VectorProtocolPlanar):
             return is_perpendicular.dispatch(tolerance, self, other)
 
     def unit(self: SameVectorType) -> SameVectorType:
-        "unit docs"
         from .compute.planar import unit
 
         return unit.dispatch(self)
 
     def dot(self, other: VectorProtocol) -> ScalarCollection:
-        "dot docs"
         module = _compute_module_of(self, other)
         return module.dot.dispatch(self, other)
 
     def add(self, other: VectorProtocol) -> VectorProtocol:
-        "add docs"
         module = _compute_module_of(self, other)
         return module.add.dispatch(self, other)
 
     def subtract(self, other: VectorProtocol) -> VectorProtocol:
-        "subtract docs"
         module = _compute_module_of(self, other)
         return module.subtract.dispatch(self, other)
 
     def scale(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
-        "scale docs"
         from .compute.planar import scale
 
         return scale.dispatch(factor, self)
 
     def equal(self, other: VectorProtocol) -> BoolCollection:
-        "equal docs"
         from .compute.planar import equal
 
         if dim(self) != dim(other):
@@ -742,7 +856,6 @@ class Planar(VectorProtocolPlanar):
         return equal.dispatch(self, other)
 
     def not_equal(self, other: VectorProtocol) -> BoolCollection:
-        "not_equal docs"
         from .compute.planar import not_equal
 
         if dim(self) != dim(other):
@@ -758,7 +871,6 @@ class Planar(VectorProtocolPlanar):
         atol: ScalarCollection = 1e-08,
         equal_nan: BoolCollection = False,
     ) -> BoolCollection:
-        "isclose docs"
         from .compute.planar import isclose
 
         if dim(self) != dim(other):
@@ -769,11 +881,6 @@ class Planar(VectorProtocolPlanar):
 
 
 class Spatial(Planar, VectorProtocolSpatial):
-    @property
-    def longitudinal(self) -> Longitudinal:
-        "longitudinal docs"
-        raise AssertionError(repr(type(self)))
-
     @property
     def z(self) -> ScalarCollection:
         "z docs"
@@ -1033,11 +1140,6 @@ class Spatial(Planar, VectorProtocolSpatial):
 
 
 class Lorentz(Spatial, VectorProtocolLorentz):
-    @property
-    def temporal(self) -> Temporal:
-        "temporal docs"
-        raise AssertionError(repr(type(self)))
-
     @property
     def t(self) -> ScalarCollection:
         "t docs"
@@ -1390,6 +1492,135 @@ class LorentzMomentum(SpatialMomentum, MomentumProtocolLorentz):
     def transverse_mass2(self) -> ScalarCollection:
         "transverse_mass2 docs"
         return self.Mt2
+
+
+def dim(v: VectorProtocol) -> int:
+    if isinstance(v, Vector2D):
+        return 2
+    elif isinstance(v, Vector3D):
+        return 3
+    elif isinstance(v, Vector4D):
+        return 4
+    else:
+        raise TypeError(f"{repr(v)} is not a vector.Vector")
+
+
+def _compute_module_of(
+    one: VectorProtocol, two: VectorProtocol, nontemporal: bool = False
+) -> Module:
+    if not isinstance(one, Vector):
+        raise TypeError(f"{repr(one)} is not a Vector")
+    if not isinstance(two, Vector):
+        raise TypeError(f"{repr(two)} is not a Vector")
+
+    if isinstance(one, Vector2D):
+        import vector.compute.planar
+
+        return vector.compute.planar
+
+    elif isinstance(one, Vector3D):
+        if isinstance(two, Vector2D):
+            import vector.compute.planar
+
+            return vector.compute.planar
+        else:
+            import vector.compute.spatial
+
+            return vector.compute.spatial
+
+    elif isinstance(one, Vector4D):
+        if isinstance(two, Vector2D):
+            import vector.compute.planar
+
+            return vector.compute.planar
+        elif isinstance(two, Vector3D) or nontemporal:
+            import vector.compute.spatial
+
+            return vector.compute.spatial
+        else:
+            import vector.compute.lorentz
+
+            return vector.compute.lorentz
+
+    raise AssertionError(repr(one))
+
+
+_coordinate_class_to_names = {
+    AzimuthalXY: ("x", "y"),
+    AzimuthalRhoPhi: ("rho", "phi"),
+    LongitudinalZ: ("z",),
+    LongitudinalTheta: ("theta",),
+    LongitudinalEta: ("eta",),
+    TemporalT: ("t",),
+    TemporalTau: ("tau",),
+}
+
+
+_repr_generic_to_momentum = {
+    "x": "px",
+    "y": "py",
+    "rho": "pt",
+    "z": "pz",
+    "t": "E",
+    "tau": "mass",
+}
+
+
+_repr_momentum_to_generic = {
+    "px": "x",
+    "py": "y",
+    "pt": "rho",
+    "pz": "z",
+    "E": "t",
+    "energy": "t",
+    "M": "tau",
+    "mass": "tau",
+}
+
+
+_coordinate_order = [
+    "x",
+    "px",
+    "y",
+    "py",
+    "rho",
+    "pt",
+    "phi",
+    "z",
+    "pz",
+    "theta",
+    "eta",
+    "t",
+    "E",
+    "energy",
+    "tau",
+    "M",
+    "mass",
+]
+
+
+def _aztype(obj: VectorProtocolPlanar) -> typing.Type[Coordinates]:
+    if hasattr(obj, "azimuthal"):
+        for t in type(obj.azimuthal).__mro__:
+            if t in (AzimuthalXY, AzimuthalRhoPhi):
+                return t
+    raise AssertionError(repr(obj))
+
+
+def _ltype(obj: VectorProtocolSpatial) -> typing.Type[Coordinates]:
+    if hasattr(obj, "longitudinal"):
+        for t in type(obj.longitudinal).__mro__:
+            if t in (LongitudinalZ, LongitudinalTheta, LongitudinalEta):
+                return t
+    raise AssertionError(repr(obj))
+
+
+def _ttype(obj: VectorProtocolLorentz) -> typing.Type[Coordinates]:
+    if hasattr(obj, "temporal"):
+        for t in type(obj.temporal).__mro__:
+            if t in (TemporalT, TemporalTau):
+                return t
+    raise AssertionError(repr(obj))
 
 
 def _lib_of(*objects: VectorProtocol) -> Module:  # NumPy-like module

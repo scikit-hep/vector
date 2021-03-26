@@ -7,6 +7,7 @@ import typing
 
 import numpy
 
+from vector._typeutils import ScalarCollection
 from vector.methods import (
     Azimuthal,
     AzimuthalRhoPhi,
@@ -19,6 +20,7 @@ from vector.methods import (
     LorentzMomentum,
     Planar,
     PlanarMomentum,
+    SameVectorType,
     Spatial,
     SpatialMomentum,
     Temporal,
@@ -28,6 +30,7 @@ from vector.methods import (
     Vector2D,
     Vector3D,
     Vector4D,
+    VectorProtocol,
     _aztype,
     _coordinate_class_to_names,
     _handler_of,
@@ -35,7 +38,6 @@ from vector.methods import (
     _repr_generic_to_momentum,
     _ttype,
 )
-from vector.protocols import SameVectorType, ScalarCollection, VectorProtocol
 
 
 class CoordinatesObject:

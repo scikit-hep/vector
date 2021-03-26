@@ -394,6 +394,7 @@ class VectorNumpy(Vector):
     def __ne__(self, other: typing.Any) -> typing.Any:
         return numpy.not_equal(self, other)
 
+    @typing.no_type_check
     def __array_ufunc__(
         self,
         ufunc: typing.Any,
