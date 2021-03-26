@@ -148,7 +148,7 @@ _coordinate_order = [
 
 
 class Vector(VectorProtocol):
-    def to_xy(self) -> typing.Any:
+    def to_xy(self) -> VectorProtocolPlanar:
         "to_xy docs"
         from .compute import planar
 
@@ -159,7 +159,7 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_rhophi(self) -> typing.Any:
+    def to_rhophi(self) -> VectorProtocolPlanar:
         "to_rhophi docs"
         from .compute import planar
 
@@ -170,7 +170,7 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_xyz(self) -> typing.Any:
+    def to_xyz(self) -> VectorProtocolSpatial:
         "to_xyz docs"
         from .compute import planar, spatial
 
@@ -185,7 +185,7 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_xytheta(self) -> typing.Any:
+    def to_xytheta(self) -> VectorProtocolSpatial:
         "to_xytheta docs"
         from .compute import planar, spatial
 
@@ -200,7 +200,7 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_xyeta(self) -> typing.Any:
+    def to_xyeta(self) -> VectorProtocolSpatial:
         "to_xyeta docs"
         from .compute import planar, spatial
 
@@ -215,7 +215,7 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_rhophiz(self) -> typing.Any:
+    def to_rhophiz(self) -> VectorProtocolSpatial:
         "to_rhophiz docs"
         from .compute import planar, spatial
 
@@ -230,7 +230,7 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_rhophitheta(self) -> typing.Any:
+    def to_rhophitheta(self) -> VectorProtocolSpatial:
         "to_rhophitheta docs"
         from .compute import planar, spatial
 
@@ -245,7 +245,7 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_rhophieta(self) -> typing.Any:
+    def to_rhophieta(self) -> VectorProtocolSpatial:
         "to_rhophieta docs"
         from .compute import planar, spatial
 
@@ -260,7 +260,7 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_xyzt(self) -> typing.Any:
+    def to_xyzt(self) -> VectorProtocolLorentz:
         "to_xyzt docs"
         from .compute import lorentz, planar, spatial
 
@@ -278,7 +278,7 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_xyztau(self) -> typing.Any:
+    def to_xyztau(self) -> VectorProtocolLorentz:
         "to_xyztau docs"
         from .compute import lorentz, planar, spatial
 
@@ -296,7 +296,7 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_xythetat(self) -> typing.Any:
+    def to_xythetat(self) -> VectorProtocolLorentz:
         "to_xythetat docs"
         from .compute import lorentz, planar, spatial
 
@@ -314,7 +314,7 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_xythetatau(self) -> typing.Any:
+    def to_xythetatau(self) -> VectorProtocolLorentz:
         "to_xythetatau docs"
         from .compute import lorentz, planar, spatial
 
@@ -332,7 +332,7 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_xyetat(self) -> typing.Any:
+    def to_xyetat(self) -> VectorProtocolLorentz:
         "to_xyetat docs"
         from .compute import lorentz, planar, spatial
 
@@ -350,7 +350,7 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_xyetatau(self) -> typing.Any:
+    def to_xyetatau(self) -> VectorProtocolLorentz:
         "to_xyetatau docs"
         from .compute import lorentz, planar, spatial
 
@@ -368,7 +368,7 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_rhophizt(self) -> typing.Any:
+    def to_rhophizt(self) -> VectorProtocolLorentz:
         "to_rhophizt docs"
         from .compute import lorentz, planar, spatial
 
@@ -386,7 +386,7 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_rhophiztau(self) -> typing.Any:
+    def to_rhophiztau(self) -> VectorProtocolLorentz:
         "to_rhophiztau docs"
         from .compute import lorentz, planar, spatial
 
@@ -404,7 +404,7 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_rhophithetat(self) -> typing.Any:
+    def to_rhophithetat(self) -> VectorProtocolLorentz:
         "to_rhophithetat docs"
         from .compute import lorentz, planar, spatial
 
@@ -422,7 +422,7 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_rhophithetatau(self) -> typing.Any:
+    def to_rhophithetatau(self) -> VectorProtocolLorentz:
         "to_rhophithetatau docs"
         from .compute import lorentz, planar, spatial
 
@@ -440,7 +440,7 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_rhophietat(self) -> typing.Any:
+    def to_rhophietat(self) -> VectorProtocolLorentz:
         "to_rhophietat docs"
         from .compute import lorentz, planar, spatial
 
@@ -458,7 +458,7 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_rhophietatau(self) -> typing.Any:
+    def to_rhophietatau(self) -> VectorProtocolLorentz:
         "to_rhophietatau docs"
         from .compute import lorentz, planar, spatial
 
@@ -478,11 +478,11 @@ class Vector(VectorProtocol):
 
 
 class Vector2D(Vector, VectorProtocolPlanar):
-    def to_Vector2D(self) -> typing.Any:
+    def to_Vector2D(self) -> VectorProtocolPlanar:
         "to_Vector2D docs"
         return self
 
-    def to_Vector3D(self) -> typing.Any:
+    def to_Vector3D(self) -> VectorProtocolSpatial:
         "to_Vector3D docs"
         return self._wrap_result(
             type(self),
@@ -491,7 +491,7 @@ class Vector2D(Vector, VectorProtocolPlanar):
             1,
         )
 
-    def to_Vector4D(self) -> typing.Any:
+    def to_Vector4D(self) -> VectorProtocolLorentz:
         "to_Vector4D docs"
         return self._wrap_result(
             type(self),
@@ -502,7 +502,7 @@ class Vector2D(Vector, VectorProtocolPlanar):
 
 
 class Vector3D(Vector, VectorProtocolSpatial):
-    def to_Vector2D(self) -> typing.Any:
+    def to_Vector2D(self) -> VectorProtocolPlanar:
         "to_Vector2D docs"
         return self._wrap_result(
             type(self),
@@ -511,11 +511,11 @@ class Vector3D(Vector, VectorProtocolSpatial):
             1,
         )
 
-    def to_Vector3D(self) -> typing.Any:
+    def to_Vector3D(self) -> VectorProtocolSpatial:
         "to_Vector3D docs"
         return self
 
-    def to_Vector4D(self) -> typing.Any:
+    def to_Vector4D(self) -> VectorProtocolLorentz:
         "to_Vector4D docs"
         return self._wrap_result(
             type(self),
@@ -526,7 +526,7 @@ class Vector3D(Vector, VectorProtocolSpatial):
 
 
 class Vector4D(Vector, VectorProtocolLorentz):
-    def to_Vector2D(self) -> typing.Any:
+    def to_Vector2D(self) -> VectorProtocolPlanar:
         "to_Vector2D docs"
         return self._wrap_result(
             type(self),
@@ -535,7 +535,7 @@ class Vector4D(Vector, VectorProtocolLorentz):
             1,
         )
 
-    def to_Vector3D(self) -> typing.Any:
+    def to_Vector3D(self) -> VectorProtocolSpatial:
         "to_Vector3D docs"
         return self._wrap_result(
             type(self),
@@ -544,12 +544,12 @@ class Vector4D(Vector, VectorProtocolLorentz):
             1,
         )
 
-    def to_Vector4D(self) -> typing.Any:
+    def to_Vector4D(self) -> VectorProtocolLorentz:
         "to_Vector4D docs"
         return self
 
 
-def dim(v: typing.Any) -> typing.Any:
+def dim(v: VectorProtocol) -> int:
     if isinstance(v, Vector2D):
         return 2
     elif isinstance(v, Vector3D):
@@ -561,7 +561,7 @@ def dim(v: typing.Any) -> typing.Any:
 
 
 def _compute_module_of(
-    one: typing.Any, two: typing.Any, nontemporal: typing.Any = False
+    one: VectorProtocol, two: VectorProtocol, nontemporal: bool = False
 ) -> typing.Any:
     if not isinstance(one, Vector):
         raise TypeError(f"{repr(one)} is not a Vector")
@@ -597,10 +597,12 @@ def _compute_module_of(
 
             return vector.compute.lorentz
 
+    raise AssertionError(repr(one))
+
 
 class Planar(VectorProtocolPlanar):
     @property
-    def azimuthal(self) -> typing.Any:
+    def azimuthal(self) -> Azimuthal:
         "azimuthal docs"
         raise AssertionError(repr(type(self)))
 
@@ -760,7 +762,7 @@ class Planar(VectorProtocolPlanar):
 
 class Spatial(Planar, VectorProtocolSpatial):
     @property
-    def longitudinal(self) -> typing.Any:
+    def longitudinal(self) -> Longitudinal:
         "longitudinal docs"
         raise AssertionError(repr(type(self)))
 
@@ -1015,7 +1017,7 @@ class Spatial(Planar, VectorProtocolSpatial):
 
 class Lorentz(Spatial, VectorProtocolLorentz):
     @property
-    def temporal(self) -> typing.Any:
+    def temporal(self) -> Temporal:
         "temporal docs"
         raise AssertionError(repr(type(self)))
 
@@ -1359,7 +1361,7 @@ class LorentzMomentum(SpatialMomentum, MomentumProtocolLorentz):
         return self.Mt2
 
 
-def _lib_of(*objects: typing.Any) -> typing.Any:
+def _lib_of(*objects: VectorProtocol) -> typing.Any:
     lib = None
     for obj in objects:
         if isinstance(obj, Vector):
@@ -1369,12 +1371,12 @@ def _lib_of(*objects: typing.Any) -> typing.Any:
                 raise TypeError(
                     f"cannot use {lib} and {obj.lib} in the same calculation"
                 )
+
+    assert lib is not None
     return lib
 
 
-def _from_signature(
-    name: typing.Any, dispatch_map: typing.Any, signature: typing.Any
-) -> typing.Any:
+def _from_signature(name: str, dispatch_map: dict, signature: tuple) -> tuple:
     result = dispatch_map.get(signature)
     if result is None:
         raise TypeError(
@@ -1390,7 +1392,7 @@ _handler_priority = [
 ]
 
 
-def _handler_of(*objects: typing.Any) -> typing.Any:
+def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
     handler = None
     for obj in objects:
         if isinstance(obj, Vector):
@@ -1401,10 +1403,11 @@ def _handler_of(*objects: typing.Any) -> typing.Any:
             ) > _handler_priority.index(type(handler).__module__):
                 handler = obj
 
+    assert handler is not None
     return handler
 
 
-def _flavor_of(*objects: typing.Any) -> typing.Any:
+def _flavor_of(*objects: VectorProtocol) -> typing.Type[VectorProtocol]:
     from .backends.numpy_ import VectorNumpy
     from .backends.object_ import VectorObject
 
@@ -1422,7 +1425,6 @@ def _flavor_of(*objects: typing.Any) -> typing.Any:
                 handler = obj
 
     assert handler is not None
-
     if is_momentum:
         return type(handler)
     else:
