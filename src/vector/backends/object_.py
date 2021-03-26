@@ -437,20 +437,22 @@ class VectorObject(Vector):
 class VectorObject2D(VectorObject, Planar, Vector2D):
     __slots__ = ("azimuthal",)
 
-    azimuthal: typing.Any
+    azimuthal: AzimuthalObject  # type: ignore
 
     @classmethod
-    def from_xy(cls, x: typing.Any, y: typing.Any) -> typing.Any:
-        return cls(AzimuthalObjectXY(x, y))
+    def from_xy(cls, x: ScalarCollection, y: ScalarCollection) -> "VectorObject2D":
+        return cls(AzimuthalObjectXY(x, y))  # type: ignore
 
     @classmethod
-    def from_rhophi(cls, rho: typing.Any, phi: typing.Any) -> typing.Any:
-        return cls(AzimuthalObjectRhoPhi(rho, phi))
+    def from_rhophi(
+        cls, rho: ScalarCollection, phi: ScalarCollection
+    ) -> "VectorObject2D":
+        return cls(AzimuthalObjectRhoPhi(rho, phi))  # type: ignore
 
-    def __init__(self, azimuthal: typing.Any) -> None:
+    def __init__(self, azimuthal: AzimuthalObject) -> None:
         self.azimuthal = azimuthal
 
-    def __repr__(self) -> typing.Any:
+    def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         out = []
         for x in aznames:
@@ -525,40 +527,40 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             raise AssertionError(repr(returns))
 
     @property
-    def x(self) -> typing.Any:
+    def x(self) -> ScalarCollection:
         return super().x
 
     @x.setter
-    def x(self, x: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectXY(x, self.y)
+    def x(self, x: ScalarCollection) -> None:
+        self.azimuthal = AzimuthalObjectXY(x, self.y)  # type: ignore
 
     @property
-    def y(self) -> typing.Any:
+    def y(self) -> ScalarCollection:
         return super().y
 
     @y.setter
-    def y(self, y: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectXY(self.x, y)
+    def y(self, y: ScalarCollection) -> None:
+        self.azimuthal = AzimuthalObjectXY(self.x, y)  # type: ignore
 
     @property
-    def rho(self) -> typing.Any:
+    def rho(self) -> ScalarCollection:
         return super().rho
 
     @rho.setter
-    def rho(self, rho: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(rho, self.phi)
+    def rho(self, rho: ScalarCollection) -> None:
+        self.azimuthal = AzimuthalObjectRhoPhi(rho, self.phi)  # type: ignore
 
     @property
-    def phi(self) -> typing.Any:
+    def phi(self) -> ScalarCollection:
         return super().phi
 
     @phi.setter
-    def phi(self, phi: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)
+    def phi(self, phi: ScalarCollection) -> None:
+        self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)  # type: ignore
 
 
 class MomentumObject2D(PlanarMomentum, VectorObject2D):
-    def __repr__(self) -> typing.Any:
+    def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         out = []
         for x in aznames:
@@ -567,73 +569,79 @@ class MomentumObject2D(PlanarMomentum, VectorObject2D):
         return "vector.obj(" + ", ".join(out) + ")"
 
     @property
-    def px(self) -> typing.Any:
+    def px(self) -> ScalarCollection:
         return super().px
 
     @px.setter
-    def px(self, px: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectXY(px, self.py)
+    def px(self, px: ScalarCollection) -> None:
+        self.azimuthal = AzimuthalObjectXY(px, self.py)  # type: ignore
 
     @property
-    def py(self) -> typing.Any:
+    def py(self) -> ScalarCollection:
         return super().py
 
     @py.setter
-    def py(self, py: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectXY(self.px, py)
+    def py(self, py: ScalarCollection) -> None:
+        self.azimuthal = AzimuthalObjectXY(self.px, py)  # type: ignore
 
     @property
-    def pt(self) -> typing.Any:
+    def pt(self) -> ScalarCollection:
         return super().pt
 
     @pt.setter
-    def pt(self, pt: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)
+    def pt(self, pt: ScalarCollection) -> None:
+        self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)  # type: ignore
 
 
 class VectorObject3D(VectorObject, Spatial, Vector3D):
     __slots__ = ("azimuthal", "longitudinal")
 
-    azimuthal: typing.Any
-    longitudinal: typing.Any
+    azimuthal: AzimuthalObject  # type: ignore
+    longitudinal: LongitudinalObject  # type: ignore
 
     @classmethod
-    def from_xyz(cls, x: typing.Any, y: typing.Any, z: typing.Any) -> typing.Any:
-        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z))
+    def from_xyz(
+        cls, x: ScalarCollection, y: ScalarCollection, z: ScalarCollection
+    ) -> "VectorObject3D":
+        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z))  # type: ignore
 
     @classmethod
     def from_xytheta(
-        cls, x: typing.Any, y: typing.Any, theta: typing.Any
-    ) -> typing.Any:
-        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectTheta(theta))
+        cls, x: ScalarCollection, y: ScalarCollection, theta: ScalarCollection
+    ) -> "VectorObject3D":
+        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectTheta(theta))  # type: ignore
 
     @classmethod
-    def from_xyeta(cls, x: typing.Any, y: typing.Any, eta: typing.Any) -> typing.Any:
-        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta))
+    def from_xyeta(
+        cls, x: ScalarCollection, y: ScalarCollection, eta: ScalarCollection
+    ) -> "VectorObject3D":
+        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta))  # type: ignore
 
     @classmethod
     def from_rhophiz(
-        cls, rho: typing.Any, phi: typing.Any, z: typing.Any
-    ) -> typing.Any:
-        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectZ(z))
+        cls, rho: ScalarCollection, phi: ScalarCollection, z: ScalarCollection
+    ) -> "VectorObject3D":
+        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectZ(z))  # type: ignore
 
     @classmethod
     def from_rhophitheta(
-        cls, rho: typing.Any, phi: typing.Any, theta: typing.Any
-    ) -> typing.Any:
-        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectTheta(theta))
+        cls, rho: ScalarCollection, phi: ScalarCollection, theta: ScalarCollection
+    ) -> "VectorObject3D":
+        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectTheta(theta))  # type: ignore
 
     @classmethod
     def from_rhophieta(
-        cls, rho: typing.Any, phi: typing.Any, eta: typing.Any
-    ) -> typing.Any:
-        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectEta(eta))
+        cls, rho: ScalarCollection, phi: ScalarCollection, eta: ScalarCollection
+    ) -> "VectorObject3D":
+        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectEta(eta))  # type: ignore
 
-    def __init__(self, azimuthal: typing.Any, longitudinal: typing.Any) -> None:
+    def __init__(
+        self, azimuthal: AzimuthalObject, longitudinal: LongitudinalObject
+    ) -> None:
         self.azimuthal = azimuthal
         self.longitudinal = longitudinal
 
-    def __repr__(self) -> typing.Any:
+    def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         lnames = _coordinate_class_to_names[_ltype(self)]
         out = []
@@ -711,64 +719,64 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             raise AssertionError(repr(returns))
 
     @property
-    def x(self) -> typing.Any:
+    def x(self) -> ScalarCollection:
         return super().x
 
     @x.setter
-    def x(self, x: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectXY(x, self.y)
+    def x(self, x: ScalarCollection) -> None:
+        self.azimuthal = AzimuthalObjectXY(x, self.y)  # type: ignore
 
     @property
-    def y(self) -> typing.Any:
+    def y(self) -> ScalarCollection:
         return super().y
 
     @y.setter
-    def y(self, y: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectXY(self.x, y)
+    def y(self, y: ScalarCollection) -> None:
+        self.azimuthal = AzimuthalObjectXY(self.x, y)  # type: ignore
 
     @property
-    def rho(self) -> typing.Any:
+    def rho(self) -> ScalarCollection:
         return super().rho
 
     @rho.setter
-    def rho(self, rho: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(rho, self.phi)
+    def rho(self, rho: ScalarCollection) -> None:
+        self.azimuthal = AzimuthalObjectRhoPhi(rho, self.phi)  # type: ignore
 
     @property
-    def phi(self) -> typing.Any:
+    def phi(self) -> ScalarCollection:
         return super().phi
 
     @phi.setter
-    def phi(self, phi: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)
+    def phi(self, phi: ScalarCollection) -> None:
+        self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)  # type: ignore
 
     @property
-    def z(self) -> typing.Any:
+    def z(self) -> ScalarCollection:
         return super().z
 
     @z.setter
-    def z(self, z: typing.Any) -> None:
-        self.longitudinal = LongitudinalObjectZ(z)
+    def z(self, z: ScalarCollection) -> None:
+        self.longitudinal = LongitudinalObjectZ(z)  # type: ignore
 
     @property
-    def theta(self) -> typing.Any:
+    def theta(self) -> ScalarCollection:
         return super().theta
 
     @theta.setter
-    def theta(self, theta: typing.Any) -> None:
-        self.longitudinal = LongitudinalObjectTheta(theta)
+    def theta(self, theta: ScalarCollection) -> None:
+        self.longitudinal = LongitudinalObjectTheta(theta)  # type: ignore
 
     @property
-    def eta(self) -> typing.Any:
+    def eta(self) -> ScalarCollection:
         return super().eta
 
     @eta.setter
-    def eta(self, eta: typing.Any) -> None:
-        self.longitudinal = LongitudinalObjectEta(eta)
+    def eta(self, eta: ScalarCollection) -> None:
+        self.longitudinal = LongitudinalObjectEta(eta)  # type: ignore
 
 
 class MomentumObject3D(SpatialMomentum, VectorObject3D):
-    def __repr__(self) -> typing.Any:
+    def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         lnames = _coordinate_class_to_names[_ltype(self)]
         out = []
@@ -781,159 +789,210 @@ class MomentumObject3D(SpatialMomentum, VectorObject3D):
         return "vector.obj(" + ", ".join(out) + ")"
 
     @property
-    def px(self) -> typing.Any:
+    def px(self) -> ScalarCollection:
         return super().px
 
     @px.setter
-    def px(self, px: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectXY(px, self.py)
+    def px(self, px: ScalarCollection) -> None:
+        self.azimuthal = AzimuthalObjectXY(px, self.py)  # type: ignore
 
     @property
-    def py(self) -> typing.Any:
+    def py(self) -> ScalarCollection:
         return super().py
 
     @py.setter
-    def py(self, py: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectXY(self.px, py)
+    def py(self, py: ScalarCollection) -> None:
+        self.azimuthal = AzimuthalObjectXY(self.px, py)  # type: ignore
 
     @property
-    def pt(self) -> typing.Any:
+    def pt(self) -> ScalarCollection:
         return super().pt
 
     @pt.setter
-    def pt(self, pt: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)
+    def pt(self, pt: ScalarCollection) -> None:
+        self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)  # type: ignore
 
     @property
-    def pz(self) -> typing.Any:
+    def pz(self) -> ScalarCollection:
         return super().pz
 
     @pz.setter
-    def pz(self, pz: typing.Any) -> None:
-        self.longitudinal = LongitudinalObjectZ(pz)
+    def pz(self, pz: ScalarCollection) -> None:
+        self.longitudinal = LongitudinalObjectZ(pz)  # type: ignore
 
 
 class VectorObject4D(VectorObject, Lorentz, Vector4D):
     __slots__ = ("azimuthal", "longitudinal", "temporal")
 
-    azimuthal: typing.Any
-    longitudinal: typing.Any
-    temporal: typing.Any
+    azimuthal: AzimuthalObject  # type: ignore
+    longitudinal: LongitudinalObject  # type: ignore
+    temporal: TemporalObject  # type: ignore
 
     @classmethod
     def from_xyzt(
-        cls, x: typing.Any, y: typing.Any, z: typing.Any, t: typing.Any
-    ) -> typing.Any:
-        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z), TemporalObjectT(t))
+        cls,
+        x: ScalarCollection,
+        y: ScalarCollection,
+        z: ScalarCollection,
+        t: ScalarCollection,
+    ) -> "VectorObject4D":
+        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z), TemporalObjectT(t))  # type: ignore
 
     @classmethod
     def from_xyztau(
-        cls, x: typing.Any, y: typing.Any, z: typing.Any, tau: typing.Any
-    ) -> typing.Any:
+        cls,
+        x: ScalarCollection,
+        y: ScalarCollection,
+        z: ScalarCollection,
+        tau: ScalarCollection,
+    ) -> "VectorObject4D":
         return cls(
-            AzimuthalObjectXY(x, y), LongitudinalObjectZ(z), TemporalObjectTau(tau)
+            AzimuthalObjectXY(x, y), LongitudinalObjectZ(z), TemporalObjectTau(tau)  # type: ignore
         )
 
     @classmethod
     def from_xythetat(
-        cls, x: typing.Any, y: typing.Any, theta: typing.Any, t: typing.Any
-    ) -> typing.Any:
+        cls,
+        x: ScalarCollection,
+        y: ScalarCollection,
+        theta: ScalarCollection,
+        t: ScalarCollection,
+    ) -> "VectorObject4D":
         return cls(
-            AzimuthalObjectXY(x, y), LongitudinalObjectTheta(theta), TemporalObjectT(t)
+            AzimuthalObjectXY(x, y), LongitudinalObjectTheta(theta), TemporalObjectT(t)  # type: ignore
         )
 
     @classmethod
     def from_xythetatau(
-        cls, x: typing.Any, y: typing.Any, theta: typing.Any, tau: typing.Any
-    ) -> typing.Any:
+        cls,
+        x: ScalarCollection,
+        y: ScalarCollection,
+        theta: ScalarCollection,
+        tau: ScalarCollection,
+    ) -> "VectorObject4D":
         return cls(
-            AzimuthalObjectXY(x, y),
-            LongitudinalObjectTheta(theta),
-            TemporalObjectTau(tau),
+            AzimuthalObjectXY(x, y),  # type: ignore
+            LongitudinalObjectTheta(theta),  # type: ignore
+            TemporalObjectTau(tau),  # type: ignore
         )
 
     @classmethod
     def from_xyetat(
-        cls, x: typing.Any, y: typing.Any, eta: typing.Any, t: typing.Any
-    ) -> typing.Any:
+        cls,
+        x: ScalarCollection,
+        y: ScalarCollection,
+        eta: ScalarCollection,
+        t: ScalarCollection,
+    ) -> "VectorObject4D":
         return cls(
-            AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta), TemporalObjectT(t)
+            AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta), TemporalObjectT(t)  # type: ignore
         )
 
     @classmethod
     def from_xyetatau(
-        cls, x: typing.Any, y: typing.Any, eta: typing.Any, tau: typing.Any
-    ) -> typing.Any:
+        cls,
+        x: ScalarCollection,
+        y: ScalarCollection,
+        eta: ScalarCollection,
+        tau: ScalarCollection,
+    ) -> "VectorObject4D":
         return cls(
-            AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta), TemporalObjectTau(tau)
+            AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta), TemporalObjectTau(tau)  # type: ignore
         )
 
     @classmethod
     def from_rhophizt(
-        cls, rho: typing.Any, phi: typing.Any, z: typing.Any, t: typing.Any
-    ) -> typing.Any:
+        cls,
+        rho: ScalarCollection,
+        phi: ScalarCollection,
+        z: ScalarCollection,
+        t: ScalarCollection,
+    ) -> "VectorObject4D":
         return cls(
-            AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectZ(z), TemporalObjectT(t)
+            AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectZ(z), TemporalObjectT(t)  # type: ignore
         )
 
     @classmethod
     def from_rhophiztau(
-        cls, rho: typing.Any, phi: typing.Any, z: typing.Any, tau: typing.Any
-    ) -> typing.Any:
+        cls,
+        rho: ScalarCollection,
+        phi: ScalarCollection,
+        z: ScalarCollection,
+        tau: ScalarCollection,
+    ) -> "VectorObject4D":
         return cls(
-            AzimuthalObjectRhoPhi(rho, phi),
-            LongitudinalObjectZ(z),
-            TemporalObjectTau(tau),
+            AzimuthalObjectRhoPhi(rho, phi),  # type: ignore
+            LongitudinalObjectZ(z),  # type: ignore
+            TemporalObjectTau(tau),  # type: ignore
         )
 
     @classmethod
     def from_rhophithetat(
-        cls, rho: typing.Any, phi: typing.Any, theta: typing.Any, t: typing.Any
-    ) -> typing.Any:
+        cls,
+        rho: ScalarCollection,
+        phi: ScalarCollection,
+        theta: ScalarCollection,
+        t: ScalarCollection,
+    ) -> "VectorObject4D":
         return cls(
-            AzimuthalObjectRhoPhi(rho, phi),
-            LongitudinalObjectTheta(theta),
-            TemporalObjectT(t),
+            AzimuthalObjectRhoPhi(rho, phi),  # type: ignore
+            LongitudinalObjectTheta(theta),  # type: ignore
+            TemporalObjectT(t),  # type: ignore
         )
 
     @classmethod
     def from_rhophithetatau(
-        cls, rho: typing.Any, phi: typing.Any, theta: typing.Any, tau: typing.Any
-    ) -> typing.Any:
+        cls,
+        rho: ScalarCollection,
+        phi: ScalarCollection,
+        theta: ScalarCollection,
+        tau: ScalarCollection,
+    ) -> "VectorObject4D":
         return cls(
-            AzimuthalObjectRhoPhi(rho, phi),
-            LongitudinalObjectTheta(theta),
-            TemporalObjectTau(tau),
+            AzimuthalObjectRhoPhi(rho, phi),  # type: ignore
+            LongitudinalObjectTheta(theta),  # type: ignore
+            TemporalObjectTau(tau),  # type: ignore
         )
 
     @classmethod
     def from_rhophietat(
-        cls, rho: typing.Any, phi: typing.Any, eta: typing.Any, t: typing.Any
-    ) -> typing.Any:
+        cls,
+        rho: ScalarCollection,
+        phi: ScalarCollection,
+        eta: ScalarCollection,
+        t: ScalarCollection,
+    ) -> "VectorObject4D":
         return cls(
-            AzimuthalObjectRhoPhi(rho, phi),
-            LongitudinalObjectEta(eta),
-            TemporalObjectT(t),
+            AzimuthalObjectRhoPhi(rho, phi),  # type: ignore
+            LongitudinalObjectEta(eta),  # type: ignore
+            TemporalObjectT(t),  # type: ignore
         )
 
     @classmethod
     def from_rhophietatau(
-        cls, rho: typing.Any, phi: typing.Any, eta: typing.Any, tau: typing.Any
-    ) -> typing.Any:
+        cls,
+        rho: ScalarCollection,
+        phi: ScalarCollection,
+        eta: ScalarCollection,
+        tau: ScalarCollection,
+    ) -> "VectorObject4D":
         return cls(
-            AzimuthalObjectRhoPhi(rho, phi),
-            LongitudinalObjectEta(eta),
-            TemporalObjectTau(tau),
+            AzimuthalObjectRhoPhi(rho, phi),  # type: ignore
+            LongitudinalObjectEta(eta),  # type: ignore
+            TemporalObjectTau(tau),  # type: ignore
         )
 
     def __init__(
-        self, azimuthal: typing.Any, longitudinal: typing.Any, temporal: typing.Any
+        self,
+        azimuthal: AzimuthalObject,
+        longitudinal: LongitudinalObject,
+        temporal: TemporalObject,
     ) -> None:
         self.azimuthal = azimuthal
         self.longitudinal = longitudinal
         self.temporal = temporal
 
-    def __repr__(self) -> typing.Any:
+    def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         lnames = _coordinate_class_to_names[_ltype(self)]
         tnames = _coordinate_class_to_names[_ttype(self)]
@@ -1014,80 +1073,80 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             raise AssertionError(repr(returns))
 
     @property
-    def x(self) -> typing.Any:
+    def x(self) -> ScalarCollection:
         return super().x
 
     @x.setter
-    def x(self, x: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectXY(x, self.y)
+    def x(self, x: ScalarCollection) -> None:
+        self.azimuthal = AzimuthalObjectXY(x, self.y)  # type: ignore
 
     @property
-    def y(self) -> typing.Any:
+    def y(self) -> ScalarCollection:
         return super().y
 
     @y.setter
-    def y(self, y: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectXY(self.x, y)
+    def y(self, y: ScalarCollection) -> None:
+        self.azimuthal = AzimuthalObjectXY(self.x, y)  # type: ignore
 
     @property
-    def rho(self) -> typing.Any:
+    def rho(self) -> ScalarCollection:
         return super().rho
 
     @rho.setter
-    def rho(self, rho: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(rho, self.phi)
+    def rho(self, rho: ScalarCollection) -> None:
+        self.azimuthal = AzimuthalObjectRhoPhi(rho, self.phi)  # type: ignore
 
     @property
-    def phi(self) -> typing.Any:
+    def phi(self) -> ScalarCollection:
         return super().phi
 
     @phi.setter
-    def phi(self, phi: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)
+    def phi(self, phi: ScalarCollection) -> None:
+        self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)  # type: ignore
 
     @property
-    def z(self) -> typing.Any:
+    def z(self) -> ScalarCollection:
         return super().z
 
     @z.setter
-    def z(self, z: typing.Any) -> None:
-        self.longitudinal = LongitudinalObjectZ(z)
+    def z(self, z: ScalarCollection) -> None:
+        self.longitudinal = LongitudinalObjectZ(z)  # type: ignore
 
     @property
-    def theta(self) -> typing.Any:
+    def theta(self) -> ScalarCollection:
         return super().theta
 
     @theta.setter
-    def theta(self, theta: typing.Any) -> None:
-        self.longitudinal = LongitudinalObjectTheta(theta)
+    def theta(self, theta: ScalarCollection) -> None:
+        self.longitudinal = LongitudinalObjectTheta(theta)  # type: ignore
 
     @property
-    def eta(self) -> typing.Any:
+    def eta(self) -> ScalarCollection:
         return super().eta
 
     @eta.setter
-    def eta(self, eta: typing.Any) -> None:
-        self.longitudinal = LongitudinalObjectEta(eta)
+    def eta(self, eta: ScalarCollection) -> None:
+        self.longitudinal = LongitudinalObjectEta(eta)  # type: ignore
 
     @property
-    def t(self) -> typing.Any:
+    def t(self) -> ScalarCollection:
         return super().t
 
     @t.setter
-    def t(self, t: typing.Any) -> None:
-        self.temporal = TemporalObjectT(t)
+    def t(self, t: ScalarCollection) -> None:
+        self.temporal = TemporalObjectT(t)  # type: ignore
 
     @property
-    def tau(self) -> typing.Any:
+    def tau(self) -> ScalarCollection:
         return super().tau
 
     @tau.setter
-    def tau(self, tau: typing.Any) -> None:
-        self.temporal = TemporalObjectTau(tau)
+    def tau(self, tau: ScalarCollection) -> None:
+        self.temporal = TemporalObjectTau(tau)  # type: ignore
 
 
 class MomentumObject4D(LorentzMomentum, VectorObject4D):
-    def __repr__(self) -> typing.Any:
+    def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         lnames = _coordinate_class_to_names[_ltype(self)]
         tnames = _coordinate_class_to_names[_ttype(self)]
@@ -1104,75 +1163,75 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
         return "vector.obj(" + ", ".join(out) + ")"
 
     @property
-    def px(self) -> typing.Any:
+    def px(self) -> ScalarCollection:
         return super().px
 
     @px.setter
-    def px(self, px: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectXY(px, self.py)
+    def px(self, px: ScalarCollection) -> None:
+        self.azimuthal = AzimuthalObjectXY(px, self.py)  # type: ignore
 
     @property
-    def py(self) -> typing.Any:
+    def py(self) -> ScalarCollection:
         return super().py
 
     @py.setter
-    def py(self, py: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectXY(self.px, py)
+    def py(self, py: ScalarCollection) -> None:
+        self.azimuthal = AzimuthalObjectXY(self.px, py)  # type: ignore
 
     @property
-    def pt(self) -> typing.Any:
+    def pt(self) -> ScalarCollection:
         return super().pt
 
     @pt.setter
-    def pt(self, pt: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)
+    def pt(self, pt: ScalarCollection) -> None:
+        self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)  # type: ignore
 
     @property
-    def pz(self) -> typing.Any:
+    def pz(self) -> ScalarCollection:
         return super().pz
 
     @pz.setter
-    def pz(self, pz: typing.Any) -> None:
-        self.longitudinal = LongitudinalObjectZ(pz)
+    def pz(self, pz: ScalarCollection) -> None:
+        self.longitudinal = LongitudinalObjectZ(pz)  # type: ignore
 
     @property
-    def E(self) -> typing.Any:
+    def E(self) -> ScalarCollection:
         return super().E
 
     @E.setter
-    def E(self, E: typing.Any) -> None:
-        self.temporal = TemporalObjectT(E)
+    def E(self, E: ScalarCollection) -> None:
+        self.temporal = TemporalObjectT(E)  # type: ignore
 
     @property
-    def energy(self) -> typing.Any:
+    def energy(self) -> ScalarCollection:
         return super().energy
 
     @energy.setter
-    def energy(self, energy: typing.Any) -> None:
-        self.temporal = TemporalObjectT(energy)
+    def energy(self, energy: ScalarCollection) -> None:
+        self.temporal = TemporalObjectT(energy)  # type: ignore
 
     @property
-    def M(self) -> typing.Any:
+    def M(self) -> ScalarCollection:
         return super().M
 
     @M.setter
-    def M(self, M: typing.Any) -> None:
-        self.temporal = TemporalObjectTau(M)
+    def M(self, M: ScalarCollection) -> None:
+        self.temporal = TemporalObjectTau(M)  # type: ignore
 
     @property
-    def mass(self) -> typing.Any:
+    def mass(self) -> ScalarCollection:
         return super().mass
 
     @mass.setter
-    def mass(self, mass: typing.Any) -> None:
-        self.temporal = TemporalObjectTau(mass)
+    def mass(self, mass: ScalarCollection) -> None:
+        self.temporal = TemporalObjectTau(mass)  # type: ignore
 
 
 def _gather_coordinates(
-    planar_class: typing.Any,
-    spatial_class: typing.Any,
-    lorentz_class: typing.Any,
-    coordinates: typing.Any,
+    planar_class: typing.Type[VectorObject2D],
+    spatial_class: typing.Type[VectorObject3D],
+    lorentz_class: typing.Type[VectorObject4D],
+    coordinates: dict,
 ) -> typing.Any:
     azimuthal: typing.Optional[
         typing.Union[AzimuthalObjectXY, AzimuthalObjectRhoPhi]
@@ -1221,11 +1280,11 @@ def _gather_coordinates(
 
     if len(coordinates) == 0:
         if azimuthal is not None and longitudinal is None and temporal is None:
-            return planar_class(azimuthal)
+            return planar_class(azimuthal)  # type: ignore
         if azimuthal is not None and longitudinal is not None and temporal is None:
-            return spatial_class(azimuthal, longitudinal)
+            return spatial_class(azimuthal, longitudinal)  # type: ignore
         if azimuthal is not None and longitudinal is not None and temporal is not None:
-            return lorentz_class(azimuthal, longitudinal, temporal)
+            return lorentz_class(azimuthal, longitudinal, temporal)  # type: ignore
 
     raise TypeError(
         "unrecognized combination of coordinates, allowed combinations are:\n\n"
@@ -1252,7 +1311,1789 @@ def _gather_coordinates(
     )
 
 
-def obj(**coordinates: typing.Any) -> typing.Any:
+@typing.overload
+def obj(*, x: ScalarCollection, y: ScalarCollection) -> VectorObject2D:
+    ...
+
+
+@typing.overload
+def obj(*, x: ScalarCollection, py: ScalarCollection) -> MomentumObject2D:
+    ...
+
+
+@typing.overload
+def obj(*, px: ScalarCollection, y: ScalarCollection) -> MomentumObject2D:
+    ...
+
+
+@typing.overload
+def obj(*, px: ScalarCollection, py: ScalarCollection) -> MomentumObject2D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: ScalarCollection, phi: ScalarCollection) -> VectorObject2D:
+    ...
+
+
+@typing.overload
+def obj(*, pt: ScalarCollection, phi: ScalarCollection) -> MomentumObject2D:
+    ...
+
+
+@typing.overload
+def obj(
+    *, x: ScalarCollection, y: ScalarCollection, z: ScalarCollection
+) -> VectorObject3D:
+    ...
+
+
+@typing.overload
+def obj(
+    *, x: ScalarCollection, y: ScalarCollection, pz: ScalarCollection
+) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(
+    *, x: ScalarCollection, py: ScalarCollection, z: ScalarCollection
+) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(
+    *, x: ScalarCollection, py: ScalarCollection, pz: ScalarCollection
+) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(
+    *, px: ScalarCollection, y: ScalarCollection, z: ScalarCollection
+) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(
+    *, px: ScalarCollection, y: ScalarCollection, pz: ScalarCollection
+) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(
+    *, px: ScalarCollection, py: ScalarCollection, z: ScalarCollection
+) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(
+    *, px: ScalarCollection, py: ScalarCollection, pz: ScalarCollection
+) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(
+    *, rho: ScalarCollection, phi: ScalarCollection, z: ScalarCollection
+) -> VectorObject3D:
+    ...
+
+
+@typing.overload
+def obj(
+    *, rho: ScalarCollection, phi: ScalarCollection, pz: ScalarCollection
+) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(
+    *, pt: ScalarCollection, phi: ScalarCollection, z: ScalarCollection
+) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(
+    *, pt: ScalarCollection, phi: ScalarCollection, pz: ScalarCollection
+) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(
+    *, x: ScalarCollection, y: ScalarCollection, theta: ScalarCollection
+) -> VectorObject3D:
+    ...
+
+
+@typing.overload
+def obj(
+    *, x: ScalarCollection, py: ScalarCollection, theta: ScalarCollection
+) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(
+    *, px: ScalarCollection, y: ScalarCollection, theta: ScalarCollection
+) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(
+    *, px: ScalarCollection, py: ScalarCollection, theta: ScalarCollection
+) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(
+    *, rho: ScalarCollection, phi: ScalarCollection, theta: ScalarCollection
+) -> VectorObject3D:
+    ...
+
+
+@typing.overload
+def obj(
+    *, pt: ScalarCollection, phi: ScalarCollection, theta: ScalarCollection
+) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(
+    *, x: ScalarCollection, y: ScalarCollection, eta: ScalarCollection
+) -> VectorObject3D:
+    ...
+
+
+@typing.overload
+def obj(
+    *, x: ScalarCollection, py: ScalarCollection, eta: ScalarCollection
+) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(
+    *, px: ScalarCollection, y: ScalarCollection, eta: ScalarCollection
+) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(
+    *, px: ScalarCollection, py: ScalarCollection, eta: ScalarCollection
+) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(
+    *, rho: ScalarCollection, phi: ScalarCollection, eta: ScalarCollection
+) -> VectorObject3D:
+    ...
+
+
+@typing.overload
+def obj(
+    *, pt: ScalarCollection, phi: ScalarCollection, eta: ScalarCollection
+) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    y: ScalarCollection,
+    z: ScalarCollection,
+    t: ScalarCollection,
+) -> VectorObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    y: ScalarCollection,
+    pz: ScalarCollection,
+    t: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    py: ScalarCollection,
+    z: ScalarCollection,
+    t: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    py: ScalarCollection,
+    pz: ScalarCollection,
+    t: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    y: ScalarCollection,
+    z: ScalarCollection,
+    t: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    y: ScalarCollection,
+    pz: ScalarCollection,
+    t: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    py: ScalarCollection,
+    z: ScalarCollection,
+    t: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    py: ScalarCollection,
+    pz: ScalarCollection,
+    t: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    rho: ScalarCollection,
+    phi: ScalarCollection,
+    z: ScalarCollection,
+    t: ScalarCollection,
+) -> VectorObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    rho: ScalarCollection,
+    phi: ScalarCollection,
+    pz: ScalarCollection,
+    t: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    pt: ScalarCollection,
+    phi: ScalarCollection,
+    z: ScalarCollection,
+    t: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    pt: ScalarCollection,
+    phi: ScalarCollection,
+    pz: ScalarCollection,
+    t: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    y: ScalarCollection,
+    theta: ScalarCollection,
+    t: ScalarCollection,
+) -> VectorObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    py: ScalarCollection,
+    theta: ScalarCollection,
+    t: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    y: ScalarCollection,
+    theta: ScalarCollection,
+    t: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    py: ScalarCollection,
+    theta: ScalarCollection,
+    t: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    rho: ScalarCollection,
+    phi: ScalarCollection,
+    theta: ScalarCollection,
+    t: ScalarCollection,
+) -> VectorObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    pt: ScalarCollection,
+    phi: ScalarCollection,
+    theta: ScalarCollection,
+    t: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    y: ScalarCollection,
+    eta: ScalarCollection,
+    t: ScalarCollection,
+) -> VectorObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    py: ScalarCollection,
+    eta: ScalarCollection,
+    t: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    y: ScalarCollection,
+    eta: ScalarCollection,
+    t: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    py: ScalarCollection,
+    eta: ScalarCollection,
+    t: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    rho: ScalarCollection,
+    phi: ScalarCollection,
+    eta: ScalarCollection,
+    t: ScalarCollection,
+) -> VectorObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    pt: ScalarCollection,
+    phi: ScalarCollection,
+    eta: ScalarCollection,
+    t: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    y: ScalarCollection,
+    z: ScalarCollection,
+    tau: ScalarCollection,
+) -> VectorObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    y: ScalarCollection,
+    pz: ScalarCollection,
+    tau: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    py: ScalarCollection,
+    z: ScalarCollection,
+    tau: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    py: ScalarCollection,
+    pz: ScalarCollection,
+    tau: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    y: ScalarCollection,
+    z: ScalarCollection,
+    tau: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    y: ScalarCollection,
+    pz: ScalarCollection,
+    tau: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    py: ScalarCollection,
+    z: ScalarCollection,
+    tau: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    py: ScalarCollection,
+    pz: ScalarCollection,
+    tau: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    rho: ScalarCollection,
+    phi: ScalarCollection,
+    z: ScalarCollection,
+    tau: ScalarCollection,
+) -> VectorObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    rho: ScalarCollection,
+    phi: ScalarCollection,
+    pz: ScalarCollection,
+    tau: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    ptau: ScalarCollection,
+    phi: ScalarCollection,
+    z: ScalarCollection,
+    tau: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    ptau: ScalarCollection,
+    phi: ScalarCollection,
+    pz: ScalarCollection,
+    tau: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    y: ScalarCollection,
+    theta: ScalarCollection,
+    tau: ScalarCollection,
+) -> VectorObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    py: ScalarCollection,
+    theta: ScalarCollection,
+    tau: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    y: ScalarCollection,
+    theta: ScalarCollection,
+    tau: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    py: ScalarCollection,
+    theta: ScalarCollection,
+    tau: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    rho: ScalarCollection,
+    phi: ScalarCollection,
+    theta: ScalarCollection,
+    tau: ScalarCollection,
+) -> VectorObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    ptau: ScalarCollection,
+    phi: ScalarCollection,
+    theta: ScalarCollection,
+    tau: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    y: ScalarCollection,
+    eta: ScalarCollection,
+    tau: ScalarCollection,
+) -> VectorObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    py: ScalarCollection,
+    eta: ScalarCollection,
+    tau: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    y: ScalarCollection,
+    eta: ScalarCollection,
+    tau: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    py: ScalarCollection,
+    eta: ScalarCollection,
+    tau: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    rho: ScalarCollection,
+    phi: ScalarCollection,
+    eta: ScalarCollection,
+    tau: ScalarCollection,
+) -> VectorObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    ptau: ScalarCollection,
+    phi: ScalarCollection,
+    eta: ScalarCollection,
+    tau: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    y: ScalarCollection,
+    z: ScalarCollection,
+    E: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    y: ScalarCollection,
+    pz: ScalarCollection,
+    E: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    py: ScalarCollection,
+    z: ScalarCollection,
+    E: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    py: ScalarCollection,
+    pz: ScalarCollection,
+    E: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    y: ScalarCollection,
+    z: ScalarCollection,
+    E: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    y: ScalarCollection,
+    pz: ScalarCollection,
+    E: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    py: ScalarCollection,
+    z: ScalarCollection,
+    E: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    py: ScalarCollection,
+    pz: ScalarCollection,
+    E: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    rho: ScalarCollection,
+    phi: ScalarCollection,
+    z: ScalarCollection,
+    E: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    rho: ScalarCollection,
+    phi: ScalarCollection,
+    pz: ScalarCollection,
+    E: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    pE: ScalarCollection,
+    phi: ScalarCollection,
+    z: ScalarCollection,
+    E: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    pE: ScalarCollection,
+    phi: ScalarCollection,
+    pz: ScalarCollection,
+    E: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    y: ScalarCollection,
+    theta: ScalarCollection,
+    E: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    py: ScalarCollection,
+    theta: ScalarCollection,
+    E: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    y: ScalarCollection,
+    theta: ScalarCollection,
+    E: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    py: ScalarCollection,
+    theta: ScalarCollection,
+    E: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    rho: ScalarCollection,
+    phi: ScalarCollection,
+    theta: ScalarCollection,
+    E: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    pE: ScalarCollection,
+    phi: ScalarCollection,
+    theta: ScalarCollection,
+    E: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    y: ScalarCollection,
+    eta: ScalarCollection,
+    E: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    py: ScalarCollection,
+    eta: ScalarCollection,
+    E: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    y: ScalarCollection,
+    eta: ScalarCollection,
+    E: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    py: ScalarCollection,
+    eta: ScalarCollection,
+    E: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    rho: ScalarCollection,
+    phi: ScalarCollection,
+    eta: ScalarCollection,
+    E: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    pE: ScalarCollection,
+    phi: ScalarCollection,
+    eta: ScalarCollection,
+    E: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    y: ScalarCollection,
+    z: ScalarCollection,
+    energy: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    y: ScalarCollection,
+    pz: ScalarCollection,
+    energy: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    py: ScalarCollection,
+    z: ScalarCollection,
+    energy: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    py: ScalarCollection,
+    pz: ScalarCollection,
+    energy: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    y: ScalarCollection,
+    z: ScalarCollection,
+    energy: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    y: ScalarCollection,
+    pz: ScalarCollection,
+    energy: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    py: ScalarCollection,
+    z: ScalarCollection,
+    energy: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    py: ScalarCollection,
+    pz: ScalarCollection,
+    energy: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    rho: ScalarCollection,
+    phi: ScalarCollection,
+    z: ScalarCollection,
+    energy: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    rho: ScalarCollection,
+    phi: ScalarCollection,
+    pz: ScalarCollection,
+    energy: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    penergy: ScalarCollection,
+    phi: ScalarCollection,
+    z: ScalarCollection,
+    energy: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    penergy: ScalarCollection,
+    phi: ScalarCollection,
+    pz: ScalarCollection,
+    energy: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    y: ScalarCollection,
+    theta: ScalarCollection,
+    energy: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    py: ScalarCollection,
+    theta: ScalarCollection,
+    energy: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    y: ScalarCollection,
+    theta: ScalarCollection,
+    energy: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    py: ScalarCollection,
+    theta: ScalarCollection,
+    energy: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    rho: ScalarCollection,
+    phi: ScalarCollection,
+    theta: ScalarCollection,
+    energy: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    penergy: ScalarCollection,
+    phi: ScalarCollection,
+    theta: ScalarCollection,
+    energy: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    y: ScalarCollection,
+    eta: ScalarCollection,
+    energy: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    py: ScalarCollection,
+    eta: ScalarCollection,
+    energy: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    y: ScalarCollection,
+    eta: ScalarCollection,
+    energy: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    py: ScalarCollection,
+    eta: ScalarCollection,
+    energy: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    rho: ScalarCollection,
+    phi: ScalarCollection,
+    eta: ScalarCollection,
+    energy: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    penergy: ScalarCollection,
+    phi: ScalarCollection,
+    eta: ScalarCollection,
+    energy: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    y: ScalarCollection,
+    z: ScalarCollection,
+    M: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    y: ScalarCollection,
+    pz: ScalarCollection,
+    M: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    py: ScalarCollection,
+    z: ScalarCollection,
+    M: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    py: ScalarCollection,
+    pz: ScalarCollection,
+    M: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    y: ScalarCollection,
+    z: ScalarCollection,
+    M: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    y: ScalarCollection,
+    pz: ScalarCollection,
+    M: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    py: ScalarCollection,
+    z: ScalarCollection,
+    M: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    py: ScalarCollection,
+    pz: ScalarCollection,
+    M: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    rho: ScalarCollection,
+    phi: ScalarCollection,
+    z: ScalarCollection,
+    M: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    rho: ScalarCollection,
+    phi: ScalarCollection,
+    pz: ScalarCollection,
+    M: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    pM: ScalarCollection,
+    phi: ScalarCollection,
+    z: ScalarCollection,
+    M: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    pM: ScalarCollection,
+    phi: ScalarCollection,
+    pz: ScalarCollection,
+    M: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    y: ScalarCollection,
+    theta: ScalarCollection,
+    M: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    py: ScalarCollection,
+    theta: ScalarCollection,
+    M: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    y: ScalarCollection,
+    theta: ScalarCollection,
+    M: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    py: ScalarCollection,
+    theta: ScalarCollection,
+    M: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    rho: ScalarCollection,
+    phi: ScalarCollection,
+    theta: ScalarCollection,
+    M: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    pM: ScalarCollection,
+    phi: ScalarCollection,
+    theta: ScalarCollection,
+    M: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    y: ScalarCollection,
+    eta: ScalarCollection,
+    M: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    py: ScalarCollection,
+    eta: ScalarCollection,
+    M: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    y: ScalarCollection,
+    eta: ScalarCollection,
+    M: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    py: ScalarCollection,
+    eta: ScalarCollection,
+    M: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    rho: ScalarCollection,
+    phi: ScalarCollection,
+    eta: ScalarCollection,
+    M: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    pM: ScalarCollection,
+    phi: ScalarCollection,
+    eta: ScalarCollection,
+    M: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    y: ScalarCollection,
+    z: ScalarCollection,
+    mass: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    y: ScalarCollection,
+    pz: ScalarCollection,
+    mass: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    py: ScalarCollection,
+    z: ScalarCollection,
+    mass: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    py: ScalarCollection,
+    pz: ScalarCollection,
+    mass: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    y: ScalarCollection,
+    z: ScalarCollection,
+    mass: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    y: ScalarCollection,
+    pz: ScalarCollection,
+    mass: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    py: ScalarCollection,
+    z: ScalarCollection,
+    mass: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    py: ScalarCollection,
+    pz: ScalarCollection,
+    mass: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    rho: ScalarCollection,
+    phi: ScalarCollection,
+    z: ScalarCollection,
+    mass: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    rho: ScalarCollection,
+    phi: ScalarCollection,
+    pz: ScalarCollection,
+    mass: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    pmass: ScalarCollection,
+    phi: ScalarCollection,
+    z: ScalarCollection,
+    mass: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    pmass: ScalarCollection,
+    phi: ScalarCollection,
+    pz: ScalarCollection,
+    mass: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    y: ScalarCollection,
+    theta: ScalarCollection,
+    mass: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    py: ScalarCollection,
+    theta: ScalarCollection,
+    mass: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    y: ScalarCollection,
+    theta: ScalarCollection,
+    mass: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    py: ScalarCollection,
+    theta: ScalarCollection,
+    mass: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    rho: ScalarCollection,
+    phi: ScalarCollection,
+    theta: ScalarCollection,
+    mass: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    pmass: ScalarCollection,
+    phi: ScalarCollection,
+    theta: ScalarCollection,
+    mass: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    y: ScalarCollection,
+    eta: ScalarCollection,
+    mass: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    x: ScalarCollection,
+    py: ScalarCollection,
+    eta: ScalarCollection,
+    mass: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    y: ScalarCollection,
+    eta: ScalarCollection,
+    mass: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    px: ScalarCollection,
+    py: ScalarCollection,
+    eta: ScalarCollection,
+    mass: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    rho: ScalarCollection,
+    phi: ScalarCollection,
+    eta: ScalarCollection,
+    mass: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(
+    *,
+    pmass: ScalarCollection,
+    phi: ScalarCollection,
+    eta: ScalarCollection,
+    mass: ScalarCollection,
+) -> MomentumObject4D:
+    ...
+
+
+def obj(**coordinates: ScalarCollection) -> VectorObject:
     "vector.obj docs"
     is_momentum = False
     generic_coordinates = {}

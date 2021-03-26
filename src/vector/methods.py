@@ -292,28 +292,144 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
         "longitudinal docs"
         raise AssertionError
 
-    z: typing.Any
-    theta: typing.Any
-    eta: typing.Any
-    costheta: typing.Any
-    cottheta: typing.Any
-    mag: typing.Any
-    mag2: typing.Any
-    cross: typing.Any
-    deltaangle: typing.Any
-    deltaeta: typing.Any
-    deltaR: typing.Any
-    deltaR2: typing.Any
-    rotateX: typing.Any
-    rotateY: typing.Any
-    rotate_axis: typing.Any
-    rotate_euler: typing.Any
-    rotate_nautical: typing.Any
-    rotate_quaternion: typing.Any
-    transform3D: typing.Any
-    is_parallel: typing.Any
-    is_antiparallel: typing.Any
-    is_perpendicular: typing.Any
+    @property
+    def z(self) -> ScalarCollection:
+        "z docs"
+        raise AssertionError
+
+    @property
+    def theta(self) -> ScalarCollection:
+        "theta docs"
+        raise AssertionError
+
+    @property
+    def eta(self) -> ScalarCollection:
+        "eta docs"
+        raise AssertionError
+
+    @property
+    def costheta(self) -> ScalarCollection:
+        "costheta docs"
+        raise AssertionError
+
+    @property
+    def cottheta(self) -> ScalarCollection:
+        "cottheta docs"
+        raise AssertionError
+
+    @property
+    def mag(self) -> ScalarCollection:
+        "mag docs"
+        raise AssertionError
+
+    @property
+    def mag2(self) -> ScalarCollection:
+        "mag2 docs"
+        raise AssertionError
+
+    def cross(self, other: "VectorProtocol") -> "VectorProtocolSpatial":
+        "cross docs"
+        raise AssertionError
+
+    def deltaangle(self, other: "VectorProtocol") -> ScalarCollection:
+        """
+        deltaangle docs
+
+        (it's just arccos(dot))
+        """
+        raise AssertionError
+
+    def deltaeta(self, other: "VectorProtocol") -> ScalarCollection:
+        "deltaeta docs"
+        raise AssertionError
+
+    def deltaR(self, other: "VectorProtocol") -> ScalarCollection:
+        "deltaR docs"
+        raise AssertionError
+
+    def deltaR2(self, other: "VectorProtocol") -> ScalarCollection:
+        "deltaR2 docs"
+        raise AssertionError
+
+    def rotateX(self: SameVectorType, angle: ScalarCollection) -> SameVectorType:
+        "rotateX docs"
+        raise AssertionError
+
+    def rotateY(self: SameVectorType, angle: ScalarCollection) -> SameVectorType:
+        "rotateY docs"
+        raise AssertionError
+
+    def rotate_axis(
+        self: SameVectorType, axis: "VectorProtocol", angle: ScalarCollection
+    ) -> SameVectorType:
+        "rotate_axis docs"
+        raise AssertionError
+
+    def rotate_euler(
+        self: SameVectorType,
+        phi: ScalarCollection,
+        theta: ScalarCollection,
+        psi: ScalarCollection,
+        order: str = "zxz",
+    ) -> SameVectorType:
+        """
+        rotate_euler docs
+
+        same conventions as ROOT
+        """
+        raise AssertionError
+
+    def rotate_nautical(
+        self: SameVectorType,
+        yaw: ScalarCollection,
+        pitch: ScalarCollection,
+        roll: ScalarCollection,
+    ) -> SameVectorType:
+        """
+        rotate_nautical docs
+
+        transforming "from the body frame to the inertial frame"
+
+        http://planning.cs.uiuc.edu/node102.html
+        http://www.chrobotics.com/library/understanding-euler-angles
+        """
+        raise AssertionError
+
+    def rotate_quaternion(
+        self: SameVectorType,
+        u: ScalarCollection,
+        i: ScalarCollection,
+        j: ScalarCollection,
+        k: ScalarCollection,
+    ) -> SameVectorType:
+        """
+        rotate_quaternion docs
+
+        same conventions as ROOT
+        """
+        raise AssertionError
+
+    def transform3D(self: SameVectorType, obj: TransformProtocol3D) -> SameVectorType:
+        "transform3D docs"
+        raise AssertionError
+
+    def is_parallel(
+        self, other: "VectorProtocol", tolerance: ScalarCollection = 1e-5
+    ) -> BoolCollection:
+        "is_parallel docs (note: this 'parallel' requires same direction)"
+        raise AssertionError
+
+    def is_antiparallel(
+        self, other: "VectorProtocol", tolerance: ScalarCollection = 1e-5
+    ) -> BoolCollection:
+        "is_antiparallel docs"
+        raise AssertionError
+
+    def is_perpendicular(
+        self, other: "VectorProtocol", tolerance: ScalarCollection = 1e-5
+    ) -> BoolCollection:
+        "is_perpendicular docs"
+        raise AssertionError
 
 
 class VectorProtocolLorentz(VectorProtocolSpatial):
@@ -322,57 +438,224 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         "temporal docs"
         raise AssertionError
 
-    t: typing.Any
-    t2: typing.Any
-    tau: typing.Any
-    tau2: typing.Any
-    beta: typing.Any
-    gamma: typing.Any
-    rapidity: typing.Any
-    boost_p4: typing.Any
-    boost_beta3: typing.Any
-    boost: typing.Any
-    boostX: typing.Any
-    boostY: typing.Any
-    boostZ: typing.Any
-    transform4D: typing.Any
-    to_beta3: typing.Any
-    is_timelike: typing.Any
-    is_spacelike: typing.Any
-    is_lightlike: typing.Any
+    @property
+    def t(self) -> ScalarCollection:
+        "t docs"
+        raise AssertionError
+
+    @property
+    def t2(self) -> ScalarCollection:
+        "t2 docs"
+        raise AssertionError
+
+    @property
+    def tau(self) -> ScalarCollection:
+        "tau docs"
+        raise AssertionError
+
+    @property
+    def tau2(self) -> ScalarCollection:
+        "tau2 docs"
+        raise AssertionError
+
+    @property
+    def beta(self) -> ScalarCollection:
+        "beta docs"
+        raise AssertionError
+
+    @property
+    def gamma(self) -> ScalarCollection:
+        "gamma docs"
+        raise AssertionError
+
+    @property
+    def rapidity(self) -> ScalarCollection:
+        "rapidity docs"
+        raise AssertionError
+
+    def boost_p4(self: SameVectorType, p4: "VectorProtocolLorentz") -> SameVectorType:
+        "boost_p4 docs"
+        raise AssertionError
+
+    def boost_beta3(
+        self: SameVectorType, beta3: "VectorProtocolSpatial"
+    ) -> SameVectorType:
+        "boost_beta3 docs"
+        raise AssertionError
+
+    def boost(self: SameVectorType, booster: "VectorProtocol") -> SameVectorType:
+        "boost docs"
+        raise AssertionError
+
+    def boostX(
+        self: SameVectorType,
+        beta: typing.Optional[ScalarCollection] = None,
+        gamma: typing.Optional[ScalarCollection] = None,
+    ) -> SameVectorType:
+        "boostX docs"
+        raise AssertionError
+
+    def boostY(
+        self: SameVectorType,
+        beta: typing.Optional[ScalarCollection] = None,
+        gamma: typing.Optional[ScalarCollection] = None,
+    ) -> SameVectorType:
+        "boostY docs"
+        raise AssertionError
+
+    def boostZ(
+        self: SameVectorType,
+        beta: typing.Optional[ScalarCollection] = None,
+        gamma: typing.Optional[ScalarCollection] = None,
+    ) -> SameVectorType:
+        "boostZ docs"
+        raise AssertionError
+
+    def transform4D(self: SameVectorType, obj: TransformProtocol4D) -> SameVectorType:
+        "transform4D docs"
+        raise AssertionError
+
+    def to_beta3(self) -> "VectorProtocolSpatial":
+        "to_beta3 docs"
+        raise AssertionError
+
+    def is_timelike(self, tolerance: ScalarCollection = 0) -> BoolCollection:
+        "is_timelike docs"
+        raise AssertionError
+
+    def is_spacelike(self, tolerance: ScalarCollection = 0) -> BoolCollection:
+        "is_spacelike docs"
+        raise AssertionError
+
+    def is_lightlike(self, tolerance: ScalarCollection = 1e-5) -> BoolCollection:
+        "is_timelike docs"
+        raise AssertionError
 
 
 class MomentumProtocolPlanar(VectorProtocolPlanar):
-    px: typing.Any
-    py: typing.Any
-    pt: typing.Any
-    pt2: typing.Any
+    @property
+    def px(self) -> ScalarCollection:
+        "px docs"
+        raise AssertionError
+
+    @property
+    def py(self) -> ScalarCollection:
+        "py docs"
+        raise AssertionError
+
+    @property
+    def pt(self) -> ScalarCollection:
+        "pt docs"
+        raise AssertionError
+
+    @property
+    def pt2(self) -> ScalarCollection:
+        "pt2 docs"
+        raise AssertionError
 
 
 class MomentumProtocolSpatial(VectorProtocolSpatial, MomentumProtocolPlanar):
-    pz: typing.Any
-    pseudorapidity: typing.Any
-    p: typing.Any
-    p2: typing.Any
+    @property
+    def pz(self) -> ScalarCollection:
+        "pz docs"
+        raise AssertionError
+
+    @property
+    def pseudorapidity(self) -> ScalarCollection:
+        "pseudorapidity docs"
+        raise AssertionError
+
+    @property
+    def p(self) -> ScalarCollection:
+        "p docs"
+        raise AssertionError
+
+    @property
+    def p2(self) -> ScalarCollection:
+        "p2 docs"
+        raise AssertionError
 
 
 class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
-    E: typing.Any
-    energy: typing.Any
-    E2: typing.Any
-    energy2: typing.Any
-    M: typing.Any
-    mass: typing.Any
-    M2: typing.Any
-    mass2: typing.Any
-    Et: typing.Any
-    transverse_energy: typing.Any
-    Et2: typing.Any
-    transverse_energy2: typing.Any
-    Mt: typing.Any
-    transverse_mass: typing.Any
-    Mt2: typing.Any
-    transverse_mass2: typing.Any
+    @property
+    def E(self) -> ScalarCollection:
+        "E docs"
+        raise AssertionError
+
+    @property
+    def energy(self) -> ScalarCollection:
+        "energy docs"
+        raise AssertionError
+
+    @property
+    def E2(self) -> ScalarCollection:
+        "E2 docs"
+        raise AssertionError
+
+    @property
+    def energy2(self) -> ScalarCollection:
+        "energy2 docs"
+        raise AssertionError
+
+    @property
+    def M(self) -> ScalarCollection:
+        "M docs"
+        raise AssertionError
+
+    @property
+    def mass(self) -> ScalarCollection:
+        "mass docs"
+        raise AssertionError
+
+    @property
+    def M2(self) -> ScalarCollection:
+        "M2 docs"
+        raise AssertionError
+
+    @property
+    def mass2(self) -> ScalarCollection:
+        "mass2 docs"
+        raise AssertionError
+
+    @property
+    def Et(self) -> ScalarCollection:
+        "Et docs"
+        raise AssertionError
+
+    @property
+    def transverse_energy(self) -> ScalarCollection:
+        "transverse_energy docs"
+        raise AssertionError
+
+    @property
+    def Et2(self) -> ScalarCollection:
+        "Et2 docs"
+        raise AssertionError
+
+    @property
+    def transverse_energy2(self) -> ScalarCollection:
+        "transverse_energy2 docs"
+        raise AssertionError
+
+    @property
+    def Mt(self) -> ScalarCollection:
+        "Mt docs"
+        raise AssertionError
+
+    @property
+    def transverse_mass(self) -> ScalarCollection:
+        "transverse_mass docs"
+        raise AssertionError
+
+    @property
+    def Mt2(self) -> ScalarCollection:
+        "Mt2 docs"
+        raise AssertionError
+
+    @property
+    def transverse_mass2(self) -> ScalarCollection:
+        "transverse_mass2 docs"
+        raise AssertionError
 
 
 class Vector(VectorProtocol):
@@ -883,95 +1166,77 @@ class Planar(VectorProtocolPlanar):
 class Spatial(Planar, VectorProtocolSpatial):
     @property
     def z(self) -> ScalarCollection:
-        "z docs"
         from .compute.spatial import z
 
         return z.dispatch(self)
 
     @property
     def theta(self) -> ScalarCollection:
-        "theta docs"
         from .compute.spatial import theta
 
         return theta.dispatch(self)
 
     @property
     def eta(self) -> ScalarCollection:
-        "eta docs"
         from .compute.spatial import eta
 
         return eta.dispatch(self)
 
     @property
     def costheta(self) -> ScalarCollection:
-        "costheta docs"
         from .compute.spatial import costheta
 
         return costheta.dispatch(self)
 
     @property
     def cottheta(self) -> ScalarCollection:
-        "cottheta docs"
         from .compute.spatial import cottheta
 
         return cottheta.dispatch(self)
 
     @property
     def mag(self) -> ScalarCollection:
-        "mag docs"
         from .compute.spatial import mag
 
         return mag.dispatch(self)
 
     @property
     def mag2(self) -> ScalarCollection:
-        "mag2 docs"
         from .compute.spatial import mag2
 
         return mag2.dispatch(self)
 
     def cross(self, other: VectorProtocol) -> VectorProtocolSpatial:
-        "cross docs"
         from .compute.spatial import cross
 
         return cross.dispatch(self, other)
 
     def deltaangle(self, other: VectorProtocol) -> ScalarCollection:
-        """
-        deltaangle docs
-
-        (it's just arccos(dot))
-        """
         from .compute.spatial import deltaangle
 
         return deltaangle.dispatch(self, other)
 
     def deltaeta(self, other: VectorProtocol) -> ScalarCollection:
-        "deltaeta docs"
         from .compute.spatial import deltaeta
 
         return deltaeta.dispatch(self, other)
 
     def deltaR(self, other: VectorProtocol) -> ScalarCollection:
-        "deltaR docs"
         from .compute.spatial import deltaR
 
         return deltaR.dispatch(self, other)
 
     def deltaR2(self, other: VectorProtocol) -> ScalarCollection:
-        "deltaR2 docs"
         from .compute.spatial import deltaR2
 
         return deltaR2.dispatch(self, other)
 
     def rotateX(self: SameVectorType, angle: ScalarCollection) -> SameVectorType:
-        "rotateX docs"
         from .compute.spatial import rotateX
 
         return rotateX.dispatch(angle, self)
 
     def rotateY(self: SameVectorType, angle: ScalarCollection) -> SameVectorType:
-        "rotateY docs"
         from .compute.spatial import rotateY
 
         return rotateY.dispatch(angle, self)
@@ -979,7 +1244,6 @@ class Spatial(Planar, VectorProtocolSpatial):
     def rotate_axis(
         self: SameVectorType, axis: VectorProtocol, angle: ScalarCollection
     ) -> SameVectorType:
-        "rotate_axis docs"
         from .compute.spatial import rotate_axis
 
         return rotate_axis.dispatch(angle, axis, self)
@@ -991,11 +1255,6 @@ class Spatial(Planar, VectorProtocolSpatial):
         psi: ScalarCollection,
         order: str = "zxz",
     ) -> SameVectorType:
-        """
-        rotate_euler docs
-
-        same conventions as ROOT
-        """
         from .compute.spatial import rotate_euler
 
         return rotate_euler.dispatch(phi, theta, psi, order.lower(), self)
@@ -1006,14 +1265,6 @@ class Spatial(Planar, VectorProtocolSpatial):
         pitch: ScalarCollection,
         roll: ScalarCollection,
     ) -> SameVectorType:
-        """
-        rotate_nautical docs
-
-        transforming "from the body frame to the inertial frame"
-
-        http://planning.cs.uiuc.edu/node102.html
-        http://www.chrobotics.com/library/understanding-euler-angles
-        """
         # The order of arguments is reversed because rotate_euler
         # follows ROOT's argument order: phi, theta, psi.
         from .compute.spatial import rotate_euler
@@ -1027,17 +1278,11 @@ class Spatial(Planar, VectorProtocolSpatial):
         j: ScalarCollection,
         k: ScalarCollection,
     ) -> SameVectorType:
-        """
-        rotate_quaternion docs
-
-        same conventions as ROOT
-        """
         from .compute.spatial import rotate_quaternion
 
         return rotate_quaternion.dispatch(u, i, j, k, self)
 
     def transform3D(self: SameVectorType, obj: TransformProtocol3D) -> SameVectorType:
-        "transform3D docs"
         from .compute.spatial import transform3D
 
         return transform3D.dispatch(obj, self)
@@ -1045,7 +1290,6 @@ class Spatial(Planar, VectorProtocolSpatial):
     def is_parallel(
         self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
     ) -> BoolCollection:
-        "is_parallel docs (note: this 'parallel' requires same direction)"
         from .compute.spatial import is_parallel
 
         if isinstance(other, Vector2D):
@@ -1056,7 +1300,6 @@ class Spatial(Planar, VectorProtocolSpatial):
     def is_antiparallel(
         self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
     ) -> BoolCollection:
-        "is_antiparallel docs"
         from .compute.spatial import is_antiparallel
 
         if isinstance(other, Vector2D):
@@ -1067,7 +1310,6 @@ class Spatial(Planar, VectorProtocolSpatial):
     def is_perpendicular(
         self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
     ) -> BoolCollection:
-        "is_perpendicular docs"
         from .compute.spatial import is_perpendicular
 
         if isinstance(other, Vector2D):
@@ -1076,34 +1318,28 @@ class Spatial(Planar, VectorProtocolSpatial):
             return is_perpendicular.dispatch(tolerance, self, other)
 
     def unit(self: SameVectorType) -> SameVectorType:
-        "unit docs"
         from .compute.spatial import unit
 
         return unit.dispatch(self)
 
     def dot(self, other: VectorProtocol) -> ScalarCollection:
-        "dot docs"
         module = _compute_module_of(self, other)
         return module.dot.dispatch(self, other)
 
     def add(self, other: VectorProtocol) -> VectorProtocol:
-        "add docs"
         module = _compute_module_of(self, other)
         return module.add.dispatch(self, other)
 
     def subtract(self, other: VectorProtocol) -> VectorProtocol:
-        "subtract docs"
         module = _compute_module_of(self, other)
         return module.subtract.dispatch(self, other)
 
     def scale(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
-        "scale docs"
         from .compute.spatial import scale
 
         return scale.dispatch(factor, self)
 
     def equal(self, other: VectorProtocol) -> BoolCollection:
-        "equal docs"
         from .compute.spatial import equal
 
         if dim(self) != dim(other):
@@ -1113,7 +1349,6 @@ class Spatial(Planar, VectorProtocolSpatial):
         return equal.dispatch(self, other)
 
     def not_equal(self, other: VectorProtocol) -> BoolCollection:
-        "not_equal docs"
         from .compute.spatial import not_equal
 
         if dim(self) != dim(other):
@@ -1129,7 +1364,6 @@ class Spatial(Planar, VectorProtocolSpatial):
         atol: ScalarCollection = 1e-08,
         equal_nan: BoolCollection = False,
     ) -> BoolCollection:
-        "isclose docs"
         from .compute.spatial import isclose
 
         if dim(self) != dim(other):
@@ -1142,55 +1376,47 @@ class Spatial(Planar, VectorProtocolSpatial):
 class Lorentz(Spatial, VectorProtocolLorentz):
     @property
     def t(self) -> ScalarCollection:
-        "t docs"
         from .compute.lorentz import t
 
         return t.dispatch(self)
 
     @property
     def t2(self) -> ScalarCollection:
-        "t2 docs"
         from .compute.lorentz import t2
 
         return t2.dispatch(self)
 
     @property
     def tau(self) -> ScalarCollection:
-        "tau docs"
         from .compute.lorentz import tau
 
         return tau.dispatch(self)
 
     @property
     def tau2(self) -> ScalarCollection:
-        "tau2 docs"
         from .compute.lorentz import tau2
 
         return tau2.dispatch(self)
 
     @property
     def beta(self) -> ScalarCollection:
-        "beta docs"
         from .compute.lorentz import beta
 
         return beta.dispatch(self)
 
     @property
     def gamma(self) -> ScalarCollection:
-        "gamma docs"
         from .compute.lorentz import gamma
 
         return gamma.dispatch(self)
 
     @property
     def rapidity(self) -> ScalarCollection:
-        "rapidity docs"
         from .compute.lorentz import rapidity
 
         return rapidity.dispatch(self)
 
     def boost_p4(self: SameVectorType, p4: VectorProtocolLorentz) -> SameVectorType:
-        "boost_p4 docs"
         from .compute.lorentz import boost_p4
 
         return boost_p4.dispatch(self, p4)
@@ -1198,13 +1424,11 @@ class Lorentz(Spatial, VectorProtocolLorentz):
     def boost_beta3(
         self: SameVectorType, beta3: VectorProtocolSpatial
     ) -> SameVectorType:
-        "boost_beta3 docs"
         from .compute.lorentz import boost_beta3
 
         return boost_beta3.dispatch(self, beta3)
 
     def boost(self: SameVectorType, booster: VectorProtocol) -> SameVectorType:
-        "boost docs"
         from .compute.lorentz import boost_beta3, boost_p4
 
         if isinstance(booster, Vector3D):
@@ -1222,7 +1446,6 @@ class Lorentz(Spatial, VectorProtocolLorentz):
         beta: typing.Optional[ScalarCollection] = None,
         gamma: typing.Optional[ScalarCollection] = None,
     ) -> SameVectorType:
-        "boostX docs"
         from .compute.lorentz import boostX_beta, boostX_gamma
 
         if beta is not None and gamma is None:
@@ -1237,7 +1460,6 @@ class Lorentz(Spatial, VectorProtocolLorentz):
         beta: typing.Optional[ScalarCollection] = None,
         gamma: typing.Optional[ScalarCollection] = None,
     ) -> SameVectorType:
-        "boostY docs"
         from .compute.lorentz import boostY_beta, boostY_gamma
 
         if beta is not None and gamma is None:
@@ -1252,7 +1474,6 @@ class Lorentz(Spatial, VectorProtocolLorentz):
         beta: typing.Optional[ScalarCollection] = None,
         gamma: typing.Optional[ScalarCollection] = None,
     ) -> SameVectorType:
-        "boostZ docs"
         from .compute.lorentz import boostZ_beta, boostZ_gamma
 
         if beta is not None and gamma is None:
@@ -1263,64 +1484,53 @@ class Lorentz(Spatial, VectorProtocolLorentz):
             raise TypeError("specify 'beta' xor 'gamma', not both or neither")
 
     def transform4D(self: SameVectorType, obj: TransformProtocol4D) -> SameVectorType:
-        "transform4D docs"
         from .compute.lorentz import transform4D
 
         return transform4D.dispatch(obj, self)
 
     def to_beta3(self) -> VectorProtocolSpatial:
-        "to_beta3 docs"
         from .compute.lorentz import to_beta3
 
         return to_beta3.dispatch(self)
 
     def is_timelike(self, tolerance: ScalarCollection = 0) -> BoolCollection:
-        "is_timelike docs"
         from .compute.lorentz import is_timelike
 
         return is_timelike.dispatch(tolerance, self)
 
     def is_spacelike(self, tolerance: ScalarCollection = 0) -> BoolCollection:
-        "is_spacelike docs"
         from .compute.lorentz import is_spacelike
 
         return is_spacelike.dispatch(tolerance, self)
 
     def is_lightlike(self, tolerance: ScalarCollection = 1e-5) -> BoolCollection:
-        "is_timelike docs"
         from .compute.lorentz import is_lightlike
 
         return is_lightlike.dispatch(tolerance, self)
 
     def unit(self: SameVectorType) -> SameVectorType:
-        "unit docs"
         from .compute.lorentz import unit
 
         return unit.dispatch(self)
 
     def dot(self, other: VectorProtocol) -> ScalarCollection:
-        "dot docs"
         module = _compute_module_of(self, other)
         return module.dot.dispatch(self, other)
 
     def add(self, other: VectorProtocol) -> VectorProtocol:
-        "add docs"
         module = _compute_module_of(self, other)
         return module.add.dispatch(self, other)
 
     def subtract(self, other: VectorProtocol) -> VectorProtocol:
-        "subtract docs"
         module = _compute_module_of(self, other)
         return module.subtract.dispatch(self, other)
 
     def scale(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
-        "scale docs"
         from .compute.lorentz import scale
 
         return scale.dispatch(factor, self)
 
     def equal(self, other: VectorProtocol) -> BoolCollection:
-        "equal docs"
         from .compute.lorentz import equal
 
         if dim(self) != dim(other):
@@ -1330,7 +1540,6 @@ class Lorentz(Spatial, VectorProtocolLorentz):
         return equal.dispatch(self, other)
 
     def not_equal(self, other: VectorProtocol) -> BoolCollection:
-        "not_equal docs"
         from .compute.lorentz import not_equal
 
         if dim(self) != dim(other):
@@ -1346,7 +1555,6 @@ class Lorentz(Spatial, VectorProtocolLorentz):
         atol: ScalarCollection = 1e-08,
         equal_nan: BoolCollection = False,
     ) -> BoolCollection:
-        "isclose docs"
         from .compute.lorentz import isclose
 
         if dim(self) != dim(other):
@@ -1363,134 +1571,110 @@ class Momentum:
 class PlanarMomentum(Momentum, MomentumProtocolPlanar):
     @property
     def px(self) -> ScalarCollection:
-        "px docs"
         return self.x
 
     @property
     def py(self) -> ScalarCollection:
-        "py docs"
         return self.y
 
     @property
     def pt(self) -> ScalarCollection:
-        "pt docs"
         return self.rho
 
     @property
     def pt2(self) -> ScalarCollection:
-        "pt2 docs"
         return self.rho2
 
 
 class SpatialMomentum(PlanarMomentum, MomentumProtocolSpatial):
     @property
     def pz(self) -> ScalarCollection:
-        "pz docs"
         return self.z
 
     @property
     def pseudorapidity(self) -> ScalarCollection:
-        "pseudorapidity docs"
         return self.eta
 
     @property
     def p(self) -> ScalarCollection:
-        "p docs"
         return self.mag
 
     @property
     def p2(self) -> ScalarCollection:
-        "p2 docs"
         return self.mag2
 
 
 class LorentzMomentum(SpatialMomentum, MomentumProtocolLorentz):
     @property
     def E(self) -> ScalarCollection:
-        "E docs"
         return self.t
 
     @property
     def energy(self) -> ScalarCollection:
-        "energy docs"
         return self.t
 
     @property
     def E2(self) -> ScalarCollection:
-        "E2 docs"
         return self.t2
 
     @property
     def energy2(self) -> ScalarCollection:
-        "energy2 docs"
         return self.t2
 
     @property
     def M(self) -> ScalarCollection:
-        "M docs"
         return self.tau
 
     @property
     def mass(self) -> ScalarCollection:
-        "mass docs"
         return self.tau
 
     @property
     def M2(self) -> ScalarCollection:
-        "M2 docs"
         return self.tau2
 
     @property
     def mass2(self) -> ScalarCollection:
-        "mass2 docs"
         return self.tau2
 
     @property
     def Et(self) -> ScalarCollection:
-        "Et docs"
         from .compute.lorentz import Et
 
         return Et.dispatch(self)
 
     @property
     def transverse_energy(self) -> ScalarCollection:
-        "transverse_energy docs"
         return self.Et
 
     @property
     def Et2(self) -> ScalarCollection:
-        "Et2 docs"
         from .compute.lorentz import Et2
 
         return Et2.dispatch(self)
 
     @property
     def transverse_energy2(self) -> ScalarCollection:
-        "transverse_energy2 docs"
         return self.Et2
 
     @property
     def Mt(self) -> ScalarCollection:
-        "Mt docs"
         from .compute.lorentz import Mt
 
         return Mt.dispatch(self)
 
     @property
     def transverse_mass(self) -> ScalarCollection:
-        "transverse_mass docs"
         return self.Mt
 
     @property
     def Mt2(self) -> ScalarCollection:
-        "Mt2 docs"
         from .compute.lorentz import Mt2
 
         return Mt2.dispatch(self)
 
     @property
     def transverse_mass2(self) -> ScalarCollection:
-        "transverse_mass2 docs"
         return self.Mt2
 
 
