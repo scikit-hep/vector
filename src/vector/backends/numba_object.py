@@ -3,6 +3,8 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+# type: ignore
+
 import operator
 
 import numba
@@ -2924,12 +2926,12 @@ def MomentumObject4DType_energy2(v):
     return MomentumObject4DType_energy2_impl
 
 
-@numba.extending.overload_attribute(MomentumObject4DType, "m")
-def MomentumObject4DType_m(v):
-    def MomentumObject4DType_m_impl(v):
+@numba.extending.overload_attribute(MomentumObject4DType, "M")
+def MomentumObject4DType_M(v):
+    def MomentumObject4DType_M_impl(v):
         return v.tau
 
-    return MomentumObject4DType_m_impl
+    return MomentumObject4DType_M_impl
 
 
 @numba.extending.overload_attribute(MomentumObject4DType, "mass")
@@ -2940,12 +2942,12 @@ def MomentumObject4DType_mass(v):
     return MomentumObject4DType_mass_impl
 
 
-@numba.extending.overload_attribute(MomentumObject4DType, "m2")
-def MomentumObject4DType_m2(v):
-    def MomentumObject4DType_m2_impl(v):
+@numba.extending.overload_attribute(MomentumObject4DType, "M2")
+def MomentumObject4DType_M2(v):
+    def MomentumObject4DType_M2_impl(v):
         return v.tau2
 
-    return MomentumObject4DType_m2_impl
+    return MomentumObject4DType_M2_impl
 
 
 @numba.extending.overload_attribute(MomentumObject4DType, "mass2")
