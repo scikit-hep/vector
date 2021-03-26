@@ -50,12 +50,17 @@ def register_numba():
     import vector.backends.numba_object  # noqa: 401
 
 
+_awkward_registered = False
+
+
 def register_awkward():
     import awkward
 
     import vector.backends.awkward_  # noqa: 401
 
+    global _awkward_registered
     awkward.behavior.update(vector.backends.awkward_.behavior)
+    _awkward_registered = True
 
 
 def Array(*args, **kwargs):
@@ -252,9 +257,9 @@ def Array(*args, **kwargs):
         names.append(name)
         arrays.append(akarray[name])
 
-    first = True
+    needs_behavior = not _awkward_registered
     for x in arrays:
-        if first:
+        if needs_behavior:
             if x.behavior is None:
                 x.behavior = vector.backends.awkward_.behavior
             else:
@@ -262,7 +267,7 @@ def Array(*args, **kwargs):
                 x.behavior.update(vector.backends.awkward_.behavior)
         else:
             x.behavior = None
-        first = False
+        needs_behavior = False
 
     depth = akarray.layout.purelist_depth
 
