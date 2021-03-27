@@ -19,6 +19,7 @@ from vector.methods import (
     LorentzMomentum,
     Planar,
     PlanarMomentum,
+    SameVectorType,
     Spatial,
     SpatialMomentum,
     Temporal,
@@ -28,6 +29,7 @@ from vector.methods import (
     Vector2D,
     Vector3D,
     Vector4D,
+    VectorProtocol,
     _aztype,
     _coordinate_class_to_names,
     _handler_of,
@@ -58,7 +60,7 @@ class AzimuthalObjectXY(typing.NamedTuple):
     y: float
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[float, float]:
         return (self.x, self.y)
 
 
@@ -70,7 +72,7 @@ class AzimuthalObjectRhoPhi(typing.NamedTuple):
     phi: float
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[float, float]:
         return (self.rho, self.phi)
 
 
@@ -81,7 +83,7 @@ class LongitudinalObjectZ(typing.NamedTuple):
     z: float
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[float]:
         return (self.z,)
 
 
@@ -92,7 +94,7 @@ class LongitudinalObjectTheta(typing.NamedTuple):
     theta: float
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[float]:
         return (self.theta,)
 
 
@@ -103,7 +105,7 @@ class LongitudinalObjectEta(typing.NamedTuple):
     eta: float
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[float]:
         return (self.eta,)
 
 
@@ -114,7 +116,7 @@ class TemporalObjectT(typing.NamedTuple):
     t: float
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[float]:
         return (self.t,)
 
 
@@ -125,7 +127,7 @@ class TemporalObjectTau(typing.NamedTuple):
     tau: float
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[float]:
         return (self.tau,)
 
 
@@ -185,55 +187,55 @@ class VectorObject(Vector):
     def __ne__(self, other: typing.Any) -> typing.Any:
         return numpy.not_equal(self, other)
 
-    def __abs__(self) -> typing.Any:
+    def __abs__(self) -> float:
         return numpy.absolute(self)
 
-    def __add__(self, other: typing.Any) -> typing.Any:
+    def __add__(self, other: VectorProtocol) -> VectorProtocol:
         return numpy.add(self, other)
 
-    def __radd__(self, other: typing.Any) -> typing.Any:
+    def __radd__(self, other: VectorProtocol) -> VectorProtocol:
         return numpy.add(other, self)
 
-    def __iadd__(self, other: typing.Any) -> typing.Any:
+    def __iadd__(self: SameVectorType, other: VectorProtocol) -> SameVectorType:
         return _replace_data(self, numpy.add(self, other))
 
-    def __sub__(self, other: typing.Any) -> typing.Any:
+    def __sub__(self, other: VectorProtocol) -> VectorProtocol:
         return numpy.subtract(self, other)
 
-    def __rsub__(self, other: typing.Any) -> typing.Any:
+    def __rsub__(self, other: VectorProtocol) -> VectorProtocol:
         return numpy.subtract(other, self)
 
-    def __isub__(self, other: typing.Any) -> typing.Any:
+    def __isub__(self: SameVectorType, other: VectorProtocol) -> SameVectorType:
         return _replace_data(self, numpy.subtract(self, other))
 
-    def __mul__(self, other: typing.Any) -> typing.Any:
+    def __mul__(self, other: float) -> VectorProtocol:
         return numpy.multiply(self, other)
 
-    def __rmul__(self, other: typing.Any) -> typing.Any:
+    def __rmul__(self, other: float) -> VectorProtocol:
         return numpy.multiply(other, self)
 
-    def __imul__(self, other: typing.Any) -> typing.Any:
+    def __imul__(self: SameVectorType, other: float) -> SameVectorType:
         return _replace_data(self, numpy.multiply(self, other))
 
-    def __neg__(self) -> typing.Any:
+    def __neg__(self: SameVectorType) -> SameVectorType:
         return numpy.negative(self)
 
-    def __pos__(self) -> typing.Any:
+    def __pos__(self: SameVectorType) -> SameVectorType:
         return numpy.positive(self)
 
-    def __truediv__(self, other: typing.Any) -> typing.Any:
+    def __truediv__(self, other: float) -> VectorProtocol:
         return numpy.true_divide(self, other)
 
-    def __rtruediv__(self, other: typing.Any) -> typing.Any:
+    def __rtruediv__(self, other: float) -> VectorProtocol:
         return numpy.true_divide(other, self)
 
-    def __itruediv__(self, other: typing.Any) -> typing.Any:
+    def __itruediv__(self: SameVectorType, other: float) -> VectorProtocol:
         return _replace_data(self, numpy.true_divide(self, other))
 
-    def __pow__(self, other: typing.Any) -> typing.Any:
+    def __pow__(self, other: float) -> float:
         return numpy.power(self, other)
 
-    def __matmul__(self, other: typing.Any) -> typing.Any:
+    def __matmul__(self, other: VectorProtocol) -> float:
         return numpy.matmul(self, other)
 
     def __array_ufunc__(
@@ -434,26 +436,27 @@ class VectorObject(Vector):
 class VectorObject2D(VectorObject, Planar, Vector2D):
     __slots__ = ("azimuthal",)
 
-    azimuthal: typing.Any
+    azimuthal: AzimuthalObject  # type: ignore
 
     @classmethod
-    def from_xy(cls, x: typing.Any, y: typing.Any) -> typing.Any:
-        return cls(AzimuthalObjectXY(x, y))
+    def from_xy(cls, x: float, y: float) -> "VectorObject2D":
+        return cls(AzimuthalObjectXY(x, y))  # type: ignore
 
     @classmethod
-    def from_rhophi(cls, rho: typing.Any, phi: typing.Any) -> typing.Any:
-        return cls(AzimuthalObjectRhoPhi(rho, phi))
+    def from_rhophi(cls, rho: float, phi: float) -> "VectorObject2D":
+        return cls(AzimuthalObjectRhoPhi(rho, phi))  # type: ignore
 
-    def __init__(self, azimuthal: typing.Any) -> None:
+    def __init__(self, azimuthal: AzimuthalObject) -> None:
         self.azimuthal = azimuthal
 
-    def __repr__(self) -> typing.Any:
+    def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         out = []
         for x in aznames:
             out.append(f"{x}={getattr(self.azimuthal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
+    @typing.no_type_check
     def _wrap_result(
         self,
         cls: typing.Any,
@@ -522,40 +525,40 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             raise AssertionError(repr(returns))
 
     @property
-    def x(self) -> typing.Any:
+    def x(self) -> float:
         return super().x
 
     @x.setter
-    def x(self, x: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectXY(x, self.y)
+    def x(self, x: float) -> None:
+        self.azimuthal = AzimuthalObjectXY(x, self.y)  # type: ignore
 
     @property
-    def y(self) -> typing.Any:
+    def y(self) -> float:
         return super().y
 
     @y.setter
-    def y(self, y: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectXY(self.x, y)
+    def y(self, y: float) -> None:
+        self.azimuthal = AzimuthalObjectXY(self.x, y)  # type: ignore
 
     @property
-    def rho(self) -> typing.Any:
+    def rho(self) -> float:
         return super().rho
 
     @rho.setter
-    def rho(self, rho: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(rho, self.phi)
+    def rho(self, rho: float) -> None:
+        self.azimuthal = AzimuthalObjectRhoPhi(rho, self.phi)  # type: ignore
 
     @property
-    def phi(self) -> typing.Any:
+    def phi(self) -> float:
         return super().phi
 
     @phi.setter
-    def phi(self, phi: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)
+    def phi(self, phi: float) -> None:
+        self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)  # type: ignore
 
 
 class MomentumObject2D(PlanarMomentum, VectorObject2D):
-    def __repr__(self) -> typing.Any:
+    def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         out = []
         for x in aznames:
@@ -564,73 +567,67 @@ class MomentumObject2D(PlanarMomentum, VectorObject2D):
         return "vector.obj(" + ", ".join(out) + ")"
 
     @property
-    def px(self) -> typing.Any:
+    def px(self) -> float:
         return super().px
 
     @px.setter
-    def px(self, px: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectXY(px, self.py)
+    def px(self, px: float) -> None:
+        self.azimuthal = AzimuthalObjectXY(px, self.py)  # type: ignore
 
     @property
-    def py(self) -> typing.Any:
+    def py(self) -> float:
         return super().py
 
     @py.setter
-    def py(self, py: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectXY(self.px, py)
+    def py(self, py: float) -> None:
+        self.azimuthal = AzimuthalObjectXY(self.px, py)  # type: ignore
 
     @property
-    def pt(self) -> typing.Any:
+    def pt(self) -> float:
         return super().pt
 
     @pt.setter
-    def pt(self, pt: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)
+    def pt(self, pt: float) -> None:
+        self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)  # type: ignore
 
 
 class VectorObject3D(VectorObject, Spatial, Vector3D):
     __slots__ = ("azimuthal", "longitudinal")
 
-    azimuthal: typing.Any
-    longitudinal: typing.Any
+    azimuthal: AzimuthalObject  # type: ignore
+    longitudinal: LongitudinalObject  # type: ignore
 
     @classmethod
-    def from_xyz(cls, x: typing.Any, y: typing.Any, z: typing.Any) -> typing.Any:
-        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z))
+    def from_xyz(cls, x: float, y: float, z: float) -> "VectorObject3D":
+        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z))  # type: ignore
 
     @classmethod
-    def from_xytheta(
-        cls, x: typing.Any, y: typing.Any, theta: typing.Any
-    ) -> typing.Any:
-        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectTheta(theta))
+    def from_xytheta(cls, x: float, y: float, theta: float) -> "VectorObject3D":
+        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectTheta(theta))  # type: ignore
 
     @classmethod
-    def from_xyeta(cls, x: typing.Any, y: typing.Any, eta: typing.Any) -> typing.Any:
-        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta))
+    def from_xyeta(cls, x: float, y: float, eta: float) -> "VectorObject3D":
+        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta))  # type: ignore
 
     @classmethod
-    def from_rhophiz(
-        cls, rho: typing.Any, phi: typing.Any, z: typing.Any
-    ) -> typing.Any:
-        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectZ(z))
+    def from_rhophiz(cls, rho: float, phi: float, z: float) -> "VectorObject3D":
+        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectZ(z))  # type: ignore
 
     @classmethod
-    def from_rhophitheta(
-        cls, rho: typing.Any, phi: typing.Any, theta: typing.Any
-    ) -> typing.Any:
-        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectTheta(theta))
+    def from_rhophitheta(cls, rho: float, phi: float, theta: float) -> "VectorObject3D":
+        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectTheta(theta))  # type: ignore
 
     @classmethod
-    def from_rhophieta(
-        cls, rho: typing.Any, phi: typing.Any, eta: typing.Any
-    ) -> typing.Any:
-        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectEta(eta))
+    def from_rhophieta(cls, rho: float, phi: float, eta: float) -> "VectorObject3D":
+        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectEta(eta))  # type: ignore
 
-    def __init__(self, azimuthal: typing.Any, longitudinal: typing.Any) -> None:
+    def __init__(
+        self, azimuthal: AzimuthalObject, longitudinal: LongitudinalObject
+    ) -> None:
         self.azimuthal = azimuthal
         self.longitudinal = longitudinal
 
-    def __repr__(self) -> typing.Any:
+    def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         lnames = _coordinate_class_to_names[_ltype(self)]
         out = []
@@ -640,6 +637,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             out.append(f"{x}={getattr(self.longitudinal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
+    @typing.no_type_check
     def _wrap_result(
         self,
         cls: typing.Any,
@@ -708,64 +706,64 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             raise AssertionError(repr(returns))
 
     @property
-    def x(self) -> typing.Any:
+    def x(self) -> float:
         return super().x
 
     @x.setter
-    def x(self, x: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectXY(x, self.y)
+    def x(self, x: float) -> None:
+        self.azimuthal = AzimuthalObjectXY(x, self.y)  # type: ignore
 
     @property
-    def y(self) -> typing.Any:
+    def y(self) -> float:
         return super().y
 
     @y.setter
-    def y(self, y: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectXY(self.x, y)
+    def y(self, y: float) -> None:
+        self.azimuthal = AzimuthalObjectXY(self.x, y)  # type: ignore
 
     @property
-    def rho(self) -> typing.Any:
+    def rho(self) -> float:
         return super().rho
 
     @rho.setter
-    def rho(self, rho: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(rho, self.phi)
+    def rho(self, rho: float) -> None:
+        self.azimuthal = AzimuthalObjectRhoPhi(rho, self.phi)  # type: ignore
 
     @property
-    def phi(self) -> typing.Any:
+    def phi(self) -> float:
         return super().phi
 
     @phi.setter
-    def phi(self, phi: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)
+    def phi(self, phi: float) -> None:
+        self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)  # type: ignore
 
     @property
-    def z(self) -> typing.Any:
+    def z(self) -> float:
         return super().z
 
     @z.setter
-    def z(self, z: typing.Any) -> None:
-        self.longitudinal = LongitudinalObjectZ(z)
+    def z(self, z: float) -> None:
+        self.longitudinal = LongitudinalObjectZ(z)  # type: ignore
 
     @property
-    def theta(self) -> typing.Any:
+    def theta(self) -> float:
         return super().theta
 
     @theta.setter
-    def theta(self, theta: typing.Any) -> None:
-        self.longitudinal = LongitudinalObjectTheta(theta)
+    def theta(self, theta: float) -> None:
+        self.longitudinal = LongitudinalObjectTheta(theta)  # type: ignore
 
     @property
-    def eta(self) -> typing.Any:
+    def eta(self) -> float:
         return super().eta
 
     @eta.setter
-    def eta(self, eta: typing.Any) -> None:
-        self.longitudinal = LongitudinalObjectEta(eta)
+    def eta(self, eta: float) -> None:
+        self.longitudinal = LongitudinalObjectEta(eta)  # type: ignore
 
 
 class MomentumObject3D(SpatialMomentum, VectorObject3D):
-    def __repr__(self) -> typing.Any:
+    def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         lnames = _coordinate_class_to_names[_ltype(self)]
         out = []
@@ -778,159 +776,210 @@ class MomentumObject3D(SpatialMomentum, VectorObject3D):
         return "vector.obj(" + ", ".join(out) + ")"
 
     @property
-    def px(self) -> typing.Any:
+    def px(self) -> float:
         return super().px
 
     @px.setter
-    def px(self, px: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectXY(px, self.py)
+    def px(self, px: float) -> None:
+        self.azimuthal = AzimuthalObjectXY(px, self.py)  # type: ignore
 
     @property
-    def py(self) -> typing.Any:
+    def py(self) -> float:
         return super().py
 
     @py.setter
-    def py(self, py: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectXY(self.px, py)
+    def py(self, py: float) -> None:
+        self.azimuthal = AzimuthalObjectXY(self.px, py)  # type: ignore
 
     @property
-    def pt(self) -> typing.Any:
+    def pt(self) -> float:
         return super().pt
 
     @pt.setter
-    def pt(self, pt: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)
+    def pt(self, pt: float) -> None:
+        self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)  # type: ignore
 
     @property
-    def pz(self) -> typing.Any:
+    def pz(self) -> float:
         return super().pz
 
     @pz.setter
-    def pz(self, pz: typing.Any) -> None:
-        self.longitudinal = LongitudinalObjectZ(pz)
+    def pz(self, pz: float) -> None:
+        self.longitudinal = LongitudinalObjectZ(pz)  # type: ignore
 
 
 class VectorObject4D(VectorObject, Lorentz, Vector4D):
     __slots__ = ("azimuthal", "longitudinal", "temporal")
 
-    azimuthal: typing.Any
-    longitudinal: typing.Any
-    temporal: typing.Any
+    azimuthal: AzimuthalObject  # type: ignore
+    longitudinal: LongitudinalObject  # type: ignore
+    temporal: TemporalObject  # type: ignore
 
     @classmethod
     def from_xyzt(
-        cls, x: typing.Any, y: typing.Any, z: typing.Any, t: typing.Any
-    ) -> typing.Any:
-        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z), TemporalObjectT(t))
+        cls,
+        x: float,
+        y: float,
+        z: float,
+        t: float,
+    ) -> "VectorObject4D":
+        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z), TemporalObjectT(t))  # type: ignore
 
     @classmethod
     def from_xyztau(
-        cls, x: typing.Any, y: typing.Any, z: typing.Any, tau: typing.Any
-    ) -> typing.Any:
+        cls,
+        x: float,
+        y: float,
+        z: float,
+        tau: float,
+    ) -> "VectorObject4D":
         return cls(
-            AzimuthalObjectXY(x, y), LongitudinalObjectZ(z), TemporalObjectTau(tau)
+            AzimuthalObjectXY(x, y), LongitudinalObjectZ(z), TemporalObjectTau(tau)  # type: ignore
         )
 
     @classmethod
     def from_xythetat(
-        cls, x: typing.Any, y: typing.Any, theta: typing.Any, t: typing.Any
-    ) -> typing.Any:
+        cls,
+        x: float,
+        y: float,
+        theta: float,
+        t: float,
+    ) -> "VectorObject4D":
         return cls(
-            AzimuthalObjectXY(x, y), LongitudinalObjectTheta(theta), TemporalObjectT(t)
+            AzimuthalObjectXY(x, y), LongitudinalObjectTheta(theta), TemporalObjectT(t)  # type: ignore
         )
 
     @classmethod
     def from_xythetatau(
-        cls, x: typing.Any, y: typing.Any, theta: typing.Any, tau: typing.Any
-    ) -> typing.Any:
+        cls,
+        x: float,
+        y: float,
+        theta: float,
+        tau: float,
+    ) -> "VectorObject4D":
         return cls(
-            AzimuthalObjectXY(x, y),
-            LongitudinalObjectTheta(theta),
-            TemporalObjectTau(tau),
+            AzimuthalObjectXY(x, y),  # type: ignore
+            LongitudinalObjectTheta(theta),  # type: ignore
+            TemporalObjectTau(tau),  # type: ignore
         )
 
     @classmethod
     def from_xyetat(
-        cls, x: typing.Any, y: typing.Any, eta: typing.Any, t: typing.Any
-    ) -> typing.Any:
+        cls,
+        x: float,
+        y: float,
+        eta: float,
+        t: float,
+    ) -> "VectorObject4D":
         return cls(
-            AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta), TemporalObjectT(t)
+            AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta), TemporalObjectT(t)  # type: ignore
         )
 
     @classmethod
     def from_xyetatau(
-        cls, x: typing.Any, y: typing.Any, eta: typing.Any, tau: typing.Any
-    ) -> typing.Any:
+        cls,
+        x: float,
+        y: float,
+        eta: float,
+        tau: float,
+    ) -> "VectorObject4D":
         return cls(
-            AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta), TemporalObjectTau(tau)
+            AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta), TemporalObjectTau(tau)  # type: ignore
         )
 
     @classmethod
     def from_rhophizt(
-        cls, rho: typing.Any, phi: typing.Any, z: typing.Any, t: typing.Any
-    ) -> typing.Any:
+        cls,
+        rho: float,
+        phi: float,
+        z: float,
+        t: float,
+    ) -> "VectorObject4D":
         return cls(
-            AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectZ(z), TemporalObjectT(t)
+            AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectZ(z), TemporalObjectT(t)  # type: ignore
         )
 
     @classmethod
     def from_rhophiztau(
-        cls, rho: typing.Any, phi: typing.Any, z: typing.Any, tau: typing.Any
-    ) -> typing.Any:
+        cls,
+        rho: float,
+        phi: float,
+        z: float,
+        tau: float,
+    ) -> "VectorObject4D":
         return cls(
-            AzimuthalObjectRhoPhi(rho, phi),
-            LongitudinalObjectZ(z),
-            TemporalObjectTau(tau),
+            AzimuthalObjectRhoPhi(rho, phi),  # type: ignore
+            LongitudinalObjectZ(z),  # type: ignore
+            TemporalObjectTau(tau),  # type: ignore
         )
 
     @classmethod
     def from_rhophithetat(
-        cls, rho: typing.Any, phi: typing.Any, theta: typing.Any, t: typing.Any
-    ) -> typing.Any:
+        cls,
+        rho: float,
+        phi: float,
+        theta: float,
+        t: float,
+    ) -> "VectorObject4D":
         return cls(
-            AzimuthalObjectRhoPhi(rho, phi),
-            LongitudinalObjectTheta(theta),
-            TemporalObjectT(t),
+            AzimuthalObjectRhoPhi(rho, phi),  # type: ignore
+            LongitudinalObjectTheta(theta),  # type: ignore
+            TemporalObjectT(t),  # type: ignore
         )
 
     @classmethod
     def from_rhophithetatau(
-        cls, rho: typing.Any, phi: typing.Any, theta: typing.Any, tau: typing.Any
-    ) -> typing.Any:
+        cls,
+        rho: float,
+        phi: float,
+        theta: float,
+        tau: float,
+    ) -> "VectorObject4D":
         return cls(
-            AzimuthalObjectRhoPhi(rho, phi),
-            LongitudinalObjectTheta(theta),
-            TemporalObjectTau(tau),
+            AzimuthalObjectRhoPhi(rho, phi),  # type: ignore
+            LongitudinalObjectTheta(theta),  # type: ignore
+            TemporalObjectTau(tau),  # type: ignore
         )
 
     @classmethod
     def from_rhophietat(
-        cls, rho: typing.Any, phi: typing.Any, eta: typing.Any, t: typing.Any
-    ) -> typing.Any:
+        cls,
+        rho: float,
+        phi: float,
+        eta: float,
+        t: float,
+    ) -> "VectorObject4D":
         return cls(
-            AzimuthalObjectRhoPhi(rho, phi),
-            LongitudinalObjectEta(eta),
-            TemporalObjectT(t),
+            AzimuthalObjectRhoPhi(rho, phi),  # type: ignore
+            LongitudinalObjectEta(eta),  # type: ignore
+            TemporalObjectT(t),  # type: ignore
         )
 
     @classmethod
     def from_rhophietatau(
-        cls, rho: typing.Any, phi: typing.Any, eta: typing.Any, tau: typing.Any
-    ) -> typing.Any:
+        cls,
+        rho: float,
+        phi: float,
+        eta: float,
+        tau: float,
+    ) -> "VectorObject4D":
         return cls(
-            AzimuthalObjectRhoPhi(rho, phi),
-            LongitudinalObjectEta(eta),
-            TemporalObjectTau(tau),
+            AzimuthalObjectRhoPhi(rho, phi),  # type: ignore
+            LongitudinalObjectEta(eta),  # type: ignore
+            TemporalObjectTau(tau),  # type: ignore
         )
 
     def __init__(
-        self, azimuthal: typing.Any, longitudinal: typing.Any, temporal: typing.Any
+        self,
+        azimuthal: AzimuthalObject,
+        longitudinal: LongitudinalObject,
+        temporal: TemporalObject,
     ) -> None:
         self.azimuthal = azimuthal
         self.longitudinal = longitudinal
         self.temporal = temporal
 
-    def __repr__(self) -> typing.Any:
+    def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         lnames = _coordinate_class_to_names[_ltype(self)]
         tnames = _coordinate_class_to_names[_ttype(self)]
@@ -943,6 +992,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             out.append(f"{x}={getattr(self.temporal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
+    @typing.no_type_check
     def _wrap_result(
         self,
         cls: typing.Any,
@@ -1011,80 +1061,80 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             raise AssertionError(repr(returns))
 
     @property
-    def x(self) -> typing.Any:
+    def x(self) -> float:
         return super().x
 
     @x.setter
-    def x(self, x: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectXY(x, self.y)
+    def x(self, x: float) -> None:
+        self.azimuthal = AzimuthalObjectXY(x, self.y)  # type: ignore
 
     @property
-    def y(self) -> typing.Any:
+    def y(self) -> float:
         return super().y
 
     @y.setter
-    def y(self, y: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectXY(self.x, y)
+    def y(self, y: float) -> None:
+        self.azimuthal = AzimuthalObjectXY(self.x, y)  # type: ignore
 
     @property
-    def rho(self) -> typing.Any:
+    def rho(self) -> float:
         return super().rho
 
     @rho.setter
-    def rho(self, rho: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(rho, self.phi)
+    def rho(self, rho: float) -> None:
+        self.azimuthal = AzimuthalObjectRhoPhi(rho, self.phi)  # type: ignore
 
     @property
-    def phi(self) -> typing.Any:
+    def phi(self) -> float:
         return super().phi
 
     @phi.setter
-    def phi(self, phi: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)
+    def phi(self, phi: float) -> None:
+        self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)  # type: ignore
 
     @property
-    def z(self) -> typing.Any:
+    def z(self) -> float:
         return super().z
 
     @z.setter
-    def z(self, z: typing.Any) -> None:
-        self.longitudinal = LongitudinalObjectZ(z)
+    def z(self, z: float) -> None:
+        self.longitudinal = LongitudinalObjectZ(z)  # type: ignore
 
     @property
-    def theta(self) -> typing.Any:
+    def theta(self) -> float:
         return super().theta
 
     @theta.setter
-    def theta(self, theta: typing.Any) -> None:
-        self.longitudinal = LongitudinalObjectTheta(theta)
+    def theta(self, theta: float) -> None:
+        self.longitudinal = LongitudinalObjectTheta(theta)  # type: ignore
 
     @property
-    def eta(self) -> typing.Any:
+    def eta(self) -> float:
         return super().eta
 
     @eta.setter
-    def eta(self, eta: typing.Any) -> None:
-        self.longitudinal = LongitudinalObjectEta(eta)
+    def eta(self, eta: float) -> None:
+        self.longitudinal = LongitudinalObjectEta(eta)  # type: ignore
 
     @property
-    def t(self) -> typing.Any:
+    def t(self) -> float:
         return super().t
 
     @t.setter
-    def t(self, t: typing.Any) -> None:
-        self.temporal = TemporalObjectT(t)
+    def t(self, t: float) -> None:
+        self.temporal = TemporalObjectT(t)  # type: ignore
 
     @property
-    def tau(self) -> typing.Any:
+    def tau(self) -> float:
         return super().tau
 
     @tau.setter
-    def tau(self, tau: typing.Any) -> None:
-        self.temporal = TemporalObjectTau(tau)
+    def tau(self, tau: float) -> None:
+        self.temporal = TemporalObjectTau(tau)  # type: ignore
 
 
 class MomentumObject4D(LorentzMomentum, VectorObject4D):
-    def __repr__(self) -> typing.Any:
+    def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         lnames = _coordinate_class_to_names[_ltype(self)]
         tnames = _coordinate_class_to_names[_ttype(self)]
@@ -1101,75 +1151,75 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
         return "vector.obj(" + ", ".join(out) + ")"
 
     @property
-    def px(self) -> typing.Any:
+    def px(self) -> float:
         return super().px
 
     @px.setter
-    def px(self, px: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectXY(px, self.py)
+    def px(self, px: float) -> None:
+        self.azimuthal = AzimuthalObjectXY(px, self.py)  # type: ignore
 
     @property
-    def py(self) -> typing.Any:
+    def py(self) -> float:
         return super().py
 
     @py.setter
-    def py(self, py: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectXY(self.px, py)
+    def py(self, py: float) -> None:
+        self.azimuthal = AzimuthalObjectXY(self.px, py)  # type: ignore
 
     @property
-    def pt(self) -> typing.Any:
+    def pt(self) -> float:
         return super().pt
 
     @pt.setter
-    def pt(self, pt: typing.Any) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)
+    def pt(self, pt: float) -> None:
+        self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)  # type: ignore
 
     @property
-    def pz(self) -> typing.Any:
+    def pz(self) -> float:
         return super().pz
 
     @pz.setter
-    def pz(self, pz: typing.Any) -> None:
-        self.longitudinal = LongitudinalObjectZ(pz)
+    def pz(self, pz: float) -> None:
+        self.longitudinal = LongitudinalObjectZ(pz)  # type: ignore
 
     @property
-    def E(self) -> typing.Any:
+    def E(self) -> float:
         return super().E
 
     @E.setter
-    def E(self, E: typing.Any) -> None:
-        self.temporal = TemporalObjectT(E)
+    def E(self, E: float) -> None:
+        self.temporal = TemporalObjectT(E)  # type: ignore
 
     @property
-    def energy(self) -> typing.Any:
+    def energy(self) -> float:
         return super().energy
 
     @energy.setter
-    def energy(self, energy: typing.Any) -> None:
-        self.temporal = TemporalObjectT(energy)
+    def energy(self, energy: float) -> None:
+        self.temporal = TemporalObjectT(energy)  # type: ignore
 
     @property
-    def M(self) -> typing.Any:
+    def M(self) -> float:
         return super().M
 
     @M.setter
-    def M(self, M: typing.Any) -> None:
-        self.temporal = TemporalObjectTau(M)
+    def M(self, M: float) -> None:
+        self.temporal = TemporalObjectTau(M)  # type: ignore
 
     @property
-    def mass(self) -> typing.Any:
+    def mass(self) -> float:
         return super().mass
 
     @mass.setter
-    def mass(self, mass: typing.Any) -> None:
-        self.temporal = TemporalObjectTau(mass)
+    def mass(self, mass: float) -> None:
+        self.temporal = TemporalObjectTau(mass)  # type: ignore
 
 
 def _gather_coordinates(
-    planar_class: typing.Any,
-    spatial_class: typing.Any,
-    lorentz_class: typing.Any,
-    coordinates: typing.Any,
+    planar_class: typing.Type[VectorObject2D],
+    spatial_class: typing.Type[VectorObject3D],
+    lorentz_class: typing.Type[VectorObject4D],
+    coordinates: dict,
 ) -> typing.Any:
     azimuthal: typing.Optional[
         typing.Union[AzimuthalObjectXY, AzimuthalObjectRhoPhi]
@@ -1218,11 +1268,11 @@ def _gather_coordinates(
 
     if len(coordinates) == 0:
         if azimuthal is not None and longitudinal is None and temporal is None:
-            return planar_class(azimuthal)
+            return planar_class(azimuthal)  # type: ignore
         if azimuthal is not None and longitudinal is not None and temporal is None:
-            return spatial_class(azimuthal, longitudinal)
+            return spatial_class(azimuthal, longitudinal)  # type: ignore
         if azimuthal is not None and longitudinal is not None and temporal is not None:
-            return lorentz_class(azimuthal, longitudinal, temporal)
+            return lorentz_class(azimuthal, longitudinal, temporal)  # type: ignore
 
     raise TypeError(
         "unrecognized combination of coordinates, allowed combinations are:\n\n"
@@ -1249,7 +1299,877 @@ def _gather_coordinates(
     )
 
 
-def obj(**coordinates: typing.Any) -> typing.Any:
+@typing.overload
+def obj(*, x: float, y: float) -> VectorObject2D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float) -> MomentumObject2D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float) -> MomentumObject2D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float) -> MomentumObject2D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float) -> VectorObject2D:
+    ...
+
+
+@typing.overload
+def obj(*, pt: float, phi: float) -> MomentumObject2D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, z: float) -> VectorObject3D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, pz: float) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, z: float) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, pz: float) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, z: float) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, pz: float) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, z: float) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, pz: float) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, z: float) -> VectorObject3D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, pz: float) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(*, pt: float, phi: float, z: float) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(*, pt: float, phi: float, pz: float) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, theta: float) -> VectorObject3D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, theta: float) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, theta: float) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, theta: float) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, theta: float) -> VectorObject3D:
+    ...
+
+
+@typing.overload
+def obj(*, pt: float, phi: float, theta: float) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, eta: float) -> VectorObject3D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, eta: float) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, eta: float) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, eta: float) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, eta: float) -> VectorObject3D:
+    ...
+
+
+@typing.overload
+def obj(*, pt: float, phi: float, eta: float) -> MomentumObject3D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, z: float, t: float) -> VectorObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, pz: float, t: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, z: float, t: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, pz: float, t: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, z: float, t: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, pz: float, t: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, z: float, t: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, pz: float, t: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, z: float, t: float) -> VectorObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, pz: float, t: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, pt: float, phi: float, z: float, t: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, pt: float, phi: float, pz: float, t: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, theta: float, t: float) -> VectorObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, theta: float, t: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, theta: float, t: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, theta: float, t: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, theta: float, t: float) -> VectorObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, pt: float, phi: float, theta: float, t: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, eta: float, t: float) -> VectorObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, eta: float, t: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, eta: float, t: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, eta: float, t: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, eta: float, t: float) -> VectorObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, pt: float, phi: float, eta: float, t: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, z: float, tau: float) -> VectorObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, pz: float, tau: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, z: float, tau: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, pz: float, tau: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, z: float, tau: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, pz: float, tau: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, z: float, tau: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, pz: float, tau: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, z: float, tau: float) -> VectorObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, pz: float, tau: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, ptau: float, phi: float, z: float, tau: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, ptau: float, phi: float, pz: float, tau: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, theta: float, tau: float) -> VectorObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, theta: float, tau: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, theta: float, tau: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, theta: float, tau: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, theta: float, tau: float) -> VectorObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, ptau: float, phi: float, theta: float, tau: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, eta: float, tau: float) -> VectorObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, eta: float, tau: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, eta: float, tau: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, eta: float, tau: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, eta: float, tau: float) -> VectorObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, ptau: float, phi: float, eta: float, tau: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, z: float, E: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, pz: float, E: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, z: float, E: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, pz: float, E: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, z: float, E: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, pz: float, E: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, z: float, E: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, pz: float, E: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, z: float, E: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, pz: float, E: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, pE: float, phi: float, z: float, E: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, pE: float, phi: float, pz: float, E: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, theta: float, E: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, theta: float, E: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, theta: float, E: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, theta: float, E: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, theta: float, E: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, pE: float, phi: float, theta: float, E: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, eta: float, E: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, eta: float, E: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, eta: float, E: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, eta: float, E: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, eta: float, E: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, pE: float, phi: float, eta: float, E: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, z: float, energy: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, pz: float, energy: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, z: float, energy: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, pz: float, energy: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, z: float, energy: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, pz: float, energy: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, z: float, energy: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, pz: float, energy: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, z: float, energy: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, pz: float, energy: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, penergy: float, phi: float, z: float, energy: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, penergy: float, phi: float, pz: float, energy: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, theta: float, energy: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, theta: float, energy: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, theta: float, energy: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, theta: float, energy: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, theta: float, energy: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, penergy: float, phi: float, theta: float, energy: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, eta: float, energy: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, eta: float, energy: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, eta: float, energy: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, eta: float, energy: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, eta: float, energy: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, penergy: float, phi: float, eta: float, energy: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, z: float, M: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, pz: float, M: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, z: float, M: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, pz: float, M: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, z: float, M: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, pz: float, M: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, z: float, M: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, pz: float, M: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, z: float, M: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, pz: float, M: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, pM: float, phi: float, z: float, M: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, pM: float, phi: float, pz: float, M: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, theta: float, M: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, theta: float, M: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, theta: float, M: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, theta: float, M: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, theta: float, M: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, pM: float, phi: float, theta: float, M: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, eta: float, M: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, eta: float, M: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, eta: float, M: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, eta: float, M: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, eta: float, M: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, pM: float, phi: float, eta: float, M: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, z: float, mass: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, pz: float, mass: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, z: float, mass: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, pz: float, mass: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, z: float, mass: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, pz: float, mass: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, z: float, mass: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, pz: float, mass: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, z: float, mass: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, pz: float, mass: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, pmass: float, phi: float, z: float, mass: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, pmass: float, phi: float, pz: float, mass: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, theta: float, mass: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, theta: float, mass: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, theta: float, mass: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, theta: float, mass: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, theta: float, mass: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, pmass: float, phi: float, theta: float, mass: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, eta: float, mass: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, eta: float, mass: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, eta: float, mass: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, eta: float, mass: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, eta: float, mass: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, pmass: float, phi: float, eta: float, mass: float) -> MomentumObject4D:
+    ...
+
+
+def obj(**coordinates: float) -> VectorObject:
     "vector.obj docs"
     is_momentum = False
     generic_coordinates = {}

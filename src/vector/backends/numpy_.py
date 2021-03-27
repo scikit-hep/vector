@@ -9,6 +9,7 @@ import typing
 import numpy
 
 import vector.backends.object_
+from vector._typeutils import ScalarCollection
 from vector.methods import (
     Azimuthal,
     AzimuthalRhoPhi,
@@ -30,6 +31,7 @@ from vector.methods import (
     Vector2D,
     Vector3D,
     Vector4D,
+    VectorProtocol,
     _aztype,
     _coordinate_class_to_names,
     _coordinate_order,
@@ -39,8 +41,10 @@ from vector.methods import (
     _ttype,
 )
 
+ArrayLike = ScalarCollection
 
-def _array_from_columns(columns: typing.Any) -> typing.Any:
+
+def _array_from_columns(columns: typing.Dict[str, ArrayLike]) -> ArrayLike:
     if len(columns) == 0:
         raise ValueError("no columns have been provided")
     names = list(columns.keys())
@@ -77,9 +81,13 @@ def _array_from_columns(columns: typing.Any) -> typing.Any:
     return array
 
 
+@typing.no_type_check
 def _setitem(
-    array: typing.Any, where: typing.Any, what: typing.Any, is_momentum: typing.Any
-) -> typing.Any:
+    array: typing.Union["VectorNumpy2D", "VectorNumpy3D", "VectorNumpy4D"],
+    where: typing.Any,
+    what: typing.Any,
+    is_momentum: bool,
+) -> None:
     if isinstance(where, str):
         if is_momentum:
             where = _repr_momentum_to_generic.get(where, where)
@@ -99,8 +107,10 @@ def _setitem(
 
 
 def _getitem(
-    array: typing.Any, where: typing.Any, is_momentum: typing.Any
-) -> typing.Any:
+    array: typing.Union["VectorNumpy2D", "VectorNumpy3D", "VectorNumpy4D"],
+    where: typing.Any,
+    is_momentum: bool,
+) -> typing.Union[float, numpy.ndarray]:
     if isinstance(where, str):
         if is_momentum:
             where = _repr_momentum_to_generic.get(where, where)
@@ -133,20 +143,28 @@ def _getitem(
             return out
 
 
-def _array_repr(array: typing.Any, is_momentum: typing.Any) -> typing.Any:
+def _array_repr(
+    array: typing.Union["VectorNumpy2D", "VectorNumpy3D", "VectorNumpy4D"],
+    is_momentum: bool,
+) -> str:
     name = type(array).__name__
     array = array.view(numpy.ndarray)
     return name + repr(array)[5:].replace("\n     ", "\n" + " " * len(name))
 
 
-def _has(array: typing.Any, names: typing.Any) -> typing.Any:
+def _has(
+    array: typing.Union["VectorNumpy2D", "VectorNumpy3D", "VectorNumpy4D"],
+    names: typing.Tuple[str, ...],
+) -> bool:
     dtype_names = array.dtype.names
     if dtype_names is None:
         dtype_names = ()
     return all(x in dtype_names for x in names)
 
 
-def _toarrays(result: typing.Any) -> typing.Any:
+def _toarrays(
+    result: typing.Tuple[ScalarCollection, ...]
+) -> typing.Tuple[numpy.array, ...]:
     istuple = True
     if not isinstance(result, tuple):
         istuple = False
@@ -161,7 +179,7 @@ def _toarrays(result: typing.Any) -> typing.Any:
         return result[0]
 
 
-def _shape_of(result: typing.Any) -> typing.Any:
+def _shape_of(result: typing.Tuple[numpy.array, ...]) -> typing.Tuple[int, ...]:
     if not isinstance(result, tuple):
         result = (result,)
     shape = None
@@ -181,25 +199,25 @@ class CoordinatesNumpy:
     lib = numpy
 
 
-class AzimuthalNumpy(CoordinatesNumpy):
-    pass
+class AzimuthalNumpy(CoordinatesNumpy, Azimuthal):
+    ObjectClass: typing.Type[vector.backends.object_.AzimuthalObject]
 
 
-class LongitudinalNumpy(CoordinatesNumpy):
-    pass
+class LongitudinalNumpy(CoordinatesNumpy, Longitudinal):
+    ObjectClass: typing.Type[vector.backends.object_.LongitudinalObject]
 
 
-class TemporalNumpy(CoordinatesNumpy):
-    pass
+class TemporalNumpy(CoordinatesNumpy, Temporal):
+    ObjectClass: typing.Type[vector.backends.object_.TemporalObject]
 
 
 class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, numpy.ndarray):
     ObjectClass = vector.backends.object_.AzimuthalObjectXY
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> typing.Any:
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "AzimuthalNumpyXY":
         return numpy.array(*args, **kwargs).view(cls)
 
-    def __array_finalize__(self, obj: typing.Any) -> typing.Any:
+    def __array_finalize__(self, obj: typing.Any) -> None:
         if not _has(self, ("x", "y")):
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype containing "
@@ -207,28 +225,28 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, numpy.ndarray):
             )
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[numpy.ndarray, numpy.ndarray]:
         return (self["x"], self["y"])
 
     @property
-    def x(self) -> typing.Any:
+    def x(self) -> numpy.ndarray:
         return self["x"]
 
     @property
-    def y(self) -> typing.Any:
+    def y(self) -> numpy.ndarray:
         return self["y"]
 
-    def __getitem__(self, where: typing.Any) -> typing.Any:
+    def __getitem__(self, where: typing.Any) -> typing.Union[float, numpy.ndarray]:
         return _getitem(self, where, False)
 
 
 class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, numpy.ndarray):
     ObjectClass = vector.backends.object_.AzimuthalObjectRhoPhi
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> typing.Any:
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "AzimuthalNumpyRhoPhi":
         return numpy.array(*args, **kwargs).view(cls)
 
-    def __array_finalize__(self, obj: typing.Any) -> typing.Any:
+    def __array_finalize__(self, obj: typing.Any) -> None:
         if not _has(self, ("rho", "phi")):
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype containing "
@@ -236,28 +254,28 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, numpy.ndarray):
             )
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[numpy.ndarray, numpy.ndarray]:
         return (self["rho"], self["phi"])
 
     @property
-    def rho(self) -> typing.Any:
+    def rho(self) -> numpy.ndarray:
         return self["rho"]
 
     @property
-    def phi(self) -> typing.Any:
+    def phi(self) -> numpy.ndarray:
         return self["phi"]
 
-    def __getitem__(self, where: typing.Any) -> typing.Any:
+    def __getitem__(self, where: typing.Any) -> typing.Union[float, numpy.ndarray]:
         return _getitem(self, where, False)
 
 
 class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, numpy.ndarray):
     ObjectClass = vector.backends.object_.LongitudinalObjectZ
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> typing.Any:
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "LongitudinalNumpyZ":
         return numpy.array(*args, **kwargs).view(cls)
 
-    def __array_finalize__(self, obj: typing.Any) -> typing.Any:
+    def __array_finalize__(self, obj: typing.Any) -> None:
         if not _has(self, ("z",)):
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype containing "
@@ -265,24 +283,26 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, numpy.ndarray):
             )
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[numpy.ndarray]:
         return (self["z"],)
 
     @property
-    def z(self) -> typing.Any:
+    def z(self) -> numpy.ndarray:
         return self["z"]
 
-    def __getitem__(self, where: typing.Any) -> typing.Any:
+    def __getitem__(self, where: typing.Any) -> typing.Union[float, numpy.ndarray]:
         return _getitem(self, where, False)
 
 
 class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, numpy.ndarray):
     ObjectClass = vector.backends.object_.LongitudinalObjectTheta
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> typing.Any:
+    def __new__(
+        cls, *args: typing.Any, **kwargs: typing.Any
+    ) -> "LongitudinalNumpyTheta":
         return numpy.array(*args, **kwargs).view(cls)
 
-    def __array_finalize__(self, obj: typing.Any) -> typing.Any:
+    def __array_finalize__(self, obj: typing.Any) -> None:
         if not _has(self, ("theta",)):
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype containing "
@@ -290,24 +310,24 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, numpy.ndarray
             )
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[numpy.ndarray]:
         return (self["theta"],)
 
     @property
-    def theta(self) -> typing.Any:
+    def theta(self) -> numpy.ndarray:
         return self["theta"]
 
-    def __getitem__(self, where: typing.Any) -> typing.Any:
+    def __getitem__(self, where: typing.Any) -> typing.Union[float, numpy.ndarray]:
         return _getitem(self, where, False)
 
 
 class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, numpy.ndarray):
     ObjectClass = vector.backends.object_.LongitudinalObjectEta
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> typing.Any:
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "LongitudinalNumpyEta":
         return numpy.array(*args, **kwargs).view(cls)
 
-    def __array_finalize__(self, obj: typing.Any) -> typing.Any:
+    def __array_finalize__(self, obj: typing.Any) -> None:
         if not _has(self, ("eta",)):
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype containing "
@@ -315,24 +335,24 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, numpy.ndarray):
             )
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[numpy.ndarray]:
         return (self["eta"],)
 
     @property
-    def eta(self) -> typing.Any:
+    def eta(self) -> numpy.ndarray:
         return self["eta"]
 
-    def __getitem__(self, where: typing.Any) -> typing.Any:
+    def __getitem__(self, where: typing.Any) -> typing.Union[float, numpy.ndarray]:
         return _getitem(self, where, False)
 
 
 class TemporalNumpyT(TemporalNumpy, TemporalT, numpy.ndarray):
     ObjectClass = vector.backends.object_.TemporalObjectT
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> typing.Any:
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "TemporalNumpyT":
         return numpy.array(*args, **kwargs).view(cls)
 
-    def __array_finalize__(self, obj: typing.Any) -> typing.Any:
+    def __array_finalize__(self, obj: typing.Any) -> None:
         if not _has(self, ("t",)):
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype containing "
@@ -340,24 +360,24 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, numpy.ndarray):
             )
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[numpy.ndarray]:
         return (self["t"],)
 
     @property
-    def t(self) -> typing.Any:
+    def t(self) -> numpy.ndarray:
         return self["t"]
 
-    def __getitem__(self, where: typing.Any) -> typing.Any:
+    def __getitem__(self, where: typing.Any) -> typing.Union[float, numpy.ndarray]:
         return _getitem(self, where, False)
 
 
 class TemporalNumpyTau(TemporalNumpy, TemporalTau, numpy.ndarray):
     ObjectClass = vector.backends.object_.TemporalObjectTau
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> typing.Any:
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "TemporalNumpyTau":
         return numpy.array(*args, **kwargs).view(cls)
 
-    def __array_finalize__(self, obj: typing.Any) -> typing.Any:
+    def __array_finalize__(self, obj: typing.Any) -> None:
         if not _has(self, ("tau",)):
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype containing "
@@ -365,14 +385,14 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, numpy.ndarray):
             )
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[numpy.ndarray]:
         return (self["tau"],)
 
     @property
-    def tau(self) -> typing.Any:
+    def tau(self) -> numpy.ndarray:
         return self["tau"]
 
-    def __getitem__(self, where: typing.Any) -> typing.Any:
+    def __getitem__(self, where: typing.Any) -> typing.Union[float, numpy.ndarray]:
         return _getitem(self, where, False)
 
 
@@ -381,11 +401,11 @@ class VectorNumpy(Vector):
 
     def allclose(
         self,
-        other: typing.Any,
-        rtol: typing.Any = 1e-05,
-        atol: typing.Any = 1e-08,
-        equal_nan: typing.Any = False,
-    ) -> typing.Any:
+        other: VectorProtocol,
+        rtol: typing.Union[float, numpy.ndarray] = 1e-05,
+        atol: typing.Union[float, numpy.ndarray] = 1e-08,
+        equal_nan: typing.Union[bool, numpy.ndarray] = False,
+    ) -> numpy.ndarray:
         return self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan).all()
 
     def __eq__(self, other: typing.Any) -> typing.Any:
@@ -394,6 +414,7 @@ class VectorNumpy(Vector):
     def __ne__(self, other: typing.Any) -> typing.Any:
         return numpy.not_equal(self, other)
 
+    @typing.no_type_check
     def __array_ufunc__(
         self,
         ufunc: typing.Any,
@@ -595,6 +616,7 @@ class VectorNumpy(Vector):
         else:
             return NotImplemented
 
+    @typing.no_type_check
     def __array_function__(
         self, func: typing.Any, types: typing.Any, args: typing.Any, kwargs: typing.Any
     ) -> typing.Any:
@@ -607,14 +629,14 @@ class VectorNumpy(Vector):
 
 
 class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> typing.Any:
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "VectorNumpy2D":
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             array = _array_from_columns(args[0])
         else:
             array = numpy.array(*args, **kwargs)
         return array.view(cls)
 
-    def __array_finalize__(self, obj: typing.Any) -> typing.Any:
+    def __array_finalize__(self, obj: typing.Any) -> None:
         if _has(self, ("x", "y")):
             self._azimuthal_type = AzimuthalNumpyXY
         elif _has(self, ("rho", "phi")):
@@ -625,16 +647,17 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):
                 'fields ("x", "y") or ("rho", "phi")'
             )
 
-    def __str__(self) -> typing.Any:
+    def __str__(self) -> str:
         return str(self.view(numpy.ndarray))
 
-    def __repr__(self) -> typing.Any:
+    def __repr__(self) -> str:
         return _array_repr(self, False)
 
     @property
-    def azimuthal(self) -> typing.Any:
+    def azimuthal(self) -> AzimuthalNumpy:
         return self.view(self._azimuthal_type)
 
+    @typing.no_type_check
     def _wrap_result(
         self,
         cls: typing.Any,
@@ -772,17 +795,17 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):
         else:
             raise AssertionError(repr(returns))
 
-    def __getitem__(self, where: typing.Any) -> typing.Any:
+    def __getitem__(self, where: typing.Any) -> typing.Union[float, numpy.ndarray]:
         return _getitem(self, where, False)
 
-    def __setitem__(self, where: typing.Any, what: typing.Any) -> typing.Any:
+    def __setitem__(self, where: typing.Any, what: typing.Any) -> None:
         return _setitem(self, where, what, False)
 
 
 class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):
     ObjectClass = vector.backends.object_.MomentumObject2D
 
-    def __array_finalize__(self, obj: typing.Any) -> typing.Any:
+    def __array_finalize__(self, obj: typing.Any) -> None:
         self.dtype.names = [
             _repr_momentum_to_generic.get(x, x) for x in self.dtype.names
         ]
@@ -796,27 +819,27 @@ class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):
                 'fields ("x", "y") or ("rho", "phi") or ("px", "py") or ("pt", "phi")'
             )
 
-    def __repr__(self) -> typing.Any:
+    def __repr__(self) -> str:
         return _array_repr(self, True)
 
-    def __getitem__(self, where: typing.Any) -> typing.Any:
+    def __getitem__(self, where: typing.Any) -> typing.Union[float, numpy.ndarray]:
         return _getitem(self, where, True)
 
-    def __setitem__(self, where: typing.Any, what: typing.Any) -> typing.Any:
+    def __setitem__(self, where: typing.Any, what: typing.Any) -> None:
         return _setitem(self, where, what, True)
 
 
 class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
     ObjectClass = vector.backends.object_.VectorObject3D
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> typing.Any:
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "VectorNumpy3D":
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             array = _array_from_columns(args[0])
         else:
             array = numpy.array(*args, **kwargs)
         return array.view(cls)
 
-    def __array_finalize__(self, obj: typing.Any) -> typing.Any:
+    def __array_finalize__(self, obj: typing.Any) -> None:
         if _has(self, ("x", "y")):
             self._azimuthal_type = AzimuthalNumpyXY
         elif _has(self, ("rho", "phi")):
@@ -838,20 +861,21 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
                 'field "z" or "theta" or "eta"'
             )
 
-    def __str__(self) -> typing.Any:
+    def __str__(self) -> str:
         return str(self.view(numpy.ndarray))
 
-    def __repr__(self) -> typing.Any:
+    def __repr__(self) -> str:
         return _array_repr(self, False)
 
     @property
-    def azimuthal(self) -> typing.Any:
+    def azimuthal(self) -> AzimuthalNumpy:
         return self.view(self._azimuthal_type)
 
     @property
-    def longitudinal(self) -> typing.Any:
+    def longitudinal(self) -> LongitudinalNumpy:
         return self.view(self._longitudinal_type)
 
+    @typing.no_type_check
     def _wrap_result(
         self,
         cls: typing.Any,
@@ -993,17 +1017,17 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
         else:
             raise AssertionError(repr(returns))
 
-    def __getitem__(self, where: typing.Any) -> typing.Any:
+    def __getitem__(self, where: typing.Any) -> typing.Union[float, numpy.ndarray]:
         return _getitem(self, where, False)
 
-    def __setitem__(self, where: typing.Any, what: typing.Any) -> typing.Any:
+    def __setitem__(self, where: typing.Any, what: typing.Any) -> None:
         return _setitem(self, where, what, False)
 
 
 class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):
     ObjectClass = vector.backends.object_.MomentumObject3D
 
-    def __array_finalize__(self, obj: typing.Any) -> typing.Any:
+    def __array_finalize__(self, obj: typing.Any) -> None:
         self.dtype.names = [
             _repr_momentum_to_generic.get(x, x) for x in self.dtype.names
         ]
@@ -1028,27 +1052,27 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):
                 'field "z" or "theta" or "eta" or "pz"'
             )
 
-    def __repr__(self) -> typing.Any:
+    def __repr__(self) -> str:
         return _array_repr(self, True)
 
-    def __getitem__(self, where: typing.Any) -> typing.Any:
+    def __getitem__(self, where: typing.Any) -> typing.Union[float, numpy.ndarray]:
         return _getitem(self, where, True)
 
-    def __setitem__(self, where: typing.Any, what: typing.Any) -> typing.Any:
+    def __setitem__(self, where: typing.Any, what: typing.Any) -> None:
         return _setitem(self, where, what, True)
 
 
 class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
     ObjectClass = vector.backends.object_.VectorObject4D
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> typing.Any:
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "VectorNumpy4D":
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             array = _array_from_columns(args[0])
         else:
             array = numpy.array(*args, **kwargs)
         return array.view(cls)
 
-    def __array_finalize__(self, obj: typing.Any) -> typing.Any:
+    def __array_finalize__(self, obj: typing.Any) -> None:
         if _has(self, ("x", "y")):
             self._azimuthal_type = AzimuthalNumpyXY
         elif _has(self, ("rho", "phi")):
@@ -1079,24 +1103,25 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
                 'field "t" or "tau"'
             )
 
-    def __str__(self) -> typing.Any:
+    def __str__(self) -> str:
         return str(self.view(numpy.ndarray))
 
-    def __repr__(self) -> typing.Any:
+    def __repr__(self) -> str:
         return _array_repr(self, False)
 
     @property
-    def azimuthal(self) -> typing.Any:
+    def azimuthal(self) -> AzimuthalNumpy:
         return self.view(self._azimuthal_type)
 
     @property
-    def longitudinal(self) -> typing.Any:
+    def longitudinal(self) -> LongitudinalNumpy:
         return self.view(self._longitudinal_type)
 
     @property
-    def temporal(self) -> typing.Any:
+    def temporal(self) -> TemporalNumpy:
         return self.view(self._temporal_type)
 
+    @typing.no_type_check
     def _wrap_result(
         self,
         cls: typing.Any,
@@ -1246,17 +1271,17 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
         else:
             raise AssertionError(repr(returns))
 
-    def __getitem__(self, where: typing.Any) -> typing.Any:
+    def __getitem__(self, where: typing.Any) -> typing.Union[float, numpy.ndarray]:
         return _getitem(self, where, False)
 
-    def __setitem__(self, where: typing.Any, what: typing.Any) -> typing.Any:
+    def __setitem__(self, where: typing.Any, what: typing.Any) -> None:
         return _setitem(self, where, what, False)
 
 
 class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):
     ObjectClass = vector.backends.object_.MomentumObject4D
 
-    def __array_finalize__(self, obj: typing.Any) -> typing.Any:
+    def __array_finalize__(self, obj: typing.Any) -> None:
         self.dtype.names = [
             _repr_momentum_to_generic.get(x, x) for x in self.dtype.names
         ]
@@ -1290,17 +1315,17 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):
                 'field "t" or "tau" or "E" or "energy" or "M" or "mass"'
             )
 
-    def __repr__(self) -> typing.Any:
+    def __repr__(self) -> str:
         return _array_repr(self, True)
 
-    def __getitem__(self, where: typing.Any) -> typing.Any:
+    def __getitem__(self, where: typing.Any) -> typing.Union[float, numpy.ndarray]:
         return _getitem(self, where, True)
 
-    def __setitem__(self, where: typing.Any, what: typing.Any) -> typing.Any:
+    def __setitem__(self, where: typing.Any, what: typing.Any) -> None:
         return _setitem(self, where, what, True)
 
 
-def array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
+def array(*args: typing.Any, **kwargs: typing.Any) -> VectorNumpy:
     "vector.array docs"
     names = None
     if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):

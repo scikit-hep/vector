@@ -12,6 +12,7 @@ numba = pytest.importorskip("numba")
 pytest.importorskip("vector.backends.numba_object")
 
 
+@pytest.mark.numba
 def test():
     @numba.njit
     def extract(x):
