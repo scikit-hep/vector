@@ -10,6 +10,7 @@ import awkward as ak
 import numpy
 
 import vector
+from vector._typeutils import BoolCollection, ScalarCollection
 from vector.backends.object_ import (
     AzimuthalObjectRhoPhi,
     AzimuthalObjectXY,
@@ -43,7 +44,10 @@ from vector.methods import (
     Vector2D,
     Vector3D,
     Vector4D,
+    VectorProtocol,
 )
+
+ArrayOrRecord = typing.TypeVar("ArrayOrRecord", bound=typing.Union[ak.Array, ak.Record])
 
 behavior: typing.Any = {}
 
@@ -55,9 +59,9 @@ class CoordinatesAwkward:
     lib = numpy
 
 
-class AzimuthalAwkward(CoordinatesAwkward):
+class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
     @classmethod
-    def from_fields(cls, array: typing.Any) -> typing.Any:
+    def from_fields(cls, array: typing.Any) -> "AzimuthalAwkward":
         fields = ak.fields(array)
         if "x" in fields and "y" in fields:
             return AzimuthalAwkwardXY(array["x"], array["y"])
@@ -69,9 +73,9 @@ class AzimuthalAwkward(CoordinatesAwkward):
             )
 
 
-class LongitudinalAwkward(CoordinatesAwkward):
+class LongitudinalAwkward(CoordinatesAwkward, Longitudinal):
     @classmethod
-    def from_fields(cls, array: typing.Any) -> typing.Any:
+    def from_fields(cls, array: typing.Any) -> "LongitudinalAwkward":
         fields = ak.fields(array)
         if "z" in fields:
             return LongitudinalAwkwardZ(array["z"])
@@ -85,9 +89,9 @@ class LongitudinalAwkward(CoordinatesAwkward):
             )
 
 
-class TemporalAwkward(CoordinatesAwkward):
+class TemporalAwkward(CoordinatesAwkward, Temporal):
     @classmethod
-    def from_fields(cls, array: typing.Any) -> typing.Any:
+    def from_fields(cls, array: typing.Any) -> "TemporalAwkward":
         fields = ak.fields(array)
         if "t" in fields:
             return TemporalAwkwardT(array["t"])
@@ -107,7 +111,7 @@ class AzimuthalAwkwardXY(AzimuthalAwkward, AzimuthalXY):
         self.y = y
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[ArrayOrRecord, ArrayOrRecord]:
         return (self.x, self.y)
 
 
@@ -119,7 +123,7 @@ class AzimuthalAwkwardRhoPhi(AzimuthalAwkward, AzimuthalRhoPhi):
         self.phi = phi
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[ArrayOrRecord, ArrayOrRecord]:
         return (self.rho, self.phi)
 
 
@@ -130,7 +134,7 @@ class LongitudinalAwkwardZ(LongitudinalAwkward, LongitudinalZ):
         self.z = z
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[ArrayOrRecord]:
         return (self.z,)
 
 
@@ -141,7 +145,7 @@ class LongitudinalAwkwardTheta(LongitudinalAwkward, LongitudinalTheta):
         self.theta = theta
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[ArrayOrRecord]:
         return (self.theta,)
 
 
@@ -152,7 +156,7 @@ class LongitudinalAwkwardEta(LongitudinalAwkward, LongitudinalEta):
         self.eta = eta
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[ArrayOrRecord]:
         return (self.eta,)
 
 
@@ -163,7 +167,7 @@ class TemporalAwkwardT(TemporalAwkward, TemporalT):
         self.t = t
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[ArrayOrRecord]:
         return (self.t,)
 
 
@@ -174,11 +178,11 @@ class TemporalAwkwardTau(TemporalAwkward, TemporalTau):
         self.tau = tau
 
     @property
-    def elements(self) -> typing.Any:
+    def elements(self) -> typing.Tuple[ArrayOrRecord]:
         return (self.tau,)
 
 
-def _class_to_name(cls: typing.Any) -> typing.Any:
+def _class_to_name(cls: typing.Type[VectorProtocol]) -> str:
     if issubclass(cls, Momentum):
         if issubclass(cls, Vector2D):
             return "Momentum2D"
@@ -194,6 +198,8 @@ def _class_to_name(cls: typing.Any) -> typing.Any:
         elif issubclass(cls, Vector4D):
             return "Vector4D"
 
+    raise AssertionError(repr(cls))
+
 
 # the vector class ############################################################
 
@@ -201,8 +207,12 @@ def _class_to_name(cls: typing.Any) -> typing.Any:
 class VectorAwkward:
     lib = numpy
 
-    __getitem__: typing.Any
+    def __getitem__(
+        self, where: typing.Any
+    ) -> typing.Optional[typing.Union[float, ak.Array, ak.Record]]:
+        return super().__getitem__(where)  # type: ignore
 
+    @typing.no_type_check
     def _wrap_result(
         self,
         cls: typing.Any,
@@ -475,7 +485,7 @@ class VectorAwkward:
 
 class VectorAwkward2D(VectorAwkward, Planar, Vector2D):
     @property
-    def azimuthal(self) -> typing.Any:
+    def azimuthal(self) -> AzimuthalAwkward:
         return AzimuthalAwkward.from_fields(self)
 
 
@@ -485,11 +495,11 @@ class MomentumAwkward2D(PlanarMomentum, VectorAwkward2D):
 
 class VectorAwkward3D(VectorAwkward, Spatial, Vector3D):
     @property
-    def azimuthal(self) -> typing.Any:
+    def azimuthal(self) -> AzimuthalAwkward:
         return AzimuthalAwkward.from_fields(self)
 
     @property
-    def longitudinal(self) -> typing.Any:
+    def longitudinal(self) -> LongitudinalAwkward:
         return LongitudinalAwkward.from_fields(self)
 
 
@@ -499,15 +509,15 @@ class MomentumAwkward3D(SpatialMomentum, VectorAwkward3D):
 
 class VectorAwkward4D(VectorAwkward, Lorentz, Vector4D):
     @property
-    def azimuthal(self) -> typing.Any:
+    def azimuthal(self) -> AzimuthalAwkward:
         return AzimuthalAwkward.from_fields(self)
 
     @property
-    def longitudinal(self) -> typing.Any:
+    def longitudinal(self) -> LongitudinalAwkward:
         return LongitudinalAwkward.from_fields(self)
 
     @property
-    def temporal(self) -> typing.Any:
+    def temporal(self) -> TemporalAwkward:
         return TemporalAwkward.from_fields(self)
 
 
@@ -521,11 +531,11 @@ class MomentumAwkward4D(LorentzMomentum, VectorAwkward4D):
 class VectorArray2D(VectorAwkward2D, ak.Array):
     def allclose(
         self,
-        other: typing.Any,
-        rtol: typing.Any = 1e-05,
-        atol: typing.Any = 1e-08,
-        equal_nan: typing.Any = False,
-    ) -> typing.Any:
+        other: VectorProtocol,
+        rtol: ScalarCollection = 1e-05,
+        atol: ScalarCollection = 1e-08,
+        equal_nan: BoolCollection = False,
+    ) -> BoolCollection:
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
 
@@ -542,11 +552,11 @@ behavior["Vector2D"] = VectorRecord2D
 class VectorArray3D(VectorAwkward3D, ak.Array):
     def allclose(
         self,
-        other: typing.Any,
-        rtol: typing.Any = 1e-05,
-        atol: typing.Any = 1e-08,
-        equal_nan: typing.Any = False,
-    ) -> typing.Any:
+        other: VectorProtocol,
+        rtol: ScalarCollection = 1e-05,
+        atol: ScalarCollection = 1e-08,
+        equal_nan: BoolCollection = False,
+    ) -> BoolCollection:
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
 
@@ -563,11 +573,11 @@ behavior["Vector3D"] = VectorRecord3D
 class VectorArray4D(VectorAwkward4D, ak.Array):
     def allclose(
         self,
-        other: typing.Any,
-        rtol: typing.Any = 1e-05,
-        atol: typing.Any = 1e-08,
-        equal_nan: typing.Any = False,
-    ) -> typing.Any:
+        other: VectorProtocol,
+        rtol: ScalarCollection = 1e-05,
+        atol: ScalarCollection = 1e-08,
+        equal_nan: BoolCollection = False,
+    ) -> BoolCollection:
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
 
@@ -584,11 +594,11 @@ behavior["Vector4D"] = VectorRecord4D
 class MomentumArray2D(MomentumAwkward2D, ak.Array):
     def allclose(
         self,
-        other: typing.Any,
-        rtol: typing.Any = 1e-05,
-        atol: typing.Any = 1e-08,
-        equal_nan: typing.Any = False,
-    ) -> typing.Any:
+        other: VectorProtocol,
+        rtol: ScalarCollection = 1e-05,
+        atol: ScalarCollection = 1e-08,
+        equal_nan: BoolCollection = False,
+    ) -> BoolCollection:
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
 
@@ -605,11 +615,11 @@ behavior["Momentum2D"] = MomentumRecord2D
 class MomentumArray3D(MomentumAwkward3D, ak.Array):
     def allclose(
         self,
-        other: typing.Any,
-        rtol: typing.Any = 1e-05,
-        atol: typing.Any = 1e-08,
-        equal_nan: typing.Any = False,
-    ) -> typing.Any:
+        other: VectorProtocol,
+        rtol: ScalarCollection = 1e-05,
+        atol: ScalarCollection = 1e-08,
+        equal_nan: BoolCollection = False,
+    ) -> BoolCollection:
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
 
@@ -626,11 +636,11 @@ behavior["Momentum3D"] = MomentumRecord3D
 class MomentumArray4D(MomentumAwkward4D, ak.Array):
     def allclose(
         self,
-        other: typing.Any,
-        rtol: typing.Any = 1e-05,
-        atol: typing.Any = 1e-08,
-        equal_nan: typing.Any = False,
-    ) -> typing.Any:
+        other: VectorProtocol,
+        rtol: ScalarCollection = 1e-05,
+        atol: ScalarCollection = 1e-08,
+        equal_nan: BoolCollection = False,
+    ) -> BoolCollection:
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
 
@@ -796,6 +806,7 @@ MomentumRecord4D.GenericClass = VectorRecord4D
 # implementation of behaviors in Numba ########################################
 
 
+@typing.no_type_check
 def _aztype_of(recordarraytype: typing.Any) -> typing.Any:
     import numba
 
@@ -834,6 +845,7 @@ def _aztype_of(recordarraytype: typing.Any) -> typing.Any:
     return numba.typeof(cls(coord1.cast_python_value(0), coord2.cast_python_value(0)))
 
 
+@typing.no_type_check
 def _ltype_of(recordarraytype: typing.Any) -> typing.Any:
     import numba
 
@@ -870,6 +882,7 @@ def _ltype_of(recordarraytype: typing.Any) -> typing.Any:
     return numba.typeof(cls(coord1.cast_python_value(0)))
 
 
+@typing.no_type_check
 def _ttype_of(recordarraytype: typing.Any) -> typing.Any:
     import numba
 
@@ -898,6 +911,7 @@ def _ttype_of(recordarraytype: typing.Any) -> typing.Any:
     return numba.typeof(cls(coord1.cast_python_value(0)))
 
 
+@typing.no_type_check
 def _numba_typer_Vector2D(viewtype: typing.Any) -> typing.Any:
     import vector.backends.numba_object
 
@@ -906,6 +920,7 @@ def _numba_typer_Vector2D(viewtype: typing.Any) -> typing.Any:
     )
 
 
+@typing.no_type_check
 def _numba_typer_Vector3D(viewtype: typing.Any) -> typing.Any:
     import vector.backends.numba_object
 
@@ -915,6 +930,7 @@ def _numba_typer_Vector3D(viewtype: typing.Any) -> typing.Any:
     )
 
 
+@typing.no_type_check
 def _numba_typer_Vector4D(viewtype: typing.Any) -> typing.Any:
     import vector.backends.numba_object
 
@@ -925,6 +941,7 @@ def _numba_typer_Vector4D(viewtype: typing.Any) -> typing.Any:
     )
 
 
+@typing.no_type_check
 def _numba_typer_Momentum2D(viewtype: typing.Any) -> typing.Any:
     import vector.backends.numba_object
 
@@ -933,6 +950,7 @@ def _numba_typer_Momentum2D(viewtype: typing.Any) -> typing.Any:
     )
 
 
+@typing.no_type_check
 def _numba_typer_Momentum3D(viewtype: typing.Any) -> typing.Any:
     import vector.backends.numba_object
 
@@ -942,6 +960,7 @@ def _numba_typer_Momentum3D(viewtype: typing.Any) -> typing.Any:
     )
 
 
+@typing.no_type_check
 def _numba_typer_Momentum4D(viewtype: typing.Any) -> typing.Any:
     import vector.backends.numba_object
 
@@ -952,6 +971,7 @@ def _numba_typer_Momentum4D(viewtype: typing.Any) -> typing.Any:
     )
 
 
+@typing.no_type_check
 def _numba_lower(
     context: typing.Any, builder: typing.Any, sig: typing.Any, args: typing.Any
 ) -> typing.Any:
@@ -1022,7 +1042,3 @@ ak.behavior["__numba_lower__", "Vector4D"] = _numba_lower
 ak.behavior["__numba_lower__", "Momentum2D"] = _numba_lower
 ak.behavior["__numba_lower__", "Momentum3D"] = _numba_lower
 ak.behavior["__numba_lower__", "Momentum4D"] = _numba_lower
-
-
-# print("_numba_typer", viewtype.arrayviewtype.type.parameters["__record__"])
-# raise Exception
