@@ -75,6 +75,7 @@ SameVectorType = typing.TypeVar("SameVectorType", bound="VectorProtocol")
 class VectorProtocol:
     lib: Module
 
+    @typing.no_type_check
     def _wrap_result(
         self,
         cls: typing.Any,

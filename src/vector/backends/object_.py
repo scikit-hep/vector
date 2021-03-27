@@ -456,6 +456,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             out.append(f"{x}={getattr(self.azimuthal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
+    @typing.no_type_check
     def _wrap_result(
         self,
         cls: typing.Any,
@@ -636,6 +637,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             out.append(f"{x}={getattr(self.longitudinal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
+    @typing.no_type_check
     def _wrap_result(
         self,
         cls: typing.Any,
@@ -990,6 +992,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             out.append(f"{x}={getattr(self.temporal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
+    @typing.no_type_check
     def _wrap_result(
         self,
         cls: typing.Any,
