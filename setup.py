@@ -8,7 +8,7 @@ from setuptools import setup
 
 extras = {
     "dev": [
-        "awkward>=1.2.0rc4",
+        "awkward>=1.2.0rc5",
         'numba>=0.50; python_version>="3.6"',
         "pytest>=4.6",
     ],
