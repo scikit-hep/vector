@@ -42,7 +42,6 @@ from vector.methods import (  # noqa: 401
     Vector4D,
     dim,
 )
-
 from vector.version import version as __version__
 
 
