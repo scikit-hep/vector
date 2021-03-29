@@ -975,7 +975,7 @@ def _numba_typer_Momentum4D(viewtype: typing.Any) -> typing.Any:
 def _numba_lower(
     context: typing.Any, builder: typing.Any, sig: typing.Any, args: typing.Any
 ) -> typing.Any:
-    from vector.backends.numba_object import (
+    from vector.backends.numba_object import (  # type: ignore
         _awkward_numba_eta,
         _awkward_numba_rhophi,
         _awkward_numba_t,
