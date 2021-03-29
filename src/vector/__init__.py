@@ -5,7 +5,7 @@
 
 import typing
 
-from .backends.numpy_ import (  # noqa: 401
+from vector.backends.numpy_ import (  # noqa: 401
     MomentumNumpy2D,
     MomentumNumpy3D,
     MomentumNumpy4D,
@@ -14,7 +14,7 @@ from .backends.numpy_ import (  # noqa: 401
     VectorNumpy4D,
     array,
 )
-from .backends.object_ import (  # noqa: 401
+from vector.backends.object_ import (  # noqa: 401
     MomentumObject2D,
     MomentumObject3D,
     MomentumObject4D,
@@ -23,7 +23,7 @@ from .backends.object_ import (  # noqa: 401
     VectorObject4D,
     obj,
 )
-from .methods import (  # noqa: 401
+from vector.methods import (  # noqa: 401
     Azimuthal,
     AzimuthalRhoPhi,
     AzimuthalXY,
@@ -43,7 +43,7 @@ from .methods import (  # noqa: 401
     dim,
 )
 
-# from .version import version as __version__
+from vector.version import version as __version__
 
 
 def register_numba() -> None:
