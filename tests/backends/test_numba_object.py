@@ -464,7 +464,7 @@ def test_conversions():
 
         out = to_xy(v)
         assert isinstance(out, vector.backends.object_.VectorObject2D)
-        if isinstance(v, vector.methods.Momentum):
+        if isinstance(v, vector._methods.Momentum):
             assert isinstance(out, vector.backends.object_.MomentumObject2D)
         assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectXY)
         assert out.x == pytest.approx(1.1)
@@ -472,7 +472,7 @@ def test_conversions():
 
         out = to_rhophi(v)
         assert isinstance(out, vector.backends.object_.VectorObject2D)
-        if isinstance(v, vector.methods.Momentum):
+        if isinstance(v, vector._methods.Momentum):
             assert isinstance(out, vector.backends.object_.MomentumObject2D)
         assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectRhoPhi)
         assert out.x == pytest.approx(1.1)
@@ -480,7 +480,7 @@ def test_conversions():
 
         out = to_xyz(v)
         assert isinstance(out, vector.backends.object_.VectorObject3D)
-        if isinstance(v, vector.methods.Momentum):
+        if isinstance(v, vector._methods.Momentum):
             assert isinstance(out, vector.backends.object_.MomentumObject3D)
         assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectXY)
         assert isinstance(out.longitudinal, vector.backends.object_.LongitudinalObjectZ)
@@ -493,7 +493,7 @@ def test_conversions():
 
         out = to_rhophiz(v)
         assert isinstance(out, vector.backends.object_.VectorObject3D)
-        if isinstance(v, vector.methods.Momentum):
+        if isinstance(v, vector._methods.Momentum):
             assert isinstance(out, vector.backends.object_.MomentumObject3D)
         assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectRhoPhi)
         assert isinstance(out.longitudinal, vector.backends.object_.LongitudinalObjectZ)
@@ -506,7 +506,7 @@ def test_conversions():
 
         out = to_xytheta(v)
         assert isinstance(out, vector.backends.object_.VectorObject3D)
-        if isinstance(v, vector.methods.Momentum):
+        if isinstance(v, vector._methods.Momentum):
             assert isinstance(out, vector.backends.object_.MomentumObject3D)
         assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectXY)
         assert isinstance(
@@ -521,7 +521,7 @@ def test_conversions():
 
         out = to_rhophitheta(v)
         assert isinstance(out, vector.backends.object_.VectorObject3D)
-        if isinstance(v, vector.methods.Momentum):
+        if isinstance(v, vector._methods.Momentum):
             assert isinstance(out, vector.backends.object_.MomentumObject3D)
         assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectRhoPhi)
         assert isinstance(
@@ -536,7 +536,7 @@ def test_conversions():
 
         out = to_xyeta(v)
         assert isinstance(out, vector.backends.object_.VectorObject3D)
-        if isinstance(v, vector.methods.Momentum):
+        if isinstance(v, vector._methods.Momentum):
             assert isinstance(out, vector.backends.object_.MomentumObject3D)
         assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectXY)
         assert isinstance(
@@ -551,7 +551,7 @@ def test_conversions():
 
         out = to_rhophietatau(v)
         assert isinstance(out, vector.backends.object_.VectorObject4D)
-        if isinstance(v, vector.methods.Momentum):
+        if isinstance(v, vector._methods.Momentum):
             assert isinstance(out, vector.backends.object_.MomentumObject4D)
         assert isinstance(out.azimuthal, vector.backends.object_.AzimuthalObjectRhoPhi)
         assert isinstance(

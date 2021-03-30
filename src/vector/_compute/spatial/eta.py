@@ -7,7 +7,7 @@
 
 import numpy
 
-from vector.methods import (
+from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
     LongitudinalEta,

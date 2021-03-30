@@ -9,7 +9,7 @@ import numpy
 
 from vector.compute.planar import deltaphi
 from vector.compute.spatial import deltaeta
-from vector.methods import (
+from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
     LongitudinalEta,

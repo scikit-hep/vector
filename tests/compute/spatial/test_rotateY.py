@@ -8,7 +8,7 @@ import pytest
 
 import vector.backends.numpy_
 import vector.backends.object_
-import vector.methods
+import vector._methods
 
 
 def test_spatial_object():
@@ -17,16 +17,16 @@ def test_spatial_object():
         vector.backends.object_.LongitudinalObjectZ(0.3),
     )
     out = vec.rotateY(0.25)
-    assert isinstance(out.azimuthal, vector.methods.AzimuthalXY)
-    assert isinstance(out.longitudinal, vector.methods.LongitudinalZ)
+    assert isinstance(out.azimuthal, vector._methods.AzimuthalXY)
+    assert isinstance(out.longitudinal, vector._methods.LongitudinalZ)
     assert out.x == pytest.approx(0.17111242994742137)
     assert out.y == pytest.approx(0.2)
     assert out.z == pytest.approx(0.2659333305877411)
 
     for t in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
         out = getattr(vec, "to_" + t)().rotateY(0.25)
-        assert isinstance(out.azimuthal, vector.methods.AzimuthalXY)
-        assert isinstance(out.longitudinal, vector.methods.LongitudinalZ)
+        assert isinstance(out.azimuthal, vector._methods.AzimuthalXY)
+        assert isinstance(out.longitudinal, vector._methods.LongitudinalZ)
         assert out.x == pytest.approx(0.17111242994742137)
         assert out.y == pytest.approx(0.2)
         assert out.z == pytest.approx(0.2659333305877411)
@@ -38,16 +38,16 @@ def test_spatial_numpy():
         dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
     )
     out = vec.rotateY(0.25)
-    assert isinstance(out.azimuthal, vector.methods.AzimuthalXY)
-    assert isinstance(out.longitudinal, vector.methods.LongitudinalZ)
+    assert isinstance(out.azimuthal, vector._methods.AzimuthalXY)
+    assert isinstance(out.longitudinal, vector._methods.LongitudinalZ)
     assert out[0].x == pytest.approx(0.17111242994742137)
     assert out[0].y == pytest.approx(0.2)
     assert out[0].z == pytest.approx(0.2659333305877411)
 
     for t in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
         out = getattr(vec, "to_" + t)().rotateY(0.25)
-        assert isinstance(out.azimuthal, vector.methods.AzimuthalXY)
-        assert isinstance(out.longitudinal, vector.methods.LongitudinalZ)
+        assert isinstance(out.azimuthal, vector._methods.AzimuthalXY)
+        assert isinstance(out.longitudinal, vector._methods.LongitudinalZ)
         assert out[0].x == pytest.approx(0.17111242994742137)
         assert out[0].y == pytest.approx(0.2)
         assert out[0].z == pytest.approx(0.2659333305877411)
@@ -60,8 +60,8 @@ def test_lorentz_object():
         vector.backends.object_.TemporalObjectT(99),
     )
     out = vec.rotateY(0.25)
-    assert isinstance(out.azimuthal, vector.methods.AzimuthalXY)
-    assert isinstance(out.longitudinal, vector.methods.LongitudinalZ)
+    assert isinstance(out.azimuthal, vector._methods.AzimuthalXY)
+    assert isinstance(out.longitudinal, vector._methods.LongitudinalZ)
     assert hasattr(out, "temporal")
     assert out.x == pytest.approx(0.17111242994742137)
     assert out.y == pytest.approx(0.2)
@@ -82,8 +82,8 @@ def test_lorentz_object():
         "rhophietatau",
     ):
         out = getattr(vec, "to_" + t)().rotateY(0.25)
-        assert isinstance(out.azimuthal, vector.methods.AzimuthalXY)
-        assert isinstance(out.longitudinal, vector.methods.LongitudinalZ)
+        assert isinstance(out.azimuthal, vector._methods.AzimuthalXY)
+        assert isinstance(out.longitudinal, vector._methods.LongitudinalZ)
         assert hasattr(out, "temporal")
         assert out.x == pytest.approx(0.17111242994742137)
         assert out.y == pytest.approx(0.2)
@@ -101,8 +101,8 @@ def test_lorentz_numpy():
         ],
     )
     out = vec.rotateY(0.25)
-    assert isinstance(out.azimuthal, vector.methods.AzimuthalXY)
-    assert isinstance(out.longitudinal, vector.methods.LongitudinalZ)
+    assert isinstance(out.azimuthal, vector._methods.AzimuthalXY)
+    assert isinstance(out.longitudinal, vector._methods.LongitudinalZ)
     assert out[0].x == pytest.approx(0.17111242994742137)
     assert out[0].y == pytest.approx(0.2)
     assert out[0].z == pytest.approx(0.2659333305877411)
@@ -122,8 +122,8 @@ def test_lorentz_numpy():
         "rhophietatau",
     ):
         out = getattr(vec, "to_" + t)().rotateY(0.25)
-        assert isinstance(out.azimuthal, vector.methods.AzimuthalXY)
-        assert isinstance(out.longitudinal, vector.methods.LongitudinalZ)
+        assert isinstance(out.azimuthal, vector._methods.AzimuthalXY)
+        assert isinstance(out.longitudinal, vector._methods.LongitudinalZ)
         assert out[0].x == pytest.approx(0.17111242994742137)
         assert out[0].y == pytest.approx(0.2)
         assert out[0].z == pytest.approx(0.2659333305877411)

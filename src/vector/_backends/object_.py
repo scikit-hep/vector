@@ -7,7 +7,7 @@ import typing
 
 import numpy
 
-from vector.methods import (
+from vector._methods import (
     Azimuthal,
     AzimuthalRhoPhi,
     AzimuthalXY,

@@ -26,7 +26,7 @@ from vector.backends.object_ import (  # noqa: 401
     VectorObject4D,
     obj,
 )
-from vector.methods import (  # noqa: 401
+from vector._methods import (  # noqa: 401
     Azimuthal,
     AzimuthalRhoPhi,
     AzimuthalXY,

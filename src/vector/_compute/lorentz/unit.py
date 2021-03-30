@@ -8,7 +8,7 @@
 import numpy
 
 from vector.compute.lorentz import tau2
-from vector.methods import (
+from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
     LongitudinalEta,

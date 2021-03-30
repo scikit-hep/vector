@@ -31,7 +31,7 @@ from vector.backends.object_ import (
     VectorObject4D,
     _coord_object_type,
 )
-from vector.methods import (
+from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
     LongitudinalEta,
