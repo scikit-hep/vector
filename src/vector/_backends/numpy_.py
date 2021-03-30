@@ -9,7 +9,6 @@ import typing
 import numpy
 
 import vector._backends.object_
-from vector._typeutils import ScalarCollection
 from vector._methods import (
     Azimuthal,
     AzimuthalRhoPhi,
@@ -40,6 +39,7 @@ from vector._methods import (
     _repr_momentum_to_generic,
     _ttype,
 )
+from vector._typeutils import ScalarCollection
 
 ArrayLike = ScalarCollection
 
