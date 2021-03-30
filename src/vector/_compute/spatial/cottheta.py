@@ -7,8 +7,8 @@
 
 import numpy
 
-from vector.compute.planar import rho
-from vector.compute.spatial import theta
+from vector._compute.planar import rho
+from vector._compute.spatial import theta
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,

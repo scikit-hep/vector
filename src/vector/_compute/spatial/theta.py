@@ -7,7 +7,7 @@
 
 import numpy
 
-from vector.compute.spatial import costheta
+from vector._compute.spatial import costheta
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,

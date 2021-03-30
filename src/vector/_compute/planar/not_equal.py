@@ -7,7 +7,7 @@
 
 import numpy
 
-from vector.compute.planar import x, y
+from vector._compute.planar import x, y
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,

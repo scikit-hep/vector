@@ -9,9 +9,9 @@ import sys
 
 import pytest
 
-import vector.compute.lorentz
-import vector.compute.planar
-import vector.compute.spatial
+import vector._compute.lorentz
+import vector._compute.planar
+import vector._compute.spatial
 
 uncompyle6 = pytest.importorskip("uncompyle6")
 spark_parser = pytest.importorskip("spark_parser")
@@ -27,7 +27,7 @@ functions = dict(
             z[0],
         )
         for x, y in inspect.getmembers(
-            vector.compute.planar, predicate=inspect.ismodule
+            vector._compute.planar, predicate=inspect.ismodule
         )
         if hasattr(y, "dispatch_map")
         for w, z in y.dispatch_map.items()
@@ -38,7 +38,7 @@ functions = dict(
             z[0],
         )
         for x, y in inspect.getmembers(
-            vector.compute.spatial, predicate=inspect.ismodule
+            vector._compute.spatial, predicate=inspect.ismodule
         )
         if hasattr(y, "dispatch_map")
         for w, z in y.dispatch_map.items()
@@ -49,7 +49,7 @@ functions = dict(
             z[0],
         )
         for x, y in inspect.getmembers(
-            vector.compute.lorentz, predicate=inspect.ismodule
+            vector._compute.lorentz, predicate=inspect.ismodule
         )
         if hasattr(y, "dispatch_map")
         for w, z in y.dispatch_map.items()
@@ -278,9 +278,9 @@ def analyze_callable(node, context):
                 context.closure.get(module.attr).__name__.split(".")[:-1]
             )
             assert module_name in (
-                "vector.compute.planar",
-                "vector.compute.spatial",
-                "vector.compute.lorentz",
+                "vector._compute.planar",
+                "vector._compute.spatial",
+                "vector._compute.lorentz",
             )
 
     elif node.kind == "LOAD_GLOBAL" or node.kind == "LOAD_DEREF":

@@ -7,8 +7,8 @@
 
 import numpy
 
-from vector.compute.planar import deltaphi
-from vector.compute.spatial import deltaeta
+from vector._compute.planar import deltaphi
+from vector._compute.spatial import deltaeta
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
