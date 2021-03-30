@@ -10,7 +10,6 @@ import awkward as ak
 import numpy
 
 import vector
-from vector._typeutils import BoolCollection, ScalarCollection
 from vector._backends.numpy_ import VectorNumpy2D, VectorNumpy3D, VectorNumpy4D
 from vector._backends.object_ import (
     AzimuthalObjectRhoPhi,
@@ -47,6 +46,7 @@ from vector._methods import (
     Vector4D,
     VectorProtocol,
 )
+from vector._typeutils import BoolCollection, ScalarCollection
 
 ArrayOrRecord = typing.TypeVar("ArrayOrRecord", bound=typing.Union[ak.Array, ak.Record])
 
