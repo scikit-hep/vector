@@ -1833,9 +1833,9 @@ def _from_signature(name: str, dispatch_map: dict, signature: tuple) -> tuple:
 
 
 _handler_priority = [
-    "vector.backends.object_",
-    "vector.backends.numpy_",
-    "vector.backends.awkward_",
+    "vector._backends.object_",
+    "vector._backends.numpy_",
+    "vector._backends.awkward_",
 ]
 
 
@@ -1855,8 +1855,8 @@ def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
 
 
 def _flavor_of(*objects: VectorProtocol) -> typing.Type[VectorProtocol]:
-    from vector.backends.numpy_ import VectorNumpy
-    from vector.backends.object_ import VectorObject
+    from vector._backends.numpy_ import VectorNumpy
+    from vector._backends.object_ import VectorObject
 
     handler = None
     is_momentum = True

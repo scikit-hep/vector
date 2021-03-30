@@ -5,8 +5,8 @@
 
 import typing
 
-from vector.backends.awkward_ import VectorAwkward  # noqa: 401
-from vector.backends.numpy_ import (  # noqa: 401
+from vector._backends.awkward_ import VectorAwkward  # noqa: 401
+from vector._backends.numpy_ import (  # noqa: 401
     MomentumNumpy2D,
     MomentumNumpy3D,
     MomentumNumpy4D,
@@ -16,7 +16,7 @@ from vector.backends.numpy_ import (  # noqa: 401
     VectorNumpy4D,
     array,
 )
-from vector.backends.object_ import (  # noqa: 401
+from vector._backends.object_ import (  # noqa: 401
     MomentumObject2D,
     MomentumObject3D,
     MomentumObject4D,
@@ -52,8 +52,8 @@ from vector.version import version as __version__  # noqa: 401
 
 
 def register_numba() -> None:
-    import vector.backends.numba_numpy  # noqa: 401
-    import vector.backends.numba_object  # noqa: 401
+    import vector._backends.numba_numpy  # noqa: 401
+    import vector._backends.numba_object  # noqa: 401
 
 
 _awkward_registered = False
@@ -62,10 +62,10 @@ _awkward_registered = False
 def register_awkward() -> None:
     import awkward
 
-    import vector.backends.awkward_  # noqa: 401
+    import vector._backends.awkward_  # noqa: 401
 
     global _awkward_registered
-    awkward.behavior.update(vector.backends.awkward_.behavior)
+    awkward.behavior.update(vector._backends.awkward_.behavior)
     _awkward_registered = True
 
 
@@ -73,7 +73,7 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     "vector.Array docs"
     import awkward
 
-    import vector.backends.awkward_  # noqa: 401
+    import vector._backends.awkward_  # noqa: 401
 
     akarray = awkward.Array(*args, **kwargs)
     fields = awkward.fields(akarray)
@@ -251,10 +251,10 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     for x in arrays:
         if needs_behavior:
             if x.behavior is None:
-                x.behavior = vector.backends.awkward_.behavior
+                x.behavior = vector._backends.awkward_.behavior
             else:
                 x.behavior = dict(x.behavior)
-                x.behavior.update(vector.backends.awkward_.behavior)
+                x.behavior.update(vector._backends.awkward_.behavior)
         else:
             x.behavior = None
         needs_behavior = False
