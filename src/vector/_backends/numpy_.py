@@ -165,7 +165,7 @@ def _has(
 
 def _toarrays(
     result: typing.Tuple[ScalarCollection, ...]
-) -> typing.Tuple[numpy.array, ...]:
+) -> typing.Tuple[numpy.ndarray, ...]:
     istuple = True
     if not isinstance(result, tuple):
         istuple = False
@@ -180,7 +180,7 @@ def _toarrays(
         return result[0]
 
 
-def _shape_of(result: typing.Tuple[numpy.array, ...]) -> typing.Tuple[int, ...]:
+def _shape_of(result: typing.Tuple[numpy.ndarray, ...]) -> typing.Tuple[int, ...]:
     if not isinstance(result, tuple):
         result = (result,)
     shape = None
