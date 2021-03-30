@@ -43,15 +43,15 @@ class CoordinatesObject:
     pass
 
 
-class AzimuthalObject(CoordinatesObject):
+class AzimuthalObject(CoordinatesObject, Azimuthal):
     pass
 
 
-class LongitudinalObject(CoordinatesObject):
+class LongitudinalObject(CoordinatesObject, Longitudinal):
     pass
 
 
-class TemporalObject(CoordinatesObject):
+class TemporalObject(CoordinatesObject, Temporal):
     pass
 
 
@@ -436,7 +436,7 @@ class VectorObject(Vector):
 class VectorObject2D(VectorObject, Planar, Vector2D):
     __slots__ = ("azimuthal",)
 
-    azimuthal: AzimuthalObject  # type: ignore
+    azimuthal: AzimuthalObject
 
     @classmethod
     def from_xy(cls, x: float, y: float) -> "VectorObject2D":
@@ -455,6 +455,16 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
         for x in aznames:
             out.append(f"{x}={getattr(self.azimuthal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
+
+    def __array__(self) -> numpy.ndarray:
+        from vector.backends.numpy_ import VectorNumpy2D
+
+        return VectorNumpy2D(
+            self.azimuthal.elements,
+            dtype=[
+                (x, numpy.float64) for x in _coordinate_class_to_names[_aztype(self)]
+            ],
+        )
 
     @typing.no_type_check
     def _wrap_result(
@@ -566,6 +576,16 @@ class MomentumObject2D(PlanarMomentum, VectorObject2D):
             out.append(f"{y}={getattr(self.azimuthal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
+    def __array__(self) -> numpy.ndarray:
+        from vector.backends.numpy_ import MomentumNumpy2D
+
+        return MomentumNumpy2D(
+            self.azimuthal.elements,
+            dtype=[
+                (x, numpy.float64) for x in _coordinate_class_to_names[_aztype(self)]
+            ],
+        )
+
     @property
     def px(self) -> float:
         return super().px
@@ -594,8 +614,8 @@ class MomentumObject2D(PlanarMomentum, VectorObject2D):
 class VectorObject3D(VectorObject, Spatial, Vector3D):
     __slots__ = ("azimuthal", "longitudinal")
 
-    azimuthal: AzimuthalObject  # type: ignore
-    longitudinal: LongitudinalObject  # type: ignore
+    azimuthal: AzimuthalObject
+    longitudinal: LongitudinalObject
 
     @classmethod
     def from_xyz(cls, x: float, y: float, z: float) -> "VectorObject3D":
@@ -636,6 +656,18 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         for x in lnames:
             out.append(f"{x}={getattr(self.longitudinal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
+
+    def __array__(self) -> numpy.ndarray:
+        from vector.backends.numpy_ import VectorNumpy3D
+
+        return VectorNumpy3D(
+            self.azimuthal.elements + self.longitudinal.elements,
+            dtype=[
+                (x, numpy.float64)
+                for x in _coordinate_class_to_names[_aztype(self)]
+                + _coordinate_class_to_names[_ltype(self)]
+            ],
+        )
 
     @typing.no_type_check
     def _wrap_result(
@@ -775,6 +807,18 @@ class MomentumObject3D(SpatialMomentum, VectorObject3D):
             out.append(f"{y}={getattr(self.longitudinal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
+    def __array__(self) -> numpy.ndarray:
+        from vector.backends.numpy_ import MomentumNumpy3D
+
+        return MomentumNumpy3D(
+            self.azimuthal.elements + self.longitudinal.elements,
+            dtype=[
+                (x, numpy.float64)
+                for x in _coordinate_class_to_names[_aztype(self)]
+                + _coordinate_class_to_names[_ltype(self)]
+            ],
+        )
+
     @property
     def px(self) -> float:
         return super().px
@@ -811,9 +855,9 @@ class MomentumObject3D(SpatialMomentum, VectorObject3D):
 class VectorObject4D(VectorObject, Lorentz, Vector4D):
     __slots__ = ("azimuthal", "longitudinal", "temporal")
 
-    azimuthal: AzimuthalObject  # type: ignore
-    longitudinal: LongitudinalObject  # type: ignore
-    temporal: TemporalObject  # type: ignore
+    azimuthal: AzimuthalObject
+    longitudinal: LongitudinalObject
+    temporal: TemporalObject
 
     @classmethod
     def from_xyzt(
@@ -992,6 +1036,21 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             out.append(f"{x}={getattr(self.temporal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
+    def __array__(self) -> numpy.ndarray:
+        from vector.backends.numpy_ import VectorNumpy4D
+
+        return VectorNumpy4D(
+            self.azimuthal.elements
+            + self.longitudinal.elements
+            + self.temporal.elements,
+            dtype=[
+                (x, numpy.float64)
+                for x in _coordinate_class_to_names[_aztype(self)]
+                + _coordinate_class_to_names[_ltype(self)]
+                + _coordinate_class_to_names[_ttype(self)]
+            ],
+        )
+
     @typing.no_type_check
     def _wrap_result(
         self,
@@ -1149,6 +1208,21 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
             y = _repr_generic_to_momentum.get(x, x)
             out.append(f"{y}={getattr(self.temporal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
+
+    def __array__(self) -> numpy.ndarray:
+        from vector.backends.numpy_ import MomentumNumpy4D
+
+        return MomentumNumpy4D(
+            self.azimuthal.elements
+            + self.longitudinal.elements
+            + self.temporal.elements,
+            dtype=[
+                (x, numpy.float64)
+                for x in _coordinate_class_to_names[_aztype(self)]
+                + _coordinate_class_to_names[_ltype(self)]
+                + _coordinate_class_to_names[_ttype(self)]
+            ],
+        )
 
     @property
     def px(self) -> float:
