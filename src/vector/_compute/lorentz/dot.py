@@ -7,8 +7,8 @@
 
 import numpy
 
-from vector.compute.lorentz import t
-from vector.compute.spatial import dot
+from vector._compute.lorentz import t
+from vector._compute.spatial import dot
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,

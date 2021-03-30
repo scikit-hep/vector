@@ -7,8 +7,8 @@
 
 import numpy
 
-from vector.compute.planar import subtract, x, y
-from vector.compute.spatial import eta, theta, z
+from vector._compute.planar import subtract, x, y
+from vector._compute.spatial import eta, theta, z
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,

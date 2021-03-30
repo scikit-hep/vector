@@ -7,7 +7,7 @@
 
 import numpy
 
-from vector.compute.spatial import eta
+from vector._compute.spatial import eta
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,

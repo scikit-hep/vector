@@ -7,8 +7,8 @@
 
 import numpy
 
-from vector.compute.lorentz import tau2
-from vector.compute.spatial import mag2
+from vector._compute.lorentz import tau2
+from vector._compute.spatial import mag2
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,

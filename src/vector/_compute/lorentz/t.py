@@ -7,7 +7,7 @@
 
 import numpy
 
-from vector.compute.lorentz import t2
+from vector._compute.lorentz import t2
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,

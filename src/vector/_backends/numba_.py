@@ -8,14 +8,14 @@ import typing
 
 import numba
 
-import vector.compute.lorentz
-import vector.compute.planar
-import vector.compute.spatial
+import vector._compute.lorentz
+import vector._compute.planar
+import vector._compute.spatial
 
 names_and_modules = [
-    ("planar", vector.compute.planar),
-    ("spatial", vector.compute.spatial),
-    ("lorentz", vector.compute.lorentz),
+    ("planar", vector._compute.planar),
+    ("spatial", vector._compute.spatial),
+    ("lorentz", vector._compute.lorentz),
 ]
 
 numba_modules: typing.Any = {}
@@ -26,10 +26,10 @@ for groupname, module in names_and_modules:
     numba_modules[groupname] = {}
     for modname, submodule in module.__dict__.items():
         if isinstance(submodule, types.ModuleType) and submodule.__name__.startswith(
-            "vector.compute."
+            "vector._compute."
         ):
             new_name = submodule.__name__.replace(
-                "vector.compute.", "vector.compute.numba."
+                "vector._compute.", "vector._compute.numba."
             )
             numba_modules[groupname][modname] = {}
 

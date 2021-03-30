@@ -7,7 +7,7 @@
 
 import numpy
 
-from vector.compute.planar import phi
+from vector._compute.planar import phi
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,

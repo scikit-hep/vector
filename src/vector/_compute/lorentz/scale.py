@@ -7,7 +7,7 @@
 
 import numpy
 
-from vector.compute.spatial import scale as scale3d
+from vector._compute.spatial import scale as scale3d
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,

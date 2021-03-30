@@ -7,7 +7,7 @@
 
 import numpy
 
-from vector.compute.spatial import deltaR2
+from vector._compute.spatial import deltaR2
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,

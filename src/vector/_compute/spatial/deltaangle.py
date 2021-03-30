@@ -7,7 +7,7 @@
 
 import numpy
 
-from vector.compute.spatial import dot
+from vector._compute.spatial import dot
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
