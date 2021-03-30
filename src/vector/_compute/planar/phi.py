@@ -5,6 +5,13 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    @property
+    Planar.phi(self)
+"""
+
 import numpy
 
 from vector._methods import (

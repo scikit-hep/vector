@@ -5,6 +5,13 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    @property
+    Planar.rho2(self)
+"""
+
 import numpy
 
 from vector._methods import (

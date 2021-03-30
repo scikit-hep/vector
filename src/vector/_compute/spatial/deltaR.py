@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Spatial.deltaR(self, other)
+"""
+
 import numpy
 
 from vector._compute.spatial import deltaR2

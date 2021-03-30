@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Planar.scale(self, factor)
+"""
+
 import numpy
 
 from vector._methods import (

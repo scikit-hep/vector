@@ -3,6 +3,32 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+"""
+Ensures that new or modified vector.compute.* functions don't break any existing
+or future backends by using unsupportable Python language features.
+
+Compute functions are highly restricted, a least common denominator for all the
+backends we *ever* want to support. The functions themselves are duck-typed:
+arguments could be numbers, NumPy arrays, Awkward Arrays, and potentially
+TensorFlow/Torch/JAX/etc. An ``if`` statement on individual numbers would have
+to be ``np.where` or a masked assignment in NumPy, so ``if`` is not allowed.
+JAX traces a function for JIT-compilation and autodifferentiation by passing a
+"tracer" object through it, and that object can only follow one code path, another
+reason to exclude ``if`` statements. Loops are even more problematic.
+
+This suite of tests statically analyzes all of the compute functions by decompiling
+their bytecode with uncompyle6 (on Python 3.8; will have to be modified slightly
+every few years). Some compute functions are dynamically generated, so they don't
+all have an AST to inspect.
+
+The sieve has been defined narrowly: compute functions can use more functions,
+binary operators, and possibly more language features than are allowed here.
+Expanding this set of rules is therefore allowed and encouraged. The test failure
+and requirement to expand the rules is intended to force you to think about
+new features, to ask yourself if they can be supported by all current and hoped-for
+backends, and whether a (formally) simpler implementation is possible.
+"""
+
 import collections
 import inspect
 import sys

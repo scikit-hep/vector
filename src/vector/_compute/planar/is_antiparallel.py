@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Planar.is_antiparallel(self, other, tolerance=...)
+"""
+
 import numpy
 
 from vector._compute.planar import dot, rho

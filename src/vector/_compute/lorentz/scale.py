@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Lorentz.scale(self, factor)
+"""
+
 import numpy
 
 from vector._compute.spatial import scale as scale3d

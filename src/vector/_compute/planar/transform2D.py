@@ -5,6 +5,14 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Planar.transform2D(self, obj)
+
+where ``obj`` has ``obj["xx"]``, ``obj["xy"]``, etc.
+"""
+
 import numpy
 
 from vector._compute.planar import x, y

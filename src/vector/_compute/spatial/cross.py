@@ -5,6 +5,15 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Spatial.cross(self, other)
+
+Note that this returns a 3D vector even for 4D inputs. The ``None`` at the end
+of the return signature indicates termination.
+"""
+
 import numpy
 
 from vector._compute.planar import x, y

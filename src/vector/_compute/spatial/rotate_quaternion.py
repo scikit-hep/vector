@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Spatial.rotate_quaternion(self, u, i, j, k)
+"""
+
 import numpy
 
 from vector._compute.planar import x, y

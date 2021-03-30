@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Spatial.add(self, other)
+"""
+
 import numpy
 
 from vector._compute.planar import add, x, y
