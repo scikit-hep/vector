@@ -5,15 +5,15 @@
 
 import pytest
 
-import vector.backends.numpy_
-import vector.backends.object_
+import vector._backends.numpy_
+import vector._backends.object_
 
 
 def test():
-    vec = vector.backends.object_.VectorObject4D(
-        vector.backends.object_.AzimuthalObjectXY(1, 2),
-        vector.backends.object_.LongitudinalObjectZ(3),
-        vector.backends.object_.TemporalObjectT(4),
+    vec = vector._backends.object_.VectorObject4D(
+        vector._backends.object_.AzimuthalObjectXY(1, 2),
+        vector._backends.object_.LongitudinalObjectZ(3),
+        vector._backends.object_.TemporalObjectT(4),
     )
     out = vec.boostZ(gamma=-3)
     assert out.x == pytest.approx(1)

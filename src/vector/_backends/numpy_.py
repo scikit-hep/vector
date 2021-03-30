@@ -8,7 +8,7 @@ import typing
 
 import numpy
 
-import vector.backends.object_
+import vector._backends.object_
 from vector._typeutils import ScalarCollection
 from vector._methods import (
     Azimuthal,
@@ -201,19 +201,19 @@ class CoordinatesNumpy:
 
 
 class AzimuthalNumpy(CoordinatesNumpy, Azimuthal):
-    ObjectClass: typing.Type[vector.backends.object_.AzimuthalObject]
+    ObjectClass: typing.Type[vector._backends.object_.AzimuthalObject]
 
 
 class LongitudinalNumpy(CoordinatesNumpy, Longitudinal):
-    ObjectClass: typing.Type[vector.backends.object_.LongitudinalObject]
+    ObjectClass: typing.Type[vector._backends.object_.LongitudinalObject]
 
 
 class TemporalNumpy(CoordinatesNumpy, Temporal):
-    ObjectClass: typing.Type[vector.backends.object_.TemporalObject]
+    ObjectClass: typing.Type[vector._backends.object_.TemporalObject]
 
 
 class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, numpy.ndarray):
-    ObjectClass = vector.backends.object_.AzimuthalObjectXY  # type: ignore
+    ObjectClass = vector._backends.object_.AzimuthalObjectXY  # type: ignore
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "AzimuthalNumpyXY":
         return numpy.array(*args, **kwargs).view(cls)
@@ -242,7 +242,7 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, numpy.ndarray):
 
 
 class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, numpy.ndarray):
-    ObjectClass = vector.backends.object_.AzimuthalObjectRhoPhi  # type: ignore
+    ObjectClass = vector._backends.object_.AzimuthalObjectRhoPhi  # type: ignore
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "AzimuthalNumpyRhoPhi":
         return numpy.array(*args, **kwargs).view(cls)
@@ -271,7 +271,7 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, numpy.ndarray):
 
 
 class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, numpy.ndarray):
-    ObjectClass = vector.backends.object_.LongitudinalObjectZ  # type: ignore
+    ObjectClass = vector._backends.object_.LongitudinalObjectZ  # type: ignore
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "LongitudinalNumpyZ":
         return numpy.array(*args, **kwargs).view(cls)
@@ -296,7 +296,7 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, numpy.ndarray):
 
 
 class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, numpy.ndarray):
-    ObjectClass = vector.backends.object_.LongitudinalObjectTheta  # type: ignore
+    ObjectClass = vector._backends.object_.LongitudinalObjectTheta  # type: ignore
 
     def __new__(
         cls, *args: typing.Any, **kwargs: typing.Any
@@ -323,7 +323,7 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, numpy.ndarray
 
 
 class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, numpy.ndarray):
-    ObjectClass = vector.backends.object_.LongitudinalObjectEta  # type: ignore
+    ObjectClass = vector._backends.object_.LongitudinalObjectEta  # type: ignore
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "LongitudinalNumpyEta":
         return numpy.array(*args, **kwargs).view(cls)
@@ -348,7 +348,7 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, numpy.ndarray):
 
 
 class TemporalNumpyT(TemporalNumpy, TemporalT, numpy.ndarray):
-    ObjectClass = vector.backends.object_.TemporalObjectT  # type: ignore
+    ObjectClass = vector._backends.object_.TemporalObjectT  # type: ignore
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "TemporalNumpyT":
         return numpy.array(*args, **kwargs).view(cls)
@@ -373,7 +373,7 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, numpy.ndarray):
 
 
 class TemporalNumpyTau(TemporalNumpy, TemporalTau, numpy.ndarray):
-    ObjectClass = vector.backends.object_.TemporalObjectTau  # type: ignore
+    ObjectClass = vector._backends.object_.TemporalObjectTau  # type: ignore
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "TemporalNumpyTau":
         return numpy.array(*args, **kwargs).view(cls)
@@ -804,7 +804,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):
 
 
 class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):
-    ObjectClass = vector.backends.object_.MomentumObject2D
+    ObjectClass = vector._backends.object_.MomentumObject2D
 
     def __array_finalize__(self, obj: typing.Any) -> None:
         self.dtype.names = [
@@ -831,7 +831,7 @@ class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):
 
 
 class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
-    ObjectClass = vector.backends.object_.VectorObject3D
+    ObjectClass = vector._backends.object_.VectorObject3D
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "VectorNumpy3D":
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
@@ -1026,7 +1026,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
 
 
 class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):
-    ObjectClass = vector.backends.object_.MomentumObject3D
+    ObjectClass = vector._backends.object_.MomentumObject3D
 
     def __array_finalize__(self, obj: typing.Any) -> None:
         self.dtype.names = [
@@ -1064,7 +1064,7 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):
 
 
 class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
-    ObjectClass = vector.backends.object_.VectorObject4D
+    ObjectClass = vector._backends.object_.VectorObject4D
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "VectorNumpy4D":
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
@@ -1280,7 +1280,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
 
 
 class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):
-    ObjectClass = vector.backends.object_.MomentumObject4D
+    ObjectClass = vector._backends.object_.MomentumObject4D
 
     def __array_finalize__(self, obj: typing.Any) -> None:
         self.dtype.names = [

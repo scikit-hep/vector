@@ -5,19 +5,19 @@
 
 import pytest
 
-import vector.backends.numpy_
-import vector.backends.object_
+import vector._backends.numpy_
+import vector._backends.object_
 
 
 def test():
-    vec = vector.backends.object_.VectorObject4D(
-        vector.backends.object_.AzimuthalObjectXY(1, 2),
-        vector.backends.object_.LongitudinalObjectZ(3),
-        vector.backends.object_.TemporalObjectT(4),
+    vec = vector._backends.object_.VectorObject4D(
+        vector._backends.object_.AzimuthalObjectXY(1, 2),
+        vector._backends.object_.LongitudinalObjectZ(3),
+        vector._backends.object_.TemporalObjectT(4),
     )
-    beta = vector.backends.object_.VectorObject3D(
-        vector.backends.object_.AzimuthalObjectXY(5 / 15, 6 / 15),
-        vector.backends.object_.LongitudinalObjectZ(7 / 15),
+    beta = vector._backends.object_.VectorObject3D(
+        vector._backends.object_.AzimuthalObjectXY(5 / 15, 6 / 15),
+        vector._backends.object_.LongitudinalObjectZ(7 / 15),
     )
     out = vec.boost_beta3(beta)
     assert out.x == pytest.approx(3.5537720741941676)

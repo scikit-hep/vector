@@ -457,7 +457,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
         return "vector.obj(" + ", ".join(out) + ")"
 
     def __array__(self) -> numpy.ndarray:
-        from vector.backends.numpy_ import VectorNumpy2D
+        from vector._backends.numpy_ import VectorNumpy2D
 
         return VectorNumpy2D(
             self.azimuthal.elements,
@@ -577,7 +577,7 @@ class MomentumObject2D(PlanarMomentum, VectorObject2D):
         return "vector.obj(" + ", ".join(out) + ")"
 
     def __array__(self) -> numpy.ndarray:
-        from vector.backends.numpy_ import MomentumNumpy2D
+        from vector._backends.numpy_ import MomentumNumpy2D
 
         return MomentumNumpy2D(
             self.azimuthal.elements,
@@ -658,7 +658,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         return "vector.obj(" + ", ".join(out) + ")"
 
     def __array__(self) -> numpy.ndarray:
-        from vector.backends.numpy_ import VectorNumpy3D
+        from vector._backends.numpy_ import VectorNumpy3D
 
         return VectorNumpy3D(
             self.azimuthal.elements + self.longitudinal.elements,
@@ -808,7 +808,7 @@ class MomentumObject3D(SpatialMomentum, VectorObject3D):
         return "vector.obj(" + ", ".join(out) + ")"
 
     def __array__(self) -> numpy.ndarray:
-        from vector.backends.numpy_ import MomentumNumpy3D
+        from vector._backends.numpy_ import MomentumNumpy3D
 
         return MomentumNumpy3D(
             self.azimuthal.elements + self.longitudinal.elements,
@@ -1037,7 +1037,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         return "vector.obj(" + ", ".join(out) + ")"
 
     def __array__(self) -> numpy.ndarray:
-        from vector.backends.numpy_ import VectorNumpy4D
+        from vector._backends.numpy_ import VectorNumpy4D
 
         return VectorNumpy4D(
             self.azimuthal.elements
@@ -1210,7 +1210,7 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
         return "vector.obj(" + ", ".join(out) + ")"
 
     def __array__(self) -> numpy.ndarray:
-        from vector.backends.numpy_ import MomentumNumpy4D
+        from vector._backends.numpy_ import MomentumNumpy4D
 
         return MomentumNumpy4D(
             self.azimuthal.elements

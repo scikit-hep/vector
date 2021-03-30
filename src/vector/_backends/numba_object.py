@@ -11,8 +11,8 @@ import numba
 import numpy
 
 import vector
-from vector.backends.numba_ import numba_modules
-from vector.backends.object_ import (
+from vector._backends.numba_ import numba_modules
+from vector._backends.object_ import (
     AzimuthalObject,
     AzimuthalObjectRhoPhi,
     AzimuthalObjectXY,

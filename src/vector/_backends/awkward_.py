@@ -11,8 +11,8 @@ import numpy
 
 import vector
 from vector._typeutils import BoolCollection, ScalarCollection
-from vector.backends.numpy_ import VectorNumpy2D, VectorNumpy3D, VectorNumpy4D
-from vector.backends.object_ import (
+from vector._backends.numpy_ import VectorNumpy2D, VectorNumpy3D, VectorNumpy4D
+from vector._backends.object_ import (
     AzimuthalObjectRhoPhi,
     AzimuthalObjectXY,
     LongitudinalObjectEta,
@@ -925,18 +925,18 @@ def _ttype_of(recordarraytype: typing.Any) -> typing.Any:
 
 @typing.no_type_check
 def _numba_typer_Vector2D(viewtype: typing.Any) -> typing.Any:
-    import vector.backends.numba_object
+    import vector._backends.numba_object
 
-    return vector.backends.numba_object.VectorObject2DType(
+    return vector._backends.numba_object.VectorObject2DType(
         _aztype_of(viewtype.arrayviewtype.type)
     )
 
 
 @typing.no_type_check
 def _numba_typer_Vector3D(viewtype: typing.Any) -> typing.Any:
-    import vector.backends.numba_object
+    import vector._backends.numba_object
 
-    return vector.backends.numba_object.VectorObject3DType(
+    return vector._backends.numba_object.VectorObject3DType(
         _aztype_of(viewtype.arrayviewtype.type),
         _ltype_of(viewtype.arrayviewtype.type),
     )
@@ -944,9 +944,9 @@ def _numba_typer_Vector3D(viewtype: typing.Any) -> typing.Any:
 
 @typing.no_type_check
 def _numba_typer_Vector4D(viewtype: typing.Any) -> typing.Any:
-    import vector.backends.numba_object
+    import vector._backends.numba_object
 
-    return vector.backends.numba_object.VectorObject4DType(
+    return vector._backends.numba_object.VectorObject4DType(
         _aztype_of(viewtype.arrayviewtype.type),
         _ltype_of(viewtype.arrayviewtype.type),
         _ttype_of(viewtype.arrayviewtype.type),
@@ -955,18 +955,18 @@ def _numba_typer_Vector4D(viewtype: typing.Any) -> typing.Any:
 
 @typing.no_type_check
 def _numba_typer_Momentum2D(viewtype: typing.Any) -> typing.Any:
-    import vector.backends.numba_object
+    import vector._backends.numba_object
 
-    return vector.backends.numba_object.MomentumObject2DType(
+    return vector._backends.numba_object.MomentumObject2DType(
         _aztype_of(viewtype.arrayviewtype.type)
     )
 
 
 @typing.no_type_check
 def _numba_typer_Momentum3D(viewtype: typing.Any) -> typing.Any:
-    import vector.backends.numba_object
+    import vector._backends.numba_object
 
-    return vector.backends.numba_object.MomentumObject3DType(
+    return vector._backends.numba_object.MomentumObject3DType(
         _aztype_of(viewtype.arrayviewtype.type),
         _ltype_of(viewtype.arrayviewtype.type),
     )
@@ -974,9 +974,9 @@ def _numba_typer_Momentum3D(viewtype: typing.Any) -> typing.Any:
 
 @typing.no_type_check
 def _numba_typer_Momentum4D(viewtype: typing.Any) -> typing.Any:
-    import vector.backends.numba_object
+    import vector._backends.numba_object
 
-    return vector.backends.numba_object.MomentumObject4DType(
+    return vector._backends.numba_object.MomentumObject4DType(
         _aztype_of(viewtype.arrayviewtype.type),
         _ltype_of(viewtype.arrayviewtype.type),
         _ttype_of(viewtype.arrayviewtype.type),
@@ -987,7 +987,7 @@ def _numba_typer_Momentum4D(viewtype: typing.Any) -> typing.Any:
 def _numba_lower(
     context: typing.Any, builder: typing.Any, sig: typing.Any, args: typing.Any
 ) -> typing.Any:
-    from vector.backends.numba_object import (  # type: ignore
+    from vector._backends.numba_object import (  # type: ignore
         _awkward_numba_eta,
         _awkward_numba_rhophi,
         _awkward_numba_t,
