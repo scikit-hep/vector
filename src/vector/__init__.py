@@ -5,7 +5,6 @@
 
 import typing
 
-import vector._compute
 from vector._backends.awkward_ import VectorAwkward  # noqa: 401
 from vector._backends.numpy_ import (  # noqa: 401
     MomentumNumpy2D,
