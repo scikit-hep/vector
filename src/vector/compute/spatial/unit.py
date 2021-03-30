@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Spatial.unit(self)
+"""
+
 import numpy
 
 from vector.compute.spatial import mag

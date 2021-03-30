@@ -5,6 +5,13 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    @property
+    Lorentz.rapidity(self)
+"""
+
 import numpy
 
 from vector.compute.lorentz import t

@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Spatial.rotate_axis(self, axis, angle)
+"""
+
 import numpy
 
 from vector.compute.planar import x, y

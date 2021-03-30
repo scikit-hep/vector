@@ -5,6 +5,14 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Spatial.transform3D(self, obj)
+
+where ``obj` has ``obj["xx"]``, ``obj["xy"]``, etc.
+"""
+
 import numpy
 
 from vector.compute.planar import x, y

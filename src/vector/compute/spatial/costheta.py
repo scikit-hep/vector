@@ -5,6 +5,13 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    @property
+    Spatial.costheta(self)
+"""
+
 import numpy
 
 from vector.compute.spatial import mag, theta

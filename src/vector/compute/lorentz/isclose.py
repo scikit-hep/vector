@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Lorentz.isclose(self, rtol=..., atol=..., equal_nan=...)
+"""
+
 import numpy
 
 from vector.compute.lorentz import t

@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Planar.isclose(self, other, rtol=..., atol=..., equal_nan=...)
+"""
+
 import numpy
 
 from vector.compute.planar import x, y

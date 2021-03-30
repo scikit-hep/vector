@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Spatial.deltaeta(self, other)
+"""
+
 import numpy
 
 from vector.compute.spatial import eta

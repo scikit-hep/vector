@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Planar.add(self, other)
+"""
+
 import numpy
 
 from vector.compute.planar import x, y

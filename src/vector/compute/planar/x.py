@@ -5,6 +5,13 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    @property
+    Planar.x(self)
+"""
+
 import numpy
 
 from vector.methods import (

@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Planar.rotateZ(self, angle)
+"""
+
 import numpy
 
 from vector.methods import (

@@ -5,6 +5,13 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    @property
+    Spatial.mag2(self)
+"""
+
 import numpy
 
 from vector.methods import (

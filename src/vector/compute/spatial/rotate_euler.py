@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Spatial.rotate_euler(self, phi, theta, psi, order=...)
+"""
+
 import numpy
 
 from vector.compute.planar import x, y

@@ -5,6 +5,13 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    @property
+    Lorentz.Et(self)
+"""
+
 import numpy
 
 from vector.compute.lorentz import Et2, t

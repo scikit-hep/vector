@@ -5,6 +5,18 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Lorentz.boost_p4(self, p4)
+
+or
+
+.. code-block:: python
+
+    Lorentz.boost(self, p4=...)
+"""
+
 import numpy
 
 from vector.compute.lorentz import transform4D

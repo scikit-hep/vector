@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Planar.is_perpendicular(self, other, tolerance=...)
+"""
+
 import numpy
 
 from vector.compute.planar import dot, rho

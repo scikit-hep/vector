@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Spatial.dot(self, other)
+"""
+
 import numpy
 
 from vector.compute.planar import x, y

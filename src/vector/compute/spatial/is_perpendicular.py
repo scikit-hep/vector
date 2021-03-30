@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Spatial.is_perpendicular(self, other, tolerance=...)
+"""
+
 import numpy
 
 from vector.compute.spatial import dot, mag

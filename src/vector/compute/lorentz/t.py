@@ -5,6 +5,13 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    @property
+    Lorentz.t(self)
+"""
+
 import numpy
 
 from vector.compute.lorentz import t2

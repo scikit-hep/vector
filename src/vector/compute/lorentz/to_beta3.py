@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Lorentz.to_beta3(self)
+"""
+
 import numpy
 
 from vector.compute.lorentz import t

@@ -5,6 +5,14 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Lorentz.transform4D(self, obj)
+
+where ``obj`` has ``obj["xx"]``, ``obj["xy"]``, etc.
+"""
+
 import numpy
 
 from vector.compute.lorentz import t

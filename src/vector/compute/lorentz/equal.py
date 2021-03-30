@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Lorentz.equal(self, other)
+"""
+
 import numpy
 
 from vector.compute.lorentz import t
