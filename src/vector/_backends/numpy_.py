@@ -10,7 +10,7 @@ import numpy
 
 import vector.backends.object_
 from vector._typeutils import ScalarCollection
-from vector.methods import (
+from vector._methods import (
     Azimuthal,
     AzimuthalRhoPhi,
     AzimuthalXY,

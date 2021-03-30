@@ -9,7 +9,7 @@ import numpy
 
 from vector.compute.planar import add, x, y
 from vector.compute.spatial import eta, theta, z
-from vector.methods import (
+from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
     LongitudinalEta,

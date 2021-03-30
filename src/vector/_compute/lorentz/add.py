@@ -9,7 +9,7 @@ import numpy
 
 from vector.compute.lorentz import t, tau
 from vector.compute.spatial import add
-from vector.methods import (
+from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
     LongitudinalEta,

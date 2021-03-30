@@ -8,7 +8,7 @@
 import numpy
 
 from vector.compute.planar import dot, rho
-from vector.methods import (
+from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
     _aztype,

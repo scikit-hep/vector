@@ -24,7 +24,7 @@ from vector.backends.object_ import (
     VectorObject3D,
     VectorObject4D,
 )
-from vector.methods import (
+from vector._methods import (
     Azimuthal,
     AzimuthalRhoPhi,
     AzimuthalXY,
