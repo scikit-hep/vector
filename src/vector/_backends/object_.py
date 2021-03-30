@@ -474,6 +474,17 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
         returns: typing.Any,
         num_vecargs: typing.Any,
     ) -> typing.Any:
+        """
+        Args:
+            result: Value or tuple of values from a compute function.
+            returns: Signature from a ``dispatch_map``.
+            num_vecargs (int): Number of vector arguments in the function
+                that would be treated on an equal footing (i.e. ``add``
+                has two, but ``rotate_axis`` has only one: the ``axis``
+                is secondary).
+
+        Wraps the raw result of a compute function as a scalar or a vector.
+        """
         if returns == [float] or returns == [bool]:
             return result
 
@@ -677,6 +688,17 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         returns: typing.Any,
         num_vecargs: typing.Any,
     ) -> typing.Any:
+        """
+        Args:
+            result: Value or tuple of values from a compute function.
+            returns: Signature from a ``dispatch_map``.
+            num_vecargs (int): Number of vector arguments in the function
+                that would be treated on an equal footing (i.e. ``add``
+                has two, but ``rotate_axis`` has only one: the ``axis``
+                is secondary).
+
+        Wraps the raw result of a compute function as a scalar or a vector.
+        """
         if returns == [float] or returns == [bool]:
             return result
 
@@ -1059,6 +1081,17 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         returns: typing.Any,
         num_vecargs: typing.Any,
     ) -> typing.Any:
+        """
+        Args:
+            result: Value or tuple of values from a compute function.
+            returns: Signature from a ``dispatch_map``.
+            num_vecargs (int): Number of vector arguments in the function
+                that would be treated on an equal footing (i.e. ``add``
+                has two, but ``rotate_axis`` has only one: the ``axis``
+                is secondary).
+
+        Wraps the raw result of a compute function as a scalar or a vector.
+        """
         if returns == [float] or returns == [bool]:
             return result
 

@@ -3,6 +3,27 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+"""
+Defines behaviors for Awkward Array. New arrays created with the
+
+.. code-block:: python
+
+    vector.Array(...)
+
+function will have these behaviors built in (and will pass them to any derived
+arrays).
+
+Alternatively, you can
+
+.. code-block:: python
+
+   vector.register_awkward()
+
+to install the behaviors globally, so that any record named ``Vector2D``,
+``Vector3D``, ``Vector4D``, ``Momentum2D``, ``Momentum3D``, or ``Momentum4D``
+will have these properties and methods.
+"""
+
 import numbers
 import typing
 
@@ -62,7 +83,12 @@ class CoordinatesAwkward:
 
 class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
     @classmethod
-    def from_fields(cls, array: typing.Any) -> "AzimuthalAwkward":
+    def from_fields(cls, array: ak.Array) -> "AzimuthalAwkward":
+        """
+        Create a :doc:`vector._backends.awkward_.AzimuthalAwkwardXY` or a
+        :doc:`vector._backends.awkward_.AzimuthalAwkwardRhoPhi`, depending on
+        the fields in ``array``.
+        """
         fields = ak.fields(array)
         if "x" in fields and "y" in fields:
             return AzimuthalAwkwardXY(array["x"], array["y"])
@@ -76,7 +102,13 @@ class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
 
 class LongitudinalAwkward(CoordinatesAwkward, Longitudinal):
     @classmethod
-    def from_fields(cls, array: typing.Any) -> "LongitudinalAwkward":
+    def from_fields(cls, array: ak.Array) -> "LongitudinalAwkward":
+        """
+        Create a :doc:`vector._backends.awkward_.LongitudinalAwkwardZ`, a
+        :doc:`vector._backends.awkward_.LongitudinalAwkwardTheta`, or a
+        :doc:`vector._backends.awkward_.LongitudinalAwkwardEta`, depending on
+        the fields in ``array``.
+        """
         fields = ak.fields(array)
         if "z" in fields:
             return LongitudinalAwkwardZ(array["z"])
@@ -92,7 +124,12 @@ class LongitudinalAwkward(CoordinatesAwkward, Longitudinal):
 
 class TemporalAwkward(CoordinatesAwkward, Temporal):
     @classmethod
-    def from_fields(cls, array: typing.Any) -> "TemporalAwkward":
+    def from_fields(cls, array: ak.Array) -> "TemporalAwkward":
+        """
+        Create a :doc:`vector._backends.awkward_.TemporalT` or a
+        :doc:`vector._backends.awkward_.TemporalTau`, depending on
+        the fields in ``array``.
+        """
         fields = ak.fields(array)
         if "t" in fields:
             return TemporalAwkwardT(array["t"])
@@ -221,6 +258,18 @@ class VectorAwkward:
         returns: typing.Any,
         num_vecargs: typing.Any,
     ) -> typing.Any:
+        """
+        Args:
+            result: Value or tuple of values from a compute function.
+            returns: Signature from a ``dispatch_map``.
+            num_vecargs (int): Number of vector arguments in the function
+                that would be treated on an equal footing (i.e. ``add``
+                has two, but ``rotate_axis`` has only one: the ``axis``
+                is secondary).
+
+        Wraps the raw result of a compute function as an array of scalars or an
+        array of vectors.
+        """
         if returns == [float] or returns == [bool]:
             return result
 
@@ -537,6 +586,9 @@ class VectorArray2D(VectorAwkward2D, ak.Array):
         atol: ScalarCollection = 1e-08,
         equal_nan: BoolCollection = False,
     ) -> BoolCollection:
+        """
+        Like ``np.ndarray.allclose``, but for VectorArray2D.
+        """
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
 
@@ -558,6 +610,9 @@ class VectorArray3D(VectorAwkward3D, ak.Array):
         atol: ScalarCollection = 1e-08,
         equal_nan: BoolCollection = False,
     ) -> BoolCollection:
+        """
+        Like ``np.ndarray.allclose``, but for VectorArray3D.
+        """
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
 
@@ -579,6 +634,9 @@ class VectorArray4D(VectorAwkward4D, ak.Array):
         atol: ScalarCollection = 1e-08,
         equal_nan: BoolCollection = False,
     ) -> BoolCollection:
+        """
+        Like ``np.ndarray.allclose``, but for VectorArray4D.
+        """
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
 

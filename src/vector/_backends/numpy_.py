@@ -407,6 +407,9 @@ class VectorNumpy(Vector):
         atol: typing.Union[float, numpy.ndarray] = 1e-08,
         equal_nan: typing.Union[bool, numpy.ndarray] = False,
     ) -> numpy.ndarray:
+        """
+        Like ``np.ndarray.allclose``, but for VectorNumpy.
+        """
         return self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan).all()
 
     def __eq__(self, other: typing.Any) -> typing.Any:
@@ -666,6 +669,18 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):
         returns: typing.Any,
         num_vecargs: typing.Any,
     ) -> typing.Any:
+        """
+        Args:
+            result: Value or tuple of values from a compute function.
+            returns: Signature from a ``dispatch_map``.
+            num_vecargs (int): Number of vector arguments in the function
+                that would be treated on an equal footing (i.e. ``add``
+                has two, but ``rotate_axis`` has only one: the ``axis``
+                is secondary).
+
+        Wraps the raw result of a compute function as an array of scalars or an
+        array of vectors.
+        """
         if returns == [float] or returns == [bool]:
             return result
 
@@ -884,6 +899,18 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
         returns: typing.Any,
         num_vecargs: typing.Any,
     ) -> typing.Any:
+        """
+        Args:
+            result: Value or tuple of values from a compute function.
+            returns: Signature from a ``dispatch_map``.
+            num_vecargs (int): Number of vector arguments in the function
+                that would be treated on an equal footing (i.e. ``add``
+                has two, but ``rotate_axis`` has only one: the ``axis``
+                is secondary).
+
+        Wraps the raw result of a compute function as an array of scalars or an
+        array of vectors.
+        """
         if returns == [float] or returns == [bool]:
             return result
 
@@ -1130,6 +1157,18 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
         returns: typing.Any,
         num_vecargs: typing.Any,
     ) -> typing.Any:
+        """
+        Args:
+            result: Value or tuple of values from a compute function.
+            returns: Signature from a ``dispatch_map``.
+            num_vecargs (int): Number of vector arguments in the function
+                that would be treated on an equal footing (i.e. ``add``
+                has two, but ``rotate_axis`` has only one: the ``axis``
+                is secondary).
+
+        Wraps the raw result of a compute function as an array of scalars or an
+        array of vectors.
+        """
         if returns == [float] or returns == [bool]:
             return result
 
