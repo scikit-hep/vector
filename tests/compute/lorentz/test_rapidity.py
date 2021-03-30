@@ -5,112 +5,112 @@
 
 import pytest
 
-import vector.backends.object_
+import vector._backends.object_
 
 
 def test_xy_z_t():
-    vec = vector.backends.object_.VectorObject4D(
-        vector.backends.object_.AzimuthalObjectXY(3, 4),
-        vector.backends.object_.LongitudinalObjectZ(10),
-        vector.backends.object_.TemporalObjectT(20),
+    vec = vector._backends.object_.VectorObject4D(
+        vector._backends.object_.AzimuthalObjectXY(3, 4),
+        vector._backends.object_.LongitudinalObjectZ(10),
+        vector._backends.object_.TemporalObjectT(20),
     )
     assert vec.rapidity == pytest.approx(0.5493061443340549)
 
 
 def test_xy_z_tau():
-    vec = vector.backends.object_.VectorObject4D(
-        vector.backends.object_.AzimuthalObjectXY(3, 4),
-        vector.backends.object_.LongitudinalObjectZ(10),
-        vector.backends.object_.TemporalObjectTau(16.583123951777),
+    vec = vector._backends.object_.VectorObject4D(
+        vector._backends.object_.AzimuthalObjectXY(3, 4),
+        vector._backends.object_.LongitudinalObjectZ(10),
+        vector._backends.object_.TemporalObjectTau(16.583123951777),
     )
     assert vec.rapidity == pytest.approx(0.5493061443340549)
 
 
 def test_xy_theta_t():
-    vec = vector.backends.object_.VectorObject4D(
-        vector.backends.object_.AzimuthalObjectXY(3, 4),
-        vector.backends.object_.LongitudinalObjectTheta(0.4636476090008061),
-        vector.backends.object_.TemporalObjectT(20),
+    vec = vector._backends.object_.VectorObject4D(
+        vector._backends.object_.AzimuthalObjectXY(3, 4),
+        vector._backends.object_.LongitudinalObjectTheta(0.4636476090008061),
+        vector._backends.object_.TemporalObjectT(20),
     )
     assert vec.rapidity == pytest.approx(0.5493061443340549)
 
 
 def test_xy_theta_tau():
-    vec = vector.backends.object_.VectorObject4D(
-        vector.backends.object_.AzimuthalObjectXY(3, 4),
-        vector.backends.object_.LongitudinalObjectTheta(0.4636476090008061),
-        vector.backends.object_.TemporalObjectTau(16.583123951777),
+    vec = vector._backends.object_.VectorObject4D(
+        vector._backends.object_.AzimuthalObjectXY(3, 4),
+        vector._backends.object_.LongitudinalObjectTheta(0.4636476090008061),
+        vector._backends.object_.TemporalObjectTau(16.583123951777),
     )
     assert vec.rapidity == pytest.approx(0.5493061443340549)
 
 
 def test_xy_eta_t():
-    vec = vector.backends.object_.VectorObject4D(
-        vector.backends.object_.AzimuthalObjectXY(3, 4),
-        vector.backends.object_.LongitudinalObjectEta(1.4436354751788103),
-        vector.backends.object_.TemporalObjectT(20),
+    vec = vector._backends.object_.VectorObject4D(
+        vector._backends.object_.AzimuthalObjectXY(3, 4),
+        vector._backends.object_.LongitudinalObjectEta(1.4436354751788103),
+        vector._backends.object_.TemporalObjectT(20),
     )
     assert vec.rapidity == pytest.approx(0.5493061443340549)
 
 
 def test_xy_eta_tau():
-    vec = vector.backends.object_.VectorObject4D(
-        vector.backends.object_.AzimuthalObjectXY(3, 4),
-        vector.backends.object_.LongitudinalObjectEta(1.4436354751788103),
-        vector.backends.object_.TemporalObjectTau(16.583123951777),
+    vec = vector._backends.object_.VectorObject4D(
+        vector._backends.object_.AzimuthalObjectXY(3, 4),
+        vector._backends.object_.LongitudinalObjectEta(1.4436354751788103),
+        vector._backends.object_.TemporalObjectTau(16.583123951777),
     )
     assert vec.rapidity == pytest.approx(0.5493061443340549)
 
 
 def test_rhophi_z_t():
-    vec = vector.backends.object_.VectorObject4D(
-        vector.backends.object_.AzimuthalObjectRhoPhi(5, 0),
-        vector.backends.object_.LongitudinalObjectZ(10),
-        vector.backends.object_.TemporalObjectT(20),
+    vec = vector._backends.object_.VectorObject4D(
+        vector._backends.object_.AzimuthalObjectRhoPhi(5, 0),
+        vector._backends.object_.LongitudinalObjectZ(10),
+        vector._backends.object_.TemporalObjectT(20),
     )
     assert vec.rapidity == pytest.approx(0.5493061443340549)
 
 
 def test_rhophi_z_tau():
-    vec = vector.backends.object_.VectorObject4D(
-        vector.backends.object_.AzimuthalObjectRhoPhi(5, 0),
-        vector.backends.object_.LongitudinalObjectZ(10),
-        vector.backends.object_.TemporalObjectTau(16.583123951777),
+    vec = vector._backends.object_.VectorObject4D(
+        vector._backends.object_.AzimuthalObjectRhoPhi(5, 0),
+        vector._backends.object_.LongitudinalObjectZ(10),
+        vector._backends.object_.TemporalObjectTau(16.583123951777),
     )
     assert vec.rapidity == pytest.approx(0.5493061443340549)
 
 
 def test_rhophi_theta_t():
-    vec = vector.backends.object_.VectorObject4D(
-        vector.backends.object_.AzimuthalObjectRhoPhi(5, 0),
-        vector.backends.object_.LongitudinalObjectTheta(0.4636476090008061),
-        vector.backends.object_.TemporalObjectT(20),
+    vec = vector._backends.object_.VectorObject4D(
+        vector._backends.object_.AzimuthalObjectRhoPhi(5, 0),
+        vector._backends.object_.LongitudinalObjectTheta(0.4636476090008061),
+        vector._backends.object_.TemporalObjectT(20),
     )
     assert vec.rapidity == pytest.approx(0.5493061443340549)
 
 
 def test_rhophi_theta_tau():
-    vec = vector.backends.object_.VectorObject4D(
-        vector.backends.object_.AzimuthalObjectRhoPhi(5, 0),
-        vector.backends.object_.LongitudinalObjectTheta(0.4636476090008061),
-        vector.backends.object_.TemporalObjectTau(16.583123951777),
+    vec = vector._backends.object_.VectorObject4D(
+        vector._backends.object_.AzimuthalObjectRhoPhi(5, 0),
+        vector._backends.object_.LongitudinalObjectTheta(0.4636476090008061),
+        vector._backends.object_.TemporalObjectTau(16.583123951777),
     )
     assert vec.rapidity == pytest.approx(0.5493061443340549)
 
 
 def test_rhophi_eta_t():
-    vec = vector.backends.object_.VectorObject4D(
-        vector.backends.object_.AzimuthalObjectRhoPhi(5, 0),
-        vector.backends.object_.LongitudinalObjectEta(1.4436354751788103),
-        vector.backends.object_.TemporalObjectT(20),
+    vec = vector._backends.object_.VectorObject4D(
+        vector._backends.object_.AzimuthalObjectRhoPhi(5, 0),
+        vector._backends.object_.LongitudinalObjectEta(1.4436354751788103),
+        vector._backends.object_.TemporalObjectT(20),
     )
     assert vec.rapidity == pytest.approx(0.5493061443340549)
 
 
 def test_rhophi_eta_tau():
-    vec = vector.backends.object_.VectorObject4D(
-        vector.backends.object_.AzimuthalObjectRhoPhi(5, 0),
-        vector.backends.object_.LongitudinalObjectEta(1.4436354751788103),
-        vector.backends.object_.TemporalObjectTau(16.583123951777),
+    vec = vector._backends.object_.VectorObject4D(
+        vector._backends.object_.AzimuthalObjectRhoPhi(5, 0),
+        vector._backends.object_.LongitudinalObjectEta(1.4436354751788103),
+        vector._backends.object_.TemporalObjectTau(16.583123951777),
     )
     assert vec.rapidity == pytest.approx(0.5493061443340549)

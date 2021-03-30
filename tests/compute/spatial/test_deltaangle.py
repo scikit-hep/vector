@@ -8,18 +8,18 @@ import math
 import numpy
 import pytest
 
-import vector.backends.numpy_
-import vector.backends.object_
+import vector._backends.numpy_
+import vector._backends.object_
 
 
 def test_spatial_object():
-    v1 = vector.backends.object_.VectorObject3D(
-        vector.backends.object_.AzimuthalObjectXY(0.1, 0.2),
-        vector.backends.object_.LongitudinalObjectZ(0.3),
+    v1 = vector._backends.object_.VectorObject3D(
+        vector._backends.object_.AzimuthalObjectXY(0.1, 0.2),
+        vector._backends.object_.LongitudinalObjectZ(0.3),
     )
-    v2 = vector.backends.object_.VectorObject3D(
-        vector.backends.object_.AzimuthalObjectXY(0.4, 0.5),
-        vector.backends.object_.LongitudinalObjectZ(0.6),
+    v2 = vector._backends.object_.VectorObject3D(
+        vector._backends.object_.AzimuthalObjectXY(0.4, 0.5),
+        vector._backends.object_.LongitudinalObjectZ(0.6),
     )
     assert v1.deltaangle(v2) == pytest.approx(math.acos(0.32))
 
@@ -35,11 +35,11 @@ def test_spatial_object():
 
 
 def test_spatial_numpy():
-    v1 = vector.backends.numpy_.VectorNumpy3D(
+    v1 = vector._backends.numpy_.VectorNumpy3D(
         [(0.1, 0.2, 0.3)],
         dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
     )
-    v2 = vector.backends.numpy_.VectorNumpy3D(
+    v2 = vector._backends.numpy_.VectorNumpy3D(
         [(0.4, 0.5, 0.6)],
         dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
     )
@@ -55,15 +55,15 @@ def test_spatial_numpy():
 
 
 def test_lorentz_object():
-    v1 = vector.backends.object_.VectorObject4D(
-        vector.backends.object_.AzimuthalObjectXY(0.1, 0.2),
-        vector.backends.object_.LongitudinalObjectZ(0.3),
-        vector.backends.object_.TemporalObjectT(99),
+    v1 = vector._backends.object_.VectorObject4D(
+        vector._backends.object_.AzimuthalObjectXY(0.1, 0.2),
+        vector._backends.object_.LongitudinalObjectZ(0.3),
+        vector._backends.object_.TemporalObjectT(99),
     )
-    v2 = vector.backends.object_.VectorObject4D(
-        vector.backends.object_.AzimuthalObjectXY(0.4, 0.5),
-        vector.backends.object_.LongitudinalObjectZ(0.6),
-        vector.backends.object_.TemporalObjectT(99),
+    v2 = vector._backends.object_.VectorObject4D(
+        vector._backends.object_.AzimuthalObjectXY(0.4, 0.5),
+        vector._backends.object_.LongitudinalObjectZ(0.6),
+        vector._backends.object_.TemporalObjectT(99),
     )
     assert v1.deltaangle(v2) == pytest.approx(math.acos(0.32))
 
@@ -100,7 +100,7 @@ def test_lorentz_object():
 
 
 def test_lorentz_numpy():
-    v1 = vector.backends.numpy_.VectorNumpy4D(
+    v1 = vector._backends.numpy_.VectorNumpy4D(
         [(0.1, 0.2, 0.3, 99)],
         dtype=[
             ("x", numpy.float64),
@@ -109,7 +109,7 @@ def test_lorentz_numpy():
             ("t", numpy.float64),
         ],
     )
-    v2 = vector.backends.numpy_.VectorNumpy4D(
+    v2 = vector._backends.numpy_.VectorNumpy4D(
         [(0.4, 0.5, 0.6, 99)],
         dtype=[
             ("x", numpy.float64),

@@ -6,12 +6,12 @@
 import pytest
 
 import vector
-import vector.backends.object_
+import vector._backends.object_
 
 numba = pytest.importorskip("numba")
 
 
-import vector.backends.numba_numpy  # noqa: E402
+import vector._backends.numba_numpy  # noqa: E402
 
 
 @pytest.mark.numba
@@ -21,5 +21,5 @@ def test_pass_through():
         return obj
 
     array = vector.array({"px": [1, 2, 3], "py": [10, 20, 30]})
-    assert isinstance(array, vector.backends.numpy_.VectorNumpy)
-    assert isinstance(pass_through(array), vector.backends.numpy_.VectorNumpy)
+    assert isinstance(array, vector._backends.numpy_.VectorNumpy)
+    assert isinstance(pass_through(array), vector._backends.numpy_.VectorNumpy)

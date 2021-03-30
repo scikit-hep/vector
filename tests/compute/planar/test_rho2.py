@@ -7,18 +7,18 @@ import math
 
 import pytest
 
-import vector.backends.object_
+import vector._backends.object_
 
 
 def test_xy():
-    vec = vector.backends.object_.VectorObject2D(
-        vector.backends.object_.AzimuthalObjectXY(3, 4)
+    vec = vector._backends.object_.VectorObject2D(
+        vector._backends.object_.AzimuthalObjectXY(3, 4)
     )
     assert vec.rho2 == pytest.approx(25)
 
 
 def test_rhophi():
-    vec = vector.backends.object_.VectorObject2D(
-        vector.backends.object_.AzimuthalObjectRhoPhi(5, math.atan2(4, 3))
+    vec = vector._backends.object_.VectorObject2D(
+        vector._backends.object_.AzimuthalObjectRhoPhi(5, math.atan2(4, 3))
     )
     assert vec.rho2 == pytest.approx(25)
