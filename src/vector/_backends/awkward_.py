@@ -29,6 +29,7 @@ manages this non-strictness well.
 """
 
 import numbers
+import types
 import typing
 
 import awkward as ak
@@ -82,7 +83,7 @@ behavior: typing.Any = {}
 
 
 class CoordinatesAwkward:
-    lib = numpy
+    lib: types.ModuleType = numpy
 
 
 class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
@@ -247,7 +248,7 @@ def _class_to_name(cls: typing.Type[VectorProtocol]) -> str:
 
 
 class VectorAwkward:
-    lib = numpy
+    lib: types.ModuleType = numpy
 
     def __getitem__(
         self, where: typing.Any
