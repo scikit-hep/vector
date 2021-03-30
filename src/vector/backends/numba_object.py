@@ -1432,7 +1432,7 @@ def dimension_of(v):
     elif isinstance(v, VectorObject3DType):
         return 3
     elif isinstance(v, VectorObject4DType):
-        return 3
+        return 4
 
 
 def flavor_of(v1, v2):
