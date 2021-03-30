@@ -26,7 +26,9 @@ def test_spatial_object():
         out = tvec.rotate_quaternion(0.1, 0.2, 0.3, 0.4)
         assert isinstance(out, vector._backends.object_.VectorObject3D)
         assert isinstance(out.azimuthal, vector._backends.object_.AzimuthalObjectXY)
-        assert isinstance(out.longitudinal, vector._backends.object_.LongitudinalObjectZ)
+        assert isinstance(
+            out.longitudinal, vector._backends.object_.LongitudinalObjectZ
+        )
         assert out.x == pytest.approx(0.078)
         assert out.y == pytest.approx(0.18)
         assert out.z == pytest.approx(0.246)

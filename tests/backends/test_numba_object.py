@@ -54,7 +54,9 @@ def test_VectorObjectType():
         assert (sys.getrefcount(obj), sys.getrefcount(obj.azimuthal)) == (2, 2)
         if class_refs is None:
             class_refs = sys.getrefcount(vector._backends.object_.VectorObject2D)
-        assert class_refs + 1 == sys.getrefcount(vector._backends.object_.VectorObject2D)
+        assert class_refs + 1 == sys.getrefcount(
+            vector._backends.object_.VectorObject2D
+        )
 
     class_refs = None
     for _ in range(10):
@@ -63,7 +65,9 @@ def test_VectorObjectType():
         assert (sys.getrefcount(a), sys.getrefcount(a.azimuthal)) == (2, 2)
         if class_refs is None:
             class_refs = sys.getrefcount(vector._backends.object_.VectorObject2D)
-        assert class_refs + 1 == sys.getrefcount(vector._backends.object_.VectorObject2D)
+        assert class_refs + 1 == sys.getrefcount(
+            vector._backends.object_.VectorObject2D
+        )
 
     class_refs = None
     for _ in range(10):
@@ -77,7 +81,9 @@ def test_VectorObjectType():
         ) == (2, 2, 2, 2)
         if class_refs is None:
             class_refs = sys.getrefcount(vector._backends.object_.VectorObject2D)
-        assert class_refs + 1 == sys.getrefcount(vector._backends.object_.VectorObject2D)
+        assert class_refs + 1 == sys.getrefcount(
+            vector._backends.object_.VectorObject2D
+        )
 
     # These tests just check that the rest of the implementations are sane.
 
@@ -483,7 +489,9 @@ def test_conversions():
         if isinstance(v, vector._methods.Momentum):
             assert isinstance(out, vector._backends.object_.MomentumObject3D)
         assert isinstance(out.azimuthal, vector._backends.object_.AzimuthalObjectXY)
-        assert isinstance(out.longitudinal, vector._backends.object_.LongitudinalObjectZ)
+        assert isinstance(
+            out.longitudinal, vector._backends.object_.LongitudinalObjectZ
+        )
         assert out.x == pytest.approx(1.1)
         assert out.y == pytest.approx(2.2)
         if isinstance(v, vector._backends.object_.VectorObject2D):
@@ -496,7 +504,9 @@ def test_conversions():
         if isinstance(v, vector._methods.Momentum):
             assert isinstance(out, vector._backends.object_.MomentumObject3D)
         assert isinstance(out.azimuthal, vector._backends.object_.AzimuthalObjectRhoPhi)
-        assert isinstance(out.longitudinal, vector._backends.object_.LongitudinalObjectZ)
+        assert isinstance(
+            out.longitudinal, vector._backends.object_.LongitudinalObjectZ
+        )
         assert out.x == pytest.approx(1.1)
         assert out.y == pytest.approx(2.2)
         if isinstance(v, vector._backends.object_.VectorObject2D):

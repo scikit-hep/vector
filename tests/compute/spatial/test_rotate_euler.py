@@ -26,7 +26,9 @@ def test_spatial_object():
         out = tvec.rotate_euler(0.1, 0.2, 0.3)
         assert isinstance(out, vector._backends.object_.VectorObject3D)
         assert isinstance(out.azimuthal, vector._backends.object_.AzimuthalObjectXY)
-        assert isinstance(out.longitudinal, vector._backends.object_.LongitudinalObjectZ)
+        assert isinstance(
+            out.longitudinal, vector._backends.object_.LongitudinalObjectZ
+        )
         assert out.x == pytest.approx(0.5956646364506655)
         assert out.y == pytest.approx(0.409927258162962)
         assert out.z == pytest.approx(0.4971350761081869)
