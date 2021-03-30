@@ -106,6 +106,7 @@ def _setitem(
             )
 
 
+@typing.no_type_check
 def _getitem(
     array: typing.Union["VectorNumpy2D", "VectorNumpy3D", "VectorNumpy4D"],
     where: typing.Any,
@@ -212,7 +213,7 @@ class TemporalNumpy(CoordinatesNumpy, Temporal):
 
 
 class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, numpy.ndarray):
-    ObjectClass = vector.backends.object_.AzimuthalObjectXY
+    ObjectClass = vector.backends.object_.AzimuthalObjectXY  # type: ignore
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "AzimuthalNumpyXY":
         return numpy.array(*args, **kwargs).view(cls)
@@ -241,7 +242,7 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, numpy.ndarray):
 
 
 class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, numpy.ndarray):
-    ObjectClass = vector.backends.object_.AzimuthalObjectRhoPhi
+    ObjectClass = vector.backends.object_.AzimuthalObjectRhoPhi  # type: ignore
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "AzimuthalNumpyRhoPhi":
         return numpy.array(*args, **kwargs).view(cls)
@@ -270,7 +271,7 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, numpy.ndarray):
 
 
 class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, numpy.ndarray):
-    ObjectClass = vector.backends.object_.LongitudinalObjectZ
+    ObjectClass = vector.backends.object_.LongitudinalObjectZ  # type: ignore
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "LongitudinalNumpyZ":
         return numpy.array(*args, **kwargs).view(cls)
@@ -295,7 +296,7 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, numpy.ndarray):
 
 
 class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, numpy.ndarray):
-    ObjectClass = vector.backends.object_.LongitudinalObjectTheta
+    ObjectClass = vector.backends.object_.LongitudinalObjectTheta  # type: ignore
 
     def __new__(
         cls, *args: typing.Any, **kwargs: typing.Any
@@ -322,7 +323,7 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, numpy.ndarray
 
 
 class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, numpy.ndarray):
-    ObjectClass = vector.backends.object_.LongitudinalObjectEta
+    ObjectClass = vector.backends.object_.LongitudinalObjectEta  # type: ignore
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "LongitudinalNumpyEta":
         return numpy.array(*args, **kwargs).view(cls)
@@ -347,7 +348,7 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, numpy.ndarray):
 
 
 class TemporalNumpyT(TemporalNumpy, TemporalT, numpy.ndarray):
-    ObjectClass = vector.backends.object_.TemporalObjectT
+    ObjectClass = vector.backends.object_.TemporalObjectT  # type: ignore
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "TemporalNumpyT":
         return numpy.array(*args, **kwargs).view(cls)
@@ -372,7 +373,7 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, numpy.ndarray):
 
 
 class TemporalNumpyTau(TemporalNumpy, TemporalTau, numpy.ndarray):
-    ObjectClass = vector.backends.object_.TemporalObjectTau
+    ObjectClass = vector.backends.object_.TemporalObjectTau  # type: ignore
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "TemporalNumpyTau":
         return numpy.array(*args, **kwargs).view(cls)

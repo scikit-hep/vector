@@ -5,25 +5,28 @@
 
 import typing
 
-from .backends.numpy_ import (  # noqa: 401
+from vector.backends.awkward_ import VectorAwkward  # noqa: 401
+from vector.backends.numpy_ import (  # noqa: 401
     MomentumNumpy2D,
     MomentumNumpy3D,
     MomentumNumpy4D,
+    VectorNumpy,
     VectorNumpy2D,
     VectorNumpy3D,
     VectorNumpy4D,
     array,
 )
-from .backends.object_ import (  # noqa: 401
+from vector.backends.object_ import (  # noqa: 401
     MomentumObject2D,
     MomentumObject3D,
     MomentumObject4D,
+    VectorObject,
     VectorObject2D,
     VectorObject3D,
     VectorObject4D,
     obj,
 )
-from .methods import (  # noqa: 401
+from vector.methods import (  # noqa: 401
     Azimuthal,
     AzimuthalRhoPhi,
     AzimuthalXY,
@@ -32,7 +35,10 @@ from .methods import (  # noqa: 401
     LongitudinalEta,
     LongitudinalTheta,
     LongitudinalZ,
+    Lorentz,
     Momentum,
+    Planar,
+    Spatial,
     Temporal,
     TemporalT,
     TemporalTau,
@@ -42,8 +48,7 @@ from .methods import (  # noqa: 401
     Vector4D,
     dim,
 )
-
-# from .version import version as __version__
+from vector.version import version as __version__  # noqa: 401
 
 
 def register_numba() -> None:

@@ -11,6 +11,7 @@ import numpy
 
 import vector
 from vector._typeutils import BoolCollection, ScalarCollection
+from vector.backends.numpy_ import VectorNumpy2D, VectorNumpy3D, VectorNumpy4D
 from vector.backends.object_ import (
     AzimuthalObjectRhoPhi,
     AzimuthalObjectXY,
@@ -702,6 +703,10 @@ behavior[numpy.power, "Momentum4D", numbers.Real] = (
     lambda v, expo: v.tau2 if expo == 2 else v.tau ** expo
 )
 
+behavior["__cast__", VectorNumpy2D] = lambda v: vector.Array(v)
+behavior["__cast__", VectorNumpy3D] = lambda v: vector.Array(v)
+behavior["__cast__", VectorNumpy4D] = lambda v: vector.Array(v)
+
 for left in (
     "Vector2D",
     "Vector3D",
@@ -709,6 +714,9 @@ for left in (
     "Momentum2D",
     "Momentum3D",
     "Momentum4D",
+    VectorObject2D,
+    VectorObject3D,
+    VectorObject4D,
 ):
     for right in (
         "Vector2D",
@@ -717,12 +725,16 @@ for left in (
         "Momentum2D",
         "Momentum3D",
         "Momentum4D",
+        VectorObject2D,
+        VectorObject3D,
+        VectorObject4D,
     ):
-        behavior[numpy.add, left, right] = lambda v1, v2: v1.add(v2)
-        behavior[numpy.subtract, left, right] = lambda v1, v2: v1.subtract(v2)
-        behavior[numpy.matmul, left, right] = lambda v1, v2: v1.dot(v2)
-        behavior[numpy.equal, left, right] = lambda v1, v2: v1.equal(v2)
-        behavior[numpy.not_equal, left, right] = lambda v1, v2: v1.not_equal(v2)
+        if not (isinstance(left, type) and isinstance(right, type)):
+            behavior[numpy.add, left, right] = lambda v1, v2: v1.add(v2)
+            behavior[numpy.subtract, left, right] = lambda v1, v2: v1.subtract(v2)
+            behavior[numpy.matmul, left, right] = lambda v1, v2: v1.dot(v2)
+            behavior[numpy.equal, left, right] = lambda v1, v2: v1.equal(v2)
+            behavior[numpy.not_equal, left, right] = lambda v1, v2: v1.not_equal(v2)
 
 for name in (
     "Vector2D",
@@ -975,7 +987,7 @@ def _numba_typer_Momentum4D(viewtype: typing.Any) -> typing.Any:
 def _numba_lower(
     context: typing.Any, builder: typing.Any, sig: typing.Any, args: typing.Any
 ) -> typing.Any:
-    from vector.backends.numba_object import (
+    from vector.backends.numba_object import (  # type: ignore
         _awkward_numba_eta,
         _awkward_numba_rhophi,
         _awkward_numba_t,

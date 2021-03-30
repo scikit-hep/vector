@@ -5,7 +5,7 @@
 
 import typing
 
-from ._typeutils import (
+from vector._typeutils import (
     BoolCollection,
     ScalarCollection,
     TransformProtocol2D,
@@ -661,309 +661,309 @@ class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
 
 class Vector(VectorProtocol):
     def to_xy(self) -> VectorProtocolPlanar:
-        from .compute import planar
+        from vector.compute import planar
 
         return self._wrap_result(
             type(self),
-            (planar.x.dispatch(self), planar.y.dispatch(self)),
+            (planar.x.dispatch(self), planar.y.dispatch(self)),  # type: ignore
             [AzimuthalXY, None],
             1,
         )
 
     def to_rhophi(self) -> VectorProtocolPlanar:
-        from .compute import planar
+        from vector.compute import planar
 
         return self._wrap_result(
             type(self),
-            (planar.rho.dispatch(self), planar.phi.dispatch(self)),
+            (planar.rho.dispatch(self), planar.phi.dispatch(self)),  # type: ignore
             [AzimuthalRhoPhi, None],
             1,
         )
 
     def to_xyz(self) -> VectorProtocolSpatial:
-        from .compute import planar, spatial
+        from vector.compute import planar, spatial
 
         lcoord = 0
         if isinstance(self, (Vector3D, Vector4D)):
-            lcoord = spatial.z.dispatch(self)
+            lcoord = spatial.z.dispatch(self)  # type: ignore
 
         return self._wrap_result(
             type(self),
-            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord),
+            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord),  # type: ignore
             [AzimuthalXY, LongitudinalZ, None],
             1,
         )
 
     def to_xytheta(self) -> VectorProtocolSpatial:
-        from .compute import planar, spatial
+        from vector.compute import planar, spatial
 
         lcoord = 0
         if isinstance(self, (Vector3D, Vector4D)):
-            lcoord = spatial.theta.dispatch(self)
+            lcoord = spatial.theta.dispatch(self)  # type: ignore
 
         return self._wrap_result(
             type(self),
-            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord),
+            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord),  # type: ignore
             [AzimuthalXY, LongitudinalTheta, None],
             1,
         )
 
     def to_xyeta(self) -> VectorProtocolSpatial:
-        from .compute import planar, spatial
+        from vector.compute import planar, spatial
 
         lcoord = 0
         if isinstance(self, (Vector3D, Vector4D)):
-            lcoord = spatial.eta.dispatch(self)
+            lcoord = spatial.eta.dispatch(self)  # type: ignore
 
         return self._wrap_result(
             type(self),
-            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord),
+            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord),  # type: ignore
             [AzimuthalXY, LongitudinalEta, None],
             1,
         )
 
     def to_rhophiz(self) -> VectorProtocolSpatial:
-        from .compute import planar, spatial
+        from vector.compute import planar, spatial
 
         lcoord = 0
         if isinstance(self, (Vector3D, Vector4D)):
-            lcoord = spatial.z.dispatch(self)
+            lcoord = spatial.z.dispatch(self)  # type: ignore
 
         return self._wrap_result(
             type(self),
-            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord),
+            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord),  # type: ignore
             [AzimuthalRhoPhi, LongitudinalZ, None],
             1,
         )
 
     def to_rhophitheta(self) -> VectorProtocolSpatial:
-        from .compute import planar, spatial
+        from vector.compute import planar, spatial
 
         lcoord = 0
         if isinstance(self, (Vector3D, Vector4D)):
-            lcoord = spatial.theta.dispatch(self)
+            lcoord = spatial.theta.dispatch(self)  # type: ignore
 
         return self._wrap_result(
             type(self),
-            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord),
+            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord),  # type: ignore
             [AzimuthalRhoPhi, LongitudinalTheta, None],
             1,
         )
 
     def to_rhophieta(self) -> VectorProtocolSpatial:
-        from .compute import planar, spatial
+        from vector.compute import planar, spatial
 
         lcoord = 0
         if isinstance(self, (Vector3D, Vector4D)):
-            lcoord = spatial.eta.dispatch(self)
+            lcoord = spatial.eta.dispatch(self)  # type: ignore
 
         return self._wrap_result(
             type(self),
-            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord),
+            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord),  # type: ignore
             [AzimuthalRhoPhi, LongitudinalEta, None],
             1,
         )
 
     def to_xyzt(self) -> VectorProtocolLorentz:
-        from .compute import lorentz, planar, spatial
+        from vector.compute import lorentz, planar, spatial
 
         lcoord = 0
         if isinstance(self, (Vector3D, Vector4D)):
-            lcoord = spatial.z.dispatch(self)
+            lcoord = spatial.z.dispatch(self)  # type: ignore
         tcoord = 0
         if isinstance(self, Vector4D):
-            tcoord = lorentz.t.dispatch(self)
+            tcoord = lorentz.t.dispatch(self)  # type: ignore
 
         return self._wrap_result(
             type(self),
-            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord, tcoord),
+            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord, tcoord),  # type: ignore
             [AzimuthalXY, LongitudinalZ, TemporalT],
             1,
         )
 
     def to_xyztau(self) -> VectorProtocolLorentz:
-        from .compute import lorentz, planar, spatial
+        from vector.compute import lorentz, planar, spatial
 
         lcoord = 0
         if isinstance(self, (Vector3D, Vector4D)):
-            lcoord = spatial.z.dispatch(self)
+            lcoord = spatial.z.dispatch(self)  # type: ignore
         tcoord = 0
         if isinstance(self, Vector4D):
-            tcoord = lorentz.tau.dispatch(self)
+            tcoord = lorentz.tau.dispatch(self)  # type: ignore
 
         return self._wrap_result(
             type(self),
-            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord, tcoord),
+            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord, tcoord),  # type: ignore
             [AzimuthalXY, LongitudinalZ, TemporalTau],
             1,
         )
 
     def to_xythetat(self) -> VectorProtocolLorentz:
-        from .compute import lorentz, planar, spatial
+        from vector.compute import lorentz, planar, spatial
 
         lcoord = 0
         if isinstance(self, (Vector3D, Vector4D)):
-            lcoord = spatial.theta.dispatch(self)
+            lcoord = spatial.theta.dispatch(self)  # type: ignore
         tcoord = 0
         if isinstance(self, Vector4D):
-            tcoord = lorentz.t.dispatch(self)
+            tcoord = lorentz.t.dispatch(self)  # type: ignore
 
         return self._wrap_result(
             type(self),
-            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord, tcoord),
+            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord, tcoord),  # type: ignore
             [AzimuthalXY, LongitudinalTheta, TemporalT],
             1,
         )
 
     def to_xythetatau(self) -> VectorProtocolLorentz:
-        from .compute import lorentz, planar, spatial
+        from vector.compute import lorentz, planar, spatial
 
         lcoord = 0
         if isinstance(self, (Vector3D, Vector4D)):
-            lcoord = spatial.theta.dispatch(self)
+            lcoord = spatial.theta.dispatch(self)  # type: ignore
         tcoord = 0
         if isinstance(self, Vector4D):
-            tcoord = lorentz.tau.dispatch(self)
+            tcoord = lorentz.tau.dispatch(self)  # type: ignore
 
         return self._wrap_result(
             type(self),
-            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord, tcoord),
+            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord, tcoord),  # type: ignore
             [AzimuthalXY, LongitudinalTheta, TemporalTau],
             1,
         )
 
     def to_xyetat(self) -> VectorProtocolLorentz:
-        from .compute import lorentz, planar, spatial
+        from vector.compute import lorentz, planar, spatial
 
         lcoord = 0
         if isinstance(self, (Vector3D, Vector4D)):
-            lcoord = spatial.eta.dispatch(self)
+            lcoord = spatial.eta.dispatch(self)  # type: ignore
         tcoord = 0
         if isinstance(self, Vector4D):
-            tcoord = lorentz.t.dispatch(self)
+            tcoord = lorentz.t.dispatch(self)  # type: ignore
 
         return self._wrap_result(
             type(self),
-            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord, tcoord),
+            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord, tcoord),  # type: ignore
             [AzimuthalXY, LongitudinalEta, TemporalT],
             1,
         )
 
     def to_xyetatau(self) -> VectorProtocolLorentz:
-        from .compute import lorentz, planar, spatial
+        from vector.compute import lorentz, planar, spatial
 
         lcoord = 0
         if isinstance(self, (Vector3D, Vector4D)):
-            lcoord = spatial.eta.dispatch(self)
+            lcoord = spatial.eta.dispatch(self)  # type: ignore
         tcoord = 0
         if isinstance(self, Vector4D):
-            tcoord = lorentz.tau.dispatch(self)
+            tcoord = lorentz.tau.dispatch(self)  # type: ignore
 
         return self._wrap_result(
             type(self),
-            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord, tcoord),
+            (planar.x.dispatch(self), planar.y.dispatch(self), lcoord, tcoord),  # type: ignore
             [AzimuthalXY, LongitudinalEta, TemporalTau],
             1,
         )
 
     def to_rhophizt(self) -> VectorProtocolLorentz:
-        from .compute import lorentz, planar, spatial
+        from vector.compute import lorentz, planar, spatial
 
         lcoord = 0
         if isinstance(self, (Vector3D, Vector4D)):
-            lcoord = spatial.z.dispatch(self)
+            lcoord = spatial.z.dispatch(self)  # type: ignore
         tcoord = 0
         if isinstance(self, Vector4D):
-            tcoord = lorentz.t.dispatch(self)
+            tcoord = lorentz.t.dispatch(self)  # type: ignore
 
         return self._wrap_result(
             type(self),
-            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord, tcoord),
+            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord, tcoord),  # type: ignore
             [AzimuthalRhoPhi, LongitudinalZ, TemporalT],
             1,
         )
 
     def to_rhophiztau(self) -> VectorProtocolLorentz:
-        from .compute import lorentz, planar, spatial
+        from vector.compute import lorentz, planar, spatial
 
         lcoord = 0
         if isinstance(self, (Vector3D, Vector4D)):
-            lcoord = spatial.z.dispatch(self)
+            lcoord = spatial.z.dispatch(self)  # type: ignore
         tcoord = 0
         if isinstance(self, Vector4D):
-            tcoord = lorentz.tau.dispatch(self)
+            tcoord = lorentz.tau.dispatch(self)  # type: ignore
 
         return self._wrap_result(
             type(self),
-            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord, tcoord),
+            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord, tcoord),  # type: ignore
             [AzimuthalRhoPhi, LongitudinalZ, TemporalTau],
             1,
         )
 
     def to_rhophithetat(self) -> VectorProtocolLorentz:
-        from .compute import lorentz, planar, spatial
+        from vector.compute import lorentz, planar, spatial
 
         lcoord = 0
         if isinstance(self, (Vector3D, Vector4D)):
-            lcoord = spatial.theta.dispatch(self)
+            lcoord = spatial.theta.dispatch(self)  # type: ignore
         tcoord = 0
         if isinstance(self, Vector4D):
-            tcoord = lorentz.t.dispatch(self)
+            tcoord = lorentz.t.dispatch(self)  # type: ignore
 
         return self._wrap_result(
             type(self),
-            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord, tcoord),
+            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord, tcoord),  # type: ignore
             [AzimuthalRhoPhi, LongitudinalTheta, TemporalT],
             1,
         )
 
     def to_rhophithetatau(self) -> VectorProtocolLorentz:
-        from .compute import lorentz, planar, spatial
+        from vector.compute import lorentz, planar, spatial
 
         lcoord = 0
         if isinstance(self, (Vector3D, Vector4D)):
-            lcoord = spatial.theta.dispatch(self)
+            lcoord = spatial.theta.dispatch(self)  # type: ignore
         tcoord = 0
         if isinstance(self, Vector4D):
-            tcoord = lorentz.tau.dispatch(self)
+            tcoord = lorentz.tau.dispatch(self)  # type: ignore
 
         return self._wrap_result(
             type(self),
-            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord, tcoord),
+            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord, tcoord),  # type: ignore
             [AzimuthalRhoPhi, LongitudinalTheta, TemporalTau],
             1,
         )
 
     def to_rhophietat(self) -> VectorProtocolLorentz:
-        from .compute import lorentz, planar, spatial
+        from vector.compute import lorentz, planar, spatial
 
         lcoord = 0
         if isinstance(self, (Vector3D, Vector4D)):
-            lcoord = spatial.eta.dispatch(self)
+            lcoord = spatial.eta.dispatch(self)  # type: ignore
         tcoord = 0
         if isinstance(self, Vector4D):
-            tcoord = lorentz.t.dispatch(self)
+            tcoord = lorentz.t.dispatch(self)  # type: ignore
 
         return self._wrap_result(
             type(self),
-            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord, tcoord),
+            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord, tcoord),  # type: ignore
             [AzimuthalRhoPhi, LongitudinalEta, TemporalT],
             1,
         )
 
     def to_rhophietatau(self) -> VectorProtocolLorentz:
-        from .compute import lorentz, planar, spatial
+        from vector.compute import lorentz, planar, spatial
 
         lcoord = 0
         if isinstance(self, (Vector3D, Vector4D)):
-            lcoord = spatial.eta.dispatch(self)
+            lcoord = spatial.eta.dispatch(self)  # type: ignore
         tcoord = 0
         if isinstance(self, Vector4D):
-            tcoord = lorentz.tau.dispatch(self)
+            tcoord = lorentz.tau.dispatch(self)  # type: ignore
 
         return self._wrap_result(
             type(self),
-            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord, tcoord),
+            (planar.rho.dispatch(self), planar.phi.dispatch(self), lcoord, tcoord),  # type: ignore
             [AzimuthalRhoPhi, LongitudinalEta, TemporalTau],
             1,
         )
@@ -1035,83 +1035,83 @@ class Vector4D(Vector, VectorProtocolLorentz):
 class Planar(VectorProtocolPlanar):
     @property
     def x(self) -> ScalarCollection:
-        from .compute.planar import x
+        from vector.compute.planar import x
 
-        return x.dispatch(self)
+        return x.dispatch(self)  # type: ignore
 
     @property
     def y(self) -> ScalarCollection:
-        from .compute.planar import y
+        from vector.compute.planar import y
 
-        return y.dispatch(self)
+        return y.dispatch(self)  # type: ignore
 
     @property
     def rho(self) -> ScalarCollection:
-        from .compute.planar import rho
+        from vector.compute.planar import rho
 
-        return rho.dispatch(self)
+        return rho.dispatch(self)  # type: ignore
 
     @property
     def rho2(self) -> ScalarCollection:
-        from .compute.planar import rho2
+        from vector.compute.planar import rho2
 
-        return rho2.dispatch(self)
+        return rho2.dispatch(self)  # type: ignore
 
     @property
     def phi(self) -> ScalarCollection:
-        from .compute.planar import phi
+        from vector.compute.planar import phi
 
-        return phi.dispatch(self)
+        return phi.dispatch(self)  # type: ignore
 
     def deltaphi(self, other: VectorProtocol) -> ScalarCollection:
-        from .compute.planar import deltaphi
+        from vector.compute.planar import deltaphi
 
-        return deltaphi.dispatch(self, other)
+        return deltaphi.dispatch(self, other)  # type: ignore
 
     def rotateZ(self: SameVectorType, angle: ScalarCollection) -> SameVectorType:
-        from .compute.planar import rotateZ
+        from vector.compute.planar import rotateZ
 
-        return rotateZ.dispatch(angle, self)
+        return rotateZ.dispatch(angle, self)  # type: ignore
 
     def transform2D(self: SameVectorType, obj: TransformProtocol2D) -> SameVectorType:
-        from .compute.planar import transform2D
+        from vector.compute.planar import transform2D
 
-        return transform2D.dispatch(obj, self)
+        return transform2D.dispatch(obj, self)  # type: ignore
 
     def is_parallel(
         self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
     ) -> BoolCollection:
-        from .compute.planar import is_parallel
+        from vector.compute.planar import is_parallel
 
         if not isinstance(other, Vector2D):
             return self.to_Vector3D().is_parallel(other, tolerance=tolerance)
         else:
-            return is_parallel.dispatch(tolerance, self, other)
+            return is_parallel.dispatch(tolerance, self, other)  # type: ignore
 
     def is_antiparallel(
         self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
     ) -> BoolCollection:
-        from .compute.planar import is_antiparallel
+        from vector.compute.planar import is_antiparallel
 
         if not isinstance(other, Vector2D):
             return self.to_Vector3D().is_antiparallel(other, tolerance=tolerance)
         else:
-            return is_antiparallel.dispatch(tolerance, self, other)
+            return is_antiparallel.dispatch(tolerance, self, other)  # type: ignore
 
     def is_perpendicular(
         self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
     ) -> BoolCollection:
-        from .compute.planar import is_perpendicular
+        from vector.compute.planar import is_perpendicular
 
         if not isinstance(other, Vector2D):
             return self.to_Vector3D().is_perpendicular(other, tolerance=tolerance)
         else:
-            return is_perpendicular.dispatch(tolerance, self, other)
+            return is_perpendicular.dispatch(tolerance, self, other)  # type: ignore
 
     def unit(self: SameVectorType) -> SameVectorType:
-        from .compute.planar import unit
+        from vector.compute.planar import unit
 
-        return unit.dispatch(self)
+        return unit.dispatch(self)  # type: ignore
 
     def dot(self, other: VectorProtocol) -> ScalarCollection:
         module = _compute_module_of(self, other)
@@ -1126,27 +1126,27 @@ class Planar(VectorProtocolPlanar):
         return module.subtract.dispatch(self, other)
 
     def scale(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
-        from .compute.planar import scale
+        from vector.compute.planar import scale
 
-        return scale.dispatch(factor, self)
+        return scale.dispatch(factor, self)  # type: ignore
 
     def equal(self, other: VectorProtocol) -> BoolCollection:
-        from .compute.planar import equal
+        from vector.compute.planar import equal
 
         if dim(self) != dim(other):
             raise TypeError(
                 f"{repr(self)} and {repr(other)} do not have the same dimension"
             )
-        return equal.dispatch(self, other)
+        return equal.dispatch(self, other)  # type: ignore
 
     def not_equal(self, other: VectorProtocol) -> BoolCollection:
-        from .compute.planar import not_equal
+        from vector.compute.planar import not_equal
 
         if dim(self) != dim(other):
             raise TypeError(
                 f"{repr(self)} and {repr(other)} do not have the same dimension"
             )
-        return not_equal.dispatch(self, other)
+        return not_equal.dispatch(self, other)  # type: ignore
 
     def isclose(
         self,
@@ -1155,99 +1155,99 @@ class Planar(VectorProtocolPlanar):
         atol: ScalarCollection = 1e-08,
         equal_nan: BoolCollection = False,
     ) -> BoolCollection:
-        from .compute.planar import isclose
+        from vector.compute.planar import isclose
 
         if dim(self) != dim(other):
             raise TypeError(
                 f"{repr(self)} and {repr(other)} do not have the same dimension"
             )
-        return isclose.dispatch(rtol, atol, equal_nan, self, other)
+        return isclose.dispatch(rtol, atol, equal_nan, self, other)  # type: ignore
 
 
 class Spatial(Planar, VectorProtocolSpatial):
     @property
     def z(self) -> ScalarCollection:
-        from .compute.spatial import z
+        from vector.compute.spatial import z
 
-        return z.dispatch(self)
+        return z.dispatch(self)  # type: ignore
 
     @property
     def theta(self) -> ScalarCollection:
-        from .compute.spatial import theta
+        from vector.compute.spatial import theta
 
-        return theta.dispatch(self)
+        return theta.dispatch(self)  # type: ignore
 
     @property
     def eta(self) -> ScalarCollection:
-        from .compute.spatial import eta
+        from vector.compute.spatial import eta
 
-        return eta.dispatch(self)
+        return eta.dispatch(self)  # type: ignore
 
     @property
     def costheta(self) -> ScalarCollection:
-        from .compute.spatial import costheta
+        from vector.compute.spatial import costheta
 
-        return costheta.dispatch(self)
+        return costheta.dispatch(self)  # type: ignore
 
     @property
     def cottheta(self) -> ScalarCollection:
-        from .compute.spatial import cottheta
+        from vector.compute.spatial import cottheta
 
-        return cottheta.dispatch(self)
+        return cottheta.dispatch(self)  # type: ignore
 
     @property
     def mag(self) -> ScalarCollection:
-        from .compute.spatial import mag
+        from vector.compute.spatial import mag
 
-        return mag.dispatch(self)
+        return mag.dispatch(self)  # type: ignore
 
     @property
     def mag2(self) -> ScalarCollection:
-        from .compute.spatial import mag2
+        from vector.compute.spatial import mag2
 
-        return mag2.dispatch(self)
+        return mag2.dispatch(self)  # type: ignore
 
     def cross(self, other: VectorProtocol) -> VectorProtocolSpatial:
-        from .compute.spatial import cross
+        from vector.compute.spatial import cross
 
-        return cross.dispatch(self, other)
+        return cross.dispatch(self, other)  # type: ignore
 
     def deltaangle(self, other: VectorProtocol) -> ScalarCollection:
-        from .compute.spatial import deltaangle
+        from vector.compute.spatial import deltaangle
 
-        return deltaangle.dispatch(self, other)
+        return deltaangle.dispatch(self, other)  # type: ignore
 
     def deltaeta(self, other: VectorProtocol) -> ScalarCollection:
-        from .compute.spatial import deltaeta
+        from vector.compute.spatial import deltaeta
 
-        return deltaeta.dispatch(self, other)
+        return deltaeta.dispatch(self, other)  # type: ignore
 
     def deltaR(self, other: VectorProtocol) -> ScalarCollection:
-        from .compute.spatial import deltaR
+        from vector.compute.spatial import deltaR
 
-        return deltaR.dispatch(self, other)
+        return deltaR.dispatch(self, other)  # type: ignore
 
     def deltaR2(self, other: VectorProtocol) -> ScalarCollection:
-        from .compute.spatial import deltaR2
+        from vector.compute.spatial import deltaR2
 
-        return deltaR2.dispatch(self, other)
+        return deltaR2.dispatch(self, other)  # type: ignore
 
     def rotateX(self: SameVectorType, angle: ScalarCollection) -> SameVectorType:
-        from .compute.spatial import rotateX
+        from vector.compute.spatial import rotateX
 
-        return rotateX.dispatch(angle, self)
+        return rotateX.dispatch(angle, self)  # type: ignore
 
     def rotateY(self: SameVectorType, angle: ScalarCollection) -> SameVectorType:
-        from .compute.spatial import rotateY
+        from vector.compute.spatial import rotateY
 
-        return rotateY.dispatch(angle, self)
+        return rotateY.dispatch(angle, self)  # type: ignore
 
     def rotate_axis(
         self: SameVectorType, axis: VectorProtocol, angle: ScalarCollection
     ) -> SameVectorType:
-        from .compute.spatial import rotate_axis
+        from vector.compute.spatial import rotate_axis
 
-        return rotate_axis.dispatch(angle, axis, self)
+        return rotate_axis.dispatch(angle, axis, self)  # type: ignore
 
     def rotate_euler(
         self: SameVectorType,
@@ -1256,9 +1256,9 @@ class Spatial(Planar, VectorProtocolSpatial):
         psi: ScalarCollection,
         order: str = "zxz",
     ) -> SameVectorType:
-        from .compute.spatial import rotate_euler
+        from vector.compute.spatial import rotate_euler
 
-        return rotate_euler.dispatch(phi, theta, psi, order.lower(), self)
+        return rotate_euler.dispatch(phi, theta, psi, order.lower(), self)  # type: ignore
 
     def rotate_nautical(
         self: SameVectorType,
@@ -1268,9 +1268,9 @@ class Spatial(Planar, VectorProtocolSpatial):
     ) -> SameVectorType:
         # The order of arguments is reversed because rotate_euler
         # follows ROOT's argument order: phi, theta, psi.
-        from .compute.spatial import rotate_euler
+        from vector.compute.spatial import rotate_euler
 
-        return rotate_euler.dispatch(roll, pitch, yaw, "zyx", self)
+        return rotate_euler.dispatch(roll, pitch, yaw, "zyx", self)  # type: ignore
 
     def rotate_quaternion(
         self: SameVectorType,
@@ -1279,49 +1279,49 @@ class Spatial(Planar, VectorProtocolSpatial):
         j: ScalarCollection,
         k: ScalarCollection,
     ) -> SameVectorType:
-        from .compute.spatial import rotate_quaternion
+        from vector.compute.spatial import rotate_quaternion
 
-        return rotate_quaternion.dispatch(u, i, j, k, self)
+        return rotate_quaternion.dispatch(u, i, j, k, self)  # type: ignore
 
     def transform3D(self: SameVectorType, obj: TransformProtocol3D) -> SameVectorType:
-        from .compute.spatial import transform3D
+        from vector.compute.spatial import transform3D
 
-        return transform3D.dispatch(obj, self)
+        return transform3D.dispatch(obj, self)  # type: ignore
 
     def is_parallel(
         self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
     ) -> BoolCollection:
-        from .compute.spatial import is_parallel
+        from vector.compute.spatial import is_parallel
 
         if isinstance(other, Vector2D):
-            return is_parallel.dispatch(tolerance, self, other.to_Vector3D())
+            return is_parallel.dispatch(tolerance, self, other.to_Vector3D())  # type: ignore
         else:
-            return is_parallel.dispatch(tolerance, self, other)
+            return is_parallel.dispatch(tolerance, self, other)  # type: ignore
 
     def is_antiparallel(
         self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
     ) -> BoolCollection:
-        from .compute.spatial import is_antiparallel
+        from vector.compute.spatial import is_antiparallel
 
         if isinstance(other, Vector2D):
-            return is_antiparallel.dispatch(tolerance, self, other.to_Vector3D())
+            return is_antiparallel.dispatch(tolerance, self, other.to_Vector3D())  # type: ignore
         else:
-            return is_antiparallel.dispatch(tolerance, self, other)
+            return is_antiparallel.dispatch(tolerance, self, other)  # type: ignore
 
     def is_perpendicular(
         self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
     ) -> BoolCollection:
-        from .compute.spatial import is_perpendicular
+        from vector.compute.spatial import is_perpendicular
 
         if isinstance(other, Vector2D):
-            return is_perpendicular.dispatch(tolerance, self, other.to_Vector3D())
+            return is_perpendicular.dispatch(tolerance, self, other.to_Vector3D())  # type: ignore
         else:
-            return is_perpendicular.dispatch(tolerance, self, other)
+            return is_perpendicular.dispatch(tolerance, self, other)  # type: ignore
 
     def unit(self: SameVectorType) -> SameVectorType:
-        from .compute.spatial import unit
+        from vector.compute.spatial import unit
 
-        return unit.dispatch(self)
+        return unit.dispatch(self)  # type: ignore
 
     def dot(self, other: VectorProtocol) -> ScalarCollection:
         module = _compute_module_of(self, other)
@@ -1336,27 +1336,27 @@ class Spatial(Planar, VectorProtocolSpatial):
         return module.subtract.dispatch(self, other)
 
     def scale(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
-        from .compute.spatial import scale
+        from vector.compute.spatial import scale
 
-        return scale.dispatch(factor, self)
+        return scale.dispatch(factor, self)  # type: ignore
 
     def equal(self, other: VectorProtocol) -> BoolCollection:
-        from .compute.spatial import equal
+        from vector.compute.spatial import equal
 
         if dim(self) != dim(other):
             raise TypeError(
                 f"{repr(self)} and {repr(other)} do not have the same dimension"
             )
-        return equal.dispatch(self, other)
+        return equal.dispatch(self, other)  # type: ignore
 
     def not_equal(self, other: VectorProtocol) -> BoolCollection:
-        from .compute.spatial import not_equal
+        from vector.compute.spatial import not_equal
 
         if dim(self) != dim(other):
             raise TypeError(
                 f"{repr(self)} and {repr(other)} do not have the same dimension"
             )
-        return not_equal.dispatch(self, other)
+        return not_equal.dispatch(self, other)  # type: ignore
 
     def isclose(
         self,
@@ -1365,77 +1365,77 @@ class Spatial(Planar, VectorProtocolSpatial):
         atol: ScalarCollection = 1e-08,
         equal_nan: BoolCollection = False,
     ) -> BoolCollection:
-        from .compute.spatial import isclose
+        from vector.compute.spatial import isclose
 
         if dim(self) != dim(other):
             raise TypeError(
                 f"{repr(self)} and {repr(other)} do not have the same dimension"
             )
-        return isclose.dispatch(rtol, atol, equal_nan, self, other)
+        return isclose.dispatch(rtol, atol, equal_nan, self, other)  # type: ignore
 
 
 class Lorentz(Spatial, VectorProtocolLorentz):
     @property
     def t(self) -> ScalarCollection:
-        from .compute.lorentz import t
+        from vector.compute.lorentz import t
 
-        return t.dispatch(self)
+        return t.dispatch(self)  # type: ignore
 
     @property
     def t2(self) -> ScalarCollection:
-        from .compute.lorentz import t2
+        from vector.compute.lorentz import t2
 
-        return t2.dispatch(self)
+        return t2.dispatch(self)  # type: ignore
 
     @property
     def tau(self) -> ScalarCollection:
-        from .compute.lorentz import tau
+        from vector.compute.lorentz import tau
 
-        return tau.dispatch(self)
+        return tau.dispatch(self)  # type: ignore
 
     @property
     def tau2(self) -> ScalarCollection:
-        from .compute.lorentz import tau2
+        from vector.compute.lorentz import tau2
 
-        return tau2.dispatch(self)
+        return tau2.dispatch(self)  # type: ignore
 
     @property
     def beta(self) -> ScalarCollection:
-        from .compute.lorentz import beta
+        from vector.compute.lorentz import beta
 
-        return beta.dispatch(self)
+        return beta.dispatch(self)  # type: ignore
 
     @property
     def gamma(self) -> ScalarCollection:
-        from .compute.lorentz import gamma
+        from vector.compute.lorentz import gamma
 
-        return gamma.dispatch(self)
+        return gamma.dispatch(self)  # type: ignore
 
     @property
     def rapidity(self) -> ScalarCollection:
-        from .compute.lorentz import rapidity
+        from vector.compute.lorentz import rapidity
 
-        return rapidity.dispatch(self)
+        return rapidity.dispatch(self)  # type: ignore
 
     def boost_p4(self: SameVectorType, p4: VectorProtocolLorentz) -> SameVectorType:
-        from .compute.lorentz import boost_p4
+        from vector.compute.lorentz import boost_p4
 
-        return boost_p4.dispatch(self, p4)
+        return boost_p4.dispatch(self, p4)  # type: ignore
 
     def boost_beta3(
         self: SameVectorType, beta3: VectorProtocolSpatial
     ) -> SameVectorType:
-        from .compute.lorentz import boost_beta3
+        from vector.compute.lorentz import boost_beta3
 
-        return boost_beta3.dispatch(self, beta3)
+        return boost_beta3.dispatch(self, beta3)  # type: ignore
 
     def boost(self: SameVectorType, booster: VectorProtocol) -> SameVectorType:
-        from .compute.lorentz import boost_beta3, boost_p4
+        from vector.compute.lorentz import boost_beta3, boost_p4
 
         if isinstance(booster, Vector3D):
-            return boost_beta3.dispatch(self, booster)
+            return boost_beta3.dispatch(self, booster)  # type: ignore
         elif isinstance(booster, Vector4D):
-            return boost_p4.dispatch(self, booster)
+            return boost_p4.dispatch(self, booster)  # type: ignore
         else:
             raise TypeError(
                 "specify a Vector3D to boost by beta (velocity with c=1) or "
@@ -1447,12 +1447,12 @@ class Lorentz(Spatial, VectorProtocolLorentz):
         beta: typing.Optional[ScalarCollection] = None,
         gamma: typing.Optional[ScalarCollection] = None,
     ) -> SameVectorType:
-        from .compute.lorentz import boostX_beta, boostX_gamma
+        from vector.compute.lorentz import boostX_beta, boostX_gamma
 
         if beta is not None and gamma is None:
-            return boostX_beta.dispatch(beta, self)
+            return boostX_beta.dispatch(beta, self)  # type: ignore
         elif beta is None and gamma is not None:
-            return boostX_gamma.dispatch(gamma, self)
+            return boostX_gamma.dispatch(gamma, self)  # type: ignore
         else:
             raise TypeError("specify 'beta' xor 'gamma', not both or neither")
 
@@ -1461,12 +1461,12 @@ class Lorentz(Spatial, VectorProtocolLorentz):
         beta: typing.Optional[ScalarCollection] = None,
         gamma: typing.Optional[ScalarCollection] = None,
     ) -> SameVectorType:
-        from .compute.lorentz import boostY_beta, boostY_gamma
+        from vector.compute.lorentz import boostY_beta, boostY_gamma
 
         if beta is not None and gamma is None:
-            return boostY_beta.dispatch(beta, self)
+            return boostY_beta.dispatch(beta, self)  # type: ignore
         elif beta is None and gamma is not None:
-            return boostY_gamma.dispatch(gamma, self)
+            return boostY_gamma.dispatch(gamma, self)  # type: ignore
         else:
             raise TypeError("specify 'beta' xor 'gamma', not both or neither")
 
@@ -1475,44 +1475,44 @@ class Lorentz(Spatial, VectorProtocolLorentz):
         beta: typing.Optional[ScalarCollection] = None,
         gamma: typing.Optional[ScalarCollection] = None,
     ) -> SameVectorType:
-        from .compute.lorentz import boostZ_beta, boostZ_gamma
+        from vector.compute.lorentz import boostZ_beta, boostZ_gamma
 
         if beta is not None and gamma is None:
-            return boostZ_beta.dispatch(beta, self)
+            return boostZ_beta.dispatch(beta, self)  # type: ignore
         elif beta is None and gamma is not None:
-            return boostZ_gamma.dispatch(gamma, self)
+            return boostZ_gamma.dispatch(gamma, self)  # type: ignore
         else:
             raise TypeError("specify 'beta' xor 'gamma', not both or neither")
 
     def transform4D(self: SameVectorType, obj: TransformProtocol4D) -> SameVectorType:
-        from .compute.lorentz import transform4D
+        from vector.compute.lorentz import transform4D
 
-        return transform4D.dispatch(obj, self)
+        return transform4D.dispatch(obj, self)  # type: ignore
 
     def to_beta3(self) -> VectorProtocolSpatial:
-        from .compute.lorentz import to_beta3
+        from vector.compute.lorentz import to_beta3
 
-        return to_beta3.dispatch(self)
+        return to_beta3.dispatch(self)  # type: ignore
 
     def is_timelike(self, tolerance: ScalarCollection = 0) -> BoolCollection:
-        from .compute.lorentz import is_timelike
+        from vector.compute.lorentz import is_timelike
 
-        return is_timelike.dispatch(tolerance, self)
+        return is_timelike.dispatch(tolerance, self)  # type: ignore
 
     def is_spacelike(self, tolerance: ScalarCollection = 0) -> BoolCollection:
-        from .compute.lorentz import is_spacelike
+        from vector.compute.lorentz import is_spacelike
 
-        return is_spacelike.dispatch(tolerance, self)
+        return is_spacelike.dispatch(tolerance, self)  # type: ignore
 
     def is_lightlike(self, tolerance: ScalarCollection = 1e-5) -> BoolCollection:
-        from .compute.lorentz import is_lightlike
+        from vector.compute.lorentz import is_lightlike
 
-        return is_lightlike.dispatch(tolerance, self)
+        return is_lightlike.dispatch(tolerance, self)  # type: ignore
 
     def unit(self: SameVectorType) -> SameVectorType:
-        from .compute.lorentz import unit
+        from vector.compute.lorentz import unit
 
-        return unit.dispatch(self)
+        return unit.dispatch(self)  # type: ignore
 
     def dot(self, other: VectorProtocol) -> ScalarCollection:
         module = _compute_module_of(self, other)
@@ -1527,27 +1527,27 @@ class Lorentz(Spatial, VectorProtocolLorentz):
         return module.subtract.dispatch(self, other)
 
     def scale(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
-        from .compute.lorentz import scale
+        from vector.compute.lorentz import scale
 
-        return scale.dispatch(factor, self)
+        return scale.dispatch(factor, self)  # type: ignore
 
     def equal(self, other: VectorProtocol) -> BoolCollection:
-        from .compute.lorentz import equal
+        from vector.compute.lorentz import equal
 
         if dim(self) != dim(other):
             raise TypeError(
                 f"{repr(self)} and {repr(other)} do not have the same dimension"
             )
-        return equal.dispatch(self, other)
+        return equal.dispatch(self, other)  # type: ignore
 
     def not_equal(self, other: VectorProtocol) -> BoolCollection:
-        from .compute.lorentz import not_equal
+        from vector.compute.lorentz import not_equal
 
         if dim(self) != dim(other):
             raise TypeError(
                 f"{repr(self)} and {repr(other)} do not have the same dimension"
             )
-        return not_equal.dispatch(self, other)
+        return not_equal.dispatch(self, other)  # type: ignore
 
     def isclose(
         self,
@@ -1556,13 +1556,13 @@ class Lorentz(Spatial, VectorProtocolLorentz):
         atol: ScalarCollection = 1e-08,
         equal_nan: BoolCollection = False,
     ) -> BoolCollection:
-        from .compute.lorentz import isclose
+        from vector.compute.lorentz import isclose
 
         if dim(self) != dim(other):
             raise TypeError(
                 f"{repr(self)} and {repr(other)} do not have the same dimension"
             )
-        return isclose.dispatch(rtol, atol, equal_nan, self, other)
+        return isclose.dispatch(rtol, atol, equal_nan, self, other)  # type: ignore
 
 
 class Momentum:
@@ -1640,9 +1640,9 @@ class LorentzMomentum(SpatialMomentum, MomentumProtocolLorentz):
 
     @property
     def Et(self) -> ScalarCollection:
-        from .compute.lorentz import Et
+        from vector.compute.lorentz import Et
 
-        return Et.dispatch(self)
+        return Et.dispatch(self)  # type: ignore
 
     @property
     def transverse_energy(self) -> ScalarCollection:
@@ -1650,9 +1650,9 @@ class LorentzMomentum(SpatialMomentum, MomentumProtocolLorentz):
 
     @property
     def Et2(self) -> ScalarCollection:
-        from .compute.lorentz import Et2
+        from vector.compute.lorentz import Et2
 
-        return Et2.dispatch(self)
+        return Et2.dispatch(self)  # type: ignore
 
     @property
     def transverse_energy2(self) -> ScalarCollection:
@@ -1660,9 +1660,9 @@ class LorentzMomentum(SpatialMomentum, MomentumProtocolLorentz):
 
     @property
     def Mt(self) -> ScalarCollection:
-        from .compute.lorentz import Mt
+        from vector.compute.lorentz import Mt
 
-        return Mt.dispatch(self)
+        return Mt.dispatch(self)  # type: ignore
 
     @property
     def transverse_mass(self) -> ScalarCollection:
@@ -1670,9 +1670,9 @@ class LorentzMomentum(SpatialMomentum, MomentumProtocolLorentz):
 
     @property
     def Mt2(self) -> ScalarCollection:
-        from .compute.lorentz import Mt2
+        from vector.compute.lorentz import Mt2
 
-        return Mt2.dispatch(self)
+        return Mt2.dispatch(self)  # type: ignore
 
     @property
     def transverse_mass2(self) -> ScalarCollection:
@@ -1855,8 +1855,8 @@ def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
 
 
 def _flavor_of(*objects: VectorProtocol) -> typing.Type[VectorProtocol]:
-    from .backends.numpy_ import VectorNumpy
-    from .backends.object_ import VectorObject
+    from vector.backends.numpy_ import VectorNumpy
+    from vector.backends.object_ import VectorObject
 
     handler = None
     is_momentum = True
