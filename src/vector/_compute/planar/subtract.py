@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Planar.subtract(self, other)
+"""
+
 import numpy
 
 from vector._compute.planar import x, y

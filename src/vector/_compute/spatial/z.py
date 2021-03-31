@@ -5,6 +5,13 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    @property
+    Spatial.z(self)
+"""
+
 import numpy
 
 from vector._compute.planar import rho

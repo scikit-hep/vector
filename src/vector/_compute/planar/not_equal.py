@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Planar.not_equal(self, other)
+"""
+
 import numpy
 
 from vector._compute.planar import x, y

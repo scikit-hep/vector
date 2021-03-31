@@ -5,6 +5,13 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    @property
+    Lorentz.tau2(self)
+"""
+
 import numpy
 
 from vector._compute.spatial import mag2

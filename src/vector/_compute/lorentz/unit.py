@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Lorentz.unit(self)
+"""
+
 import numpy
 
 from vector._compute.lorentz import tau2

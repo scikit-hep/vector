@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Spatial.subtract(self, angle)
+"""
+
 import numpy
 
 from vector._compute.planar import subtract, x, y

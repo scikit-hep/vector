@@ -5,6 +5,13 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    @property
+    Lorentz.Mt(self)
+"""
+
 import numpy
 
 from vector._compute.lorentz import Mt2

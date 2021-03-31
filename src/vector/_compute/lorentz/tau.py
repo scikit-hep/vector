@@ -5,6 +5,13 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    @property
+    Lorentz.tau(self)
+"""
+
 import numpy
 
 from vector._compute.lorentz import tau2

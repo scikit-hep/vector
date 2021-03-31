@@ -407,6 +407,9 @@ class VectorNumpy(Vector):
         atol: typing.Union[float, numpy.ndarray] = 1e-08,
         equal_nan: typing.Union[bool, numpy.ndarray] = False,
     ) -> numpy.ndarray:
+        """
+        Like ``np.ndarray.allclose``, but for VectorNumpy.
+        """
         return self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan).all()
 
     def __eq__(self, other: typing.Any) -> typing.Any:
@@ -666,6 +669,18 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):
         returns: typing.Any,
         num_vecargs: typing.Any,
     ) -> typing.Any:
+        """
+        Args:
+            result: Value or tuple of values from a compute function.
+            returns: Signature from a ``dispatch_map``.
+            num_vecargs (int): Number of vector arguments in the function
+                that would be treated on an equal footing (i.e. ``add``
+                has two, but ``rotate_axis`` has only one: the ``axis``
+                is secondary).
+
+        Wraps the raw result of a compute function as an array of scalars or an
+        array of vectors.
+        """
         if returns == [float] or returns == [bool]:
             return result
 
@@ -884,6 +899,18 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
         returns: typing.Any,
         num_vecargs: typing.Any,
     ) -> typing.Any:
+        """
+        Args:
+            result: Value or tuple of values from a compute function.
+            returns: Signature from a ``dispatch_map``.
+            num_vecargs (int): Number of vector arguments in the function
+                that would be treated on an equal footing (i.e. ``add``
+                has two, but ``rotate_axis`` has only one: the ``axis``
+                is secondary).
+
+        Wraps the raw result of a compute function as an array of scalars or an
+        array of vectors.
+        """
         if returns == [float] or returns == [bool]:
             return result
 
@@ -1130,6 +1157,18 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
         returns: typing.Any,
         num_vecargs: typing.Any,
     ) -> typing.Any:
+        """
+        Args:
+            result: Value or tuple of values from a compute function.
+            returns: Signature from a ``dispatch_map``.
+            num_vecargs (int): Number of vector arguments in the function
+                that would be treated on an equal footing (i.e. ``add``
+                has two, but ``rotate_axis`` has only one: the ``axis``
+                is secondary).
+
+        Wraps the raw result of a compute function as an array of scalars or an
+        array of vectors.
+        """
         if returns == [float] or returns == [bool]:
             return result
 
@@ -1327,7 +1366,60 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):
 
 
 def array(*args: typing.Any, **kwargs: typing.Any) -> VectorNumpy:
-    "vector.array docs"
+    """
+    Constructs a NumPy array of vectors, whose type is determined by the dtype
+    of the structured array or Pandas-style "columns" argument.
+
+    All allowed signatures for ``np.array`` can be used in this function, plus
+    one more:
+
+    .. code-block:: python
+
+        vector.array({"x": x_column, "y": y_column})
+
+    to make an array with ``dtype=[("x", x_column.dtype), ("y", y_column.dtype)]``.
+
+    The array must have structured ``dtype`` (i.e. ``dtype.names is not None``)
+    and the following combinations of names are allowed:
+
+    - (2D) ``x``, ``y``
+    - (2D) ``rho``, ``phi``
+    - (3D) ``x``, ``y``, ``z``
+    - (3D) ``x``, ``y``, ``theta``
+    - (3D) ``x``, ``y``, ``eta``
+    - (3D) ``rho``, ``phi``, ``z``
+    - (3D) ``rho``, ``phi``, ``theta``
+    - (3D) ``rho``, ``phi``, ``eta``
+    - (4D) ``x``, ``y``, ``z``, ``t``
+    - (4D) ``x``, ``y``, ``z``, ``tau```
+    - (4D) ``x``, ``y``, ``theta``, ``t```
+    - (4D) ``x``, ``y``, ``theta``, ``tau```
+    - (4D) ``x``, ``y``, ``eta``, ``t```
+    - (4D) ``x``, ``y``, ``eta``, ``tau```
+    - (4D) ``rho``, ``phi``, ``z``, ``t```
+    - (4D) ``rho``, ``phi``, ``z``, ``tau```
+    - (4D) ``rho``, ``phi``, ``theta``, ``t```
+    - (4D) ``rho``, ``phi``, ``theta``, ``tau```
+    - (4D) ``rho``, ``phi``, ``eta``, ``t```
+    - (4D) ``rho``, ``phi``, ``eta``, ``tau```
+
+    in which
+
+    - ``px`` may be substituted for ``x``
+    - ``py`` may be substituted for ``y``
+    - ``pt`` may be substituted for ``rho``
+    - ``pz`` may be substituted for ``z``
+    - ``E`` may be substituted for ``t``
+    - ``energy`` may be substituted for ``t``
+    - ``M`` may be substituted for ``tau``
+    - ``mass`` may be substituted for ``tau``
+
+    to make the vector a momentum vector.
+
+    No constraints are placed on the ``dtypes`` of the vector fields, though if they
+    are not numbers, mathematical operations will fail. Usually, you want them to be
+    ``np.integer`` or ``np.floating``.
+    """
     names = None
     if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
         names = tuple(args[0].keys())

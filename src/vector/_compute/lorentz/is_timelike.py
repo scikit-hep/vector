@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Lorentz.is_timelike(self, tolerance=...)
+"""
+
 import numpy
 
 from vector._compute.lorentz import dot

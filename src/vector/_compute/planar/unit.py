@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Planar.unit(self)
+"""
+
 import numpy
 
 from vector._compute.planar import rho

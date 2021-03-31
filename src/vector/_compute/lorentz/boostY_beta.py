@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Lorentz.boostY(self, beta=...)
+"""
+
 import numpy
 
 from vector._compute.lorentz import t

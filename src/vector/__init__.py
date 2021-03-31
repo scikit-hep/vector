@@ -5,8 +5,8 @@
 
 import typing
 
-from vector._backends.awkward_ import VectorAwkward  # noqa: 401
-from vector._backends.numpy_ import (  # noqa: 401
+from vector._backends.awkward_ import VectorAwkward
+from vector._backends.numpy_ import (
     MomentumNumpy2D,
     MomentumNumpy3D,
     MomentumNumpy4D,
@@ -16,7 +16,7 @@ from vector._backends.numpy_ import (  # noqa: 401
     VectorNumpy4D,
     array,
 )
-from vector._backends.object_ import (  # noqa: 401
+from vector._backends.object_ import (
     MomentumObject2D,
     MomentumObject3D,
     MomentumObject4D,
@@ -26,7 +26,7 @@ from vector._backends.object_ import (  # noqa: 401
     VectorObject4D,
     obj,
 )
-from vector._methods import (  # noqa: 401
+from vector._methods import (
     Azimuthal,
     AzimuthalRhoPhi,
     AzimuthalXY,
@@ -48,10 +48,17 @@ from vector._methods import (  # noqa: 401
     Vector4D,
     dim,
 )
-from vector.version import version as __version__  # noqa: 401
+from vector.version import version as __version__
 
 
 def register_numba() -> None:
+    """
+    Make Vector types known to Numba's compiler, so that JIT-compilations with
+    vector arguments do not fail.
+
+    This usually isn't necessary, as it is passed to Numba's ``entry_point`` and
+    is therefore executed as soon as Numba is imported.
+    """
     import vector._backends.numba_numpy  # noqa: 401
     import vector._backends.numba_object  # noqa: 401
 
@@ -60,6 +67,17 @@ _awkward_registered = False
 
 
 def register_awkward() -> None:
+    """
+    Make Vector behaviors known to Awkward Array's ``ak.behavior`` mechanism.
+
+    If you call this function, any records named ``Vector2D``, ``Vector3D``,
+    ``Vector4D``, ``Momentum2D``, ``Momentum3D``, and ``Momentum4D`` will have
+    vector properties and methods.
+
+    If you do not call this function, only arrays created with
+    :doc:`vector.Array` (or derived from such an array) have vector properties
+    and methods.
+    """
     import awkward
 
     import vector._backends.awkward_  # noqa: 401
@@ -70,7 +88,52 @@ def register_awkward() -> None:
 
 
 def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
-    "vector.Array docs"
+    """
+    Constructs an Awkward Array of vectors, whose type is determined by the fields
+    of the record array (which may be nested within lists or other non-record structures).
+
+    All allowed signatures for ``ak.Array`` can be used in this function.
+
+    The array must contain records with the following combinations of field names:
+
+    - (2D) ``x``, ``y``
+    - (2D) ``rho``, ``phi``
+    - (3D) ``x``, ``y``, ``z``
+    - (3D) ``x``, ``y``, ``theta``
+    - (3D) ``x``, ``y``, ``eta``
+    - (3D) ``rho``, ``phi``, ``z``
+    - (3D) ``rho``, ``phi``, ``theta``
+    - (3D) ``rho``, ``phi``, ``eta``
+    - (4D) ``x``, ``y``, ``z``, ``t``
+    - (4D) ``x``, ``y``, ``z``, ``tau```
+    - (4D) ``x``, ``y``, ``theta``, ``t```
+    - (4D) ``x``, ``y``, ``theta``, ``tau```
+    - (4D) ``x``, ``y``, ``eta``, ``t```
+    - (4D) ``x``, ``y``, ``eta``, ``tau```
+    - (4D) ``rho``, ``phi``, ``z``, ``t```
+    - (4D) ``rho``, ``phi``, ``z``, ``tau```
+    - (4D) ``rho``, ``phi``, ``theta``, ``t```
+    - (4D) ``rho``, ``phi``, ``theta``, ``tau```
+    - (4D) ``rho``, ``phi``, ``eta``, ``t```
+    - (4D) ``rho``, ``phi``, ``eta``, ``tau```
+
+    in which
+
+    - ``px`` may be substituted for ``x``
+    - ``py`` may be substituted for ``y``
+    - ``pt`` may be substituted for ``rho``
+    - ``pz`` may be substituted for ``z``
+    - ``E`` may be substituted for ``t``
+    - ``energy`` may be substituted for ``t``
+    - ``M`` may be substituted for ``tau``
+    - ``mass`` may be substituted for ``tau``
+
+    to make the vector a momentum vector.
+
+    No constraints are placed on the types of the vector fields, though if they
+    are not numbers, mathematical operations will fail. Usually, you want them to be
+    integers or floating-point numbers.
+    """
     import awkward
 
     import vector._backends.awkward_  # noqa: 401
@@ -277,4 +340,46 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     return awkward.zip(dict(zip(names, arrays)), depth_limit=depth, with_name=recname)
 
 
-# __all__ = ("__version__",)
+__all__ = (
+    "VectorAwkward",
+    "MomentumNumpy2D",
+    "MomentumNumpy3D",
+    "MomentumNumpy4D",
+    "VectorNumpy",
+    "VectorNumpy2D",
+    "VectorNumpy3D",
+    "VectorNumpy4D",
+    "array",
+    "MomentumObject2D",
+    "MomentumObject3D",
+    "MomentumObject4D",
+    "VectorObject",
+    "VectorObject2D",
+    "VectorObject3D",
+    "VectorObject4D",
+    "obj",
+    "Azimuthal",
+    "AzimuthalRhoPhi",
+    "AzimuthalXY",
+    "Coordinates",
+    "Longitudinal",
+    "LongitudinalEta",
+    "LongitudinalTheta",
+    "LongitudinalZ",
+    "Lorentz",
+    "Momentum",
+    "Planar",
+    "Spatial",
+    "Temporal",
+    "TemporalT",
+    "TemporalTau",
+    "Vector",
+    "Vector2D",
+    "Vector3D",
+    "Vector4D",
+    "dim",
+    "__version__",
+    "register_numba",
+    "register_awkward",
+    "Array",
+)

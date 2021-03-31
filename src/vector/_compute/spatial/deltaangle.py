@@ -5,6 +5,12 @@
 
 # type: ignore
 
+"""
+.. code-block:: python
+
+    Spatial.deltaangle(self, other)
+"""
+
 import numpy
 
 from vector._compute.spatial import dot
