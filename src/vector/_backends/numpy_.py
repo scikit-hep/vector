@@ -206,7 +206,7 @@ def _shape_of(result: typing.Tuple[numpy.ndarray, ...]) -> typing.Tuple[int, ...
 
 
 class GetItem:
-    _IS_MOMENTUM: bool
+    _IS_MOMENTUM: typing.ClassVar[bool]
 
     @typing.overload
     def __getitem__(self, where: str) -> numpy.ndarray:
