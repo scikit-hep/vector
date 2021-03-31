@@ -94,17 +94,17 @@ def _setitem(
             where = _repr_momentum_to_generic.get(where, where)
         array.view(numpy.ndarray)[where] = what
     else:
-        if hasattr(what, "dtype") and what.dtype.names is not None:
-            tofill = array[where]
-            for name in what.dtype.names:
-                if is_momentum:
-                    generic = _repr_momentum_to_generic.get(name, name)
-                tofill[generic] = what[name]
-        else:
+        if not hasattr(what, "dtype") or what.dtype.names is None:
             raise TypeError(
                 "right-hand side of assignment must be a structured array with "
                 "the same fields as " + type(array).__name__
             )
+
+        tofill = array[where]
+        for name in what.dtype.names:
+            if is_momentum:
+                generic = _repr_momentum_to_generic.get(name, name)
+            tofill[generic] = what[name]
 
 
 @typing.no_type_check
@@ -119,30 +119,30 @@ def _getitem(
         return array.view(numpy.ndarray)[where]
     else:
         out = numpy.ndarray.__getitem__(array, where)
-        if isinstance(out, numpy.void):
-            azimuthal, longitudinal, temporal = None, None, None
-            if hasattr(array, "_azimuthal_type"):
-                azimuthal = array._azimuthal_type.ObjectClass(
-                    *[out[x] for x in _coordinate_class_to_names[_aztype(array)]]
-                )
-            if hasattr(array, "_longitudinal_type"):
-                longitudinal = array._longitudinal_type.ObjectClass(
-                    *[out[x] for x in _coordinate_class_to_names[_ltype(array)]]
-                )
-            if hasattr(array, "_temporal_type"):
-                temporal = array._temporal_type.ObjectClass(
-                    *[out[x] for x in _coordinate_class_to_names[_ttype(array)]]
-                )
-            if temporal is not None:
-                return array.ObjectClass(azimuthal, longitudinal, temporal)
-            elif longitudinal is not None:
-                return array.ObjectClass(azimuthal, longitudinal)
-            elif azimuthal is not None:
-                return array.ObjectClass(azimuthal)
-            else:
-                return array.ObjectClass(*out.view(numpy.ndarray))
-        else:
+        if not isinstance(out, numpy.void):
             return out
+
+        azimuthal, longitudinal, temporal = None, None, None
+        if hasattr(array, "_azimuthal_type"):
+            azimuthal = array._azimuthal_type.ObjectClass(
+                *[out[x] for x in _coordinate_class_to_names[_aztype(array)]]
+            )
+        if hasattr(array, "_longitudinal_type"):
+            longitudinal = array._longitudinal_type.ObjectClass(
+                *[out[x] for x in _coordinate_class_to_names[_ltype(array)]]
+            )
+        if hasattr(array, "_temporal_type"):
+            temporal = array._temporal_type.ObjectClass(
+                *[out[x] for x in _coordinate_class_to_names[_ttype(array)]]
+            )
+        if temporal is not None:
+            return array.ObjectClass(azimuthal, longitudinal, temporal)
+        elif longitudinal is not None:
+            return array.ObjectClass(azimuthal, longitudinal)
+        elif azimuthal is not None:
+            return array.ObjectClass(azimuthal)
+        else:
+            return array.ObjectClass(*out.view(numpy.ndarray))
 
 
 def _array_repr(
@@ -709,16 +709,14 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):  # type: igno
             and issubclass(returns[0], Azimuthal)
         ):
             result = _toarrays(result)
-            dtype = []
-            i = 0
-            for name in _coordinate_class_to_names[returns[0]]:
-                dtype.append((name, result[i].dtype))
-                i += 1
+            dtype = [
+                (name, result[i].dtype)
+                for i, name in enumerate(_coordinate_class_to_names[returns[0]])
+            ]
+
             out = numpy.empty(_shape_of(result), dtype=dtype)
-            i = 0
-            for name in _coordinate_class_to_names[returns[0]]:
+            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
                 out[name] = result[i]
-                i += 1
             return out.view(cls.ProjectionClass2D)
 
         elif (
@@ -728,16 +726,14 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):  # type: igno
             and returns[1] is None
         ):
             result = _toarrays(result)
-            dtype = []
-            i = 0
-            for name in _coordinate_class_to_names[returns[0]]:
-                dtype.append((name, result[i].dtype))
-                i += 1
+            dtype = [
+                (name, result[i].dtype)
+                for i, name in enumerate(_coordinate_class_to_names[returns[0]])
+            ]
+
             out = numpy.empty(_shape_of(result), dtype=dtype)
-            i = 0
-            for name in _coordinate_class_to_names[returns[0]]:
+            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
                 out[name] = result[i]
-                i += 1
             return out.view(cls.ProjectionClass2D)
 
         elif (
@@ -946,18 +942,16 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):  # type: ign
             and issubclass(returns[0], Azimuthal)
         ):
             result = _toarrays(result)
-            dtype = []
-            i = 0
-            for name in _coordinate_class_to_names[returns[0]]:
-                dtype.append((name, result[i].dtype))
-                i += 1
+            dtype = [
+                (name, result[i].dtype)
+                for i, name in enumerate(_coordinate_class_to_names[returns[0]])
+            ]
+
             for name in _coordinate_class_to_names[_ltype(self)]:
                 dtype.append((name, self.dtype[name]))
             out = numpy.empty(_shape_of(result), dtype=dtype)
-            i = 0
-            for name in _coordinate_class_to_names[returns[0]]:
+            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
                 out[name] = result[i]
-                i += 1
             for name in _coordinate_class_to_names[_ltype(self)]:
                 out[name] = self[name]
             return out.view(cls.ProjectionClass3D)
@@ -969,16 +963,14 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):  # type: ign
             and returns[1] is None
         ):
             result = _toarrays(result)
-            dtype = []
-            i = 0
-            for name in _coordinate_class_to_names[returns[0]]:
-                dtype.append((name, result[i].dtype))
-                i += 1
+            dtype = [
+                (name, result[i].dtype)
+                for i, name in enumerate(_coordinate_class_to_names[returns[0]])
+            ]
+
             out = numpy.empty(_shape_of(result), dtype=dtype)
-            i = 0
-            for name in _coordinate_class_to_names[returns[0]]:
+            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
                 out[name] = result[i]
-                i += 1
             return out.view(cls.ProjectionClass2D)
 
         elif (
@@ -1216,20 +1208,18 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):  # type: ign
             and issubclass(returns[0], Azimuthal)
         ):
             result = _toarrays(result)
-            dtype = []
-            i = 0
-            for name in _coordinate_class_to_names[returns[0]]:
-                dtype.append((name, result[i].dtype))
-                i += 1
+            dtype = [
+                (name, result[i].dtype)
+                for i, name in enumerate(_coordinate_class_to_names[returns[0]])
+            ]
+
             for name in _coordinate_class_to_names[_ltype(self)]:
                 dtype.append((name, self.dtype[name]))
             for name in _coordinate_class_to_names[_ttype(self)]:
                 dtype.append((name, self.dtype[name]))
             out = numpy.empty(_shape_of(result), dtype=dtype)
-            i = 0
-            for name in _coordinate_class_to_names[returns[0]]:
+            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
                 out[name] = result[i]
-                i += 1
             for name in _coordinate_class_to_names[_ltype(self)]:
                 out[name] = self[name]
             for name in _coordinate_class_to_names[_ttype(self)]:
@@ -1243,16 +1233,14 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):  # type: ign
             and returns[1] is None
         ):
             result = _toarrays(result)
-            dtype = []
-            i = 0
-            for name in _coordinate_class_to_names[returns[0]]:
-                dtype.append((name, result[i].dtype))
-                i += 1
+            dtype = [
+                (name, result[i].dtype)
+                for i, name in enumerate(_coordinate_class_to_names[returns[0]])
+            ]
+
             out = numpy.empty(_shape_of(result), dtype=dtype)
-            i = 0
-            for name in _coordinate_class_to_names[returns[0]]:
+            for i, name in enumerate(_coordinate_class_to_names[returns[0]]):
                 out[name] = result[i]
-                i += 1
             return out.view(cls.ProjectionClass2D)
 
         elif (
