@@ -1,10 +1,15 @@
-vector.\_compute
-================
+vector.\_compute package
+========================
 
+Subpackages
+-----------
 
-.. include:: vector._compute.lorentz.rst
-.. include:: vector._compute.planar.rst
-.. include:: vector._compute.spatial.rst
+.. toctree::
+   :maxdepth: 4
+
+   vector._compute.lorentz
+   vector._compute.planar
+   vector._compute.spatial
 
 Module contents
 ---------------

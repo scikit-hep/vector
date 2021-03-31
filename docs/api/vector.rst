@@ -1,15 +1,44 @@
-vector
-======
+vector package
+==============
 
+Subpackages
+-----------
 
-.. include:: vector._backends.rst
-.. include:: vector._compute.rst
+.. toctree::
+   :maxdepth: 4
 
+   vector._backends
+   vector._compute
 
+Submodules
+----------
 
-.. include:: vector._methods.rst
-.. include:: vector._typeutils.rst
-.. include:: vector.version.rst
+vector.\_methods module
+-----------------------
+
+.. automodule:: vector._methods
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+vector.\_typeutils module
+-------------------------
+
+.. automodule:: vector._typeutils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+vector.version module
+---------------------
+
+.. automodule:: vector.version
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
 
 Module contents
 ---------------

@@ -22,9 +22,10 @@ extras = {
     "docs": [
         "nbsphinx",
         "recommonmark>=0.5.0",
-        "Sphinx>=2.0.0",
+        "Sphinx~=3.0",
         "sphinx_copybutton",
-        "sphinx_rtd_theme",
+        "sphinx_book_theme~=0.0.42",
+        "nbsphinx",
         "sphinx-math-dollar",
         "ipykernel",
         "awkward",

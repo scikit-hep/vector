@@ -10,7 +10,9 @@ Vector: vectorized 2D, 3D, and Lorentz vectors
    :maxdepth: 2
    :caption: Contents:
 
+   usage/intro
    usage/structure
+   usage/vector_design_prototype
 
 .. toctree::
    :maxdepth: 3
