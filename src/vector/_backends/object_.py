@@ -182,61 +182,61 @@ class VectorObject(Vector):
     lib = numpy
 
     def __eq__(self, other: typing.Any) -> typing.Any:
-        return numpy.equal(self, other)
+        return numpy.equal(self, other)  # type: ignore
 
     def __ne__(self, other: typing.Any) -> typing.Any:
-        return numpy.not_equal(self, other)
+        return numpy.not_equal(self, other)  # type: ignore
 
     def __abs__(self) -> float:
-        return numpy.absolute(self)
+        return numpy.absolute(self)  # type: ignore
 
     def __add__(self, other: VectorProtocol) -> VectorProtocol:
-        return numpy.add(self, other)
+        return numpy.add(self, other)  # type: ignore
 
     def __radd__(self, other: VectorProtocol) -> VectorProtocol:
-        return numpy.add(other, self)
+        return numpy.add(other, self)  # type: ignore
 
     def __iadd__(self: SameVectorType, other: VectorProtocol) -> SameVectorType:
-        return _replace_data(self, numpy.add(self, other))
+        return _replace_data(self, numpy.add(self, other))  # type: ignore
 
     def __sub__(self, other: VectorProtocol) -> VectorProtocol:
-        return numpy.subtract(self, other)
+        return numpy.subtract(self, other)  # type: ignore
 
     def __rsub__(self, other: VectorProtocol) -> VectorProtocol:
-        return numpy.subtract(other, self)
+        return numpy.subtract(other, self)  # type: ignore
 
     def __isub__(self: SameVectorType, other: VectorProtocol) -> SameVectorType:
-        return _replace_data(self, numpy.subtract(self, other))
+        return _replace_data(self, numpy.subtract(self, other))  # type: ignore
 
     def __mul__(self, other: float) -> VectorProtocol:
-        return numpy.multiply(self, other)
+        return numpy.multiply(self, other)  # type: ignore
 
     def __rmul__(self, other: float) -> VectorProtocol:
-        return numpy.multiply(other, self)
+        return numpy.multiply(other, self)  # type: ignore
 
     def __imul__(self: SameVectorType, other: float) -> SameVectorType:
-        return _replace_data(self, numpy.multiply(self, other))
+        return _replace_data(self, numpy.multiply(self, other))  # type: ignore
 
     def __neg__(self: SameVectorType) -> SameVectorType:
-        return numpy.negative(self)
+        return numpy.negative(self)  # type: ignore
 
     def __pos__(self: SameVectorType) -> SameVectorType:
-        return numpy.positive(self)
+        return numpy.positive(self)  # type: ignore
 
     def __truediv__(self, other: float) -> VectorProtocol:
-        return numpy.true_divide(self, other)
+        return numpy.true_divide(self, other)  # type: ignore
 
     def __rtruediv__(self, other: float) -> VectorProtocol:
-        return numpy.true_divide(other, self)
+        return numpy.true_divide(other, self)  # type: ignore
 
     def __itruediv__(self: SameVectorType, other: float) -> VectorProtocol:
-        return _replace_data(self, numpy.true_divide(self, other))
+        return _replace_data(self, numpy.true_divide(self, other))  # type: ignore
 
     def __pow__(self, other: float) -> float:
-        return numpy.power(self, other)
+        return numpy.power(self, other)  # type: ignore
 
     def __matmul__(self, other: VectorProtocol) -> float:
-        return numpy.matmul(self, other)
+        return numpy.matmul(self, other)  # type: ignore
 
     def __array_ufunc__(
         self,
@@ -350,7 +350,7 @@ class VectorObject(Vector):
             and isinstance(inputs[0], Vector)
             and not isinstance(inputs[1], Vector)
         ):
-            result = numpy.absolute(inputs[0]) ** inputs[1]
+            result = numpy.absolute(inputs[0]) ** inputs[1]  # type: ignore
             for output in outputs:
                 _replace_data(output, result)
             return result

@@ -426,10 +426,10 @@ class VectorNumpy(Vector, GetItem):
         return self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan).all()
 
     def __eq__(self, other: typing.Any) -> typing.Any:
-        return numpy.equal(self, other)
+        return numpy.equal(self, other)  # type: ignore
 
     def __ne__(self, other: typing.Any) -> typing.Any:
-        return numpy.not_equal(self, other)
+        return numpy.not_equal(self, other)  # type: ignore
 
     @typing.no_type_check
     def __array_ufunc__(
@@ -645,7 +645,7 @@ class VectorNumpy(Vector, GetItem):
             return NotImplemented
 
 
-class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):
+class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):  # type: ignore
     ObjectClass = vector._backends.object_.VectorObject2D
     _IS_MOMENTUM = False
 
@@ -834,7 +834,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):
         return _setitem(self, where, what, False)
 
 
-class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):
+class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore
     ObjectClass = vector._backends.object_.MomentumObject2D
     _IS_MOMENTUM = True
     dtype: numpy.dtype
@@ -861,7 +861,7 @@ class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):
         return _setitem(self, where, what, True)
 
 
-class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
+class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):  # type: ignore
     ObjectClass = vector._backends.object_.VectorObject3D
     _IS_MOMENTUM = False
 
@@ -1075,7 +1075,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):
         return _setitem(self, where, what, False)
 
 
-class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):
+class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore
     ObjectClass = vector._backends.object_.MomentumObject3D
     _IS_MOMENTUM = True
     dtype: numpy.dtype
@@ -1112,7 +1112,7 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):
         return _setitem(self, where, what, True)
 
 
-class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
+class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):  # type: ignore
     ObjectClass = vector._backends.object_.VectorObject4D
     _IS_MOMENTUM = False
 
@@ -1353,7 +1353,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):
         return _setitem(self, where, what, False)
 
 
-class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):
+class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore
     ObjectClass = vector._backends.object_.MomentumObject4D
     _IS_MOMENTUM = True
     dtype: numpy.dtype
