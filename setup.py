@@ -15,6 +15,19 @@ extras = {
     "test": [
         "pytest>=4.6",
     ],
+    "test_extras": [
+        "uncompyle6",
+        "spark-parser",
+    ],
+    "docs": [
+        "nbsphinx",
+        "recommonmark>=0.5.0",
+        "Sphinx>=2.0.0",
+        "sphinx_copybutton",
+        "sphinx_rtd_theme",
+        "sphinx-math-dollar",
+        "ipykernel",
+    ],
 }
 
 extras["all"] = sum(extras.values(), [])

@@ -6,18 +6,6 @@ vector package
    :undoc-members:
    :show-inheritance:
 
-Subpackages
------------
-..
-
-   .. toctree::
-
-      vector.mixins
-      vector.core
-      vector.numpy
-      vector.awkward
-      vector.numba
-
 Submodules
 ----------
 
