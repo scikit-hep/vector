@@ -27,6 +27,7 @@ extras = {
         "sphinx_rtd_theme",
         "sphinx-math-dollar",
         "ipykernel",
+        "awkward",
     ],
 }
 

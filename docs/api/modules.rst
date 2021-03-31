@@ -1,5 +1,3 @@
-vector
-======
 
 .. toctree::
    :maxdepth: 4
