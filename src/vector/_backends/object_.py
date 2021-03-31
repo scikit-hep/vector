@@ -495,7 +495,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
 
         Wraps the raw result of a compute function as a scalar or a vector.
         """
-        if returns == [float] or returns == [bool]:
+        if returns in [[float], [bool]]:
             return result
 
         elif (
@@ -748,7 +748,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
 
         Wraps the raw result of a compute function as a scalar or a vector.
         """
-        if returns == [float] or returns == [bool]:
+        if returns in [[float], [bool]]:
             return result
 
         elif (
@@ -1223,7 +1223,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
         Wraps the raw result of a compute function as a scalar or a vector.
         """
-        if returns == [float] or returns == [bool]:
+        if returns in [[float], [bool]]:
             return result
 
         elif (

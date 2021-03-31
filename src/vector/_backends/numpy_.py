@@ -700,7 +700,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):  # type: igno
         Wraps the raw result of a compute function as an array of scalars or an
         array of vectors.
         """
-        if returns == [float] or returns == [bool]:
+        if returns in [[float], [bool]]:
             return result
 
         elif (
@@ -933,7 +933,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):  # type: ign
         Wraps the raw result of a compute function as an array of scalars or an
         array of vectors.
         """
-        if returns == [float] or returns == [bool]:
+        if returns in [[float], [bool]]:
             return result
 
         elif (
@@ -1199,7 +1199,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):  # type: ign
         Wraps the raw result of a compute function as an array of scalars or an
         array of vectors.
         """
-        if returns == [float] or returns == [bool]:
+        if returns in [[float], [bool]]:
             return result
 
         elif (
