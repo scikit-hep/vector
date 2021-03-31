@@ -61,13 +61,16 @@ def cartesian_t(lib, x1, y1, z1, t1, betax, betay, betaz):
     tz = zt
     tt = gamma
 
-    row_x = (xx, xy, xz, xt)
-    row_y = (yx, yy, yz, yt)
-    row_z = (zx, zy, zz, zt)
-    row_t = (tx, ty, tz, tt)
-    row_1 = (x1, y1, z1, t1)
-
-    return transform4D.cartesian_t(lib, *row_x, *row_y, *row_z, *row_t, *row_1)
+    # fmt: off
+    return transform4D.cartesian_t(
+        lib,
+        xx, xy, xz, xt,
+        yx, yy, yz, yt,
+        zx, zy, zz, zt,
+        tx, ty, tz, tt,
+        x1, y1, z1, t1,
+    )
+    # fmt: on
 
 
 def cartesian_tau(lib, x1, y1, z1, tau1, betax, betay, betaz):
@@ -87,12 +90,15 @@ def cartesian_tau(lib, x1, y1, z1, tau1, betax, betay, betaz):
     yt = gamma * betay
     zt = gamma * betaz
 
-    row_x = (xx, xy, xz, xt)
-    row_y = (yx, yy, yz, yt)
-    row_z = (zx, zy, zz, zt)
-    row_1 = (x1, y1, z1, tau1)
-
-    return transform4D.cartesian_tau(lib, *row_x, *row_y, *row_z, *row_1)
+    # fmt: off
+    return transform4D.cartesian_tau(
+        lib,
+        xx, xy, xz, xt,
+        yx, yy, yz, yt,
+        zx, zy, zz, zt,
+        x1, y1, z1, tau1,
+    )
+    # fmt: on
 
 
 def cartesian_t_xy_z(lib, x1, y1, z1, t1, x2, y2, z2):
