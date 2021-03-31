@@ -1394,7 +1394,7 @@ def test_operator_truth():
 
     @numba.njit
     def get_false(v):
-        return not v
+        return not bool(v)
 
     assert not get_true(vector.obj(x=0, y=0))
     assert get_true(vector.obj(x=0, y=0.1))
