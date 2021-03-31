@@ -1387,14 +1387,32 @@ def test_operator_neg():
 
 
 @pytest.mark.numba
-def test_operator_truth():
+def test_operator_bool():
     @numba.njit
     def get_true(v):
         return bool(v)
 
+    assert not get_true(vector.obj(x=0, y=0))
+    assert get_true(vector.obj(x=0, y=0.1))
+
+    assert not get_true(vector.obj(x=0, y=0, z=0))
+    assert get_true(vector.obj(x=0, y=0, z=0.1))
+
+    assert not get_true(vector.obj(x=0, y=0, z=0, t=0))
+    assert get_true(vector.obj(x=0, y=0, z=0.1, t=0))
+    assert get_true(vector.obj(x=0, y=0, z=0, t=0.1))
+    assert get_true(vector.obj(x=0, y=0, z=10, t=10))
+
+
+@pytest.mark.numba
+def test_operator_truth():
+    @numba.njit
+    def get_true(v):
+        return True if v else False
+
     @numba.njit
     def get_false(v):
-        return not bool(v)
+        return False if v else True
 
     assert not get_true(vector.obj(x=0, y=0))
     assert get_true(vector.obj(x=0, y=0.1))
