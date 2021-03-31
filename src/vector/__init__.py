@@ -326,15 +326,15 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
 
     if dimension == 2 and not is_momentum:
         recname = "Vector2D"
-    elif dimension == 2 and is_momentum:
+    elif dimension == 2:
         recname = "Momentum2D"
     elif dimension == 3 and not is_momentum:
         recname = "Vector3D"
-    elif dimension == 3 and is_momentum:
+    elif dimension == 3:
         recname = "Momentum3D"
     elif dimension == 4 and not is_momentum:
         recname = "Vector4D"
-    elif dimension == 4 and is_momentum:
+    elif dimension == 4:
         recname = "Momentum4D"
 
     return awkward.zip(dict(zip(names, arrays)), depth_limit=depth, with_name=recname)

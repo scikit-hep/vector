@@ -17,7 +17,7 @@ a2 = vector.array({"x": [10, 100, 1000, 10000], "y": [20, 200, 2000, 20000]})
 
 def test_eq():
     assert v1 == v1
-    assert not v1 == v2
+    assert v1 != v2
     assert (a1 == a1).all()
     assert not (a1 == a2).any()
     assert (v1 == a1).any()
@@ -27,7 +27,7 @@ def test_eq():
 
 
 def test_ne():
-    assert not v1 != v1
+    assert v1 == v1
     assert v1 != v2
     assert not (a1 != a1).any()
     assert (a1 != a2).all()

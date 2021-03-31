@@ -65,17 +65,17 @@ def cartesian_t(lib, x1, y1, z1, t1, energy, mass, mass2, x2, y2, z2):
     return transform4D.cartesian_t(
         lib,
         xx,
-        xy,
-        xz,
-        xt,
+        yx,
+        zx,
+        tx,
         yx,
         yy,
-        yz,
-        yt,
+        zy,
+        ty,
         zx,
         zy,
         zz,
-        zt,
+        tz,
         tx,
         ty,
         tz,
@@ -106,23 +106,7 @@ def cartesian_tau(lib, x1, y1, z1, tau1, energy, mass, mass2, x2, y2, z2):
     yt = gbetay
     zt = gbetaz
     return transform4D.cartesian_tau(
-        lib,
-        xx,
-        xy,
-        xz,
-        xt,
-        yx,
-        yy,
-        yz,
-        yt,
-        zx,
-        zy,
-        zz,
-        zt,
-        x1,
-        y1,
-        z1,
-        tau1,
+        lib, xx, yx, zx, xt, yx, yy, zy, yt, zx, zy, zz, zt, x1, y1, z1, tau1
     )
 
 

@@ -185,15 +185,15 @@ def is_pi(node):
 
 
 def is_nan_to_num(node):
-    if node.kind == "call_kw36" and len(node) >= 3:
-        function = expr(node[0])
-        return (
-            function.kind == "attribute"
-            and expr(function[0]).attr == "lib"
-            and function[1].attr == "nan_to_num"
-        )
-    else:
+    if node.kind != "call_kw36" or len(node) < 3:
         return False
+
+    function = expr(node[0])
+    return (
+        function.kind == "attribute"
+        and expr(function[0]).attr == "lib"
+        and function[1].attr == "nan_to_num"
+    )
 
 
 def analyze_return(node, context):
@@ -291,7 +291,7 @@ def analyze_callable(node, context):
     if node.kind == "attribute37":
         assert len(node) == 2
         module = expr(node[0])
-        assert module.kind == "LOAD_FAST" or module.kind == "LOAD_GLOBAL"
+        assert module.kind in ["LOAD_FAST", "LOAD_GLOBAL"]
         assert node[1].kind == "LOAD_METHOD"
 
         if module.attr == "lib":
@@ -309,7 +309,7 @@ def analyze_callable(node, context):
                 "vector._compute.lorentz",
             )
 
-    elif node.kind == "LOAD_GLOBAL" or node.kind == "LOAD_DEREF":
+    elif node.kind in ["LOAD_GLOBAL", "LOAD_DEREF"]:
         function = context.closure.get(node.attr)
         assert (
             function is not None

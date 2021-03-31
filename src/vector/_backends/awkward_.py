@@ -226,21 +226,15 @@ class TemporalAwkwardTau(TemporalAwkward, TemporalTau):
 
 
 def _class_to_name(cls: typing.Type[VectorProtocol]) -> str:
-    if issubclass(cls, Momentum):
-        if issubclass(cls, Vector2D):
+    if issubclass(cls, Vector2D):
+        if issubclass(cls, Momentum):
             return "Momentum2D"
-        elif issubclass(cls, Vector3D):
-            return "Momentum3D"
-        elif issubclass(cls, Vector4D):
-            return "Momentum4D"
-    else:
-        if issubclass(cls, Vector2D):
+        else:
             return "Vector2D"
-        elif issubclass(cls, Vector3D):
-            return "Vector3D"
-        elif issubclass(cls, Vector4D):
-            return "Vector4D"
-
+    elif issubclass(cls, Vector3D):
+        return "Momentum3D"
+    elif issubclass(cls, Vector4D):
+        return "Momentum4D"
     raise AssertionError(repr(cls))
 
 
@@ -275,7 +269,7 @@ class VectorAwkward:
         Wraps the raw result of a compute function as an array of scalars or an
         array of vectors.
         """
-        if returns == [float] or returns == [bool]:
+        if returns in [[float], [bool]]:
             return result
 
         elif (

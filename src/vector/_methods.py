@@ -2463,13 +2463,12 @@ def _flavor_of(*objects: VectorProtocol) -> typing.Type[VectorProtocol]:
         if isinstance(obj, Vector):
             if not isinstance(obj, Momentum):
                 is_momentum = False
-            if handler is None:
+            if (
+                handler is None
+                or not isinstance(obj, VectorObject)
+                and isinstance(obj, VectorNumpy)
+            ):
                 handler = obj
-            elif isinstance(obj, VectorObject):
-                pass
-            elif isinstance(obj, VectorNumpy):
-                handler = obj
-
     assert handler is not None
     if is_momentum:
         return type(handler)

@@ -463,9 +463,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
 
     def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
-        out = []
-        for x in aznames:
-            out.append(f"{x}={getattr(self.azimuthal, x)}")
+        out = [f"{x}={getattr(self.azimuthal, x)}" for x in aznames]
         return "vector.obj(" + ", ".join(out) + ")"
 
     def __array__(self) -> numpy.ndarray:
@@ -497,7 +495,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
 
         Wraps the raw result of a compute function as a scalar or a vector.
         """
-        if returns == [float] or returns == [bool]:
+        if returns in [[float], [bool]]:
             return result
 
         elif (
@@ -714,9 +712,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
     def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         lnames = _coordinate_class_to_names[_ltype(self)]
-        out = []
-        for x in aznames:
-            out.append(f"{x}={getattr(self.azimuthal, x)}")
+        out = [f"{x}={getattr(self.azimuthal, x)}" for x in aznames]
         for x in lnames:
             out.append(f"{x}={getattr(self.longitudinal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
@@ -752,7 +748,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
 
         Wraps the raw result of a compute function as a scalar or a vector.
         """
-        if returns == [float] or returns == [bool]:
+        if returns in [[float], [bool]]:
             return result
 
         elif (
@@ -1186,9 +1182,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         aznames = _coordinate_class_to_names[_aztype(self)]
         lnames = _coordinate_class_to_names[_ltype(self)]
         tnames = _coordinate_class_to_names[_ttype(self)]
-        out = []
-        for x in aznames:
-            out.append(f"{x}={getattr(self.azimuthal, x)}")
+        out = [f"{x}={getattr(self.azimuthal, x)}" for x in aznames]
         for x in lnames:
             out.append(f"{x}={getattr(self.longitudinal, x)}")
         for x in tnames:
@@ -1229,7 +1223,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
         Wraps the raw result of a compute function as a scalar or a vector.
         """
-        if returns == [float] or returns == [bool]:
+        if returns in [[float], [bool]]:
             return result
 
         elif (
@@ -1494,12 +1488,10 @@ def _gather_coordinates(
             raise TypeError("specify z= or theta= or eta=, but not more than one")
         longitudinal = LongitudinalObjectZ(coordinates.pop("z"))
     elif "theta" in coordinates:
-        if "z" in coordinates or "eta" in coordinates:
+        if "eta" in coordinates:
             raise TypeError("specify z= or theta= or eta=, but not more than one")
         longitudinal = LongitudinalObjectTheta(coordinates.pop("theta"))
     elif "eta" in coordinates:
-        if "z" in coordinates or "theta" in coordinates:
-            raise TypeError("specify z= or theta= or eta=, but not more than one")
         longitudinal = LongitudinalObjectEta(coordinates.pop("eta"))
 
     temporal: typing.Optional[typing.Union[TemporalObjectT, TemporalObjectTau]] = None
@@ -1509,11 +1501,9 @@ def _gather_coordinates(
             raise TypeError("specify t= or tau=, but not more than one")
         temporal = TemporalObjectT(coordinates.pop("t"))
     elif "tau" in coordinates:
-        if "t" in coordinates:
-            raise TypeError("specify t= or tau=, but not more than one")
         temporal = TemporalObjectTau(coordinates.pop("tau"))
 
-    if len(coordinates) == 0:
+    if not coordinates:
         if azimuthal is not None and longitudinal is None and temporal is None:
             return planar_class(azimuthal)  # type: ignore
         if azimuthal is not None and longitudinal is not None and temporal is None:

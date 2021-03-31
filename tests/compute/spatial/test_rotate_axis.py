@@ -198,12 +198,12 @@ def test_lorentz_numpy():
             )
             out = tvec.rotate_axis(taxis, 0.25)
             assert isinstance(out, vector._backends.numpy_.VectorNumpy4D)
-            assert out.dtype.names == ("x", "y", "z", "t") or out.dtype.names == (
+            assert out.dtype.names in [("x", "y", "z", "t"), (
                 "x",
                 "y",
                 "z",
                 "tau",
-            )
+            )]
             assert out[0].x == pytest.approx(0.37483425404335763)
             assert out[0].y == pytest.approx(0.5383405688588193)
             assert out[0].z == pytest.approx(0.5828282027463345)

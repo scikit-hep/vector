@@ -53,10 +53,7 @@ def nan_to_num(x, copy=True, nan=0.0, posinf=None, neginf=None):
     if isinstance(x, numba.types.Array):
 
         def nan_to_num_impl(x, copy=True, nan=0.0, posinf=None, neginf=None):
-            if copy:
-                out = numpy.copy(x).reshape(-1)
-            else:
-                out = x.reshape(-1)
+            out = numpy.copy(x).reshape(-1) if copy else x.reshape(-1)
             for i in range(len(out)):
                 if numpy.isnan(out[i]):
                     out[i] = nan
@@ -1285,7 +1282,7 @@ for vectortype in (VectorObject2DType, VectorObject3DType, VectorObject4DType):
             LongitudinalObjectEta,
         ):
             for tcoordtype in (None, TemporalObjectT, TemporalObjectTau):
-                if not (lcoordtype is None and tcoordtype is not None):
+                if lcoordtype is not None or tcoordtype is None:
                     add_coordinate_change(
                         vectortype, azcoordtype, lcoordtype, tcoordtype
                     )
