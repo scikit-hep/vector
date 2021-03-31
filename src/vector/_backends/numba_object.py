@@ -5,6 +5,10 @@
 
 # type: ignore
 
+"""
+Implements VectorObjects in Numba. Every function should be made usable in Numba.
+"""
+
 import operator
 
 import numba

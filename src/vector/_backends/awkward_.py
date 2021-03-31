@@ -22,6 +22,10 @@ Alternatively, you can
 to install the behaviors globally, so that any record named ``Vector2D``,
 ``Vector3D``, ``Vector4D``, ``Momentum2D``, ``Momentum3D``, or ``Momentum4D``
 will have these properties and methods.
+
+The Awkward-Vectors-in-Numba extension is also implemented here, since it requires
+two non-strict dependencies of Vector: Awkward and Numba. Awkward's ``ak.behavior``
+manages this non-strictness well.
 """
 
 import numbers

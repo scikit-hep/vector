@@ -787,53 +787,123 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
 
     @property
     def t(self) -> ScalarCollection:
-        """
+        r"""
         The Cartesian $t$ (time) coordinate of the vector or every vector in the array.
+
+        If $t$ is derived from $\tau$, it is not allowed to be ``NaN``.
+
+        .. code-block:: python
+
+            t = sqrt(max(copysign(tau**2, tau) + mag**2, 0))
         """
         raise AssertionError
 
     @property
     def t2(self) -> ScalarCollection:
-        "t2 docs"
+        r"""
+        The Cartesian $t$ (time) coordinate squared of the vector or every vector
+        in the array.
+
+        If $t^2$ is derived from $\tau$, it is not allowed to be negative.
+
+        .. code-block:: python
+
+            t2 = max(copysign(tau**2, tau) + mag**2, 0)
+        """
         raise AssertionError
 
     @property
     def tau(self) -> ScalarCollection:
-        "tau docs"
+        r"""
+        The Lorentz magnitude $\tau$ (proper time) of the vector or every vector
+        in the array.
+
+        If $\tau$ is derived from $t$, spacelike vectors are represented by negative
+        proper times.
+
+        .. code-block:: python
+
+            tau = copysign(sqrt(abs(t**2 - mag**2)), t**2 - mag**2)
+        """
         raise AssertionError
 
     @property
     def tau2(self) -> ScalarCollection:
-        "tau2 docs"
+        r"""
+        The Lorentz magnitude $\tau$ (proper time) squared of the vector or every
+        vector in the array.
+
+        .. code-block:: python
+
+            tau2 = t**2 - mag**2
+        """
         raise AssertionError
 
     @property
     def beta(self) -> ScalarCollection:
-        "beta docs"
+        """
+        The speed(s) of the Lorentz vector or array of vectors, in which lightlike
+        vectors have ``beta == 1``.
+        """
         raise AssertionError
 
     @property
     def gamma(self) -> ScalarCollection:
-        "gamma docs"
+        r"""
+        The time dilation/length contraction factor(s) of the Lorentz vector or
+        array of vectors: $t/\tau$.
+        """
         raise AssertionError
 
     @property
     def rapidity(self) -> ScalarCollection:
-        "rapidity docs"
+        """
+        The rapidity relative to the longitudinal axis of the Lorentz vector or
+        array of vectors.
+
+        .. code-block:: python
+
+            0.5 * log((t + z) / (t - z))
+        """
         raise AssertionError
 
     def boost_p4(self: SameVectorType, p4: "VectorProtocolLorentz") -> SameVectorType:
-        "boost_p4 docs"
+        """
+        Boosts the vector or array of vectors in a direction and magnitude given
+        by the 4D vector or array of vectors ``p4``.
+
+        This function is equivalent to but more numerically stable than
+
+        .. code-block:: python
+
+            boost_beta3(p4.to_beta3)
+
+        where :doc:`vector._methods.VectorProtocolLorentz.to_beta3` converts a
+        4D Lorentz vector into a 3D velocity (in which lightlike velocities have
+        ``mag == 1``).
+        """
         raise AssertionError
 
     def boost_beta3(
         self: SameVectorType, beta3: "VectorProtocolSpatial"
     ) -> SameVectorType:
-        "boost_beta3 docs"
+        """
+        Boosts the vector or array of vectors in a direction and magnitude given
+        by the 3D velocity or array of velocity vectors ``beta3``.
+        """
         raise AssertionError
 
     def boost(self: SameVectorType, booster: "VectorProtocol") -> SameVectorType:
-        "boost docs"
+        """
+        Boosts the vector or array of vectors using the 3D or 4D ``booster``.
+
+        If ``booster`` is 3D, it is interpreted as a velocity (in which lightlike
+        velocities have ``mag == 1``) and :doc:`vector._methods.VectorProtocolLorentz.boost_beta3`
+        is called.
+
+        If ``booster`` is 4D, it is interpreted as a Lorentz vector and
+        :doc:`vector._methods.VectorProtocolLorentz.boost_p4` is called.
+        """
         raise AssertionError
 
     def boostX(
@@ -841,7 +911,16 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         beta: typing.Optional[ScalarCollection] = None,
         gamma: typing.Optional[ScalarCollection] = None,
     ) -> SameVectorType:
-        "boostX docs"
+        """
+        Boosts the vector or array of vectors in the $x$ direction by a speed
+        ``beta`` (in which lightlike boosts have ``beta == 1``) or time dilation/length
+        contraction factor ``gamma``.
+
+        Either ``beta`` xor ``gamma`` must be specified, not both or neither.
+
+        If ``beta`` or ``gamma`` is negative, it is taken as a boost in the $-x$
+        direction.
+        """
         raise AssertionError
 
     def boostY(
@@ -849,7 +928,16 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         beta: typing.Optional[ScalarCollection] = None,
         gamma: typing.Optional[ScalarCollection] = None,
     ) -> SameVectorType:
-        "boostY docs"
+        """
+        Boosts the vector or array of vectors in the $y$ direction by a speed
+        ``beta`` (in which lightlike boosts have ``beta == 1``) or time dilation/length
+        contraction factor ``gamma``.
+
+        Either ``beta`` xor ``gamma`` must be specified, not both or neither.
+
+        If ``beta`` or ``gamma`` is negative, it is taken as a boost in the $-y$
+        direction.
+        """
         raise AssertionError
 
     def boostZ(
@@ -857,153 +945,275 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         beta: typing.Optional[ScalarCollection] = None,
         gamma: typing.Optional[ScalarCollection] = None,
     ) -> SameVectorType:
-        "boostZ docs"
+        """
+        Boosts the vector or array of vectors in the $z$ direction by a speed
+        ``beta`` (in which lightlike boosts have ``beta == 1``) or time dilation/length
+        contraction factor ``gamma``.
+
+        Either ``beta`` xor ``gamma`` must be specified, not both or neither.
+
+        If ``beta`` or ``gamma`` is negative, it is taken as a boost in the $-z$
+        direction.
+        """
         raise AssertionError
 
     def transform4D(self: SameVectorType, obj: TransformProtocol4D) -> SameVectorType:
-        "transform4D docs"
+        """
+        Arbitrarily transforms the vector(s) by
+
+        .. code-block:: python
+
+            obj["xx"] obj["xy"] obj["xz"] obj["xt"]
+            obj["yx"] obj["yy"] obj["yz"] obj["yt"]
+            obj["zx"] obj["zy"] obj["zz"] obj["zt"]
+            obj["tx"] obj["ty"] obj["tz"] obj["tt"]
+
+        There is no restriction on the type of ``obj``; it just has to provide
+        those components (which can be arrays if the vectors are in an array).
+        """
         raise AssertionError
 
     def to_beta3(self) -> "VectorProtocolSpatial":
-        "to_beta3 docs"
+        """
+        Converts the 4D Lorentz vector or array of vectors into a 3D velocity
+        vector or array of vectors, in which lightlike velocities have
+        ``mag == 1``.
+        """
         raise AssertionError
 
     def is_timelike(self, tolerance: ScalarCollection = 0) -> BoolCollection:
-        "is_timelike docs"
+        """
+        Returns True if the vector or a vector in the array is pointing in a
+        timelike direction, ``t**2 > mag**2``, False otherwise.
+
+        The ``tolerance`` is in units of ``t`` and ``mag``. Note that
+
+        - the default ``tolerance`` for :doc:`vector._methods.VectorProtocolLorentz.is_timelike`
+          is ``0``
+        - the default ``tolerance`` for :doc:`vector._methods.VectorProtocolLorentz.is_spacelike`
+          is ``0``
+        - the default ``tolerance`` for :doc:`vector._methods.VectorProtocolLorentz.is_lightlike`
+          is ``1e-5``
+
+        If you want to use these methods to divide space-time into non-overlapping
+        regions (the light-cone), use the same ``tolerance`` for each.
+        """
         raise AssertionError
 
     def is_spacelike(self, tolerance: ScalarCollection = 0) -> BoolCollection:
-        "is_spacelike docs"
+        """
+        Returns True if the vector or a vector in the array is pointing in a
+        spacelike direction, ``t**2 < mag**2``, False otherwise.
+
+        The ``tolerance`` is in units of ``t`` and ``mag``. Note that
+
+        - the default ``tolerance`` for :doc:`vector._methods.VectorProtocolLorentz.is_timelike`
+          is ``0``
+        - the default ``tolerance`` for :doc:`vector._methods.VectorProtocolLorentz.is_spacelike`
+          is ``0``
+        - the default ``tolerance`` for :doc:`vector._methods.VectorProtocolLorentz.is_lightlike`
+          is ``1e-5``
+
+        If you want to use these methods to divide space-time into non-overlapping
+        regions (the light-cone), use the same ``tolerance`` for each.
+        """
         raise AssertionError
 
     def is_lightlike(self, tolerance: ScalarCollection = 1e-5) -> BoolCollection:
-        "is_timelike docs"
+        """
+        Returns True if the vector or a vector in the array is pointing in a
+        lightlike direction, ``t**2 == mag**2``, False otherwise.
+
+        The ``tolerance`` is in units of ``t`` and ``mag``. Note that
+
+        - the default ``tolerance`` for :doc:`vector._methods.VectorProtocolLorentz.is_timelike`
+          is ``0``
+        - the default ``tolerance`` for :doc:`vector._methods.VectorProtocolLorentz.is_spacelike`
+          is ``0``
+        - the default ``tolerance`` for :doc:`vector._methods.VectorProtocolLorentz.is_lightlike`
+          is ``1e-5``
+
+        If you want to use these methods to divide space-time into non-overlapping
+        regions (the light-cone), use the same ``tolerance`` for each.
+        """
         raise AssertionError
 
 
 class MomentumProtocolPlanar(VectorProtocolPlanar):
     @property
     def px(self) -> ScalarCollection:
-        "px docs"
+        """
+        Momentum-synonym for :doc:`vector._methods.VectorProtocolPlanar.x`.
+        """
         raise AssertionError
 
     @property
     def py(self) -> ScalarCollection:
-        "py docs"
+        """
+        Momentum-synonym for :doc:`vector._methods.VectorProtocolPlanar.y`.
+        """
         raise AssertionError
 
     @property
     def pt(self) -> ScalarCollection:
-        "pt docs"
+        """
+        Momentum-synonym for :doc:`vector._methods.VectorProtocolPlanar.rho`.
+        """
         raise AssertionError
 
     @property
     def pt2(self) -> ScalarCollection:
-        "pt2 docs"
+        """
+        Momentum-synonym for :doc:`vector._methods.VectorProtocolPlanar.rho2`.
+        """
         raise AssertionError
 
 
 class MomentumProtocolSpatial(VectorProtocolSpatial, MomentumProtocolPlanar):
     @property
     def pz(self) -> ScalarCollection:
-        "pz docs"
+        """
+        Momentum-synonym for :doc:`vector._methods.VectorProtocolSpatial.z`.
+        """
         raise AssertionError
 
     @property
     def pseudorapidity(self) -> ScalarCollection:
-        "pseudorapidity docs"
+        """
+        Momentum-synonym for :doc:`vector._methods.VectorProtocolSpatial.eta`.
+        """
         raise AssertionError
 
     @property
     def p(self) -> ScalarCollection:
-        "p docs"
+        """
+        Momentum-synonym for :doc:`vector._methods.VectorProtocolSpatial.mag`.
+        """
         raise AssertionError
 
     @property
     def p2(self) -> ScalarCollection:
-        "p2 docs"
+        """
+        Momentum-synonym for :doc:`vector._methods.VectorProtocolSpatial.mag2`.
+        """
         raise AssertionError
 
 
 class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
     @property
     def E(self) -> ScalarCollection:
-        "E docs"
+        """
+        Momentum-synonym for :doc:`vector._methods.VectorProtocolLorentz.t`.
+        """
         raise AssertionError
 
     @property
     def energy(self) -> ScalarCollection:
-        "energy docs"
+        """
+        Momentum-synonym for :doc:`vector._methods.VectorProtocolLorentz.t`.
+        """
         raise AssertionError
 
     @property
     def E2(self) -> ScalarCollection:
-        "E2 docs"
+        """
+        Momentum-synonym for :doc:`vector._methods.VectorProtocolLorentz.t2`.
+        """
         raise AssertionError
 
     @property
     def energy2(self) -> ScalarCollection:
-        "energy2 docs"
+        """
+        Momentum-synonym for :doc:`vector._methods.VectorProtocolLorentz.t2`.
+        """
         raise AssertionError
 
     @property
     def M(self) -> ScalarCollection:
-        "M docs"
+        """
+        Momentum-synonym for :doc:`vector._methods.VectorProtocolLorentz.tau`.
+        """
         raise AssertionError
 
     @property
     def mass(self) -> ScalarCollection:
-        "mass docs"
+        """
+        Momentum-synonym for :doc:`vector._methods.VectorProtocolLorentz.tau`.
+        """
         raise AssertionError
 
     @property
     def M2(self) -> ScalarCollection:
-        "M2 docs"
+        """
+        Momentum-synonym for :doc:`vector._methods.VectorProtocolLorentz.tau2`.
+        """
         raise AssertionError
 
     @property
     def mass2(self) -> ScalarCollection:
-        "mass2 docs"
+        """
+        Momentum-synonym for :doc:`vector._methods.VectorProtocolLorentz.tau2`.
+        """
         raise AssertionError
 
     @property
     def Et(self) -> ScalarCollection:
-        "Et docs"
+        r"""
+        Transverse energy of the four-momentum vector or array of vectors:
+        $E_T = E \sin\theta$.
+        """
         raise AssertionError
 
     @property
     def transverse_energy(self) -> ScalarCollection:
-        "transverse_energy docs"
+        """
+        Synonym for :doc:`vector._methods.MomentumProtocolLorentz.Et`.
+        """
         raise AssertionError
 
     @property
     def Et2(self) -> ScalarCollection:
-        "Et2 docs"
+        r"""
+        Transverse energy squared of the four-momentum vector or array of
+        vectors: $E_T^2 = E^2 \sin^2\theta$.
+        """
         raise AssertionError
 
     @property
     def transverse_energy2(self) -> ScalarCollection:
-        "transverse_energy2 docs"
+        """
+        Synonym for :doc:`vector._methods.MomentumProtocolLorentz.Et2`.
+        """
         raise AssertionError
 
     @property
     def Mt(self) -> ScalarCollection:
-        "Mt docs"
+        r"""
+        Transverse mass of the four-momentum vector or array of vectors:
+        $M_T = \sqrt{t^2 - z^2}$.
+        """
         raise AssertionError
 
     @property
     def transverse_mass(self) -> ScalarCollection:
-        "transverse_mass docs"
+        """
+        Synonym for :doc:`vector._methods.MomentumProtocolLorentz.Mt`.
+        """
         raise AssertionError
 
     @property
     def Mt2(self) -> ScalarCollection:
-        "Mt2 docs"
+        r"""
+        Transverse mass squared of the four-momentum vector or array of vectors:
+        $M_T^2 = t^2 - z^2$.
+        """
         raise AssertionError
 
     @property
     def transverse_mass2(self) -> ScalarCollection:
-        "transverse_mass2 docs"
+        """
+        Synonym for :doc:`vector._methods.MomentumProtocolLorentz.Mt2`.
+        """
         raise AssertionError
 
 
@@ -2028,6 +2238,9 @@ class LorentzMomentum(SpatialMomentum, MomentumProtocolLorentz):
 
 
 def dim(v: VectorProtocol) -> int:
+    """
+    Returns the number of dimensions in a vector: 2, 3, or 4.
+    """
     if isinstance(v, Vector2D):
         return 2
     elif isinstance(v, Vector3D):
@@ -2041,6 +2254,12 @@ def dim(v: VectorProtocol) -> int:
 def _compute_module_of(
     one: VectorProtocol, two: VectorProtocol, nontemporal: bool = False
 ) -> Module:
+    """
+    Determines which compute module to use for functions of two vectors
+    (the one with minimum dimension).
+
+    If ``nontemporal``, use a spatial module even if both vectors are 4D.
+    """
     if not isinstance(one, Vector):
         raise TypeError(f"{repr(one)} is not a Vector")
     if not isinstance(two, Vector):
@@ -2133,6 +2352,10 @@ _coordinate_order = [
 
 
 def _aztype(obj: VectorProtocolPlanar) -> typing.Type[Coordinates]:
+    """
+    Determines the Azimuthal type of a vector for use in looking up a
+    dispatched function.
+    """
     if hasattr(obj, "azimuthal"):
         for t in type(obj.azimuthal).__mro__:
             if t in (AzimuthalXY, AzimuthalRhoPhi):
@@ -2141,6 +2364,10 @@ def _aztype(obj: VectorProtocolPlanar) -> typing.Type[Coordinates]:
 
 
 def _ltype(obj: VectorProtocolSpatial) -> typing.Type[Coordinates]:
+    """
+    Determines the Longitudinal type of a vector for use in looking up a
+    dispatched function.
+    """
     if hasattr(obj, "longitudinal"):
         for t in type(obj.longitudinal).__mro__:
             if t in (LongitudinalZ, LongitudinalTheta, LongitudinalEta):
@@ -2149,6 +2376,10 @@ def _ltype(obj: VectorProtocolSpatial) -> typing.Type[Coordinates]:
 
 
 def _ttype(obj: VectorProtocolLorentz) -> typing.Type[Coordinates]:
+    """
+    Determines the Temporal type of a vector for use in looking up a
+    dispatched function.
+    """
     if hasattr(obj, "temporal"):
         for t in type(obj.temporal).__mro__:
             if t in (TemporalT, TemporalTau):
@@ -2157,6 +2388,10 @@ def _ttype(obj: VectorProtocolLorentz) -> typing.Type[Coordinates]:
 
 
 def _lib_of(*objects: VectorProtocol) -> Module:  # NumPy-like module
+    """
+    Determines the ``lib`` of a vector or set of vectors, complaining
+    if they're incompatible.
+    """
     lib = None
     for obj in objects:
         if isinstance(obj, Vector):
@@ -2172,6 +2407,10 @@ def _lib_of(*objects: VectorProtocol) -> Module:  # NumPy-like module
 
 
 def _from_signature(name: str, dispatch_map: dict, signature: tuple) -> tuple:
+    """
+    Gets a function and its return type from a ``dispatch_map`` and the
+    ``signature`` to search for (complaining if none is found).
+    """
     result = dispatch_map.get(signature)
     if result is None:
         raise TypeError(
@@ -2188,6 +2427,14 @@ _handler_priority = [
 
 
 def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
+    """
+    Determines which vector should wrap the output of a dispatched function.
+
+    Awkward Arrays have higher priority than NumPy arrays, which have higher
+    priority than Python objects, which has the effect of "promoting" Python
+    objects to NumPy arrays to Awkward Arrays whenever two are used in the
+    same formula.
+    """
     handler = None
     for obj in objects:
         if isinstance(obj, Vector):
@@ -2203,6 +2450,10 @@ def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
 
 
 def _flavor_of(*objects: VectorProtocol) -> typing.Type[VectorProtocol]:
+    """
+    Determines the flavor of the output of a dispatched function, where
+    "flavor" is generic vs momentum.
+    """
     from vector._backends.numpy_ import VectorNumpy
     from vector._backends.object_ import VectorObject
 

@@ -1366,7 +1366,60 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):
 
 
 def array(*args: typing.Any, **kwargs: typing.Any) -> VectorNumpy:
-    "vector.array docs"
+    """
+    Constructs a NumPy array of vectors, whose type is determined by the dtype
+    of the structured array or Pandas-style "columns" argument.
+
+    All allowed signatures for ``np.array`` can be used in this function, plus
+    one more:
+
+    .. code-block:: python
+
+        vector.array({"x": x_column, "y": y_column})
+
+    to make an array with ``dtype=[("x", x_column.dtype), ("y", y_column.dtype)]``.
+
+    The array must have structured ``dtype`` (i.e. ``dtype.names is not None``)
+    and the following combinations of names are allowed:
+
+    - (2D) ``x``, ``y``
+    - (2D) ``rho``, ``phi``
+    - (3D) ``x``, ``y``, ``z``
+    - (3D) ``x``, ``y``, ``theta``
+    - (3D) ``x``, ``y``, ``eta``
+    - (3D) ``rho``, ``phi``, ``z``
+    - (3D) ``rho``, ``phi``, ``theta``
+    - (3D) ``rho``, ``phi``, ``eta``
+    - (4D) ``x``, ``y``, ``z``, ``t``
+    - (4D) ``x``, ``y``, ``z``, ``tau```
+    - (4D) ``x``, ``y``, ``theta``, ``t```
+    - (4D) ``x``, ``y``, ``theta``, ``tau```
+    - (4D) ``x``, ``y``, ``eta``, ``t```
+    - (4D) ``x``, ``y``, ``eta``, ``tau```
+    - (4D) ``rho``, ``phi``, ``z``, ``t```
+    - (4D) ``rho``, ``phi``, ``z``, ``tau```
+    - (4D) ``rho``, ``phi``, ``theta``, ``t```
+    - (4D) ``rho``, ``phi``, ``theta``, ``tau```
+    - (4D) ``rho``, ``phi``, ``eta``, ``t```
+    - (4D) ``rho``, ``phi``, ``eta``, ``tau```
+
+    in which
+
+    - ``px`` may be substituted for ``x``
+    - ``py`` may be substituted for ``y``
+    - ``pt`` may be substituted for ``rho``
+    - ``pz`` may be substituted for ``z``
+    - ``E`` may be substituted for ``t``
+    - ``energy`` may be substituted for ``t``
+    - ``M`` may be substituted for ``tau``
+    - ``mass`` may be substituted for ``tau``
+
+    to make the vector a momentum vector.
+
+    No constraints are placed on the ``dtypes`` of the vector fields, though if they
+    are not numbers, mathematical operations will fail. Usually, you want them to be
+    ``np.integer`` or ``np.floating``.
+    """
     names = None
     if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
         names = tuple(args[0].keys())
