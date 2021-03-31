@@ -1390,17 +1390,11 @@ def test_operator_neg():
 def test_operator_truth():
     @numba.njit
     def get_true(v):
-        if v:
-            return True
-        else:
-            return False
+        return bool(v)
 
     @numba.njit
     def get_false(v):
-        if not v:
-            return True
-        else:
-            return False
+        return not bool(v)
 
     assert not get_true(vector.obj(x=0, y=0))
     assert get_true(vector.obj(x=0, y=0.1))

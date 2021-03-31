@@ -324,18 +324,11 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
 
     depth = akarray.layout.purelist_depth
 
-    if dimension == 2 and not is_momentum:
-        recname = "Vector2D"
-    elif dimension == 2 and is_momentum:
-        recname = "Momentum2D"
-    elif dimension == 3 and not is_momentum:
-        recname = "Vector3D"
-    elif dimension == 3 and is_momentum:
-        recname = "Momentum3D"
-    elif dimension == 4 and not is_momentum:
-        recname = "Vector4D"
-    elif dimension == 4 and is_momentum:
-        recname = "Momentum4D"
+    if 2 <= dimension <= 4:
+        name = "Momentum" if is_momentum else "Vector"
+        recname = f"{name}{dimension}D"
+    else:
+        raise RuntimeError(f"Dimension must be between 2-4, not {dimension}")
 
     return awkward.zip(dict(zip(names, arrays)), depth_limit=depth, with_name=recname)
 
