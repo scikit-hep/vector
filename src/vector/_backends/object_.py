@@ -476,7 +476,6 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             ],
         )
 
-    @typing.no_type_check
     def _wrap_result(
         self,
         cls: typing.Any,
@@ -729,7 +728,6 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             ],
         )
 
-    @typing.no_type_check
     def _wrap_result(
         self,
         cls: typing.Any,
@@ -1204,7 +1202,6 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             ],
         )
 
-    @typing.no_type_check
     def _wrap_result(
         self,
         cls: typing.Any,
