@@ -55,53 +55,53 @@ class TemporalObject(CoordinatesObject, Temporal):
     pass
 
 
-class AzimuthalObjectXY(typing.NamedTuple):
+class TupleXY(typing.NamedTuple):
     x: float
     y: float
 
+
+class AzimuthalObjectXY(AzimuthalObject, AzimuthalXY, TupleXY):
     @property
     def elements(self) -> typing.Tuple[float, float]:
         return (self.x, self.y)
 
 
-AzimuthalObjectXY.__bases__ = (AzimuthalObject, AzimuthalXY, tuple)
-
-
-class AzimuthalObjectRhoPhi(typing.NamedTuple):
+class TupleRhoPhi(typing.NamedTuple):
     rho: float
     phi: float
 
+
+class AzimuthalObjectRhoPhi(AzimuthalObject, AzimuthalRhoPhi, TupleRhoPhi):
     @property
     def elements(self) -> typing.Tuple[float, float]:
         return (self.rho, self.phi)
 
 
-AzimuthalObjectRhoPhi.__bases__ = (AzimuthalObject, AzimuthalRhoPhi, tuple)
-
-
-class LongitudinalObjectZ(typing.NamedTuple):
+class TupleZ(typing.NamedTuple):
     z: float
 
+
+class LongitudinalObjectZ(LongitudinalObject, LongitudinalZ, TupleZ):
     @property
     def elements(self) -> typing.Tuple[float]:
         return (self.z,)
 
 
-LongitudinalObjectZ.__bases__ = (LongitudinalObject, LongitudinalZ, tuple)
-
-
-class LongitudinalObjectTheta(typing.NamedTuple):
+class TupleTheta(typing.NamedTuple):
     theta: float
 
+
+class LongitudinalObjectTheta(LongitudinalObject, LongitudinalTheta, TupleTheta):
     @property
     def elements(self) -> typing.Tuple[float]:
         return (self.theta,)
 
 
-LongitudinalObjectTheta.__bases__ = (LongitudinalObject, LongitudinalTheta, tuple)
+class TupleEta(typing.NamedTuple):
+    eta: float
 
 
-class LongitudinalObjectEta(typing.NamedTuple):
+class LongitudinalObjectEta(LongitudinalObject, LongitudinalEta, TupleEta):
     eta: float
 
     @property
@@ -109,10 +109,11 @@ class LongitudinalObjectEta(typing.NamedTuple):
         return (self.eta,)
 
 
-LongitudinalObjectEta.__bases__ = (LongitudinalObject, LongitudinalEta, tuple)
+class TupleT(typing.NamedTuple):
+    t: float
 
 
-class TemporalObjectT(typing.NamedTuple):
+class TemporalObjectT(TemporalObject, TemporalT, TupleT):
     t: float
 
     @property
@@ -120,18 +121,14 @@ class TemporalObjectT(typing.NamedTuple):
         return (self.t,)
 
 
-TemporalObjectT.__bases__ = (TemporalObject, TemporalT, tuple)
-
-
-class TemporalObjectTau(typing.NamedTuple):
+class TupleTau(typing.NamedTuple):
     tau: float
 
+
+class TemporalObjectTau(TemporalObject, TemporalTau, TupleTau):
     @property
     def elements(self) -> typing.Tuple[float]:
         return (self.tau,)
-
-
-TemporalObjectTau.__bases__ = (TemporalObject, TemporalTau, tuple)
 
 
 _coord_object_type = {
@@ -446,7 +443,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
         Use :doc:`vector._backends.object_.MomentumObject2D` to construct a vector
         with momentum properties and methods.
         """
-        return cls(AzimuthalObjectXY(x, y))  # type: ignore
+        return cls(AzimuthalObjectXY(x, y))
 
     @classmethod
     def from_rhophi(cls, rho: float, phi: float) -> "VectorObject2D":
@@ -456,7 +453,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
         Use :doc:`vector._backends.object_.MomentumObject2D` to construct a vector
         with momentum properties and methods.
         """
-        return cls(AzimuthalObjectRhoPhi(rho, phi))  # type: ignore
+        return cls(AzimuthalObjectRhoPhi(rho, phi))
 
     def __init__(self, azimuthal: AzimuthalObject) -> None:
         self.azimuthal = azimuthal
@@ -560,7 +557,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
 
     @x.setter
     def x(self, x: float) -> None:
-        self.azimuthal = AzimuthalObjectXY(x, self.y)  # type: ignore
+        self.azimuthal = AzimuthalObjectXY(x, self.y)
 
     @property
     def y(self) -> float:
@@ -568,7 +565,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
 
     @y.setter
     def y(self, y: float) -> None:
-        self.azimuthal = AzimuthalObjectXY(self.x, y)  # type: ignore
+        self.azimuthal = AzimuthalObjectXY(self.x, y)
 
     @property
     def rho(self) -> float:
@@ -576,7 +573,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
 
     @rho.setter
     def rho(self, rho: float) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(rho, self.phi)  # type: ignore
+        self.azimuthal = AzimuthalObjectRhoPhi(rho, self.phi)
 
     @property
     def phi(self) -> float:
@@ -584,7 +581,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
 
     @phi.setter
     def phi(self, phi: float) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)  # type: ignore
+        self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)
 
 
 class MomentumObject2D(PlanarMomentum, VectorObject2D):
@@ -612,7 +609,7 @@ class MomentumObject2D(PlanarMomentum, VectorObject2D):
 
     @px.setter
     def px(self, px: float) -> None:
-        self.azimuthal = AzimuthalObjectXY(px, self.py)  # type: ignore
+        self.azimuthal = AzimuthalObjectXY(px, self.py)
 
     @property
     def py(self) -> float:
@@ -620,7 +617,7 @@ class MomentumObject2D(PlanarMomentum, VectorObject2D):
 
     @py.setter
     def py(self, py: float) -> None:
-        self.azimuthal = AzimuthalObjectXY(self.px, py)  # type: ignore
+        self.azimuthal = AzimuthalObjectXY(self.px, py)
 
     @property
     def pt(self) -> float:
@@ -628,7 +625,7 @@ class MomentumObject2D(PlanarMomentum, VectorObject2D):
 
     @pt.setter
     def pt(self, pt: float) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)  # type: ignore
+        self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)
 
 
 class VectorObject3D(VectorObject, Spatial, Vector3D):
@@ -645,7 +642,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
-        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z))  # type: ignore
+        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z))
 
     @classmethod
     def from_xytheta(cls, x: float, y: float, theta: float) -> "VectorObject3D":
@@ -656,7 +653,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
-        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectTheta(theta))  # type: ignore
+        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectTheta(theta))
 
     @classmethod
     def from_xyeta(cls, x: float, y: float, eta: float) -> "VectorObject3D":
@@ -667,7 +664,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
-        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta))  # type: ignore
+        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta))
 
     @classmethod
     def from_rhophiz(cls, rho: float, phi: float, z: float) -> "VectorObject3D":
@@ -678,7 +675,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
-        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectZ(z))  # type: ignore
+        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectZ(z))
 
     @classmethod
     def from_rhophitheta(cls, rho: float, phi: float, theta: float) -> "VectorObject3D":
@@ -689,7 +686,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
-        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectTheta(theta))  # type: ignore
+        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectTheta(theta))
 
     @classmethod
     def from_rhophieta(cls, rho: float, phi: float, eta: float) -> "VectorObject3D":
@@ -700,7 +697,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
-        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectEta(eta))  # type: ignore
+        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectEta(eta))
 
     def __init__(
         self, azimuthal: AzimuthalObject, longitudinal: LongitudinalObject
@@ -812,7 +809,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
 
     @x.setter
     def x(self, x: float) -> None:
-        self.azimuthal = AzimuthalObjectXY(x, self.y)  # type: ignore
+        self.azimuthal = AzimuthalObjectXY(x, self.y)
 
     @property
     def y(self) -> float:
@@ -820,7 +817,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
 
     @y.setter
     def y(self, y: float) -> None:
-        self.azimuthal = AzimuthalObjectXY(self.x, y)  # type: ignore
+        self.azimuthal = AzimuthalObjectXY(self.x, y)
 
     @property
     def rho(self) -> float:
@@ -828,7 +825,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
 
     @rho.setter
     def rho(self, rho: float) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(rho, self.phi)  # type: ignore
+        self.azimuthal = AzimuthalObjectRhoPhi(rho, self.phi)
 
     @property
     def phi(self) -> float:
@@ -836,7 +833,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
 
     @phi.setter
     def phi(self, phi: float) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)  # type: ignore
+        self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)
 
     @property
     def z(self) -> float:
@@ -844,7 +841,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
 
     @z.setter
     def z(self, z: float) -> None:
-        self.longitudinal = LongitudinalObjectZ(z)  # type: ignore
+        self.longitudinal = LongitudinalObjectZ(z)
 
     @property
     def theta(self) -> float:
@@ -852,7 +849,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
 
     @theta.setter
     def theta(self, theta: float) -> None:
-        self.longitudinal = LongitudinalObjectTheta(theta)  # type: ignore
+        self.longitudinal = LongitudinalObjectTheta(theta)
 
     @property
     def eta(self) -> float:
@@ -860,7 +857,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
 
     @eta.setter
     def eta(self, eta: float) -> None:
-        self.longitudinal = LongitudinalObjectEta(eta)  # type: ignore
+        self.longitudinal = LongitudinalObjectEta(eta)
 
 
 class MomentumObject3D(SpatialMomentum, VectorObject3D):
@@ -894,7 +891,7 @@ class MomentumObject3D(SpatialMomentum, VectorObject3D):
 
     @px.setter
     def px(self, px: float) -> None:
-        self.azimuthal = AzimuthalObjectXY(px, self.py)  # type: ignore
+        self.azimuthal = AzimuthalObjectXY(px, self.py)
 
     @property
     def py(self) -> float:
@@ -902,7 +899,7 @@ class MomentumObject3D(SpatialMomentum, VectorObject3D):
 
     @py.setter
     def py(self, py: float) -> None:
-        self.azimuthal = AzimuthalObjectXY(self.px, py)  # type: ignore
+        self.azimuthal = AzimuthalObjectXY(self.px, py)
 
     @property
     def pt(self) -> float:
@@ -910,7 +907,7 @@ class MomentumObject3D(SpatialMomentum, VectorObject3D):
 
     @pt.setter
     def pt(self, pt: float) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)  # type: ignore
+        self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)
 
     @property
     def pz(self) -> float:
@@ -918,7 +915,7 @@ class MomentumObject3D(SpatialMomentum, VectorObject3D):
 
     @pz.setter
     def pz(self, pz: float) -> None:
-        self.longitudinal = LongitudinalObjectZ(pz)  # type: ignore
+        self.longitudinal = LongitudinalObjectZ(pz)
 
 
 class VectorObject4D(VectorObject, Lorentz, Vector4D):
@@ -943,7 +940,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
-        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z), TemporalObjectT(t))  # type: ignore
+        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z), TemporalObjectT(t))
 
     @classmethod
     def from_xyztau(
@@ -961,7 +958,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         with momentum properties and methods.
         """
         return cls(
-            AzimuthalObjectXY(x, y), LongitudinalObjectZ(z), TemporalObjectTau(tau)  # type: ignore
+            AzimuthalObjectXY(x, y), LongitudinalObjectZ(z), TemporalObjectTau(tau)
         )
 
     @classmethod
@@ -980,7 +977,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         with momentum properties and methods.
         """
         return cls(
-            AzimuthalObjectXY(x, y), LongitudinalObjectTheta(theta), TemporalObjectT(t)  # type: ignore
+            AzimuthalObjectXY(x, y), LongitudinalObjectTheta(theta), TemporalObjectT(t)
         )
 
     @classmethod
@@ -999,9 +996,9 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         with momentum properties and methods.
         """
         return cls(
-            AzimuthalObjectXY(x, y),  # type: ignore
-            LongitudinalObjectTheta(theta),  # type: ignore
-            TemporalObjectTau(tau),  # type: ignore
+            AzimuthalObjectXY(x, y),
+            LongitudinalObjectTheta(theta),
+            TemporalObjectTau(tau),
         )
 
     @classmethod
@@ -1020,7 +1017,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         with momentum properties and methods.
         """
         return cls(
-            AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta), TemporalObjectT(t)  # type: ignore
+            AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta), TemporalObjectT(t)
         )
 
     @classmethod
@@ -1039,7 +1036,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         with momentum properties and methods.
         """
         return cls(
-            AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta), TemporalObjectTau(tau)  # type: ignore
+            AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta), TemporalObjectTau(tau)
         )
 
     @classmethod
@@ -1058,7 +1055,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         with momentum properties and methods.
         """
         return cls(
-            AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectZ(z), TemporalObjectT(t)  # type: ignore
+            AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectZ(z), TemporalObjectT(t)
         )
 
     @classmethod
@@ -1077,9 +1074,9 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         with momentum properties and methods.
         """
         return cls(
-            AzimuthalObjectRhoPhi(rho, phi),  # type: ignore
-            LongitudinalObjectZ(z),  # type: ignore
-            TemporalObjectTau(tau),  # type: ignore
+            AzimuthalObjectRhoPhi(rho, phi),
+            LongitudinalObjectZ(z),
+            TemporalObjectTau(tau),
         )
 
     @classmethod
@@ -1098,9 +1095,9 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         with momentum properties and methods.
         """
         return cls(
-            AzimuthalObjectRhoPhi(rho, phi),  # type: ignore
-            LongitudinalObjectTheta(theta),  # type: ignore
-            TemporalObjectT(t),  # type: ignore
+            AzimuthalObjectRhoPhi(rho, phi),
+            LongitudinalObjectTheta(theta),
+            TemporalObjectT(t),
         )
 
     @classmethod
@@ -1119,9 +1116,9 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         with momentum properties and methods.
         """
         return cls(
-            AzimuthalObjectRhoPhi(rho, phi),  # type: ignore
-            LongitudinalObjectTheta(theta),  # type: ignore
-            TemporalObjectTau(tau),  # type: ignore
+            AzimuthalObjectRhoPhi(rho, phi),
+            LongitudinalObjectTheta(theta),
+            TemporalObjectTau(tau),
         )
 
     @classmethod
@@ -1140,9 +1137,9 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         with momentum properties and methods.
         """
         return cls(
-            AzimuthalObjectRhoPhi(rho, phi),  # type: ignore
-            LongitudinalObjectEta(eta),  # type: ignore
-            TemporalObjectT(t),  # type: ignore
+            AzimuthalObjectRhoPhi(rho, phi),
+            LongitudinalObjectEta(eta),
+            TemporalObjectT(t),
         )
 
     @classmethod
@@ -1161,9 +1158,9 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         with momentum properties and methods.
         """
         return cls(
-            AzimuthalObjectRhoPhi(rho, phi),  # type: ignore
-            LongitudinalObjectEta(eta),  # type: ignore
-            TemporalObjectTau(tau),  # type: ignore
+            AzimuthalObjectRhoPhi(rho, phi),
+            LongitudinalObjectEta(eta),
+            TemporalObjectTau(tau),
         )
 
     def __init__(
@@ -1286,7 +1283,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
     @x.setter
     def x(self, x: float) -> None:
-        self.azimuthal = AzimuthalObjectXY(x, self.y)  # type: ignore
+        self.azimuthal = AzimuthalObjectXY(x, self.y)
 
     @property
     def y(self) -> float:
@@ -1294,7 +1291,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
     @y.setter
     def y(self, y: float) -> None:
-        self.azimuthal = AzimuthalObjectXY(self.x, y)  # type: ignore
+        self.azimuthal = AzimuthalObjectXY(self.x, y)
 
     @property
     def rho(self) -> float:
@@ -1302,7 +1299,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
     @rho.setter
     def rho(self, rho: float) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(rho, self.phi)  # type: ignore
+        self.azimuthal = AzimuthalObjectRhoPhi(rho, self.phi)
 
     @property
     def phi(self) -> float:
@@ -1310,7 +1307,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
     @phi.setter
     def phi(self, phi: float) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)  # type: ignore
+        self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)
 
     @property
     def z(self) -> float:
@@ -1318,7 +1315,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
     @z.setter
     def z(self, z: float) -> None:
-        self.longitudinal = LongitudinalObjectZ(z)  # type: ignore
+        self.longitudinal = LongitudinalObjectZ(z)
 
     @property
     def theta(self) -> float:
@@ -1326,7 +1323,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
     @theta.setter
     def theta(self, theta: float) -> None:
-        self.longitudinal = LongitudinalObjectTheta(theta)  # type: ignore
+        self.longitudinal = LongitudinalObjectTheta(theta)
 
     @property
     def eta(self) -> float:
@@ -1334,7 +1331,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
     @eta.setter
     def eta(self, eta: float) -> None:
-        self.longitudinal = LongitudinalObjectEta(eta)  # type: ignore
+        self.longitudinal = LongitudinalObjectEta(eta)
 
     @property
     def t(self) -> float:
@@ -1342,7 +1339,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
     @t.setter
     def t(self, t: float) -> None:
-        self.temporal = TemporalObjectT(t)  # type: ignore
+        self.temporal = TemporalObjectT(t)
 
     @property
     def tau(self) -> float:
@@ -1350,7 +1347,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
     @tau.setter
     def tau(self, tau: float) -> None:
-        self.temporal = TemporalObjectTau(tau)  # type: ignore
+        self.temporal = TemporalObjectTau(tau)
 
 
 class MomentumObject4D(LorentzMomentum, VectorObject4D):
@@ -1391,7 +1388,7 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
 
     @px.setter
     def px(self, px: float) -> None:
-        self.azimuthal = AzimuthalObjectXY(px, self.py)  # type: ignore
+        self.azimuthal = AzimuthalObjectXY(px, self.py)
 
     @property
     def py(self) -> float:
@@ -1399,7 +1396,7 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
 
     @py.setter
     def py(self, py: float) -> None:
-        self.azimuthal = AzimuthalObjectXY(self.px, py)  # type: ignore
+        self.azimuthal = AzimuthalObjectXY(self.px, py)
 
     @property
     def pt(self) -> float:
@@ -1407,7 +1404,7 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
 
     @pt.setter
     def pt(self, pt: float) -> None:
-        self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)  # type: ignore
+        self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)
 
     @property
     def pz(self) -> float:
@@ -1415,7 +1412,7 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
 
     @pz.setter
     def pz(self, pz: float) -> None:
-        self.longitudinal = LongitudinalObjectZ(pz)  # type: ignore
+        self.longitudinal = LongitudinalObjectZ(pz)
 
     @property
     def E(self) -> float:
@@ -1423,7 +1420,7 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
 
     @E.setter
     def E(self, E: float) -> None:
-        self.temporal = TemporalObjectT(E)  # type: ignore
+        self.temporal = TemporalObjectT(E)
 
     @property
     def energy(self) -> float:
@@ -1431,7 +1428,7 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
 
     @energy.setter
     def energy(self, energy: float) -> None:
-        self.temporal = TemporalObjectT(energy)  # type: ignore
+        self.temporal = TemporalObjectT(energy)
 
     @property
     def M(self) -> float:
@@ -1439,7 +1436,7 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
 
     @M.setter
     def M(self, M: float) -> None:
-        self.temporal = TemporalObjectTau(M)  # type: ignore
+        self.temporal = TemporalObjectTau(M)
 
     @property
     def mass(self) -> float:
@@ -1447,7 +1444,7 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
 
     @mass.setter
     def mass(self, mass: float) -> None:
-        self.temporal = TemporalObjectTau(mass)  # type: ignore
+        self.temporal = TemporalObjectTau(mass)
 
 
 def _gather_coordinates(
@@ -1502,11 +1499,11 @@ def _gather_coordinates(
 
     if not coordinates:
         if azimuthal is not None and longitudinal is None and temporal is None:
-            return planar_class(azimuthal)  # type: ignore
+            return planar_class(azimuthal)
         if azimuthal is not None and longitudinal is not None and temporal is None:
-            return spatial_class(azimuthal, longitudinal)  # type: ignore
+            return spatial_class(azimuthal, longitudinal)
         if azimuthal is not None and longitudinal is not None and temporal is not None:
-            return lorentz_class(azimuthal, longitudinal, temporal)  # type: ignore
+            return lorentz_class(azimuthal, longitudinal, temporal)
 
     raise TypeError(
         "unrecognized combination of coordinates, allowed combinations are:\n\n"
