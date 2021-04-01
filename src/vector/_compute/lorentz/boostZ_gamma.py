@@ -3,7 +3,7 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-# type: ignore
+import typing
 
 """
 .. code-block:: python
@@ -203,7 +203,7 @@ dispatch_map = {
 }
 
 
-def dispatch(gamma, v):
+def dispatch(gamma: typing.Any, v: typing.Any) -> typing.Any:
     function, *returns = _from_signature(
         __name__,
         dispatch_map,

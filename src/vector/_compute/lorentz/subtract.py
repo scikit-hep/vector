@@ -3,7 +3,7 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-# type: ignore
+import typing
 
 """
 .. code-block:: python
@@ -157,7 +157,12 @@ def make_conversion(
 
         dispatch_map[
             azimuthal1, longitudinal1, temporal1, azimuthal2, longitudinal2, temporal2
-        ] = (f, azimuthal, longitudinal, TemporalTau)
+        ] = (
+            f,
+            azimuthal,
+            longitudinal,
+            TemporalTau,
+        )  # type: ignore
 
 
 for azimuthal1 in (AzimuthalXY, AzimuthalRhoPhi):
@@ -180,7 +185,7 @@ for azimuthal1 in (AzimuthalXY, AzimuthalRhoPhi):
                         )
 
 
-def dispatch(v1, v2):
+def dispatch(v1: typing.Any, v2: typing.Any) -> typing.Any:
     function, *returns = _from_signature(
         __name__,
         dispatch_map,

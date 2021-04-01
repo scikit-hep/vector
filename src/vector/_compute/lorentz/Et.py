@@ -3,14 +3,14 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-# type: ignore
-
 """
 .. code-block:: python
 
     @property
     Lorentz.Et(self)
 """
+
+import typing
 
 import numpy
 
@@ -99,7 +99,7 @@ dispatch_map = {
 }
 
 
-def dispatch(v):
+def dispatch(v: typing.Any) -> typing.Any:
     function, *returns = _from_signature(
         __name__,
         dispatch_map,
