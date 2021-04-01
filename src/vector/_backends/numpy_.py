@@ -222,7 +222,7 @@ class GetItem:
 
 class CoordinatesNumpy:
     lib = numpy
-    dtype: numpy.dtype
+    dtype: "numpy.dtype[typing.Any]"
 
 
 class AzimuthalNumpy(CoordinatesNumpy, Azimuthal):
@@ -833,7 +833,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):  # type: igno
 class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore
     ObjectClass = vector._backends.object_.MomentumObject2D
     _IS_MOMENTUM = True
-    dtype: numpy.dtype
+    dtype: "numpy.dtype[typing.Any]"
 
     def __array_finalize__(self, obj: typing.Any) -> None:
         self.dtype.names = tuple(
@@ -1070,7 +1070,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):  # type: ign
 class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore
     ObjectClass = vector._backends.object_.MomentumObject3D
     _IS_MOMENTUM = True
-    dtype: numpy.dtype
+    dtype: "numpy.dtype[typing.Any]"
 
     def __array_finalize__(self, obj: typing.Any) -> None:
         self.dtype.names = tuple(
@@ -1344,7 +1344,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):  # type: ign
 class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore
     ObjectClass = vector._backends.object_.MomentumObject4D
     _IS_MOMENTUM = True
-    dtype: numpy.dtype
+    dtype: "numpy.dtype[typing.Any]"
 
     def __array_finalize__(self, obj: typing.Any) -> None:
         self.dtype.names = tuple(

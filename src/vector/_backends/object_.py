@@ -1457,7 +1457,7 @@ def _gather_coordinates(
     planar_class: typing.Type[VectorObject2D],
     spatial_class: typing.Type[VectorObject3D],
     lorentz_class: typing.Type[VectorObject4D],
-    coordinates: dict,
+    coordinates: typing.Dict[str, typing.Any],
 ) -> typing.Any:
     """
     Helper function for :doc:`vector._backends.object_.obj`.
