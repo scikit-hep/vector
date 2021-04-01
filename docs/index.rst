@@ -16,9 +16,6 @@ Vector: vectorized 2D, 3D, and Lorentz vectors
 
 .. toctree::
    :maxdepth: 3
-   :caption: Examples:
-
-.. toctree::
    :caption: API Reference:
 
    api/modules.rst
