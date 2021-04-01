@@ -1,25 +1,35 @@
 vector package
 ==============
 
-.. automodule:: vector
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Subpackages
 -----------
-..
 
-   .. toctree::
+.. toctree::
+   :maxdepth: 4
 
-      vector.mixins
-      vector.core
-      vector.numpy
-      vector.awkward
-      vector.numba
+   vector._backends
+   vector._compute
 
 Submodules
 ----------
+
+vector.\_methods module
+-----------------------
+
+.. automodule:: vector._methods
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+vector.\_typeutils module
+-------------------------
+
+.. automodule:: vector._typeutils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
 
 vector.version module
 ---------------------
@@ -28,3 +38,13 @@ vector.version module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
+
+Module contents
+---------------
+
+.. automodule:: vector
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
