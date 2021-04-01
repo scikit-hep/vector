@@ -3,7 +3,7 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-# type: ignore
+import typing
 
 """
 .. code-block:: python
@@ -57,7 +57,7 @@ for azimuthal1 in (AzimuthalXY, AzimuthalRhoPhi):
                 make_function(azimuthal1, longitudinal1, azimuthal2, longitudinal2)
 
 
-def dispatch(tolerance, v1, v2):
+def dispatch(tolerance: typing.Any, v1: typing.Any, v2: typing.Any) -> typing.Any:
     function, *returns = _from_signature(
         __name__,
         dispatch_map,

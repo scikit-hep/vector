@@ -3,7 +3,7 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-# type: ignore
+import typing
 
 """
 .. code-block:: python
@@ -43,7 +43,7 @@ dispatch_map = {
 }
 
 
-def dispatch(factor, v):
+def dispatch(factor: typing.Any, v: typing.Any) -> typing.Any:
     function, *returns = _from_signature(__name__, dispatch_map, (_aztype(v),))
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
