@@ -122,7 +122,7 @@ def _getitem(
 
         azimuthal, longitudinal, temporal = None, None, None
         if hasattr(array, "_azimuthal_type"):
-            azimuthal = array._azimuthal_type.ObjectClass(  # type: ignore
+            azimuthal = array._azimuthal_type.ObjectClass(
                 *[out[x] for x in _coordinate_class_to_names[_aztype(array)]]
             )
         if hasattr(array, "_longitudinal_type"):
@@ -236,7 +236,7 @@ class TemporalNumpy(CoordinatesNumpy, Temporal):
 
 
 class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, numpy.ndarray):
-    ObjectClass = vector._backends.object_.AzimuthalObjectXY  # type: ignore
+    ObjectClass = vector._backends.object_.AzimuthalObjectXY
     _IS_MOMENTUM = False
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "AzimuthalNumpyXY":
@@ -263,7 +263,7 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, numpy.ndarray):
 
 
 class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, numpy.ndarray):
-    ObjectClass = vector._backends.object_.AzimuthalObjectRhoPhi  # type: ignore
+    ObjectClass = vector._backends.object_.AzimuthalObjectRhoPhi
     _IS_MOMENTUM = False
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "AzimuthalNumpyRhoPhi":
@@ -290,7 +290,7 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, numpy.ndarr
 
 
 class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, numpy.ndarray):
-    ObjectClass = vector._backends.object_.LongitudinalObjectZ  # type: ignore
+    ObjectClass = vector._backends.object_.LongitudinalObjectZ
     _IS_MOMENTUM = False
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "LongitudinalNumpyZ":
@@ -315,7 +315,7 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, numpy.ndarra
 class LongitudinalNumpyTheta(
     LongitudinalNumpy, LongitudinalTheta, GetItem, numpy.ndarray
 ):
-    ObjectClass = vector._backends.object_.LongitudinalObjectTheta  # type: ignore
+    ObjectClass = vector._backends.object_.LongitudinalObjectTheta
     _IS_MOMENTUM = False
 
     def __new__(
@@ -340,7 +340,7 @@ class LongitudinalNumpyTheta(
 
 
 class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, numpy.ndarray):
-    ObjectClass = vector._backends.object_.LongitudinalObjectEta  # type: ignore
+    ObjectClass = vector._backends.object_.LongitudinalObjectEta
     _IS_MOMENTUM = False
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "LongitudinalNumpyEta":
@@ -363,7 +363,7 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, numpy.nd
 
 
 class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, numpy.ndarray):
-    ObjectClass = vector._backends.object_.TemporalObjectT  # type: ignore
+    ObjectClass = vector._backends.object_.TemporalObjectT
     _IS_MOMENTUM = False
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "TemporalNumpyT":
@@ -386,7 +386,7 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, numpy.ndarray):
 
 
 class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, numpy.ndarray):
-    ObjectClass = vector._backends.object_.TemporalObjectTau  # type: ignore
+    ObjectClass = vector._backends.object_.TemporalObjectTau
     _IS_MOMENTUM = False
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "TemporalNumpyTau":
