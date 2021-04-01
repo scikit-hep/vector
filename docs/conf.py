@@ -68,12 +68,12 @@ html_theme = "sphinx_book_theme"
 
 # Config for the Sphinx book
 
-html_baseurl = "https://boost-histogram.readthedocs.io/en/latest/"
+html_baseurl = "https://vector.readthedocs.io/en/latest/"
 
 
 html_theme_options = {
     "home_page_in_toc": True,
-    "repository_url": "https://github.com/scikit-hep/boost-histogram",
+    "repository_url": "https://github.com/scikit-hep/vector",
     "use_repository_button": True,
     "use_issues_button": True,
     "use_edit_page_button": True,
