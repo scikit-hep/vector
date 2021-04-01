@@ -143,7 +143,6 @@ class VectorProtocol:
 
     lib: Module
 
-    @typing.no_type_check
     def _wrap_result(
         self,
         cls: typing.Any,
@@ -2406,7 +2405,11 @@ def _lib_of(*objects: VectorProtocol) -> Module:  # NumPy-like module
     return lib
 
 
-def _from_signature(name: str, dispatch_map: dict, signature: tuple) -> tuple:
+def _from_signature(
+    name: str,
+    dispatch_map: typing.Dict[typing.Any, typing.Any],
+    signature: typing.Tuple[typing.Any],
+) -> typing.Tuple[typing.Any]:
     """
     Gets a function and its return type from a ``dispatch_map`` and the
     ``signature`` to search for (complaining if none is found).

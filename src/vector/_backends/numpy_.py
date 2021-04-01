@@ -82,7 +82,6 @@ def _array_from_columns(columns: typing.Dict[str, ArrayLike]) -> ArrayLike:
     return array
 
 
-@typing.no_type_check
 def _setitem(
     array: typing.Union["VectorNumpy2D", "VectorNumpy3D", "VectorNumpy4D"],
     where: typing.Any,
@@ -107,7 +106,6 @@ def _setitem(
             tofill[generic] = what[name]
 
 
-@typing.no_type_check
 def _getitem(
     array: typing.Union["VectorNumpy2D", "VectorNumpy3D", "VectorNumpy4D"],
     where: typing.Any,
@@ -124,25 +122,25 @@ def _getitem(
 
         azimuthal, longitudinal, temporal = None, None, None
         if hasattr(array, "_azimuthal_type"):
-            azimuthal = array._azimuthal_type.ObjectClass(
+            azimuthal = array._azimuthal_type.ObjectClass(  # type: ignore
                 *[out[x] for x in _coordinate_class_to_names[_aztype(array)]]
             )
         if hasattr(array, "_longitudinal_type"):
-            longitudinal = array._longitudinal_type.ObjectClass(
-                *[out[x] for x in _coordinate_class_to_names[_ltype(array)]]
+            longitudinal = array._longitudinal_type.ObjectClass(  # type: ignore
+                *[out[x] for x in _coordinate_class_to_names[_ltype(array)]]  # type: ignore
             )
         if hasattr(array, "_temporal_type"):
-            temporal = array._temporal_type.ObjectClass(
-                *[out[x] for x in _coordinate_class_to_names[_ttype(array)]]
+            temporal = array._temporal_type.ObjectClass(  # type: ignore
+                *[out[x] for x in _coordinate_class_to_names[_ttype(array)]]  # type: ignore
             )
         if temporal is not None:
-            return array.ObjectClass(azimuthal, longitudinal, temporal)
+            return array.ObjectClass(azimuthal, longitudinal, temporal)  # type: ignore
         elif longitudinal is not None:
-            return array.ObjectClass(azimuthal, longitudinal)
+            return array.ObjectClass(azimuthal, longitudinal)  # type: ignore
         elif azimuthal is not None:
-            return array.ObjectClass(azimuthal)
+            return array.ObjectClass(azimuthal)  # type: ignore
         else:
-            return array.ObjectClass(*out.view(numpy.ndarray))
+            return array.ObjectClass(*out.view(numpy.ndarray))  # type: ignore
 
 
 def _array_repr(
@@ -217,12 +215,12 @@ class GetItem:
         ...
 
     def __getitem__(self, where: typing.Any) -> typing.Union[float, numpy.ndarray]:
-        return _getitem(self, where, self.__class__._IS_MOMENTUM)
+        return _getitem(self, where, self.__class__._IS_MOMENTUM)  # type: ignore
 
 
 class CoordinatesNumpy:
     lib = numpy
-    dtype: numpy.dtype
+    dtype: "numpy.dtype[typing.Any]"
 
 
 class AzimuthalNumpy(CoordinatesNumpy, Azimuthal):
@@ -412,6 +410,7 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, numpy.ndarray):
 
 class VectorNumpy(Vector, GetItem):
     lib = numpy
+    dtype: "numpy.dtype[typing.Any]"
 
     def allclose(
         self,
@@ -431,7 +430,6 @@ class VectorNumpy(Vector, GetItem):
     def __ne__(self, other: typing.Any) -> typing.Any:
         return numpy.not_equal(self, other)  # type: ignore
 
-    @typing.no_type_check
     def __array_ufunc__(
         self,
         ufunc: typing.Any,
@@ -443,7 +441,7 @@ class VectorNumpy(Vector, GetItem):
             # Let a higher-precedence backend handle it.
             return NotImplemented
 
-        outputs = kwargs.get("out", ())
+        outputs: typing.Tuple["VectorNumpy", ...] = kwargs.get("out", ())
         if any(not isinstance(x, VectorNumpy) for x in outputs):
             raise TypeError(
                 "ufunc operating on VectorNumpys can only use the 'out' keyword "
@@ -474,8 +472,9 @@ class VectorNumpy(Vector, GetItem):
         ):
             result = inputs[0].add(inputs[1])
             for output in outputs:
+                assert output.dtype.names is not None
                 for name in output.dtype.names:
-                    output[name] = result[name]
+                    output[name] = result[name]  # type: ignore
             return result
 
         elif (
@@ -486,8 +485,9 @@ class VectorNumpy(Vector, GetItem):
         ):
             result = inputs[0].subtract(inputs[1])
             for output in outputs:
+                assert output.dtype.names is not None
                 for name in output.dtype.names:
-                    output[name] = result[name]
+                    output[name] = result[name]  # type: ignore
             return result
 
         elif (
@@ -498,8 +498,9 @@ class VectorNumpy(Vector, GetItem):
         ):
             result = inputs[0].scale(inputs[1])
             for output in outputs:
+                assert output.dtype.names is not None
                 for name in output.dtype.names:
-                    output[name] = result[name]
+                    output[name] = result[name]  # type: ignore
             return result
 
         elif (
@@ -510,8 +511,9 @@ class VectorNumpy(Vector, GetItem):
         ):
             result = inputs[1].scale(inputs[0])
             for output in outputs:
+                assert output.dtype.names is not None
                 for name in output.dtype.names:
-                    output[name] = result[name]
+                    output[name] = result[name]  # type: ignore
             return result
 
         elif (
@@ -521,8 +523,9 @@ class VectorNumpy(Vector, GetItem):
         ):
             result = inputs[0].scale(-1)
             for output in outputs:
+                assert output.dtype.names is not None
                 for name in output.dtype.names:
-                    output[name] = result[name]
+                    output[name] = result[name]  # type: ignore
             return result
 
         elif (
@@ -540,8 +543,9 @@ class VectorNumpy(Vector, GetItem):
         ):
             result = inputs[0].scale(1 / inputs[1])
             for output in outputs:
+                assert output.dtype.names is not None
                 for name in output.dtype.names:
-                    output[name] = result[name]
+                    output[name] = result[name]  # type: ignore
             return result
 
         elif (
@@ -550,10 +554,11 @@ class VectorNumpy(Vector, GetItem):
             and isinstance(inputs[0], Vector)
             and not isinstance(inputs[1], Vector)
         ):
-            result = numpy.absolute(inputs[0]) ** inputs[1]
+            result = numpy.absolute(inputs[0]) ** inputs[1]  # type: ignore
             for output in outputs:
+                assert output.dtype.names is not None
                 for name in output.dtype.names:
-                    output[name] = result[name]
+                    output[name] = result[name]  # type: ignore
             return result
 
         elif (
@@ -633,7 +638,6 @@ class VectorNumpy(Vector, GetItem):
         else:
             return NotImplemented
 
-    @typing.no_type_check
     def __array_function__(
         self, func: typing.Any, types: typing.Any, args: typing.Any, kwargs: typing.Any
     ) -> typing.Any:
@@ -833,7 +837,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):  # type: igno
 class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore
     ObjectClass = vector._backends.object_.MomentumObject2D
     _IS_MOMENTUM = True
-    dtype: numpy.dtype
+    dtype: "numpy.dtype[typing.Any]"
 
     def __array_finalize__(self, obj: typing.Any) -> None:
         self.dtype.names = tuple(
@@ -913,7 +917,6 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):  # type: ign
     def longitudinal(self) -> LongitudinalNumpy:
         return self.view(self._longitudinal_type)  # type: ignore
 
-    @typing.no_type_check
     def _wrap_result(
         self,
         cls: typing.Any,
@@ -1070,7 +1073,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):  # type: ign
 class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore
     ObjectClass = vector._backends.object_.MomentumObject3D
     _IS_MOMENTUM = True
-    dtype: numpy.dtype
+    dtype: "numpy.dtype[typing.Any]"
 
     def __array_finalize__(self, obj: typing.Any) -> None:
         self.dtype.names = tuple(
@@ -1179,7 +1182,6 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):  # type: ign
     def temporal(self) -> TemporalNumpy:
         return self.view(self._temporal_type)  # type: ignore
 
-    @typing.no_type_check
     def _wrap_result(
         self,
         cls: typing.Any,
@@ -1344,7 +1346,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):  # type: ign
 class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore
     ObjectClass = vector._backends.object_.MomentumObject4D
     _IS_MOMENTUM = True
-    dtype: numpy.dtype
+    dtype: "numpy.dtype[typing.Any]"
 
     def __array_finalize__(self, obj: typing.Any) -> None:
         self.dtype.names = tuple(

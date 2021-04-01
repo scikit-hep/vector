@@ -476,7 +476,6 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             ],
         )
 
-    @typing.no_type_check
     def _wrap_result(
         self,
         cls: typing.Any,
@@ -729,7 +728,6 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             ],
         )
 
-    @typing.no_type_check
     def _wrap_result(
         self,
         cls: typing.Any,
@@ -1204,7 +1202,6 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             ],
         )
 
-    @typing.no_type_check
     def _wrap_result(
         self,
         cls: typing.Any,
@@ -1457,7 +1454,7 @@ def _gather_coordinates(
     planar_class: typing.Type[VectorObject2D],
     spatial_class: typing.Type[VectorObject3D],
     lorentz_class: typing.Type[VectorObject4D],
-    coordinates: dict,
+    coordinates: typing.Dict[str, typing.Any],
 ) -> typing.Any:
     """
     Helper function for :doc:`vector._backends.object_.obj`.

@@ -255,7 +255,6 @@ class VectorAwkward:
     ) -> typing.Optional[typing.Union[float, ak.Array, ak.Record]]:
         return super().__getitem__(where)  # type: ignore
 
-    @typing.no_type_check
     def _wrap_result(
         self,
         cls: typing.Any,
@@ -881,9 +880,13 @@ MomentumRecord4D.GenericClass = VectorRecord4D
 # implementation of behaviors in Numba ########################################
 
 
-@typing.no_type_check
 def _aztype_of(recordarraytype: typing.Any) -> typing.Any:
     import numba
+
+    cls: typing.Union[
+        typing.Type[AzimuthalObjectXY],
+        typing.Type[AzimuthalObjectRhoPhi],
+    ]
 
     try:
         x_index = recordarraytype.recordlookup.index("x")
@@ -920,9 +923,14 @@ def _aztype_of(recordarraytype: typing.Any) -> typing.Any:
     return numba.typeof(cls(coord1.cast_python_value(0), coord2.cast_python_value(0)))
 
 
-@typing.no_type_check
 def _ltype_of(recordarraytype: typing.Any) -> typing.Any:
     import numba
+
+    cls: typing.Union[
+        typing.Type[LongitudinalObjectZ],
+        typing.Type[LongitudinalObjectTheta],
+        typing.Type[LongitudinalObjectEta],
+    ]
 
     try:
         z_index = recordarraytype.recordlookup.index("z")
@@ -957,9 +965,13 @@ def _ltype_of(recordarraytype: typing.Any) -> typing.Any:
     return numba.typeof(cls(coord1.cast_python_value(0)))
 
 
-@typing.no_type_check
 def _ttype_of(recordarraytype: typing.Any) -> typing.Any:
     import numba
+
+    cls: typing.Union[
+        typing.Type[TemporalObjectT],
+        typing.Type[TemporalObjectTau],
+    ]
 
     try:
         t_index = recordarraytype.recordlookup.index("t")
@@ -986,67 +998,61 @@ def _ttype_of(recordarraytype: typing.Any) -> typing.Any:
     return numba.typeof(cls(coord1.cast_python_value(0)))
 
 
-@typing.no_type_check
 def _numba_typer_Vector2D(viewtype: typing.Any) -> typing.Any:
     import vector._backends.numba_object
 
-    return vector._backends.numba_object.VectorObject2DType(
+    # These clearly exist, a bug somewhere, but ignoring them for now
+    return vector._backends.numba_object.VectorObject2DType(  # type: ignore
         _aztype_of(viewtype.arrayviewtype.type)
     )
 
 
-@typing.no_type_check
 def _numba_typer_Vector3D(viewtype: typing.Any) -> typing.Any:
     import vector._backends.numba_object
 
-    return vector._backends.numba_object.VectorObject3DType(
+    return vector._backends.numba_object.VectorObject3DType(  # type: ignore
         _aztype_of(viewtype.arrayviewtype.type),
         _ltype_of(viewtype.arrayviewtype.type),
     )
 
 
-@typing.no_type_check
 def _numba_typer_Vector4D(viewtype: typing.Any) -> typing.Any:
     import vector._backends.numba_object
 
-    return vector._backends.numba_object.VectorObject4DType(
+    return vector._backends.numba_object.VectorObject4DType(  # type: ignore
         _aztype_of(viewtype.arrayviewtype.type),
         _ltype_of(viewtype.arrayviewtype.type),
         _ttype_of(viewtype.arrayviewtype.type),
     )
 
 
-@typing.no_type_check
 def _numba_typer_Momentum2D(viewtype: typing.Any) -> typing.Any:
     import vector._backends.numba_object
 
-    return vector._backends.numba_object.MomentumObject2DType(
+    return vector._backends.numba_object.MomentumObject2DType(  # type: ignore
         _aztype_of(viewtype.arrayviewtype.type)
     )
 
 
-@typing.no_type_check
 def _numba_typer_Momentum3D(viewtype: typing.Any) -> typing.Any:
     import vector._backends.numba_object
 
-    return vector._backends.numba_object.MomentumObject3DType(
+    return vector._backends.numba_object.MomentumObject3DType(  # type: ignore
         _aztype_of(viewtype.arrayviewtype.type),
         _ltype_of(viewtype.arrayviewtype.type),
     )
 
 
-@typing.no_type_check
 def _numba_typer_Momentum4D(viewtype: typing.Any) -> typing.Any:
     import vector._backends.numba_object
 
-    return vector._backends.numba_object.MomentumObject4DType(
+    return vector._backends.numba_object.MomentumObject4DType(  # type: ignore
         _aztype_of(viewtype.arrayviewtype.type),
         _ltype_of(viewtype.arrayviewtype.type),
         _ttype_of(viewtype.arrayviewtype.type),
     )
 
 
-@typing.no_type_check
 def _numba_lower(
     context: typing.Any, builder: typing.Any, sig: typing.Any, args: typing.Any
 ) -> typing.Any:
