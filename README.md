@@ -102,7 +102,7 @@ If you want to bypass the dimension and coordinate system inference through keyw
 vector.VectorObject2D.from_xy(1.1, 2.2)
 vector.MomentumObject3D.from_rhophiz(1.1, 2.2, 3.3)
 vector.VectorObject4D.from_xyetatau(1.1, 2.2, 3.3, 4.4)
-
+```
 
 and so on, for all combinations of azimuthal, longitudinal, and temporal coordinates, geometric and momentum-flavored.
 
