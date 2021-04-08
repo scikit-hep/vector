@@ -9,6 +9,16 @@ on:
     - develop
 
 jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    name: Check SDist
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+    - uses: pre-commit/action@v2.0.2
+      with:
+        extra_args: --hook-stage manual check-manifest
+
   checks:
     runs-on: ubuntu-latest
     strategy:
@@ -66,9 +76,8 @@ jobs:
       with:
         path: dist
 
-    - uses: pypa/gh-action-pypi-publish@master
+    - uses: pypa/gh-action-pypi-publish@v1.4.2
       with:
         user: __token__
         password: ${{ secrets.pypi_password }}
-        repository_url: https://test.pypi.org/legacy/
       if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
