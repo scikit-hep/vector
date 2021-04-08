@@ -29,7 +29,7 @@ This overview is based on the [documentation here](https://vector.readthedocs.io
 ```python
 import vector
 import numpy as np
-import awkward as ak   # at least version 1.2.0rc5
+import awkward as ak  # at least version 1.2.0
 import numba as nb
 ```
 
@@ -38,8 +38,8 @@ import numba as nb
 The easiest way to create one or many vectors is with a helper function:
 
    * `vector.obj` to make a pure Python vector object,
-   * `vector.array` to make a NumPy array of vectors (lowercase, like `np.array`),
-   * `vector.Array` to make an Awkward Array of vectors (uppercase, like `ak.Array`).
+   * `vector.arr` to make a NumPy array of vectors (lowercase, like `np.array`),
+   * `vector.awk` to make an Awkward Array of vectors (uppercase, like `ak.Array`).
 
 ### Pure Python vectors
 
@@ -113,22 +113,22 @@ and so on, for all combinations of azimuthal, longitudinal, and temporal coordin
 
 ```python
 # NumPy-like arguments (literally passed through to NumPy)
-vector.array([
+vector.arr([
     (1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)
 ], dtype=[("x", float), ("y", float)])
 
 # Pandas-like arguments (dict from names to column arrays)
-vector.array({"x": [1.1, 1.2, 1.3, 1.4, 1.5], "y": [2.1, 2.2, 2.3, 2.4, 2.5]})
+vector.arr({"x": [1.1, 1.2, 1.3, 1.4, 1.5], "y": [2.1, 2.2, 2.3, 2.4, 2.5]})
 
 # As with objects, the coordinate system and dimension is taken from the names of the fields.
-vector.array({
+vector.arr({
     "x": [1.1, 1.2, 1.3, 1.4, 1.5],
     "y": [2.1, 2.2, 2.3, 2.4, 2.5],
     "z": [3.1, 3.2, 3.3, 3.4, 3.5],
     "t": [4.1, 4.2, 4.3, 4.4, 4.5],
 })
 
-vector.array({
+vector.arr({
     "pt": [1.1, 1.2, 1.3, 1.4, 1.5],
     "phi": [2.1, 2.2, 2.3, 2.4, 2.5],
     "eta": [3.1, 3.2, 3.3, 3.4, 3.5],
@@ -153,13 +153,13 @@ np.arange(0, 24, 0.1).view([("x", float), ("y", float), ("z", float), ("t", floa
 ```
 
 
-All of the keyword arguments and rules that apply to `vector.obj` construction apply to `vector.array` dtypes.
+All of the keyword arguments and rules that apply to `vector.obj` construction apply to `vector.arr` dtypes.
 
 Geometrical names are used in the dtype, even if momentum-synonyms are used in construction.
 
 
 ```python
-vector.array({"px": [1, 2, 3, 4], "py": [1.1, 2.2, 3.3, 4.4], "pz": [0.1, 0.2, 0.3, 0.4]})
+vector.arr({"px": [1, 2, 3, 4], "py": [1.1, 2.2, 3.3, 4.4], "pz": [0.1, 0.2, 0.3, 0.4]})
 ```
 
 
@@ -167,11 +167,11 @@ vector.array({"px": [1, 2, 3, 4], "py": [1.1, 2.2, 3.3, 4.4], "pz": [0.1, 0.2, 0
 
 [Awkward Arrays](https://awkward-array.org/) are arrays with more complex data structures than NumPy allows, such as variable-length lists, nested records, missing and even heterogeneous data (multiple data types: use sparingly).
 
-The `vector.Array` function behaves exactly like the [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html) constructor, except that it makes arrays of vectors.
+The `vector.awk` function behaves exactly like the [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html) constructor, except that it makes arrays of vectors.
 
 
 ```python
-vector.Array([
+vector.awk([
     [{"x": 1, "y": 1.1, "z": 0.1}, {"x": 2, "y": 2.2, "z": 0.2}],
     [],
     [{"x": 3, "y": 3.3, "z": 0.3}],
@@ -201,7 +201,7 @@ ak.Array([
 
 
 
-All of the keyword arguments and rules that apply to `vector.obj` construction apply to `vector.Array` field names.
+All of the keyword arguments and rules that apply to `vector.obj` construction apply to `vector.awk` field names.
 
 ## Vector properties
 
@@ -251,13 +251,13 @@ Here's the key thing: _arrays of vectors return arrays of coordinates_.
 
 
 ```python
-vector.array({
+vector.arr({
     "x": [1.0, 2.0, 3.0, 4.0, 5.0],
     "y": [1.1, 2.2, 3.3, 4.4, 5.5],
     "z": [0.1, 0.2, 0.3, 0.4, 0.5],
 }).theta
 
-vector.Array([
+vector.awk([
     [{"x": 1, "y": 1.1, "z": 0.1}, {"x": 2, "y": 2.2, "z": 0.2}],
     [],
     [{"x": 3, "y": 3.3, "z": 0.3}],
@@ -275,7 +275,7 @@ array.shape
 array.pt.shape
 
 # Make a large, random Awkward Array of 3D momentum vectors.
-array = vector.Array([[{x: np.random.normal(0, 1) for x in ("px", "py", "pz")} for inner in range(np.random.poisson(1.5))] for outer in range(50)])
+array = vector.awk([[{x: np.random.normal(0, 1) for x in ("px", "py", "pz")} for inner in range(np.random.poisson(1.5))] for outer in range(50)])
 
 # Get the transverse momentum of each one, in the same nested structure.
 array.pt
@@ -296,19 +296,19 @@ vector.obj(x=3, y=4).rotateZ(0.1)
 vector.obj(rho=5, phi=0.4).rotateZ(0.1)
 
 # Broadcasts a scalar rotation angle of 0.5 to all elements of the NumPy array.
-print(vector.array({"rho": [1, 2, 3, 4, 5], "phi": [0.1, 0.2, 0.3, 0.4, 0.5]}).rotateZ(0.5))
+print(vector.arr({"rho": [1, 2, 3, 4, 5], "phi": [0.1, 0.2, 0.3, 0.4, 0.5]}).rotateZ(0.5))
 
 # Matches each rotation angle to an element of the NumPy array.
-print(vector.array({"rho": [1, 2, 3, 4, 5], "phi": [0.1, 0.2, 0.3, 0.4, 0.5]}).rotateZ(np.array([0.1, 0.2, 0.3, 0.4, 0.5])))
+print(vector.arr({"rho": [1, 2, 3, 4, 5], "phi": [0.1, 0.2, 0.3, 0.4, 0.5]}).rotateZ(np.array([0.1, 0.2, 0.3, 0.4, 0.5])))
 
 # Broadcasts a scalar rotation angle of 0.5 to all elements of the Awkward Array.
-print(vector.Array([[{"rho": 1, "phi": 0.1}, {"rho": 2, "phi": 0.2}], [], [{"rho": 3, "phi": 0.3}]]).rotateZ(0.5))
+print(vector.awk([[{"rho": 1, "phi": 0.1}, {"rho": 2, "phi": 0.2}], [], [{"rho": 3, "phi": 0.3}]]).rotateZ(0.5))
 
 # Broadcasts a rotation angle of 0.1 to both elements of the first list, 0.2 to the empty list, and 0.3 to the only element of the last list.
-print(vector.Array([[{"rho": 1, "phi": 0.1}, {"rho": 2, "phi": 0.2}], [], [{"rho": 3, "phi": 0.3}]]).rotateZ([0.1, 0.2, 0.3]))
+print(vector.awk([[{"rho": 1, "phi": 0.1}, {"rho": 2, "phi": 0.2}], [], [{"rho": 3, "phi": 0.3}]]).rotateZ([0.1, 0.2, 0.3]))
 
 # Matches each rotation angle to an element of the Awkward Array.
-print(vector.Array([[{"rho": 1, "phi": 0.1}, {"rho": 2, "phi": 0.2}], [], [{"rho": 3, "phi": 0.3}]]).rotateZ([[0.1, 0.2], [], [0.3]]))
+print(vector.awk([[{"rho": 1, "phi": 0.1}, {"rho": 2, "phi": 0.2}], [], [{"rho": 3, "phi": 0.3}]]).rotateZ([[0.1, 0.2], [], [0.3]]))
 ```
 
 
@@ -369,10 +369,10 @@ The vectors can be from different backends. Normal rules for broadcasting Python
 
 
 ```python
-vector.array({"x": [1, 2, 3, 4, 5], "y": [0.1, 0.2, 0.3, 0.4, 0.5]}) + vector.obj(x=10, y=5)
+vector.arr({"x": [1, 2, 3, 4, 5], "y": [0.1, 0.2, 0.3, 0.4, 0.5]}) + vector.obj(x=10, y=5)
 
 (
-    vector.Array([                                                   # an Awkward Array of vectors
+    vector.awk([                                                   # an Awkward Array of vectors
         [{"x": 1, "y": 1.1}, {"x": 2, "y": 2.2}],
         [],
         [{"x": 3, "y": 3.3}],
@@ -382,13 +382,13 @@ vector.array({"x": [1, 2, 3, 4, 5], "y": [0.1, 0.2, 0.3, 0.4, 0.5]}) + vector.ob
 )
 
 (
-    vector.Array([                                                   # an Awkward Array of vectors
+    vector.awk([                                                   # an Awkward Array of vectors
         [{"x": 1, "y": 1.1}, {"x": 2, "y": 2.2}],
         [],
         [{"x": 3, "y": 3.3}],
         [{"x": 4, "y": 4.4}, {"x": 5, "y": 5.5}],
     ])
-    + vector.array({"x": [4, 3, 2, 1], "y": [0.1, 0.1, 0.1, 0.1]})   # and a NumPy array of vectors
+    + vector.arr({"x": [4, 3, 2, 1], "y": [0.1, 0.1, 0.1, 0.1]})   # and a NumPy array of vectors
 )
 ```
 
@@ -533,7 +533,7 @@ Although this demonstrates that Numba can manipulate vector objects, there is no
 
 ```python
 # This is still not a large number. You want millions.
-array = vector.Array([[dict({x: np.random.normal(0, 1) for x in ("px", "py", "pz")}, E=np.random.normal(10, 1)) for inner in range(np.random.poisson(1.5))] for outer in range(50)])
+array = vector.awk([[dict({x: np.random.normal(0, 1) for x in ("px", "py", "pz")}, E=np.random.normal(10, 1)) for inner in range(np.random.poisson(1.5))] for outer in range(50)])
 
 @nb.njit
 def compute_masses(array):
