@@ -1,3 +1,5 @@
+<img alt="Vector logo" width="433" src="https://raw.githubusercontent.com/scikit-hep/vector/develop/docs/_images/vector-logo.png"/>
+
 # Vector
 
 [![Actions Status][actions-badge]][actions-link]

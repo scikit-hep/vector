@@ -70,6 +70,9 @@ html_theme = "sphinx_book_theme"
 
 html_baseurl = "https://vector.readthedocs.io/en/latest/"
 
+html_logo = "_images/vector-logo.png"
+html_title = "Vector docs"
+
 
 html_theme_options = {
     "home_page_in_toc": True,
