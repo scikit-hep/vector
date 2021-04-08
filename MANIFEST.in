@@ -1,1 +1,3 @@
-include LICENSE
+include LICENSE README.md
+recursive-include src *.typed
+recursive-include tests *.py
