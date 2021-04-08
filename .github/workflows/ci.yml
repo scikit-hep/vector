@@ -4,7 +4,6 @@ on:
   pull_request:
   push:
     branches:
-    - master
     - main
     - develop
 
@@ -63,21 +62,3 @@ jobs:
   #   - name: Run tests
   #     shell: "bash -l {0}"
   #     run: python -m pytest tests/root_tests -ra
-
-  dist:
-    runs-on: ubuntu-20.04
-    steps:
-    - uses: actions/checkout@v1
-
-    - name: Build sdist and wheel
-      run: pipx run --spec build pyproject-build
-
-    - uses: actions/upload-artifact@v2
-      with:
-        path: dist
-
-    - uses: pypa/gh-action-pypi-publish@v1.4.2
-      with:
-        user: __token__
-        password: ${{ secrets.pypi_password }}
-      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
