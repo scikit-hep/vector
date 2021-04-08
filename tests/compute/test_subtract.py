@@ -14,10 +14,10 @@ import vector.backends.object
 
 def test_planar_object():
     v1 = vector.backends.object.VectorObject2D(
-        vector.backends.object.AzimuthalObjectXY(3, 4)
+        azimuthal=vector.backends.object.AzimuthalObjectXY(3, 4)
     )
     v2 = vector.backends.object.VectorObject2D(
-        vector.backends.object.AzimuthalObjectXY(5, 12)
+        azimuthal=vector.backends.object.AzimuthalObjectXY(5, 12)
     )
     out = v1.subtract(v2)
     assert out.x == pytest.approx(-2)
