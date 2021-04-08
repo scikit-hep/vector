@@ -13,6 +13,7 @@ Vector: vectorized 2D, 3D, and Lorentz vectors
    usage/intro
    usage/structure
    usage/vector_design_prototype
+   changelog
 
 .. toctree::
    :maxdepth: 3
