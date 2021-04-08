@@ -627,7 +627,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             >>> vec
             vector.obj(x=1, y=2)
         """
-        return cls(AzimuthalObjectXY(x, y))
+        return cls(azimuthal=AzimuthalObjectXY(x, y))
 
     @classmethod
     def from_rhophi(cls, rho: float, phi: float) -> VectorObject2D:
@@ -643,10 +643,22 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             >>> vec
             vector.obj(rho=1, phi=2)
         """
-        return cls(AzimuthalObjectRhoPhi(rho, phi))
+        return cls(azimuthal=AzimuthalObjectRhoPhi(rho, phi))
 
-    def __init__(self, azimuthal: AzimuthalObject) -> None:
-        self.azimuthal = azimuthal
+    def __init__(
+        self, azimuthal: typing.Optional[AzimuthalObject] = None, **kwargs: float
+    ) -> None:
+        if not kwargs and azimuthal is not None:
+            self.azimuthal = azimuthal
+        elif kwargs and azimuthal is None:
+            if set(kwargs) == {"x", "y"}:
+                self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
+            elif set(kwargs) == {"rho", "phi"}:
+                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
+            else:
+                raise TypeError("Invalid arguments, must be x=, y= or rho=, phi=")
+        else:
+            raise TypeError("Must give Azimuthal if not giving keyword arguments")
 
     def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
@@ -690,7 +702,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             and issubclass(returns[0], Azimuthal)
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
-            return cls.ProjectionClass2D(azcoords)
+            return cls.ProjectionClass2D(azimuthal=azcoords)
 
         elif (
             len(returns) == 2
@@ -699,7 +711,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             and returns[1] is None
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
-            return cls.ProjectionClass2D(azcoords)
+            return cls.ProjectionClass2D(azimuthal=azcoords)
 
         elif (
             len(returns) == 2
@@ -1011,7 +1023,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             and returns[1] is None
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
-            return cls.ProjectionClass2D(azcoords)
+            return cls.ProjectionClass2D(azimuthal=azcoords)
 
         elif (
             len(returns) == 2
@@ -1587,7 +1599,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             and returns[1] is None
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
-            return cls.ProjectionClass2D(azcoords)
+            return cls.ProjectionClass2D(azimuthal=azcoords)
 
         elif (
             len(returns) == 2
@@ -1875,7 +1887,7 @@ def _gather_coordinates(
 
     if not coordinates:
         if azimuthal is not None and longitudinal is None and temporal is None:
-            return planar_class(azimuthal)
+            return planar_class(azimuthal=azimuthal)
         if azimuthal is not None and longitudinal is not None and temporal is None:
             return spatial_class(azimuthal, longitudinal)
         if azimuthal is not None and longitudinal is not None and temporal is not None:

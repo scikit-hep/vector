@@ -14,7 +14,7 @@ import vector.backends.object
 
 def test_planar_object():
     v = vector.backends.object.VectorObject2D(
-        vector.backends.object.AzimuthalObjectXY(0.1, 0.2)
+        azimuthal=vector.backends.object.AzimuthalObjectXY(0.1, 0.2)
     )
     u = v.unit()
     assert type(u) is type(v)  # noqa: E721

@@ -13,10 +13,10 @@ import vector.backends.object
 
 def test_planar_object():
     v1 = vector.backends.object.VectorObject2D(
-        vector.backends.object.AzimuthalObjectXY(0.1, 0.2)
+        azimuthal=vector.backends.object.AzimuthalObjectXY(0.1, 0.2)
     )
     v2 = vector.backends.object.VectorObject2D(
-        vector.backends.object.AzimuthalObjectXY(0.1, 0.2)
+        azimuthal=vector.backends.object.AzimuthalObjectXY(0.1, 0.2)
     )
     assert v1.equal(v2)
 
