@@ -76,7 +76,7 @@ vector.obj(x=3, y=4, z=-2, t=10).isclose(vector.obj(pt=5, phi=0.9273, theta=1.95
 
 The allowed keyword arguments for 2D vectors are:
 
-   * `x` and `y` for Caresian azimuthal coordinates,
+   * `x` and `y` for Cartesian azimuthal coordinates,
    * `px` and `py` for momentum,
    * `rho` and `phi` for polar azimuthal coordinates,
    * `pt` and `phi` for momentum.
@@ -93,7 +93,7 @@ For 4D vectors, you need the above and:
    * `t` for the Cartesian temporal coordinate,
    * `E` or `energy` to get four-momentum,
    * `tau` for the "proper time" (temporal coordinate in the vector's rest coordinate system),
-   * `M` or `mass` to get four-moemtum.
+   * `M` or `mass` to get four-momentum.
 
 Since momentum vectors have momentum-synonyms _in addition_ to the geometrical names, any momentum-synonym will make the whole vector a momentum vector.
 
