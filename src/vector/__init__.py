@@ -50,6 +50,56 @@ from vector._methods import (
 )
 from vector.version import version as __version__
 
+__all__ = (
+    "Array",
+    "Azimuthal",
+    "AzimuthalRhoPhi",
+    "AzimuthalXY",
+    "Coordinates",
+    "Longitudinal",
+    "LongitudinalEta",
+    "LongitudinalTheta",
+    "LongitudinalZ",
+    "Lorentz",
+    "Momentum",
+    "MomentumNumpy2D",
+    "MomentumNumpy3D",
+    "MomentumNumpy4D",
+    "MomentumObject2D",
+    "MomentumObject3D",
+    "MomentumObject4D",
+    "Planar",
+    "Spatial",
+    "Temporal",
+    "TemporalT",
+    "TemporalTau",
+    "Vector",
+    "Vector2D",
+    "Vector3D",
+    "Vector4D",
+    "VectorAwkward",
+    "VectorNumpy",
+    "VectorNumpy2D",
+    "VectorNumpy3D",
+    "VectorNumpy4D",
+    "VectorObject",
+    "VectorObject2D",
+    "VectorObject3D",
+    "VectorObject4D",
+    "__version__",
+    "arr",
+    "array",
+    "awk",
+    "dim",
+    "obj",
+    "register_awkward",
+    "register_numba",
+)
+
+
+def __dir__() -> typing.Tuple[str, ...]:
+    return __all__
+
 
 def register_numba() -> None:
     """
@@ -332,46 +382,5 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     return awkward.zip(dict(zip(names, arrays)), depth_limit=depth, with_name=recname)
 
 
-__all__ = (
-    "VectorAwkward",
-    "MomentumNumpy2D",
-    "MomentumNumpy3D",
-    "MomentumNumpy4D",
-    "VectorNumpy",
-    "VectorNumpy2D",
-    "VectorNumpy3D",
-    "VectorNumpy4D",
-    "array",
-    "MomentumObject2D",
-    "MomentumObject3D",
-    "MomentumObject4D",
-    "VectorObject",
-    "VectorObject2D",
-    "VectorObject3D",
-    "VectorObject4D",
-    "obj",
-    "Azimuthal",
-    "AzimuthalRhoPhi",
-    "AzimuthalXY",
-    "Coordinates",
-    "Longitudinal",
-    "LongitudinalEta",
-    "LongitudinalTheta",
-    "LongitudinalZ",
-    "Lorentz",
-    "Momentum",
-    "Planar",
-    "Spatial",
-    "Temporal",
-    "TemporalT",
-    "TemporalTau",
-    "Vector",
-    "Vector2D",
-    "Vector3D",
-    "Vector4D",
-    "dim",
-    "__version__",
-    "register_numba",
-    "register_awkward",
-    "Array",
-)
+arr = Array
+awk = Array
