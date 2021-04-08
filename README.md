@@ -1,4 +1,4 @@
-<img alt="Vector logo" width="433" src="https://raw.githubusercontent.com/scikit-hep/vector/develop/docs/_images/vector-logo.png"/>
+<img alt="Vector logo" width="433" src="https://raw.githubusercontent.com/scikit-hep/vector/main/docs/_images/vector-logo.png"/>
 
 # Vector
 
