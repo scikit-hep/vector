@@ -31,6 +31,12 @@ Main features of Vector:
    * NumPy/Awkward backends also implemented in [Numba](https://numba.pydata.org/) for JIT-compiled calculations on vectors.
    * Distinction between geometrical vectors, which have a minimum of attribute and method names, and vectors representing momentum, which have synonyms like `pt` = `rho`, `energy` = `t`, `mass` = `tau`.
 
+## Installation
+
+To install, use `pip install vector` or your favorite way to instal in an environment.
+
+## Overview
+
 This overview is based on the [documentation here](https://vector.readthedocs.io/en/develop/usage/intro.html).
 
 
