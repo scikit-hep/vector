@@ -5,7 +5,6 @@
 
 import typing
 
-from vector._backends.awkward_ import VectorAwkward
 from vector._backends.numpy_ import (
     MomentumNumpy2D,
     MomentumNumpy3D,
@@ -50,7 +49,16 @@ from vector._methods import (
 )
 from vector.version import version as __version__
 
-__all__ = (
+try:
+    import awkward
+except ModuleNotFoundError:
+    awkward = None
+    if not typing.TYPE_CHECKING:
+        VectorAwkward = None
+else:
+    from vector._backends.awkward_ import VectorAwkward
+
+__all__: typing.Tuple[str, ...] = (
     "Array",
     "Azimuthal",
     "AzimuthalRhoPhi",
@@ -98,7 +106,11 @@ __all__ = (
 
 
 def __dir__() -> typing.Tuple[str, ...]:
-    return __all__
+    return (
+        tuple(s for s in __all__ if s != "VectorAwkward")
+        if awkward is None
+        else __all__
+    )
 
 
 def register_numba() -> None:
