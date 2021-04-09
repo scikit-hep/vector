@@ -1,0 +1,93 @@
+{
+  "projectName": "vector",
+  "projectOwner": "scikit-hep",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "jpivarski",
+      "name": "Jim Pivarski",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1852447?v=4",
+      "profile": "https://github.com/jpivarski",
+      "contributions": [
+        "maintenance",
+        "code",
+        "doc"
+      ]
+    },
+    {
+      "login": "henryiii",
+      "name": "Henry Schreiner",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4616906?v=4",
+      "profile": "https://github.com/henryiii",
+      "contributions": [
+        "maintenance",
+        "code",
+        "doc"
+      ]
+    },
+    {
+      "login": "eduardo-rodrigues",
+      "name": "Eduardo Rodrigues",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5013581?v=4",
+      "profile": "https://github.com/eduardo-rodrigues",
+      "contributions": [
+        "maintenance",
+        "code",
+        "doc"
+      ]
+    },
+    {
+      "login": "LovelyBuggies",
+      "name": "N!no",
+      "avatar_url": "https://avatars.githubusercontent.com/u/29083689?v=4",
+      "profile": "http://lovelybuggies.com.cn/",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "pfackeldey",
+      "name": "Peter Fackeldey",
+      "avatar_url": "https://avatars.githubusercontent.com/u/18463582?v=4",
+      "profile": "https://github.com/pfackeldey",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "kreczko",
+      "name": "Luke Kreczko",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1213276?v=4",
+      "profile": "https://github.com/kreczko",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "nsmith-",
+      "name": "Nicholas Smith",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6587412?v=4",
+      "profile": "https://github.com/nsmith-",
+      "contributions": [
+        "ideas"
+      ]
+    },
+    {
+      "login": "mayou36",
+      "name": "Jonas Eschle",
+      "avatar_url": "https://avatars.githubusercontent.com/u/17454848?v=4",
+      "profile": "https://github.com/mayou36",
+      "contributions": [
+        "ideas"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7
+}

@@ -590,3 +590,32 @@ Support for this work was provided by the National Science Foundation cooperativ
 [rtd-badge]:                https://readthedocs.org/projects/vector/badge/?version=latest
 [rtd-link]:                 https://vector.readthedocs.io/en/latest/?badge=latest
 [sk-badge]:                 https://scikit-hep.org/assets/images/Scikit--HEP-Project-blue.svg
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/jpivarski"><img src="https://avatars.githubusercontent.com/u/1852447?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Jim Pivarski</b></sub></a><br /><a href="#maintenance-jpivarski" title="Maintenance">🚧</a> <a href="https://github.com/scikit-hep/vector/commits?author=jpivarski" title="Code">💻</a> <a href="https://github.com/scikit-hep/vector/commits?author=jpivarski" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/henryiii"><img src="https://avatars.githubusercontent.com/u/4616906?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Henry Schreiner</b></sub></a><br /><a href="#maintenance-henryiii" title="Maintenance">🚧</a> <a href="https://github.com/scikit-hep/vector/commits?author=henryiii" title="Code">💻</a> <a href="https://github.com/scikit-hep/vector/commits?author=henryiii" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/eduardo-rodrigues"><img src="https://avatars.githubusercontent.com/u/5013581?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Eduardo Rodrigues</b></sub></a><br /><a href="#maintenance-eduardo-rodrigues" title="Maintenance">🚧</a> <a href="https://github.com/scikit-hep/vector/commits?author=eduardo-rodrigues" title="Code">💻</a> <a href="https://github.com/scikit-hep/vector/commits?author=eduardo-rodrigues" title="Documentation">📖</a></td>
+    <td align="center"><a href="http://lovelybuggies.com.cn/"><img src="https://avatars.githubusercontent.com/u/29083689?v=4?s=100" width="100px;" alt=""/><br /><sub><b>N!no</b></sub></a><br /><a href="https://github.com/scikit-hep/vector/commits?author=LovelyBuggies" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/pfackeldey"><img src="https://avatars.githubusercontent.com/u/18463582?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Peter Fackeldey</b></sub></a><br /><a href="https://github.com/scikit-hep/vector/commits?author=pfackeldey" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/kreczko"><img src="https://avatars.githubusercontent.com/u/1213276?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Luke Kreczko</b></sub></a><br /><a href="https://github.com/scikit-hep/vector/commits?author=kreczko" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/nsmith-"><img src="https://avatars.githubusercontent.com/u/6587412?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Nicholas Smith</b></sub></a><br /><a href="#ideas-nsmith-" title="Ideas, Planning, & Feedback">🤔</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/mayou36"><img src="https://avatars.githubusercontent.com/u/17454848?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Jonas Eschle</b></sub></a><br /><a href="#ideas-mayou36" title="Ideas, Planning, & Feedback">🤔</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
