@@ -20,7 +20,7 @@ from pkg_resources import get_distribution
 
 project = "Vector"
 copyright = (
-    "2019-2020, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner"
+    "2019-2021, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner"
 )
 author = "Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner"
 
