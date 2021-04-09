@@ -31,6 +31,7 @@ jobs:
     name: Check Python ${{ matrix.python-version }}
     steps:
     - uses: actions/checkout@v2
+
     - uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
@@ -39,7 +40,13 @@ jobs:
       run: python -m pip list
 
     - name: Install package
-      run: python -m pip install -e .[dev,test]
+      run: python -m pip install -e .[test]
+
+    - name: Test light package
+      run: python -m pytest -ra
+
+    - name: Install develop extras
+      run: python -m pip install -e .[dev]
 
     - name: Check compute features only on Python 3.8
       if: matrix.python-version == 3.8
