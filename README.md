@@ -16,7 +16,7 @@
 [![Scikit-HEP][sk-badge]](https://scikit-hep.org/)
 
 
-Vector is a Python library for 2D, 3D, and [Lorentz vectors](https://en.wikipedia.org/wiki/Special_relativity#Physics_in_spacetime), especially _arrays of vectors_, to solve common physics problems in a NumPy-like way.
+Vector is a Python 3.6+ library for 2D, 3D, and [Lorentz vectors](https://en.wikipedia.org/wiki/Special_relativity#Physics_in_spacetime), especially _arrays of vectors_, to solve common physics problems in a NumPy-like way.
 
 Main features of Vector:
 
@@ -28,8 +28,14 @@ Main features of Vector:
       - NumPy arrays of vectors (as a [structured array](https://numpy.org/doc/stable/user/basics.rec.html) subclass)
       - [Awkward Arrays](https://awkward-array.org/) of vectors
       - potential for more: CuPy, TensorFlow, Torch, JAX...
-   * Implemented in [Numba](https://numba.pydata.org/) for JIT-compiled calculations on vectors.
+   * NumPy/Awkward backends also implemented in [Numba](https://numba.pydata.org/) for JIT-compiled calculations on vectors.
    * Distinction between geometrical vectors, which have a minimum of attribute and method names, and vectors representing momentum, which have synonyms like `pt` = `rho`, `energy` = `t`, `mass` = `tau`.
+
+## Installation
+
+To install, use `pip install vector` or your favorite way to instal in an environment.
+
+## Overview
 
 This overview is based on the [documentation here](https://vector.readthedocs.io/en/develop/usage/intro.html).
 
@@ -46,8 +52,8 @@ import numba as nb
 The easiest way to create one or many vectors is with a helper function:
 
    * `vector.obj` to make a pure Python vector object,
-   * `vector.arr` to make a NumPy array of vectors (lowercase, like `np.array`),
-   * `vector.awk` to make an Awkward Array of vectors (uppercase, like `ak.Array`).
+   * `vector.arr` to make a NumPy array of vectors (or `array`, lowercase, like `np.array`),
+   * `vector.awk` to make an Awkward Array of vectors (or `Array`, uppercase, like `ak.Array`).
 
 ### Pure Python vectors
 
@@ -562,34 +568,6 @@ compute_masses(array)
 
 Undoubtedly, there are rough edges, but most of the functionality is there and Vector is ready for user-testing. It can only be improved by your feedback!
 
-See [CONTRIBUTING.md](./.github/CONTRIBUTING.md) for information on setting up
-a development environment.
-
-
-## Acknowledgements
-
-This library was primarily developed by Jim Pivarski, Henry Schreiner, and Eduardo Rodrigues.
-
-Support for this work was provided by the National Science Foundation cooperative agreement OAC-1836650 (IRIS-HEP) and OAC-1450377 (DIANA/HEP). Any opinions, findings, conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of the National Science Foundation.
-
-
-
-[actions-badge]:            https://github.com/scikit-hep/vector/workflows/CI/badge.svg
-[actions-link]:             https://github.com/scikit-hep/vector/actions
-[black-badge]:              https://img.shields.io/badge/code%20style-black-000000.svg
-[black-link]:               https://github.com/psf/black
-[github-discussions-badge]: https://img.shields.io/static/v1?label=Discussions&message=Ask&color=blue&logo=github
-[github-discussions-link]:  https://github.com/scikit-hep/vector/discussions
-[gitter-badge]:             https://badges.gitter.im/Scikit-HEP/vector.svg
-[gitter-link]:              https://gitter.im/Scikit-HEP/vector?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
-[pre-commit-badge]:         https://results.pre-commit.ci/badge/github/scikit-hep/vector/develop.svg
-[pre-commit-link]:          https://results.pre-commit.ci/repo/github/scikit-hep/vector
-[pypi-link]:                https://pypi.org/project/vector/
-[pypi-platforms]:           https://img.shields.io/pypi/pyversions/vector
-[pypi-version]:             https://badge.fury.io/py/vector.svg
-[rtd-badge]:                https://readthedocs.org/projects/vector/badge/?version=latest
-[rtd-link]:                 https://vector.readthedocs.io/en/latest/?badge=latest
-[sk-badge]:                 https://scikit-hep.org/assets/images/Scikit--HEP-Project-blue.svg
 
 ## Contributors ✨
 
@@ -618,4 +596,34 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+This project follows the
+[all-contributors](https://github.com/all-contributors/all-contributors)
+specification. Contributions of any kind welcome!  See
+[CONTRIBUTING.md](./.github/CONTRIBUTING.md) for information on setting up a
+development environment.
+
+
+## Acknowledgements
+
+This library was primarily developed by Jim Pivarski, Henry Schreiner, and Eduardo Rodrigues.
+
+Support for this work was provided by the National Science Foundation cooperative agreement OAC-1836650 (IRIS-HEP) and OAC-1450377 (DIANA/HEP). Any opinions, findings, conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of the National Science Foundation.
+
+
+
+[actions-badge]:            https://github.com/scikit-hep/vector/workflows/CI/badge.svg
+[actions-link]:             https://github.com/scikit-hep/vector/actions
+[black-badge]:              https://img.shields.io/badge/code%20style-black-000000.svg
+[black-link]:               https://github.com/psf/black
+[github-discussions-badge]: https://img.shields.io/static/v1?label=Discussions&message=Ask&color=blue&logo=github
+[github-discussions-link]:  https://github.com/scikit-hep/vector/discussions
+[gitter-badge]:             https://badges.gitter.im/Scikit-HEP/vector.svg
+[gitter-link]:              https://gitter.im/Scikit-HEP/vector?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+[pre-commit-badge]:         https://results.pre-commit.ci/badge/github/scikit-hep/vector/develop.svg
+[pre-commit-link]:          https://results.pre-commit.ci/repo/github/scikit-hep/vector
+[pypi-link]:                https://pypi.org/project/vector/
+[pypi-platforms]:           https://img.shields.io/pypi/pyversions/vector
+[pypi-version]:             https://badge.fury.io/py/vector.svg
+[rtd-badge]:                https://readthedocs.org/projects/vector/badge/?version=latest
+[rtd-link]:                 https://vector.readthedocs.io/en/latest/?badge=latest
+[sk-badge]:                 https://scikit-hep.org/assets/images/Scikit--HEP-Project-blue.svg
