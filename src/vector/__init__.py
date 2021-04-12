@@ -3,7 +3,10 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+import sys
 import typing
+
+import packaging.version
 
 from vector._backends.numpy_ import (
     MomentumNumpy2D,
@@ -49,6 +52,12 @@ from vector._methods import (
 )
 from vector.version import version as __version__
 
+if sys.version_info < (3, 8):
+    import importlib_metadata
+else:
+    import importlib.metadata as importlib_metadata
+
+
 try:
     import awkward
 except ModuleNotFoundError:
@@ -56,7 +65,12 @@ except ModuleNotFoundError:
     if not typing.TYPE_CHECKING:
         VectorAwkward = None
 else:
+    awk_version = packaging.version.Version(importlib_metadata.version("awkward"))
+    if awk_version < packaging.version.Version("1.2.0rc5"):
+        msg = f"Awkward {awk_version} installed and too old, remove or install 1.2.0+"
+        raise ImportError(msg)
     from vector._backends.awkward_ import VectorAwkward
+
 
 __all__: typing.Tuple[str, ...] = (
     "Array",
