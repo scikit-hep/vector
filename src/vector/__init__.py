@@ -58,17 +58,23 @@ else:
     import importlib.metadata as importlib_metadata
 
 
-try:
+def _import_awkward():
     import awkward
-except ModuleNotFoundError:
-    awkward = None
+    awk_version = packaging.version.Version(importlib_metadata.version("awkward"))
+    if awk_version < packaging.version.Version("1.2.0rc5"):
+        msg = f"""awkward {awk_version} is too old; please upgrade to 1.2.0 or later:
+
+    pip install -U awkward
+"""  # the only context users will see this message is if they're trying to use vector.awk
+        raise ImportError(msg)
+    return awkward
+
+try:
+    _import_awkward()
+except ImportError:  # superclass of ModuleNotFoundError, I believe
     if not typing.TYPE_CHECKING:
         VectorAwkward = None
 else:
-    awk_version = packaging.version.Version(importlib_metadata.version("awkward"))
-    if awk_version < packaging.version.Version("1.2.0rc5"):
-        msg = f"Awkward {awk_version} installed and too old, remove or install 1.2.0+"
-        raise ImportError(msg)
     from vector._backends.awkward_ import VectorAwkward
 
 
