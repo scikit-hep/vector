@@ -74,6 +74,9 @@ from vector._methods import (
 )
 from vector._typeutils import BoolCollection, ScalarCollection
 
+# Throws an error if awkward is too old
+vector._import_awkward()
+
 ArrayOrRecord = typing.TypeVar("ArrayOrRecord", bound=typing.Union[ak.Array, ak.Record])
 
 behavior: typing.Any = {}
