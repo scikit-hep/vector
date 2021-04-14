@@ -7,11 +7,7 @@
 from setuptools import setup
 
 extras = {
-    "dev": [
-        "awkward>=1.2.0",
-        'numba>=0.50; python_version>="3.6"',
-        "pytest>=4.6",
-    ],
+    "awkward": ["awkward>=1.2.0"],
     "test": [
         "pytest>=4.6",
     ],
@@ -31,6 +27,12 @@ extras = {
         "awkward",
     ],
 }
+
+extras["dev"] = [
+    *extras["awkward"],
+    *extras["test"],
+    'numba>=0.50; python_version>="3.6"',
+]
 
 extras["all"] = sum(extras.values(), [])
 
