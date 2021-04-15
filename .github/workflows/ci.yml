@@ -48,9 +48,24 @@ jobs:
     - name: Install develop extras
       run: python -m pip install -e .[dev]
 
-    - name: Check compute features only on Python 3.8
-      if: matrix.python-version == 3.8
-      run: python -m pip install -e .[test_extras]
+    - name: Test package
+      run: python -m pytest -ra
+
+  discheck:
+    runs-on: ubuntu-latest
+    name: Disassemble check
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.8.8
+
+    - name: Requirements check
+      run: python -m pip list
+
+    - name: Check compute features
+      run: python -m pip install .[dev,test,test_extras]
 
     - name: Test package
       run: python -m pytest -ra
