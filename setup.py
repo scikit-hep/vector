@@ -10,6 +10,7 @@ extras = {
     "awkward": ["awkward>=1.2.0"],
     "test": [
         "pytest>=4.6",
+        "hypothesis>=6",
     ],
     "test_extras": [
         "uncompyle6",
