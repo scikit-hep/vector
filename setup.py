@@ -17,7 +17,7 @@ extras = {
     ],
     "docs": [
         "nbsphinx",
-        "recommonmark>=0.5.0",
+        "myst-parser>0.13",
         "Sphinx~=3.0",
         "sphinx_copybutton",
         "sphinx_book_theme~=0.0.42",

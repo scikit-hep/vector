@@ -33,7 +33,7 @@ version = get_distribution("vector").version
 # ones.
 extensions = [
     "nbsphinx",
-    "recommonmark",
+    "myst_parser",
     "sphinx.ext.autodoc",
     "sphinx.ext.mathjax",
     "sphinx.ext.napoleon",
