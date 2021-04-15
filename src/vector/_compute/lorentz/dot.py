@@ -111,8 +111,9 @@ def make_conversion(
     def f(lib, coord11, coord12, coord13, coord14, coord21, coord22, coord23, coord24):
         t1 = to_t1(lib, coord11, coord12, coord13, coord14)
         t2 = to_t1(lib, coord21, coord22, coord23, coord24)
-        return (t1 * t2
-        ) - spatial_dot(lib, coord11, coord12, coord13, coord21, coord22, coord23)
+        return (t1 * t2) - spatial_dot(
+            lib, coord11, coord12, coord13, coord21, coord22, coord23
+        )
 
     dispatch_map[
         azimuthal1, longitudinal1, temporal1, azimuthal2, longitudinal2, temporal2
