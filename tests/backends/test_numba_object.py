@@ -16,8 +16,9 @@ numba = pytest.importorskip("numba")
 
 import vector._backends.numba_object  # noqa: E402
 
+pytestmark = pytest.mark.numba
 
-@pytest.mark.numba
+
 def test_namedtuples():
     @numba.njit
     def get_x(obj):
@@ -27,7 +28,6 @@ def test_namedtuples():
     assert get_x(vector._backends.object_.AzimuthalObjectXY(1.1, 2)) == 1.1
 
 
-@pytest.mark.numba
 def test_VectorObjectType():
     # These tests verify that the reference counts for Python objects touched in
     # the lowered Numba code do not increase or decrease with the number of times
@@ -130,7 +130,6 @@ def test_VectorObjectType():
     assert out.t == pytest.approx(4)
 
 
-@pytest.mark.numba
 def test_VectorObject_constructor():
     @numba.njit
     def vector_xy():
@@ -289,7 +288,6 @@ def test_VectorObject_constructor():
     assert out.tau == pytest.approx(4)
 
 
-@pytest.mark.numba
 def test_projections():
     @numba.njit
     def to_Vector2D(x):
@@ -376,7 +374,6 @@ def test_projections():
     )
 
 
-@pytest.mark.numba
 def test_conversions():
     @numba.njit
     def to_xy(x):
@@ -586,7 +583,6 @@ def test_conversions():
             assert out.t == pytest.approx(4.4)
 
 
-@pytest.mark.numba
 def test_factory():
     @numba.njit
     def vector_xy():
@@ -709,7 +705,6 @@ def test_factory():
     assert out.E == pytest.approx(10)
 
 
-@pytest.mark.numba
 def test_property_float():
     @numba.njit
     def get_x(v):
@@ -763,7 +758,6 @@ def test_property_float():
     )
 
 
-@pytest.mark.numba
 def test_planar_method_float():
     @numba.njit
     def get_deltaphi(v1, v2):
@@ -780,7 +774,6 @@ def test_planar_method_float():
     ) == pytest.approx(-numpy.pi / 2)
 
 
-@pytest.mark.numba
 def test_spatial_method_float():
     @numba.njit
     def get_deltaeta(v1, v2):
@@ -791,7 +784,6 @@ def test_spatial_method_float():
     ) == pytest.approx(1.5)
 
 
-@pytest.mark.numba
 def test_method_deltaphi():
     @numba.njit
     def get_deltaphi(v1, v2):
@@ -814,7 +806,6 @@ def test_method_deltaphi():
     ) == pytest.approx(2.2 - 4)
 
 
-@pytest.mark.numba
 def test_method_add():
     @numba.njit
     def get_add(v1, v2):
@@ -905,7 +896,6 @@ def test_method_add():
     assert out.z == pytest.approx(8.3)
 
 
-@pytest.mark.numba
 def test_method_isparallel():
     @numba.njit
     def get_isparallel(v1, v2):
@@ -926,7 +916,6 @@ def test_method_isparallel():
     )
 
 
-@pytest.mark.numba
 def test_method_isclose():
     @numba.njit
     def get_isclose(v1, v2):
@@ -941,7 +930,6 @@ def test_method_isclose():
     )
 
 
-@pytest.mark.numba
 def test_method_rotateZ():
     @numba.njit
     def get_rotateZ(v, angle):
@@ -964,7 +952,6 @@ def test_method_rotateZ():
     assert out.z == pytest.approx(2.2)
 
 
-@pytest.mark.numba
 def test_method_transform2D():
     @numba.njit
     def get_transform2D(v, obj):
@@ -993,7 +980,6 @@ def test_method_transform2D():
     assert out.z == pytest.approx(2.2)
 
 
-@pytest.mark.numba
 def test_method_unit():
     @numba.njit
     def get_unit(v):
@@ -1018,7 +1004,6 @@ def test_method_unit():
     assert out.t == pytest.approx(1 / numpy.sqrt(2))
 
 
-@pytest.mark.numba
 def test_method_scale():
     @numba.njit
     def get_scale(v):
@@ -1043,7 +1028,6 @@ def test_method_scale():
     assert out.t == pytest.approx(8.8)
 
 
-@pytest.mark.numba
 def test_method_cross():
     @numba.njit
     def get_cross(v1, v2):
@@ -1080,7 +1064,6 @@ def test_method_cross():
     assert (out.x, out.y, out.z) == pytest.approx((-0.03, 0.06, -0.03))
 
 
-@pytest.mark.numba
 def test_method_rotateX():
     @numba.njit
     def get_rotateX(v):
@@ -1100,7 +1083,6 @@ def test_method_rotateX():
     assert out.t == pytest.approx(0.4)
 
 
-@pytest.mark.numba
 def test_method_rotateY():
     @numba.njit
     def get_rotateY(v):
@@ -1120,7 +1102,6 @@ def test_method_rotateY():
     assert out.t == pytest.approx(0.4)
 
 
-@pytest.mark.numba
 def test_method_rotate_axis():
     @numba.njit
     def get_rotate_axis(vec, axis):
@@ -1161,7 +1142,6 @@ def test_method_rotate_axis():
     assert out.t == pytest.approx(999)
 
 
-@pytest.mark.numba
 def test_method_rotate_euler():
     @numba.njit
     def get_rotate_euler(vec, phi, theta, psi):
@@ -1175,7 +1155,6 @@ def test_method_rotate_euler():
     assert out.z == pytest.approx(0.4971350761081869)
 
 
-@pytest.mark.numba
 def test_method_rotate_quaternion():
     @numba.njit
     def get_rotate_quaternion(vec, u, i, j, k):
@@ -1189,7 +1168,6 @@ def test_method_rotate_quaternion():
     assert out.z == pytest.approx(0.246)
 
 
-@pytest.mark.numba
 def test_method_transform3D():
     @numba.njit
     def get_transform3D(v, obj):
@@ -1213,7 +1191,6 @@ def test_method_transform3D():
     assert out.z == pytest.approx(99)
 
 
-@pytest.mark.numba
 def test_method_boost():
     @numba.njit
     def get_boost_p4(vec, p4):
@@ -1256,7 +1233,6 @@ def test_method_boost():
     assert out.t == pytest.approx(9.138547120755076)
 
 
-@pytest.mark.numba
 def test_method_boostX():
     @numba.njit
     def get_boostX_beta(vec, beta):
@@ -1279,7 +1255,6 @@ def test_method_boostX():
     assert out.t == pytest.approx(3.5147186257614287)
 
 
-@pytest.mark.numba
 def test_method_to_beta3():
     @numba.njit
     def get_to_beta3(vec):
@@ -1292,7 +1267,6 @@ def test_method_to_beta3():
     assert out.z == pytest.approx(10 / 20)
 
 
-@pytest.mark.numba
 def test_method_transform4D():
     @numba.njit
     def get_transform4D(v, obj):
@@ -1324,7 +1298,6 @@ def test_method_transform4D():
     assert out.t == pytest.approx(123)
 
 
-@pytest.mark.numba
 def test_method_timespacelight_like():
     @numba.njit
     def get_is_timelike(v):
@@ -1343,7 +1316,6 @@ def test_method_timespacelight_like():
     assert get_is_spacelike(vector.obj(x=3, y=4, z=0, t=2))
 
 
-@pytest.mark.numba
 def test_momentum_alias():
     @numba.njit
     def get_px(v):
@@ -1354,7 +1326,6 @@ def test_momentum_alias():
         get_px(vector.obj(x=3, y=4))
 
 
-@pytest.mark.numba
 def test_operator_abs():
     @numba.njit
     def get_abs(v):
@@ -1367,7 +1338,6 @@ def test_operator_abs():
     assert get_abs(vector.obj(x=3, y=4, z=5, tau=100)) == pytest.approx(100)
 
 
-@pytest.mark.numba
 def test_operator_neg():
     @numba.njit
     def get_neg(v):
@@ -1386,7 +1356,6 @@ def test_operator_neg():
     assert out.y == 4
 
 
-@pytest.mark.numba
 def test_operator_bool():
     @numba.njit
     def get_true(v):
@@ -1404,7 +1373,6 @@ def test_operator_bool():
     assert get_true(vector.obj(x=0, y=0, z=10, t=10))
 
 
-@pytest.mark.numba
 def test_operator_truth():
     @numba.njit
     def get_true(v):
@@ -1437,7 +1405,6 @@ def test_operator_truth():
     assert not get_false(vector.obj(x=0, y=0, z=10, t=10))
 
 
-@pytest.mark.numba
 def test_operator_eq():
     @numba.njit
     def get_eq(v1, v2):
@@ -1458,7 +1425,6 @@ def test_operator_eq():
         get_ne(vector.obj(x=3, y=4), vector.obj(x=3, y=4, z=99))
 
 
-@pytest.mark.numba
 def test_operator_add():
     @numba.njit
     def get_add(v1, v2):
@@ -1490,7 +1456,6 @@ def test_operator_add():
     assert out.y == pytest.approx(-2)
 
 
-@pytest.mark.numba
 def test_operator_mul():
     @numba.njit
     def get_mul(a, b):
@@ -1519,7 +1484,6 @@ def test_operator_mul():
         get_div(2, vector.obj(x=1, y=2))
 
 
-@pytest.mark.numba
 def test_operator_pow():
     @numba.njit
     def get_pow(a, b):
@@ -1534,7 +1498,6 @@ def test_operator_pow():
     assert get_square(vector.obj(x=1, y=2)) == pytest.approx(5)
 
 
-@pytest.mark.numba
 def test_operator_matmul():
     @numba.njit
     def get_matmul(v1, v2):
@@ -1543,7 +1506,6 @@ def test_operator_matmul():
     assert get_matmul(vector.obj(x=1, y=2), vector.obj(x=3, y=4)) == pytest.approx(11)
 
 
-@pytest.mark.numba
 def test_numpy_functions():
     @numba.njit
     def get_absolute(v):

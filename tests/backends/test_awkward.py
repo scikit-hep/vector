@@ -9,6 +9,8 @@ import vector
 
 ak = pytest.importorskip("awkward")
 
+pytestmark = pytest.mark.awkward
+
 
 def test_basic():
     array = vector.Array([[{"x": 1, "y": 2}], [], [{"x": 3, "y": 4}]])
