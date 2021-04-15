@@ -11,23 +11,38 @@ import vector
 # If ROOT is not available, skip these tests.
 ROOT = pytest.importorskip("ROOT")
 
-# ROOT.Math.XYVector constructor arguments to get all the weird cases.
+# 4D constructor arguments to get all the weird cases.
 constructor = [
-    (0, 0),
-    (0, 10),
-    (0, -10),
-    (1, 0),
-    (1, 10),
-    (1, -10),
-    (1., 2.5),
-    (1, 2.5),
-    (1, -2.5),
+    (0, 0, 0, 0),
+    (0, 0, 1, 0), # theta == 0.0
+    (0, 0, -1, 0),
+    (0, 0, 1, 0),
+    (0, 0, 0, 4294967296),
+    (0, 4294967296, 0, 0),
+    (0, 0, 0, 10),
+    (0, 0, 0, -10),
+    (1, 2, 3, 0),
+    (1, 2, 3, 10),
+    (1, 2, 3, -10),
+    (1., 2., 3., 2.5),
+    (1, 2, 3, 2.5),
+    (1, 2, 3, -2.5),
 ]
 
-# Coordinate conversion methods to apply to the VectorObject2D.
+# Coordinate conversion methods to apply to the VectorObject4D.
 coordinate_list = [
-    "to_xy",
-    "to_rhophi",
+    "to_xyzt",
+    "to_xythetat", # may fail for constructor2
+    "to_xyetat",
+    "to_rhophizt",
+    "to_rhophithetat",
+    "to_rhophietat",
+    "to_xyztau",
+    "to_xythetatau",
+    "to_xyetatau",
+    "to_rhophiztau",
+    "to_rhophithetatau",
+    "to_rhophietatau",
 ]
 
 @pytest.fixture(scope="module", params=coordinate_list)
@@ -62,155 +77,3 @@ scalar_list = [
 @pytest.fixture(scope="module", params=scalar_list)
 def scalar(request):
     return request.param
-
-# Run a test that compares ROOT's 'Dot()' with vector's 'dot' for all cases.
-@pytest.mark.parametrize("constructor", constructor)
-def test_Dot(constructor, coordinates):
-    assert ROOT.Math.XYVector(*constructor).Dot(ROOT.Math.XYVector(*constructor)) == pytest.approx(
-        getattr(
-            vector.obj(**dict(zip(["x", "y"], constructor))), coordinates
-        )().dot(getattr(
-            vector.obj(**dict(zip(["x", "y"], constructor))), coordinates
-        )())
-    )
-
-# Run the same tests within hypothesis
-@given(constructor1=st.tuples(st.floats(min_value=-10e7, max_value=10e7),
-                              st.floats(min_value=-10e7, max_value=10e7))
-                  | st.tuples(st.integers(min_value=-10e7, max_value=10e7),
-                              st.integers(min_value=-10e7, max_value=10e7)),
-       constructor2=st.tuples(st.floats(min_value=-10e7, max_value=10e7),
-                              st.floats(min_value=-10e7, max_value=10e7))
-                  | st.tuples(st.integers(min_value=-10e7, max_value=10e7),
-                              st.integers(min_value=-10e7, max_value=10e7)))
-def test_fuzz_Dot(constructor1, constructor2, coordinates):
-    assert ROOT.Math.XYVector(*constructor1).Dot(ROOT.Math.XYVector(*constructor2)) == pytest.approx(
-        getattr(
-            vector.obj(**dict(zip(["x", "y"], constructor1))), coordinates
-        )().dot(getattr(
-            vector.obj(**dict(zip(["x", "y"], constructor2))), coordinates
-        )())
-    )
-
-# Run a test that compares ROOT's 'Mag2()' with vector's 'rho2' for all cases.
-@pytest.mark.parametrize("constructor", constructor)
-def test_Mag2(constructor, coordinates):
-    assert ROOT.Math.XYVector(*constructor).Mag2() == pytest.approx(
-        getattr(
-            vector.obj(**dict(zip(["x", "y"], constructor))), coordinates
-        )().rho2
-    )
-
-# Run a test that compares ROOT's 'R()' with vector's 'rho' for all cases.
-@pytest.mark.parametrize("constructor", constructor)
-def test_R(constructor, coordinates):
-    assert ROOT.Math.XYVector(*constructor).R() == pytest.approx(
-        getattr(
-            vector.obj(**dict(zip(["x", "y"], constructor))), coordinates
-        )().rho
-    )
-
-# Run a test that compares ROOT's 'Phi()' with vector's 'rho' for all cases.
-@pytest.mark.parametrize("constructor", constructor)
-def test_Phi(constructor, coordinates):
-    assert ROOT.Math.XYVector(*constructor).Phi() == pytest.approx(
-        getattr(
-            vector.obj(**dict(zip(["x", "y"], constructor))), coordinates
-        )().phi
-    )
-
-# Run a test that compares ROOT's 'Rotate()' with vector's 'rotateZ' for all cases.
-@pytest.mark.parametrize("constructor", constructor)
-def test_Rotate(constructor, angle, coordinates):
-    ref_vec = ROOT.Math.XYVector(*constructor)
-    ref_vec.Rotate(angle)
-    vec = getattr(
-        vector.obj(**dict(zip(["x", "y"], constructor))), coordinates
-    )()
-    vec.rotateZ(angle)
-    assert (ref_vec.__getattribute__("x")() == pytest.approx(vec.x)  and
-            ref_vec.__getattribute__("y")() == pytest.approx(vec.y))
-
-# Run a test that compares ROOT's 'Unit()' with vector's 'unit' for all cases.
-@pytest.mark.parametrize("constructor", constructor)
-def test_Unit(constructor, coordinates):
-    ref_vec = ROOT.Math.XYVector(*constructor).Unit()
-    vec = getattr(
-        vector.obj(**dict(zip(["x", "y"], constructor))), coordinates
-    )().unit
-    assert (ref_vec.__getattribute__("x")() == pytest.approx(vec().x)  and
-            ref_vec.__getattribute__("y")() == pytest.approx(vec().y))
-
-# Run a test that compares ROOT's 'X()' and 'Y()' with vector's 'x' and 'y' for all cases.
-@pytest.mark.parametrize("constructor", constructor)
-def test_X_and_Y(constructor, coordinates):
-    vec = getattr(
-        vector.obj(**dict(zip(["x", "y"], constructor))), coordinates
-    )()
-    assert (ROOT.Math.XYVector(*constructor).X() == pytest.approx(vec.x)  and
-            ROOT.Math.XYVector(*constructor).Y() == pytest.approx(vec.y))
-
-# Run a test that compares ROOT's '__add__' with vector's 'add' for all cases.
-@pytest.mark.parametrize("constructor", constructor)
-def test_add(constructor, coordinates):
-    ref_vec = ROOT.Math.XYVector(*constructor).__add__(ROOT.Math.XYVector(*constructor))
-    vec = getattr(
-        vector.obj(**dict(zip(["x", "y"], constructor))), coordinates
-    )().add(getattr(
-        vector.obj(**dict(zip(["x", "y"], constructor))), coordinates)())
-    assert (ref_vec.X() == pytest.approx(vec.x)  and
-            ref_vec.Y() == pytest.approx(vec.y))
-
-# Run a test that compares ROOT's '__sub__' with vector's 'subtract' for all cases.
-@pytest.mark.parametrize("constructor", constructor)
-def test_sub(constructor, coordinates):
-    ref_vec = ROOT.Math.XYVector(*constructor).__sub__(ROOT.Math.XYVector(*constructor))
-    vec = getattr(
-        vector.obj(**dict(zip(["x", "y"], constructor))), coordinates
-    )().subtract(getattr(
-        vector.obj(**dict(zip(["x", "y"], constructor))), coordinates)())
-    assert (ref_vec.X() == pytest.approx(vec.x)  and
-            ref_vec.Y() == pytest.approx(vec.y))
-
-# Run a test that compares ROOT's '__neg__' with vector's '__neg__' for all cases.
-@pytest.mark.parametrize("constructor", constructor)
-def test_neg(constructor, coordinates):
-    ref_vec = ROOT.Math.XYVector(*constructor).__neg__()
-    vec = getattr(
-        vector.obj(**dict(zip(["x", "y"], constructor))), coordinates
-    )().__neg__
-    assert (ref_vec.X() == pytest.approx(vec().x)  and
-            ref_vec.Y() == pytest.approx(vec().y))
-
-# Run a test that compares ROOT's '__mul__' with vector's 'mul' for all cases.
-@pytest.mark.parametrize("constructor", constructor)
-def test_mul(constructor, scalar, coordinates):
-    ref_vec = ROOT.Math.XYVector(*constructor).__mul__(scalar)
-    vec = getattr(
-        vector.obj(**dict(zip(["x", "y"], constructor))), coordinates
-    )().__mul__(scalar)
-    assert (ref_vec.X() == pytest.approx(vec().x)  and
-            ref_vec.Y() == pytest.approx(vec().y))
-
-# Run a test that compares ROOT's '__truediv__' with vector's '__truediv__' for all cases.
-@pytest.mark.parametrize("constructor", constructor)
-def test_truediv(constructor, scalar, coordinates):
-    ref_vec = ROOT.Math.XYVector(*constructor).__truediv__(scalar)
-    vec = getattr(
-        vector.obj(**dict(zip(["x", "y"], constructor))), coordinates
-    )().__truediv__(scalar)
-    assert (ref_vec.X() == pytest.approx(vec().x)  and
-            ref_vec.Y() == pytest.approx(vec().y))
-
-
-# Run a test that compares ROOT's '__eq__' with vector's 'isclose' for all cases.
-@pytest.mark.parametrize("constructor", constructor)
-def test_eq(constructor, coordinates):
-    ref_vec = ROOT.Math.XYVector(*constructor).__eq__(ROOT.Math.XYVector(*constructor))
-    vec = getattr(
-        vector.obj(**dict(zip(["x", "y"], constructor))), coordinates
-    )().isclose(getattr(
-        vector.obj(**dict(zip(["x", "y"], constructor))), coordinates
-    )()
-    )
-    assert ref_vec == vec
