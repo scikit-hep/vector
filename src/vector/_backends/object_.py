@@ -1423,6 +1423,14 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
         self.temporal = TemporalObjectT(E)
 
     @property
+    def e(self) -> float:
+        return super().e
+
+    @e.setter
+    def e(self, e: float) -> None:
+        self.temporal = TemporalObjectT(e)
+
+    @property
     def energy(self) -> float:
         return super().energy
 
@@ -1437,6 +1445,14 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
     @M.setter
     def M(self, M: float) -> None:
         self.temporal = TemporalObjectTau(M)
+
+    @property
+    def m(self) -> float:
+        return super().m
+
+    @m.setter
+    def m(self, m: float) -> None:
+        self.temporal = TemporalObjectTau(m)
 
     @property
     def mass(self) -> float:
@@ -2041,6 +2057,126 @@ def obj(*, pE: float, phi: float, eta: float, E: float) -> MomentumObject4D:
 
 
 @typing.overload
+def obj(*, x: float, y: float, z: float, e: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, pz: float, e: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, z: float, e: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, pz: float, e: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, z: float, e: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, pz: float, e: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, z: float, e: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, pz: float, e: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, z: float, e: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, pz: float, e: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, pe: float, phi: float, z: float, e: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, pe: float, phi: float, pz: float, e: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, theta: float, e: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, theta: float, e: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, theta: float, e: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, theta: float, e: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, theta: float, e: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, pe: float, phi: float, theta: float, e: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, eta: float, e: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, eta: float, e: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, eta: float, e: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, eta: float, e: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, eta: float, e: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, pe: float, phi: float, eta: float, e: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
 def obj(*, x: float, y: float, z: float, energy: float) -> MomentumObject4D:
     ...
 
@@ -2091,12 +2227,12 @@ def obj(*, rho: float, phi: float, pz: float, energy: float) -> MomentumObject4D
 
 
 @typing.overload
-def obj(*, penergy: float, phi: float, z: float, energy: float) -> MomentumObject4D:
+def obj(*, pt: float, phi: float, z: float, energy: float) -> MomentumObject4D:
     ...
 
 
 @typing.overload
-def obj(*, penergy: float, phi: float, pz: float, energy: float) -> MomentumObject4D:
+def obj(*, pt: float, phi: float, pz: float, energy: float) -> MomentumObject4D:
     ...
 
 
@@ -2126,7 +2262,7 @@ def obj(*, rho: float, phi: float, theta: float, energy: float) -> MomentumObjec
 
 
 @typing.overload
-def obj(*, penergy: float, phi: float, theta: float, energy: float) -> MomentumObject4D:
+def obj(*, pt: float, phi: float, theta: float, energy: float) -> MomentumObject4D:
     ...
 
 
@@ -2156,7 +2292,7 @@ def obj(*, rho: float, phi: float, eta: float, energy: float) -> MomentumObject4
 
 
 @typing.overload
-def obj(*, penergy: float, phi: float, eta: float, energy: float) -> MomentumObject4D:
+def obj(*, pt: float, phi: float, eta: float, energy: float) -> MomentumObject4D:
     ...
 
 
@@ -2281,6 +2417,126 @@ def obj(*, pM: float, phi: float, eta: float, M: float) -> MomentumObject4D:
 
 
 @typing.overload
+def obj(*, x: float, y: float, z: float, m: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, pz: float, m: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, z: float, m: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, pz: float, m: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, z: float, m: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, pz: float, m: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, z: float, m: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, pz: float, m: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, z: float, m: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, pz: float, m: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, pm: float, phi: float, z: float, m: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, pm: float, phi: float, pz: float, m: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, theta: float, m: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, theta: float, m: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, theta: float, m: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, theta: float, m: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, theta: float, m: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, pm: float, phi: float, theta: float, m: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, y: float, eta: float, m: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, x: float, py: float, eta: float, m: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, y: float, eta: float, m: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, px: float, py: float, eta: float, m: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, rho: float, phi: float, eta: float, m: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
+def obj(*, pm: float, phi: float, eta: float, m: float) -> MomentumObject4D:
+    ...
+
+
+@typing.overload
 def obj(*, x: float, y: float, z: float, mass: float) -> MomentumObject4D:
     ...
 
@@ -2331,12 +2587,12 @@ def obj(*, rho: float, phi: float, pz: float, mass: float) -> MomentumObject4D:
 
 
 @typing.overload
-def obj(*, pmass: float, phi: float, z: float, mass: float) -> MomentumObject4D:
+def obj(*, pt: float, phi: float, z: float, mass: float) -> MomentumObject4D:
     ...
 
 
 @typing.overload
-def obj(*, pmass: float, phi: float, pz: float, mass: float) -> MomentumObject4D:
+def obj(*, pt: float, phi: float, pz: float, mass: float) -> MomentumObject4D:
     ...
 
 
@@ -2366,7 +2622,7 @@ def obj(*, rho: float, phi: float, theta: float, mass: float) -> MomentumObject4
 
 
 @typing.overload
-def obj(*, pmass: float, phi: float, theta: float, mass: float) -> MomentumObject4D:
+def obj(*, pt: float, phi: float, theta: float, mass: float) -> MomentumObject4D:
     ...
 
 
@@ -2396,7 +2652,7 @@ def obj(*, rho: float, phi: float, eta: float, mass: float) -> MomentumObject4D:
 
 
 @typing.overload
-def obj(*, pmass: float, phi: float, eta: float, mass: float) -> MomentumObject4D:
+def obj(*, pt: float, phi: float, eta: float, mass: float) -> MomentumObject4D:
     ...
 
 
@@ -2435,8 +2691,10 @@ def obj(**coordinates: float) -> VectorObject:
     - ``pt`` may be substituted for ``rho``
     - ``pz`` may be substituted for ``z``
     - ``E`` may be substituted for ``t``
+    - ``e`` may be substituted for ``t``
     - ``energy`` may be substituted for ``t``
     - ``M`` may be substituted for ``tau``
+    - ``m`` may be substituted for ``tau``
     - ``mass`` may be substituted for ``tau``
 
     to make the vector a momentum vector.
@@ -2490,12 +2748,18 @@ def obj(**coordinates: float) -> VectorObject:
     if "E" in coordinates:
         is_momentum = True
         generic_coordinates["t"] = coordinates.pop("E")
+    if "e" in coordinates:
+        is_momentum = True
+        generic_coordinates["t"] = coordinates.pop("e")
     if "energy" in coordinates and "t" not in generic_coordinates:
         is_momentum = True
         generic_coordinates["t"] = coordinates.pop("energy")
     if "M" in coordinates:
         is_momentum = True
         generic_coordinates["tau"] = coordinates.pop("M")
+    if "m" in coordinates:
+        is_momentum = True
+        generic_coordinates["tau"] = coordinates.pop("m")
     if "mass" in coordinates and "tau" not in generic_coordinates:
         is_momentum = True
         generic_coordinates["tau"] = coordinates.pop("mass")

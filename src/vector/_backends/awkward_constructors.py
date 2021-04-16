@@ -151,6 +151,14 @@ def _check_names(
         names.append("t")
         columns.append(projectable["E"])
         fieldnames.remove("E")
+    if "e" in fieldnames:
+        is_momentum = True
+        if dimension != 3:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 4
+        names.append("t")
+        columns.append(projectable["e"])
+        fieldnames.remove("e")
     if "energy" in fieldnames:
         is_momentum = True
         if dimension != 3:
@@ -167,6 +175,14 @@ def _check_names(
         names.append("tau")
         columns.append(projectable["M"])
         fieldnames.remove("M")
+    if "m" in fieldnames:
+        is_momentum = True
+        if dimension != 3:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 4
+        names.append("tau")
+        columns.append(projectable["m"])
+        fieldnames.remove("m")
     if "mass" in fieldnames:
         is_momentum = True
         if dimension != 3:
@@ -223,8 +239,10 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     - ``pt`` may be substituted for ``rho``
     - ``pz`` may be substituted for ``z``
     - ``E`` may be substituted for ``t``
+    - ``e`` may be substituted for ``t``
     - ``energy`` may be substituted for ``t``
     - ``M`` may be substituted for ``tau``
+    - ``m`` may be substituted for ``tau``
     - ``mass`` may be substituted for ``tau``
 
     to make the vector a momentum vector.
@@ -312,8 +330,10 @@ def zip(
     - ``pt`` may be substituted for ``rho``
     - ``pz`` may be substituted for ``z``
     - ``E`` may be substituted for ``t``
+    - ``e`` may be substituted for ``t``
     - ``energy`` may be substituted for ``t``
     - ``M`` may be substituted for ``tau``
+    - ``m`` may be substituted for ``tau``
     - ``mass`` may be substituted for ``tau``
 
     to make the vector a momentum vector.
