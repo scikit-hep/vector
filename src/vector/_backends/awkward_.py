@@ -212,17 +212,21 @@ class TemporalAwkward(CoordinatesAwkward, Temporal):
             return TemporalAwkwardT(array["t"])
         elif "E" in fields:
             return TemporalAwkwardT(array["E"])
+        elif "e" in fields:
+            return TemporalAwkwardT(array["e"])
         elif "energy" in fields:
             return TemporalAwkwardT(array["energy"])
         elif "tau" in fields:
             return TemporalAwkwardTau(array["tau"])
         elif "M" in fields:
             return TemporalAwkwardTau(array["M"])
+        elif "m" in fields:
+            return TemporalAwkwardTau(array["m"])
         elif "mass" in fields:
             return TemporalAwkwardTau(array["mass"])
         else:
             raise ValueError(
-                "array does not have temporal coordinates (t/E/energy or tau/M/mass): "
+                "array does not have temporal coordinates (t/E/e/energy or tau/M/m/mass): "
                 f"{', '.join(fields)}"
             )
 

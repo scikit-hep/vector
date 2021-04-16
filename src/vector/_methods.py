@@ -1107,6 +1107,13 @@ class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
         raise AssertionError
 
     @property
+    def e(self) -> ScalarCollection:
+        """
+        Momentum-synonym for :doc:`vector._methods.VectorProtocolLorentz.t`.
+        """
+        raise AssertionError
+
+    @property
     def energy(self) -> ScalarCollection:
         """
         Momentum-synonym for :doc:`vector._methods.VectorProtocolLorentz.t`.
@@ -1115,6 +1122,13 @@ class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
 
     @property
     def E2(self) -> ScalarCollection:
+        """
+        Momentum-synonym for :doc:`vector._methods.VectorProtocolLorentz.t2`.
+        """
+        raise AssertionError
+
+    @property
+    def e2(self) -> ScalarCollection:
         """
         Momentum-synonym for :doc:`vector._methods.VectorProtocolLorentz.t2`.
         """
@@ -1135,6 +1149,13 @@ class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
         raise AssertionError
 
     @property
+    def m(self) -> ScalarCollection:
+        """
+        Momentum-synonym for :doc:`vector._methods.VectorProtocolLorentz.tau`.
+        """
+        raise AssertionError
+
+    @property
     def mass(self) -> ScalarCollection:
         """
         Momentum-synonym for :doc:`vector._methods.VectorProtocolLorentz.tau`.
@@ -1149,6 +1170,13 @@ class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
         raise AssertionError
 
     @property
+    def m2(self) -> ScalarCollection:
+        """
+        Momentum-synonym for :doc:`vector._methods.VectorProtocolLorentz.tau2`.
+        """
+        raise AssertionError
+
+    @property
     def mass2(self) -> ScalarCollection:
         """
         Momentum-synonym for :doc:`vector._methods.VectorProtocolLorentz.tau2`.
@@ -1157,6 +1185,14 @@ class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
 
     @property
     def Et(self) -> ScalarCollection:
+        r"""
+        Transverse energy of the four-momentum vector or array of vectors:
+        $E_T = E \sin\theta$.
+        """
+        raise AssertionError
+
+    @property
+    def et(self) -> ScalarCollection:
         r"""
         Transverse energy of the four-momentum vector or array of vectors:
         $E_T = E \sin\theta$.
@@ -1179,6 +1215,14 @@ class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
         raise AssertionError
 
     @property
+    def et2(self) -> ScalarCollection:
+        r"""
+        Transverse energy squared of the four-momentum vector or array of
+        vectors: $E_T^2 = E^2 \sin^2\theta$.
+        """
+        raise AssertionError
+
+    @property
     def transverse_energy2(self) -> ScalarCollection:
         """
         Synonym for :doc:`vector._methods.MomentumProtocolLorentz.Et2`.
@@ -1194,6 +1238,14 @@ class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
         raise AssertionError
 
     @property
+    def mt(self) -> ScalarCollection:
+        r"""
+        Transverse mass of the four-momentum vector or array of vectors:
+        $M_T = \sqrt{t^2 - z^2}$.
+        """
+        raise AssertionError
+
+    @property
     def transverse_mass(self) -> ScalarCollection:
         """
         Synonym for :doc:`vector._methods.MomentumProtocolLorentz.Mt`.
@@ -1202,6 +1254,14 @@ class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
 
     @property
     def Mt2(self) -> ScalarCollection:
+        r"""
+        Transverse mass squared of the four-momentum vector or array of vectors:
+        $M_T^2 = t^2 - z^2$.
+        """
+        raise AssertionError
+
+    @property
+    def mt2(self) -> ScalarCollection:
         r"""
         Transverse mass squared of the four-momentum vector or array of vectors:
         $M_T^2 = t^2 - z^2$.
@@ -2168,11 +2228,19 @@ class LorentzMomentum(SpatialMomentum, MomentumProtocolLorentz):
         return self.t
 
     @property
+    def e(self) -> ScalarCollection:
+        return self.t
+
+    @property
     def energy(self) -> ScalarCollection:
         return self.t
 
     @property
     def E2(self) -> ScalarCollection:
+        return self.t2
+
+    @property
+    def e2(self) -> ScalarCollection:
         return self.t2
 
     @property
@@ -2184,6 +2252,10 @@ class LorentzMomentum(SpatialMomentum, MomentumProtocolLorentz):
         return self.tau
 
     @property
+    def m(self) -> ScalarCollection:
+        return self.tau
+
+    @property
     def mass(self) -> ScalarCollection:
         return self.tau
 
@@ -2192,11 +2264,21 @@ class LorentzMomentum(SpatialMomentum, MomentumProtocolLorentz):
         return self.tau2
 
     @property
+    def m2(self) -> ScalarCollection:
+        return self.tau2
+
+    @property
     def mass2(self) -> ScalarCollection:
         return self.tau2
 
     @property
     def Et(self) -> ScalarCollection:
+        from vector._compute.lorentz import Et
+
+        return Et.dispatch(self)
+
+    @property
+    def et(self) -> ScalarCollection:
         from vector._compute.lorentz import Et
 
         return Et.dispatch(self)
@@ -2212,6 +2294,12 @@ class LorentzMomentum(SpatialMomentum, MomentumProtocolLorentz):
         return Et2.dispatch(self)
 
     @property
+    def et2(self) -> ScalarCollection:
+        from vector._compute.lorentz import Et2
+
+        return Et2.dispatch(self)
+
+    @property
     def transverse_energy2(self) -> ScalarCollection:
         return self.Et2
 
@@ -2222,11 +2310,23 @@ class LorentzMomentum(SpatialMomentum, MomentumProtocolLorentz):
         return Mt.dispatch(self)
 
     @property
+    def mt(self) -> ScalarCollection:
+        from vector._compute.lorentz import Mt
+
+        return Mt.dispatch(self)
+
+    @property
     def transverse_mass(self) -> ScalarCollection:
         return self.Mt
 
     @property
     def Mt2(self) -> ScalarCollection:
+        from vector._compute.lorentz import Mt2
+
+        return Mt2.dispatch(self)
+
+    @property
+    def mt2(self) -> ScalarCollection:
         from vector._compute.lorentz import Mt2
 
         return Mt2.dispatch(self)
@@ -2323,8 +2423,10 @@ _repr_momentum_to_generic = {
     "pt": "rho",
     "pz": "z",
     "E": "t",
+    "e": "t",
     "energy": "t",
     "M": "tau",
+    "m": "tau",
     "mass": "tau",
 }
 
@@ -2343,9 +2445,11 @@ _coordinate_order = [
     "eta",
     "t",
     "E",
+    "e",
     "energy",
     "tau",
     "M",
+    "m",
     "mass",
 ]
 

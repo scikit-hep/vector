@@ -1382,7 +1382,7 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore
         else:
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype containing "
-                'field "t" or "tau" or "E" or "energy" or "M" or "mass"'
+                'field "t" or "tau" or "E" or "e" or "energy" or "M" or "m" or "mass"'
             )
 
     def __repr__(self) -> str:
@@ -1437,8 +1437,10 @@ def array(*args: typing.Any, **kwargs: typing.Any) -> VectorNumpy:
     - ``pt`` may be substituted for ``rho``
     - ``pz`` may be substituted for ``z``
     - ``E`` may be substituted for ``t``
+    - ``e`` may be substituted for ``t``
     - ``energy`` may be substituted for ``t``
     - ``M`` may be substituted for ``tau``
+    - ``m`` may be substituted for ``tau``
     - ``mass`` may be substituted for ``tau``
 
     to make the vector a momentum vector.
@@ -1462,7 +1464,7 @@ def array(*args: typing.Any, **kwargs: typing.Any) -> VectorNumpy:
 
     is_momentum = any(x in _repr_momentum_to_generic for x in names)
 
-    if any(x in ("t", "E", "energy", "tau", "M", "mass") for x in names):
+    if any(x in ("t", "E", "e", "energy", "tau", "M", "m", "mass") for x in names):
         cls = MomentumNumpy4D if is_momentum else VectorNumpy4D
     elif any(x in ("z", "pz", "theta", "eta") for x in names):
         cls = MomentumNumpy3D if is_momentum else VectorNumpy3D
