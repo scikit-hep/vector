@@ -175,3 +175,13 @@ def test_ufuncs():
         [],
         [{"x": 30, "y": 33}],
     ]
+
+
+def test_zip():
+    v = vector.zip({"x": [[], [1]], "y": [[], [1]]})
+    assert isinstance(v, vector._backends.awkward_.VectorArray2D)
+    assert isinstance(v[1], vector._backends.awkward_.VectorArray2D)
+    assert isinstance(v[1, 0], vector._backends.awkward_.VectorRecord2D)
+    assert v.tolist() == [[], [{"x": 1, "y": 1}]]
+    assert v.x.tolist() == [[], [1]]
+    assert v.y.tolist() == [[], [1]]
