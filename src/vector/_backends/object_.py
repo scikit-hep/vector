@@ -2091,12 +2091,12 @@ def obj(*, rho: float, phi: float, pz: float, energy: float) -> MomentumObject4D
 
 
 @typing.overload
-def obj(*, penergy: float, phi: float, z: float, energy: float) -> MomentumObject4D:
+def obj(*, energy: float, phi: float, z: float, energy: float) -> MomentumObject4D:
     ...
 
 
 @typing.overload
-def obj(*, penergy: float, phi: float, pz: float, energy: float) -> MomentumObject4D:
+def obj(*, energy: float, phi: float, pz: float, energy: float) -> MomentumObject4D:
     ...
 
 
@@ -2126,7 +2126,7 @@ def obj(*, rho: float, phi: float, theta: float, energy: float) -> MomentumObjec
 
 
 @typing.overload
-def obj(*, penergy: float, phi: float, theta: float, energy: float) -> MomentumObject4D:
+def obj(*, energy: float, phi: float, theta: float, energy: float) -> MomentumObject4D:
     ...
 
 
@@ -2156,7 +2156,7 @@ def obj(*, rho: float, phi: float, eta: float, energy: float) -> MomentumObject4
 
 
 @typing.overload
-def obj(*, penergy: float, phi: float, eta: float, energy: float) -> MomentumObject4D:
+def obj(*, energy: float, phi: float, eta: float, energy: float) -> MomentumObject4D:
     ...
 
 
@@ -2331,12 +2331,12 @@ def obj(*, rho: float, phi: float, pz: float, mass: float) -> MomentumObject4D:
 
 
 @typing.overload
-def obj(*, pmass: float, phi: float, z: float, mass: float) -> MomentumObject4D:
+def obj(*, mass: float, phi: float, z: float, mass: float) -> MomentumObject4D:
     ...
 
 
 @typing.overload
-def obj(*, pmass: float, phi: float, pz: float, mass: float) -> MomentumObject4D:
+def obj(*, mass: float, phi: float, pz: float, mass: float) -> MomentumObject4D:
     ...
 
 
@@ -2366,7 +2366,7 @@ def obj(*, rho: float, phi: float, theta: float, mass: float) -> MomentumObject4
 
 
 @typing.overload
-def obj(*, pmass: float, phi: float, theta: float, mass: float) -> MomentumObject4D:
+def obj(*, mass: float, phi: float, theta: float, mass: float) -> MomentumObject4D:
     ...
 
 
@@ -2396,7 +2396,7 @@ def obj(*, rho: float, phi: float, eta: float, mass: float) -> MomentumObject4D:
 
 
 @typing.overload
-def obj(*, pmass: float, phi: float, eta: float, mass: float) -> MomentumObject4D:
+def obj(*, mass: float, phi: float, eta: float, mass: float) -> MomentumObject4D:
     ...
 
 
