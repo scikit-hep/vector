@@ -264,8 +264,9 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     )
 
 
-
-def zip(arrays: typing.Dict[str, typing.Any], depth_limit: typing.Optional[int] = None) -> typing.Any:
+def zip(
+    arrays: typing.Dict[str, typing.Any], depth_limit: typing.Optional[int] = None
+) -> typing.Any:
     """
     FIXME: docstring
     """
