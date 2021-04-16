@@ -11,6 +11,7 @@ import packaging.version
 from vector._backends.awkward_constructors import Array as Array
 from vector._backends.awkward_constructors import Array as arr
 from vector._backends.awkward_constructors import Array as awk
+from vector._backends.awkward_constructors import zip
 from vector._backends.numpy_ import (
     MomentumNumpy2D,
     MomentumNumpy3D,

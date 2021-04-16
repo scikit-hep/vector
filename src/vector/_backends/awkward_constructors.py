@@ -6,6 +6,11 @@
 import typing
 
 
+def _recname(is_momentum: bool, dimension: int) -> str:
+    name = "Momentum" if is_momentum else "Vector"
+    return f"{name}{dimension}D"
+
+
 def _check_names(
     projectable: typing.Any, fieldnames: typing.List[str]
 ) -> typing.Tuple[bool, int, typing.List[str], typing.Any]:
@@ -250,11 +255,36 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
             x.behavior = None
         needs_behavior = False
 
-    depth = akarray.layout.purelist_depth
-
     assert 2 <= dimension <= 4, f"Dimension must be between 2-4, not {dimension}"
 
-    name = "Momentum" if is_momentum else "Vector"
-    recname = f"{name}{dimension}D"
+    return awkward.zip(
+        dict(__builtins__["zip"](names, arrays)),
+        depth_limit=akarray.layout.purelist_depth,
+        with_name=_recname(is_momentum, dimension),
+    )
 
-    return awkward.zip(dict(zip(names, arrays)), depth_limit=depth, with_name=recname)
+
+
+def zip(arrays: typing.Dict[str, typing.Any], depth_limit: typing.Optional[int] = None) -> typing.Any:
+    """
+    FIXME: docstring
+    """
+    import awkward
+
+    import vector
+    import vector._backends.awkward_
+
+    is_momentum, dimension, names, columns = _check_names(arrays, list(arrays.keys()))
+
+    behavior = None
+    if not vector._awkward_registered:
+        behavior = dict(vector._backends.awkward_.behavior)
+
+    recname = _recname(is_momentum, dimension)
+
+    return awkward.zip(
+        dict(__builtins__["zip"](names, columns)),
+        depth_limit=depth_limit,
+        with_name=_recname(is_momentum, dimension),
+        behavior=behavior,
+    )
