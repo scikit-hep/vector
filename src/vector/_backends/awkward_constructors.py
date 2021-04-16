@@ -6,6 +6,181 @@
 import typing
 
 
+def _check_names(
+    projectable: typing.Any, fieldnames: typing.List[str]
+) -> typing.Tuple[bool, int, typing.List[str], typing.Any]:
+    complaint1 = "duplicate coordinates (through momentum-aliases): " + ", ".join(
+        repr(x) for x in fieldnames
+    )
+    complaint2 = (
+        "unrecognized combination of coordinates, allowed combinations are:\n\n"
+        "    (2D) x= y=\n"
+        "    (2D) rho= phi=\n"
+        "    (3D) x= y= z=\n"
+        "    (3D) x= y= theta=\n"
+        "    (3D) x= y= eta=\n"
+        "    (3D) rho= phi= z=\n"
+        "    (3D) rho= phi= theta=\n"
+        "    (3D) rho= phi= eta=\n"
+        "    (4D) x= y= z= t=\n"
+        "    (4D) x= y= z= tau=\n"
+        "    (4D) x= y= theta= t=\n"
+        "    (4D) x= y= theta= tau=\n"
+        "    (4D) x= y= eta= t=\n"
+        "    (4D) x= y= eta= tau=\n"
+        "    (4D) rho= phi= z= t=\n"
+        "    (4D) rho= phi= z= tau=\n"
+        "    (4D) rho= phi= theta= t=\n"
+        "    (4D) rho= phi= theta= tau=\n"
+        "    (4D) rho= phi= eta= t=\n"
+        "    (4D) rho= phi= eta= tau="
+    )
+
+    is_momentum = False
+    dimension = 0
+    names = []
+    columns = []
+
+    if "x" in fieldnames and "y" in fieldnames:
+        if dimension != 0:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 2
+        names.extend(["x", "y"])
+        columns.extend([projectable["x"], projectable["y"]])
+        fieldnames.remove("x")
+        fieldnames.remove("y")
+    if "rho" in fieldnames and "phi" in fieldnames:
+        if dimension != 0:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 2
+        names.extend(["rho", "phi"])
+        columns.extend([projectable["rho"], projectable["phi"]])
+        fieldnames.remove("rho")
+        fieldnames.remove("phi")
+    if "x" in fieldnames and "py" in fieldnames:
+        is_momentum = True
+        if dimension != 0:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 2
+        names.extend(["x", "y"])
+        columns.extend([projectable["x"], projectable["py"]])
+        fieldnames.remove("x")
+        fieldnames.remove("py")
+    if "px" in fieldnames and "y" in fieldnames:
+        is_momentum = True
+        if dimension != 0:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 2
+        names.extend(["x", "y"])
+        columns.extend([projectable["px"], projectable["y"]])
+        fieldnames.remove("px")
+        fieldnames.remove("y")
+    if "px" in fieldnames and "py" in fieldnames:
+        is_momentum = True
+        if dimension != 0:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 2
+        names.extend(["x", "y"])
+        columns.extend([projectable["px"], projectable["py"]])
+        fieldnames.remove("px")
+        fieldnames.remove("py")
+    if "pt" in fieldnames and "phi" in fieldnames:
+        is_momentum = True
+        if dimension != 0:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 2
+        names.extend(["rho", "phi"])
+        columns.extend([projectable["pt"], projectable["phi"]])
+        fieldnames.remove("pt")
+        fieldnames.remove("phi")
+
+    if "z" in fieldnames:
+        if dimension != 2:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 3
+        names.append("z")
+        columns.append(projectable["z"])
+        fieldnames.remove("z")
+    if "theta" in fieldnames:
+        if dimension != 2:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 3
+        names.append("theta")
+        columns.append(projectable["theta"])
+        fieldnames.remove("theta")
+    if "eta" in fieldnames:
+        if dimension != 2:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 3
+        names.append("eta")
+        columns.append(projectable["eta"])
+        fieldnames.remove("eta")
+    if "pz" in fieldnames:
+        is_momentum = True
+        if dimension != 2:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 3
+        names.append("z")
+        columns.append(projectable["pz"])
+        fieldnames.remove("pz")
+
+    if "t" in fieldnames:
+        if dimension != 3:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 4
+        names.append("t")
+        columns.append(projectable["t"])
+        fieldnames.remove("t")
+    if "tau" in fieldnames:
+        if dimension != 3:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 4
+        names.append("tau")
+        columns.append(projectable["tau"])
+        fieldnames.remove("tau")
+    if "E" in fieldnames:
+        is_momentum = True
+        if dimension != 3:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 4
+        names.append("t")
+        columns.append(projectable["E"])
+        fieldnames.remove("E")
+    if "energy" in fieldnames:
+        is_momentum = True
+        if dimension != 3:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 4
+        names.append("t")
+        columns.append(projectable["energy"])
+        fieldnames.remove("energy")
+    if "M" in fieldnames:
+        is_momentum = True
+        if dimension != 3:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 4
+        names.append("tau")
+        columns.append(projectable["M"])
+        fieldnames.remove("M")
+    if "mass" in fieldnames:
+        is_momentum = True
+        if dimension != 3:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 4
+        names.append("tau")
+        columns.append(projectable["mass"])
+        fieldnames.remove("mass")
+
+    if dimension == 0:
+        raise TypeError(complaint1 if is_momentum else complaint2)
+
+    for name in fieldnames:
+        names.append(name)
+        columns.append(projectable[name])
+
+    return is_momentum, dimension, names, columns
+
+
 def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     """
     Constructs an Awkward Array of vectors, whose type is determined by the fields
@@ -61,174 +236,7 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     akarray = awkward.Array(*args, **kwargs)
     fields = awkward.fields(akarray)
 
-    complaint1 = "duplicate coordinates (through momentum-aliases): " + ", ".join(
-        repr(x) for x in fields
-    )
-    complaint2 = (
-        "unrecognized combination of coordinates, allowed combinations are:\n\n"
-        "    (2D) x= y=\n"
-        "    (2D) rho= phi=\n"
-        "    (3D) x= y= z=\n"
-        "    (3D) x= y= theta=\n"
-        "    (3D) x= y= eta=\n"
-        "    (3D) rho= phi= z=\n"
-        "    (3D) rho= phi= theta=\n"
-        "    (3D) rho= phi= eta=\n"
-        "    (4D) x= y= z= t=\n"
-        "    (4D) x= y= z= tau=\n"
-        "    (4D) x= y= theta= t=\n"
-        "    (4D) x= y= theta= tau=\n"
-        "    (4D) x= y= eta= t=\n"
-        "    (4D) x= y= eta= tau=\n"
-        "    (4D) rho= phi= z= t=\n"
-        "    (4D) rho= phi= z= tau=\n"
-        "    (4D) rho= phi= theta= t=\n"
-        "    (4D) rho= phi= theta= tau=\n"
-        "    (4D) rho= phi= eta= t=\n"
-        "    (4D) rho= phi= eta= tau="
-    )
-
-    is_momentum = False
-    dimension = 0
-    names = []
-    arrays = []
-
-    if "x" in fields and "y" in fields:
-        if dimension != 0:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 2
-        names.extend(["x", "y"])
-        arrays.extend([akarray["x"], akarray["y"]])
-        fields.remove("x")
-        fields.remove("y")
-    if "rho" in fields and "phi" in fields:
-        if dimension != 0:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 2
-        names.extend(["rho", "phi"])
-        arrays.extend([akarray["rho"], akarray["phi"]])
-        fields.remove("rho")
-        fields.remove("phi")
-    if "x" in fields and "py" in fields:
-        is_momentum = True
-        if dimension != 0:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 2
-        names.extend(["x", "y"])
-        arrays.extend([akarray["x"], akarray["py"]])
-        fields.remove("x")
-        fields.remove("py")
-    if "px" in fields and "y" in fields:
-        is_momentum = True
-        if dimension != 0:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 2
-        names.extend(["x", "y"])
-        arrays.extend([akarray["px"], akarray["y"]])
-        fields.remove("px")
-        fields.remove("y")
-    if "px" in fields and "py" in fields:
-        is_momentum = True
-        if dimension != 0:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 2
-        names.extend(["x", "y"])
-        arrays.extend([akarray["px"], akarray["py"]])
-        fields.remove("px")
-        fields.remove("py")
-    if "pt" in fields and "phi" in fields:
-        is_momentum = True
-        if dimension != 0:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 2
-        names.extend(["rho", "phi"])
-        arrays.extend([akarray["pt"], akarray["phi"]])
-        fields.remove("pt")
-        fields.remove("phi")
-
-    if "z" in fields:
-        if dimension != 2:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 3
-        names.append("z")
-        arrays.append(akarray["z"])
-        fields.remove("z")
-    if "theta" in fields:
-        if dimension != 2:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 3
-        names.append("theta")
-        arrays.append(akarray["theta"])
-        fields.remove("theta")
-    if "eta" in fields:
-        if dimension != 2:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 3
-        names.append("eta")
-        arrays.append(akarray["eta"])
-        fields.remove("eta")
-    if "pz" in fields:
-        is_momentum = True
-        if dimension != 2:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 3
-        names.append("z")
-        arrays.append(akarray["pz"])
-        fields.remove("pz")
-
-    if "t" in fields:
-        if dimension != 3:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 4
-        names.append("t")
-        arrays.append(akarray["t"])
-        fields.remove("t")
-    if "tau" in fields:
-        if dimension != 3:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 4
-        names.append("tau")
-        arrays.append(akarray["tau"])
-        fields.remove("tau")
-    if "E" in fields:
-        is_momentum = True
-        if dimension != 3:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 4
-        names.append("t")
-        arrays.append(akarray["E"])
-        fields.remove("E")
-    if "energy" in fields:
-        is_momentum = True
-        if dimension != 3:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 4
-        names.append("t")
-        arrays.append(akarray["energy"])
-        fields.remove("energy")
-    if "M" in fields:
-        is_momentum = True
-        if dimension != 3:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 4
-        names.append("tau")
-        arrays.append(akarray["M"])
-        fields.remove("M")
-    if "mass" in fields:
-        is_momentum = True
-        if dimension != 3:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 4
-        names.append("tau")
-        arrays.append(akarray["mass"])
-        fields.remove("mass")
-
-    if dimension == 0:
-        raise TypeError(complaint1 if is_momentum else complaint2)
-
-    for name in fields:
-        names.append(name)
-        arrays.append(akarray[name])
+    is_momentum, dimension, names, arrays = _check_names(akarray, fields)
 
     needs_behavior = not vector._awkward_registered
     for x in arrays:
