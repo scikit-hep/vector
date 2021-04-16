@@ -123,6 +123,7 @@ __all__: typing.Tuple[str, ...] = (
     "arr",
     "array",
     "awk",
+    "zip",
     "dim",
     "obj",
     "register_awkward",

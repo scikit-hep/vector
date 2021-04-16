@@ -258,7 +258,7 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     assert 2 <= dimension <= 4, f"Dimension must be between 2-4, not {dimension}"
 
     return awkward.zip(
-        dict(__builtins__["zip"](names, arrays)),
+        dict(__builtins__["zip"](names, arrays)),  # type:ignore
         depth_limit=akarray.layout.purelist_depth,
         with_name=_recname(is_momentum, dimension),
     )
@@ -268,7 +268,59 @@ def zip(
     arrays: typing.Dict[str, typing.Any], depth_limit: typing.Optional[int] = None
 ) -> typing.Any:
     """
-    FIXME: docstring
+    Constructs an Awkward Array of vectors, whose type is determined by the fields
+    of the record array (which may be nested within lists or other non-record structures).
+
+    This function accepts a subset of ``ak.zip``'s arguments.
+
+    Args:
+
+        arrays (dict of str to array-like): Arrays, lists, etc. to zip together.
+            Unlike ``ak.zip``, this must be a dict with string keys to determine
+            the coordinate system of the arrays; it may not be a tuple.
+        depth_limit (None or int): If None, attempt to fully broadcast the
+            ``array`` to all levels. If an int, limit the number of dimensions
+            that get broadcasted. The minimum value is ``1``, for no broadcasting.
+
+    The array must contain records with the following combinations of field names:
+
+    - (2D) ``x``, ``y``
+    - (2D) ``rho``, ``phi``
+    - (3D) ``x``, ``y``, ``z``
+    - (3D) ``x``, ``y``, ``theta``
+    - (3D) ``x``, ``y``, ``eta``
+    - (3D) ``rho``, ``phi``, ``z``
+    - (3D) ``rho``, ``phi``, ``theta``
+    - (3D) ``rho``, ``phi``, ``eta``
+    - (4D) ``x``, ``y``, ``z``, ``t``
+    - (4D) ``x``, ``y``, ``z``, ``tau```
+    - (4D) ``x``, ``y``, ``theta``, ``t```
+    - (4D) ``x``, ``y``, ``theta``, ``tau```
+    - (4D) ``x``, ``y``, ``eta``, ``t```
+    - (4D) ``x``, ``y``, ``eta``, ``tau```
+    - (4D) ``rho``, ``phi``, ``z``, ``t```
+    - (4D) ``rho``, ``phi``, ``z``, ``tau```
+    - (4D) ``rho``, ``phi``, ``theta``, ``t```
+    - (4D) ``rho``, ``phi``, ``theta``, ``tau```
+    - (4D) ``rho``, ``phi``, ``eta``, ``t```
+    - (4D) ``rho``, ``phi``, ``eta``, ``tau```
+
+    in which
+
+    - ``px`` may be substituted for ``x``
+    - ``py`` may be substituted for ``y``
+    - ``pt`` may be substituted for ``rho``
+    - ``pz`` may be substituted for ``z``
+    - ``E`` may be substituted for ``t``
+    - ``energy`` may be substituted for ``t``
+    - ``M`` may be substituted for ``tau``
+    - ``mass`` may be substituted for ``tau``
+
+    to make the vector a momentum vector.
+
+    No constraints are placed on the types of the vector fields, though if they
+    are not numbers, mathematical operations will fail. Usually, you want them to be
+    integers or floating-point numbers.
     """
     import awkward
 
@@ -281,10 +333,8 @@ def zip(
     if not vector._awkward_registered:
         behavior = dict(vector._backends.awkward_.behavior)
 
-    recname = _recname(is_momentum, dimension)
-
     return awkward.zip(
-        dict(__builtins__["zip"](names, columns)),
+        dict(__builtins__["zip"](names, columns)),  # type:ignore
         depth_limit=depth_limit,
         with_name=_recname(is_momentum, dimension),
         behavior=behavior,
