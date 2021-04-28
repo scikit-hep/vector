@@ -332,6 +332,14 @@ def _class_to_name(cls: typing.Type[VectorProtocol]) -> str:
 # the vector class ############################################################
 
 
+def _yes_record(x: ak.Array) -> typing.Optional[typing.Union[float, ak.Record]]:
+    return x[0]
+
+
+def _no_record(x: ak.Array) -> typing.Optional[ak.Array]:
+    return x
+
+
 class VectorAwkward:
     lib: types.ModuleType = numpy
 
@@ -362,7 +370,18 @@ class VectorAwkward:
         if returns == [float] or returns == [bool]:
             return result
 
-        elif (
+        if all(not isinstance(x, ak.Array) for x in result):
+            maybe_record = _yes_record
+            result = [
+                ak.Array(x.layout.array[x.layout.at : x.layout.at + 1])
+                if isinstance(x, ak.Record)
+                else ak.Array([x])
+                for x in result
+            ]
+        else:
+            maybe_record = _no_record
+
+        if (
             len(returns) == 1
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
@@ -396,11 +415,13 @@ class VectorAwkward:
             else:
                 cls = cls.ProjectionClass2D
 
-            return ak.zip(
-                dict(zip(names, arrays)),
-                depth_limit=first.layout.purelist_depth,
-                with_name=_class_to_name(cls),
-                behavior=None if vector._awkward_registered else first.behavior,
+            return maybe_record(
+                ak.zip(
+                    dict(zip(names, arrays)),
+                    depth_limit=first.layout.purelist_depth,
+                    with_name=_class_to_name(cls),
+                    behavior=None if vector._awkward_registered else first.behavior,
+                )
             )
 
         elif (
@@ -440,11 +461,13 @@ class VectorAwkward:
                         names.append(name)
                         arrays.append(self[name])
 
-            return ak.zip(
-                dict(zip(names, arrays)),
-                depth_limit=first.layout.purelist_depth,
-                with_name=_class_to_name(cls.ProjectionClass2D),
-                behavior=None if vector._awkward_registered else first.behavior,
+            return maybe_record(
+                ak.zip(
+                    dict(zip(names, arrays)),
+                    depth_limit=first.layout.purelist_depth,
+                    with_name=_class_to_name(cls.ProjectionClass2D),
+                    behavior=None if vector._awkward_registered else first.behavior,
+                )
             )
 
         elif (
@@ -491,11 +514,13 @@ class VectorAwkward:
             else:
                 cls = cls.ProjectionClass3D
 
-            return ak.zip(
-                dict(zip(names, arrays)),
-                depth_limit=first.layout.purelist_depth,
-                with_name=_class_to_name(cls),
-                behavior=None if vector._awkward_registered else first.behavior,
+            return maybe_record(
+                ak.zip(
+                    dict(zip(names, arrays)),
+                    depth_limit=first.layout.purelist_depth,
+                    with_name=_class_to_name(cls),
+                    behavior=None if vector._awkward_registered else first.behavior,
+                )
             )
 
         elif (
@@ -547,11 +572,13 @@ class VectorAwkward:
                         names.append(name)
                         arrays.append(self[name])
 
-            return ak.zip(
-                dict(zip(names, arrays)),
-                depth_limit=first.layout.purelist_depth,
-                with_name=_class_to_name(cls.ProjectionClass3D),
-                behavior=None if vector._awkward_registered else first.behavior,
+            return maybe_record(
+                ak.zip(
+                    dict(zip(names, arrays)),
+                    depth_limit=first.layout.purelist_depth,
+                    with_name=_class_to_name(cls.ProjectionClass3D),
+                    behavior=None if vector._awkward_registered else first.behavior,
+                )
             )
 
         elif (
@@ -611,11 +638,13 @@ class VectorAwkward:
                         names.append(name)
                         arrays.append(self[name])
 
-            return ak.zip(
-                dict(zip(names, arrays)),
-                depth_limit=first.layout.purelist_depth,
-                with_name=_class_to_name(cls.ProjectionClass4D),
-                behavior=None if vector._awkward_registered else first.behavior,
+            return maybe_record(
+                ak.zip(
+                    dict(zip(names, arrays)),
+                    depth_limit=first.layout.purelist_depth,
+                    with_name=_class_to_name(cls.ProjectionClass4D),
+                    behavior=None if vector._awkward_registered else first.behavior,
+                )
             )
 
         else:
