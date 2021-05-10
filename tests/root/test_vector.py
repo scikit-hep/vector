@@ -1,10 +1,11 @@
 # This test code was written by the `hypothesis.extra.ghostwriter` module
 # and is provided under the Creative Commons Zero public domain dedication.
 
-import vector
-from hypothesis import given, strategies as st
-
 import pytest
+from hypothesis import given
+from hypothesis import strategies as st
+
+import vector
 
 # If ROOT is not available, skip these tests.
 ROOT = pytest.importorskip("ROOT")
@@ -25,9 +26,11 @@ coordinate_list = [
     "to_rhophietatau",
 ]
 
+
 @pytest.fixture(scope="module", params=coordinate_list)
 def coordinates(request):
     return request.param
+
 
 constructor = [
     (0, 0, 0, 0),
@@ -40,6 +43,7 @@ constructor = [
     (1, 2, 3, -2.5),
 ]
 
+
 @pytest.mark.parametrize("constructor", constructor)
 def test_M2(constructor, coordinates):
     assert ROOT.Math.PxPyPzEVector(*constructor).M2() == pytest.approx(
@@ -48,7 +52,11 @@ def test_M2(constructor, coordinates):
         )().tau2
     )
 
-@given(constructor=st.tuples(st.floats(), st.floats(), st.floats(), st.floats()) | st.tuples(st.integers(), st.integers(), st.integers(), st.integers()))
+
+@given(
+    constructor=st.tuples(st.floats(), st.floats(), st.floats(), st.floats())
+    | st.tuples(st.integers(), st.integers(), st.integers(), st.integers())
+)
 def test_fuzz_M2(constructor, coordinates):
     assert ROOT.Math.PxPyPzEVector(*constructor).M2() == pytest.approx(
         getattr(
@@ -56,37 +64,62 @@ def test_fuzz_M2(constructor, coordinates):
         )().tau2
     )
 
-@given(azimuthal=st.tuples(st.floats(), st.floats()) | st.tuples(st.integers(), st.integers()))
+
+@given(
+    azimuthal=st.tuples(st.floats(), st.floats())
+    | st.tuples(st.integers(), st.integers())
+)
 def test_fuzz_MomentumObject2D(azimuthal):
-    vec = vector.MomentumObject2D(azimuthal=azimuthal)
+    vector.MomentumObject2D(azimuthal=azimuthal)
 
 
-@given(azimuthal=st.tuples(st.floats(), st.floats()) | st.tuples(st.integers(), st.integers()), longitudinal=st.floats() | st.integers())
+@given(
+    azimuthal=st.tuples(st.floats(), st.floats())
+    | st.tuples(st.integers(), st.integers()),
+    longitudinal=st.floats() | st.integers(),
+)
 def test_fuzz_MomentumObject3D(azimuthal, longitudinal):
-    vec = vector.MomentumObject3D(azimuthal=azimuthal, longitudinal=longitudinal)
+    vector.MomentumObject3D(azimuthal=azimuthal, longitudinal=longitudinal)
 
 
-@given(azimuthal=st.tuples(st.floats(), st.floats()) | st.tuples(st.integers(), st.integers()), longitudinal=st.floats() | st.integers(), temporal=st.floats() | st.integers())
+@given(
+    azimuthal=st.tuples(st.floats(), st.floats())
+    | st.tuples(st.integers(), st.integers()),
+    longitudinal=st.floats() | st.integers(),
+    temporal=st.floats() | st.integers(),
+)
 def test_fuzz_MomentumObject4D(azimuthal, longitudinal, temporal):
-    vec = vector.MomentumObject4D(
+    vector.MomentumObject4D(
         azimuthal=azimuthal, longitudinal=longitudinal, temporal=temporal
     )
 
 
-@given(azimuthal=st.tuples(st.floats(), st.floats()) | st.tuples(st.integers(), st.integers()))
+@given(
+    azimuthal=st.tuples(st.floats(), st.floats())
+    | st.tuples(st.integers(), st.integers())
+)
 def test_fuzz_VectorObject2D(azimuthal):
     vector.VectorObject2D(azimuthal=azimuthal)
 
 
-@given(azimuthal=st.tuples(st.floats(), st.floats()) | st.tuples(st.integers(), st.integers()), longitudinal=st.floats() | st.integers())
+@given(
+    azimuthal=st.tuples(st.floats(), st.floats())
+    | st.tuples(st.integers(), st.integers()),
+    longitudinal=st.floats() | st.integers(),
+)
 def test_fuzz_VectorObject3D(azimuthal, longitudinal):
-    vec = vector.VectorObject3D(azimuthal=azimuthal, longitudinal=longitudinal)
+    vector.VectorObject3D(azimuthal=azimuthal, longitudinal=longitudinal)
 
 
-@given(azimuthal=st.tuples(st.floats(), st.floats()) | st.tuples(st.integers(), st.integers()), longitudinal=st.floats() | st.integers(), temporal=st.floats() | st.integers())
+@given(
+    azimuthal=st.tuples(st.floats(), st.floats())
+    | st.tuples(st.integers(), st.integers()),
+    longitudinal=st.floats() | st.integers(),
+    temporal=st.floats() | st.integers(),
+)
 def test_fuzz_VectorObject4D(azimuthal, longitudinal, temporal):
-    vec = vector.VectorObject4D(
+    vector.VectorObject4D(
         azimuthal=azimuthal, longitudinal=longitudinal, temporal=temporal
     )
     # assert (vector.obj(**dict(zip(["x", "y", "z", "t"], azimuthal[0], azimuthal[1], longitudinal, temporal)))).tau == 0
-    #pytest.approx(ROOT.Math.PxPyPzEVector(azimuthal[0], azimuthal[1], longitudinal, temporal).M())
+    # pytest.approx(ROOT.Math.PxPyPzEVector(azimuthal[0], azimuthal[1], longitudinal, temporal).M())
