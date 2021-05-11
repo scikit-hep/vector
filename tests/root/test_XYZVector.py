@@ -3,7 +3,6 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-import numpy as np
 import pytest
 from hypothesis import given
 from hypothesis import strategies as st
@@ -96,16 +95,20 @@ def test_Dot(constructor, coordinates):
     constructor1=st.tuples(
         st.floats(min_value=-10e7, max_value=10e7),
         st.floats(min_value=-10e7, max_value=10e7),
+        st.floats(min_value=-10e7, max_value=10e7),
     )
     | st.tuples(
+        st.integers(min_value=-10e7, max_value=10e7),
         st.integers(min_value=-10e7, max_value=10e7),
         st.integers(min_value=-10e7, max_value=10e7),
     ),
     constructor2=st.tuples(
         st.floats(min_value=-10e7, max_value=10e7),
         st.floats(min_value=-10e7, max_value=10e7),
+        st.floats(min_value=-10e7, max_value=10e7),
     )
     | st.tuples(
+        st.integers(min_value=-10e7, max_value=10e7),
         st.integers(min_value=-10e7, max_value=10e7),
         st.integers(min_value=-10e7, max_value=10e7),
     ),
@@ -120,29 +123,35 @@ def test_fuzz_Dot(constructor1, constructor2, coordinates):
             getattr(
                 vector.obj(**dict(zip(["x", "y", "z"], constructor2))), coordinates
             )()
-        )
+        ),
+        1.0e-6,
+        1.0e-6,
     )
 
 
 # Run a test that compares ROOT's 'Mag2()' with vector's 'rho2' for all cases.
 @pytest.mark.parametrize("constructor", constructor)
 def test_Mag2(constructor, coordinates):
-    assert ROOT.Math.XYZVector(*constructor).Mag2() == pytest.approx(
-        getattr(
-            vector.obj(**dict(zip(["x", "y", "z"], constructor))), coordinates
-        )().rho2
+    ref_vec = ROOT.Math.XYZVector(*constructor)
+    vec = getattr(vector.obj(**dict(zip(["x", "y", "z"], constructor))), coordinates)()
+    assert (
+        pytest.approx(vec.x) == ref_vec.X()
+        and pytest.approx(vec.y) == ref_vec.Y()
+        and pytest.approx(vec.z) == ref_vec.Z()
     )
+
+    assert ref_vec.Mag2() == pytest.approx(vec.mag2, 1.0e-6, 1.0e-6)
 
 
 # Run a test that compares ROOT's 'R()' with vector's 'rho' for all cases.
 @pytest.mark.parametrize("constructor", constructor)
-def test_R(constructor, coordinates):
+def test_Mag(constructor, coordinates):
     assert ROOT.Math.XYZVector(*constructor).R() == pytest.approx(
-        np.sqrt(
-            getattr(
-                vector.obj(**dict(zip(["x", "y", "z"], constructor))), coordinates
-            )().rho2
-        )
+        getattr(
+            vector.obj(**dict(zip(["x", "y", "z"], constructor))), coordinates
+        )().mag,
+        1.0e-6,
+        1.0e-6,
     )
 
 
@@ -258,21 +267,22 @@ def test_mul(constructor, scalar, coordinates):
     vec = getattr(
         vector.obj(**dict(zip(["x", "y", "z"], constructor))), coordinates
     )().__mul__(scalar)
-    assert ref_vec.X() == pytest.approx(vec.x)
-    assert ref_vec.Y() == pytest.approx(vec.y)
-    assert ref_vec.Z() == pytest.approx(vec.z)
+    assert ref_vec.X() == pytest.approx(vec.x, 1.0e-6, 1.0e-6)
+    assert ref_vec.Y() == pytest.approx(vec.y, 1.0e-6, 1.0e-6)
+    assert ref_vec.Z() == pytest.approx(vec.z, 1.0e-6, 1.0e-6)
 
 
 # Run a test that compares ROOT's '__truediv__' with vector's '__truediv__' for all cases.
 @pytest.mark.parametrize("constructor", constructor)
 def test_truediv(constructor, scalar, coordinates):
-    ref_vec = ROOT.Math.XYZVector(*constructor).__truediv__(scalar)
-    vec = getattr(
-        vector.obj(**dict(zip(["x", "y", "z"], constructor))), coordinates
-    )().__truediv__(scalar)
-    assert ref_vec.X() == pytest.approx(vec.x)
-    assert ref_vec.Y() == pytest.approx(vec.y)
-    assert ref_vec.Z() == pytest.approx(vec.z)
+    if scalar != 0:
+        ref_vec = ROOT.Math.XYZVector(*constructor).__truediv__(scalar)
+        vec = getattr(
+            vector.obj(**dict(zip(["x", "y", "z"], constructor))), coordinates
+        )().__truediv__(scalar)
+        assert ref_vec.X() == pytest.approx(vec.x)
+        assert ref_vec.Y() == pytest.approx(vec.y)
+        assert ref_vec.Z() == pytest.approx(vec.z)
 
 
 # Run a test that compares ROOT's '__eq__' with vector's 'isclose' for all cases.
