@@ -82,7 +82,9 @@ def test_Dot(constructor, coordinates):
             vector.obj(**dict(zip(["rho", "phi"], constructor))), coordinates
         )().dot(
             getattr(vector.obj(**dict(zip(["rho", "phi"], constructor))), coordinates)()
-        )
+        ),
+        1.0e-6,
+        1.0e-6,
     )
 
 
@@ -91,18 +93,10 @@ def test_Dot(constructor, coordinates):
     constructor1=st.tuples(
         st.floats(min_value=-10e7, max_value=10e7),
         st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
     ),
     constructor2=st.tuples(
         st.floats(min_value=-10e7, max_value=10e7),
         st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
     ),
 )
 def test_fuzz_Dot(constructor1, constructor2, coordinates):
@@ -137,10 +131,6 @@ def test_Mag2(constructor, coordinates):
         st.floats(min_value=-10e7, max_value=10e7),
         st.floats(min_value=-10e7, max_value=10e7),
     )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-    )
 )
 def test_fuzz_Mag2(constructor, coordinates):
     assert ROOT.Math.Polar2DVector(*constructor).Mag2() == pytest.approx(
@@ -166,10 +156,6 @@ def test_Mag(constructor, coordinates):
         st.floats(min_value=-10e7, max_value=10e7),
         st.floats(min_value=-10e7, max_value=10e7),
     )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-    )
 )
 def test_fuzz_Mag(constructor, coordinates):
     assert ROOT.Math.sqrt(
@@ -192,10 +178,6 @@ def test_Phi(constructor, coordinates):
     constructor=st.tuples(
         st.floats(min_value=-10e7, max_value=10e7),
         st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
     )
 )
 def test_fuzz_Phi(constructor, coordinates):
@@ -230,13 +212,8 @@ def test_Rotate(constructor, angle, coordinates):
     constructor=st.tuples(
         st.floats(min_value=-10e7, max_value=10e7),
         st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
     ),
-    angle=st.floats(min_value=-10e7, max_value=10e7)
-    | st.integers(min_value=-10e7, max_value=10e7),
+    angle=st.floats(min_value=-10e7, max_value=10e7),
 )
 def test_fuzz_Rotate(constructor, angle, coordinates):
     ref_vec = ROOT.Math.Polar2DVector(*constructor)
@@ -271,10 +248,6 @@ def test_Unit(constructor, coordinates):
         st.floats(min_value=-10e7, max_value=10e7),
         st.floats(min_value=-10e7, max_value=10e7),
     )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-    )
 )
 def test_fuzz_Unit(constructor, coordinates):
     ref_vec = ROOT.Math.Polar2DVector(*constructor).Unit()
@@ -297,10 +270,6 @@ def test_X_and_Y(constructor, coordinates):
     constructor=st.tuples(
         st.floats(min_value=-10e7, max_value=10e7),
         st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
     )
 )
 def test_fuzz_X_and_Y(constructor, coordinates):
@@ -337,18 +306,10 @@ def test_add(constructor, coordinates):
     constructor1=st.tuples(
         st.floats(min_value=-10e7, max_value=10e7),
         st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
     ),
     constructor2=st.tuples(
         st.floats(min_value=-10e7, max_value=10e7),
         st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
     ),
 )
 def test_fuzz_add(constructor1, constructor2, coordinates):
@@ -398,18 +359,10 @@ def test_sub(constructor, coordinates):
     constructor1=st.tuples(
         st.floats(min_value=-10e7, max_value=10e7),
         st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
     ),
     constructor2=st.tuples(
         st.floats(min_value=-10e7, max_value=10e7),
         st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
     ),
 )
 def test_fuzz_sub(constructor1, constructor2, coordinates):
@@ -448,10 +401,6 @@ def test_neg(constructor, coordinates):
         st.floats(min_value=-10e7, max_value=10e7),
         st.floats(min_value=-10e7, max_value=10e7),
     )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-    )
 )
 def test_fuzz_neg(constructor, coordinates):
     ref_vec = ROOT.Math.Polar2DVector(*constructor).__neg__()
@@ -478,13 +427,8 @@ def test_mul(constructor, scalar, coordinates):
     constructor=st.tuples(
         st.floats(min_value=-10e7, max_value=10e7),
         st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
     ),
-    scalar=st.floats(min_value=-10e7, max_value=10e7)
-    | st.integers(min_value=-10e7, max_value=10e7),
+    scalar=st.floats(min_value=-10e7, max_value=10e7),
 )
 def test_fuzz_mul(constructor, scalar, coordinates):
     ref_vec = ROOT.Math.Polar2DVector(*constructor).__mul__(scalar)
@@ -513,13 +457,8 @@ def test_truediv(constructor, scalar, coordinates):
     constructor=st.tuples(
         st.floats(min_value=-10e7, max_value=10e7),
         st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
     ),
-    scalar=st.floats(min_value=-10e7, max_value=10e7)
-    | st.integers(min_value=-10e7, max_value=10e7),
+    scalar=st.floats(min_value=-10e7, max_value=10e7),
 )
 def test_fuzz_truediv(constructor, scalar, coordinates):
     # FIXME:
@@ -551,10 +490,6 @@ def test_eq(constructor, coordinates):
     constructor=st.tuples(
         st.floats(min_value=-10e7, max_value=10e7),
         st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
     )
 )
 def test_fuzz_eq(constructor, coordinates):
