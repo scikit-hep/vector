@@ -3,8 +3,6 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-import math
-
 import numpy
 import pytest
 
@@ -21,7 +19,7 @@ def test_spatial_object():
         vector._backends.object_.AzimuthalObjectXY(0.4, 0.5),
         vector._backends.object_.LongitudinalObjectZ(0.6),
     )
-    assert v1.deltaangle(v2) == pytest.approx(math.acos(0.32))
+    assert v1.deltaangle(v2) == pytest.approx(0.225726)
 
     for t1 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
         for t2 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
@@ -29,9 +27,7 @@ def test_spatial_object():
                 getattr(v1, "to_" + t1)(),
                 getattr(v2, "to_" + t2)(),
             )
-            assert transformed1.deltaangle(transformed2) == pytest.approx(
-                math.acos(0.32)
-            )
+            assert transformed1.deltaangle(transformed2) == pytest.approx(0.225726)
 
 
 def test_spatial_numpy():
@@ -43,7 +39,7 @@ def test_spatial_numpy():
         [(0.4, 0.5, 0.6)],
         dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
     )
-    assert v1.deltaangle(v2)[0] == pytest.approx(math.acos(0.32))
+    assert v1.deltaangle(v2)[0] == pytest.approx(0.225726)
 
     for t1 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
         for t2 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
@@ -51,7 +47,7 @@ def test_spatial_numpy():
                 getattr(v1, "to_" + t1)(),
                 getattr(v2, "to_" + t2)(),
             )
-            assert tr1.deltaangle(tr2)[0] == pytest.approx(math.acos(0.32))
+            assert tr1.deltaangle(tr2)[0] == pytest.approx(0.225726)
 
 
 def test_lorentz_object():
@@ -65,7 +61,7 @@ def test_lorentz_object():
         vector._backends.object_.LongitudinalObjectZ(0.6),
         vector._backends.object_.TemporalObjectT(99),
     )
-    assert v1.deltaangle(v2) == pytest.approx(math.acos(0.32))
+    assert v1.deltaangle(v2) == pytest.approx(0.225726)
 
     for t1 in (
         "xyzt",
@@ -96,7 +92,7 @@ def test_lorentz_object():
             "rhophietatau",
         ):
             tr1, tr2 = getattr(v1, "to_" + t1)(), getattr(v2, "to_" + t2)()
-            assert tr1.deltaangle(tr2) == pytest.approx(math.acos(0.32))
+            assert tr1.deltaangle(tr2) == pytest.approx(0.225726)
 
 
 def test_lorentz_numpy():
@@ -118,7 +114,7 @@ def test_lorentz_numpy():
             ("t", numpy.float64),
         ],
     )
-    assert v1.deltaangle(v2) == pytest.approx(math.acos(0.32))
+    assert v1.deltaangle(v2) == pytest.approx(0.225726)
 
     for t1 in (
         "xyzt",
@@ -149,4 +145,4 @@ def test_lorentz_numpy():
             "rhophietatau",
         ):
             tr1, tr2 = getattr(v1, "to_" + t1)(), getattr(v2, "to_" + t2)()
-            assert tr1.deltaangle(tr2) == pytest.approx(math.acos(0.32))
+            assert tr1.deltaangle(tr2) == pytest.approx(0.225726)
