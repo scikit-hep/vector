@@ -123,15 +123,15 @@ def _getitem(
         azimuthal, longitudinal, temporal = None, None, None
         if hasattr(array, "_azimuthal_type"):
             azimuthal = array._azimuthal_type.ObjectClass(
-                *[out[x] for x in _coordinate_class_to_names[_aztype(array)]]
+                *(out[x] for x in _coordinate_class_to_names[_aztype(array)])
             )
         if hasattr(array, "_longitudinal_type"):
             longitudinal = array._longitudinal_type.ObjectClass(  # type: ignore
-                *[out[x] for x in _coordinate_class_to_names[_ltype(array)]]  # type: ignore
+                *(out[x] for x in _coordinate_class_to_names[_ltype(array)])  # type: ignore
             )
         if hasattr(array, "_temporal_type"):
             temporal = array._temporal_type.ObjectClass(  # type: ignore
-                *[out[x] for x in _coordinate_class_to_names[_ttype(array)]]  # type: ignore
+                *(out[x] for x in _coordinate_class_to_names[_ttype(array)])  # type: ignore
             )
         if temporal is not None:
             return array.ObjectClass(azimuthal, longitudinal, temporal)  # type: ignore
