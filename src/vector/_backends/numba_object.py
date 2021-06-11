@@ -3461,13 +3461,38 @@ def _awkward_numba_xy(record):
 
 
 @numba.jit(nopython=True)
+def _awkward_numba_pxy(record):
+    return AzimuthalObjectXY(record["px"], record["y"])
+
+
+@numba.jit(nopython=True)
+def _awkward_numba_xpy(record):
+    return AzimuthalObjectXY(record["x"], record["py"])
+
+
+@numba.jit(nopython=True)
+def _awkward_numba_pxpy(record):
+    return AzimuthalObjectXY(record["px"], record["py"])
+
+
+@numba.jit(nopython=True)
 def _awkward_numba_rhophi(record):
     return AzimuthalObjectRhoPhi(record["rho"], record["phi"])
 
 
 @numba.jit(nopython=True)
+def _awkward_numba_ptphi(record):
+    return AzimuthalObjectRhoPhi(record["pt"], record["phi"])
+
+
+@numba.jit(nopython=True)
 def _awkward_numba_z(record):
     return LongitudinalObjectZ(record["z"])
+
+
+@numba.jit(nopython=True)
+def _awkward_numba_pz(record):
+    return LongitudinalObjectZ(record["pz"])
 
 
 @numba.jit(nopython=True)
@@ -3486,5 +3511,35 @@ def _awkward_numba_t(record):
 
 
 @numba.jit(nopython=True)
+def _awkward_numba_E(record):
+    return TemporalObjectT(record["E"])
+
+
+@numba.jit(nopython=True)
+def _awkward_numba_e(record):
+    return TemporalObjectT(record["e"])
+
+
+@numba.jit(nopython=True)
+def _awkward_numba_energy(record):
+    return TemporalObjectT(record["energy"])
+
+
+@numba.jit(nopython=True)
 def _awkward_numba_tau(record):
     return TemporalObjectTau(record["tau"])
+
+
+@numba.jit(nopython=True)
+def _awkward_numba_M(record):
+    return TemporalObjectTau(record["M"])
+
+
+@numba.jit(nopython=True)
+def _awkward_numba_m(record):
+    return TemporalObjectTau(record["m"])
+
+
+@numba.jit(nopython=True)
+def _awkward_numba_mass(record):
+    return TemporalObjectTau(record["mass"])
