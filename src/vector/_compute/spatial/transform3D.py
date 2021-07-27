@@ -171,9 +171,9 @@ def contravariant(lib, x1, y1, z1, x_prime, y_prime, z_prime):
     z = sympy.Symbol("z")
 
 <<<<<<< HEAD
-    new_x1 = sympy.diff(x_prime, x) * x1 + sympy.diff(x_prime, y) * y1 + sympy.diff(x_prime, z) * z1 
-    new_y1 = sympy.diff(y_prime, x) * x1 + sympy.diff(y_prime, y) * y1 + sympy.diff(y_prime, z) * z1 
-    new_z1 = sympy.diff(z_prime, x) * x1 + sympy.diff(z_prime, y) * y1 + sympy.diff(z_prime, z) * z1 
+    new_x1 = sympy.diff(x_prime, x) * x1 + sympy.diff(x_prime, y) * y1 + sympy.diff(x_prime, z) * z1
+    new_y1 = sympy.diff(y_prime, x) * x1 + sympy.diff(y_prime, y) * y1 + sympy.diff(y_prime, z) * z1
+    new_z1 = sympy.diff(z_prime, x) * x1 + sympy.diff(z_prime, y) * y1 + sympy.diff(z_prime, z) * z1
 =======
     new_x1 = (
         sympy.Derivative(x_prime, x) * x1
