@@ -146,7 +146,7 @@ def dispatch(obj: typing.Any, v: typing.Any) -> typing.Any:
             1,
         )
 
-# Contravarient transformation of vector components
+# Contravariant transformation of vector components
 # 
 # enter the x, y and z compoents of your vector and the new coordinate system
 # as a function of the old one (x, y and z). 
@@ -162,7 +162,7 @@ def dispatch(obj: typing.Any, v: typing.Any) -> typing.Any:
 # This could also be done with the Jacobian and the dot product, but this works
 # aswell (maybe the Jacobian can be added later)
 
-def contravarient(lib, x1, y1, z1, x_prime, y_prime, z_prime):
+def contravariant(lib, x1, y1, z1, x_prime, y_prime, z_prime):
     x = sympy.Symbol("x")
     y = sympy.Symbol("y")
     z = sympy.Symbol("z")
