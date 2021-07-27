@@ -4,6 +4,7 @@
 # or https://github.com/scikit-hep/vector for details.
 
 import typing
+
 import sympy
 
 """
@@ -146,29 +147,43 @@ def dispatch(obj: typing.Any, v: typing.Any) -> typing.Any:
             1,
         )
 
+
 # Contravariant transformation of vector components
-# 
+#
 # enter the x, y and z compoents of your vector and the new coordinate system
-# as a function of the old one (x, y and z). 
-# 
+# as a function of the old one (x, y and z).
+#
 # Example:
-# 
+#
 # x_prime = 2*x
 # y_prime = 4*y+2*x
 # z_prime = 2*x+z*z
-# 
+#
 # This method the returns the vector in the new coordinate system
-# 
+#
 # This could also be done with the Jacobian and the dot product, but this works
 # aswell (maybe the Jacobian can be added later)
+
 
 def contravariant(lib, x1, y1, z1, x_prime, y_prime, z_prime):
     x = sympy.Symbol("x")
     y = sympy.Symbol("y")
     z = sympy.Symbol("z")
 
-    new_x1 = sympy.Derivative(x_prime, x) * x1 + sympy.Derivative(x_prime, y) * y1 + sympy.Derivative(x_prime, z) * z1 
-    new_y1 = sympy.Derivative(y_prime, x) * x1 + sympy.Derivative(y_prime, y) * y1 + sympy.Derivative(y_prime, z) * z1 
-    new_z1 = sympy.Derivative(z_prime, x) * x1 + sympy.Derivative(z_prime, y) * y1 + sympy.Derivative(z_prime, z) * z1 
+    new_x1 = (
+        sympy.Derivative(x_prime, x) * x1
+        + sympy.Derivative(x_prime, y) * y1
+        + sympy.Derivative(x_prime, z) * z1
+    )
+    new_y1 = (
+        sympy.Derivative(y_prime, x) * x1
+        + sympy.Derivative(y_prime, y) * y1
+        + sympy.Derivative(y_prime, z) * z1
+    )
+    new_z1 = (
+        sympy.Derivative(z_prime, x) * x1
+        + sympy.Derivative(z_prime, y) * y1
+        + sympy.Derivative(z_prime, z) * z1
+    )
 
     return (new_x1, new_y1, new_z1)
