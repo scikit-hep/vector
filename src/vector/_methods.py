@@ -4,8 +4,8 @@
 # or https://github.com/scikit-hep/vector for details.
 
 import typing
-
 from contextlib import suppress
+
 from vector._typeutils import (
     BoolCollection,
     ScalarCollection,
