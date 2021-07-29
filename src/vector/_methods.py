@@ -2559,11 +2559,12 @@ def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
     """
     handler = None
     for obj in objects:
-        if isinstance(obj, Vector):
-            if handler is None:
-                handler = obj
-            elif _get_handler_index(obj) > _get_handler_index(handler):
-                handler = obj
+        if not isinstance(obj, Vector):
+            continue
+        if handler is None:
+            handler = obj
+        elif _get_handler_index(obj) > _get_handler_index(handler):
+            handler = obj
 
     assert handler is not None
     return handler
