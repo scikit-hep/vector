@@ -2539,7 +2539,9 @@ def _get_handler_index(obj: VectorProtocol) -> int:
     for cls in type(obj).__mro__:
         with suppress(ValueError):
             return _handler_priority.index(cls.__module__)
-    raise AssertionError(f"Could not find a valid handler for {obj}! This should not happen.")
+    raise AssertionError(
+        f"Could not find a valid handler for {obj}! This should not happen."
+    )
 
 
 def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
