@@ -4,6 +4,7 @@
 # or https://github.com/scikit-hep/vector for details.
 
 import typing
+from contextlib import suppress
 
 from vector._typeutils import (
     BoolCollection,
@@ -2533,6 +2534,16 @@ _handler_priority = [
 ]
 
 
+def _get_handler_index(obj: VectorProtocol) -> int:
+    """Returns the index of the first valid handler checking the list of parent classes"""
+    for cls in type(obj).__mro__:
+        with suppress(ValueError):
+            return _handler_priority.index(cls.__module__)
+    raise AssertionError(
+        f"Could not find a valid handler for {obj}! This should not happen."
+    )
+
+
 def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
     """
     Determines which vector should wrap the output of a dispatched function.
@@ -2544,13 +2555,12 @@ def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
     """
     handler = None
     for obj in objects:
-        if isinstance(obj, Vector):
-            if handler is None:
-                handler = obj
-            elif _handler_priority.index(
-                type(obj).__module__
-            ) > _handler_priority.index(type(handler).__module__):
-                handler = obj
+        if not isinstance(obj, Vector):
+            continue
+        if handler is None:
+            handler = obj
+        elif _get_handler_index(obj) > _get_handler_index(handler):
+            handler = obj
 
     assert handler is not None
     return handler
