@@ -5,6 +5,7 @@
 
 import typing
 
+from contextlib import suppress
 from vector._typeutils import (
     BoolCollection,
     ScalarCollection,
@@ -2533,6 +2534,20 @@ _handler_priority = [
 ]
 
 
+def _get_handler_index(obj: VectorProtocol) -> int:
+    """
+    Returns the index of the first valid handler checking the list of parent classes
+    Returns -1 if no handler is found
+    """
+    index = -1
+    for cls in type(obj).__mro__:
+        with suppress(ValueError):
+            index = _handler_priority.index(cls.__module__)
+            break
+
+    return index
+
+
 def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
     """
     Determines which vector should wrap the output of a dispatched function.
@@ -2547,9 +2562,7 @@ def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
         if isinstance(obj, Vector):
             if handler is None:
                 handler = obj
-            elif _handler_priority.index(
-                type(obj).__module__
-            ) > _handler_priority.index(type(handler).__module__):
+            elif _get_handler_index(obj) > _get_handler_index(handler):
                 handler = obj
 
     assert handler is not None
