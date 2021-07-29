@@ -2536,14 +2536,10 @@ _handler_priority = [
 
 def _get_handler_index(obj: VectorProtocol) -> int:
     """Returns the index of the first valid handler checking the list of parent classes"""
-    index = -1
     for cls in type(obj).__mro__:
         with suppress(ValueError):
-            index = _handler_priority.index(cls.__module__)
-            break
-
-    assert index != -1
-    return index
+            return _handler_priority.index(cls.__module__)
+    raise AssertionError(f"Could not find a valid handler for {obj}! This should not happen.")
 
 
 def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
