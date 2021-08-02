@@ -1,0 +1,3 @@
+numpy>=1.4.1
+awkward>=1.4.0
+numba>=0.53.1
