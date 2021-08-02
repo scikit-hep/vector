@@ -33,7 +33,7 @@ Main features of Vector:
 
 ## Installation
 
-To install, use `pip install vector` or your favorite way to instal in an environment.
+To install, first use `pip install -r requirements.txt` to install the requirements. Then use `pip install vector` or your favorite way to instal in an environment.
 
 ## Overview
 
