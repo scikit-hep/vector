@@ -1524,11 +1524,11 @@ def test_numpy_functions():
 
 
 def test_scale2D_3D_4D():
-    @numba.njit
+    # @numba.njit
     def get_scale2D(v, factor):
         return v.scale2D(factor)
 
-    @numba.njit
+    # @numba.njit
     def get_neg2D(v):
         return v.neg2D
 
@@ -1568,11 +1568,11 @@ def test_scale2D_3D_4D():
     assert out.z == pytest.approx(3)
     assert out.t == pytest.approx(4)
 
-    @numba.njit
+    # @numba.njit
     def get_scale3D(v, factor):
         return v.scale3D(factor)
 
-    @numba.njit
+    # @numba.njit
     def get_neg3D(v):
         return v.neg3D
 
@@ -1602,11 +1602,11 @@ def test_scale2D_3D_4D():
     assert out.z == pytest.approx(-3)
     assert out.t == pytest.approx(4)
 
-    @numba.njit
+    # @numba.njit
     def get_scale4D(v, factor):
         return v.scale4D(factor)
 
-    @numba.njit
+    # @numba.njit
     def get_neg4D(v):
         return v.neg4D
 
@@ -1626,15 +1626,15 @@ def test_scale2D_3D_4D():
 
 
 def test_method_boostCM_of():
-    @numba.njit
+    # @numba.njit
     def get_boostCM_of_p4(vec, p4):
         return vec.boostCM_of_p4(p4)
 
-    @numba.njit
+    # @numba.njit
     def get_boostCM_of_beta3(vec, beta3):
         return vec.boostCM_of_beta3(beta3)
 
-    @numba.njit
+    # @numba.njit
     def get_boostCM_of(vec, booster):
         return vec.boostCM_of(booster)
 
