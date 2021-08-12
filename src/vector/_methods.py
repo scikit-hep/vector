@@ -964,7 +964,9 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """
         raise AssertionError
 
-    def boostCM_of_p4(self: SameVectorType, p4: "VectorProtocolLorentz") -> SameVectorType:
+    def boostCM_of_p4(
+        self: SameVectorType, p4: "VectorProtocolLorentz"
+    ) -> SameVectorType:
         """
         Boosts the vector or array of vectors to the center-of-mass (CM) frame of
         the 4D vector or array of vectors ``p4``.
@@ -980,7 +982,9 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """
         return self.boost_p4(p4.neg3D)
 
-    def boostCM_of_beta3(self: SameVectorType, beta3: "VectorProtocolSpatial") -> SameVectorType:
+    def boostCM_of_beta3(
+        self: SameVectorType, beta3: "VectorProtocolSpatial"
+    ) -> SameVectorType:
         """
         Boosts the vector or array of vectors to the center-of-mass (CM) frame of
         the 3D velocity or array of velocity vectors ``beta3``.
