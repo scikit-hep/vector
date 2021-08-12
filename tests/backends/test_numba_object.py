@@ -1521,3 +1521,145 @@ def test_numpy_functions():
     assert isinstance(out, vector._backends.object_.VectorObject2D)
     assert out.x == pytest.approx(13)
     assert out.y == pytest.approx(24)
+
+
+def test_scale2D_3D_4D():
+    @numba.njit
+    def get_scale2D(v, factor):
+        return v.scale2D(factor)
+
+    @numba.njit
+    def get_neg2D(v):
+        return v.neg2D
+
+    out = get_scale2D(vector.obj(x=1, y=2), 10)
+    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert out.x == pytest.approx(10)
+    assert out.y == pytest.approx(20)
+
+    out = get_scale2D(vector.obj(x=1, y=2, z=3), 10)
+    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert out.x == pytest.approx(10)
+    assert out.y == pytest.approx(20)
+    assert out.z == pytest.approx(3)
+
+    out = get_scale2D(vector.obj(x=1, y=2, z=3, t=4), 10)
+    assert isinstance(out, vector._backends.object_.VectorObject4D)
+    assert out.x == pytest.approx(10)
+    assert out.y == pytest.approx(20)
+    assert out.z == pytest.approx(3)
+    assert out.t == pytest.approx(4)
+
+    out = get_neg2D(vector.obj(x=1, y=2))
+    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert out.x == pytest.approx(-1)
+    assert out.y == pytest.approx(-2)
+
+    out = get_neg2D(vector.obj(x=1, y=2, z=3))
+    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert out.x == pytest.approx(-1)
+    assert out.y == pytest.approx(-2)
+    assert out.z == pytest.approx(3)
+
+    out = get_neg2D(vector.obj(x=1, y=2, z=3, t=4))
+    assert isinstance(out, vector._backends.object_.VectorObject4D)
+    assert out.x == pytest.approx(-1)
+    assert out.y == pytest.approx(-2)
+    assert out.z == pytest.approx(3)
+    assert out.t == pytest.approx(4)
+
+    @numba.njit
+    def get_scale3D(v, factor):
+        return v.scale3D(factor)
+
+    @numba.njit
+    def get_neg3D(v):
+        return v.neg3D
+
+    out = get_scale3D(vector.obj(x=1, y=2, z=3), 10)
+    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert out.x == pytest.approx(10)
+    assert out.y == pytest.approx(20)
+    assert out.z == pytest.approx(30)
+
+    out = get_scale3D(vector.obj(x=1, y=2, z=3, t=4), 10)
+    assert isinstance(out, vector._backends.object_.VectorObject4D)
+    assert out.x == pytest.approx(10)
+    assert out.y == pytest.approx(20)
+    assert out.z == pytest.approx(30)
+    assert out.t == pytest.approx(4)
+
+    out = get_neg3D(vector.obj(x=1, y=2, z=3))
+    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert out.x == pytest.approx(-1)
+    assert out.y == pytest.approx(-2)
+    assert out.z == pytest.approx(-3)
+
+    out = get_neg3D(vector.obj(x=1, y=2, z=3, t=4))
+    assert isinstance(out, vector._backends.object_.VectorObject4D)
+    assert out.x == pytest.approx(-1)
+    assert out.y == pytest.approx(-2)
+    assert out.z == pytest.approx(-3)
+    assert out.t == pytest.approx(4)
+
+    @numba.njit
+    def get_scale4D(v, factor):
+        return v.scale4D(factor)
+
+    @numba.njit
+    def get_neg4D(v):
+        return v.neg4D
+
+    out = get_scale4D(vector.obj(x=1, y=2, z=3, t=4), 10)
+    assert isinstance(out, vector._backends.object_.VectorObject4D)
+    assert out.x == pytest.approx(10)
+    assert out.y == pytest.approx(20)
+    assert out.z == pytest.approx(30)
+    assert out.t == pytest.approx(40)
+
+    out = get_neg4D(vector.obj(x=1, y=2, z=3, t=4))
+    assert isinstance(out, vector._backends.object_.VectorObject4D)
+    assert out.x == pytest.approx(-1)
+    assert out.y == pytest.approx(-2)
+    assert out.z == pytest.approx(-3)
+    assert out.t == pytest.approx(-4)
+
+
+def test_method_boostCM_of():
+    @numba.njit
+    def get_boostCM_of_p4(vec, p4):
+        return vec.boostCM_of_p4(p4)
+
+    @numba.njit
+    def get_boostCM_of_beta3(vec, beta3):
+        return vec.boostCM_of_beta3(beta3)
+
+    @numba.njit
+    def get_boostCM_of(vec, booster):
+        return vec.boostCM_of(booster)
+
+    vec = vector.obj(x=1, y=2, z=3, t=4)
+
+    out = get_boostCM_of_p4(vec, vec)
+    assert out.x == pytest.approx(0)
+    assert out.y == pytest.approx(0)
+    assert out.z == pytest.approx(0)
+    assert out.t == pytest.approx(vec.tau)
+
+    out = get_boostCM_of_beta3(vec, vec.to_beta3())
+    assert out.x == pytest.approx(0)
+    assert out.y == pytest.approx(0)
+    assert out.z == pytest.approx(0)
+    assert out.t == pytest.approx(vec.tau)
+
+    out = get_boostCM_of(vec, vec)
+    assert out.x == pytest.approx(0)
+    assert out.y == pytest.approx(0)
+    assert out.z == pytest.approx(0)
+    assert out.t == pytest.approx(vec.tau)
+
+    out = get_boostCM_of(vec, vec.to_beta3())
+    assert out.x == pytest.approx(0)
+    assert out.y == pytest.approx(0)
+    assert out.z == pytest.approx(0)
+    assert out.t == pytest.approx(vec.tau)

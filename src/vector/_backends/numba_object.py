@@ -2002,6 +2002,7 @@ def VectorObject4DType_unit(v):
 
 
 @numba.extending.overload_method(VectorObject2DType, "scale")
+@numba.extending.overload_method(VectorObject2DType, "scale2D")
 def VectorObject2DType_scale(v, factor):
     if isinstance(factor, (numba.types.Integer, numba.types.Float)):
         function, *returns = _from_signature(
@@ -2026,6 +2027,7 @@ def VectorObject2DType_scale(v, factor):
 
 
 @numba.extending.overload_method(VectorObject3DType, "scale")
+@numba.extending.overload_method(VectorObject3DType, "scale3D")
 def VectorObject3DType_scale(v, factor):
     if isinstance(factor, (numba.types.Integer, numba.types.Float)):
         function, *returns = _from_signature(
@@ -2052,6 +2054,7 @@ def VectorObject3DType_scale(v, factor):
 
 
 @numba.extending.overload_method(VectorObject4DType, "scale")
+@numba.extending.overload_method(VectorObject4DType, "scale4D")
 def VectorObject4DType_scale(v, factor):
     if isinstance(factor, (numba.types.Integer, numba.types.Float)):
         function, *returns = _from_signature(
@@ -2081,6 +2084,61 @@ def VectorObject4DType_scale(v, factor):
         raise numba.TypingError(
             "'factor' must be an integer or a floating-point number"
         )
+
+
+@numba.extending.overload_method(VectorObject3DType, "scale2D")
+@numba.extending.overload_method(VectorObject4DType, "scale2D")
+def VectorObject34DType_scale2D(v, factor):
+    if isinstance(factor, (numba.types.Integer, numba.types.Float)):
+        function, *returns = _from_signature(
+            "", numba_modules["planar"]["scale"], (numba_aztype(v),)
+        )
+
+        instance_class = v.instance_class
+        coord1 = getcoord1[numba_aztype(v)]
+        coord2 = getcoord2[numba_aztype(v)]
+        azcoords = _coord_object_type[returns[0]]
+
+        if isinstance(v, VectorObject3DType):
+
+            def VectorObject34DType_scale2D_impl(v, factor):
+                out1, out2 = function(numpy, factor, coord1(v), coord2(v))
+                return instance_class(azcoords(out1, out2), v.longitudinal)
+
+        else:
+
+            def VectorObject34DType_scale2D_impl(v, factor):
+                out1, out2 = function(numpy, factor, coord1(v), coord2(v))
+                return instance_class(azcoords(out1, out2), v.longitudinal, v.temporal)
+
+        return VectorObject34DType_scale2D_impl
+
+    else:
+        numba.TypingError("'factor' must be an integer or a floating-point number")
+
+
+@numba.extending.overload_method(VectorObject4DType, "scale3D")
+def VectorObject4DType_scale3D(v, factor):
+    if isinstance(factor, (numba.types.Integer, numba.types.Float)):
+        function, *returns = _from_signature(
+            "", numba_modules["spatial"]["scale"], (numba_aztype(v), numba_ltype(v))
+        )
+
+        instance_class = v.instance_class
+        coord1 = getcoord1[numba_aztype(v)]
+        coord2 = getcoord2[numba_aztype(v)]
+        coord3 = getcoord1[numba_ltype(v)]
+        azcoords = _coord_object_type[returns[0]]
+        lcoords = _coord_object_type[returns[1]]
+
+        def VectorObject4DType_scale3D_impl(v, factor):
+            out1, out2, out3 = function(numpy, factor, coord1(v), coord2(v), coord3(v))
+            return instance_class(azcoords(out1, out2), lcoords(out3), v.temporal)
+
+        return VectorObject4DType_scale3D_impl
+
+    else:
+        numba.TypingError("'factor' must be an integer or a floating-point number")
 
 
 @numba.extending.overload_method(VectorObject3DType, "cross")
@@ -2580,6 +2638,43 @@ def VectorObject4DType_boost(v, booster):
     return VectorObject4DType_boost_impl
 
 
+@numba.extending.overload_method(VectorObject4DType, "boostCM_of_p4")
+def VectorObject4DType_boostCM_of_p4(v, p4):
+    def VectorObject4DType_boostCM_of_p4_impl(v, p4):
+        return v.boost_p4(p4.neg3D)
+
+    return VectorObject4DType_boostCM_of_p4_impl
+
+
+@numba.extending.overload_method(VectorObject4DType, "boostCM_of_beta3")
+def VectorObject4DType_boostCM_of_beta3(v, beta3):
+    def VectorObject4DType_boostCM_of_beta3_impl(v, beta3):
+        return v.boost_beta3(beta3.neg3D)
+
+    return VectorObject4DType_boostCM_of_beta3_impl
+
+
+@numba.extending.overload_method(VectorObject4DType, "boostCM_of")
+def VectorObject4DType_boostCM_of(v, booster):
+    if isinstance(booster, VectorObject3DType):
+
+        def VectorObject4DType_boostCM_of_impl(v, booster):
+            return v.boost_beta3(booster.neg3D)
+
+    elif isinstance(booster, VectorObject4DType):
+
+        def VectorObject4DType_boostCM_of_impl(v, booster):
+            return v.boost_p4(booster.neg3D)
+
+    else:
+        raise numba.TypingError(
+            "specify a Vector3D to boost to the CM of beta (velocity with c=1) or "
+            "a Vector4D to boost to the CM of a momentum 4-vector"
+        )
+
+    return VectorObject4DType_boostCM_of_impl
+
+
 def add_boostXYZ(methodname):
     @numba.extending.overload_method(VectorObject4DType, methodname)
     def VectorObject4DType_boostXYZ(v, beta=None, gamma=None):
@@ -2815,6 +2910,33 @@ def VectorObject4DType_is_lightlike(v, tolerance=1e-5):
         )
 
     return VectorObject4DType_is_lightlike_impl
+
+
+@numba.extending.overload_attribute(VectorObject2DType, "neg2D")
+@numba.extending.overload_attribute(VectorObject3DType, "neg2D")
+@numba.extending.overload_attribute(VectorObject4DType, "neg2D")
+def VectorObject234DType_neg2D(v):
+    def VectorObject234DType_neg2D_impl(v):
+        return v.scale2D(-1)
+
+    return VectorObject234DType_neg2D_impl
+
+
+@numba.extending.overload_attribute(VectorObject3DType, "neg3D")
+@numba.extending.overload_attribute(VectorObject4DType, "neg3D")
+def VectorObject34DType_neg3D(v):
+    def VectorObject34DType_neg3D_impl(v):
+        return v.scale3D(-1)
+
+    return VectorObject34DType_neg3D_impl
+
+
+@numba.extending.overload_attribute(VectorObject4DType, "neg4D")
+def VectorObject4DType_neg4D(v):
+    def VectorObject4DType_neg4D_impl(v):
+        return v.scale4D(-1)
+
+    return VectorObject4DType_neg4D_impl
 
 
 # momentum aliases ############################################################
