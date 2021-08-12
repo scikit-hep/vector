@@ -469,6 +469,21 @@ class VectorProtocolPlanar(VectorProtocol):
         """
         raise AssertionError
 
+    def scale2D(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
+        """
+        Returns vector(s) with the 2D part scaled by a ``factor``, not affecting
+        any longitudinal or temporal parts.
+        """
+        raise AssertionError
+
+    @property
+    def neg2D(self: SameVectorType) -> SameVectorType:
+        """
+        Returns vector(s) with the 2D part negated, not affecting any longitudinal
+        or temporal parts.
+        """
+        raise AssertionError
+
     def deltaphi(self, other: VectorProtocol) -> ScalarCollection:
         r"""
         Signed difference in $\phi$ of ``self`` minus ``other`` (in radians).
@@ -596,6 +611,21 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
     def mag2(self) -> ScalarCollection:
         """
         The magnitude-squared of the vector(s) in 3D (not including any temporal parts).
+        """
+        raise AssertionError
+
+    def scale3D(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
+        """
+        Returns vector(s) with the 3D part scaled by a ``factor``, not affecting
+        any longitudinal or temporal parts.
+        """
+        raise AssertionError
+
+    @property
+    def neg3D(self: SameVectorType) -> SameVectorType:
+        """
+        Returns vector(s) with the 3D part negated, not affecting any longitudinal
+        or temporal parts.
         """
         raise AssertionError
 
@@ -867,6 +897,19 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """
         raise AssertionError
 
+    def scale4D(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
+        """
+        Same as ``scale``.
+        """
+        raise AssertionError
+
+    @property
+    def neg4D(self: SameVectorType) -> SameVectorType:
+        """
+        Same as multiplying by -1.
+        """
+        raise AssertionError
+
     def boost_p4(self: SameVectorType, p4: "VectorProtocolLorentz") -> SameVectorType:
         """
         Boosts the vector or array of vectors in a direction and magnitude given
@@ -876,11 +919,20 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
 
         .. code-block:: python
 
-            boost_beta3(p4.to_beta3)
+            boost_beta3(p4.to_beta3())
 
         where :doc:`vector._methods.VectorProtocolLorentz.to_beta3` converts a
         4D Lorentz vector into a 3D velocity (in which lightlike velocities have
         ``mag == 1``).
+
+        Note that ``v.boost_p4(v)`` does not boost into the center-of-mass (CM) frame
+        of ``v``; it boosts *away* from its CM frame. Neither does ``v.boost_p4(-v)``,
+        since that negates the time component of ``v`` as well.
+
+        To boost to the center-of-mass frame of a vector ``v``, use
+        :doc:`vector._methods.VectorProtocolLorentz.boostCM_of_p4`. For instance,
+        ``v.boostCM_of_p4(v)`` is guaranteed to have spatial components close to zero
+        and a temporal component close to ``v.tau``.
         """
         raise AssertionError
 
@@ -890,6 +942,16 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """
         Boosts the vector or array of vectors in a direction and magnitude given
         by the 3D velocity or array of velocity vectors ``beta3``.
+
+        Note that ``v.boost_beta3(v.to_beta3())`` does not boost into the center-of-mass (CM) frame
+        of ``v``; it boosts *away* from its CM frame. Neither does ``v.boost_beta3((-v).to_beta3())``,
+        since that negates the time component of ``v`` as well. On the other hand,
+        ``v.boost_beta3(-(v.to_beta3()))`` *would* boost to the center-of-mass frame.
+
+        However, there's a function for that: :doc:`vector._methods.VectorProtocolLorentz.boostCM_of_beta3`
+        is explicit about boosting to a center-of-mass (CM) frame and it handles the
+        negative sign for you: ``v.boostCM_of_beta3(v.to_beta3())`` is guaranteed to
+        have spatial components close to zero and a temporal component close to ``v.tau``.
         """
         raise AssertionError
 
@@ -903,6 +965,62 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
 
         If ``booster`` is 4D, it is interpreted as a Lorentz vector and
         :doc:`vector._methods.VectorProtocolLorentz.boost_p4` is called.
+
+        Note that ``v.boost(v)`` does not boost into the center-of-mass (CM) frame
+        of ``v``; it boosts *away* from its CM frame. Neither does ``v.boost(-v)``,
+        since that negates the time component of ``v`` as well.
+
+        To boost to the center-of-mass frame of a vector ``v``, use
+        :doc:`vector._methods.VectorProtocolLorentz.boostCM_of`. For instance,
+        ``v.boostCM_of(v)`` is guaranteed to have spatial components close to zero
+        and a temporal component close to ``v.tau``.
+        """
+        raise AssertionError
+
+    def boostCM_of_p4(
+        self: SameVectorType, p4: "VectorProtocolLorentz"
+    ) -> SameVectorType:
+        """
+        Boosts the vector or array of vectors to the center-of-mass (CM) frame of
+        the 4D vector or array of vectors ``p4``.
+
+        This function is equivalent to but more numerically stable than
+
+        .. code-block:: python
+
+            boostCM_of_beta3(p4.to_beta3())
+
+        Note that ``v.boostCM_of_p4(v)`` is guaranteed to have spatial components close
+        to zero and a temporal component close to ``v.tau``.
+        """
+        raise AssertionError
+
+    def boostCM_of_beta3(
+        self: SameVectorType, beta3: "VectorProtocolSpatial"
+    ) -> SameVectorType:
+        """
+        Boosts the vector or array of vectors to the center-of-mass (CM) frame of
+        the 3D velocity or array of velocity vectors ``beta3``.
+
+        Note that ``v.boostCM_of_beta3(v.to_beta3())`` is guaranteed to have spatial
+        components close to zero and a temporal component close to ``v.tau``.
+        """
+        raise AssertionError
+
+    def boostCM_of(self: SameVectorType, booster: "VectorProtocol") -> SameVectorType:
+        """
+        Boosts the vector or array of vectors to the center-of-mass (CM) frame of
+        the 3D or 4D ``booster``.
+
+        If ``booster`` is 3D, it is interpreted as a velocity (in which lightlike
+        velocities have ``mag == 1``) and :doc:`vector._methods.VectorProtocolLorentz.boostCM_of_beta3`
+        is called.
+
+        If ``booster`` is 4D, it is interpreted as a Lorentz vector and
+        :doc:`vector._methods.VectorProtocolLorentz.boostCM_of_p4` is called.
+
+        Note that ``v.boostCM_of(v)`` is guaranteed to have spatial components close
+        to zero and a temporal component close to ``v.tau``.
         """
         raise AssertionError
 
@@ -1743,6 +1861,17 @@ class Planar(VectorProtocolPlanar):
         module = _compute_module_of(self, other)
         return module.subtract.dispatch(self, other)
 
+    @property
+    def neg2D(self: SameVectorType) -> SameVectorType:
+        from vector._compute.planar import scale
+
+        return scale.dispatch(-1, self)
+
+    def scale2D(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
+        from vector._compute.planar import scale
+
+        return scale.dispatch(factor, self)
+
     def scale(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
         from vector._compute.planar import scale
 
@@ -1953,6 +2082,28 @@ class Spatial(Planar, VectorProtocolSpatial):
         module = _compute_module_of(self, other)
         return module.subtract.dispatch(self, other)
 
+    @property
+    def neg2D(self: SameVectorType) -> SameVectorType:
+        from vector._compute.planar import scale
+
+        return scale.dispatch(-1, self)
+
+    @property
+    def neg3D(self: SameVectorType) -> SameVectorType:
+        from vector._compute.spatial import scale
+
+        return scale.dispatch(-1, self)
+
+    def scale2D(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
+        from vector._compute.planar import scale
+
+        return scale.dispatch(factor, self)
+
+    def scale3D(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
+        from vector._compute.spatial import scale
+
+        return scale.dispatch(factor, self)
+
     def scale(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
         from vector._compute.spatial import scale
 
@@ -2060,6 +2211,33 @@ class Lorentz(Spatial, VectorProtocolLorentz):
                 "a Vector4D to boost by a momentum 4-vector"
             )
 
+    def boostCM_of_p4(
+        self: SameVectorType, p4: "VectorProtocolLorentz"
+    ) -> SameVectorType:
+        from vector._compute.lorentz import boost_p4
+
+        return boost_p4.dispatch(self, p4.neg3D)
+
+    def boostCM_of_beta3(
+        self: SameVectorType, beta3: "VectorProtocolSpatial"
+    ) -> SameVectorType:
+        from vector._compute.lorentz import boost_beta3
+
+        return boost_beta3.dispatch(self, beta3.neg3D)
+
+    def boostCM_of(self: SameVectorType, booster: "VectorProtocol") -> SameVectorType:
+        from vector._compute.lorentz import boost_beta3, boost_p4
+
+        if isinstance(booster, Vector3D):
+            return boost_beta3.dispatch(self, booster.neg3D)
+        elif isinstance(booster, Vector4D):
+            return boost_p4.dispatch(self, booster.neg3D)
+        else:
+            raise TypeError(
+                "specify a Vector3D to boost by beta (velocity with c=1) or "
+                "a Vector4D to boost by a momentum 4-vector"
+            )
+
     def boostX(
         self: SameVectorType,
         beta: typing.Optional[ScalarCollection] = None,
@@ -2143,6 +2321,39 @@ class Lorentz(Spatial, VectorProtocolLorentz):
     def subtract(self, other: VectorProtocol) -> VectorProtocol:
         module = _compute_module_of(self, other)
         return module.subtract.dispatch(self, other)
+
+    @property
+    def neg2D(self: SameVectorType) -> SameVectorType:
+        from vector._compute.planar import scale
+
+        return scale.dispatch(-1, self)
+
+    @property
+    def neg3D(self: SameVectorType) -> SameVectorType:
+        from vector._compute.spatial import scale
+
+        return scale.dispatch(-1, self)
+
+    @property
+    def neg4D(self: SameVectorType) -> SameVectorType:
+        from vector._compute.lorentz import scale
+
+        return scale.dispatch(-1, self)
+
+    def scale2D(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
+        from vector._compute.planar import scale
+
+        return scale.dispatch(factor, self)
+
+    def scale3D(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
+        from vector._compute.spatial import scale
+
+        return scale.dispatch(factor, self)
+
+    def scale4D(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
+        from vector._compute.lorentz import scale
+
+        return scale.dispatch(factor, self)
 
     def scale(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
         from vector._compute.lorentz import scale
