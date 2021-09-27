@@ -1,6 +1,6 @@
 repos:
 - repo: https://github.com/asottile/pyupgrade
-  rev: v2.26.0
+  rev: v2.28.0
   hooks:
   - id: pyupgrade
     args: [--py36-plus]
@@ -36,7 +36,7 @@ repos:
   - id: setup-cfg-fmt
 
 - repo: https://github.com/mgedmin/check-manifest
-  rev: "0.46"
+  rev: "0.47"
   hooks:
   - id: check-manifest
     stages: [manual]
