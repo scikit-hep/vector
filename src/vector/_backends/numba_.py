@@ -42,7 +42,8 @@ for groupname, module in names_and_modules:
                     numba.extending.register_jitable(obj)
                     registered.add(obj)
 
-            for key, value in getattr(submodule, "dispatch_map").items():
+            # MyPy doesn't know that submodule contains dispatch_map, so getattr
+            for key, value in getattr(submodule, "dispatch_map").items():  # noqa: B009
                 function, *returns = value
                 if function not in registered:
                     numba.extending.register_jitable(function)
