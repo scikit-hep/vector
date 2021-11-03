@@ -127,22 +127,22 @@ and so on, for all combinations of azimuthal, longitudinal, and temporal coordin
 
 ```python
 # NumPy-like arguments (literally passed through to NumPy)
-vector.arr([
+vector.array([
     (1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)
 ], dtype=[("x", float), ("y", float)])
 
 # Pandas-like arguments (dict from names to column arrays)
-vector.arr({"x": [1.1, 1.2, 1.3, 1.4, 1.5], "y": [2.1, 2.2, 2.3, 2.4, 2.5]})
+vector.array({"x": [1.1, 1.2, 1.3, 1.4, 1.5], "y": [2.1, 2.2, 2.3, 2.4, 2.5]})
 
 # As with objects, the coordinate system and dimension is taken from the names of the fields.
-vector.arr({
+vector.array({
     "x": [1.1, 1.2, 1.3, 1.4, 1.5],
     "y": [2.1, 2.2, 2.3, 2.4, 2.5],
     "z": [3.1, 3.2, 3.3, 3.4, 3.5],
     "t": [4.1, 4.2, 4.3, 4.4, 4.5],
 })
 
-vector.arr({
+vector.array({
     "pt": [1.1, 1.2, 1.3, 1.4, 1.5],
     "phi": [2.1, 2.2, 2.3, 2.4, 2.5],
     "eta": [3.1, 3.2, 3.3, 3.4, 3.5],
