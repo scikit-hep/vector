@@ -117,7 +117,7 @@ analyze_function.done = set()
 
 def analyze_code(code, context):
     # this block is all uncompyle6
-    python_version = float(sys.version[0:3])
+    python_version = "{0}.{1}".format(sys.version_info[0], sys.version_info[1])
     is_pypy = "__pypy__" in sys.builtin_module_names
     parser = uncompyle6.parser.get_python_parser(
         python_version,
