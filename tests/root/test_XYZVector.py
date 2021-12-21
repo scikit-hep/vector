@@ -4,8 +4,6 @@
 # or https://github.com/scikit-hep/vector for details.
 
 import pytest
-from hypothesis import given
-from hypothesis import strategies as st
 
 import vector
 
@@ -90,45 +88,6 @@ def test_Dot(constructor, coordinates):
     )
 
 
-# Run the same tests within hypothesis
-@given(
-    constructor1=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-    ),
-    constructor2=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-    ),
-)
-def test_fuzz_Dot(constructor1, constructor2, coordinates):
-    assert ROOT.Math.XYZVector(*constructor1).Dot(
-        ROOT.Math.XYZVector(*constructor2)
-    ) == pytest.approx(
-        getattr(
-            vector.obj(**dict(zip(["x", "y", "z"], constructor1))), coordinates
-        )().dot(
-            getattr(
-                vector.obj(**dict(zip(["x", "y", "z"], constructor2))), coordinates
-            )()
-        ),
-        1.0e-6,
-        1.0e-6,
-    )
-
-
 # Run a test that compares ROOT's 'Cross()' with vector's 'cross' for all cases.
 @pytest.mark.parametrize("constructor", constructor)
 def test_Cross(constructor, coordinates):
@@ -137,60 +96,6 @@ def test_Cross(constructor, coordinates):
         vector.obj(**dict(zip(["x", "y", "z"], constructor))), coordinates
     )().cross(
         getattr(vector.obj(**dict(zip(["x", "y", "z"], constructor))), coordinates)()
-    )
-    assert (
-        ref_vec.X()
-        == pytest.approx(
-            vec.x,
-            1.0e-6,
-            1.0e-6,
-        )
-        and ref_vec.Y()
-        == pytest.approx(
-            vec.y,
-            1.0e-6,
-            1.0e-6,
-        )
-        and ref_vec.Z()
-        == pytest.approx(
-            vec.z,
-            1.0e-6,
-            1.0e-6,
-        )
-    )
-
-
-# Run the same tests within hypothesis
-@given(
-    constructor1=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-    ),
-    constructor2=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-    ),
-)
-def test_fuzz_Cross(constructor1, constructor2, coordinates):
-    ref_vec = ROOT.Math.XYZVector(*constructor1).Cross(
-        ROOT.Math.XYZVector(*constructor2)
-    )
-    vec = getattr(
-        vector.obj(**dict(zip(["x", "y", "z"], constructor1))), coordinates
-    )().cross(
-        getattr(vector.obj(**dict(zip(["x", "y", "z"], constructor2))), coordinates)()
     )
     assert (
         ref_vec.X()

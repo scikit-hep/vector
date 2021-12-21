@@ -5,8 +5,6 @@
 
 import numpy as np
 import pytest
-from hypothesis import given
-from hypothesis import strategies as st
 
 import vector
 
@@ -79,37 +77,6 @@ def test_Dot(constructor, coordinates):
     ) == pytest.approx(
         getattr(vector.obj(**dict(zip(["x", "y"], constructor))), coordinates)().dot(
             getattr(vector.obj(**dict(zip(["x", "y"], constructor))), coordinates)()
-        ),
-        1.0e-6,
-        1.0e-6,
-    )
-
-
-# Run the same tests within hypothesis
-@given(
-    constructor1=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-    ),
-    constructor2=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-    ),
-)
-def test_fuzz_Dot(constructor1, constructor2, coordinates):
-    assert ROOT.Math.XYVector(*constructor1).Dot(
-        ROOT.Math.XYVector(*constructor2)
-    ) == pytest.approx(
-        getattr(vector.obj(**dict(zip(["x", "y"], constructor1))), coordinates)().dot(
-            getattr(vector.obj(**dict(zip(["x", "y"], constructor2))), coordinates)()
         ),
         1.0e-6,
         1.0e-6,

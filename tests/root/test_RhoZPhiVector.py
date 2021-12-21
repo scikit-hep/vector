@@ -5,8 +5,6 @@
 
 import numpy as np
 import pytest
-from hypothesis import given
-from hypothesis import strategies as st
 
 import vector
 
@@ -86,39 +84,6 @@ def test_Dot(constructor, coordinates):
         )().dot(
             getattr(
                 vector.obj(**dict(zip(["rho", "z", "phi"], constructor))), coordinates
-            )()
-        )
-    )
-
-
-# Run the same tests within hypothesis
-@given(
-    constructor1=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-    ),
-    constructor2=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-    ),
-)
-def test_fuzz_Dot(constructor1, constructor2, coordinates):
-    assert ROOT.Math.RhoZPhiVector(*constructor1).Dot(
-        ROOT.Math.RhoZPhiVector(*constructor2)
-    ) == pytest.approx(
-        getattr(
-            vector.obj(**dict(zip(["rho", "z", "phi"], constructor1))), coordinates
-        )().dot(
-            getattr(
-                vector.obj(**dict(zip(["rho", "z", "phi"], constructor2))), coordinates
             )()
         )
     )
