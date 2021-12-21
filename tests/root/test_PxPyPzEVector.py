@@ -4,8 +4,6 @@
 # or https://github.com/scikit-hep/vector for details.
 
 import pytest
-from hypothesis import given
-from hypothesis import strategies as st
 
 import vector
 
@@ -100,45 +98,6 @@ def test_Dot(constructor, coordinates):
     ) == pytest.approx(v1.dot(v2))
 
 
-# Run the same test within hypothesis
-@given(
-    constructor1=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-    ),
-    constructor2=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-    ),
-)
-def test_fizz_Dot(constructor1, constructor2, coordinates):
-    v1 = getattr(
-        vector.obj(**dict(zip(["x", "y", "z", "t"], constructor1))), coordinates
-    )()
-    v2 = getattr(
-        vector.obj(**dict(zip(["x", "y", "z", "t"], constructor2))), coordinates
-    )()
-    assert ROOT.Math.PxPyPzEVector(*constructor1).Dot(
-        ROOT.Math.PxPyPzEVector(*constructor2)
-    ) == pytest.approx(v1.dot(v2))
-
-
 # Run a test that compares ROOT's 'M2()' with vector's 'tau2' for all cases.
 # Mass2 is our tau2 (or mass2 if it's a momentum vector and has kinematic synonyms)
 @pytest.mark.parametrize("constructor", constructor)
@@ -150,56 +109,10 @@ def test_M2(constructor, coordinates):
     )
 
 
-# Run the same tests within hypothesis
-@given(
-    constructor=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-    )
-)
-def test_fuzz_M2(constructor, coordinates):
-    assert ROOT.Math.PxPyPzEVector(*constructor).M2() == pytest.approx(
-        getattr(
-            vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
-        )().tau2
-    )
-
-
 # Run a test that compares ROOT's 'M()' with vector's 'tau' for all cases.
 # Mass is tau (or mass)
 @pytest.mark.parametrize("constructor", constructor)
 def test_M(constructor, coordinates):
-    assert ROOT.Math.PxPyPzEVector(*constructor).M() == pytest.approx(
-        getattr(
-            vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
-        )().tau
-    )
-
-
-# Run the same tests within hypothesis
-@given(
-    constructor=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-    )
-)
-def test_fuzz_M(constructor, coordinates):
     assert ROOT.Math.PxPyPzEVector(*constructor).M() == pytest.approx(
         getattr(
             vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates

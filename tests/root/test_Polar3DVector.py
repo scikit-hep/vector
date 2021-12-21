@@ -4,8 +4,6 @@
 # or https://github.com/scikit-hep/vector for details.
 
 import pytest
-from hypothesis import given
-from hypothesis import strategies as st
 
 import vector
 
@@ -94,34 +92,6 @@ def test_Dot(constructor, coordinates):
     )
 
 
-# Run the same tests within hypothesis
-@given(
-    constructor1=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-ROOT.Math.Pi(), max_value=ROOT.Math.Pi()),
-    ),
-    constructor2=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-ROOT.Math.Pi(), max_value=ROOT.Math.Pi()),
-    ),
-)
-def test_fuzz_Dot(constructor1, constructor2, coordinates):
-    assert ROOT.Math.Polar3DVector(*constructor1).Dot(
-        ROOT.Math.Polar3DVector(*constructor2)
-    ) == pytest.approx(
-        getattr(
-            vector.obj(**dict(zip(["rho", "theta", "phi"], constructor1))), coordinates
-        )().dot(
-            getattr(
-                vector.obj(**dict(zip(["rho", "theta", "phi"], constructor2))),
-                coordinates,
-            )()
-        )
-    )
-
-
 # Run a test that compares ROOT's 'Cross()' with vector's 'cross' for all cases.
 @pytest.mark.parametrize("constructor", constructor)
 def test_Cross(constructor, coordinates):
@@ -133,62 +103,6 @@ def test_Cross(constructor, coordinates):
     )().cross(
         getattr(
             vector.obj(**dict(zip(["rho", "theta", "phi"], constructor))), coordinates
-        )()
-    )
-    assert (
-        ref_vec.X()
-        == pytest.approx(
-            vec.x,
-            1.0e-6,
-            1.0e-6,
-        )
-        and ref_vec.Y()
-        == pytest.approx(
-            vec.y,
-            1.0e-6,
-            1.0e-6,
-        )
-        and ref_vec.Z()
-        == pytest.approx(
-            vec.z,
-            1.0e-6,
-            1.0e-6,
-        )
-    )
-
-
-# Run the same tests within hypothesis
-@given(
-    constructor1=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-    ),
-    constructor2=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    )
-    | st.tuples(
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-        st.integers(min_value=-10e7, max_value=10e7),
-    ),
-)
-def test_fuzz_Cross(constructor1, constructor2, coordinates):
-    ref_vec = ROOT.Math.Polar3DVector(*constructor1).Cross(
-        ROOT.Math.Polar3DVector(*constructor2)
-    )
-    vec = getattr(
-        vector.obj(**dict(zip(["rho", "theta", "phi"], constructor1))), coordinates
-    )().cross(
-        getattr(
-            vector.obj(**dict(zip(["rho", "theta", "phi"], constructor2))), coordinates
         )()
     )
     assert (
