@@ -107,5 +107,5 @@ def test_M2(constructor, coordinates):
 #     vector.VectorObject4D(
 #         azimuthal=azimuthal, longitudinal=longitudinal, temporal=temporal
 #     )
-    # assert (vector.obj(**dict(zip(["x", "y", "z", "t"], azimuthal[0], azimuthal[1], longitudinal, temporal)))).tau == 0
-    # pytest.approx(ROOT.Math.PxPyPzEVector(azimuthal[0], azimuthal[1], longitudinal, temporal).M())
+# assert (vector.obj(**dict(zip(["x", "y", "z", "t"], azimuthal[0], azimuthal[1], longitudinal, temporal)))).tau == 0
+# pytest.approx(ROOT.Math.PxPyPzEVector(azimuthal[0], azimuthal[1], longitudinal, temporal).M())
