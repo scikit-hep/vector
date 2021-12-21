@@ -5,11 +5,6 @@
 
 import pytest
 
-# from hypothesis import given
-# from hypothesis import strategies as st
-
-# import vector
-
 # If ROOT is not available, skip these tests.
 ROOT = pytest.importorskip("ROOT")
 

@@ -5,8 +5,6 @@
 
 import numpy as np
 import pytest
-from hypothesis import given
-from hypothesis import strategies as st
 
 import vector
 
@@ -88,51 +86,9 @@ def test_Dot(constructor, coordinates):
     )
 
 
-# Run the same tests within hypothesis
-@given(
-    constructor1=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    ),
-    constructor2=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    ),
-)
-def test_fuzz_Dot(constructor1, constructor2, coordinates):
-    assert ROOT.Math.Polar2DVector(*constructor1).Dot(
-        ROOT.Math.Polar2DVector(*constructor2)
-    ) == pytest.approx(
-        getattr(
-            vector.obj(**dict(zip(["rho", "phi"], constructor1))), coordinates
-        )().dot(
-            getattr(
-                vector.obj(**dict(zip(["rho", "phi"], constructor2))), coordinates
-            )()
-        ),
-        rel=1e-6,
-        abs=1e-6,
-    )
-
-
 # Run a test that compares ROOT's 'Mag2()' with vector's 'rho2' for all cases.
 @pytest.mark.parametrize("constructor", constructor)
 def test_Mag2(constructor, coordinates):
-    assert ROOT.Math.Polar2DVector(*constructor).Mag2() == pytest.approx(
-        getattr(
-            vector.obj(**dict(zip(["rho", "phi"], constructor))), coordinates
-        )().rho2
-    )
-
-
-# Run the same tests within hypothesis
-@given(
-    constructor=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    )
-)
-def test_fuzz_Mag2(constructor, coordinates):
     assert ROOT.Math.Polar2DVector(*constructor).Mag2() == pytest.approx(
         getattr(
             vector.obj(**dict(zip(["rho", "phi"], constructor))), coordinates
@@ -150,37 +106,9 @@ def test_Mag(constructor, coordinates):
     )
 
 
-# Run the same tests within hypothesis
-@given(
-    constructor=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    )
-)
-def test_fuzz_Mag(constructor, coordinates):
-    assert ROOT.Math.sqrt(
-        ROOT.Math.Polar2DVector(*constructor).Mag2()
-    ) == pytest.approx(
-        getattr(vector.obj(**dict(zip(["rho", "phi"], constructor))), coordinates)().rho
-    )
-
-
 # Run a test that compares ROOT's 'Phi()' with vector's 'rho' for all cases.
 @pytest.mark.parametrize("constructor", constructor)
 def test_Phi(constructor, coordinates):
-    assert ROOT.Math.Polar2DVector(*constructor).Phi() == pytest.approx(
-        getattr(vector.obj(**dict(zip(["rho", "phi"], constructor))), coordinates)().phi
-    )
-
-
-# Run the same tests within hypothesis
-@given(
-    constructor=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    )
-)
-def test_fuzz_Phi(constructor, coordinates):
     assert ROOT.Math.Polar2DVector(*constructor).Phi() == pytest.approx(
         getattr(vector.obj(**dict(zip(["rho", "phi"], constructor))), coordinates)().phi
     )
@@ -207,49 +135,9 @@ def test_Rotate(constructor, angle, coordinates):
     )
 
 
-# Run the same tests within hypothesis
-@given(
-    constructor=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    ),
-    angle=st.floats(min_value=-10e7, max_value=10e7),
-)
-def test_fuzz_Rotate(constructor, angle, coordinates):
-    ref_vec = ROOT.Math.Polar2DVector(*constructor)
-    ref_vec.Rotate(angle)
-    vec = getattr(vector.obj(**dict(zip(["rho", "phi"], constructor))), coordinates)()
-    res_vec = vec.rotateZ(angle)
-    assert ref_vec.R() == pytest.approx(
-        res_vec.rho,
-        1.0e-6,
-        1.0e-6,
-    )
-    assert ref_vec.Phi() == pytest.approx(
-        res_vec.phi,
-        1.0e-6,
-        1.0e-6,
-    )
-
-
 # Run a test that compares ROOT's 'Unit()' with vector's 'unit' for all cases.
 @pytest.mark.parametrize("constructor", constructor)
 def test_Unit(constructor, coordinates):
-    ref_vec = ROOT.Math.Polar2DVector(*constructor).Unit()
-    vec = getattr(vector.obj(**dict(zip(["rho", "phi"], constructor))), coordinates)()
-    res_vec = vec.unit
-    assert ref_vec.R() == pytest.approx(res_vec().rho)
-    assert ref_vec.Phi() == pytest.approx(res_vec().phi)
-
-
-# Run the same tests within hypothesis
-@given(
-    constructor=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    )
-)
-def test_fuzz_Unit(constructor, coordinates):
     ref_vec = ROOT.Math.Polar2DVector(*constructor).Unit()
     vec = getattr(vector.obj(**dict(zip(["rho", "phi"], constructor))), coordinates)()
     res_vec = vec.unit
@@ -265,19 +153,6 @@ def test_X_and_Y(constructor, coordinates):
     assert ref_vec.X() == pytest.approx(vec.x) and ref_vec.Y() == pytest.approx(vec.y)
 
 
-# Run the same tests within hypothesis
-@given(
-    constructor=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    )
-)
-def test_fuzz_X_and_Y(constructor, coordinates):
-    ref_vec = ROOT.Math.Polar2DVector(*constructor)
-    vec = getattr(vector.obj(**dict(zip(["rho", "phi"], constructor))), coordinates)()
-    assert ref_vec.X() == pytest.approx(vec.x) and ref_vec.Y() == pytest.approx(vec.y)
-
-
 # Run a test that compares ROOT's '__add__' with vector's 'add' for all cases.
 @pytest.mark.parametrize("constructor", constructor)
 def test_add(constructor, coordinates):
@@ -288,38 +163,6 @@ def test_add(constructor, coordinates):
         vector.obj(**dict(zip(["rho", "phi"], constructor))), coordinates
     )().add(
         getattr(vector.obj(**dict(zip(["rho", "phi"], constructor))), coordinates)()
-    )
-    assert ref_vec.R() == pytest.approx(
-        vec.rho,
-        1.0e-6,
-        1.0e-6,
-    )
-    assert ref_vec.Phi() == pytest.approx(
-        vec.phi,
-        1.0e-6,
-        1.0e-6,
-    )
-
-
-# Run the same tests within hypothesis
-@given(
-    constructor1=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    ),
-    constructor2=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    ),
-)
-def test_fuzz_add(constructor1, constructor2, coordinates):
-    ref_vec = ROOT.Math.Polar2DVector(*constructor1).__add__(
-        ROOT.Math.Polar2DVector(*constructor2)
-    )
-    vec = getattr(
-        vector.obj(**dict(zip(["rho", "phi"], constructor1))), coordinates
-    )().add(
-        getattr(vector.obj(**dict(zip(["rho", "phi"], constructor2))), coordinates)()
     )
     assert ref_vec.R() == pytest.approx(
         vec.rho,
@@ -354,36 +197,6 @@ def test_sub(constructor, coordinates):
     )
 
 
-# Run the same tests within hypothesis
-@given(
-    constructor1=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    ),
-    constructor2=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    ),
-)
-def test_fuzz_sub(constructor1, constructor2, coordinates):
-    ref_vec = ROOT.Math.Polar2DVector(*constructor1).__sub__(
-        ROOT.Math.Polar2DVector(*constructor2)
-    )
-    vec1 = getattr(vector.obj(**dict(zip(["rho", "phi"], constructor1))), coordinates)()
-    vec2 = getattr(vector.obj(**dict(zip(["rho", "phi"], constructor2))), coordinates)()
-    res_vec = vec1.subtract(vec2)
-    assert ref_vec.R() == pytest.approx(
-        res_vec.rho,
-        1.0e-6,
-        1.0e-6,
-    )
-    assert ref_vec.Phi() == pytest.approx(
-        res_vec.phi,
-        1.0e-6,
-        1.0e-6,
-    )
-
-
 # Run a test that compares ROOT's '__neg__' with vector's '__neg__' for all cases.
 @pytest.mark.parametrize("constructor", constructor)
 def test_neg(constructor, coordinates):
@@ -395,42 +208,9 @@ def test_neg(constructor, coordinates):
     assert ref_vec.Phi() == pytest.approx(vec().phi)
 
 
-# Run the same tests within hypothesis
-@given(
-    constructor=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    )
-)
-def test_fuzz_neg(constructor, coordinates):
-    ref_vec = ROOT.Math.Polar2DVector(*constructor).__neg__()
-    vec = getattr(
-        vector.obj(**dict(zip(["rho", "phi"], constructor))), coordinates
-    )().__neg__
-    assert ref_vec.R() == pytest.approx(vec().rho)
-    assert ref_vec.Phi() == pytest.approx(vec().phi)
-
-
 # Run a test that compares ROOT's '__mul__' with vector's 'mul' for all cases.
 @pytest.mark.parametrize("constructor", constructor)
 def test_mul(constructor, scalar, coordinates):
-    ref_vec = ROOT.Math.Polar2DVector(*constructor).__mul__(scalar)
-    vec = getattr(
-        vector.obj(**dict(zip(["rho", "phi"], constructor))), coordinates
-    )().__mul__(scalar)
-    assert ref_vec.R() == pytest.approx(vec.rho)
-    assert ref_vec.Phi() == pytest.approx(vec.phi)
-
-
-# Run the same tests within hypothesis
-@given(
-    constructor=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    ),
-    scalar=st.floats(min_value=-10e7, max_value=10e7),
-)
-def test_fuzz_mul(constructor, scalar, coordinates):
     ref_vec = ROOT.Math.Polar2DVector(*constructor).__mul__(scalar)
     vec = getattr(
         vector.obj(**dict(zip(["rho", "phi"], constructor))), coordinates
@@ -452,25 +232,6 @@ def test_truediv(constructor, scalar, coordinates):
         assert ref_vec.Phi() == pytest.approx(vec.phi)
 
 
-# Run the same tests within hypothesis
-@given(
-    constructor=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    ),
-    scalar=st.floats(min_value=-10e7, max_value=10e7),
-)
-def test_fuzz_truediv(constructor, scalar, coordinates):
-    # FIXME:
-    if scalar != 0:
-        ref_vec = ROOT.Math.Polar2DVector(*constructor).__truediv__(scalar)
-        vec = getattr(
-            vector.obj(**dict(zip(["rho", "phi"], constructor))), coordinates
-        )().__truediv__(scalar)
-        assert ref_vec.R() == pytest.approx(vec.rho)
-        assert ref_vec.Phi() == pytest.approx(vec.phi)
-
-
 # Run a test that compares ROOT's '__eq__' with vector's 'isclose' for all cases.
 @pytest.mark.parametrize("constructor", constructor)
 def test_eq(constructor, coordinates):
@@ -480,25 +241,6 @@ def test_eq(constructor, coordinates):
     vec = getattr(
         vector.obj(**dict(zip(["rho", "phi"], constructor))), coordinates
     )().isclose(
-        getattr(vector.obj(**dict(zip(["rho", "phi"], constructor))), coordinates)()
-    )
-    assert ref_vec == vec
-
-
-# Run the same tests within hypothesis
-@given(
-    constructor=st.tuples(
-        st.floats(min_value=-10e7, max_value=10e7),
-        st.floats(min_value=-10e7, max_value=10e7),
-    )
-)
-def test_fuzz_eq(constructor, coordinates):
-    ref_vec = ROOT.Math.Polar2DVector(*constructor).__eq__(
-        ROOT.Math.Polar2DVector(*constructor)
-    )
-    vec = getattr(
-        vector.obj(**dict(zip(["rho", "phi"], constructor))), coordinates
-    )().equal(
         getattr(vector.obj(**dict(zip(["rho", "phi"], constructor))), coordinates)()
     )
     assert ref_vec == vec
