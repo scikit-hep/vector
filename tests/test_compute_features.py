@@ -89,12 +89,14 @@ is_pypy = "__pypy__" in sys.builtin_module_names
 try:
     uncompyle6.scanner.get_scanner(python_version, is_pypy=is_pypy)
 except RuntimeError as err:
+    is_unsupported = True
     unsupported_message = str(err)
 else:
-    unsupported_message = None
+    is_unsupported = False
+    unsupported_message = ""
 
 
-@pytest.mark.skipif(unsupported_message is not None, reason=unsupported_message)
+@pytest.mark.skipif(is_unsupported, reason=unsupported_message)
 @pytest.mark.slow
 @pytest.mark.parametrize("signature", functions.keys())
 def test(signature):
