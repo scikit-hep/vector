@@ -84,6 +84,19 @@ functions = dict(
 )
 
 
+python_version = f"{sys.version_info[0]}.{sys.version_info[1]}"
+is_pypy = "__pypy__" in sys.builtin_module_names
+try:
+    uncompyle6.scanner.get_scanner(python_version, is_pypy=is_pypy)
+except RuntimeError as err:
+    is_unsupported = True
+    unsupported_message = str(err)
+else:
+    is_unsupported = False
+    unsupported_message = ""
+
+
+@pytest.mark.skipif(is_unsupported, reason=unsupported_message)
 @pytest.mark.slow
 @pytest.mark.parametrize("signature", functions.keys())
 def test(signature):
@@ -117,8 +130,6 @@ analyze_function.done = set()
 
 def analyze_code(code, context):
     # this block is all uncompyle6
-    python_version = f"{sys.version_info[0]}.{sys.version_info[1]}"
-    is_pypy = "__pypy__" in sys.builtin_module_names
     parser = uncompyle6.parser.get_python_parser(
         python_version,
         debug_parser=dict(spark_parser.DEFAULT_DEBUG),
