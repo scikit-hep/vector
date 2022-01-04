@@ -1012,6 +1012,19 @@ MomentumRecord4D.GenericClass = VectorRecord4D
 # implementation of behaviors in Numba ########################################
 
 
+def _arraytype_of(awkwardtype: typing.Any, component: str) -> typing.Any:
+    import numba
+
+    if isinstance(awkwardtype, ak._connect._numba.layout.NumpyArrayType):
+        return awkwardtype.arraytype
+    elif isinstance(awkwardtype, ak._connect._numba.layout.IndexedArrayType):
+        return _arraytype_of(awkwardtype.contenttype, component)
+    else:
+        raise numba.TypingError(
+            f"vector components like {repr(component)} must be NumpyArrayType, not {awkwardtype}"
+        )
+
+
 def _aztype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
     import numba
 
@@ -1061,13 +1074,13 @@ def _aztype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
         phi_index = None
 
     if x_index is not None and y_index is not None:
-        coord1 = recordarraytype.contenttypes[x_index].arraytype.dtype
-        coord2 = recordarraytype.contenttypes[y_index].arraytype.dtype
+        coord1 = _arraytype_of(recordarraytype.contenttypes[x_index], "x").dtype
+        coord2 = _arraytype_of(recordarraytype.contenttypes[y_index], "y").dtype
         cls = AzimuthalObjectXY
 
     elif rho_index is not None and phi_index is not None:
-        coord1 = recordarraytype.contenttypes[rho_index].arraytype.dtype
-        coord2 = recordarraytype.contenttypes[phi_index].arraytype.dtype
+        coord1 = _arraytype_of(recordarraytype.contenttypes[rho_index], "rho").dtype
+        coord2 = _arraytype_of(recordarraytype.contenttypes[phi_index], "phi").dtype
         cls = AzimuthalObjectRhoPhi
 
     elif is_momentum:
@@ -1116,15 +1129,15 @@ def _ltype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
         eta_index = None
 
     if z_index is not None:
-        coord1 = recordarraytype.contenttypes[z_index].arraytype.dtype
+        coord1 = _arraytype_of(recordarraytype.contenttypes[z_index], "z").dtype
         cls = LongitudinalObjectZ
 
     elif theta_index is not None:
-        coord1 = recordarraytype.contenttypes[theta_index].arraytype.dtype
+        coord1 = _arraytype_of(recordarraytype.contenttypes[theta_index], "theta").dtype
         cls = LongitudinalObjectTheta
 
     elif eta_index is not None:
-        coord1 = recordarraytype.contenttypes[eta_index].arraytype.dtype
+        coord1 = _arraytype_of(recordarraytype.contenttypes[eta_index], "eta").dtype
         cls = LongitudinalObjectEta
 
     elif is_momentum:
@@ -1193,11 +1206,11 @@ def _ttype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
             tau_index = None
 
     if t_index is not None:
-        coord1 = recordarraytype.contenttypes[t_index].arraytype.dtype
+        coord1 = _arraytype_of(recordarraytype.contenttypes[t_index], "t").dtype
         cls = TemporalObjectT
 
     elif tau_index is not None:
-        coord1 = recordarraytype.contenttypes[tau_index].arraytype.dtype
+        coord1 = _arraytype_of(recordarraytype.contenttypes[tau_index], "tau").dtype
         cls = TemporalObjectTau
 
     elif is_momentum:
