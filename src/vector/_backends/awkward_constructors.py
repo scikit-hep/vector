@@ -276,7 +276,7 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     assert 2 <= dimension <= 4, f"Dimension must be between 2-4, not {dimension}"
 
     return awkward.zip(
-        dict(__builtins__["zip"](names, arrays)),  # type:ignore
+        dict(__builtins__["zip"](names, arrays)),  # type: ignore[index]
         depth_limit=akarray.layout.purelist_depth,
         with_name=_recname(is_momentum, dimension),
     )
@@ -354,7 +354,7 @@ def zip(
         behavior = dict(vector._backends.awkward_.behavior)
 
     return awkward.zip(
-        dict(__builtins__["zip"](names, columns)),  # type:ignore
+        dict(__builtins__["zip"](names, columns)),  # type: ignore[index]
         depth_limit=depth_limit,
         with_name=_recname(is_momentum, dimension),
         behavior=behavior,

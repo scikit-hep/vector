@@ -59,3 +59,23 @@ repos:
     - flake8-bugbear
     - flake8-docstrings
     - flake8-print
+
+- repo: https://github.com/codespell-project/codespell
+  rev: v2.1.0
+  hooks:
+  - id: codespell
+    args: ["-L", "hist,nd,circularly,ba"]
+    exclude: ^(notebooks/xarray.ipynb|notebooks/BoostHistogramHandsOn.ipynb)$
+
+- repo: https://github.com/pre-commit/pygrep-hooks
+  rev: v1.9.0
+  hooks:
+  - id: python-check-blanket-noqa
+  - id: python-check-blanket-type-ignore
+    exclude: ^src/vector/_backends/numba_object.py$
+  - id: python-no-log-warn
+  - id: python-no-eval
+  - id: python-use-type-annotations
+  - id: rst-backticks
+  - id: rst-directive-colons
+  - id: rst-inline-touching-normal

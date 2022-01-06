@@ -1,12 +1,41 @@
 [build-system]
-
 requires = [
     "wheel",
     "setuptools>=42.0",
     "setuptools_scm[toml]>=3.4"
 ]
-
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
 write_to = "src/vector/version.py"
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-markers"
+testpaths = ["tests"]
+markers = ["slow", "numba", "awkward", "dis"]
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+files = ["src/vector"]
+python_version = "3.8"
+strict = true
+warn_return_any = false
+
+[[tool.mypy.overrides]]
+module = "vector._compute.*.*"
+disallow_untyped_defs = false
+disallow_untyped_calls = false
+
+[[tool.mypy.overrides]]
+module = ["numba.*", "awkward.*"]
+ignore_missing_imports = true
+
+[tool.check-manifest]
+ignore = [
+  ".*",
+  "environment.yml",
+  "src/vector/version.py",
+  "docs/**",
+]
