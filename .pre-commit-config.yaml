@@ -46,8 +46,10 @@ repos:
   hooks:
   - id: mypy
     files: src
+    args: [--show-error-codes]
     additional_dependencies:
-    - numpy==1.20.2
+    - numpy==1.22.0
+    - packaging
 
 - repo: https://github.com/PyCQA/flake8
   rev: 4.0.1

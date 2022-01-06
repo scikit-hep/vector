@@ -162,7 +162,7 @@ def make_conversion(
             azimuthal,
             longitudinal,
             TemporalTau,
-        )  # type: ignore
+        )  # type: ignore[assignment]
 
 
 for azimuthal1 in (AzimuthalXY, AzimuthalRhoPhi):

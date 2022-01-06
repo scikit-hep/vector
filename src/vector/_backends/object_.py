@@ -37,6 +37,7 @@ from vector._methods import (
     _repr_generic_to_momentum,
     _ttype,
 )
+from vector._typeutils import FloatArray
 
 
 class CoordinatesObject:
@@ -179,61 +180,61 @@ class VectorObject(Vector):
     lib = numpy
 
     def __eq__(self, other: typing.Any) -> typing.Any:
-        return numpy.equal(self, other)  # type: ignore
+        return numpy.equal(self, other)
 
     def __ne__(self, other: typing.Any) -> typing.Any:
-        return numpy.not_equal(self, other)  # type: ignore
+        return numpy.not_equal(self, other)
 
     def __abs__(self) -> float:
-        return numpy.absolute(self)  # type: ignore
+        return numpy.absolute(self)
 
     def __add__(self, other: VectorProtocol) -> VectorProtocol:
-        return numpy.add(self, other)  # type: ignore
+        return numpy.add(self, other)
 
     def __radd__(self, other: VectorProtocol) -> VectorProtocol:
-        return numpy.add(other, self)  # type: ignore
+        return numpy.add(other, self)
 
     def __iadd__(self: SameVectorType, other: VectorProtocol) -> SameVectorType:
-        return _replace_data(self, numpy.add(self, other))  # type: ignore
+        return _replace_data(self, numpy.add(self, other))
 
     def __sub__(self, other: VectorProtocol) -> VectorProtocol:
-        return numpy.subtract(self, other)  # type: ignore
+        return numpy.subtract(self, other)
 
     def __rsub__(self, other: VectorProtocol) -> VectorProtocol:
-        return numpy.subtract(other, self)  # type: ignore
+        return numpy.subtract(other, self)
 
     def __isub__(self: SameVectorType, other: VectorProtocol) -> SameVectorType:
-        return _replace_data(self, numpy.subtract(self, other))  # type: ignore
+        return _replace_data(self, numpy.subtract(self, other))
 
     def __mul__(self, other: float) -> VectorProtocol:
-        return numpy.multiply(self, other)  # type: ignore
+        return numpy.multiply(self, other)
 
     def __rmul__(self, other: float) -> VectorProtocol:
-        return numpy.multiply(other, self)  # type: ignore
+        return numpy.multiply(other, self)
 
     def __imul__(self: SameVectorType, other: float) -> SameVectorType:
-        return _replace_data(self, numpy.multiply(self, other))  # type: ignore
+        return _replace_data(self, numpy.multiply(self, other))
 
     def __neg__(self: SameVectorType) -> SameVectorType:
-        return numpy.negative(self)  # type: ignore
+        return numpy.negative(self)
 
     def __pos__(self: SameVectorType) -> SameVectorType:
-        return numpy.positive(self)  # type: ignore
+        return numpy.positive(self)
 
     def __truediv__(self, other: float) -> VectorProtocol:
-        return numpy.true_divide(self, other)  # type: ignore
+        return numpy.true_divide(self, other)
 
     def __rtruediv__(self, other: float) -> VectorProtocol:
-        return numpy.true_divide(other, self)  # type: ignore
+        return numpy.true_divide(other, self)
 
     def __itruediv__(self: SameVectorType, other: float) -> VectorProtocol:
-        return _replace_data(self, numpy.true_divide(self, other))  # type: ignore
+        return _replace_data(self, numpy.true_divide(self, other))
 
     def __pow__(self, other: float) -> float:
-        return numpy.power(self, other)  # type: ignore
+        return numpy.power(self, other)
 
     def __matmul__(self, other: VectorProtocol) -> float:
-        return numpy.matmul(self, other)  # type: ignore
+        return numpy.matmul(self, other)
 
     def __array_ufunc__(
         self,
@@ -347,7 +348,7 @@ class VectorObject(Vector):
             and isinstance(inputs[0], Vector)
             and not isinstance(inputs[1], Vector)
         ):
-            result = numpy.absolute(inputs[0]) ** inputs[1]  # type: ignore
+            result = numpy.absolute(inputs[0]) ** inputs[1]
             for output in outputs:
                 _replace_data(output, result)
             return result
@@ -463,7 +464,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
         out = [f"{x}={getattr(self.azimuthal, x)}" for x in aznames]
         return "vector.obj(" + ", ".join(out) + ")"
 
-    def __array__(self) -> numpy.ndarray:
+    def __array__(self) -> FloatArray:
         from vector._backends.numpy_ import VectorNumpy2D
 
         return VectorNumpy2D(
@@ -593,7 +594,7 @@ class MomentumObject2D(PlanarMomentum, VectorObject2D):
             out.append(f"{y}={getattr(self.azimuthal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
-    def __array__(self) -> numpy.ndarray:
+    def __array__(self) -> FloatArray:
         from vector._backends.numpy_ import MomentumNumpy2D
 
         return MomentumNumpy2D(
@@ -713,7 +714,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             out.append(f"{x}={getattr(self.longitudinal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
-    def __array__(self) -> numpy.ndarray:
+    def __array__(self) -> FloatArray:
         from vector._backends.numpy_ import VectorNumpy3D
 
         return VectorNumpy3D(
@@ -873,7 +874,7 @@ class MomentumObject3D(SpatialMomentum, VectorObject3D):
             out.append(f"{y}={getattr(self.longitudinal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
-    def __array__(self) -> numpy.ndarray:
+    def __array__(self) -> FloatArray:
         from vector._backends.numpy_ import MomentumNumpy3D
 
         return MomentumNumpy3D(
@@ -1184,7 +1185,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             out.append(f"{x}={getattr(self.temporal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
-    def __array__(self) -> numpy.ndarray:
+    def __array__(self) -> FloatArray:
         from vector._backends.numpy_ import VectorNumpy4D
 
         return VectorNumpy4D(
@@ -1367,7 +1368,7 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
             out.append(f"{y}={getattr(self.temporal, x)}")
         return "vector.obj(" + ", ".join(out) + ")"
 
-    def __array__(self) -> numpy.ndarray:
+    def __array__(self) -> FloatArray:
         from vector._backends.numpy_ import MomentumNumpy4D
 
         return MomentumNumpy4D(

@@ -6,6 +6,8 @@
 import sys
 import typing
 
+import numpy
+
 if sys.version_info < (3, 8):
     from typing_extensions import TypedDict
 else:
@@ -55,3 +57,11 @@ class TransformProtocol4D(TypedDict):
     ty: ScalarCollection
     tz: ScalarCollection
     tt: ScalarCollection
+
+
+if typing.TYPE_CHECKING:
+    import numpy.typing
+
+    FloatArray = numpy.typing.NDArray[numpy.float64]
+else:
+    FloatArray = numpy.ndarray
