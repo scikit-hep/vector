@@ -430,12 +430,12 @@ class VectorNumpy(Vector, GetItem):
     def __ne__(self, other: typing.Any) -> typing.Any:
         return numpy.not_equal(self, other)  # type: ignore
 
-    def __reduce__(self) -> typing.Sequence[typing.Any]:
+    def __reduce__(self) -> typing.Union[str, typing.Tuple[typing.Any, ...]]:
         pickled_state = super().__reduce__()
         new_state = (*pickled_state[2], self.__dict__)
         return pickled_state[0], pickled_state[1], new_state
 
-    def __setstate__(self, state: typing.Sequence[typing.Any]) -> None:
+    def __setstate__(self, state: typing.Any) -> None:
         self.__dict__.update(state[-1])
         super().__setstate__(state[0:-1])  # type: ignore
 
