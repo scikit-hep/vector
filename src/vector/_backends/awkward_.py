@@ -346,7 +346,8 @@ class VectorAwkward:
     def __getitem__(
         self, where: typing.Any
     ) -> typing.Optional[typing.Union[float, ak.Array, ak.Record]]:
-        return super().__getitem__(where)  # type: ignore
+        # "__getitem__" undefined in superclass
+        return super().__getitem__(where)  # type: ignore[misc]
 
     def _wrap_result(
         self,
@@ -714,7 +715,7 @@ class MomentumAwkward4D(LorentzMomentum, VectorAwkward4D):
 # ak.Array and ak.Record subclasses ###########################################
 
 
-class VectorArray2D(VectorAwkward2D, ak.Array):
+class VectorArray2D(VectorAwkward2D, ak.Array):  # type: ignore[misc]
     def allclose(
         self,
         other: VectorProtocol,
@@ -731,14 +732,14 @@ class VectorArray2D(VectorAwkward2D, ak.Array):
 behavior["*", "Vector2D"] = VectorArray2D
 
 
-class VectorRecord2D(VectorAwkward2D, ak.Record):
+class VectorRecord2D(VectorAwkward2D, ak.Record):  # type: ignore[misc]
     pass
 
 
 behavior["Vector2D"] = VectorRecord2D
 
 
-class VectorArray3D(VectorAwkward3D, ak.Array):
+class VectorArray3D(VectorAwkward3D, ak.Array):  # type: ignore[misc]
     def allclose(
         self,
         other: VectorProtocol,
@@ -755,14 +756,14 @@ class VectorArray3D(VectorAwkward3D, ak.Array):
 behavior["*", "Vector3D"] = VectorArray3D
 
 
-class VectorRecord3D(VectorAwkward3D, ak.Record):
+class VectorRecord3D(VectorAwkward3D, ak.Record):  # type: ignore[misc]
     pass
 
 
 behavior["Vector3D"] = VectorRecord3D
 
 
-class VectorArray4D(VectorAwkward4D, ak.Array):
+class VectorArray4D(VectorAwkward4D, ak.Array):  # type: ignore[misc]
     def allclose(
         self,
         other: VectorProtocol,
@@ -779,14 +780,14 @@ class VectorArray4D(VectorAwkward4D, ak.Array):
 behavior["*", "Vector4D"] = VectorArray4D
 
 
-class VectorRecord4D(VectorAwkward4D, ak.Record):
+class VectorRecord4D(VectorAwkward4D, ak.Record):  # type: ignore[misc]
     pass
 
 
 behavior["Vector4D"] = VectorRecord4D
 
 
-class MomentumArray2D(MomentumAwkward2D, ak.Array):
+class MomentumArray2D(MomentumAwkward2D, ak.Array):  # type: ignore[misc]
     def allclose(
         self,
         other: VectorProtocol,
@@ -800,14 +801,14 @@ class MomentumArray2D(MomentumAwkward2D, ak.Array):
 behavior["*", "Momentum2D"] = MomentumArray2D
 
 
-class MomentumRecord2D(MomentumAwkward2D, ak.Record):
+class MomentumRecord2D(MomentumAwkward2D, ak.Record):  # type: ignore[misc]
     pass
 
 
 behavior["Momentum2D"] = MomentumRecord2D
 
 
-class MomentumArray3D(MomentumAwkward3D, ak.Array):
+class MomentumArray3D(MomentumAwkward3D, ak.Array):  # type: ignore[misc]
     def allclose(
         self,
         other: VectorProtocol,
@@ -821,14 +822,14 @@ class MomentumArray3D(MomentumAwkward3D, ak.Array):
 behavior["*", "Momentum3D"] = MomentumArray3D
 
 
-class MomentumRecord3D(MomentumAwkward3D, ak.Record):
+class MomentumRecord3D(MomentumAwkward3D, ak.Record):  # type: ignore[misc]
     pass
 
 
 behavior["Momentum3D"] = MomentumRecord3D
 
 
-class MomentumArray4D(MomentumAwkward4D, ak.Array):
+class MomentumArray4D(MomentumAwkward4D, ak.Array):  # type: ignore[misc]
     def allclose(
         self,
         other: VectorProtocol,
@@ -842,7 +843,7 @@ class MomentumArray4D(MomentumAwkward4D, ak.Array):
 behavior["*", "Momentum4D"] = MomentumArray4D
 
 
-class MomentumRecord4D(MomentumAwkward4D, ak.Record):
+class MomentumRecord4D(MomentumAwkward4D, ak.Record):  # type: ignore[misc]
     pass
 
 
@@ -1229,8 +1230,8 @@ def _ttype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
 def _numba_typer_Vector2D(viewtype: typing.Any) -> typing.Any:
     import vector._backends.numba_object
 
-    # These clearly exist, a bug somewhere, but ignoring them for now
-    return vector._backends.numba_object.VectorObject2DType(  # type: ignore
+    # These exist, but the file is type ignored, so can't be found
+    return vector._backends.numba_object.VectorObject2DType(  # type: ignore[attr-defined]
         _aztype_of(viewtype.arrayviewtype.type, False)
     )
 
@@ -1238,7 +1239,7 @@ def _numba_typer_Vector2D(viewtype: typing.Any) -> typing.Any:
 def _numba_typer_Vector3D(viewtype: typing.Any) -> typing.Any:
     import vector._backends.numba_object
 
-    return vector._backends.numba_object.VectorObject3DType(  # type: ignore
+    return vector._backends.numba_object.VectorObject3DType(  # type: ignore[attr-defined]
         _aztype_of(viewtype.arrayviewtype.type, False),
         _ltype_of(viewtype.arrayviewtype.type, False),
     )
@@ -1247,7 +1248,7 @@ def _numba_typer_Vector3D(viewtype: typing.Any) -> typing.Any:
 def _numba_typer_Vector4D(viewtype: typing.Any) -> typing.Any:
     import vector._backends.numba_object
 
-    return vector._backends.numba_object.VectorObject4DType(  # type: ignore
+    return vector._backends.numba_object.VectorObject4DType(  # type: ignore[attr-defined]
         _aztype_of(viewtype.arrayviewtype.type, False),
         _ltype_of(viewtype.arrayviewtype.type, False),
         _ttype_of(viewtype.arrayviewtype.type, False),
@@ -1257,7 +1258,7 @@ def _numba_typer_Vector4D(viewtype: typing.Any) -> typing.Any:
 def _numba_typer_Momentum2D(viewtype: typing.Any) -> typing.Any:
     import vector._backends.numba_object
 
-    return vector._backends.numba_object.MomentumObject2DType(  # type: ignore
+    return vector._backends.numba_object.MomentumObject2DType(  # type: ignore[attr-defined]
         _aztype_of(viewtype.arrayviewtype.type, True)
     )
 
@@ -1265,7 +1266,7 @@ def _numba_typer_Momentum2D(viewtype: typing.Any) -> typing.Any:
 def _numba_typer_Momentum3D(viewtype: typing.Any) -> typing.Any:
     import vector._backends.numba_object
 
-    return vector._backends.numba_object.MomentumObject3DType(  # type: ignore
+    return vector._backends.numba_object.MomentumObject3DType(  # type: ignore[attr-defined]
         _aztype_of(viewtype.arrayviewtype.type, True),
         _ltype_of(viewtype.arrayviewtype.type, True),
     )
@@ -1274,7 +1275,7 @@ def _numba_typer_Momentum3D(viewtype: typing.Any) -> typing.Any:
 def _numba_typer_Momentum4D(viewtype: typing.Any) -> typing.Any:
     import vector._backends.numba_object
 
-    return vector._backends.numba_object.MomentumObject4DType(  # type: ignore
+    return vector._backends.numba_object.MomentumObject4DType(  # type: ignore[attr-defined]
         _aztype_of(viewtype.arrayviewtype.type, True),
         _ltype_of(viewtype.arrayviewtype.type, True),
         _ttype_of(viewtype.arrayviewtype.type, True),
@@ -1284,7 +1285,7 @@ def _numba_typer_Momentum4D(viewtype: typing.Any) -> typing.Any:
 def _numba_lower(
     context: typing.Any, builder: typing.Any, sig: typing.Any, args: typing.Any
 ) -> typing.Any:
-    from vector._backends.numba_object import (  # type: ignore
+    from vector._backends.numba_object import (  # type: ignore[attr-defined]
         _awkward_numba_E,
         _awkward_numba_e,
         _awkward_numba_energy,
