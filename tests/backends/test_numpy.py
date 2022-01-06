@@ -4,6 +4,7 @@
 # or https://github.com/scikit-hep/vector for details.
 
 import math
+import pickle
 
 import numpy
 
@@ -29,3 +30,43 @@ def test_rhophi():
     assert numpy.allclose(array.y, [0, 1, 4])
     assert numpy.allclose(array.rho, [0, 1, 5])
     assert numpy.allclose(array.phi, [10, math.atan2(1, 0), math.atan2(4, 3)])
+
+
+def test_pickle_vector_numpy_2d():
+    array = vector._backends.numpy_.VectorNumpy2D(
+        [(0, 0), (0, 1), (3, 4)], dtype=[("x", numpy.float64), ("y", numpy.float64)]
+    )
+
+    array_pickled = pickle.dumps(array)
+    array_new = pickle.loads(array_pickled)
+
+    assert numpy.allclose(array_new.x, array.x)
+    assert numpy.allclose(array_new.y, array.y)
+
+
+def test_pickle_vector_numpy_3d():
+    array = vector._backends.numpy_.VectorNumpy3D(
+        [(0, 0, 0), (0, 1, 1), (3, 4, 5)], dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)]
+    )
+
+    array_pickled = pickle.dumps(array)
+    array_new = pickle.loads(array_pickled)
+
+    assert numpy.allclose(array_new.x, array.x)
+    assert numpy.allclose(array_new.y, array.y)
+    assert numpy.allclose(array_new.z, array.z)
+
+
+def test_pickle_vector_numpy_4d():
+    array = vector._backends.numpy_.VectorNumpy4D(
+        [(0, 0, 0, 0), (0, 1, 1, 1), (3, 4, 5, 6)],
+        dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64), ("t", numpy.float64)]
+    )
+
+    array_pickled = pickle.dumps(array)
+    array_new = pickle.loads(array_pickled)
+
+    assert numpy.allclose(array_new.x, array.x)
+    assert numpy.allclose(array_new.y, array.y)
+    assert numpy.allclose(array_new.z, array.z)
+    assert numpy.allclose(array_new.t, array.t)
