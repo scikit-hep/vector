@@ -430,6 +430,15 @@ class VectorNumpy(Vector, GetItem):
     def __ne__(self, other: typing.Any) -> typing.Any:
         return numpy.not_equal(self, other)  # type: ignore
 
+    def __reduce__(self):
+        pickled_state = super(VectorNumpy, self).__reduce__()
+        new_state = pickled_state[2] + (self.__dict__,)
+        return (pickled_state[0], pickled_state[1], new_state)
+
+    def __setstate__(self, state):
+        self.__dict__.update(state[-1])
+        super(VectorNumpy, self).__setstate__(state[0:-1])
+
     def __array_ufunc__(
         self,
         ufunc: typing.Any,
@@ -665,6 +674,9 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, numpy.ndarray):  # type: igno
         return array.view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:
+        if obj is None:
+            return
+
         if _has(self, ("x", "y")):
             self._azimuthal_type = AzimuthalNumpyXY
         elif _has(self, ("rho", "phi")):
@@ -840,6 +852,9 @@ class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore
     dtype: "numpy.dtype[typing.Any]"
 
     def __array_finalize__(self, obj: typing.Any) -> None:
+        if obj is None:
+            return
+
         self.dtype.names = tuple(
             _repr_momentum_to_generic.get(x, x) for x in (self.dtype.names or ())
         )
@@ -882,6 +897,9 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, numpy.ndarray):  # type: ign
         return array.view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:
+        if obj is None:
+            return
+
         if _has(self, ("x", "y")):
             self._azimuthal_type = AzimuthalNumpyXY
         elif _has(self, ("rho", "phi")):
@@ -1076,6 +1094,9 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore
     dtype: "numpy.dtype[typing.Any]"
 
     def __array_finalize__(self, obj: typing.Any) -> None:
+        if obj is None:
+            return
+
         self.dtype.names = tuple(
             _repr_momentum_to_generic.get(x, x) for x in (self.dtype.names or ())
         )
@@ -1132,6 +1153,9 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, numpy.ndarray):  # type: ign
         return array.view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:
+        if obj is None:
+            return
+
         if _has(self, ("x", "y")):
             self._azimuthal_type = AzimuthalNumpyXY
         elif _has(self, ("rho", "phi")):
@@ -1349,6 +1373,9 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore
     dtype: "numpy.dtype[typing.Any]"
 
     def __array_finalize__(self, obj: typing.Any) -> None:
+        if obj is None:
+            return
+
         self.dtype.names = tuple(
             _repr_momentum_to_generic.get(x, x) for x in (self.dtype.names or ())
         )
