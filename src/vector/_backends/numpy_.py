@@ -430,7 +430,7 @@ class VectorNumpy(Vector, GetItem):
 
     def __reduce__(self) -> typing.Union[str, typing.Tuple[typing.Any, ...]]:
         pickled_state = super().__reduce__()
-        new_state = (*pickled_state[2], self.__dict__)  # type: ignore[misc]
+        new_state = (*pickled_state[2], self.__dict__)
         return pickled_state[0], pickled_state[1], new_state
 
     def __setstate__(self, state: typing.Any) -> None:
