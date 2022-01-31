@@ -156,7 +156,7 @@ def test_ufuncs():
         [[{"x": 3, "y": 4}, {"x": 5, "y": 12}], [], [{"x": 8, "y": 15}]]
     )
     assert abs(array).tolist() == [[5, 13], [], [17]]
-    assert (array ** 2).tolist() == [[5 ** 2, 13 ** 2], [], [17 ** 2]]
+    assert (array**2).tolist() == [[5**2, 13**2], [], [17**2]]
 
     one = vector.Array(
         [[{"x": 1, "y": 1.1}, {"x": 2, "y": 2.2}], [], [{"x": 3, "y": 3.3}]]

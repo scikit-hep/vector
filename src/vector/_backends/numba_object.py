@@ -3170,21 +3170,21 @@ def numpy_sqrt(v):
     if isinstance(v, VectorObject2DType):
 
         def numpy_sqrt_impl(v):
-            return v.rho2 ** 0.25
+            return v.rho2**0.25
 
         return numpy_sqrt_impl
 
     elif isinstance(v, VectorObject3DType):
 
         def numpy_sqrt_impl(v):
-            return v.mag2 ** 0.25
+            return v.mag2**0.25
 
         return numpy_sqrt_impl
 
     elif isinstance(v, VectorObject4DType):
 
         def numpy_sqrt_impl(v):
-            return v.tau2 ** 0.25
+            return v.tau2**0.25
 
         return numpy_sqrt_impl
 
@@ -3194,21 +3194,21 @@ def numpy_cbrt(v):
     if isinstance(v, VectorObject2DType):
 
         def numpy_cbrt_impl(v):
-            return v.rho2 ** 0.16666666666666666
+            return v.rho2**0.16666666666666666
 
         return numpy_cbrt_impl
 
     elif isinstance(v, VectorObject3DType):
 
         def numpy_cbrt_impl(v):
-            return v.mag2 ** 0.16666666666666666
+            return v.mag2**0.16666666666666666
 
         return numpy_cbrt_impl
 
     elif isinstance(v, VectorObject4DType):
 
         def numpy_cbrt_impl(v):
-            return v.tau2 ** 0.16666666666666666
+            return v.tau2**0.16666666666666666
 
         return numpy_cbrt_impl
 
@@ -3223,7 +3223,7 @@ def numpy_power(v, expo):
             if expo == 2:
                 return v.rho2
             else:
-                return v.rho ** expo
+                return v.rho**expo
 
         return numpy_power_impl
 
@@ -3235,7 +3235,7 @@ def numpy_power(v, expo):
             if expo == 2:
                 return v.mag2
             else:
-                return v.mag ** expo
+                return v.mag**expo
 
         return numpy_power_impl
 
@@ -3247,7 +3247,7 @@ def numpy_power(v, expo):
             if expo == 2:
                 return v.tau2
             else:
-                return v.tau ** expo
+                return v.tau**expo
 
         return numpy_power_impl
 

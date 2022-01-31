@@ -865,37 +865,37 @@ behavior[numpy.square, "Momentum2D"] = lambda v: v.rho2
 behavior[numpy.square, "Momentum3D"] = lambda v: v.mag2
 behavior[numpy.square, "Momentum4D"] = lambda v: v.tau2
 
-behavior[numpy.sqrt, "Vector2D"] = lambda v: v.rho2 ** 0.25
-behavior[numpy.sqrt, "Vector3D"] = lambda v: v.mag2 ** 0.25
-behavior[numpy.sqrt, "Vector4D"] = lambda v: v.tau2 ** 0.25
-behavior[numpy.sqrt, "Momentum2D"] = lambda v: v.rho2 ** 0.25
-behavior[numpy.sqrt, "Momentum3D"] = lambda v: v.mag2 ** 0.25
-behavior[numpy.sqrt, "Momentum4D"] = lambda v: v.tau2 ** 0.25
+behavior[numpy.sqrt, "Vector2D"] = lambda v: v.rho2**0.25
+behavior[numpy.sqrt, "Vector3D"] = lambda v: v.mag2**0.25
+behavior[numpy.sqrt, "Vector4D"] = lambda v: v.tau2**0.25
+behavior[numpy.sqrt, "Momentum2D"] = lambda v: v.rho2**0.25
+behavior[numpy.sqrt, "Momentum3D"] = lambda v: v.mag2**0.25
+behavior[numpy.sqrt, "Momentum4D"] = lambda v: v.tau2**0.25
 
-behavior[numpy.cbrt, "Vector2D"] = lambda v: v.rho2 ** 0.16666666666666666
-behavior[numpy.cbrt, "Vector3D"] = lambda v: v.mag2 ** 0.16666666666666666
-behavior[numpy.cbrt, "Vector4D"] = lambda v: v.tau2 ** 0.16666666666666666
-behavior[numpy.cbrt, "Momentum2D"] = lambda v: v.rho2 ** 0.16666666666666666
-behavior[numpy.cbrt, "Momentum3D"] = lambda v: v.mag2 ** 0.16666666666666666
-behavior[numpy.cbrt, "Momentum4D"] = lambda v: v.tau2 ** 0.16666666666666666
+behavior[numpy.cbrt, "Vector2D"] = lambda v: v.rho2**0.16666666666666666
+behavior[numpy.cbrt, "Vector3D"] = lambda v: v.mag2**0.16666666666666666
+behavior[numpy.cbrt, "Vector4D"] = lambda v: v.tau2**0.16666666666666666
+behavior[numpy.cbrt, "Momentum2D"] = lambda v: v.rho2**0.16666666666666666
+behavior[numpy.cbrt, "Momentum3D"] = lambda v: v.mag2**0.16666666666666666
+behavior[numpy.cbrt, "Momentum4D"] = lambda v: v.tau2**0.16666666666666666
 
 behavior[numpy.power, "Vector2D", numbers.Real] = (
-    lambda v, expo: v.rho2 if expo == 2 else v.rho ** expo
+    lambda v, expo: v.rho2 if expo == 2 else v.rho**expo
 )
 behavior[numpy.power, "Vector3D", numbers.Real] = (
-    lambda v, expo: v.mag2 if expo == 2 else v.mag ** expo
+    lambda v, expo: v.mag2 if expo == 2 else v.mag**expo
 )
 behavior[numpy.power, "Vector4D", numbers.Real] = (
-    lambda v, expo: v.tau2 if expo == 2 else v.tau ** expo
+    lambda v, expo: v.tau2 if expo == 2 else v.tau**expo
 )
 behavior[numpy.power, "Momentum2D", numbers.Real] = (
-    lambda v, expo: v.rho2 if expo == 2 else v.rho ** expo
+    lambda v, expo: v.rho2 if expo == 2 else v.rho**expo
 )
 behavior[numpy.power, "Momentum3D", numbers.Real] = (
-    lambda v, expo: v.mag2 if expo == 2 else v.mag ** expo
+    lambda v, expo: v.mag2 if expo == 2 else v.mag**expo
 )
 behavior[numpy.power, "Momentum4D", numbers.Real] = (
-    lambda v, expo: v.tau2 if expo == 2 else v.tau ** expo
+    lambda v, expo: v.tau2 if expo == 2 else v.tau**expo
 )
 
 behavior["__cast__", VectorNumpy2D] = lambda v: vector.Array(v)

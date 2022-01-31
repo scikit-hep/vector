@@ -33,7 +33,7 @@ from vector._methods import (
 
 
 def cartesian(lib, angle, x1, y1, z1, x2, y2, z2):
-    norm = lib.sqrt(x1 ** 2 + y1 ** 2 + z1 ** 2)
+    norm = lib.sqrt(x1**2 + y1**2 + z1**2)
     ux = x1 / norm
     uy = y1 / norm
     uz = z1 / norm
@@ -41,19 +41,19 @@ def cartesian(lib, angle, x1, y1, z1, x2, y2, z2):
     s = lib.sin(angle)
     c1 = 1 - c
     xp = (
-        (c + ux ** 2 * c1) * x2
+        (c + ux**2 * c1) * x2
         + (ux * uy * c1 - uz * s) * y2
         + (ux * uz * c1 + uy * s) * z2
     )
     yp = (
         (ux * uy * c1 + uz * s) * x2
-        + (c + uy ** 2 * c1) * y2
+        + (c + uy**2 * c1) * y2
         + (uy * uz * c1 - ux * s) * z2
     )
     zp = (
         (ux * uz * c1 - uy * s) * x2
         + (uy * uz * c1 + ux * s) * y2
-        + (c + uz ** 2 * c1) * z2
+        + (c + uz**2 * c1) * z2
     )
     return (xp, yp, zp)
 

@@ -405,8 +405,8 @@ def rhophi_eta_rhophi_theta(lib, rho1, phi1, eta1, rho2, phi2, theta2):
 def rhophi_eta_rhophi_eta(lib, rho1, phi1, eta1, rho2, phi2, eta2):
     expmeta1 = lib.exp(-eta1)
     expmeta2 = lib.exp(-eta2)
-    invtantheta1 = 0.5 * (1 - expmeta1 ** 2) / expmeta1
-    invtantheta2 = 0.5 * (1 - expmeta2 ** 2) / expmeta2
+    invtantheta1 = 0.5 * (1 - expmeta1**2) / expmeta1
+    invtantheta2 = 0.5 * (1 - expmeta2**2) / expmeta2
     return rho1 * rho2 * (lib.cos(phi1 - phi2) + invtantheta1 * invtantheta2)
 
 

@@ -48,7 +48,7 @@ def rhophi_rhophi(lib, rho1, phi1, rho2, phi2):
     u = rho2 * lib.cos(diff)
     v = rho2 * lib.sin(diff)
     return (
-        lib.sqrt((rho1 + u) ** 2 + v ** 2),
+        lib.sqrt((rho1 + u) ** 2 + v**2),
         rectify(lib, phi1 + lib.arctan2(v, rho1 + u)),
     )
 

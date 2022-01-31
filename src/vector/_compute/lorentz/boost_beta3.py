@@ -41,9 +41,9 @@ from vector._methods import (
 
 
 def cartesian_t(lib, x1, y1, z1, t1, betax, betay, betaz):
-    bp2 = betax ** 2 + betay ** 2 + betaz ** 2
+    bp2 = betax**2 + betay**2 + betaz**2
     gamma = 1 / lib.sqrt(1 - bp2)
-    bgam = gamma ** 2 / (1 + gamma)
+    bgam = gamma**2 / (1 + gamma)
     xx = 1 + bgam * betax * betax
     yy = 1 + bgam * betay * betay
     zz = 1 + bgam * betaz * betaz
@@ -74,9 +74,9 @@ def cartesian_t(lib, x1, y1, z1, t1, betax, betay, betaz):
 
 
 def cartesian_tau(lib, x1, y1, z1, tau1, betax, betay, betaz):
-    bp2 = betax ** 2 + betay ** 2 + betaz ** 2
+    bp2 = betax**2 + betay**2 + betaz**2
     gamma = 1 / lib.sqrt(1 - bp2)
-    bgam = gamma ** 2 / (1 + gamma)
+    bgam = gamma**2 / (1 + gamma)
     xx = 1 + bgam * betax * betax
     yy = 1 + bgam * betay * betay
     zz = 1 + bgam * betaz * betaz

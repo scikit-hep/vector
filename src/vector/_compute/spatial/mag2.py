@@ -28,31 +28,31 @@ from vector._methods import (
 
 
 def xy_z(lib, x, y, z):
-    return x ** 2 + y ** 2 + z ** 2
+    return x**2 + y**2 + z**2
 
 
 def xy_theta(lib, x, y, theta):
-    return (x ** 2 + y ** 2) / lib.sin(theta) ** 2
+    return (x**2 + y**2) / lib.sin(theta) ** 2
 
 
 def xy_eta(lib, x, y, eta):
     expmeta = lib.exp(-eta)
-    invsintheta = 0.5 * (1 + expmeta ** 2) / expmeta
-    return (x ** 2 + y ** 2) * invsintheta ** 2
+    invsintheta = 0.5 * (1 + expmeta**2) / expmeta
+    return (x**2 + y**2) * invsintheta**2
 
 
 def rhophi_z(lib, rho, phi, z):
-    return rho ** 2 + z ** 2
+    return rho**2 + z**2
 
 
 def rhophi_theta(lib, rho, phi, theta):
-    return rho ** 2 / lib.sin(theta) ** 2
+    return rho**2 / lib.sin(theta) ** 2
 
 
 def rhophi_eta(lib, rho, phi, eta):
     expmeta = lib.exp(-eta)
-    invsintheta = 0.5 * (1 + expmeta ** 2) / expmeta
-    return rho ** 2 * invsintheta ** 2
+    invsintheta = 0.5 * (1 + expmeta**2) / expmeta
+    return rho**2 * invsintheta**2
 
 
 dispatch_map = {

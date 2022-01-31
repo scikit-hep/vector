@@ -34,7 +34,7 @@ from vector._methods import (
 
 def xy_z_t(lib, gamma, x, y, z, t):
     gam = lib.absolute(gamma)
-    bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
+    bgam = lib.copysign(lib.sqrt(gam**2 - 1), gamma)
     exx = x
     why = y
     zee = z
@@ -44,7 +44,7 @@ def xy_z_t(lib, gamma, x, y, z, t):
 
 def xy_z_tau(lib, gamma, x, y, z, tau):
     gam = lib.absolute(gamma)
-    bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
+    bgam = lib.copysign(lib.sqrt(gam**2 - 1), gamma)
     exx = x
     why = y
     zee = z
@@ -54,7 +54,7 @@ def xy_z_tau(lib, gamma, x, y, z, tau):
 
 def xy_theta_t(lib, gamma, x, y, theta, t):
     gam = lib.absolute(gamma)
-    bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
+    bgam = lib.copysign(lib.sqrt(gam**2 - 1), gamma)
     exx = x
     why = y
     zee = z.xy_theta(lib, x, y, theta)
@@ -64,7 +64,7 @@ def xy_theta_t(lib, gamma, x, y, theta, t):
 
 def xy_theta_tau(lib, gamma, x, y, theta, tau):
     gam = lib.absolute(gamma)
-    bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
+    bgam = lib.copysign(lib.sqrt(gam**2 - 1), gamma)
     exx = x
     why = y
     zee = z.xy_theta(lib, x, y, theta)
@@ -74,7 +74,7 @@ def xy_theta_tau(lib, gamma, x, y, theta, tau):
 
 def xy_eta_t(lib, gamma, x, y, eta, t):
     gam = lib.absolute(gamma)
-    bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
+    bgam = lib.copysign(lib.sqrt(gam**2 - 1), gamma)
     exx = x
     why = y
     zee = z.xy_eta(lib, x, y, eta)
@@ -84,7 +84,7 @@ def xy_eta_t(lib, gamma, x, y, eta, t):
 
 def xy_eta_tau(lib, gamma, x, y, eta, tau):
     gam = lib.absolute(gamma)
-    bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
+    bgam = lib.copysign(lib.sqrt(gam**2 - 1), gamma)
     exx = x
     why = y
     zee = z.xy_eta(lib, x, y, eta)
@@ -94,7 +94,7 @@ def xy_eta_tau(lib, gamma, x, y, eta, tau):
 
 def rhophi_z_t(lib, gamma, rho, phi, z, t):
     gam = lib.absolute(gamma)
-    bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
+    bgam = lib.copysign(lib.sqrt(gam**2 - 1), gamma)
     exx = x.rhophi(lib, rho, phi)
     why = y.rhophi(lib, rho, phi)
     zee = z
@@ -104,7 +104,7 @@ def rhophi_z_t(lib, gamma, rho, phi, z, t):
 
 def rhophi_z_tau(lib, gamma, rho, phi, z, tau):
     gam = lib.absolute(gamma)
-    bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
+    bgam = lib.copysign(lib.sqrt(gam**2 - 1), gamma)
     exx = x.rhophi(lib, rho, phi)
     why = y.rhophi(lib, rho, phi)
     zee = z
@@ -114,7 +114,7 @@ def rhophi_z_tau(lib, gamma, rho, phi, z, tau):
 
 def rhophi_theta_t(lib, gamma, rho, phi, theta, t):
     gam = lib.absolute(gamma)
-    bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
+    bgam = lib.copysign(lib.sqrt(gam**2 - 1), gamma)
     exx = x.rhophi(lib, rho, phi)
     why = y.rhophi(lib, rho, phi)
     zee = z.rhophi_theta(lib, rho, phi, theta)
@@ -124,7 +124,7 @@ def rhophi_theta_t(lib, gamma, rho, phi, theta, t):
 
 def rhophi_theta_tau(lib, gamma, rho, phi, theta, tau):
     gam = lib.absolute(gamma)
-    bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
+    bgam = lib.copysign(lib.sqrt(gam**2 - 1), gamma)
     exx = x.rhophi(lib, rho, phi)
     why = y.rhophi(lib, rho, phi)
     zee = z.rhophi_theta(lib, rho, phi, theta)
@@ -134,7 +134,7 @@ def rhophi_theta_tau(lib, gamma, rho, phi, theta, tau):
 
 def rhophi_eta_t(lib, gamma, rho, phi, eta, t):
     gam = lib.absolute(gamma)
-    bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
+    bgam = lib.copysign(lib.sqrt(gam**2 - 1), gamma)
     exx = x.rhophi(lib, rho, phi)
     why = y.rhophi(lib, rho, phi)
     zee = z.rhophi_eta(lib, rho, phi, eta)
@@ -144,7 +144,7 @@ def rhophi_eta_t(lib, gamma, rho, phi, eta, t):
 
 def rhophi_eta_tau(lib, gamma, rho, phi, eta, tau):
     gam = lib.absolute(gamma)
-    bgam = lib.copysign(lib.sqrt(gam ** 2 - 1), gamma)
+    bgam = lib.copysign(lib.sqrt(gam**2 - 1), gamma)
     exx = x.rhophi(lib, rho, phi)
     why = y.rhophi(lib, rho, phi)
     zee = z.rhophi_eta(lib, rho, phi, eta)

@@ -32,51 +32,51 @@ from vector._methods import (
 
 
 def xy_z_t(lib, x, y, z, t):
-    return t ** 2 - mag2.xy_z(lib, x, y, z)
+    return t**2 - mag2.xy_z(lib, x, y, z)
 
 
 def xy_z_tau(lib, x, y, z, tau):
-    return lib.copysign(tau ** 2, tau)
+    return lib.copysign(tau**2, tau)
 
 
 def xy_theta_t(lib, x, y, theta, t):
-    return t ** 2 - mag2.xy_theta(lib, x, y, theta)
+    return t**2 - mag2.xy_theta(lib, x, y, theta)
 
 
 def xy_theta_tau(lib, x, y, theta, tau):
-    return lib.copysign(tau ** 2, tau)
+    return lib.copysign(tau**2, tau)
 
 
 def xy_eta_t(lib, x, y, eta, t):
-    return t ** 2 - mag2.xy_eta(lib, x, y, eta)
+    return t**2 - mag2.xy_eta(lib, x, y, eta)
 
 
 def xy_eta_tau(lib, x, y, eta, tau):
-    return lib.copysign(tau ** 2, tau)
+    return lib.copysign(tau**2, tau)
 
 
 def rhophi_z_t(lib, rho, phi, z, t):
-    return t ** 2 - mag2.rhophi_z(lib, rho, phi, z)
+    return t**2 - mag2.rhophi_z(lib, rho, phi, z)
 
 
 def rhophi_z_tau(lib, rho, phi, z, tau):
-    return lib.copysign(tau ** 2, tau)
+    return lib.copysign(tau**2, tau)
 
 
 def rhophi_theta_t(lib, rho, phi, theta, t):
-    return t ** 2 - mag2.rhophi_theta(lib, rho, phi, theta)
+    return t**2 - mag2.rhophi_theta(lib, rho, phi, theta)
 
 
 def rhophi_theta_tau(lib, rho, phi, theta, tau):
-    return lib.copysign(tau ** 2, tau)
+    return lib.copysign(tau**2, tau)
 
 
 def rhophi_eta_t(lib, rho, phi, eta, t):
-    return t ** 2 - mag2.rhophi_eta(lib, rho, phi, eta)
+    return t**2 - mag2.rhophi_eta(lib, rho, phi, eta)
 
 
 def rhophi_eta_tau(lib, rho, phi, eta, tau):
-    return lib.copysign(tau ** 2, tau)
+    return lib.copysign(tau**2, tau)
 
 
 dispatch_map = {

@@ -107,7 +107,7 @@ def cartesian_tau(lib, x1, y1, z1, tau1, energy, mass, mass2, x2, y2, z2):
 
 def cartesian_t_xy_z_t(lib, x1, y1, z1, t1, x2, y2, z2, t2):
     energy = t2
-    energy2 = energy ** 2
+    energy2 = energy**2
     mass2 = energy2 - mag2.xy_z(lib, x2, y2, z2)
     mass = lib.sqrt(mass2)  # NaN for spacelike boosts propagates everywhere!
     return cartesian_t(lib, x1, y1, z1, t1, energy, mass, mass2, x2, y2, z2)
@@ -115,7 +115,7 @@ def cartesian_t_xy_z_t(lib, x1, y1, z1, t1, x2, y2, z2, t2):
 
 def cartesian_tau_xy_z_t(lib, x1, y1, z1, tau1, x2, y2, z2, t2):
     energy = t2
-    energy2 = energy ** 2
+    energy2 = energy**2
     mass2 = energy2 - mag2.xy_z(lib, x2, y2, z2)
     mass = lib.sqrt(mass2)  # NaN for spacelike boosts propagates everywhere!
     return cartesian_tau(lib, x1, y1, z1, tau1, energy, mass, mass2, x2, y2, z2)
@@ -123,7 +123,7 @@ def cartesian_tau_xy_z_t(lib, x1, y1, z1, tau1, x2, y2, z2, t2):
 
 def cartesian_t_xy_z_tau(lib, x1, y1, z1, t1, x2, y2, z2, tau2):
     mass = tau2
-    mass2 = mass ** 2
+    mass2 = mass**2
     energy2 = mass2 + mag2.xy_z(lib, x2, y2, z2)
     energy = lib.sqrt(energy2)  # NaN for spacelike boosts propagates everywhere!
     return cartesian_t(lib, x1, y1, z1, t1, energy, mass, mass2, x2, y2, z2)
@@ -131,7 +131,7 @@ def cartesian_t_xy_z_tau(lib, x1, y1, z1, t1, x2, y2, z2, tau2):
 
 def cartesian_tau_xy_z_tau(lib, x1, y1, z1, tau1, x2, y2, z2, tau2):
     mass = tau2
-    mass2 = mass ** 2
+    mass2 = mass**2
     energy2 = mass2 + mag2.xy_z(lib, x2, y2, z2)
     energy = lib.sqrt(energy2)  # NaN for spacelike boosts propagates everywhere!
     return cartesian_tau(lib, x1, y1, z1, tau1, energy, mass, mass2, x2, y2, z2)
@@ -139,7 +139,7 @@ def cartesian_tau_xy_z_tau(lib, x1, y1, z1, tau1, x2, y2, z2, tau2):
 
 def cartesian_t_xy_theta_t(lib, x1, y1, z1, t1, x2, y2, theta2, t2):
     energy = t2
-    energy2 = energy ** 2
+    energy2 = energy**2
     mass2 = energy2 - mag2.xy_theta(lib, x2, y2, theta2)
     mass = lib.sqrt(mass2)  # NaN for spacelike boosts propagates everywhere!
     return cartesian_t(
@@ -159,7 +159,7 @@ def cartesian_t_xy_theta_t(lib, x1, y1, z1, t1, x2, y2, theta2, t2):
 
 def cartesian_tau_xy_theta_t(lib, x1, y1, z1, tau1, x2, y2, theta2, t2):
     energy = t2
-    energy2 = energy ** 2
+    energy2 = energy**2
     mass2 = energy2 - mag2.xy_theta(lib, x2, y2, theta2)
     mass = lib.sqrt(mass2)  # NaN for spacelike boosts propagates everywhere!
     return cartesian_tau(
@@ -179,7 +179,7 @@ def cartesian_tau_xy_theta_t(lib, x1, y1, z1, tau1, x2, y2, theta2, t2):
 
 def cartesian_t_xy_theta_tau(lib, x1, y1, z1, t1, x2, y2, theta2, tau2):
     mass = tau2
-    mass2 = mass ** 2
+    mass2 = mass**2
     energy2 = mass2 + mag2.xy_theta(lib, x2, y2, theta2)
     energy = lib.sqrt(energy2)  # NaN for spacelike boosts propagates everywhere!
     return cartesian_t(
@@ -199,7 +199,7 @@ def cartesian_t_xy_theta_tau(lib, x1, y1, z1, t1, x2, y2, theta2, tau2):
 
 def cartesian_tau_xy_theta_tau(lib, x1, y1, z1, tau1, x2, y2, theta2, tau2):
     mass = tau2
-    mass2 = mass ** 2
+    mass2 = mass**2
     energy2 = mass2 + mag2.xy_theta(lib, x2, y2, theta2)
     energy = lib.sqrt(energy2)  # NaN for spacelike boosts propagates everywhere!
     return cartesian_tau(
@@ -219,7 +219,7 @@ def cartesian_tau_xy_theta_tau(lib, x1, y1, z1, tau1, x2, y2, theta2, tau2):
 
 def cartesian_t_xy_eta_t(lib, x1, y1, z1, t1, x2, y2, eta2, t2):
     energy = t2
-    energy2 = energy ** 2
+    energy2 = energy**2
     mass2 = energy2 - mag2.xy_eta(lib, x2, y2, eta2)
     mass = lib.sqrt(mass2)  # NaN for spacelike boosts propagates everywhere!
     return cartesian_t(
@@ -229,7 +229,7 @@ def cartesian_t_xy_eta_t(lib, x1, y1, z1, t1, x2, y2, eta2, t2):
 
 def cartesian_tau_xy_eta_t(lib, x1, y1, z1, tau1, x2, y2, eta2, t2):
     energy = t2
-    energy2 = energy ** 2
+    energy2 = energy**2
     mass2 = energy2 - mag2.xy_eta(lib, x2, y2, eta2)
     mass = lib.sqrt(mass2)  # NaN for spacelike boosts propagates everywhere!
     return cartesian_tau(
@@ -239,7 +239,7 @@ def cartesian_tau_xy_eta_t(lib, x1, y1, z1, tau1, x2, y2, eta2, t2):
 
 def cartesian_t_xy_eta_tau(lib, x1, y1, z1, t1, x2, y2, eta2, tau2):
     mass = tau2
-    mass2 = mass ** 2
+    mass2 = mass**2
     energy2 = mass2 + mag2.xy_eta(lib, x2, y2, eta2)
     energy = lib.sqrt(energy2)  # NaN for spacelike boosts propagates everywhere!
     return cartesian_t(
@@ -249,7 +249,7 @@ def cartesian_t_xy_eta_tau(lib, x1, y1, z1, t1, x2, y2, eta2, tau2):
 
 def cartesian_tau_xy_eta_tau(lib, x1, y1, z1, tau1, x2, y2, eta2, tau2):
     mass = tau2
-    mass2 = mass ** 2
+    mass2 = mass**2
     energy2 = mass2 + mag2.xy_eta(lib, x2, y2, eta2)
     energy = lib.sqrt(energy2)  # NaN for spacelike boosts propagates everywhere!
     return cartesian_tau(
@@ -259,7 +259,7 @@ def cartesian_tau_xy_eta_tau(lib, x1, y1, z1, tau1, x2, y2, eta2, tau2):
 
 def cartesian_t_rhophi_z_t(lib, x1, y1, z1, t1, rho2, phi2, z2, t2):
     energy = t2
-    energy2 = energy ** 2
+    energy2 = energy**2
     mass2 = energy2 - mag2.rhophi_z(lib, rho2, phi2, z2)
     mass = lib.sqrt(mass2)  # NaN for spacelike boosts propagates everywhere!
     return cartesian_t(
@@ -279,7 +279,7 @@ def cartesian_t_rhophi_z_t(lib, x1, y1, z1, t1, rho2, phi2, z2, t2):
 
 def cartesian_tau_rhophi_z_t(lib, x1, y1, z1, tau1, rho2, phi2, z2, t2):
     energy = t2
-    energy2 = energy ** 2
+    energy2 = energy**2
     mass2 = energy2 - mag2.rhophi_z(lib, rho2, phi2, z2)
     mass = lib.sqrt(mass2)  # NaN for spacelike boosts propagates everywhere!
     return cartesian_tau(
@@ -299,7 +299,7 @@ def cartesian_tau_rhophi_z_t(lib, x1, y1, z1, tau1, rho2, phi2, z2, t2):
 
 def cartesian_t_rhophi_z_tau(lib, x1, y1, z1, t1, rho2, phi2, z2, tau2):
     mass = tau2
-    mass2 = mass ** 2
+    mass2 = mass**2
     energy2 = mass2 + mag2.rhophi_z(lib, rho2, phi2, z2)
     energy = lib.sqrt(energy2)  # NaN for spacelike boosts propagates everywhere!
     return cartesian_t(
@@ -319,7 +319,7 @@ def cartesian_t_rhophi_z_tau(lib, x1, y1, z1, t1, rho2, phi2, z2, tau2):
 
 def cartesian_tau_rhophi_z_tau(lib, x1, y1, z1, tau1, rho2, phi2, z2, tau2):
     mass = tau2
-    mass2 = mass ** 2
+    mass2 = mass**2
     energy2 = mass2 + mag2.rhophi_z(lib, rho2, phi2, z2)
     energy = lib.sqrt(energy2)  # NaN for spacelike boosts propagates everywhere!
     return cartesian_tau(
@@ -339,7 +339,7 @@ def cartesian_tau_rhophi_z_tau(lib, x1, y1, z1, tau1, rho2, phi2, z2, tau2):
 
 def cartesian_t_rhophi_theta_t(lib, x1, y1, z1, t1, rho2, phi2, theta2, t2):
     energy = t2
-    energy2 = energy ** 2
+    energy2 = energy**2
     mass2 = energy2 - mag2.rhophi_theta(lib, rho2, phi2, theta2)
     mass = lib.sqrt(mass2)  # NaN for spacelike boosts propagates everywhere!
     return cartesian_t(
@@ -359,7 +359,7 @@ def cartesian_t_rhophi_theta_t(lib, x1, y1, z1, t1, rho2, phi2, theta2, t2):
 
 def cartesian_tau_rhophi_theta_t(lib, x1, y1, z1, tau1, rho2, phi2, theta2, t2):
     energy = t2
-    energy2 = energy ** 2
+    energy2 = energy**2
     mass2 = energy2 - mag2.rhophi_theta(lib, rho2, phi2, theta2)
     mass = lib.sqrt(mass2)  # NaN for spacelike boosts propagates everywhere!
     return cartesian_tau(
@@ -379,7 +379,7 @@ def cartesian_tau_rhophi_theta_t(lib, x1, y1, z1, tau1, rho2, phi2, theta2, t2):
 
 def cartesian_t_rhophi_theta_tau(lib, x1, y1, z1, t1, rho2, phi2, theta2, tau2):
     mass = tau2
-    mass2 = mass ** 2
+    mass2 = mass**2
     energy2 = mass2 + mag2.rhophi_theta(lib, rho2, phi2, theta2)
     energy = lib.sqrt(energy2)  # NaN for spacelike boosts propagates everywhere!
     return cartesian_t(
@@ -399,7 +399,7 @@ def cartesian_t_rhophi_theta_tau(lib, x1, y1, z1, t1, rho2, phi2, theta2, tau2):
 
 def cartesian_tau_rhophi_theta_tau(lib, x1, y1, z1, tau1, rho2, phi2, theta2, tau2):
     mass = tau2
-    mass2 = mass ** 2
+    mass2 = mass**2
     energy2 = mass2 + mag2.rhophi_theta(lib, rho2, phi2, theta2)
     energy = lib.sqrt(energy2)  # NaN for spacelike boosts propagates everywhere!
     return cartesian_tau(
@@ -419,7 +419,7 @@ def cartesian_tau_rhophi_theta_tau(lib, x1, y1, z1, tau1, rho2, phi2, theta2, ta
 
 def cartesian_t_rhophi_eta_t(lib, x1, y1, z1, t1, rho2, phi2, eta2, t2):
     energy = t2
-    energy2 = energy ** 2
+    energy2 = energy**2
     mass2 = energy2 - mag2.rhophi_eta(lib, rho2, phi2, eta2)
     mass = lib.sqrt(mass2)  # NaN for spacelike boosts propagates everywhere!
     return cartesian_t(
@@ -439,7 +439,7 @@ def cartesian_t_rhophi_eta_t(lib, x1, y1, z1, t1, rho2, phi2, eta2, t2):
 
 def cartesian_tau_rhophi_eta_t(lib, x1, y1, z1, tau1, rho2, phi2, eta2, t2):
     energy = t2
-    energy2 = energy ** 2
+    energy2 = energy**2
     mass2 = energy2 - mag2.rhophi_eta(lib, rho2, phi2, eta2)
     mass = lib.sqrt(mass2)  # NaN for spacelike boosts propagates everywhere!
     return cartesian_tau(
@@ -459,7 +459,7 @@ def cartesian_tau_rhophi_eta_t(lib, x1, y1, z1, tau1, rho2, phi2, eta2, t2):
 
 def cartesian_t_rhophi_eta_tau(lib, x1, y1, z1, t1, rho2, phi2, eta2, tau2):
     mass = tau2
-    mass2 = mass ** 2
+    mass2 = mass**2
     energy2 = mass2 + mag2.rhophi_eta(lib, rho2, phi2, eta2)
     energy = lib.sqrt(energy2)  # NaN for spacelike boosts propagates everywhere!
     return cartesian_t(
@@ -479,7 +479,7 @@ def cartesian_t_rhophi_eta_tau(lib, x1, y1, z1, t1, rho2, phi2, eta2, tau2):
 
 def cartesian_tau_rhophi_eta_tau(lib, x1, y1, z1, tau1, rho2, phi2, eta2, tau2):
     mass = tau2
-    mass2 = mass ** 2
+    mass2 = mass**2
     energy2 = mass2 + mag2.rhophi_eta(lib, rho2, phi2, eta2)
     energy = lib.sqrt(energy2)  # NaN for spacelike boosts propagates everywhere!
     return cartesian_tau(
