@@ -33,11 +33,11 @@ from vector._methods import (
 
 
 def xy_z_t(lib, x, y, z, t):
-    return t ** 2 - z ** 2
+    return t**2 - z**2
 
 
 def xy_z_tau(lib, x, y, z, tau):
-    return lib.maximum(tau2.xy_z_tau(lib, x, y, z, tau) + x ** 2 + y ** 2, 0)
+    return lib.maximum(tau2.xy_z_tau(lib, x, y, z, tau) + x**2 + y**2, 0)
 
 
 def xy_theta_t(lib, x, y, theta, t):
@@ -45,7 +45,7 @@ def xy_theta_t(lib, x, y, theta, t):
 
 
 def xy_theta_tau(lib, x, y, theta, tau):
-    return lib.maximum(tau2.xy_theta_tau(lib, x, y, theta, tau) + x ** 2 + y ** 2, 0)
+    return lib.maximum(tau2.xy_theta_tau(lib, x, y, theta, tau) + x**2 + y**2, 0)
 
 
 def xy_eta_t(lib, x, y, eta, t):
@@ -53,15 +53,15 @@ def xy_eta_t(lib, x, y, eta, t):
 
 
 def xy_eta_tau(lib, x, y, eta, tau):
-    return lib.maximum(tau2.xy_eta_tau(lib, x, y, eta, tau) + x ** 2 + y ** 2, 0)
+    return lib.maximum(tau2.xy_eta_tau(lib, x, y, eta, tau) + x**2 + y**2, 0)
 
 
 def rhophi_z_t(lib, rho, phi, z, t):
-    return t ** 2 - z ** 2
+    return t**2 - z**2
 
 
 def rhophi_z_tau(lib, rho, phi, z, tau):
-    return lib.maximum(tau2.rhophi_z_tau(lib, rho, phi, z, tau) + rho ** 2, 0)
+    return lib.maximum(tau2.rhophi_z_tau(lib, rho, phi, z, tau) + rho**2, 0)
 
 
 def rhophi_theta_t(lib, rho, phi, theta, t):
@@ -69,7 +69,7 @@ def rhophi_theta_t(lib, rho, phi, theta, t):
 
 
 def rhophi_theta_tau(lib, rho, phi, theta, tau):
-    return lib.maximum(tau2.rhophi_theta_tau(lib, rho, phi, theta, tau) + rho ** 2, 0)
+    return lib.maximum(tau2.rhophi_theta_tau(lib, rho, phi, theta, tau) + rho**2, 0)
 
 
 def rhophi_eta_t(lib, rho, phi, eta, t):
@@ -77,7 +77,7 @@ def rhophi_eta_t(lib, rho, phi, eta, t):
 
 
 def rhophi_eta_tau(lib, rho, phi, eta, tau):
-    return lib.maximum(tau2.rhophi_eta_tau(lib, rho, phi, eta, tau) + rho ** 2, 0)
+    return lib.maximum(tau2.rhophi_eta_tau(lib, rho, phi, eta, tau) + rho**2, 0)
 
 
 dispatch_map = {

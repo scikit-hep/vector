@@ -754,7 +754,7 @@ def test_property_float():
     with pytest.raises(numba.TypingError):
         get_Et(vector.obj(x=1, y=2, z=3, t=4))
     assert get_Et(vector.obj(px=1, py=2, pz=3, E=4)) == pytest.approx(
-        numpy.sqrt(4 ** 2 * (1 ** 2 + 2 ** 2) / (1 ** 2 + 2 ** 2 + 3 ** 2))
+        numpy.sqrt(4**2 * (1**2 + 2**2) / (1**2 + 2**2 + 3**2))
     )
 
 
@@ -1487,11 +1487,11 @@ def test_operator_mul():
 def test_operator_pow():
     @numba.njit
     def get_pow(a, b):
-        return a ** b
+        return a**b
 
     @numba.njit
     def get_square(a):
-        return a ** 2
+        return a**2
 
     assert get_pow(vector.obj(x=1, y=2), 4) == pytest.approx(25)
 

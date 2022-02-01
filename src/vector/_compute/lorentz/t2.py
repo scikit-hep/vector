@@ -33,7 +33,7 @@ from vector._methods import (
 
 
 def xy_z_t(lib, x, y, z, t):
-    return t ** 2
+    return t**2
 
 
 def xy_z_tau(lib, x, y, z, tau):
@@ -41,7 +41,7 @@ def xy_z_tau(lib, x, y, z, tau):
 
 
 def xy_theta_t(lib, x, y, theta, t):
-    return t ** 2
+    return t**2
 
 
 def xy_theta_tau(lib, x, y, theta, tau):
@@ -51,7 +51,7 @@ def xy_theta_tau(lib, x, y, theta, tau):
 
 
 def xy_eta_t(lib, x, y, eta, t):
-    return t ** 2
+    return t**2
 
 
 def xy_eta_tau(lib, x, y, eta, tau):
@@ -61,7 +61,7 @@ def xy_eta_tau(lib, x, y, eta, tau):
 
 
 def rhophi_z_t(lib, rho, phi, z, t):
-    return t ** 2
+    return t**2
 
 
 def rhophi_z_tau(lib, rho, phi, z, tau):
@@ -71,7 +71,7 @@ def rhophi_z_tau(lib, rho, phi, z, tau):
 
 
 def rhophi_theta_t(lib, rho, phi, theta, t):
-    return t ** 2
+    return t**2
 
 
 def rhophi_theta_tau(lib, rho, phi, theta, tau):
@@ -83,7 +83,7 @@ def rhophi_theta_tau(lib, rho, phi, theta, tau):
 
 
 def rhophi_eta_t(lib, rho, phi, eta, t):
-    return t ** 2
+    return t**2
 
 
 def rhophi_eta_tau(lib, rho, phi, eta, tau):

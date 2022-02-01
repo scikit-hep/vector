@@ -24,11 +24,11 @@ from vector._methods import (
 
 
 def xy(lib, x, y):
-    return x ** 2 + y ** 2
+    return x**2 + y**2
 
 
 def rhophi(lib, rho, phi):
-    return rho ** 2
+    return rho**2
 
 
 dispatch_map = {

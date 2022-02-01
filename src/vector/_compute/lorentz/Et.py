@@ -57,7 +57,7 @@ def xy_eta_tau(lib, x, y, eta, tau):
 
 
 def rhophi_z_t(lib, rho, phi, z, t):
-    return t * rho / lib.sqrt(rho ** 2 + z ** 2)
+    return t * rho / lib.sqrt(rho**2 + z**2)
 
 
 def rhophi_z_tau(lib, rho, phi, z, tau):
