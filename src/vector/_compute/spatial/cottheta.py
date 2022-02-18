@@ -4,6 +4,7 @@
 # or https://github.com/scikit-hep/vector for details.
 
 import typing
+from math import inf
 
 """
 .. code-block:: python
@@ -30,7 +31,7 @@ from vector._methods import (
 
 
 def xy_z(lib, x, y, z):
-    return lib.nan_to_num(z / rho.xy(lib, x, y), nan=lib.inf)
+    return lib.nan_to_num(z / rho.xy(lib, x, y), nan=lib.inf, posinf=inf, neginf=-inf)
 
 
 def xy_theta(lib, x, y, theta):
@@ -42,7 +43,7 @@ def xy_eta(lib, x, y, eta):
 
 
 def rhophi_z(lib, rho, phi, z):
-    return lib.nan_to_num(z / rho, nan=lib.inf)
+    return lib.nan_to_num(z / rho, nan=lib.inf, posinf=inf, neginf=-inf)
 
 
 def rhophi_theta(lib, rho, phi, theta):
