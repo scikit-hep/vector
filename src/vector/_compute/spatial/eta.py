@@ -28,7 +28,7 @@ from vector._methods import (
 
 
 def xy_z(lib, x, y, z):
-    return lib.where(z, lib.arcsinh(z / lib.sqrt(x**2 + y**2)), z)
+    return lib.arcsinh(z / lib.sqrt(x**2 + y**2))
 
 
 def xy_theta(lib, x, y, theta):
@@ -40,7 +40,7 @@ def xy_eta(lib, x, y, eta):
 
 
 def rhophi_z(lib, rho, phi, z):
-    return lib.where(z, lib.arcsinh(z / rho), z)
+    return lib.arcsinh(z / rho)
 
 
 def rhophi_theta(lib, rho, phi, theta):
