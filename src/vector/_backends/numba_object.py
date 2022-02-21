@@ -1425,6 +1425,7 @@ for propertyname in lorentz_momentum_properties:
 
 planar_binary_methods = ["deltaphi"]
 spatial_binary_methods = ["deltaangle", "deltaeta", "deltaR", "deltaR2"]
+lorentz_binary_methods = ["deltaRapidityPhi", "deltaRapidityPhi2"]
 general_binary_methods = ["dot", "add", "subtract", "equal", "not_equal"]
 
 
@@ -1613,6 +1614,10 @@ for methodname in planar_binary_methods:
 for methodname in spatial_binary_methods:
     for vectortype in (VectorObject3DType, VectorObject4DType):
         add_binary_method(vectortype, "spatial", methodname)
+
+for methodname in lorentz_binary_methods:
+    for vectortype in (VectorObject4DType,):
+        add_binary_method(vectortype, "lorentz", methodname)
 
 for methodname in general_binary_methods:
     add_binary_method(VectorObject2DType, None, methodname)
