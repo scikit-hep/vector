@@ -29,12 +29,7 @@ from vector._methods import (
 
 
 def xy_z(lib, x, y, z):
-    return lib.nan_to_num(
-        lib.arcsinh(z / lib.sqrt(x**2 + y**2)),
-        nan=lib.nan_to_num((z != 0) * inf, posinf=nan),
-        posinf=inf,
-        neginf=-inf,
-    )
+    return lib.where(z == 0, lib.arcsinh(z / lib.sqrt(x**2 + y**2)), z) * 1
 
 
 def xy_theta(lib, x, y, theta):
@@ -46,12 +41,7 @@ def xy_eta(lib, x, y, eta):
 
 
 def rhophi_z(lib, rho, phi, z):
-    return lib.nan_to_num(
-        lib.arcsinh(z / rho),
-        nan=lib.nan_to_num((z != 0) * inf, posinf=nan),
-        posinf=inf,
-        neginf=-inf,
-    )
+    return lib.where(z == 0, lib.arcsinh(z / rho), z) * 1
 
 
 def rhophi_theta(lib, rho, phi, theta):
