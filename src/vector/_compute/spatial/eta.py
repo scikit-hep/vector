@@ -4,7 +4,6 @@
 # or https://github.com/scikit-hep/vector for details.
 
 import typing
-from math import inf, nan
 
 """
 .. code-block:: python
