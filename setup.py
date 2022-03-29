@@ -18,9 +18,9 @@ extras = {
     "docs": [
         "nbsphinx",
         "myst-parser>0.13",
-        "Sphinx~=3.0",
+        "Sphinx>=4.0",
         "sphinx_copybutton",
-        "sphinx_book_theme~=0.0.42",
+        "sphinx_book_theme>=0.0.42",
         "nbsphinx",
         "sphinx-math-dollar",
         "ipykernel",
