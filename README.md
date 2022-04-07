@@ -2,19 +2,21 @@
 
 # Vector: arrays of 2D, 3D, and Lorentz vectors
 
-[![Scikit-HEP][sk-badge]][sk-link]
-[![PyPI version][pypi-version]][pypi-link]
-[![PyPI platforms][pypi-platforms]][pypi-link]
-[![Conda latest release][conda-version]][conda-link]
-[![DOI][zenodo-badge]][zenodo-link]
 
 [![Actions Status][actions-badge]][actions-link]
 [![Documentation Status][rtd-badge]][rtd-link]
 [![pre-commit.ci status][pre-commit-badge]][pre-commit-link]
-[![Code style: black][black-badge]][black-link]
-
 [![GitHub Discussion][github-discussions-badge]][github-discussions-link]
 [![Gitter][gitter-badge]][gitter-link]
+[![Code style: black][black-badge]][black-link]
+
+[![PyPI platforms][pypi-platforms]][pypi-link]
+[![PyPI version][pypi-version]][pypi-link]
+[![Conda latest release][conda-version]][conda-link]
+[![DOI][zenodo-badge]][zenodo-link]
+[![Scikit-HEP][sk-badge]][sk-link]
+
+
 
 
 Vector is a Python 3.6+ library for 2D, 3D, and [Lorentz vectors](https://en.wikipedia.org/wiki/Special_relativity#Physics_in_spacetime), especially _arrays of vectors_, to solve common physics problems in a NumPy-like way.
