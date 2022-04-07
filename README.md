@@ -1,19 +1,20 @@
 <img alt="Vector logo" width="433" src="https://raw.githubusercontent.com/scikit-hep/vector/main/docs/_images/vector-logo.png"/>
 
-# Vector
+# Vector: arrays of 2D, 3D, and Lorentz vectors
+
+[![Scikit-HEP][sk-badge]][sk-link]
+[![PyPI version][pypi-version]][pypi-link]
+[![PyPI platforms][pypi-platforms]][pypi-link]
+[![Conda latest release][conda-version]][conda-link]
+[![DOI][zenodo-badge]][zenodo-link]
 
 [![Actions Status][actions-badge]][actions-link]
 [![Documentation Status][rtd-badge]][rtd-link]
 [![pre-commit.ci status][pre-commit-badge]][pre-commit-link]
 [![Code style: black][black-badge]][black-link]
 
-
-[![PyPI version][pypi-version]][pypi-link]
-[![PyPI platforms][pypi-platforms]][pypi-link]
-
 [![GitHub Discussion][github-discussions-badge]][github-discussions-link]
 [![Gitter][gitter-badge]][gitter-link]
-[![Scikit-HEP][sk-badge]](https://scikit-hep.org/)
 
 
 Vector is a Python 3.6+ library for 2D, 3D, and [Lorentz vectors](https://en.wikipedia.org/wiki/Special_relativity#Physics_in_spacetime), especially _arrays of vectors_, to solve common physics problems in a NumPy-like way.
@@ -615,6 +616,8 @@ Support for this work was provided by the National Science Foundation cooperativ
 [actions-link]:             https://github.com/scikit-hep/vector/actions
 [black-badge]:              https://img.shields.io/badge/code%20style-black-000000.svg
 [black-link]:               https://github.com/psf/black
+[conda-version]:            https://img.shields.io/conda/vn/conda-forge/decaylanguage.svg
+[conda-link]:               https://github.com/conda-forge/decaylanguage-feedstock
 [github-discussions-badge]: https://img.shields.io/static/v1?label=Discussions&message=Ask&color=blue&logo=github
 [github-discussions-link]:  https://github.com/scikit-hep/vector/discussions
 [gitter-badge]:             https://badges.gitter.im/Scikit-HEP/vector.svg
@@ -627,3 +630,6 @@ Support for this work was provided by the National Science Foundation cooperativ
 [rtd-badge]:                https://readthedocs.org/projects/vector/badge/?version=latest
 [rtd-link]:                 https://vector.readthedocs.io/en/latest/?badge=latest
 [sk-badge]:                 https://scikit-hep.org/assets/images/Scikit--HEP-Project-blue.svg
+[sk-link]:                  https://scikit-hep.org/
+[zenodo-badge]:             https://zenodo.org/badge/DOI/10.5281/zenodo.5942083.svg
+[zenodo-link]:              https://doi.org/10.5281/zenodo.5942082
