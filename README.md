@@ -495,6 +495,8 @@ The (current) list of properties and methods is:
    * `tau` (`M`, `mass`): see note above
    * `tau2` (`M2`, `mass2`)
    * `beta`: scalar(s) between $0$ (inclusive) and $1$ (exclusive, unless the vector components are infinite)
+   * `deltaRapidityPhi`: $Delta R_{\mbox{rapidity}} = \Delta\phi^2 + \Delta \mbox{rapidity}^2$
+   * `deltaRapidityPhi2`: the above, squared
    * `gamma`: scalar(s) between $1$ (inclusive) and $\infty$
    * `rapidity`: scalar(s) between $0$ (inclusive) and $\infty$
    * `boost_p4(four_vector)`: change coordinate system using another 4D vector as the difference
