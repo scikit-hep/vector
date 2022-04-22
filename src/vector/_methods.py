@@ -653,7 +653,7 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
     def deltaR(self, other: "VectorProtocol") -> ScalarCollection:
         r"""
         Sum in quadrature of :doc:`vector._methods.VectorProtocolPlanar.deltaphi`
-        and :doc:`vector._methods.VectorProtocolPlanar.deltaeta`:
+        and :doc:`vector._methods.VectorProtocolSpatial.deltaeta`:
 
         $$\Delta R = \sqrt{\Delta\phi^2 + \Delta\eta^2}$$
         """
@@ -894,6 +894,26 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         .. code-block:: python
 
             0.5 * log((t + z) / (t - z))
+        """
+        raise AssertionError
+
+    def deltaRapidityPhi(self, other: "VectorProtocol") -> ScalarCollection:
+        r"""
+        Sum in quadrature of :doc:`vector._methods.VectorProtocolPlanar.deltaphi`
+        and the difference in :doc:`vector._methods.VectorProtocolLorentz.rapidity`
+        of the two vectors:
+
+        $$\Delta R_{\mbox{rapidity}} = \sqrt{\Delta\phi^2 + \Delta \mbox{rapidity}^2}$$
+        """
+        raise AssertionError
+
+    def deltaRapidityPhi2(self, other: "VectorProtocol") -> ScalarCollection:
+        r"""
+        Square of the sum in quadrature of
+        :doc:`vector._methods.VectorProtocolPlanar.deltaphi` and the difference in
+        :doc:`vector._methods.VectorProtocolLorentz.rapidity` of the two vectors:
+
+        $$\Delta R_{\mbox{rapidity}} = \Delta\phi^2 + \Delta \mbox{rapidity}^2$$
         """
         raise AssertionError
 
@@ -2185,6 +2205,16 @@ class Lorentz(Spatial, VectorProtocolLorentz):
         from vector._compute.lorentz import rapidity
 
         return rapidity.dispatch(self)
+
+    def deltaRapidityPhi(self, other: VectorProtocol) -> ScalarCollection:
+        from vector._compute.lorentz import deltaRapidityPhi
+
+        return deltaRapidityPhi.dispatch(self, other)
+
+    def deltaRapidityPhi2(self, other: VectorProtocol) -> ScalarCollection:
+        from vector._compute.lorentz import deltaRapidityPhi2
+
+        return deltaRapidityPhi2.dispatch(self, other)
 
     def boost_p4(self: SameVectorType, p4: VectorProtocolLorentz) -> SameVectorType:
         from vector._compute.lorentz import boost_p4
