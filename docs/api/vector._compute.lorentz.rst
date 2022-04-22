@@ -130,6 +130,24 @@ vector.\_compute.lorentz.boost\_p4 module
    :show-inheritance:
    :private-members:
 
+vector.\_compute.lorentz.deltaRapidityPhi module
+--------------------------------------
+
+.. automodule:: vector._compute.lorentz.deltaRapidityPhi
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+vector.\_compute.lorentz.deltaRapidityPhi2 module
+---------------------------------------
+
+.. automodule:: vector._compute.lorentz.deltaRapidityPhi2
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
 vector.\_compute.lorentz.dot module
 -----------------------------------
 
