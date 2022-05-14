@@ -5,7 +5,7 @@ Submodules
 ----------
 
 vector.\_backends.awkward\_ module
-----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._backends.awkward_
    :members:
@@ -14,7 +14,7 @@ vector.\_backends.awkward\_ module
    :private-members:
 
 vector.\_backends.numba\_ module
---------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._backends.numba_
    :members:
@@ -23,7 +23,7 @@ vector.\_backends.numba\_ module
    :private-members:
 
 vector.\_backends.numba\_numpy module
--------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._backends.numba_numpy
    :members:
@@ -32,7 +32,7 @@ vector.\_backends.numba\_numpy module
    :private-members:
 
 vector.\_backends.numba\_object module
---------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._backends.numba_object
    :members:
@@ -41,7 +41,7 @@ vector.\_backends.numba\_object module
    :private-members:
 
 vector.\_backends.numpy\_ module
---------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._backends.numpy_
    :members:
@@ -50,7 +50,7 @@ vector.\_backends.numpy\_ module
    :private-members:
 
 vector.\_backends.object\_ module
----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._backends.object_
    :members:
