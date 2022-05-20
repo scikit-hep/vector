@@ -5,7 +5,7 @@ Submodules
 ----------
 
 vector.\_compute.planar.add module
-----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.planar.add
    :members:
@@ -14,7 +14,7 @@ vector.\_compute.planar.add module
    :private-members:
 
 vector.\_compute.planar.deltaphi module
----------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.planar.deltaphi
    :members:
@@ -23,7 +23,7 @@ vector.\_compute.planar.deltaphi module
    :private-members:
 
 vector.\_compute.planar.dot module
-----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.planar.dot
    :members:
@@ -32,7 +32,7 @@ vector.\_compute.planar.dot module
    :private-members:
 
 vector.\_compute.planar.equal module
-------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.planar.equal
    :members:
@@ -41,7 +41,7 @@ vector.\_compute.planar.equal module
    :private-members:
 
 vector.\_compute.planar.is\_antiparallel module
------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.planar.is_antiparallel
    :members:
@@ -50,7 +50,7 @@ vector.\_compute.planar.is\_antiparallel module
    :private-members:
 
 vector.\_compute.planar.is\_parallel module
--------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.planar.is_parallel
    :members:
@@ -59,7 +59,7 @@ vector.\_compute.planar.is\_parallel module
    :private-members:
 
 vector.\_compute.planar.is\_perpendicular module
-------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.planar.is_perpendicular
    :members:
@@ -68,7 +68,7 @@ vector.\_compute.planar.is\_perpendicular module
    :private-members:
 
 vector.\_compute.planar.isclose module
---------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.planar.isclose
    :members:
@@ -77,7 +77,7 @@ vector.\_compute.planar.isclose module
    :private-members:
 
 vector.\_compute.planar.not\_equal module
------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.planar.not_equal
    :members:
@@ -86,7 +86,7 @@ vector.\_compute.planar.not\_equal module
    :private-members:
 
 vector.\_compute.planar.phi module
-----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.planar.phi
    :members:
@@ -95,7 +95,7 @@ vector.\_compute.planar.phi module
    :private-members:
 
 vector.\_compute.planar.rho module
-----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.planar.rho
    :members:
@@ -104,7 +104,7 @@ vector.\_compute.planar.rho module
    :private-members:
 
 vector.\_compute.planar.rho2 module
------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.planar.rho2
    :members:
@@ -113,7 +113,7 @@ vector.\_compute.planar.rho2 module
    :private-members:
 
 vector.\_compute.planar.rotateZ module
---------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.planar.rotateZ
    :members:
@@ -122,7 +122,7 @@ vector.\_compute.planar.rotateZ module
    :private-members:
 
 vector.\_compute.planar.scale module
-------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.planar.scale
    :members:
@@ -131,7 +131,7 @@ vector.\_compute.planar.scale module
    :private-members:
 
 vector.\_compute.planar.subtract module
----------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.planar.subtract
    :members:
@@ -140,7 +140,7 @@ vector.\_compute.planar.subtract module
    :private-members:
 
 vector.\_compute.planar.transform2D module
-------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.planar.transform2D
    :members:
@@ -149,7 +149,7 @@ vector.\_compute.planar.transform2D module
    :private-members:
 
 vector.\_compute.planar.unit module
------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.planar.unit
    :members:
@@ -158,7 +158,7 @@ vector.\_compute.planar.unit module
    :private-members:
 
 vector.\_compute.planar.x module
---------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.planar.x
    :members:
@@ -167,7 +167,7 @@ vector.\_compute.planar.x module
    :private-members:
 
 vector.\_compute.planar.y module
---------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.planar.y
    :members:

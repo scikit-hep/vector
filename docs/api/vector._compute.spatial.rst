@@ -5,7 +5,7 @@ Submodules
 ----------
 
 vector.\_compute.spatial.add module
------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.add
    :members:
@@ -14,7 +14,7 @@ vector.\_compute.spatial.add module
    :private-members:
 
 vector.\_compute.spatial.costheta module
-----------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.costheta
    :members:
@@ -23,7 +23,7 @@ vector.\_compute.spatial.costheta module
    :private-members:
 
 vector.\_compute.spatial.cottheta module
-----------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.cottheta
    :members:
@@ -32,7 +32,7 @@ vector.\_compute.spatial.cottheta module
    :private-members:
 
 vector.\_compute.spatial.cross module
--------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.cross
    :members:
@@ -41,7 +41,7 @@ vector.\_compute.spatial.cross module
    :private-members:
 
 vector.\_compute.spatial.deltaR module
---------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.deltaR
    :members:
@@ -50,7 +50,7 @@ vector.\_compute.spatial.deltaR module
    :private-members:
 
 vector.\_compute.spatial.deltaR2 module
----------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.deltaR2
    :members:
@@ -59,7 +59,7 @@ vector.\_compute.spatial.deltaR2 module
    :private-members:
 
 vector.\_compute.spatial.deltaangle module
-------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.deltaangle
    :members:
@@ -68,7 +68,7 @@ vector.\_compute.spatial.deltaangle module
    :private-members:
 
 vector.\_compute.spatial.deltaeta module
-----------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.deltaeta
    :members:
@@ -77,7 +77,7 @@ vector.\_compute.spatial.deltaeta module
    :private-members:
 
 vector.\_compute.spatial.dot module
------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.dot
    :members:
@@ -86,7 +86,7 @@ vector.\_compute.spatial.dot module
    :private-members:
 
 vector.\_compute.spatial.equal module
--------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.equal
    :members:
@@ -95,7 +95,7 @@ vector.\_compute.spatial.equal module
    :private-members:
 
 vector.\_compute.spatial.eta module
------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.eta
    :members:
@@ -104,7 +104,7 @@ vector.\_compute.spatial.eta module
    :private-members:
 
 vector.\_compute.spatial.is\_antiparallel module
-------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.is_antiparallel
    :members:
@@ -113,7 +113,7 @@ vector.\_compute.spatial.is\_antiparallel module
    :private-members:
 
 vector.\_compute.spatial.is\_parallel module
---------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.is_parallel
    :members:
@@ -122,7 +122,7 @@ vector.\_compute.spatial.is\_parallel module
    :private-members:
 
 vector.\_compute.spatial.is\_perpendicular module
--------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.is_perpendicular
    :members:
@@ -131,7 +131,7 @@ vector.\_compute.spatial.is\_perpendicular module
    :private-members:
 
 vector.\_compute.spatial.isclose module
----------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.isclose
    :members:
@@ -140,7 +140,7 @@ vector.\_compute.spatial.isclose module
    :private-members:
 
 vector.\_compute.spatial.mag module
------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.mag
    :members:
@@ -149,7 +149,7 @@ vector.\_compute.spatial.mag module
    :private-members:
 
 vector.\_compute.spatial.mag2 module
-------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.mag2
    :members:
@@ -158,7 +158,7 @@ vector.\_compute.spatial.mag2 module
    :private-members:
 
 vector.\_compute.spatial.not\_equal module
-------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.not_equal
    :members:
@@ -167,7 +167,7 @@ vector.\_compute.spatial.not\_equal module
    :private-members:
 
 vector.\_compute.spatial.rotateX module
----------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.rotateX
    :members:
@@ -176,7 +176,7 @@ vector.\_compute.spatial.rotateX module
    :private-members:
 
 vector.\_compute.spatial.rotateY module
----------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.rotateY
    :members:
@@ -185,7 +185,7 @@ vector.\_compute.spatial.rotateY module
    :private-members:
 
 vector.\_compute.spatial.rotate\_axis module
---------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.rotate_axis
    :members:
@@ -194,7 +194,7 @@ vector.\_compute.spatial.rotate\_axis module
    :private-members:
 
 vector.\_compute.spatial.rotate\_euler module
----------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.rotate_euler
    :members:
@@ -203,7 +203,7 @@ vector.\_compute.spatial.rotate\_euler module
    :private-members:
 
 vector.\_compute.spatial.rotate\_quaternion module
---------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.rotate_quaternion
    :members:
@@ -212,7 +212,7 @@ vector.\_compute.spatial.rotate\_quaternion module
    :private-members:
 
 vector.\_compute.spatial.scale module
--------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.scale
    :members:
@@ -221,7 +221,7 @@ vector.\_compute.spatial.scale module
    :private-members:
 
 vector.\_compute.spatial.subtract module
-----------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.subtract
    :members:
@@ -230,7 +230,7 @@ vector.\_compute.spatial.subtract module
    :private-members:
 
 vector.\_compute.spatial.theta module
--------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.theta
    :members:
@@ -239,7 +239,7 @@ vector.\_compute.spatial.theta module
    :private-members:
 
 vector.\_compute.spatial.transform3D module
--------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.transform3D
    :members:
@@ -248,7 +248,7 @@ vector.\_compute.spatial.transform3D module
    :private-members:
 
 vector.\_compute.spatial.unit module
-------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.unit
    :members:
@@ -257,7 +257,7 @@ vector.\_compute.spatial.unit module
    :private-members:
 
 vector.\_compute.spatial.z module
----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: vector._compute.spatial.z
    :members:
