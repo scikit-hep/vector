@@ -7,7 +7,7 @@ Submodules
 vector.\_backends.awkward\_ module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: vector._backends.awkward_
+.. automodule:: vector._backends.awkward
    :members:
    :undoc-members:
    :show-inheritance:

@@ -254,7 +254,7 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     import awkward
 
     import vector
-    import vector._backends.awkward_  # noqa: 401
+    import vector._backends.awkward  # noqa: 401
 
     akarray = awkward.Array(*args, **kwargs)
     fields = awkward.fields(akarray)
@@ -265,10 +265,10 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     for x in arrays:
         if needs_behavior:
             if x.behavior is None:
-                x.behavior = vector._backends.awkward_.behavior
+                x.behavior = vector._backends.awkward.behavior
             else:
                 x.behavior = dict(x.behavior)
-                x.behavior.update(vector._backends.awkward_.behavior)
+                x.behavior.update(vector._backends.awkward.behavior)
         else:
             x.behavior = None
         needs_behavior = False
@@ -345,13 +345,13 @@ def zip(
     import awkward
 
     import vector
-    import vector._backends.awkward_
+    import vector._backends.awkward
 
     is_momentum, dimension, names, columns = _check_names(arrays, list(arrays.keys()))
 
     behavior = None
     if not vector._awkward_registered:
-        behavior = dict(vector._backends.awkward_.behavior)
+        behavior = dict(vector._backends.awkward.behavior)
 
     return awkward.zip(
         dict(__builtins__["zip"](names, columns)),  # type: ignore[index]

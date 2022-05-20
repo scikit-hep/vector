@@ -80,7 +80,7 @@ except ImportError:
     if not typing.TYPE_CHECKING:
         VectorAwkward = None
 else:
-    from vector._backends.awkward_ import VectorAwkward
+    from vector._backends.awkward import VectorAwkward
 
 
 __all__: typing.Tuple[str, ...] = (
@@ -168,8 +168,8 @@ def register_awkward() -> None:
     """
     import awkward
 
-    import vector._backends.awkward_  # noqa: 401
+    import vector._backends.awkward  # noqa: 401
 
     global _awkward_registered
-    awkward.behavior.update(vector._backends.awkward_.behavior)
+    awkward.behavior.update(vector._backends.awkward.behavior)
     _awkward_registered = True
