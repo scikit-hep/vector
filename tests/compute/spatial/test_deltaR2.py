@@ -7,17 +7,17 @@ import numpy
 import pytest
 
 import vector._backends.numpy_
-import vector._backends.object_
+import vector._backends.object
 
 
 def test_spatial_object():
-    v1 = vector._backends.object_.VectorObject3D(
-        vector._backends.object_.AzimuthalObjectXY(0.1, 0.2),
-        vector._backends.object_.LongitudinalObjectZ(0.3),
+    v1 = vector._backends.object.VectorObject3D(
+        vector._backends.object.AzimuthalObjectXY(0.1, 0.2),
+        vector._backends.object.LongitudinalObjectZ(0.3),
     )
-    v2 = vector._backends.object_.VectorObject3D(
-        vector._backends.object_.AzimuthalObjectXY(0.4, 0.5),
-        vector._backends.object_.LongitudinalObjectZ(0.6),
+    v2 = vector._backends.object.VectorObject3D(
+        vector._backends.object.AzimuthalObjectXY(0.4, 0.5),
+        vector._backends.object.LongitudinalObjectZ(0.6),
     )
     assert v1.deltaR2(v2) == pytest.approx(0.116083865330319)
 
@@ -53,15 +53,15 @@ def test_spatial_numpy():
 
 
 def test_lorentz_object():
-    v1 = vector._backends.object_.VectorObject4D(
-        vector._backends.object_.AzimuthalObjectXY(0.1, 0.2),
-        vector._backends.object_.LongitudinalObjectZ(0.3),
-        vector._backends.object_.TemporalObjectT(99),
+    v1 = vector._backends.object.VectorObject4D(
+        vector._backends.object.AzimuthalObjectXY(0.1, 0.2),
+        vector._backends.object.LongitudinalObjectZ(0.3),
+        vector._backends.object.TemporalObjectT(99),
     )
-    v2 = vector._backends.object_.VectorObject4D(
-        vector._backends.object_.AzimuthalObjectXY(0.4, 0.5),
-        vector._backends.object_.LongitudinalObjectZ(0.6),
-        vector._backends.object_.TemporalObjectT(99),
+    v2 = vector._backends.object.VectorObject4D(
+        vector._backends.object.AzimuthalObjectXY(0.4, 0.5),
+        vector._backends.object.LongitudinalObjectZ(0.6),
+        vector._backends.object.TemporalObjectT(99),
     )
     assert v1.deltaR2(v2) == pytest.approx(0.116083865330319)
 

@@ -52,7 +52,7 @@ vector.\_backends.numpy\_ module
 vector.\_backends.object\_ module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: vector._backends.object_
+.. automodule:: vector._backends.object
    :members:
    :undoc-members:
    :show-inheritance:

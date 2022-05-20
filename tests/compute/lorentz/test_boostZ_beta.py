@@ -6,14 +6,14 @@
 import pytest
 
 import vector._backends.numpy_
-import vector._backends.object_
+import vector._backends.object
 
 
 def test():
-    vec = vector._backends.object_.VectorObject4D(
-        vector._backends.object_.AzimuthalObjectXY(1, 2),
-        vector._backends.object_.LongitudinalObjectZ(3),
-        vector._backends.object_.TemporalObjectT(4),
+    vec = vector._backends.object.VectorObject4D(
+        vector._backends.object.AzimuthalObjectXY(1, 2),
+        vector._backends.object.LongitudinalObjectZ(3),
+        vector._backends.object.TemporalObjectT(4),
     )
     out = vec.boostZ(beta=-0.9428090415820634)
     assert out.x == pytest.approx(1)

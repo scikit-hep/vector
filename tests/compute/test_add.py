@@ -7,15 +7,15 @@ import numpy
 import pytest
 
 import vector._backends.numpy_
-import vector._backends.object_
+import vector._backends.object
 
 
 def test_planar_object():
-    v1 = vector._backends.object_.VectorObject2D(
-        vector._backends.object_.AzimuthalObjectXY(3, 4)
+    v1 = vector._backends.object.VectorObject2D(
+        vector._backends.object.AzimuthalObjectXY(3, 4)
     )
-    v2 = vector._backends.object_.VectorObject2D(
-        vector._backends.object_.AzimuthalObjectXY(5, 12)
+    v2 = vector._backends.object.VectorObject2D(
+        vector._backends.object.AzimuthalObjectXY(5, 12)
     )
     out = v1.add(v2)
     assert out.x == pytest.approx(8)
@@ -57,13 +57,13 @@ def test_planar_numpy():
 
 
 def test_spatial_object():
-    v1 = vector._backends.object_.VectorObject3D(
-        vector._backends.object_.AzimuthalObjectXY(3, 4),
-        vector._backends.object_.LongitudinalObjectZ(2),
+    v1 = vector._backends.object.VectorObject3D(
+        vector._backends.object.AzimuthalObjectXY(3, 4),
+        vector._backends.object.LongitudinalObjectZ(2),
     )
-    v2 = vector._backends.object_.VectorObject3D(
-        vector._backends.object_.AzimuthalObjectXY(5, 12),
-        vector._backends.object_.LongitudinalObjectZ(4),
+    v2 = vector._backends.object.VectorObject3D(
+        vector._backends.object.AzimuthalObjectXY(5, 12),
+        vector._backends.object.LongitudinalObjectZ(4),
     )
     out = v1.add(v2)
     assert out.x == pytest.approx(8)
@@ -111,15 +111,15 @@ def test_spatial_numpy():
 
 
 def test_lorentz_object():
-    v1 = vector._backends.object_.VectorObject4D(
-        vector._backends.object_.AzimuthalObjectXY(3, 4),
-        vector._backends.object_.LongitudinalObjectZ(2),
-        vector._backends.object_.TemporalObjectT(10),
+    v1 = vector._backends.object.VectorObject4D(
+        vector._backends.object.AzimuthalObjectXY(3, 4),
+        vector._backends.object.LongitudinalObjectZ(2),
+        vector._backends.object.TemporalObjectT(10),
     )
-    v2 = vector._backends.object_.VectorObject4D(
-        vector._backends.object_.AzimuthalObjectXY(5, 12),
-        vector._backends.object_.LongitudinalObjectZ(4),
-        vector._backends.object_.TemporalObjectT(15),
+    v2 = vector._backends.object.VectorObject4D(
+        vector._backends.object.AzimuthalObjectXY(5, 12),
+        vector._backends.object.LongitudinalObjectZ(4),
+        vector._backends.object.TemporalObjectT(15),
     )
     out = v1.add(v2)
     assert out.x == pytest.approx(8)

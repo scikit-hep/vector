@@ -2769,7 +2769,7 @@ def _from_signature(
 
 
 _handler_priority = [
-    "vector._backends.object_",
+    "vector._backends.object",
     "vector._backends.numpy_",
     "vector._backends.awkward_",
 ]
@@ -2813,7 +2813,7 @@ def _flavor_of(*objects: VectorProtocol) -> typing.Type[VectorProtocol]:
     "flavor" is generic vs momentum.
     """
     from vector._backends.numpy_ import VectorNumpy
-    from vector._backends.object_ import VectorObject
+    from vector._backends.object import VectorObject
 
     handler = None
     is_momentum = True

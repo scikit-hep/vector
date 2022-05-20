@@ -6,22 +6,22 @@
 import pytest
 
 import vector._backends.numpy_
-import vector._backends.object_
+import vector._backends.object
 
 
 def test_VectorObject2D():
     v = vector.obj(x=1, y=2)
     tv = v.to_Vector2D()
-    assert isinstance(tv, vector._backends.object_.VectorObject2D)
+    assert isinstance(tv, vector._backends.object.VectorObject2D)
     assert tv.x == pytest.approx(1)
     assert tv.y == pytest.approx(2)
     tv = v.to_Vector3D()
-    assert isinstance(tv, vector._backends.object_.VectorObject3D)
+    assert isinstance(tv, vector._backends.object.VectorObject3D)
     assert tv.x == pytest.approx(1)
     assert tv.y == pytest.approx(2)
     assert tv.z == pytest.approx(0)
     tv = v.to_Vector4D()
-    assert isinstance(tv, vector._backends.object_.VectorObject4D)
+    assert isinstance(tv, vector._backends.object.VectorObject4D)
     assert tv.x == pytest.approx(1)
     assert tv.y == pytest.approx(2)
     assert tv.z == pytest.approx(0)
@@ -29,20 +29,20 @@ def test_VectorObject2D():
 
     for azimuthal in "xy", "rhophi":
         tv = getattr(v, "to_" + azimuthal)()
-        assert isinstance(tv, vector._backends.object_.VectorObject2D)
+        assert isinstance(tv, vector._backends.object.VectorObject2D)
         assert tv.x == pytest.approx(1)
         assert tv.y == pytest.approx(2)
 
         for longitudinal in "z", "theta", "eta":
             tv = getattr(v, "to_" + azimuthal + longitudinal)()
-            assert isinstance(tv, vector._backends.object_.VectorObject3D)
+            assert isinstance(tv, vector._backends.object.VectorObject3D)
             assert tv.x == pytest.approx(1)
             assert tv.y == pytest.approx(2)
             assert getattr(tv, longitudinal) == pytest.approx(0)
 
             for temporal in "t", "tau":
                 tv = getattr(v, "to_" + azimuthal + longitudinal + temporal)()
-                assert isinstance(tv, vector._backends.object_.VectorObject4D)
+                assert isinstance(tv, vector._backends.object.VectorObject4D)
                 assert tv.x == pytest.approx(1)
                 assert tv.y == pytest.approx(2)
                 assert getattr(tv, longitudinal) == pytest.approx(0)
@@ -52,16 +52,16 @@ def test_VectorObject2D():
 def test_MomentumObject2D():
     v = vector.obj(px=1, py=2)
     tv = v.to_Vector2D()
-    assert isinstance(tv, vector._backends.object_.MomentumObject2D)
+    assert isinstance(tv, vector._backends.object.MomentumObject2D)
     assert tv.x == pytest.approx(1)
     assert tv.y == pytest.approx(2)
     tv = v.to_Vector3D()
-    assert isinstance(tv, vector._backends.object_.MomentumObject3D)
+    assert isinstance(tv, vector._backends.object.MomentumObject3D)
     assert tv.x == pytest.approx(1)
     assert tv.y == pytest.approx(2)
     assert tv.z == pytest.approx(0)
     tv = v.to_Vector4D()
-    assert isinstance(tv, vector._backends.object_.MomentumObject4D)
+    assert isinstance(tv, vector._backends.object.MomentumObject4D)
     assert tv.x == pytest.approx(1)
     assert tv.y == pytest.approx(2)
     assert tv.z == pytest.approx(0)
@@ -69,20 +69,20 @@ def test_MomentumObject2D():
 
     for azimuthal in "xy", "rhophi":
         tv = getattr(v, "to_" + azimuthal)()
-        assert isinstance(tv, vector._backends.object_.MomentumObject2D)
+        assert isinstance(tv, vector._backends.object.MomentumObject2D)
         assert tv.x == pytest.approx(1)
         assert tv.y == pytest.approx(2)
 
         for longitudinal in "z", "theta", "eta":
             tv = getattr(v, "to_" + azimuthal + longitudinal)()
-            assert isinstance(tv, vector._backends.object_.MomentumObject3D)
+            assert isinstance(tv, vector._backends.object.MomentumObject3D)
             assert tv.x == pytest.approx(1)
             assert tv.y == pytest.approx(2)
             assert getattr(tv, longitudinal) == pytest.approx(0)
 
             for temporal in "t", "tau":
                 tv = getattr(v, "to_" + azimuthal + longitudinal + temporal)()
-                assert isinstance(tv, vector._backends.object_.MomentumObject4D)
+                assert isinstance(tv, vector._backends.object.MomentumObject4D)
                 assert tv.x == pytest.approx(1)
                 assert tv.y == pytest.approx(2)
                 assert getattr(tv, longitudinal) == pytest.approx(0)
@@ -172,16 +172,16 @@ def test_MomentumNumpy2D():
 def test_VectorObject3D():
     v = vector.obj(x=1, y=2, z=3)
     tv = v.to_Vector2D()
-    assert isinstance(tv, vector._backends.object_.VectorObject2D)
+    assert isinstance(tv, vector._backends.object.VectorObject2D)
     assert tv.x == pytest.approx(1)
     assert tv.y == pytest.approx(2)
     tv = v.to_Vector3D()
-    assert isinstance(tv, vector._backends.object_.VectorObject3D)
+    assert isinstance(tv, vector._backends.object.VectorObject3D)
     assert tv.x == pytest.approx(1)
     assert tv.y == pytest.approx(2)
     assert tv.z == pytest.approx(3)
     tv = v.to_Vector4D()
-    assert isinstance(tv, vector._backends.object_.VectorObject4D)
+    assert isinstance(tv, vector._backends.object.VectorObject4D)
     assert tv.x == pytest.approx(1)
     assert tv.y == pytest.approx(2)
     assert tv.z == pytest.approx(3)
@@ -189,20 +189,20 @@ def test_VectorObject3D():
 
     for azimuthal in "xy", "rhophi":
         tv = getattr(v, "to_" + azimuthal)()
-        assert isinstance(tv, vector._backends.object_.VectorObject2D)
+        assert isinstance(tv, vector._backends.object.VectorObject2D)
         assert tv.x == pytest.approx(1)
         assert tv.y == pytest.approx(2)
 
         for longitudinal in "z", "theta", "eta":
             tv = getattr(v, "to_" + azimuthal + longitudinal)()
-            assert isinstance(tv, vector._backends.object_.VectorObject3D)
+            assert isinstance(tv, vector._backends.object.VectorObject3D)
             assert tv.x == pytest.approx(1)
             assert tv.y == pytest.approx(2)
             assert tv.z == pytest.approx(3)
 
             for temporal in "t", "tau":
                 tv = getattr(v, "to_" + azimuthal + longitudinal + temporal)()
-                assert isinstance(tv, vector._backends.object_.VectorObject4D)
+                assert isinstance(tv, vector._backends.object.VectorObject4D)
                 assert tv.x == pytest.approx(1)
                 assert tv.y == pytest.approx(2)
                 assert tv.z == pytest.approx(3)
@@ -212,16 +212,16 @@ def test_VectorObject3D():
 def test_MomentumObject3D():
     v = vector.obj(px=1, py=2, pz=3)
     tv = v.to_Vector2D()
-    assert isinstance(tv, vector._backends.object_.MomentumObject2D)
+    assert isinstance(tv, vector._backends.object.MomentumObject2D)
     assert tv.x == pytest.approx(1)
     assert tv.y == pytest.approx(2)
     tv = v.to_Vector3D()
-    assert isinstance(tv, vector._backends.object_.MomentumObject3D)
+    assert isinstance(tv, vector._backends.object.MomentumObject3D)
     assert tv.x == pytest.approx(1)
     assert tv.y == pytest.approx(2)
     assert tv.z == pytest.approx(3)
     tv = v.to_Vector4D()
-    assert isinstance(tv, vector._backends.object_.MomentumObject4D)
+    assert isinstance(tv, vector._backends.object.MomentumObject4D)
     assert tv.x == pytest.approx(1)
     assert tv.y == pytest.approx(2)
     assert tv.z == pytest.approx(3)
@@ -229,20 +229,20 @@ def test_MomentumObject3D():
 
     for azimuthal in "xy", "rhophi":
         tv = getattr(v, "to_" + azimuthal)()
-        assert isinstance(tv, vector._backends.object_.MomentumObject2D)
+        assert isinstance(tv, vector._backends.object.MomentumObject2D)
         assert tv.x == pytest.approx(1)
         assert tv.y == pytest.approx(2)
 
         for longitudinal in "z", "theta", "eta":
             tv = getattr(v, "to_" + azimuthal + longitudinal)()
-            assert isinstance(tv, vector._backends.object_.MomentumObject3D)
+            assert isinstance(tv, vector._backends.object.MomentumObject3D)
             assert tv.x == pytest.approx(1)
             assert tv.y == pytest.approx(2)
             assert tv.z == pytest.approx(3)
 
             for temporal in "t", "tau":
                 tv = getattr(v, "to_" + azimuthal + longitudinal + temporal)()
-                assert isinstance(tv, vector._backends.object_.MomentumObject4D)
+                assert isinstance(tv, vector._backends.object.MomentumObject4D)
                 assert tv.x == pytest.approx(1)
                 assert tv.y == pytest.approx(2)
                 assert tv.z == pytest.approx(3)
@@ -332,16 +332,16 @@ def test_MomentumNumpy3D():
 def test_VectorObject4D():
     v = vector.obj(x=1, y=2, z=3, t=4)
     tv = v.to_Vector2D()
-    assert isinstance(tv, vector._backends.object_.VectorObject2D)
+    assert isinstance(tv, vector._backends.object.VectorObject2D)
     assert tv.x == pytest.approx(1)
     assert tv.y == pytest.approx(2)
     tv = v.to_Vector3D()
-    assert isinstance(tv, vector._backends.object_.VectorObject3D)
+    assert isinstance(tv, vector._backends.object.VectorObject3D)
     assert tv.x == pytest.approx(1)
     assert tv.y == pytest.approx(2)
     assert tv.z == pytest.approx(3)
     tv = v.to_Vector4D()
-    assert isinstance(tv, vector._backends.object_.VectorObject4D)
+    assert isinstance(tv, vector._backends.object.VectorObject4D)
     assert tv.x == pytest.approx(1)
     assert tv.y == pytest.approx(2)
     assert tv.z == pytest.approx(3)
@@ -349,20 +349,20 @@ def test_VectorObject4D():
 
     for azimuthal in "xy", "rhophi":
         tv = getattr(v, "to_" + azimuthal)()
-        assert isinstance(tv, vector._backends.object_.VectorObject2D)
+        assert isinstance(tv, vector._backends.object.VectorObject2D)
         assert tv.x == pytest.approx(1)
         assert tv.y == pytest.approx(2)
 
         for longitudinal in "z", "theta", "eta":
             tv = getattr(v, "to_" + azimuthal + longitudinal)()
-            assert isinstance(tv, vector._backends.object_.VectorObject3D)
+            assert isinstance(tv, vector._backends.object.VectorObject3D)
             assert tv.x == pytest.approx(1)
             assert tv.y == pytest.approx(2)
             assert tv.z == pytest.approx(3)
 
             for temporal in "t", "tau":
                 tv = getattr(v, "to_" + azimuthal + longitudinal + temporal)()
-                assert isinstance(tv, vector._backends.object_.VectorObject4D)
+                assert isinstance(tv, vector._backends.object.VectorObject4D)
                 assert tv.x == pytest.approx(1)
                 assert tv.y == pytest.approx(2)
                 assert tv.z == pytest.approx(3)
@@ -372,16 +372,16 @@ def test_VectorObject4D():
 def test_MomentumObject4D():
     v = vector.obj(px=1, py=2, pz=3, E=4)
     tv = v.to_Vector2D()
-    assert isinstance(tv, vector._backends.object_.MomentumObject2D)
+    assert isinstance(tv, vector._backends.object.MomentumObject2D)
     assert tv.x == pytest.approx(1)
     assert tv.y == pytest.approx(2)
     tv = v.to_Vector3D()
-    assert isinstance(tv, vector._backends.object_.MomentumObject3D)
+    assert isinstance(tv, vector._backends.object.MomentumObject3D)
     assert tv.x == pytest.approx(1)
     assert tv.y == pytest.approx(2)
     assert tv.z == pytest.approx(3)
     tv = v.to_Vector4D()
-    assert isinstance(tv, vector._backends.object_.MomentumObject4D)
+    assert isinstance(tv, vector._backends.object.MomentumObject4D)
     assert tv.x == pytest.approx(1)
     assert tv.y == pytest.approx(2)
     assert tv.z == pytest.approx(3)
@@ -389,20 +389,20 @@ def test_MomentumObject4D():
 
     for azimuthal in "xy", "rhophi":
         tv = getattr(v, "to_" + azimuthal)()
-        assert isinstance(tv, vector._backends.object_.MomentumObject2D)
+        assert isinstance(tv, vector._backends.object.MomentumObject2D)
         assert tv.x == pytest.approx(1)
         assert tv.y == pytest.approx(2)
 
         for longitudinal in "z", "theta", "eta":
             tv = getattr(v, "to_" + azimuthal + longitudinal)()
-            assert isinstance(tv, vector._backends.object_.MomentumObject3D)
+            assert isinstance(tv, vector._backends.object.MomentumObject3D)
             assert tv.x == pytest.approx(1)
             assert tv.y == pytest.approx(2)
             assert tv.z == pytest.approx(3)
 
             for temporal in "t", "tau":
                 tv = getattr(v, "to_" + azimuthal + longitudinal + temporal)()
-                assert isinstance(tv, vector._backends.object_.MomentumObject4D)
+                assert isinstance(tv, vector._backends.object.MomentumObject4D)
                 assert tv.x == pytest.approx(1)
                 assert tv.y == pytest.approx(2)
                 assert tv.z == pytest.approx(3)

@@ -6,7 +6,7 @@
 import pytest
 
 import vector
-import vector._backends.object_
+import vector._backends.object
 
 numba = pytest.importorskip("numba")
 

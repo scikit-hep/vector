@@ -22,7 +22,7 @@ from vector._backends.numpy_ import (
     VectorNumpy4D,
     array,
 )
-from vector._backends.object_ import (
+from vector._backends.object import (
     MomentumObject2D,
     MomentumObject3D,
     MomentumObject4D,

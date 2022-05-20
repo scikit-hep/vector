@@ -37,7 +37,7 @@ import numpy
 
 import vector
 from vector._backends.numpy_ import VectorNumpy2D, VectorNumpy3D, VectorNumpy4D
-from vector._backends.object_ import (
+from vector._backends.object import (
     AzimuthalObjectRhoPhi,
     AzimuthalObjectXY,
     LongitudinalObjectEta,

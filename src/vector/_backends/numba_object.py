@@ -16,7 +16,7 @@ import numpy
 
 import vector
 from vector._backends.numba_ import numba_modules
-from vector._backends.object_ import (
+from vector._backends.object import (
     AzimuthalObject,
     AzimuthalObjectRhoPhi,
     AzimuthalObjectXY,

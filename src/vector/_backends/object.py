@@ -441,7 +441,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
         """
         Constructs a ``VectorObject2D`` from Cartesian coordinates.
 
-        Use :doc:`vector._backends.object_.MomentumObject2D` to construct a vector
+        Use :doc:`vector._backends.object.MomentumObject2D` to construct a vector
         with momentum properties and methods.
         """
         return cls(AzimuthalObjectXY(x, y))
@@ -451,7 +451,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
         """
         Constructs a ``VectorObject2D`` from polar coordinates.
 
-        Use :doc:`vector._backends.object_.MomentumObject2D` to construct a vector
+        Use :doc:`vector._backends.object.MomentumObject2D` to construct a vector
         with momentum properties and methods.
         """
         return cls(AzimuthalObjectRhoPhi(rho, phi))
@@ -640,7 +640,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         """
         Constructs a ``VectorObject3D`` from Cartesian coordinates.
 
-        Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
+        Use :doc:`vector._backends.object.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
         return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z))
@@ -651,7 +651,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         Constructs a ``VectorObject3D`` from Cartesian azimuthal coordinates and
         a polar angle $\theta$.
 
-        Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
+        Use :doc:`vector._backends.object.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
         return cls(AzimuthalObjectXY(x, y), LongitudinalObjectTheta(theta))
@@ -662,7 +662,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         Constructs a ``VectorObject3D`` from Cartesian coordinates and a
         pseudorapidity $\eta$.
 
-        Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
+        Use :doc:`vector._backends.object.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
         return cls(AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta))
@@ -673,7 +673,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         Constructs a ``VectorObject3D`` from polar azimuthal coordinates and a
         Cartesian longitudinal coordinate $z$.
 
-        Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
+        Use :doc:`vector._backends.object.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
         return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectZ(z))
@@ -684,7 +684,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         Constructs a ``VectorObject3D`` from polar azimuthal coordinates and a
         polar angle $\theta$.
 
-        Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
+        Use :doc:`vector._backends.object.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
         return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectTheta(theta))
@@ -695,7 +695,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         Constructs a ``VectorObject3D`` from polar azimuthal coordinates and a
         pseudorapidity $\eta$.
 
-        Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
+        Use :doc:`vector._backends.object.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
         return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectEta(eta))
@@ -938,7 +938,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         Constructs a ``VectorObject3D`` from Cartesian coordinates and a time
         coordinate $t$.
 
-        Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
+        Use :doc:`vector._backends.object.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
         return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z), TemporalObjectT(t))
@@ -955,7 +955,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         Constructs a ``VectorObject3D`` from Cartesian coordinates and a proper time
         coordinate $\tau$.
 
-        Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
+        Use :doc:`vector._backends.object.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
         return cls(
@@ -974,7 +974,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         Constructs a ``VectorObject3D`` from Cartesian azimuthal coordinates, a
         polar angle $\theta$, and a time coordinate $t$.
 
-        Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
+        Use :doc:`vector._backends.object.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
         return cls(
@@ -993,7 +993,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         Constructs a ``VectorObject3D`` from Cartesian azimuthal coordinates, a
         polar angle $\theta$, and a proper time coordinate $\tau$.
 
-        Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
+        Use :doc:`vector._backends.object.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
         return cls(
@@ -1014,7 +1014,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         Constructs a ``VectorObject3D`` from Cartesian coordinates, a pseudorapidity
         $\eta$, and a time coordinate $t$.
 
-        Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
+        Use :doc:`vector._backends.object.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
         return cls(
@@ -1033,7 +1033,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         Constructs a ``VectorObject3D`` from Cartesian coordinates, a pseudorapidity
         $\eta$, and a proper time coordinate $\tau$.
 
-        Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
+        Use :doc:`vector._backends.object.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
         return cls(
@@ -1052,7 +1052,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         Constructs a ``VectorObject3D`` from polar azimuthal coordinates, a Cartesian
         longitudinal coordinate $z$, and a time coordinate $t$.
 
-        Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
+        Use :doc:`vector._backends.object.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
         return cls(
@@ -1071,7 +1071,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         Constructs a ``VectorObject3D`` from polar azimuthal coordinates, a Cartesian
         longitudinal coordinate $z$, and a proper time coordinate $\tau$.
 
-        Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
+        Use :doc:`vector._backends.object.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
         return cls(
@@ -1092,7 +1092,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         Constructs a ``VectorObject3D`` from polar azimuthal coordinates, a polar
         angle $\theta$, and a time coordinate $t$.
 
-        Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
+        Use :doc:`vector._backends.object.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
         return cls(
@@ -1113,7 +1113,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         Constructs a ``VectorObject3D`` from polar azimuthal coordinates, a polar
         angle $\theta$, and a proper time coordinate $\tau$.
 
-        Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
+        Use :doc:`vector._backends.object.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
         return cls(
@@ -1134,7 +1134,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         Constructs a ``VectorObject3D`` from polar azimuthal coordinates, a
         pseudorapidity $\eta$, and a time coordinate $t$.
 
-        Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
+        Use :doc:`vector._backends.object.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
         return cls(
@@ -1155,7 +1155,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         Constructs a ``VectorObject3D`` from polar azimuthal coordinates, a
         pseudorapidity $\eta$, and a proper time coordinate $\tau$.
 
-        Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
+        Use :doc:`vector._backends.object.MomentumObject3D` to construct a vector
         with momentum properties and methods.
         """
         return cls(
@@ -1471,7 +1471,7 @@ def _gather_coordinates(
     coordinates: typing.Dict[str, typing.Any],
 ) -> typing.Any:
     """
-    Helper function for :doc:`vector._backends.object_.obj`.
+    Helper function for :doc:`vector._backends.object.obj`.
     """
     azimuthal: typing.Optional[
         typing.Union[AzimuthalObjectXY, AzimuthalObjectRhoPhi]
@@ -2704,33 +2704,33 @@ def obj(**coordinates: float) -> VectorObject:
     if they are not numbers, mathematical operations will fail. Usually, you want
     them to be ``int`` or ``float``.
 
-    Alternatively, the :doc:`vector._backends.object_.VectorObject2D`,
-    :doc:`vector._backends.object_.VectorObject3D`, and
-    :doc:`vector._backends.object_.VectorObject4D` classes (with momentum
+    Alternatively, the :doc:`vector._backends.object.VectorObject2D`,
+    :doc:`vector._backends.object.VectorObject3D`, and
+    :doc:`vector._backends.object.VectorObject4D` classes (with momentum
     subclasses) have explicit constructors:
 
-    - :doc:`vector._backends.object_.VectorObject2D.from_xy`
-    - :doc:`vector._backends.object_.VectorObject2D.from_rhophi`
+    - :doc:`vector._backends.object.VectorObject2D.from_xy`
+    - :doc:`vector._backends.object.VectorObject2D.from_rhophi`
 
-    - :doc:`vector._backends.object_.VectorObject3D.from_xyz`
-    - :doc:`vector._backends.object_.VectorObject3D.from_xytheta`
-    - :doc:`vector._backends.object_.VectorObject3D.from_xyeta`
-    - :doc:`vector._backends.object_.VectorObject3D.from_rhophiz`
-    - :doc:`vector._backends.object_.VectorObject3D.from_rhophitheta`
-    - :doc:`vector._backends.object_.VectorObject3D.from_rhophieta`
+    - :doc:`vector._backends.object.VectorObject3D.from_xyz`
+    - :doc:`vector._backends.object.VectorObject3D.from_xytheta`
+    - :doc:`vector._backends.object.VectorObject3D.from_xyeta`
+    - :doc:`vector._backends.object.VectorObject3D.from_rhophiz`
+    - :doc:`vector._backends.object.VectorObject3D.from_rhophitheta`
+    - :doc:`vector._backends.object.VectorObject3D.from_rhophieta`
 
-    - :doc:`vector._backends.object_.VectorObject4D.from_xyzt`
-    - :doc:`vector._backends.object_.VectorObject4D.from_xyztau`
-    - :doc:`vector._backends.object_.VectorObject4D.from_xythetat`
-    - :doc:`vector._backends.object_.VectorObject4D.from_xythetatau`
-    - :doc:`vector._backends.object_.VectorObject4D.from_xyetat`
-    - :doc:`vector._backends.object_.VectorObject4D.from_xyetatau`
-    - :doc:`vector._backends.object_.VectorObject4D.from_rhophizt`
-    - :doc:`vector._backends.object_.VectorObject4D.from_rhophiztau`
-    - :doc:`vector._backends.object_.VectorObject4D.from_rhophithetat`
-    - :doc:`vector._backends.object_.VectorObject4D.from_rhophithetatau`
-    - :doc:`vector._backends.object_.VectorObject4D.from_rhophietat`
-    - :doc:`vector._backends.object_.VectorObject4D.from_rhophietatau`
+    - :doc:`vector._backends.object.VectorObject4D.from_xyzt`
+    - :doc:`vector._backends.object.VectorObject4D.from_xyztau`
+    - :doc:`vector._backends.object.VectorObject4D.from_xythetat`
+    - :doc:`vector._backends.object.VectorObject4D.from_xythetatau`
+    - :doc:`vector._backends.object.VectorObject4D.from_xyetat`
+    - :doc:`vector._backends.object.VectorObject4D.from_xyetatau`
+    - :doc:`vector._backends.object.VectorObject4D.from_rhophizt`
+    - :doc:`vector._backends.object.VectorObject4D.from_rhophiztau`
+    - :doc:`vector._backends.object.VectorObject4D.from_rhophithetat`
+    - :doc:`vector._backends.object.VectorObject4D.from_rhophithetatau`
+    - :doc:`vector._backends.object.VectorObject4D.from_rhophietat`
+    - :doc:`vector._backends.object.VectorObject4D.from_rhophietatau`
     """
     is_momentum = False
     generic_coordinates = {}
