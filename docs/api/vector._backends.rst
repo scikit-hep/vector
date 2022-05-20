@@ -1,58 +1,58 @@
-vector.\_backends package
+vector.\backends package
 =========================
 
 Submodules
 ----------
 
-vector.\_backends.awkward\_ module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vector.backends.awkward module
+----------------------------------
 
-.. automodule:: vector._backends.awkward
+.. automodule:: vector.backends.awkward
    :members:
    :undoc-members:
    :show-inheritance:
    :private-members:
 
-vector.\_backends.numba\_ module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vector.backends.\_numba module
+--------------------------------
 
-.. automodule:: vector._backends.numba_
+.. automodule:: vector.backends._numba
    :members:
    :undoc-members:
    :show-inheritance:
    :private-members:
 
-vector.\_backends.numba\_numpy module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vector.backends.numba\_numpy module
+-------------------------------------
 
-.. automodule:: vector._backends.numba_numpy
+.. automodule:: vector.backends.numba_numpy
    :members:
    :undoc-members:
    :show-inheritance:
    :private-members:
 
-vector.\_backends.numba\_object module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vector.backends.\_numba\_object module
+--------------------------------------
 
-.. automodule:: vector._backends.numba_object
+.. automodule:: vector.backends._numba_object
    :members:
    :undoc-members:
    :show-inheritance:
    :private-members:
 
-vector.\_backends.numpy\_ module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vector.backends.numpy module
+--------------------------------
 
-.. automodule:: vector._backends.numpy
+.. automodule:: vector.backends.numpy
    :members:
    :undoc-members:
    :show-inheritance:
    :private-members:
 
-vector.\_backends.object\_ module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vector.backends.object module
+---------------------------------
 
-.. automodule:: vector._backends.object
+.. automodule:: vector.backends.object
    :members:
    :undoc-members:
    :show-inheritance:
@@ -61,7 +61,7 @@ vector.\_backends.object\_ module
 Module contents
 ---------------
 
-.. automodule:: vector._backends
+.. automodule:: vector.backends
    :members:
    :undoc-members:
    :show-inheritance:
