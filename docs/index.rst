@@ -19,7 +19,7 @@ Main features of Vector:
    * `Awkward Arrays <https://awkward-array.org/>`_ of vectors
    * potential for more: CuPy, TensorFlow, Torch, JAX...
 * NumPy/Awkward backends also implemented in `Numba <https://numba.pydata.org/>`_ for JIT-compiled calculations on vectors.
-* Distinction between geometrical vectors, which have a minimum of attribute and method names, and vectors representing momentum, which have synonyms like `pt` = `rho`, `energy` = `t`, `mass` = `tau`.
+* Distinction between geometrical vectors, which have a minimum of attribute and method names, and vectors representing momentum, which have synonyms like ``pt`` = ``rho``, ``energy`` = ``t``, ``mass`` = ``tau``.
 
 
 .. toctree::
