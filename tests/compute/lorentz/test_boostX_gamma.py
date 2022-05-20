@@ -5,7 +5,7 @@
 
 import pytest
 
-import vector._backends.numpy_
+import vector._backends.numpy
 import vector._backends.object
 
 

@@ -2770,7 +2770,7 @@ def _from_signature(
 
 _handler_priority = [
     "vector._backends.object",
-    "vector._backends.numpy_",
+    "vector._backends.numpy",
     "vector._backends.awkward",
 ]
 
@@ -2812,7 +2812,7 @@ def _flavor_of(*objects: VectorProtocol) -> typing.Type[VectorProtocol]:
     Determines the flavor of the output of a dispatched function, where
     "flavor" is generic vs momentum.
     """
-    from vector._backends.numpy_ import VectorNumpy
+    from vector._backends.numpy import VectorNumpy
     from vector._backends.object import VectorObject
 
     handler = None

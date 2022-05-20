@@ -6,7 +6,7 @@
 import numpy
 import pytest
 
-import vector._backends.numpy_
+import vector._backends.numpy
 import vector._backends.object
 
 
@@ -62,7 +62,7 @@ def test_lorentz_object():
 
 
 def test_lorentz_numpy():
-    v1 = vector._backends.numpy_.VectorNumpy4D(
+    v1 = vector._backends.numpy.VectorNumpy4D(
         [(1.0, 1.0, 1.0, 1.0)],
         dtype=[
             ("x", numpy.float64),
@@ -71,7 +71,7 @@ def test_lorentz_numpy():
             ("tau", numpy.float64),
         ],
     )
-    v2 = vector._backends.numpy_.VectorNumpy4D(
+    v2 = vector._backends.numpy.VectorNumpy4D(
         [(-1.0, -1.0, -1.0, 1.0)],
         dtype=[
             ("x", numpy.float64),

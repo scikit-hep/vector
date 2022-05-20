@@ -6,7 +6,7 @@
 import numpy
 import pytest
 
-import vector._backends.numpy_
+import vector._backends.numpy
 import vector._backends.object
 
 
@@ -33,11 +33,11 @@ def test_planar_object():
 
 
 def test_planar_numpy():
-    v1 = vector._backends.numpy_.VectorNumpy2D(
+    v1 = vector._backends.numpy.VectorNumpy2D(
         [(3, 4)],
         dtype=[("x", numpy.float64), ("y", numpy.float64)],
     )
-    v2 = vector._backends.numpy_.VectorNumpy2D(
+    v2 = vector._backends.numpy.VectorNumpy2D(
         [(5, 12)],
         dtype=[("x", numpy.float64), ("y", numpy.float64)],
     )
@@ -83,11 +83,11 @@ def test_spatial_object():
 
 
 def test_spatial_numpy():
-    v1 = vector._backends.numpy_.VectorNumpy3D(
+    v1 = vector._backends.numpy.VectorNumpy3D(
         [(3, 4, 2)],
         dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
     )
-    v2 = vector._backends.numpy_.VectorNumpy3D(
+    v2 = vector._backends.numpy.VectorNumpy3D(
         [(5, 12, 4)],
         dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
     )
@@ -165,7 +165,7 @@ def test_lorentz_object():
 
 
 def test_lorentz_numpy():
-    v1 = vector._backends.numpy_.VectorNumpy4D(
+    v1 = vector._backends.numpy.VectorNumpy4D(
         [(3, 4, 2, 20)],
         dtype=[
             ("x", numpy.float64),
@@ -174,7 +174,7 @@ def test_lorentz_numpy():
             ("t", numpy.float64),
         ],
     )
-    v2 = vector._backends.numpy_.VectorNumpy4D(
+    v2 = vector._backends.numpy.VectorNumpy4D(
         [(5, 12, 4, 15)],
         dtype=[
             ("x", numpy.float64),

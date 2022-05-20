@@ -6,7 +6,7 @@
 import numpy
 import pytest
 
-import vector._backends.numpy_
+import vector._backends.numpy
 import vector._backends.object
 
 
@@ -45,16 +45,16 @@ def test_spatial_object():
 
 
 def test_spatial_numpy():
-    axis = vector._backends.numpy_.VectorNumpy3D(
+    axis = vector._backends.numpy.VectorNumpy3D(
         [(0.1, 0.2, 0.3)],
         dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
     )
-    vec = vector._backends.numpy_.VectorNumpy3D(
+    vec = vector._backends.numpy.VectorNumpy3D(
         [(0.4, 0.5, 0.6)],
         dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
     )
     out = vec.rotate_axis(axis, 0.25)
-    assert isinstance(out, vector._backends.numpy_.VectorNumpy3D)
+    assert isinstance(out, vector._backends.numpy.VectorNumpy3D)
     assert out.dtype.names == ("x", "y", "z")
     assert out[0].x == pytest.approx(0.37483425404335763)
     assert out[0].y == pytest.approx(0.5383405688588193)
@@ -67,7 +67,7 @@ def test_spatial_numpy():
                 getattr(vec, "to_" + t2)(),
             )
             out = tvec.rotate_axis(taxis, 0.25)
-            assert isinstance(out, vector._backends.numpy_.VectorNumpy3D)
+            assert isinstance(out, vector._backends.numpy.VectorNumpy3D)
             assert out.dtype.names == ("x", "y", "z")
             assert out[0].x == pytest.approx(0.37483425404335763)
             assert out[0].y == pytest.approx(0.5383405688588193)
@@ -139,7 +139,7 @@ def test_lorentz_object():
 
 
 def test_lorentz_numpy():
-    axis = vector._backends.numpy_.VectorNumpy4D(
+    axis = vector._backends.numpy.VectorNumpy4D(
         [(0.1, 0.2, 0.3, 99)],
         dtype=[
             ("x", numpy.float64),
@@ -148,7 +148,7 @@ def test_lorentz_numpy():
             ("t", numpy.float64),
         ],
     )
-    vec = vector._backends.numpy_.VectorNumpy4D(
+    vec = vector._backends.numpy.VectorNumpy4D(
         [(0.4, 0.5, 0.6, 99)],
         dtype=[
             ("x", numpy.float64),
@@ -158,7 +158,7 @@ def test_lorentz_numpy():
         ],
     )
     out = vec.rotate_axis(axis, 0.25)
-    assert isinstance(out, vector._backends.numpy_.VectorNumpy4D)
+    assert isinstance(out, vector._backends.numpy.VectorNumpy4D)
     assert out.dtype.names == ("x", "y", "z", "t")
     assert out[0].x == pytest.approx(0.37483425404335763)
     assert out[0].y == pytest.approx(0.5383405688588193)
@@ -197,7 +197,7 @@ def test_lorentz_numpy():
                 getattr(vec, "to_" + t2)(),
             )
             out = tvec.rotate_axis(taxis, 0.25)
-            assert isinstance(out, vector._backends.numpy_.VectorNumpy4D)
+            assert isinstance(out, vector._backends.numpy.VectorNumpy4D)
             assert out.dtype.names in {
                 ("x", "y", "z", "t"),
                 ("x", "y", "z", "tau"),

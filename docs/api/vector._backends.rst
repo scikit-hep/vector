@@ -43,7 +43,7 @@ vector.\_backends.numba\_object module
 vector.\_backends.numpy\_ module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: vector._backends.numpy_
+.. automodule:: vector._backends.numpy
    :members:
    :undoc-members:
    :show-inheritance:

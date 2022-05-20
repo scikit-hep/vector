@@ -6,7 +6,7 @@
 import numpy
 import pytest
 
-import vector._backends.numpy_
+import vector._backends.numpy
 import vector._backends.object
 
 
@@ -41,16 +41,16 @@ def test_spatial_object():
 
 
 def test_spatial_numpy():
-    v1 = vector._backends.numpy_.VectorNumpy3D(
+    v1 = vector._backends.numpy.VectorNumpy3D(
         [(0.1, 0.2, 0.3)],
         dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
     )
-    v2 = vector._backends.numpy_.VectorNumpy3D(
+    v2 = vector._backends.numpy.VectorNumpy3D(
         [(0.4, 0.5, 0.6)],
         dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
     )
     out = v1.cross(v2)
-    assert isinstance(out, vector._backends.numpy_.VectorNumpy3D)
+    assert isinstance(out, vector._backends.numpy.VectorNumpy3D)
     assert out.dtype.names == ("x", "y", "z")
     assert (out[0].x, out[0].y, out[0].z) == pytest.approx((-0.03, 0.06, -0.03))
 
@@ -61,7 +61,7 @@ def test_spatial_numpy():
                 getattr(v2, "to_" + t2)(),
             )
             out = transformed1.cross(transformed2)
-            assert isinstance(out, vector._backends.numpy_.VectorNumpy3D)
+            assert isinstance(out, vector._backends.numpy.VectorNumpy3D)
             assert out.dtype.names == ("x", "y", "z")
             assert (out[0].x, out[0].y, out[0].z) == pytest.approx((-0.03, 0.06, -0.03))
 
@@ -125,7 +125,7 @@ def test_lorentz_object():
 
 
 def test_lorentz_numpy():
-    v1 = vector._backends.numpy_.VectorNumpy4D(
+    v1 = vector._backends.numpy.VectorNumpy4D(
         [(0.1, 0.2, 0.3, 99)],
         dtype=[
             ("x", numpy.float64),
@@ -134,7 +134,7 @@ def test_lorentz_numpy():
             ("t", numpy.float64),
         ],
     )
-    v2 = vector._backends.numpy_.VectorNumpy4D(
+    v2 = vector._backends.numpy.VectorNumpy4D(
         [(0.4, 0.5, 0.6, 99)],
         dtype=[
             ("x", numpy.float64),
@@ -144,7 +144,7 @@ def test_lorentz_numpy():
         ],
     )
     out = v1.cross(v2)
-    assert isinstance(out, vector._backends.numpy_.VectorNumpy3D)
+    assert isinstance(out, vector._backends.numpy.VectorNumpy3D)
     assert out.dtype.names == ("x", "y", "z")
     assert out.tolist() == pytest.approx([(-0.03, 0.06, -0.030000000000000013)])
 
@@ -181,6 +181,6 @@ def test_lorentz_numpy():
                 getattr(v2, "to_" + t2)(),
             )
             out = transformed1.cross(transformed2)
-            assert isinstance(out, vector._backends.numpy_.VectorNumpy3D)
+            assert isinstance(out, vector._backends.numpy.VectorNumpy3D)
             assert out.dtype.names == ("x", "y", "z")
             assert (out[0].x, out[0].y, out[0].z) == pytest.approx((-0.03, 0.06, -0.03))

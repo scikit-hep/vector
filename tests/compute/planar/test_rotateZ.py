@@ -6,7 +6,7 @@
 import numpy
 import pytest
 
-import vector._backends.numpy_
+import vector._backends.numpy
 import vector._backends.object
 
 
@@ -17,10 +17,10 @@ def test_xy():
     assert vec.rotateZ(0.1).x == pytest.approx(0.9950041652780258)
     assert vec.rotateZ(0.1).y == pytest.approx(0.09983341664682815)
 
-    array = vector._backends.numpy_.VectorNumpy2D(
+    array = vector._backends.numpy.VectorNumpy2D(
         [(0, 0), (1, 0), (0, 1)], dtype=[("x", numpy.float64), ("y", numpy.float64)]
     )
-    assert isinstance(array.rotateZ(0.1), vector._backends.numpy_.VectorNumpy2D)
+    assert isinstance(array.rotateZ(0.1), vector._backends.numpy.VectorNumpy2D)
     out = array.rotateZ(0.1)
     assert out.dtype.names == ("x", "y")
     assert numpy.allclose(out.x, [0, 0.9950041652780258, -0.09983341664682815])
@@ -34,10 +34,10 @@ def test_rhophi():
     assert vec.rotateZ(0.1).rho == pytest.approx(1)
     assert vec.rotateZ(0.1).phi == pytest.approx(0.1)
 
-    array = vector._backends.numpy_.VectorNumpy2D(
+    array = vector._backends.numpy.VectorNumpy2D(
         [(0, 0), (1, 0), (0, 1)], dtype=[("rho", numpy.float64), ("phi", numpy.float64)]
     )
-    assert isinstance(array.rotateZ(0.1), vector._backends.numpy_.VectorNumpy2D)
+    assert isinstance(array.rotateZ(0.1), vector._backends.numpy.VectorNumpy2D)
     out = array.rotateZ(0.1)
     assert out.dtype.names == ("rho", "phi")
     assert numpy.allclose(out.rho, [0, 1, 0])
