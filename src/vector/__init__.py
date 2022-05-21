@@ -163,7 +163,7 @@ def register_awkward() -> None:
     vector properties and methods.
 
     If you do not call this function, only arrays created with
-    :doc:`vector.Array` (or derived from such an array) have vector properties
+    :func:`vector.Array` (or derived from such an array) have vector properties
     and methods.
     """
     import awkward
