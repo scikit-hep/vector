@@ -142,6 +142,8 @@ class VectorProtocol:
             vectors without momentum-synonyms.
     """
 
+    #: module: The module used for functions used in compute functions
+    #: (such as ``sqrt``, ``sin``, ``cos``). Usually ``numpy``.
     lib: Module
 
     def _wrap_result(
@@ -523,7 +525,7 @@ class VectorProtocolPlanar(VectorProtocol):
         (i.e. not "antiparallel"; dot product is nearly ``abs(self) * abs(other)``).
 
         The ``tolerance`` is measured in units of $\cos(\Delta\alpha)$ where $\Delta\alpha$
-        is ``self.deltaangle(other)`.
+        is ``self.deltaangle(other)``.
         """
         raise AssertionError
 
@@ -535,7 +537,7 @@ class VectorProtocolPlanar(VectorProtocol):
         (i.e. dot product is nearly ``-abs(self) * abs(other)``).
 
         The ``tolerance`` is measured in units of $\cos(\Delta\alpha)$ where $\Delta\alpha$
-        is ``self.deltaangle(other)`.
+        is ``self.deltaangle(other)``.
         """
         raise AssertionError
 
@@ -547,7 +549,7 @@ class VectorProtocolPlanar(VectorProtocol):
         (i.e. dot product is nearly ``0``).
 
         The ``tolerance`` is measured in units of $\cos(\Delta\alpha)$ where $\Delta\alpha$
-        is ``self.deltaangle(other)`.
+        is ``self.deltaangle(other)``.
         """
         raise AssertionError
 
@@ -740,8 +742,8 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
         """
         Rotates the vector(s) by three given angles: ``yaw``, ``pitch``, and ``roll``
         (in radians). These are Tait-Bryan angles often used for boats and planes
-        (see `this lesson <http://planning.cs.uiuc.edu/node102.html>`_ and
-        `this lesson <http://www.chrobotics.com/library/understanding-euler-angles>`_).
+        (see `this lesson <http://planning.cs.uiuc.edu/node102.html>`__ and
+        `this lesson <http://www.chrobotics.com/library/understanding-euler-angles>`__).
 
         This function is entirely equivalent to
 
