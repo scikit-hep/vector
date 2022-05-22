@@ -1471,7 +1471,7 @@ def _gather_coordinates(
     coordinates: typing.Dict[str, typing.Any],
 ) -> typing.Any:
     """
-    Helper function for :func:`vector._backends._.obj`.
+    Helper function for :func:`vector._backends.object_.obj`.
     """
     azimuthal: typing.Optional[
         typing.Union[AzimuthalObjectXY, AzimuthalObjectRhoPhi]

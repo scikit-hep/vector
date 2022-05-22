@@ -142,8 +142,6 @@ class VectorProtocol:
             vectors without momentum-synonyms.
     """
 
-    #: module: The module used for functions used in compute functions
-    #: (such as ``sqrt``, ``sin``, ``cos``). Usually ``numpy``.
     lib: Module
 
     def _wrap_result(

@@ -93,7 +93,7 @@ class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
     @classmethod
     def from_fields(cls, array: ak.Array) -> "AzimuthalAwkward":
         """
-        Create a :class:`vector.backends.awkward.AzimuthalAwkwardXY` or a
+        Create a :class:`vector._backends.awkward_.AzimuthalAwkwardXY` or a
         :class:`vector._backends.awkward_.AzimuthalAwkwardRhoPhi`, depending on
         the fields in ``array``.
         """
@@ -111,7 +111,7 @@ class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
     @classmethod
     def from_momentum_fields(cls, array: ak.Array) -> "AzimuthalAwkward":
         """
-        Create a :class:`vector.backends.awkward.AzimuthalAwkwardXY` or a
+        Create a :class:`vector._backends.awkward_.AzimuthalAwkwardXY` or a
         :class:`vector._backends.awkward_.AzimuthalAwkwardRhoPhi`, depending on
         the fields in ``array``, allowing momentum synonyms.
         """
