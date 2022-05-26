@@ -3,6 +3,17 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+"""
+Defines behaviors for NumPy Array. New arrays created with the
+
+.. code-block:: python
+
+    vector.array(...)
+
+function will have these behaviors built in (and will pass them to any derived
+arrays).
+"""
+
 import collections.abc
 import typing
 
@@ -45,6 +56,20 @@ ArrayLike = ScalarCollection
 
 
 def _array_from_columns(columns: typing.Dict[str, ArrayLike]) -> ArrayLike:
+    """
+    Converts a dictionary (or columns) of coordinates to an array.
+
+    Args:
+        columns (dict): The dictionary of coordinates
+            to be converted.
+
+    Returns:
+        ``np.ndarray``: A structured array of coordinates.
+
+    Examples:
+        >>> _array_from_columns({"x": [1, 2, 3], "y": [1, 2, 4]})
+        array([(1., 1.), (2., 2.), (3., 4.)], dtype=[('x', '<f8'), ('y', '<f8')])
+    """
     if len(columns) == 0:
         raise ValueError("no columns have been provided")
     names = list(columns.keys())
@@ -111,6 +136,10 @@ def _getitem(
     where: typing.Any,
     is_momentum: bool,
 ) -> typing.Union[float, FloatArray]:
+    """
+    Implementation for the ``__getitem__`` method. See :class:`GetItem` for
+    more details.
+    """
     if isinstance(where, str):
         if is_momentum:
             where = _repr_momentum_to_generic.get(where, where)
@@ -147,6 +176,10 @@ def _array_repr(
     array: typing.Union["VectorNumpy2D", "VectorNumpy3D", "VectorNumpy4D"],
     is_momentum: bool,
 ) -> str:
+    """
+    Constructs the value for ``__repr__`` function of the provided VectorNumpy
+    class.
+    """
     name = type(array).__name__
     vanilla_array = array.view(numpy.ndarray)
     return name + repr(vanilla_array)[5:].replace("\n     ", "\n" + " " * len(name))
@@ -164,6 +197,30 @@ def _has(
     ],
     names: typing.Tuple[str, ...],
 ) -> bool:
+    """
+    Checks if a NumPy vector has the provided coordinate attributes.
+
+    Args:
+        array (NumPy vector): A NumPy Vector whose coordinate attributes
+            have to be checked.
+        names (tuple): Names of the attributes.
+
+    Returns:
+        bool: If the attribute exists or not.
+
+    Examples:
+        >>> from vector._backends.numpy_ import _has
+        >>> from vector._methods import _coordinate_class_to_names
+        >>> vec = vector.array([
+        ...     (1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)
+        ... ], dtype=[("x", float), ("y", float)])
+        >>> _has(vec, ("x", "y"))
+        True
+        >>> _has(vec, _coordinate_class_to_names[vector._methods.AzimuthalXY])
+        True
+        >>> _has(vec, _coordinate_class_to_names[vector._methods.AzimuthalRhoPhi])
+        False
+    """
     dtype_names = array.dtype.names
     if dtype_names is None:
         dtype_names = ()
@@ -173,6 +230,24 @@ def _has(
 def _toarrays(
     result: typing.Tuple[ScalarCollection, ...]
 ) -> typing.Tuple[FloatArray, ...]:
+    """
+    Converts a tuple of values to a tuple of ``numpy.array``s.
+
+    Args:
+        result (tuple): A tuple of values to be converted.
+
+    Returns:
+        tuple: A tuple of ``numpy.array``.
+
+    Examples
+        >>> from vector._backends.numpy_ import _toarrays
+        >>> _toarrays((1, 2, 3, 4))
+        (array([1.]), array([2.]), array([3.]), array([4.]))
+        >>> _toarrays((1, 2, (1, 2, 3)))
+        (array([1.]), array([2.]), array([[1., 2., 3.]]))
+        >>> _toarrays((1, 2, (1, 2, False)))
+        (array([1.]), array([2.]), array([[1., 2., 0.]]))
+    """
     istuple = True
     if not isinstance(result, tuple):
         istuple = False
@@ -188,6 +263,25 @@ def _toarrays(
 
 
 def _shape_of(result: typing.Tuple[FloatArray, ...]) -> typing.Tuple[int, ...]:
+    """
+    Calculates the shape of a tuple of ``numpy.array``s. The shape returned
+    is the highest (numerical) value of the shapes present in the tuple.
+
+    Args:
+        result (tuple): A tuple of ``numpy.array``s.
+
+    Returns:
+        tuple: The calculated shape.
+
+    Examples:
+        >>> from vector._backends.numpy_ import _shape_of
+        >>> _shape_of((np.array([1]), np.array([2])))
+        (1,)
+        >>> _shape_of((np.array([1]), np.array([2, 8]), np.array([0])))
+        (2,)
+        >>> _shape_of((np.array([1]), np.array([2, 8])))
+        (2,)
+    """
     if not isinstance(result, tuple):
         result = (result,)
     shape = None
@@ -219,23 +313,43 @@ class GetItem:
 
 
 class CoordinatesNumpy:
+    """
+    Coordinates class for the Numpy backend.
+    """
+
     lib = numpy
     dtype: "numpy.dtype[typing.Any]"
 
 
 class AzimuthalNumpy(CoordinatesNumpy, Azimuthal):
+    """
+    Azimuthal class for the NumPy backend.
+    """
+
     ObjectClass: typing.Type[vector._backends.object_.AzimuthalObject]
 
 
 class LongitudinalNumpy(CoordinatesNumpy, Longitudinal):
+    """
+    Longitudinal class for the NumPy backend.
+    """
+
     ObjectClass: typing.Type[vector._backends.object_.LongitudinalObject]
 
 
 class TemporalNumpy(CoordinatesNumpy, Temporal):
+    """
+    Temporal class for the NumPy backend.
+    """
+
     ObjectClass: typing.Type[vector._backends.object_.TemporalObject]
 
 
 class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # type: ignore[misc]
+    """
+    Class for the ``rho`` and ``phi`` (azimuthal) coordinates of NumPy backend.
+    """
+
     ObjectClass = vector._backends.object_.AzimuthalObjectXY
     _IS_MOMENTUM = False
 
@@ -263,6 +377,10 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # typ
 
 
 class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray):  # type: ignore[misc]
+    """
+    Class for the ``rho`` and ``phi`` (azimuthal) coordinates of NumPy backend.
+    """
+
     ObjectClass = vector._backends.object_.AzimuthalObjectRhoPhi
     _IS_MOMENTUM = False
 
@@ -290,6 +408,10 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray)
 
 
 class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):  # type: ignore[misc]
+    """
+    Class for the ``z`` (longitudinal) coordinate of NumPy backend.
+    """
+
     ObjectClass = vector._backends.object_.LongitudinalObjectZ
     _IS_MOMENTUM = False
 
@@ -313,6 +435,10 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):
 
 
 class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, FloatArray):  # type: ignore[misc]
+    """
+    Class for the ``theta`` (longitudinal) coordinate of NumPy backend.
+    """
+
     ObjectClass = vector._backends.object_.LongitudinalObjectTheta
     _IS_MOMENTUM = False
 
@@ -338,6 +464,10 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, Floa
 
 
 class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArray):  # type: ignore[misc]
+    """
+    Class for the ``eta`` (longitudinal) coordinate of NumPy backend.
+    """
+
     ObjectClass = vector._backends.object_.LongitudinalObjectEta
     _IS_MOMENTUM = False
 
@@ -361,6 +491,10 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArr
 
 
 class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ignore[misc]
+    """
+    Class for the ``t`` (temporal) coordinate of NumPy backend.
+    """
+
     ObjectClass = vector._backends.object_.TemporalObjectT
     _IS_MOMENTUM = False
 
@@ -384,6 +518,10 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ig
 
 
 class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type: ignore[misc]
+    """
+    Class for the ``tau`` (temporal) coordinate of NumPy backend.
+    """
+
     ObjectClass = vector._backends.object_.TemporalObjectTau
     _IS_MOMENTUM = False
 
@@ -407,6 +545,10 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type
 
 
 class VectorNumpy(Vector, GetItem):
+    """
+    One dimensional vector class for the NumPy backend.
+    """
+
     lib = numpy
     dtype: "numpy.dtype[typing.Any]"
 
@@ -423,17 +565,29 @@ class VectorNumpy(Vector, GetItem):
         return self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan).all()
 
     def __eq__(self, other: typing.Any) -> typing.Any:
+        """
+        Check if 2 ``VectorNumpy``s are equal.
+        """
         return numpy.equal(self, other)
 
     def __ne__(self, other: typing.Any) -> typing.Any:
+        """
+        Check if 2 ``VectorNumpy``s are not equal.
+        """
         return numpy.not_equal(self, other)
 
     def __reduce__(self) -> typing.Union[str, typing.Tuple[typing.Any, ...]]:
+        """
+        Make ``VectorNumpy``'s object pickle-able.
+        """
         pickled_state = super().__reduce__()
         new_state = (*pickled_state[2], self.__dict__)
         return pickled_state[0], pickled_state[1], new_state
 
     def __setstate__(self, state: typing.Any) -> None:
+        """
+        Takes the object and retrieves class state as it was before.
+        """
         self.__dict__.update(state[-1])
         super().__setstate__(state[0:-1])  # type: ignore[misc]
 
@@ -444,6 +598,13 @@ class VectorNumpy(Vector, GetItem):
         *inputs: typing.Any,
         **kwargs: typing.Any,
     ) -> typing.Any:
+        """
+        Implements NumPy's ``ufunc``s for ``VectorNumpy``. The current implementation
+        includes ``numpy.absolute``, ``numpy.add``, ``numpy.subtract``, ``numpy.multipy``,
+        ``numpy.positive``, ``numpy.negative``, ``numpy.true_divide``, ``numpy.power``,
+        ``numpy.square``, ``numpy.sqrt``, ``numpy.cbrt``, ``numpy.matmul``, ``numpy.equal``,
+        and ``numpy.not_equal``.
+        """
         if not isinstance(_handler_of(*inputs), VectorNumpy):
             # Let a higher-precedence backend handle it.
             return NotImplemented
@@ -657,14 +818,20 @@ class VectorNumpy(Vector, GetItem):
 
 
 class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[misc]
+    """
+    Two dimensional vector class for the NumPy backend.
+    """
+
     ObjectClass = vector._backends.object_.VectorObject2D
     _IS_MOMENTUM = False
-
     _azimuthal_type: typing.Union[
         typing.Type[AzimuthalNumpyXY], typing.Type[AzimuthalNumpyRhoPhi]
     ]
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "VectorNumpy2D":
+        """
+        Returns the object of ``VectorNumpy2D``. Behvaes as ``__init__`` in this case.
+        """
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             array = _array_from_columns(args[0])
         else:
@@ -693,6 +860,17 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
 
     @property
     def azimuthal(self) -> AzimuthalNumpy:
+        """
+        Returns the azimuthal type vector for the given ``VectorNumpy2D`` object.
+
+        Examples:
+            >>> vec = vector.array([
+            ...     (1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)
+            ... ], dtype=[("x", float), ("y", float)])
+            >>> vec.azimuthal
+            AzimuthalNumpyXY([(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4),
+                            (1.5, 2.5)], dtype=[('x', '<f8'), ('y', '<f8')])
+        """
         return self.view(self._azimuthal_type)  # type: ignore[return-value]
 
     def _wrap_result(
@@ -703,6 +881,9 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
         num_vecargs: typing.Any,
     ) -> typing.Any:
         """
+        Wraps the raw result of a compute function as an array of scalars or an
+        array of vectors.
+
         Args:
             result: Value or tuple of values from a compute function.
             returns: Signature from a ``dispatch_map``.
@@ -710,9 +891,6 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
                 that would be treated on an equal footing (i.e. ``add``
                 has two, but ``rotate_axis`` has only one: the ``axis``
                 is secondary).
-
-        Wraps the raw result of a compute function as an array of scalars or an
-        array of vectors.
         """
         if returns == [float] or returns == [bool]:
             return result
@@ -845,6 +1023,10 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
 
 
 class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore[misc]
+    """
+    Two dimensional momentum vector class for the NumPy backend.
+    """
+
     ObjectClass = vector._backends.object_.MomentumObject2D
     _IS_MOMENTUM = True
     dtype: "numpy.dtype[typing.Any]"
@@ -875,6 +1057,10 @@ class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore[misc]
 
 
 class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore[misc]
+    """
+    Three dimensional vector class for the NumPy backend.
+    """
+
     ObjectClass = vector._backends.object_.VectorObject3D
     _IS_MOMENTUM = False
 
@@ -888,6 +1074,9 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
     ]
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "VectorNumpy3D":
+        """
+        Returns the object of ``VectorNumpy3D``. Behvaes as ``__init__`` in this case.
+        """
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             array = _array_from_columns(args[0])
         else:
@@ -927,10 +1116,18 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
 
     @property
     def azimuthal(self) -> AzimuthalNumpy:
+        """
+        Returns the azimuthal type vector for the given ``VectorNumpy3D`` object.
+        """
+        # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
         return self.view(self._azimuthal_type)  # type: ignore[return-value]
 
     @property
     def longitudinal(self) -> LongitudinalNumpy:
+        """
+        Returns the longitudinal type vector for the given ``VectorNumpy3D`` object.
+        """
+        # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
         return self.view(self._longitudinal_type)  # type: ignore[return-value]
 
     def _wrap_result(
@@ -941,6 +1138,9 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
         num_vecargs: typing.Any,
     ) -> typing.Any:
         """
+        Wraps the raw result of a compute function as an array of scalars or an
+        array of vectors.
+
         Args:
             result: Value or tuple of values from a compute function.
             returns: Signature from a ``dispatch_map``.
@@ -948,9 +1148,6 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
                 that would be treated on an equal footing (i.e. ``add``
                 has two, but ``rotate_axis`` has only one: the ``axis``
                 is secondary).
-
-        Wraps the raw result of a compute function as an array of scalars or an
-        array of vectors.
         """
         if returns == [float] or returns == [bool]:
             return result
@@ -1087,6 +1284,10 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
 
 
 class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
+    """
+    Two dimensional momentum vector class for the NumPy backend.
+    """
+
     ObjectClass = vector._backends.object_.MomentumObject3D
     _IS_MOMENTUM = True
     dtype: "numpy.dtype[typing.Any]"
@@ -1127,6 +1328,10 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
 
 
 class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore[misc]
+    """
+    Four dimensional vector class for the NumPy backend.
+    """
+
     ObjectClass = vector._backends.object_.VectorObject4D
     _IS_MOMENTUM = False
 
@@ -1144,6 +1349,9 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
     ]
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "VectorNumpy4D":
+        """
+        Returns the object of ``VectorNumpy4D``. Behvaes as ``__init__`` in this case.
+        """
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             array = _array_from_columns(args[0])
         else:
@@ -1194,14 +1402,26 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
 
     @property
     def azimuthal(self) -> AzimuthalNumpy:
+        """
+        Returns the azimuthal type vector for the given ``VectorNumpy4D`` object.
+        """
+        # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
         return self.view(self._azimuthal_type)  # type: ignore[return-value]
 
     @property
     def longitudinal(self) -> LongitudinalNumpy:
+        """
+        Returns the longitudinal type vector for the given ``Vectornumpy4D`` object.
+        """
+        # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
         return self.view(self._longitudinal_type)  # type: ignore[return-value]
 
     @property
     def temporal(self) -> TemporalNumpy:
+        """
+        Returns the azimuthal type vector for the given ``VectorNumpy4D`` object.
+        """
+        # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
         return self.view(self._temporal_type)  # type: ignore[return-value]
 
     def _wrap_result(
@@ -1366,6 +1586,10 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
 
 
 class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore[misc]
+    """
+    Four dimensional momentum vector class for the NumPy backend.
+    """
+
     ObjectClass = vector._backends.object_.MomentumObject4D
     _IS_MOMENTUM = True
     dtype: "numpy.dtype[typing.Any]"
