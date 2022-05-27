@@ -347,7 +347,7 @@ class TemporalNumpy(CoordinatesNumpy, Temporal):
 
 class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # type: ignore[misc]
     """
-    Class for the ``rho`` and ``phi`` (azimuthal) coordinates of NumPy backend.
+    Class for the ``x`` and ``y`` (azimuthal) coordinates of NumPy backend.
     """
 
     ObjectClass = vector._backends.object_.AzimuthalObjectXY
@@ -809,6 +809,10 @@ class VectorNumpy(Vector, GetItem):
     def __array_function__(
         self, func: typing.Any, types: typing.Any, args: typing.Any, kwargs: typing.Any
     ) -> typing.Any:
+        """
+        Implements NumPy's function for ``VectorNumpy`` and its subclasses. The current
+        implementation includes ``numpy.isclose`` and ``numpy.allclose``.
+        """
         if func is numpy.isclose:
             return type(self).isclose(*args, **kwargs)
         elif func is numpy.allclose:
