@@ -41,7 +41,7 @@ The developer installation of ``vector`` comes with a lot of options -
 * dev: installs the ``awkward`` option + the ``test`` option + `numba <https://github.com/numba/numba>`_
 * all: installs dependencies from every option
 
-These options can be used with ``pip`` in the editable (``-e``) form of installation in the following ways -
+These options can be used with ``pip`` in the editable (``-e``) mode of installation in the following ways -
 
 .. code-block::
 
@@ -53,8 +53,27 @@ For example, if you want to install the ``docs`` dependencies along with the dep
 
     pip install -e .[dev,test,docs]
 
+Furthermore, ``vector`` can also be installed using ``conda``, and this installation also requires using a virtual
+environment. ``Vector`` can be installed by executing the following commands -
+
+.. code-block::
+
+    conda env create
+    conda activate vector
+    conda config --env --add channels conda-forge  # Optional
+
+Adding vector for notebooks
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``Vector`` can be added to the notebooks using the following commands -
+
+.. code-block::
+
+    python -m ipykernel install --user --name vector # For notebooks
+
 Activating pre-commit
 =====================
+
 
 Testing vector
 ==============
