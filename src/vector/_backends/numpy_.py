@@ -823,7 +823,16 @@ class VectorNumpy(Vector, GetItem):
 
 class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[misc]
     """
-    Two dimensional vector class for the NumPy backend.
+    Two dimensional vector class for the NumPy backend which can be used
+    to construct two dimensional NumPy vectors. For two dimensional Momentum
+    NumPy vectors see :class:`MomentumNumpy2D`.
+
+    Examples:
+        >>> vec = vector.VectorNumpy2D([(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)],
+        ...               dtype=[('x', float), ('y', float)])
+        >>> vec
+        VectorNumpy2D([(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)],
+                    dtype=[('x', '<f8'), ('y', '<f8')])
     """
 
     ObjectClass = vector._backends.object_.VectorObject2D
@@ -1028,7 +1037,16 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
 
 class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore[misc]
     """
-    Two dimensional momentum vector class for the NumPy backend.
+    Two dimensional momentum vector class for the NumPy backend which can be used
+    to construct two dimensional NumPy momentum vectors. For two dimensional
+    NumPy vectors see :class:`VectorNumpy2D`.
+
+    Examples:
+        >>> vec = vector.MomentumNumpy2D([(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)],
+        ...               dtype=[('px', float), ('py', float)])
+        >>> vec
+        MomentumNumpy2D([(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)],
+                        dtype=[('x', '<f8'), ('y', '<f8')])
     """
 
     ObjectClass = vector._backends.object_.MomentumObject2D
@@ -1062,7 +1080,16 @@ class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore[misc]
 
 class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore[misc]
     """
-    Three dimensional vector class for the NumPy backend.
+    Three dimensional vector class for the NumPy backend which can be used
+    to construct three dimensional NumPy vectors. For three dimensional Momentum
+    NumPy vectors see :class:`MomentumNumpy3D`.
+
+    Examples:
+        >>> vec = vector.VectorNumpy3D([(1.1, 2.1, 3.1), (1.2, 2.2, 3.2), (1.3, 2.3, 3.3), (1.4, 2.4, 3.4), (1.5, 2.5, 3.5)],
+        ...               dtype=[('x', float), ('y', float), ('z', float)])
+        >>> vec
+        VectorNumpy3D([(1.1, 2.1, 3.1), (1.2, 2.2, 3.2), (1.3, 2.3, 3.3), (1.4, 2.4, 3.4),
+                    (1.5, 2.5, 3.5)], dtype=[('x', '<f8'), ('y', '<f8'), ('z', '<f8')])
     """
 
     ObjectClass = vector._backends.object_.VectorObject3D
@@ -1289,7 +1316,16 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
 
 class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
     """
-    Two dimensional momentum vector class for the NumPy backend.
+    Three dimensional momentum vector class for the NumPy backend which can be used
+    to construct three dimensional NumPy momentum vectors. For three dimensional
+    NumPy vectors see :class:`VectorNumpy3D`.
+
+    Examples:
+        >>> vec = vector.MomentumNumpy3D([(1.1, 2.1, 3.1), (1.2, 2.2, 3.2), (1.3, 2.3, 3.3), (1.4, 2.4, 3.4), (1.5, 2.5, 3.5)],
+        ...               dtype=[('px', float), ('py', float), ('pz', float)])
+        >>> vec
+        MomentumNumpy3D([(1.1, 2.1, 3.1), (1.2, 2.2, 3.2), (1.3, 2.3, 3.3), (1.4, 2.4, 3.4),
+                        (1.5, 2.5, 3.5)], dtype=[('x', '<f8'), ('y', '<f8'), ('z', '<f8')])
     """
 
     ObjectClass = vector._backends.object_.MomentumObject3D
@@ -1333,7 +1369,17 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
 
 class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore[misc]
     """
-    Four dimensional vector class for the NumPy backend.
+    Four dimensional vector class for the NumPy backend which can be used
+    to construct four dimensional NumPy vectors. For four dimensional Momentum
+    NumPy vectors see :class:`MomentumNumpy4D`.
+
+    Examples:
+        >>> vec = vector.VectorNumpy4D([(1.1, 2.1, 3.1, 4.1), (1.2, 2.2, 3.2, 4.2), (1.3, 2.3, 3.3, 4.3), (1.4, 2.4, 3.4, 4.4), (1.5, 2.5, 3.5, 4.5)],
+        ...               dtype=[('x', float), ('y', float), ('z', float), ('t', float)])
+        >>> vec
+        VectorNumpy4D([(1.1, 2.1, 3.1, 4.1), (1.2, 2.2, 3.2, 4.2), (1.3, 2.3, 3.3, 4.3),
+                    (1.4, 2.4, 3.4, 4.4), (1.5, 2.5, 3.5, 4.5)],
+                    dtype=[('x', '<f8'), ('y', '<f8'), ('z', '<f8'), ('t', '<f8')])
     """
 
     ObjectClass = vector._backends.object_.VectorObject4D
@@ -1591,7 +1637,17 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
 
 class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore[misc]
     """
-    Four dimensional momentum vector class for the NumPy backend.
+    Four dimensional momentum vector class for the NumPy backend which can be used
+    to construct four dimensional NumPy momentum vectors. For three dimensional
+    NumPy vectors see :class:`VectorNumpy4D`.
+
+    Examples:
+        >>> vec = vector.MomentumNumpy4D([(1.1, 2.1, 3.1, 4.1), (1.2, 2.2, 3.2, 4.2), (1.3, 2.3, 3.3, 4.3), (1.4, 2.4, 3.4, 4.4), (1.5, 2.5, 3.5, 4.5)],
+        ...               dtype=[('px', float), ('py', float), ('pz', float), ('t', float)])
+        >>> vec
+        MomentumNumpy4D([(1.1, 2.1, 3.1, 4.1), (1.2, 2.2, 3.2, 4.2), (1.3, 2.3, 3.3, 4.3),
+                        (1.4, 2.4, 3.4, 4.4), (1.5, 2.5, 3.5, 4.5)],
+                        dtype=[('x', '<f8'), ('y', '<f8'), ('z', '<f8'), ('t', '<f8')])
     """
 
     ObjectClass = vector._backends.object_.MomentumObject4D
