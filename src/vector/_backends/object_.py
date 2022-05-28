@@ -41,18 +41,30 @@ from vector._typeutils import FloatArray
 
 
 class CoordinatesObject:
+    """
+    Coordinates class for the Object backend.
+    """
+
     pass
 
 
 class AzimuthalObject(CoordinatesObject, Azimuthal):
+    """
+    Azimuthal class for the Object backend.
+    """
+
     pass
 
 
 class LongitudinalObject(CoordinatesObject, Longitudinal):
+    """ """
+
     pass
 
 
 class TemporalObject(CoordinatesObject, Temporal):
+    """ """
+
     pass
 
 
@@ -62,8 +74,22 @@ class TupleXY(typing.NamedTuple):
 
 
 class AzimuthalObjectXY(AzimuthalObject, AzimuthalXY, TupleXY):
+    """
+    Class for the ``x`` and ``y`` (azimuthal) coordinates of Object backend.
+    Use the ``elements`` property to retrieve the coordinates.
+    """
+
     @property
     def elements(self) -> typing.Tuple[float, float]:
+        """
+        Returns ``x`` and ``y`` coordinates.
+
+        Examples:
+            >>> v = vector.obj(x=1, y=2)
+            >>> az = v.azimuthal
+            >>> az.elements
+            (1, 2)
+        """
         return (self.x, self.y)
 
 
@@ -73,8 +99,22 @@ class TupleRhoPhi(typing.NamedTuple):
 
 
 class AzimuthalObjectRhoPhi(AzimuthalObject, AzimuthalRhoPhi, TupleRhoPhi):
+    """
+    Class for the ``rho`` and ``phi`` (azimuthal) coordinates of Object backend.
+    Use the ``elements`` property to retrieve the coordinates.
+    """
+
     @property
     def elements(self) -> typing.Tuple[float, float]:
+        """
+        Returns ``rho`` and ``phi`` coordinates.
+
+        Examples:
+            >>> v = vector.obj(rho=1, phi=2)
+            >>> az = v.azimuthal
+            >>> az.elements
+            (1, 2)
+        """
         return (self.rho, self.phi)
 
 
@@ -83,8 +123,22 @@ class TupleZ(typing.NamedTuple):
 
 
 class LongitudinalObjectZ(LongitudinalObject, LongitudinalZ, TupleZ):
+    """
+    Class for the ``z`` (longitudinal) coordinate of Object backend.
+    Use the ``elements`` property to retrieve the coordinates.
+    """
+
     @property
     def elements(self) -> typing.Tuple[float]:
+        """
+        Returns ``z`` coordinate.
+
+        Examples:
+            >>> v = vector.obj(rho=1, phi=2, z=3)
+            >>> lc = v.longitudinal
+            >>> lc.elements
+            (3,)
+        """
         return (self.z,)
 
 
@@ -93,8 +147,22 @@ class TupleTheta(typing.NamedTuple):
 
 
 class LongitudinalObjectTheta(LongitudinalObject, LongitudinalTheta, TupleTheta):
+    """
+    Class for the ``theta`` (longitudinal) coordinate of Object backend.
+    Use the ``elements`` property to retrieve the coordinates.
+    """
+
     @property
     def elements(self) -> typing.Tuple[float]:
+        """
+        Returns ``theta`` coordinate.
+
+        Examples:
+            >>> v = vector.obj(rho=1, phi=2, theta=3)
+            >>> lc = v.longitudinal
+            >>> lc.elements
+            (3,)
+        """
         return (self.theta,)
 
 
@@ -103,10 +171,24 @@ class TupleEta(typing.NamedTuple):
 
 
 class LongitudinalObjectEta(LongitudinalObject, LongitudinalEta, TupleEta):
+    """
+    Class for the ``eta`` (longitudinal) coordinate of Object backend.
+    Use the ``elements`` property to retrieve the coordinates.
+    """
+
     eta: float
 
     @property
     def elements(self) -> typing.Tuple[float]:
+        """
+        Returns ``eta`` coordinate.
+
+        Examples:
+            >>> v = vector.obj(rho=1, phi=2, eta=3)
+            >>> lc = v.longitudinal
+            >>> lc.elements
+            (3,)
+        """
         return (self.eta,)
 
 
@@ -119,6 +201,15 @@ class TemporalObjectT(TemporalObject, TemporalT, TupleT):
 
     @property
     def elements(self) -> typing.Tuple[float]:
+        """
+        Returns ``t`` coordinate.
+
+        Examples:
+            >>> v = vector.obj(rho=1, phi=2, theta=3, t=4)
+            >>> tc = v.temporal
+            >>> tc.elements
+            (4,)
+        """
         return (self.t,)
 
 
@@ -129,6 +220,15 @@ class TupleTau(typing.NamedTuple):
 class TemporalObjectTau(TemporalObject, TemporalTau, TupleTau):
     @property
     def elements(self) -> typing.Tuple[float]:
+        """
+        Returns ``tau`` coordinate.
+
+        Examples:
+            >>> v = vector.obj(rho=1, phi=2, theta=3, tau=4)
+            >>> tc = v.temporal
+            >>> tc.elements
+            (4,)
+        """
         return (self.tau,)
 
 
@@ -177,6 +277,8 @@ def _replace_data(obj: typing.Any, result: typing.Any) -> typing.Any:
 
 
 class VectorObject(Vector):
+    """ """
+
     lib = numpy
 
     def __eq__(self, other: typing.Any) -> typing.Any:
@@ -482,6 +584,8 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
         num_vecargs: typing.Any,
     ) -> typing.Any:
         """
+        Wraps the raw result of a compute function as a scalar or a vector.
+
         Args:
             result: Value or tuple of values from a compute function.
             returns: Signature from a ``dispatch_map``.
@@ -489,8 +593,6 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
                 that would be treated on an equal footing (i.e. ``add``
                 has two, but ``rotate_axis`` has only one: the ``axis``
                 is secondary).
-
-        Wraps the raw result of a compute function as a scalar or a vector.
         """
         if returns == [float] or returns == [bool]:
             return result
@@ -642,6 +744,9 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
 
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
+
+        Examples:
+
         """
         return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z))
 
@@ -734,6 +839,8 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         num_vecargs: typing.Any,
     ) -> typing.Any:
         """
+        Wraps the raw result of a compute function as a scalar or a vector.
+
         Args:
             result: Value or tuple of values from a compute function.
             returns: Signature from a ``dispatch_map``.
@@ -741,8 +848,6 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
                 that would be treated on an equal footing (i.e. ``add``
                 has two, but ``rotate_axis`` has only one: the ``axis``
                 is secondary).
-
-        Wraps the raw result of a compute function as a scalar or a vector.
         """
         if returns == [float] or returns == [bool]:
             return result
@@ -1208,6 +1313,8 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         num_vecargs: typing.Any,
     ) -> typing.Any:
         """
+        Wraps the raw result of a compute function as a scalar or a vector.
+
         Args:
             result: Value or tuple of values from a compute function.
             returns: Signature from a ``dispatch_map``.
@@ -1215,8 +1322,6 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
                 that would be treated on an equal footing (i.e. ``add``
                 has two, but ``rotate_axis`` has only one: the ``axis``
                 is secondary).
-
-        Wraps the raw result of a compute function as a scalar or a vector.
         """
         if returns == [float] or returns == [bool]:
             return result
@@ -1472,6 +1577,11 @@ def _gather_coordinates(
 ) -> typing.Any:
     """
     Helper function for :doc:`vector._backends.object_.obj`.
+
+    Constructs and returns a 2D, 3D, or 4D ``VectorObject`` or ``MomentumObject`` with
+    the provided coordinates (dictionary), planar (``VectorObject2D`` or ``MomentumObject2D``),
+    spatial (``VectorObject3D`` or ``MomentumObject3D``), and lorentz
+    (``VectorObject4D`` or ``MomentumObject4D``) classes.
     """
     azimuthal: typing.Optional[
         typing.Union[AzimuthalObjectXY, AzimuthalObjectRhoPhi]
@@ -2659,7 +2769,7 @@ def obj(*, pt: float, phi: float, eta: float, mass: float) -> MomentumObject4D:
 
 def obj(**coordinates: float) -> VectorObject:
     """
-    Constructs a single vector, whose type is determined by the keyword-only
+    Constructs a single ``Object`` type vector, whose type is determined by the keyword-only
     arguments to this function.
 
     Allowed combinations are:
