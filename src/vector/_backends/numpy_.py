@@ -372,7 +372,10 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # typ
     @property
     def elements(self) -> typing.Tuple[FloatArray, FloatArray]:
         """
-        Returns the elements (``x`` and ``y`` coordinates).
+        Azimuthal coordinates (``x`` and ``y``) as a tuple.
+
+        Each coordinate may be a scalar, a NumPy array, an Awkward Array, etc.,
+        but they are not vectors.
 
         Examples:
             >>> vec = vector._backends.numpy_.AzimuthalNumpyXY([(1, 1), (2.1, 3.1)], dtype=[("x", float), ("y", float)])
@@ -384,14 +387,14 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # typ
     @property
     def x(self) -> FloatArray:
         """
-        Returns the ``x`` coordinates.
+        The ``x`` coordinates.
         """
         return self["x"]
 
     @property
     def y(self) -> FloatArray:
         """
-        Returns the ``y`` coordinates.
+        The ``y`` coordinates.
         """
         return self["y"]
 
@@ -423,7 +426,10 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray)
     @property
     def elements(self) -> typing.Tuple[FloatArray, FloatArray]:
         """
-        Returns the elements (``rho`` and ``phi`` coordinates).
+        Azimuthal coordinates (``rho`` and ``phi``) as a tuple.
+
+        Each coordinate may be a scalar, a NumPy array, an Awkward Array, etc.,
+        but they are not vectors.
 
         Examples:
             >>> vec = vector._backends.numpy_.AzimuthalNumpyRhoPhi([(1, 1), (2.1, 3.1)], dtype=[("rho", float), ("phi", float)])
@@ -435,14 +441,14 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray)
     @property
     def rho(self) -> FloatArray:
         """
-        Returns the ``rho`` coordinates.
+        The ``rho`` coordinates.
         """
         return self["rho"]
 
     @property
     def phi(self) -> FloatArray:
         """
-        Returns the ``phi`` coordinates.
+        The ``phi`` coordinates.
         """
         return self["phi"]
 
@@ -473,7 +479,10 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):
     @property
     def elements(self) -> typing.Tuple[FloatArray]:
         """
-        Returns the elements (``z`` coordinates).
+        Longitudinal coordinates (``z``) as a tuple.
+
+        Each coordinate may be a scalar, a NumPy array, an Awkward Array, etc.,
+        but they are not vectors.
 
         Examples:
             >>> vec = vector._backends.numpy_.LongitudinalNumpyZ([(1), (2.1)], dtype=[("z", float)])
@@ -485,7 +494,7 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):
     @property
     def z(self) -> FloatArray:
         """
-        Returns the ``z`` coordinates.
+        The ``z`` coordinates.
         """
         return self["z"]
 
@@ -518,7 +527,10 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, Floa
     @property
     def elements(self) -> typing.Tuple[FloatArray]:
         """
-        Returns the elements (``theta`` coordinates).
+        Longitudinal coordinates (``theta``) as a tuple.
+
+        Each coordinate may be a scalar, a NumPy array, an Awkward Array, etc.,
+        but they are not vectors.
 
         Examples:
             >>> vec = vector._backends.numpy_.LongitudinalNumpyTheta([(1), (2.1)], dtype=[("theta", float)])
@@ -530,7 +542,7 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, Floa
     @property
     def theta(self) -> FloatArray:
         """
-        Returns the ``theta`` coordinates.
+        The ``theta`` coordinates.
         """
         return self["theta"]
 
@@ -561,7 +573,10 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArr
     @property
     def elements(self) -> typing.Tuple[FloatArray]:
         """
-        Returns the elements (``eta`` coordinates).
+        Longitudinal coordinates (``eta``) as a tuple.
+
+        Each coordinate may be a scalar, a NumPy array, an Awkward Array, etc.,
+        but they are not vectors.
 
         Examples:
             >>> vec = vector._backends.numpy_.LongitudinalNumpyTheta([(1), (2.1)], dtype=[("theta", float)])
@@ -573,7 +588,7 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArr
     @property
     def eta(self) -> FloatArray:
         """
-        Returns the ``eta`` coordinates.
+        The ``eta`` coordinates.
         """
         return self["eta"]
 
@@ -604,7 +619,10 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ig
     @property
     def elements(self) -> typing.Tuple[FloatArray]:
         """
-        Returns the elements (``t`` coordinates).
+        Temporal coordinates (``t``) as a tuple.
+
+        Each coordinate may be a scalar, a NumPy array, an Awkward Array, etc.,
+        but they are not vectors.
 
         Examples:
             >>> vec = vector._backends.numpy_.TemporalNumpyT([(1), (2.1)], dtype=[("t", float)])
@@ -615,6 +633,9 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ig
 
     @property
     def t(self) -> FloatArray:
+        """
+        The ``t`` coordinates.
+        """
         return self["t"]
 
 
@@ -638,10 +659,24 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type
 
     @property
     def elements(self) -> typing.Tuple[FloatArray]:
+        """
+        Temporal coordinates (``tau``) as a tuple.
+
+        Each coordinate may be a scalar, a NumPy array, an Awkward Array, etc.,
+        but they are not vectors.
+
+        Examples:
+            >>> vec = vector._backends.numpy_.TemporalNumpyTau([(1), (2.1)], dtype=[("tau", float)])
+            >>> vec.elements
+            (array([1. , 2.1]),)
+        """
         return (self["tau"],)
 
     @property
     def tau(self) -> FloatArray:
+        """
+        The ``tau`` coordinates.
+        """
         return self["tau"]
 
 
@@ -963,7 +998,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
     @property
     def azimuthal(self) -> AzimuthalNumpy:
         """
-        Returns the azimuthal type vector for the given ``VectorNumpy2D`` object.
+        Returns the azimuthal type class for the given ``VectorNumpy2D`` object.
 
         Examples:
             >>> vec = vector.array([
@@ -1237,7 +1272,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
     @property
     def azimuthal(self) -> AzimuthalNumpy:
         """
-        Returns the azimuthal type vector for the given ``VectorNumpy3D`` object.
+        Returns the azimuthal type class for the given ``VectorNumpy3D`` object.
         """
         # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
         return self.view(self._azimuthal_type)  # type: ignore[return-value]
@@ -1245,7 +1280,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
     @property
     def longitudinal(self) -> LongitudinalNumpy:
         """
-        Returns the longitudinal type vector for the given ``VectorNumpy3D`` object.
+        Returns the longitudinal type class for the given ``VectorNumpy3D`` object.
         """
         # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
         return self.view(self._longitudinal_type)  # type: ignore[return-value]
@@ -1542,7 +1577,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
     @property
     def azimuthal(self) -> AzimuthalNumpy:
         """
-        Returns the azimuthal type vector for the given ``VectorNumpy4D`` object.
+        Returns the azimuthal type class for the given ``VectorNumpy4D`` object.
         """
         # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
         return self.view(self._azimuthal_type)  # type: ignore[return-value]
@@ -1550,7 +1585,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
     @property
     def longitudinal(self) -> LongitudinalNumpy:
         """
-        Returns the longitudinal type vector for the given ``Vectornumpy4D`` object.
+        Returns the longitudinal type class for the given ``Vectornumpy4D`` object.
         """
         # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
         return self.view(self._longitudinal_type)  # type: ignore[return-value]
@@ -1558,7 +1593,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
     @property
     def temporal(self) -> TemporalNumpy:
         """
-        Returns the azimuthal type vector for the given ``VectorNumpy4D`` object.
+        Returns the azimuthal type class for the given ``VectorNumpy4D`` object.
         """
         # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
         return self.view(self._temporal_type)  # type: ignore[return-value]
