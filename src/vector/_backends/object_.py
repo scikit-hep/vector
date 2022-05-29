@@ -57,18 +57,26 @@ class AzimuthalObject(CoordinatesObject, Azimuthal):
 
 
 class LongitudinalObject(CoordinatesObject, Longitudinal):
-    """ """
+    """
+    Longitudinal class for the Object backend.
+    """
 
     pass
 
 
 class TemporalObject(CoordinatesObject, Temporal):
-    """ """
+    """
+    Temporal class for the Object backend.
+    """
 
     pass
 
 
 class TupleXY(typing.NamedTuple):
+    """
+    ``x`` and ``y`` coordinates as a ``NamedTuple``.
+    """
+
     x: float
     y: float
 
@@ -82,7 +90,8 @@ class AzimuthalObjectXY(AzimuthalObject, AzimuthalXY, TupleXY):
     @property
     def elements(self) -> typing.Tuple[float, float]:
         """
-        Returns ``x`` and ``y`` coordinates.
+        Azimuthal coordinates (``x`` and ``y``) as a tuple.
+        Each coordinate is a scalar and not a vector.
 
         Examples:
             >>> v = vector.obj(x=1, y=2)
@@ -94,6 +103,10 @@ class AzimuthalObjectXY(AzimuthalObject, AzimuthalXY, TupleXY):
 
 
 class TupleRhoPhi(typing.NamedTuple):
+    """
+    ``rho`` and ``phi`` coordinates as a ``NamedTuple``.
+    """
+
     rho: float
     phi: float
 
@@ -107,7 +120,8 @@ class AzimuthalObjectRhoPhi(AzimuthalObject, AzimuthalRhoPhi, TupleRhoPhi):
     @property
     def elements(self) -> typing.Tuple[float, float]:
         """
-        Returns ``rho`` and ``phi`` coordinates.
+        Azimuthal coordinates (``rho`` and ``phi``) as a tuple.
+        Each coordinate is a scalar and not a vector.
 
         Examples:
             >>> v = vector.obj(rho=1, phi=2)
@@ -119,6 +133,10 @@ class AzimuthalObjectRhoPhi(AzimuthalObject, AzimuthalRhoPhi, TupleRhoPhi):
 
 
 class TupleZ(typing.NamedTuple):
+    """
+    ``z`` coordinate as a ``NamedTuple``.
+    """
+
     z: float
 
 
@@ -131,7 +149,8 @@ class LongitudinalObjectZ(LongitudinalObject, LongitudinalZ, TupleZ):
     @property
     def elements(self) -> typing.Tuple[float]:
         """
-        Returns ``z`` coordinate.
+        Longitudinal coordinates (``z``) as a tuple.
+        Each coordinate is a scalar and not a vector.
 
         Examples:
             >>> v = vector.obj(rho=1, phi=2, z=3)
@@ -143,6 +162,10 @@ class LongitudinalObjectZ(LongitudinalObject, LongitudinalZ, TupleZ):
 
 
 class TupleTheta(typing.NamedTuple):
+    """
+    ``theta`` coordinates as a ``NamedTuple``.
+    """
+
     theta: float
 
 
@@ -155,7 +178,8 @@ class LongitudinalObjectTheta(LongitudinalObject, LongitudinalTheta, TupleTheta)
     @property
     def elements(self) -> typing.Tuple[float]:
         """
-        Returns ``theta`` coordinate.
+        Longitudinal coordinates (``theta``) as a tuple.
+        Each coordinate is a scalar and not a vector.
 
         Examples:
             >>> v = vector.obj(rho=1, phi=2, theta=3)
@@ -167,6 +191,10 @@ class LongitudinalObjectTheta(LongitudinalObject, LongitudinalTheta, TupleTheta)
 
 
 class TupleEta(typing.NamedTuple):
+    """
+    ``eta`` coordinate as a ``NamedTuple``.
+    """
+
     eta: float
 
 
@@ -181,7 +209,8 @@ class LongitudinalObjectEta(LongitudinalObject, LongitudinalEta, TupleEta):
     @property
     def elements(self) -> typing.Tuple[float]:
         """
-        Returns ``eta`` coordinate.
+        Longitudinal coordinates (``theta``) as a tuple.
+        Each coordinate is a scalar and not a vector.
 
         Examples:
             >>> v = vector.obj(rho=1, phi=2, eta=3)
@@ -193,16 +222,26 @@ class LongitudinalObjectEta(LongitudinalObject, LongitudinalEta, TupleEta):
 
 
 class TupleT(typing.NamedTuple):
+    """
+    ``t`` coordinate as a ``NamedTuple``.
+    """
+
     t: float
 
 
 class TemporalObjectT(TemporalObject, TemporalT, TupleT):
+    """
+    Class for the ``t`` (temporal) coordinate of Object backend.
+    Use the ``elements`` property to retrieve the coordinates.
+    """
+
     t: float
 
     @property
     def elements(self) -> typing.Tuple[float]:
         """
-        Returns ``t`` coordinate.
+        Temporal coordinates (``t``) as a tuple.
+        Each coordinate is a scalar and not a vector.
 
         Examples:
             >>> v = vector.obj(rho=1, phi=2, theta=3, t=4)
@@ -214,14 +253,24 @@ class TemporalObjectT(TemporalObject, TemporalT, TupleT):
 
 
 class TupleTau(typing.NamedTuple):
+    """
+    ``tau`` coordinate as a ``NamedTuple``.
+    """
+
     tau: float
 
 
 class TemporalObjectTau(TemporalObject, TemporalTau, TupleTau):
+    """
+    Class for the ``tau`` (temporal) coordinate of Object backend.
+    Use the ``elements`` property to retrieve the coordinates.
+    """
+
     @property
     def elements(self) -> typing.Tuple[float]:
         """
-        Returns ``tau`` coordinate.
+        Temporal coordinates (``tau``) as a tuple.
+        Each coordinate is a scalar and not a vector.
 
         Examples:
             >>> v = vector.obj(rho=1, phi=2, theta=3, tau=4)
@@ -277,7 +326,9 @@ def _replace_data(obj: typing.Any, result: typing.Any) -> typing.Any:
 
 
 class VectorObject(Vector):
-    """ """
+    """
+    One dimensional vector class for the object backend.
+    """
 
     lib = numpy
 
@@ -345,6 +396,13 @@ class VectorObject(Vector):
         *inputs: typing.Any,
         **kwargs: typing.Any,
     ) -> typing.Any:
+        """
+        Implements NumPy's ``ufunc``s for ``VectorObject`` and its subclasses. The current
+        implementation includes ``numpy.absolute``, ``numpy.add``, ``numpy.subtract``,
+        ``numpy.multipy``, ``numpy.positive``, ``numpy.negative``, ``numpy.true_divide``,
+        ``numpy.power``, ``numpy.square``, ``numpy.sqrt``, ``numpy.cbrt``, ``numpy.matmul``,
+        ``numpy.equal``, and ``numpy.not_equal``.
+        """
         if not isinstance(_handler_of(*inputs), VectorObject):
             # Let a higher-precedence backend handle it.
             return NotImplemented
@@ -534,6 +592,19 @@ class VectorObject(Vector):
 
 
 class VectorObject2D(VectorObject, Planar, Vector2D):
+    """
+    Two dimensional vector class for the object backend.
+    Use the class methods -
+
+    - :meth:`VectorObject2D.from_xy`
+    - :meth:`VectorObject2D.from_rhophi`
+
+    to construct 2D Vector objects.
+
+    For two dimensional momentum vector objects, see
+    :class:`vector._backends.object_.MomentumObject2D`.
+    """
+
     __slots__ = ("azimuthal",)
 
     azimuthal: AzimuthalObject
@@ -545,6 +616,11 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
 
         Use :doc:`vector._backends.object_.MomentumObject2D` to construct a vector
         with momentum properties and methods.
+
+        Examples:
+            >>> vec = vector.VectorObject2D.from_xy(1, 2)
+            >>> vec
+            vector.obj(x=1, y=2)
         """
         return cls(AzimuthalObjectXY(x, y))
 
@@ -555,6 +631,11 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
 
         Use :doc:`vector._backends.object_.MomentumObject2D` to construct a vector
         with momentum properties and methods.
+
+        Examples:
+            >>> vec = vector.VectorObject2D.from_rhophi(1, 2)
+            >>> vec
+            vector.obj(rho=1, phi=2)
         """
         return cls(AzimuthalObjectRhoPhi(rho, phi))
 
@@ -688,6 +769,13 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
 
 
 class MomentumObject2D(PlanarMomentum, VectorObject2D):
+    """
+    Two dimensional momentum vector class for the object backend.
+
+    For two dimensional vector objects, see
+    :class:`vector._backends.object_.VectorObject2D`.
+    """
+
     def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         out = []
@@ -732,6 +820,23 @@ class MomentumObject2D(PlanarMomentum, VectorObject2D):
 
 
 class VectorObject3D(VectorObject, Spatial, Vector3D):
+    """
+    Three dimensional vector class for the object backend.
+    Use the class methods -
+
+    - :meth:`VectorObject3D.from_xyz`
+    - :meth:`VectorObject3D.from_xytheta`
+    - :meth:`VectorObject3D.from_xyeta`
+    - :meth:`VectorObject3D.from_rhophiz`
+    - :meth:`VectorObject3D.from_rhophitheta`
+    - :meth:`VectorObject3D.from_rhophieta`
+
+    to construct 3D Vector objects.
+
+    For three dimensional momentum vector objects, see
+    :class:`vector._backends.object_.MomentumObject3D`.
+    """
+
     __slots__ = ("azimuthal", "longitudinal")
 
     azimuthal: AzimuthalObject
@@ -746,7 +851,9 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         with momentum properties and methods.
 
         Examples:
-
+            >>> vec = vector.VectorObject3D.from_xyz(1, 1, 1)
+            >>> vec
+            vector.obj(x=1, y=1, z=1)
         """
         return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z))
 
@@ -758,6 +865,11 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
 
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
+
+        Examples:
+            >>> vec = vector.VectorObject3D.from_xytheta(1, 1, 1)
+            >>> vec
+            vector.obj(x=1, y=1, theta=1)
         """
         return cls(AzimuthalObjectXY(x, y), LongitudinalObjectTheta(theta))
 
@@ -769,6 +881,11 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
 
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
+
+        Examples:
+            >>> vec = vector.VectorObject3D.from_xyeta(1, 1, 1)
+            >>> vec
+            vector.obj(x=1, y=1, eta=1)
         """
         return cls(AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta))
 
@@ -780,6 +897,11 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
 
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
+
+        Examples:
+            >>> vec = vector.VectorObject3D.from_rhophiz(1, 1, 1)
+            >>> vec
+            vector.obj(rho=1, phi=1, z=1)
         """
         return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectZ(z))
 
@@ -791,6 +913,11 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
 
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
+
+        Examples:
+            >>> vec = vector.VectorObject3D.from_rhophitheta(1, 1, 1)
+            >>> vec
+            vector.obj(rho=1, phi=1, theta=1)
         """
         return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectTheta(theta))
 
@@ -802,6 +929,11 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
 
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
+
+        Examples:
+            >>> vec = vector.VectorObject3D.from_rhophieta(1, 1, 1)
+            >>> vec
+            vector.obj(rho=1, phi=1, eta=1)
         """
         return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectEta(eta))
 
@@ -967,6 +1099,13 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
 
 
 class MomentumObject3D(SpatialMomentum, VectorObject3D):
+    """
+    Three dimensional momentum vector class for the object backend.
+
+    For three dimensional vector objects, see
+    :class:`vector._backends.object_.VectorObject3D`.
+    """
+
     def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         lnames = _coordinate_class_to_names[_ltype(self)]
@@ -1025,6 +1164,29 @@ class MomentumObject3D(SpatialMomentum, VectorObject3D):
 
 
 class VectorObject4D(VectorObject, Lorentz, Vector4D):
+    """
+    Four dimensional vector class for the object backend.
+    Use the class methods -
+
+    - :meth:`VectorObject4D.from_xyzt`
+    - :meth:`VectorObject4D.from_xythetat`
+    - :meth:`VectorObject4D.from_xyetat`
+    - :meth:`VectorObject4D.from_rhophizt`
+    - :meth:`VectorObject4D.from_rhophithetat`
+    - :meth:`VectorObject4D.from_rhophietat`
+    - :meth:`VectorObject4D.from_xyztau`
+    - :meth:`VectorObject4D.from_xythetatau`
+    - :meth:`VectorObject4D.from_xyetatau`
+    - :meth:`VectorObject4D.from_rhophiztau`
+    - :meth:`VectorObject4D.from_rhophithetatau`
+    - :meth:`VectorObject4D.from_rhophietatau`
+
+    to construct 4D Vector objects.
+
+    For four dimensional momentum vector objects, see
+    :class:`vector._backends.object_.MomentumObject4D`.
+    """
+
     __slots__ = ("azimuthal", "longitudinal", "temporal")
 
     azimuthal: AzimuthalObject
@@ -1045,6 +1207,11 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
+
+        Examples:
+            >>> vec = vector.VectorObject4D.from_xyzt(1, 1, 1, 1)
+            >>> vec
+            vector.obj(x=1, y=1, z=1, t=1)
         """
         return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z), TemporalObjectT(t))
 
@@ -1062,6 +1229,11 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
+
+        Examples:
+            >>> vec = vector.VectorObject4D.from_xyztau(1, 1, 1, 1)
+            >>> vec
+            vector.obj(x=1, y=1, z=1, tau=1)
         """
         return cls(
             AzimuthalObjectXY(x, y), LongitudinalObjectZ(z), TemporalObjectTau(tau)
@@ -1081,6 +1253,11 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
+
+        Examples:
+            >>> vec = vector.VectorObject4D.from_xythetat(1, 1, 1, 1)
+            >>> vec
+            vector.obj(x=1, y=1, theta=1, t=1)
         """
         return cls(
             AzimuthalObjectXY(x, y), LongitudinalObjectTheta(theta), TemporalObjectT(t)
@@ -1100,6 +1277,11 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
+
+        Examples:
+            >>> vec = vector.VectorObject4D.from_xythetatau(1, 1, 1, 1)
+            >>> vec
+            vector.obj(x=1, y=1, theta=1, tau=1)
         """
         return cls(
             AzimuthalObjectXY(x, y),
@@ -1121,6 +1303,11 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
+
+        Examples:
+            >>> vec = vector.VectorObject4D.from_xyetat(1, 1, 1, 1)
+            >>> vec
+            vector.obj(x=1, y=1, eta=1, t=1)
         """
         return cls(
             AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta), TemporalObjectT(t)
@@ -1140,6 +1327,11 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
+
+        Examples:
+            >>> vec = vector.VectorObject4D.from_xyetatau(1, 1, 1, 1)
+            >>> vec
+            vector.obj(x=1, y=1, eta=1, tau=1)
         """
         return cls(
             AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta), TemporalObjectTau(tau)
@@ -1159,6 +1351,11 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
+
+        Examples:
+            >>> vec = vector.VectorObject4D.from_rhophizt(1, 1, 1, 1)
+            >>> vec
+            vector.obj(rho=1, phi=1, z=1, t=1)
         """
         return cls(
             AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectZ(z), TemporalObjectT(t)
@@ -1178,6 +1375,11 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
+
+        Examples:
+            >>> vec = vector.VectorObject4D.from_rhophiztau(1, 1, 1, 1)
+            >>> vec
+            vector.obj(rho=1, phi=1, z=1, tau=1)
         """
         return cls(
             AzimuthalObjectRhoPhi(rho, phi),
@@ -1199,6 +1401,11 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
+
+        Examples:
+            >>> vec = vector.VectorObject4D.from_rhophithetat(1, 1, 1, 1)
+            >>> vec
+            vector.obj(rho=1, phi=1, theta=1, t=1)
         """
         return cls(
             AzimuthalObjectRhoPhi(rho, phi),
@@ -1220,6 +1427,11 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
+
+        Examples:
+            >>> vec = vector.VectorObject4D.from_rhophithetatau(1, 1, 1, 1)
+            >>> vec
+            vector.obj(rho=1, phi=1, theta=1, tau=1)
         """
         return cls(
             AzimuthalObjectRhoPhi(rho, phi),
@@ -1241,6 +1453,11 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
+
+        Examples:
+            >>> vec = vector.VectorObject4D.from_rhophietat(1, 1, 1, 1)
+            >>> vec
+            vector.obj(rho=1, phi=1, eta=1, t=1)
         """
         return cls(
             AzimuthalObjectRhoPhi(rho, phi),
@@ -1262,6 +1479,11 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
         Use :doc:`vector._backends.object_.MomentumObject3D` to construct a vector
         with momentum properties and methods.
+
+        Examples:
+            >>> vec = vector.VectorObject4D.from_rhophietatau(1, 1, 1, 1)
+            >>> vec
+            vector.obj(rho=1, phi=1, eta=1, tau=1)
         """
         return cls(
             AzimuthalObjectRhoPhi(rho, phi),
@@ -1457,6 +1679,13 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
 
 class MomentumObject4D(LorentzMomentum, VectorObject4D):
+    """
+    Four dimensional momentum vector class for the object backend.
+
+    For four dimensional vector objects, see
+    :class:`vector._backends.object_.VectorObject4D`.
+    """
+
     def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         lnames = _coordinate_class_to_names[_ltype(self)]
