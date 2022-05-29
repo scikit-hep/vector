@@ -2,7 +2,25 @@
 #
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
+"""
+Defines behaviors for Object vectors. New vectors created with the
 
+.. code-block:: python
+
+    vector.obj(...)
+
+
+function will have these behaviors built in (and will pass them to any derived
+objects).
+
+Additionally, the class methods can also be used to construct object type
+vectors -
+
+.. code-block:: python
+
+    vec = vector.VectorObject2D.from_xy(1, 2)
+
+"""
 import typing
 
 import numpy
