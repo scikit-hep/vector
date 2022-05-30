@@ -42,47 +42,60 @@ or using ``conda`` -
 
 Example gallery
 ---------------
-Below are some examples covering the majority of the features offered by ``vector``.
+``Vector`` has a number of examples covering the basics as well as some advanced usage of the library. The example gallery
+covers almost all the features offered by ``vector`` and any new additions to the gallery are welcomed.
 
-* `Introduction to Vector <usage/intro.ipynb>`_
-* `Structur of Vector <usage/structure.ipynb>`_
-* `Vector Design Prototype <usage/vector_design_prototype.ipynb>`_
+**Note**: Adding more examples and improving the existing examples for newcomers is still in process.
 
 .. toctree::
    :maxdepth: 1
    :caption: Example gallery
-   :hidden:
 
    usage/intro
    usage/structure
    usage/vector_design_prototype
 
-Developer guide
------------------
-If you are planning to develop ``vector``, or if you want to use the latest commit of ``vector`` on your local machine,
-you might want to install it from the source. The developer guide is available here -
-
-* `Developer guide <dev_guide.rst>`_
-
-.. toctree::
-   :maxdepth: 4
-   :caption: Development of vector
-   :hidden:
-
-   dev_guide.rst
+Changes in vector's API
+-----------------------
+The ``changelog`` file describes the changes in ``vector``'s API and usage introduced in every new version. These changes can
+be breaking changes or minor adjustments, hence one should go through this file and their existing codebase while updating ``vector``'s
+version.
 
 .. toctree::
-   :maxdepth: 1
-   :caption: Changelog
+   :maxdepth: 3
+   :caption: Changes in vector's API
 
    changelog
 
+Getting help
+------------
+* ``Vector``'s code is hosted on `GitHub <https://github.com/scikit-hep/vector>`_.
+* If something is not working the way it should, or if you want to request a new feature, create a new `issue <https://github.com/scikit-hep/vector/issues>`_ on GitHub.
+* To discuss something related to ``vector``, use the `discussions <https://github.com/scikit-hep/vector/discussions/>`_ tab on GitHub or ``vector``'s gitter (`Scikit-HEP/vector <https://gitter.im/Scikit-HEP/vector>`_) chat room.
+
+API reference
+-------------
+The API reference details the functionality of each ``class`` and ``function`` present in ``vector``'s codebase.
+
+**Note**: Adding missing docstrings is in process.
+
 .. toctree::
-   :maxdepth: 5
+   :maxdepth: 6
    :caption: API Reference
 
    api/modules.rst
 
+Developing vector
+-----------------
+If you are planning to develop ``vector`` (thank you!), or if you want to use the latest commit of ``vector`` on your local machine,
+you might want to install it from the source. The developer guide introduces a user with the various tasks a developer might perform,
+including, installating from source, testing the library, documenting the library, etc.
+
+.. toctree::
+   :maxdepth: 4
+   :caption: Developing vector
+
+   dev_guide.rst
 
 .. |Action status| image:: https://github.com/scikit-hep/vector/workflows/CI/badge.svg
    :target: https://github.com/scikit-hep/vector/actions
