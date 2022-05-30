@@ -374,8 +374,7 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # typ
         """
         Azimuthal coordinates (``x`` and ``y``) as a tuple.
 
-        Each coordinate may be a scalar, a NumPy array, an Awkward Array, etc.,
-        but they are not vectors.
+        Each coordinate is a NumPy array of values and not a vector.
 
         Examples:
             >>> vec = vector._backends.numpy_.AzimuthalNumpyXY([(1, 1), (2.1, 3.1)], dtype=[("x", float), ("y", float)])
@@ -428,8 +427,7 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray)
         """
         Azimuthal coordinates (``rho`` and ``phi``) as a tuple.
 
-        Each coordinate may be a scalar, a NumPy array, an Awkward Array, etc.,
-        but they are not vectors.
+        Each coordinate is a NumPy array of values and not a vector.
 
         Examples:
             >>> vec = vector._backends.numpy_.AzimuthalNumpyRhoPhi([(1, 1), (2.1, 3.1)], dtype=[("rho", float), ("phi", float)])
@@ -481,8 +479,7 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):
         """
         Longitudinal coordinates (``z``) as a tuple.
 
-        Each coordinate may be a scalar, a NumPy array, an Awkward Array, etc.,
-        but they are not vectors.
+        Each coordinate is a NumPy array of values and not a vector.
 
         Examples:
             >>> vec = vector._backends.numpy_.LongitudinalNumpyZ([(1), (2.1)], dtype=[("z", float)])
@@ -529,8 +526,7 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, Floa
         """
         Longitudinal coordinates (``theta``) as a tuple.
 
-        Each coordinate may be a scalar, a NumPy array, an Awkward Array, etc.,
-        but they are not vectors.
+        Each coordinate is a NumPy array of values and not a vector.
 
         Examples:
             >>> vec = vector._backends.numpy_.LongitudinalNumpyTheta([(1), (2.1)], dtype=[("theta", float)])
@@ -575,8 +571,7 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArr
         """
         Longitudinal coordinates (``eta``) as a tuple.
 
-        Each coordinate may be a scalar, a NumPy array, an Awkward Array, etc.,
-        but they are not vectors.
+        Each coordinate is a NumPy array of values and not a vector.
 
         Examples:
             >>> vec = vector._backends.numpy_.LongitudinalNumpyTheta([(1), (2.1)], dtype=[("theta", float)])
@@ -621,8 +616,7 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ig
         """
         Temporal coordinates (``t``) as a tuple.
 
-        Each coordinate may be a scalar, a NumPy array, an Awkward Array, etc.,
-        but they are not vectors.
+        Each coordinate is a NumPy array of values and not a vector.
 
         Examples:
             >>> vec = vector._backends.numpy_.TemporalNumpyT([(1), (2.1)], dtype=[("t", float)])
@@ -662,8 +656,7 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type
         """
         Temporal coordinates (``tau``) as a tuple.
 
-        Each coordinate may be a scalar, a NumPy array, an Awkward Array, etc.,
-        but they are not vectors.
+        Each coordinate is a NumPy array of values and not a vector.
 
         Examples:
             >>> vec = vector._backends.numpy_.TemporalNumpyTau([(1), (2.1)], dtype=[("tau", float)])
