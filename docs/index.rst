@@ -80,13 +80,7 @@ you might want to install it from the source. The developer guide introduces a u
 including installing from source, testing the library, documenting the library, etc. For a general developer guide for all the
 Scikit-HEP projects, refer to the `Scikit-HEP website <https://scikit-hep.org/developer>`_.
 
-.. **Note**: The developer guide is still in progress.
-
-.. toctree::
-   :maxdepth: 4
-   :caption: Developing vector
-
-   dev_guide.rst
+**Note**: The developer guide is still in progress.
 
 API reference
 -------------
