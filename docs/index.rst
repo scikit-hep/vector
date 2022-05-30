@@ -42,10 +42,10 @@ or using ``conda`` -
 
 Example gallery
 ---------------
-``Vector`` has a number of examples covering the basics as well as some advanced usage of the library. The example gallery
+``Vector`` has several examples covering the basics as well as some advanced usage of the library. The example gallery
 covers almost all the features offered by ``vector`` and any new additions to the gallery are welcomed.
 
-**Note**: Adding more examples and improving the existing examples for newcomers is still in process.
+**Note**: Adding more examples and improving the existing examples for newcomers is still in progress.
 
 .. toctree::
    :maxdepth: 1
@@ -73,29 +73,32 @@ Getting help
 * If something is not working the way it should, or if you want to request a new feature, create a new `issue <https://github.com/scikit-hep/vector/issues>`_ on GitHub.
 * To discuss something related to ``vector``, use the `discussions <https://github.com/scikit-hep/vector/discussions/>`_ tab on GitHub or ``vector``'s gitter (`Scikit-HEP/vector <https://gitter.im/Scikit-HEP/vector>`_) chat room.
 
-API reference
--------------
-The API reference details the functionality of each ``class`` and ``function`` present in ``vector``'s codebase.
-
-**Note**: Adding missing docstrings is in process.
-
-.. toctree::
-   :maxdepth: 6
-   :caption: API Reference
-
-   api/modules.rst
-
 Developing vector
 -----------------
 If you are planning to develop ``vector`` (thank you!), or if you want to use the latest commit of ``vector`` on your local machine,
-you might want to install it from the source. The developer guide introduces a user with the various tasks a developer might perform,
-including, installating from source, testing the library, documenting the library, etc.
+you might want to install it from the source. The developer guide introduces a user to the various tasks a developer might perform,
+including installing from source, testing the library, documenting the library, etc. For a general developer guide for all the
+Scikit-HEP projects, refer to the `Scikit-HEP website <https://scikit-hep.org/developer>`_.
+
+.. **Note**: The developer guide is still in progress.
 
 .. toctree::
    :maxdepth: 4
    :caption: Developing vector
 
    dev_guide.rst
+
+API reference
+-------------
+The API reference details the functionality of each ``class`` and ``function`` present in ``vector``'s codebase.
+
+**Note**: Adding missing docstrings is still in progress.
+
+.. toctree::
+   :maxdepth: 8
+   :caption: API Reference
+
+   api/modules.rst
 
 .. |Action status| image:: https://github.com/scikit-hep/vector/workflows/CI/badge.svg
    :target: https://github.com/scikit-hep/vector/actions
