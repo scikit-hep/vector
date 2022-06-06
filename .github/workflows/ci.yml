@@ -58,7 +58,10 @@ jobs:
       run: python -m pip install -e .[dev]
 
     - name: Test package
-      run: python -m pytest -ra
+      run: python -m pytest -ra --cov=vector tests/
+
+    - name: Upload coverage report
+      uses: codecov/codecov-action@v2.1.0
 
   discheck:
     runs-on: ubuntu-latest
