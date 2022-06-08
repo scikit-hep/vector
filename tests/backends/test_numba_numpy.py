@@ -13,7 +13,7 @@ numba = pytest.importorskip("numba")
 
 import vector.backends.numba_numpy  # noqa: E402
 
-pytestmark = pytest.mark._numba
+pytestmark = pytest.mark.numba
 
 
 def test_pass_through():
