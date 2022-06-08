@@ -26,7 +26,7 @@ from vector._methods import (
     TemporalTau,
     _from_signature,
 )
-from vector.backends.numba import numba_modules
+from vector.backends._numba import numba_modules
 from vector.backends.object import (
     AzimuthalObject,
     AzimuthalObjectRhoPhi,

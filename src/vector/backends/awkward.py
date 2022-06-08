@@ -1228,27 +1228,27 @@ def _ttype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
 
 
 def _numba_typer_Vector2D(viewtype: typing.Any) -> typing.Any:
-    import vector.backends.numba_object
+    import vector.backends._numba_object
 
     # These exist, but the file is type ignored, so can't be found
-    return vector.backends.numba_object.VectorObject2DType(  # type: ignore[attr-defined]
+    return vector.backends._numba_object.VectorObject2DType(  # type: ignore[attr-defined]
         _aztype_of(viewtype.arrayviewtype.type, False)
     )
 
 
 def _numba_typer_Vector3D(viewtype: typing.Any) -> typing.Any:
-    import vector.backends.numba_object
+    import vector.backends._numba_object
 
-    return vector.backends.numba_object.VectorObject3DType(  # type: ignore[attr-defined]
+    return vector.backends._numba_object.VectorObject3DType(  # type: ignore[attr-defined]
         _aztype_of(viewtype.arrayviewtype.type, False),
         _ltype_of(viewtype.arrayviewtype.type, False),
     )
 
 
 def _numba_typer_Vector4D(viewtype: typing.Any) -> typing.Any:
-    import vector.backends.numba_object
+    import vector.backends._numba_object
 
-    return vector.backends.numba_object.VectorObject4DType(  # type: ignore[attr-defined]
+    return vector.backends._numba_object.VectorObject4DType(  # type: ignore[attr-defined]
         _aztype_of(viewtype.arrayviewtype.type, False),
         _ltype_of(viewtype.arrayviewtype.type, False),
         _ttype_of(viewtype.arrayviewtype.type, False),
@@ -1256,26 +1256,26 @@ def _numba_typer_Vector4D(viewtype: typing.Any) -> typing.Any:
 
 
 def _numba_typer_Momentum2D(viewtype: typing.Any) -> typing.Any:
-    import vector.backends.numba_object
+    import vector.backends._numba_object
 
-    return vector.backends.numba_object.MomentumObject2DType(  # type: ignore[attr-defined]
+    return vector.backends._numba_object.MomentumObject2DType(  # type: ignore[attr-defined]
         _aztype_of(viewtype.arrayviewtype.type, True)
     )
 
 
 def _numba_typer_Momentum3D(viewtype: typing.Any) -> typing.Any:
-    import vector.backends.numba_object
+    import vector.backends._numba_object
 
-    return vector.backends.numba_object.MomentumObject3DType(  # type: ignore[attr-defined]
+    return vector.backends._numba_object.MomentumObject3DType(  # type: ignore[attr-defined]
         _aztype_of(viewtype.arrayviewtype.type, True),
         _ltype_of(viewtype.arrayviewtype.type, True),
     )
 
 
 def _numba_typer_Momentum4D(viewtype: typing.Any) -> typing.Any:
-    import vector.backends.numba_object
+    import vector.backends._numba_object
 
-    return vector.backends.numba_object.MomentumObject4DType(  # type: ignore[attr-defined]
+    return vector.backends._numba_object.MomentumObject4DType(  # type: ignore[attr-defined]
         _aztype_of(viewtype.arrayviewtype.type, True),
         _ltype_of(viewtype.arrayviewtype.type, True),
         _ttype_of(viewtype.arrayviewtype.type, True),
@@ -1285,7 +1285,7 @@ def _numba_typer_Momentum4D(viewtype: typing.Any) -> typing.Any:
 def _numba_lower(
     context: typing.Any, builder: typing.Any, sig: typing.Any, args: typing.Any
 ) -> typing.Any:
-    from vector.backends.numba_object import (  # type: ignore[attr-defined]
+    from vector.backends._numba_object import (  # type: ignore[attr-defined]
         _awkward_numba_E,
         _awkward_numba_e,
         _awkward_numba_energy,

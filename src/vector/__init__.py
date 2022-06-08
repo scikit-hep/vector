@@ -147,8 +147,8 @@ def register_numba() -> None:
     This usually isn't necessary, as it is passed to Numba's ``entry_point`` and
     is therefore executed as soon as Numba is imported.
     """
+    import vector.backends._numba_object  # noqa: 401
     import vector.backends.numba_numpy  # noqa: 401
-    import vector.backends.numba_object  # noqa: 401
 
 
 _awkward_registered = False

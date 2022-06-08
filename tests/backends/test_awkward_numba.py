@@ -9,10 +9,10 @@ import vector
 
 ak = pytest.importorskip("awkward")
 numba = pytest.importorskip("numba")
-pytest.importorskip("vector.backends.numba_object")
+pytest.importorskip("vector.backends._numba_object")
 
 
-pytestmark = [pytest.mark.numba, pytest.mark.awkward]
+pytestmark = [pytest.mark._numba, pytest.mark.awkward]
 
 
 def test():

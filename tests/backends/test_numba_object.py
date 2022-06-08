@@ -14,9 +14,9 @@ import vector.backends.object
 numba = pytest.importorskip("numba")
 
 
-import vector.backends.numba_object  # noqa: E402
+import vector.backends._numba_object  # noqa: E402
 
-pytestmark = pytest.mark.numba
+pytestmark = pytest.mark._numba
 
 
 def test_namedtuples():
