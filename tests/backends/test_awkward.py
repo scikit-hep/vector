@@ -78,7 +78,8 @@ def test_projection():
 
     out = array.to_rhophietatau()
     assert isinstance(out, vector._backends.awkward_.VectorArray4D)
-    assert out.tolist()[0][0] == pytest.approx(
+    (a,), (), (c,) = out.tolist()
+    assert a == pytest.approx(
         {
             "rho": 2.23606797749979,
             "phi": 1.1071487177940904,
@@ -87,8 +88,7 @@ def test_projection():
             "wow": 99,
         }
     )
-    assert out.tolist()[1] == pytest.approx([])
-    assert out.tolist()[2][0] == pytest.approx(
+    assert c == pytest.approx(
         {
             "rho": 6.4031242374328485,
             "phi": 0.8960553845713439,
