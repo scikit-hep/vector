@@ -19,7 +19,7 @@ import typing
 
 import numpy
 
-import vector._backends.object_
+import vector.backends.object
 from vector._methods import (
     Azimuthal,
     AzimuthalRhoPhi,
@@ -326,7 +326,7 @@ class AzimuthalNumpy(CoordinatesNumpy, Azimuthal):
     Azimuthal class for the NumPy backend.
     """
 
-    ObjectClass: typing.Type[vector._backends.object_.AzimuthalObject]
+    ObjectClass: typing.Type[vector.backends.object.AzimuthalObject]
 
 
 class LongitudinalNumpy(CoordinatesNumpy, Longitudinal):
@@ -334,7 +334,7 @@ class LongitudinalNumpy(CoordinatesNumpy, Longitudinal):
     Longitudinal class for the NumPy backend.
     """
 
-    ObjectClass: typing.Type[vector._backends.object_.LongitudinalObject]
+    ObjectClass: typing.Type[vector.backends.object.LongitudinalObject]
 
 
 class TemporalNumpy(CoordinatesNumpy, Temporal):
@@ -342,7 +342,7 @@ class TemporalNumpy(CoordinatesNumpy, Temporal):
     Temporal class for the NumPy backend.
     """
 
-    ObjectClass: typing.Type[vector._backends.object_.TemporalObject]
+    ObjectClass: typing.Type[vector.backends.object.TemporalObject]
 
 
 class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # type: ignore[misc]
@@ -356,7 +356,7 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # typ
                         dtype=[('x', '<f8'), ('y', '<f8')])
     """
 
-    ObjectClass = vector._backends.object_.AzimuthalObjectXY
+    ObjectClass = vector.backends.object.AzimuthalObjectXY
     _IS_MOMENTUM = False
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "AzimuthalNumpyXY":
@@ -409,7 +409,7 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray)
                             dtype=[('rho', '<f8'), ('phi', '<f8')])
     """
 
-    ObjectClass = vector._backends.object_.AzimuthalObjectRhoPhi
+    ObjectClass = vector.backends.object.AzimuthalObjectRhoPhi
     _IS_MOMENTUM = False
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "AzimuthalNumpyRhoPhi":
@@ -461,7 +461,7 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):
         LongitudinalNumpyZ([(1. ,), (2.1,)], dtype=[('z', '<f8')])
     """
 
-    ObjectClass = vector._backends.object_.LongitudinalObjectZ
+    ObjectClass = vector.backends.object.LongitudinalObjectZ
     _IS_MOMENTUM = False
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "LongitudinalNumpyZ":
@@ -506,7 +506,7 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, Floa
         LongitudinalNumpyTheta([(1. ,), (2.1,)], dtype=[('theta', '<f8')])
     """
 
-    ObjectClass = vector._backends.object_.LongitudinalObjectTheta
+    ObjectClass = vector.backends.object.LongitudinalObjectTheta
     _IS_MOMENTUM = False
 
     def __new__(
@@ -553,7 +553,7 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArr
         LongitudinalNumpyEta([(1. ,), (2.1,)], dtype=[('eta', '<f8')])
     """
 
-    ObjectClass = vector._backends.object_.LongitudinalObjectEta
+    ObjectClass = vector.backends.object.LongitudinalObjectEta
     _IS_MOMENTUM = False
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "LongitudinalNumpyEta":
@@ -598,7 +598,7 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ig
         TemporalNumpyT([(1. ,), (2.1,)], dtype=[('t', '<f8')])
     """
 
-    ObjectClass = vector._backends.object_.TemporalObjectT
+    ObjectClass = vector.backends.object.TemporalObjectT
     _IS_MOMENTUM = False
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "TemporalNumpyT":
@@ -638,7 +638,7 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type
     Class for the ``tau`` (temporal) coordinate of NumPy backend.
     """
 
-    ObjectClass = vector._backends.object_.TemporalObjectTau
+    ObjectClass = vector.backends.object.TemporalObjectTau
     _IS_MOMENTUM = False
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "TemporalNumpyTau":
@@ -952,7 +952,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
                     dtype=[('x', '<f8'), ('y', '<f8')])
     """
 
-    ObjectClass = vector._backends.object_.VectorObject2D
+    ObjectClass = vector.backends.object.VectorObject2D
     _IS_MOMENTUM = False
     _azimuthal_type: typing.Union[
         typing.Type[AzimuthalNumpyXY], typing.Type[AzimuthalNumpyRhoPhi]
@@ -1166,7 +1166,7 @@ class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore[misc]
                         dtype=[('x', '<f8'), ('y', '<f8')])
     """
 
-    ObjectClass = vector._backends.object_.MomentumObject2D
+    ObjectClass = vector.backends.object.MomentumObject2D
     _IS_MOMENTUM = True
     dtype: "numpy.dtype[typing.Any]"
 
@@ -1209,7 +1209,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
                     (1.5, 2.5, 3.5)], dtype=[('x', '<f8'), ('y', '<f8'), ('z', '<f8')])
     """
 
-    ObjectClass = vector._backends.object_.VectorObject3D
+    ObjectClass = vector.backends.object.VectorObject3D
     _IS_MOMENTUM = False
 
     _azimuthal_type: typing.Union[
@@ -1445,7 +1445,7 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
                         (1.5, 2.5, 3.5)], dtype=[('x', '<f8'), ('y', '<f8'), ('z', '<f8')])
     """
 
-    ObjectClass = vector._backends.object_.MomentumObject3D
+    ObjectClass = vector.backends.object.MomentumObject3D
     _IS_MOMENTUM = True
     dtype: "numpy.dtype[typing.Any]"
 
@@ -1499,7 +1499,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
                     dtype=[('x', '<f8'), ('y', '<f8'), ('z', '<f8'), ('t', '<f8')])
     """
 
-    ObjectClass = vector._backends.object_.VectorObject4D
+    ObjectClass = vector.backends.object.VectorObject4D
     _IS_MOMENTUM = False
 
     _azimuthal_type: typing.Union[
@@ -1767,7 +1767,7 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore[misc]
                         dtype=[('x', '<f8'), ('y', '<f8'), ('z', '<f8'), ('t', '<f8')])
     """
 
-    ObjectClass = vector._backends.object_.MomentumObject4D
+    ObjectClass = vector.backends.object.MomentumObject4D
     _IS_MOMENTUM = True
     dtype: "numpy.dtype[typing.Any]"
 

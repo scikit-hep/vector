@@ -8,30 +8,6 @@ import typing
 
 import packaging.version
 
-from vector._backends.awkward_constructors import Array as Array
-from vector._backends.awkward_constructors import Array as arr
-from vector._backends.awkward_constructors import Array as awk
-from vector._backends.awkward_constructors import zip
-from vector._backends.numpy_ import (
-    MomentumNumpy2D,
-    MomentumNumpy3D,
-    MomentumNumpy4D,
-    VectorNumpy,
-    VectorNumpy2D,
-    VectorNumpy3D,
-    VectorNumpy4D,
-    array,
-)
-from vector._backends.object_ import (
-    MomentumObject2D,
-    MomentumObject3D,
-    MomentumObject4D,
-    VectorObject,
-    VectorObject2D,
-    VectorObject3D,
-    VectorObject4D,
-    obj,
-)
 from vector._methods import (
     Azimuthal,
     AzimuthalRhoPhi,
@@ -53,6 +29,30 @@ from vector._methods import (
     Vector3D,
     Vector4D,
     dim,
+)
+from vector.backends.awkward_constructors import Array as Array
+from vector.backends.awkward_constructors import Array as arr
+from vector.backends.awkward_constructors import Array as awk
+from vector.backends.awkward_constructors import zip
+from vector.backends.numpy import (
+    MomentumNumpy2D,
+    MomentumNumpy3D,
+    MomentumNumpy4D,
+    VectorNumpy,
+    VectorNumpy2D,
+    VectorNumpy3D,
+    VectorNumpy4D,
+    array,
+)
+from vector.backends.object import (
+    MomentumObject2D,
+    MomentumObject3D,
+    MomentumObject4D,
+    VectorObject,
+    VectorObject2D,
+    VectorObject3D,
+    VectorObject4D,
+    obj,
 )
 from vector.version import version as __version__
 
@@ -80,7 +80,7 @@ except ImportError:
     if not typing.TYPE_CHECKING:
         VectorAwkward = None
 else:
-    from vector._backends.awkward_ import VectorAwkward
+    from vector.backends.awkward import VectorAwkward
 
 
 __all__: typing.Tuple[str, ...] = (
@@ -147,8 +147,8 @@ def register_numba() -> None:
     This usually isn't necessary, as it is passed to Numba's ``entry_point`` and
     is therefore executed as soon as Numba is imported.
     """
-    import vector._backends.numba_numpy  # noqa: 401
-    import vector._backends.numba_object  # noqa: 401
+    import vector.backends._numba_object  # noqa: 401
+    import vector.backends.numba_numpy  # noqa: 401
 
 
 _awkward_registered = False
@@ -168,8 +168,8 @@ def register_awkward() -> None:
     """
     import awkward
 
-    import vector._backends.awkward_  # noqa: 401
+    import vector.backends.awkward  # noqa: 401
 
     global _awkward_registered
-    awkward.behavior.update(vector._backends.awkward_.behavior)
+    awkward.behavior.update(vector.backends.awkward.behavior)
     _awkward_registered = True

@@ -5,13 +5,13 @@
 
 import pytest
 
-import vector._backends.numpy_
-import vector._backends.object_
+import vector.backends.numpy
+import vector.backends.object
 
 
 def test_planar_posfactor():
-    vec = vector._backends.object_.VectorObject2D(
-        vector._backends.object_.AzimuthalObjectXY(1, 2),
+    vec = vector.backends.object.VectorObject2D(
+        vector.backends.object.AzimuthalObjectXY(1, 2),
     )
     out = vec.scale(1.75)
     assert type(out.azimuthal) == type(vec.azimuthal)  # noqa: E721
@@ -27,8 +27,8 @@ def test_planar_posfactor():
 
 
 def test_planar_negfactor():
-    vec = vector._backends.object_.VectorObject2D(
-        vector._backends.object_.AzimuthalObjectXY(1, 2),
+    vec = vector.backends.object.VectorObject2D(
+        vector.backends.object.AzimuthalObjectXY(1, 2),
     )
     out = vec.scale(-1.75)
     assert type(out.azimuthal) == type(vec.azimuthal)  # noqa: E721
@@ -44,9 +44,9 @@ def test_planar_negfactor():
 
 
 def test_spatial_posfactor():
-    vec = vector._backends.object_.VectorObject3D(
-        vector._backends.object_.AzimuthalObjectXY(1, 2),
-        vector._backends.object_.LongitudinalObjectZ(3),
+    vec = vector.backends.object.VectorObject3D(
+        vector.backends.object.AzimuthalObjectXY(1, 2),
+        vector.backends.object.LongitudinalObjectZ(3),
     )
     out = vec.scale(1.75)
     assert type(out.azimuthal) == type(vec.azimuthal)  # noqa: E721
@@ -73,9 +73,9 @@ def test_spatial_posfactor():
 
 
 def test_spatial_negfactor():
-    vec = vector._backends.object_.VectorObject3D(
-        vector._backends.object_.AzimuthalObjectXY(1, 2),
-        vector._backends.object_.LongitudinalObjectZ(3),
+    vec = vector.backends.object.VectorObject3D(
+        vector.backends.object.AzimuthalObjectXY(1, 2),
+        vector.backends.object.LongitudinalObjectZ(3),
     )
     out = vec.scale(-1.75)
     assert type(out.azimuthal) == type(vec.azimuthal)  # noqa: E721
@@ -102,10 +102,10 @@ def test_spatial_negfactor():
 
 
 def test_lorentz_postime_posfactor():
-    vec = vector._backends.object_.VectorObject4D(
-        vector._backends.object_.AzimuthalObjectXY(1, 2),
-        vector._backends.object_.LongitudinalObjectZ(3),
-        vector._backends.object_.TemporalObjectT(4),
+    vec = vector.backends.object.VectorObject4D(
+        vector.backends.object.AzimuthalObjectXY(1, 2),
+        vector.backends.object.LongitudinalObjectZ(3),
+        vector.backends.object.TemporalObjectT(4),
     )
     out = vec.scale(1.75)
     assert type(out.azimuthal) == type(vec.azimuthal)  # noqa: E721
@@ -142,10 +142,10 @@ def test_lorentz_postime_posfactor():
 
 
 def test_lorentz_postime_negfactor():
-    vec = vector._backends.object_.VectorObject4D(
-        vector._backends.object_.AzimuthalObjectXY(1, 2),
-        vector._backends.object_.LongitudinalObjectZ(3),
-        vector._backends.object_.TemporalObjectT(4),
+    vec = vector.backends.object.VectorObject4D(
+        vector.backends.object.AzimuthalObjectXY(1, 2),
+        vector.backends.object.LongitudinalObjectZ(3),
+        vector.backends.object.TemporalObjectT(4),
     )
     out = vec.scale(-1.75)
     assert type(out.azimuthal) == type(vec.azimuthal)  # noqa: E721
@@ -194,10 +194,10 @@ def test_lorentz_postime_negfactor():
 
 
 def test_lorentz_negtime_posfactor():
-    vec = vector._backends.object_.VectorObject4D(
-        vector._backends.object_.AzimuthalObjectXY(1, 2),
-        vector._backends.object_.LongitudinalObjectZ(3),
-        vector._backends.object_.TemporalObjectT(-1.5),
+    vec = vector.backends.object.VectorObject4D(
+        vector.backends.object.AzimuthalObjectXY(1, 2),
+        vector.backends.object.LongitudinalObjectZ(3),
+        vector.backends.object.TemporalObjectT(-1.5),
     )
     out = vec.scale(1.75)
     assert type(out.azimuthal) == type(vec.azimuthal)  # noqa: E721
@@ -246,10 +246,10 @@ def test_lorentz_negtime_posfactor():
 
 
 def test_lorentz_negtime_negfactor():
-    vec = vector._backends.object_.VectorObject4D(
-        vector._backends.object_.AzimuthalObjectXY(1, 2),
-        vector._backends.object_.LongitudinalObjectZ(3),
-        vector._backends.object_.TemporalObjectT(-1.5),
+    vec = vector.backends.object.VectorObject4D(
+        vector.backends.object.AzimuthalObjectXY(1, 2),
+        vector.backends.object.LongitudinalObjectZ(3),
+        vector.backends.object.TemporalObjectT(-1.5),
     )
     out = vec.scale(-1.75)
     assert type(out.azimuthal) == type(vec.azimuthal)  # noqa: E721

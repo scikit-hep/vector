@@ -7,52 +7,52 @@ import math
 
 import pytest
 
-import vector._backends.object_
+import vector.backends.object
 
 
 def test_xy_z():
-    vec = vector._backends.object_.VectorObject3D(
-        vector._backends.object_.AzimuthalObjectXY(3, 4),
-        vector._backends.object_.LongitudinalObjectZ(10),
+    vec = vector.backends.object.VectorObject3D(
+        vector.backends.object.AzimuthalObjectXY(3, 4),
+        vector.backends.object.LongitudinalObjectZ(10),
     )
     assert vec.costheta == pytest.approx(math.cos(0.4636476090008061))
 
 
 def test_xy_theta():
-    vec = vector._backends.object_.VectorObject3D(
-        vector._backends.object_.AzimuthalObjectXY(3, 4),
-        vector._backends.object_.LongitudinalObjectTheta(0.4636476090008061),
+    vec = vector.backends.object.VectorObject3D(
+        vector.backends.object.AzimuthalObjectXY(3, 4),
+        vector.backends.object.LongitudinalObjectTheta(0.4636476090008061),
     )
     assert vec.costheta == pytest.approx(math.cos(0.4636476090008061))
 
 
 def test_xy_eta():
-    vec = vector._backends.object_.VectorObject3D(
-        vector._backends.object_.AzimuthalObjectXY(3, 4),
-        vector._backends.object_.LongitudinalObjectEta(1.4436354751788103),
+    vec = vector.backends.object.VectorObject3D(
+        vector.backends.object.AzimuthalObjectXY(3, 4),
+        vector.backends.object.LongitudinalObjectEta(1.4436354751788103),
     )
     assert vec.costheta == pytest.approx(math.cos(0.4636476090008061))
 
 
 def test_rhophi_z():
-    vec = vector._backends.object_.VectorObject3D(
-        vector._backends.object_.AzimuthalObjectRhoPhi(5, 0),
-        vector._backends.object_.LongitudinalObjectZ(10),
+    vec = vector.backends.object.VectorObject3D(
+        vector.backends.object.AzimuthalObjectRhoPhi(5, 0),
+        vector.backends.object.LongitudinalObjectZ(10),
     )
     assert vec.costheta == pytest.approx(math.cos(0.4636476090008061))
 
 
 def test_rhophi_theta():
-    vec = vector._backends.object_.VectorObject3D(
-        vector._backends.object_.AzimuthalObjectRhoPhi(5, 0),
-        vector._backends.object_.LongitudinalObjectTheta(0.4636476090008061),
+    vec = vector.backends.object.VectorObject3D(
+        vector.backends.object.AzimuthalObjectRhoPhi(5, 0),
+        vector.backends.object.LongitudinalObjectTheta(0.4636476090008061),
     )
     assert vec.costheta == pytest.approx(math.cos(0.4636476090008061))
 
 
 def test_rhophi_eta():
-    vec = vector._backends.object_.VectorObject3D(
-        vector._backends.object_.AzimuthalObjectRhoPhi(5, 0),
-        vector._backends.object_.LongitudinalObjectEta(1.4436354751788103),
+    vec = vector.backends.object.VectorObject3D(
+        vector.backends.object.AzimuthalObjectRhoPhi(5, 0),
+        vector.backends.object.LongitudinalObjectEta(1.4436354751788103),
     )
     assert vec.costheta == pytest.approx(math.cos(0.4636476090008061))

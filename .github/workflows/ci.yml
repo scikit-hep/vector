@@ -6,6 +6,13 @@ on:
     branches:
     - main
     - develop
+  workflow_dispatch:
+
+concurrency:
+  # Skip intermediate builds: always.
+  # Cancel intermediate builds: only if it is a pull request build.
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
 
 jobs:
   pre-commit:
@@ -49,7 +56,10 @@ jobs:
       run: python -m pip install -e .[dev]
 
     - name: Test package
-      run: python -m pytest -ra
+      run: python -m pytest -ra --cov=vector tests/
+
+    - name: Upload coverage report
+      uses: codecov/codecov-action@v2.1.0
 
   discheck:
     runs-on: ubuntu-latest

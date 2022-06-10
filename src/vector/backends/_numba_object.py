@@ -15,8 +15,19 @@ import numba
 import numpy
 
 import vector
-from vector._backends.numba_ import numba_modules
-from vector._backends.object_ import (
+from vector._methods import (
+    AzimuthalRhoPhi,
+    AzimuthalXY,
+    LongitudinalEta,
+    LongitudinalTheta,
+    LongitudinalZ,
+    Momentum,
+    TemporalT,
+    TemporalTau,
+    _from_signature,
+)
+from vector.backends._numba import numba_modules
+from vector.backends.object import (
     AzimuthalObject,
     AzimuthalObjectRhoPhi,
     AzimuthalObjectXY,
@@ -34,17 +45,6 @@ from vector._backends.object_ import (
     VectorObject3D,
     VectorObject4D,
     _coord_object_type,
-)
-from vector._methods import (
-    AzimuthalRhoPhi,
-    AzimuthalXY,
-    LongitudinalEta,
-    LongitudinalTheta,
-    LongitudinalZ,
-    Momentum,
-    TemporalT,
-    TemporalTau,
-    _from_signature,
 )
 
 

@@ -36,19 +36,6 @@ import awkward as ak
 import numpy
 
 import vector
-from vector._backends.numpy_ import VectorNumpy2D, VectorNumpy3D, VectorNumpy4D
-from vector._backends.object_ import (
-    AzimuthalObjectRhoPhi,
-    AzimuthalObjectXY,
-    LongitudinalObjectEta,
-    LongitudinalObjectTheta,
-    LongitudinalObjectZ,
-    TemporalObjectT,
-    TemporalObjectTau,
-    VectorObject2D,
-    VectorObject3D,
-    VectorObject4D,
-)
 from vector._methods import (
     Azimuthal,
     AzimuthalRhoPhi,
@@ -73,6 +60,19 @@ from vector._methods import (
     VectorProtocol,
 )
 from vector._typeutils import BoolCollection, ScalarCollection
+from vector.backends.numpy import VectorNumpy2D, VectorNumpy3D, VectorNumpy4D
+from vector.backends.object import (
+    AzimuthalObjectRhoPhi,
+    AzimuthalObjectXY,
+    LongitudinalObjectEta,
+    LongitudinalObjectTheta,
+    LongitudinalObjectZ,
+    TemporalObjectT,
+    TemporalObjectTau,
+    VectorObject2D,
+    VectorObject3D,
+    VectorObject4D,
+)
 
 # Throws an error if awkward is too old
 vector._import_awkward()
@@ -93,8 +93,8 @@ class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
     @classmethod
     def from_fields(cls, array: ak.Array) -> "AzimuthalAwkward":
         """
-        Create a :doc:`vector._backends.awkward_.AzimuthalAwkwardXY` or a
-        :doc:`vector._backends.awkward_.AzimuthalAwkwardRhoPhi`, depending on
+        Create a :doc:`vector.backends.awkward.AzimuthalAwkwardXY` or a
+        :doc:`vector.backends.awkward.AzimuthalAwkwardRhoPhi`, depending on
         the fields in ``array``.
         """
         fields = ak.fields(array)
@@ -111,8 +111,8 @@ class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
     @classmethod
     def from_momentum_fields(cls, array: ak.Array) -> "AzimuthalAwkward":
         """
-        Create a :doc:`vector._backends.awkward_.AzimuthalAwkwardXY` or a
-        :doc:`vector._backends.awkward_.AzimuthalAwkwardRhoPhi`, depending on
+        Create a :doc:`vector.backends.awkward.AzimuthalAwkwardXY` or a
+        :doc:`vector.backends.awkward.AzimuthalAwkwardRhoPhi`, depending on
         the fields in ``array``, allowing momentum synonyms.
         """
         fields = ak.fields(array)
@@ -139,9 +139,9 @@ class LongitudinalAwkward(CoordinatesAwkward, Longitudinal):
     @classmethod
     def from_fields(cls, array: ak.Array) -> "LongitudinalAwkward":
         """
-        Create a :doc:`vector._backends.awkward_.LongitudinalAwkwardZ`, a
-        :doc:`vector._backends.awkward_.LongitudinalAwkwardTheta`, or a
-        :doc:`vector._backends.awkward_.LongitudinalAwkwardEta`, depending on
+        Create a :doc:`vector.backends.awkward.LongitudinalAwkwardZ`, a
+        :doc:`vector.backends.awkward.LongitudinalAwkwardTheta`, or a
+        :doc:`vector.backends.awkward.LongitudinalAwkwardEta`, depending on
         the fields in ``array``.
         """
         fields = ak.fields(array)
@@ -160,9 +160,9 @@ class LongitudinalAwkward(CoordinatesAwkward, Longitudinal):
     @classmethod
     def from_momentum_fields(cls, array: ak.Array) -> "LongitudinalAwkward":
         """
-        Create a :doc:`vector._backends.awkward_.LongitudinalAwkwardZ`, a
-        :doc:`vector._backends.awkward_.LongitudinalAwkwardTheta`, or a
-        :doc:`vector._backends.awkward_.LongitudinalAwkwardEta`, depending on
+        Create a :doc:`vector.backends.awkward.LongitudinalAwkwardZ`, a
+        :doc:`vector.backends.awkward.LongitudinalAwkwardTheta`, or a
+        :doc:`vector.backends.awkward.LongitudinalAwkwardEta`, depending on
         the fields in ``array``, allowing momentum synonyms.
         """
         fields = ak.fields(array)
@@ -185,8 +185,8 @@ class TemporalAwkward(CoordinatesAwkward, Temporal):
     @classmethod
     def from_fields(cls, array: ak.Array) -> "TemporalAwkward":
         """
-        Create a :doc:`vector._backends.awkward_.TemporalT` or a
-        :doc:`vector._backends.awkward_.TemporalTau`, depending on
+        Create a :doc:`vector.backends.awkward.TemporalT` or a
+        :doc:`vector.backends.awkward.TemporalTau`, depending on
         the fields in ``array``.
         """
         fields = ak.fields(array)
@@ -203,8 +203,8 @@ class TemporalAwkward(CoordinatesAwkward, Temporal):
     @classmethod
     def from_momentum_fields(cls, array: ak.Array) -> "TemporalAwkward":
         """
-        Create a :doc:`vector._backends.awkward_.TemporalT` or a
-        :doc:`vector._backends.awkward_.TemporalTau`, depending on
+        Create a :doc:`vector.backends.awkward.TemporalT` or a
+        :doc:`vector.backends.awkward.TemporalTau`, depending on
         the fields in ``array``, allowing momentum synonyms.
         """
         fields = ak.fields(array)
@@ -1228,27 +1228,27 @@ def _ttype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
 
 
 def _numba_typer_Vector2D(viewtype: typing.Any) -> typing.Any:
-    import vector._backends.numba_object
+    import vector.backends._numba_object
 
     # These exist, but the file is type ignored, so can't be found
-    return vector._backends.numba_object.VectorObject2DType(  # type: ignore[attr-defined]
+    return vector.backends._numba_object.VectorObject2DType(  # type: ignore[attr-defined]
         _aztype_of(viewtype.arrayviewtype.type, False)
     )
 
 
 def _numba_typer_Vector3D(viewtype: typing.Any) -> typing.Any:
-    import vector._backends.numba_object
+    import vector.backends._numba_object
 
-    return vector._backends.numba_object.VectorObject3DType(  # type: ignore[attr-defined]
+    return vector.backends._numba_object.VectorObject3DType(  # type: ignore[attr-defined]
         _aztype_of(viewtype.arrayviewtype.type, False),
         _ltype_of(viewtype.arrayviewtype.type, False),
     )
 
 
 def _numba_typer_Vector4D(viewtype: typing.Any) -> typing.Any:
-    import vector._backends.numba_object
+    import vector.backends._numba_object
 
-    return vector._backends.numba_object.VectorObject4DType(  # type: ignore[attr-defined]
+    return vector.backends._numba_object.VectorObject4DType(  # type: ignore[attr-defined]
         _aztype_of(viewtype.arrayviewtype.type, False),
         _ltype_of(viewtype.arrayviewtype.type, False),
         _ttype_of(viewtype.arrayviewtype.type, False),
@@ -1256,26 +1256,26 @@ def _numba_typer_Vector4D(viewtype: typing.Any) -> typing.Any:
 
 
 def _numba_typer_Momentum2D(viewtype: typing.Any) -> typing.Any:
-    import vector._backends.numba_object
+    import vector.backends._numba_object
 
-    return vector._backends.numba_object.MomentumObject2DType(  # type: ignore[attr-defined]
+    return vector.backends._numba_object.MomentumObject2DType(  # type: ignore[attr-defined]
         _aztype_of(viewtype.arrayviewtype.type, True)
     )
 
 
 def _numba_typer_Momentum3D(viewtype: typing.Any) -> typing.Any:
-    import vector._backends.numba_object
+    import vector.backends._numba_object
 
-    return vector._backends.numba_object.MomentumObject3DType(  # type: ignore[attr-defined]
+    return vector.backends._numba_object.MomentumObject3DType(  # type: ignore[attr-defined]
         _aztype_of(viewtype.arrayviewtype.type, True),
         _ltype_of(viewtype.arrayviewtype.type, True),
     )
 
 
 def _numba_typer_Momentum4D(viewtype: typing.Any) -> typing.Any:
-    import vector._backends.numba_object
+    import vector.backends._numba_object
 
-    return vector._backends.numba_object.MomentumObject4DType(  # type: ignore[attr-defined]
+    return vector.backends._numba_object.MomentumObject4DType(  # type: ignore[attr-defined]
         _aztype_of(viewtype.arrayviewtype.type, True),
         _ltype_of(viewtype.arrayviewtype.type, True),
         _ttype_of(viewtype.arrayviewtype.type, True),
@@ -1285,7 +1285,7 @@ def _numba_typer_Momentum4D(viewtype: typing.Any) -> typing.Any:
 def _numba_lower(
     context: typing.Any, builder: typing.Any, sig: typing.Any, args: typing.Any
 ) -> typing.Any:
-    from vector._backends.numba_object import (  # type: ignore[attr-defined]
+    from vector.backends._numba_object import (  # type: ignore[attr-defined]
         _awkward_numba_E,
         _awkward_numba_e,
         _awkward_numba_energy,

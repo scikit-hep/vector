@@ -29,7 +29,7 @@ for groupname, module in names_and_modules:
             "vector._compute."
         ):
             new_name = submodule.__name__.replace(
-                "vector._compute.", "vector._compute.numba."
+                "vector._compute.", "vector._compute._numba."
             )
             numba_modules[groupname][modname] = {}
 

@@ -9,7 +9,8 @@ from setuptools import setup
 extras = {
     "awkward": ["awkward>=1.2.0"],
     "test": [
-        "pytest>=4.6",
+        "pytest>=6",
+        "pytest-cov>=3.0.0",
     ],
     "test_extras": [
         "uncompyle6",
