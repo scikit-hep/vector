@@ -8,7 +8,7 @@ import typing
 
 import numpy
 
-import vector._backends.object_
+import vector.backends.object
 from vector._methods import (
     Azimuthal,
     AzimuthalRhoPhi,
@@ -224,19 +224,19 @@ class CoordinatesNumpy:
 
 
 class AzimuthalNumpy(CoordinatesNumpy, Azimuthal):
-    ObjectClass: typing.Type[vector._backends.object_.AzimuthalObject]
+    ObjectClass: typing.Type[vector.backends.object.AzimuthalObject]
 
 
 class LongitudinalNumpy(CoordinatesNumpy, Longitudinal):
-    ObjectClass: typing.Type[vector._backends.object_.LongitudinalObject]
+    ObjectClass: typing.Type[vector.backends.object.LongitudinalObject]
 
 
 class TemporalNumpy(CoordinatesNumpy, Temporal):
-    ObjectClass: typing.Type[vector._backends.object_.TemporalObject]
+    ObjectClass: typing.Type[vector.backends.object.TemporalObject]
 
 
 class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # type: ignore[misc]
-    ObjectClass = vector._backends.object_.AzimuthalObjectXY
+    ObjectClass = vector.backends.object.AzimuthalObjectXY
     _IS_MOMENTUM = False
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "AzimuthalNumpyXY":
@@ -263,7 +263,7 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # typ
 
 
 class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray):  # type: ignore[misc]
-    ObjectClass = vector._backends.object_.AzimuthalObjectRhoPhi
+    ObjectClass = vector.backends.object.AzimuthalObjectRhoPhi
     _IS_MOMENTUM = False
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "AzimuthalNumpyRhoPhi":
@@ -290,7 +290,7 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray)
 
 
 class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):  # type: ignore[misc]
-    ObjectClass = vector._backends.object_.LongitudinalObjectZ
+    ObjectClass = vector.backends.object.LongitudinalObjectZ
     _IS_MOMENTUM = False
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "LongitudinalNumpyZ":
@@ -313,7 +313,7 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):
 
 
 class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, FloatArray):  # type: ignore[misc]
-    ObjectClass = vector._backends.object_.LongitudinalObjectTheta
+    ObjectClass = vector.backends.object.LongitudinalObjectTheta
     _IS_MOMENTUM = False
 
     def __new__(
@@ -338,7 +338,7 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, Floa
 
 
 class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArray):  # type: ignore[misc]
-    ObjectClass = vector._backends.object_.LongitudinalObjectEta
+    ObjectClass = vector.backends.object.LongitudinalObjectEta
     _IS_MOMENTUM = False
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "LongitudinalNumpyEta":
@@ -361,7 +361,7 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArr
 
 
 class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ignore[misc]
-    ObjectClass = vector._backends.object_.TemporalObjectT
+    ObjectClass = vector.backends.object.TemporalObjectT
     _IS_MOMENTUM = False
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "TemporalNumpyT":
@@ -384,7 +384,7 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ig
 
 
 class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type: ignore[misc]
-    ObjectClass = vector._backends.object_.TemporalObjectTau
+    ObjectClass = vector.backends.object.TemporalObjectTau
     _IS_MOMENTUM = False
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "TemporalNumpyTau":
@@ -657,7 +657,7 @@ class VectorNumpy(Vector, GetItem):
 
 
 class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[misc]
-    ObjectClass = vector._backends.object_.VectorObject2D
+    ObjectClass = vector.backends.object.VectorObject2D
     _IS_MOMENTUM = False
 
     _azimuthal_type: typing.Union[
@@ -845,7 +845,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
 
 
 class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore[misc]
-    ObjectClass = vector._backends.object_.MomentumObject2D
+    ObjectClass = vector.backends.object.MomentumObject2D
     _IS_MOMENTUM = True
     dtype: "numpy.dtype[typing.Any]"
 
@@ -875,7 +875,7 @@ class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore[misc]
 
 
 class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore[misc]
-    ObjectClass = vector._backends.object_.VectorObject3D
+    ObjectClass = vector.backends.object.VectorObject3D
     _IS_MOMENTUM = False
 
     _azimuthal_type: typing.Union[
@@ -1087,7 +1087,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
 
 
 class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
-    ObjectClass = vector._backends.object_.MomentumObject3D
+    ObjectClass = vector.backends.object.MomentumObject3D
     _IS_MOMENTUM = True
     dtype: "numpy.dtype[typing.Any]"
 
@@ -1127,7 +1127,7 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
 
 
 class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore[misc]
-    ObjectClass = vector._backends.object_.VectorObject4D
+    ObjectClass = vector.backends.object.VectorObject4D
     _IS_MOMENTUM = False
 
     _azimuthal_type: typing.Union[
@@ -1366,7 +1366,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
 
 
 class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore[misc]
-    ObjectClass = vector._backends.object_.MomentumObject4D
+    ObjectClass = vector.backends.object.MomentumObject4D
     _IS_MOMENTUM = True
     dtype: "numpy.dtype[typing.Any]"
 

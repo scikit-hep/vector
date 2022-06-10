@@ -8,11 +8,11 @@ import pickle
 
 import numpy
 
-import vector._backends.numpy_
+import vector.backends.numpy
 
 
 def test_xy():
-    array = vector._backends.numpy_.VectorNumpy2D(
+    array = vector.backends.numpy.VectorNumpy2D(
         [(0, 0), (0, 1), (3, 4)], dtype=[("x", numpy.float64), ("y", numpy.float64)]
     )
     assert numpy.allclose(array.x, [0, 0, 3])
@@ -22,7 +22,7 @@ def test_xy():
 
 
 def test_rhophi():
-    array = vector._backends.numpy_.VectorNumpy2D(
+    array = vector.backends.numpy.VectorNumpy2D(
         [(0, 10), (1, math.atan2(1, 0)), (5, math.atan2(4, 3))],
         dtype=[("rho", numpy.float64), ("phi", numpy.float64)],
     )
@@ -33,7 +33,7 @@ def test_rhophi():
 
 
 def test_pickle_vector_numpy_2d():
-    array = vector._backends.numpy_.VectorNumpy2D(
+    array = vector.backends.numpy.VectorNumpy2D(
         [(0, 0), (0, 1), (3, 4)], dtype=[("x", numpy.float64), ("y", numpy.float64)]
     )
 
@@ -45,7 +45,7 @@ def test_pickle_vector_numpy_2d():
 
 
 def test_pickle_momentum_numpy_2d():
-    array = vector._backends.numpy_.MomentumNumpy2D(
+    array = vector.backends.numpy.MomentumNumpy2D(
         [(0, 0), (0, 1), (3, 4)], dtype=[("rho", numpy.float64), ("phi", numpy.float64)]
     )
 
@@ -57,7 +57,7 @@ def test_pickle_momentum_numpy_2d():
 
 
 def test_pickle_vector_numpy_3d():
-    array = vector._backends.numpy_.VectorNumpy3D(
+    array = vector.backends.numpy.VectorNumpy3D(
         [(0, 0, 0), (0, 1, 1), (3, 4, 5)],
         dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
     )
@@ -71,7 +71,7 @@ def test_pickle_vector_numpy_3d():
 
 
 def test_pickle_momentum_numpy_3d():
-    array = vector._backends.numpy_.MomentumNumpy3D(
+    array = vector.backends.numpy.MomentumNumpy3D(
         [(0, 0, 0), (0, 1, 1), (3, 4, 5)],
         dtype=[
             ("rho", numpy.float64),
@@ -89,7 +89,7 @@ def test_pickle_momentum_numpy_3d():
 
 
 def test_pickle_vector_numpy_4d():
-    array = vector._backends.numpy_.VectorNumpy4D(
+    array = vector.backends.numpy.VectorNumpy4D(
         [(0, 0, 0, 0), (0, 1, 1, 1), (3, 4, 5, 6)],
         dtype=[
             ("x", numpy.float64),
@@ -109,7 +109,7 @@ def test_pickle_vector_numpy_4d():
 
 
 def test_pickle_momentum_numpy_4d():
-    array = vector._backends.numpy_.MomentumNumpy4D(
+    array = vector.backends.numpy.MomentumNumpy4D(
         [(0, 0, 0, 0), (0, 1, 1, 1), (3, 4, 5, 6)],
         dtype=[
             ("rho", numpy.float64),

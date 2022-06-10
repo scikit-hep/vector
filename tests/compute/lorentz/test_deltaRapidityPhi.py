@@ -6,20 +6,20 @@
 import numpy
 import pytest
 
-import vector._backends.numpy_
-import vector._backends.object_
+import vector.backends.numpy
+import vector.backends.object
 
 
 def test_lorentz_object():
-    v1 = vector._backends.object_.MomentumObject4D(
-        vector._backends.object_.AzimuthalObjectXY(1.0, 1.0),
-        vector._backends.object_.LongitudinalObjectZ(1.0),
-        vector._backends.object_.TemporalObjectTau(1.0),
+    v1 = vector.backends.object.MomentumObject4D(
+        vector.backends.object.AzimuthalObjectXY(1.0, 1.0),
+        vector.backends.object.LongitudinalObjectZ(1.0),
+        vector.backends.object.TemporalObjectTau(1.0),
     )
-    v2 = vector._backends.object_.MomentumObject4D(
-        vector._backends.object_.AzimuthalObjectXY(-1.0, -1.0),
-        vector._backends.object_.LongitudinalObjectZ(-1.0),
-        vector._backends.object_.TemporalObjectTau(1.0),
+    v2 = vector.backends.object.MomentumObject4D(
+        vector.backends.object.AzimuthalObjectXY(-1.0, -1.0),
+        vector.backends.object.LongitudinalObjectZ(-1.0),
+        vector.backends.object.TemporalObjectTau(1.0),
     )
     expected_result = numpy.sqrt(
         # phi
@@ -62,7 +62,7 @@ def test_lorentz_object():
 
 
 def test_lorentz_numpy():
-    v1 = vector._backends.numpy_.VectorNumpy4D(
+    v1 = vector.backends.numpy.VectorNumpy4D(
         [(1.0, 1.0, 1.0, 1.0)],
         dtype=[
             ("x", numpy.float64),
@@ -71,7 +71,7 @@ def test_lorentz_numpy():
             ("tau", numpy.float64),
         ],
     )
-    v2 = vector._backends.numpy_.VectorNumpy4D(
+    v2 = vector.backends.numpy.VectorNumpy4D(
         [(-1.0, -1.0, -1.0, 1.0)],
         dtype=[
             ("x", numpy.float64),
