@@ -9,12 +9,12 @@ import numpy
 import pytest
 
 import vector
-import vector._backends.object_
+import vector.backends.object
 
 numba = pytest.importorskip("numba")
 
 
-import vector._backends.numba_object  # noqa: E402
+import vector.backends._numba_object  # noqa: E402
 
 pytestmark = pytest.mark.numba
 
@@ -24,8 +24,8 @@ def test_namedtuples():
     def get_x(obj):
         return obj.x
 
-    assert get_x(vector._backends.object_.AzimuthalObjectXY(1, 2.2)) == 1
-    assert get_x(vector._backends.object_.AzimuthalObjectXY(1.1, 2)) == 1.1
+    assert get_x(vector.backends.object.AzimuthalObjectXY(1, 2.2)) == 1
+    assert get_x(vector.backends.object.AzimuthalObjectXY(1.1, 2)) == 1.1
 
 
 def test_VectorObjectType():
@@ -53,10 +53,8 @@ def test_VectorObjectType():
         zero(obj)
         assert (sys.getrefcount(obj), sys.getrefcount(obj.azimuthal)) == (2, 2)
         if class_refs is None:
-            class_refs = sys.getrefcount(vector._backends.object_.VectorObject2D)
-        assert class_refs + 1 == sys.getrefcount(
-            vector._backends.object_.VectorObject2D
-        )
+            class_refs = sys.getrefcount(vector.backends.object.VectorObject2D)
+        assert class_refs + 1 == sys.getrefcount(vector.backends.object.VectorObject2D)
 
     class_refs = None
     for _ in range(10):
@@ -64,10 +62,8 @@ def test_VectorObjectType():
         assert (sys.getrefcount(obj), sys.getrefcount(obj.azimuthal)) == (2, 2)
         assert (sys.getrefcount(a), sys.getrefcount(a.azimuthal)) == (2, 2)
         if class_refs is None:
-            class_refs = sys.getrefcount(vector._backends.object_.VectorObject2D)
-        assert class_refs + 1 == sys.getrefcount(
-            vector._backends.object_.VectorObject2D
-        )
+            class_refs = sys.getrefcount(vector.backends.object.VectorObject2D)
+        assert class_refs + 1 == sys.getrefcount(vector.backends.object.VectorObject2D)
 
     class_refs = None
     for _ in range(10):
@@ -80,42 +76,40 @@ def test_VectorObjectType():
             sys.getrefcount(b.azimuthal),
         ) == (2, 2, 2, 2)
         if class_refs is None:
-            class_refs = sys.getrefcount(vector._backends.object_.VectorObject2D)
-        assert class_refs + 1 == sys.getrefcount(
-            vector._backends.object_.VectorObject2D
-        )
+            class_refs = sys.getrefcount(vector.backends.object.VectorObject2D)
+        assert class_refs + 1 == sys.getrefcount(vector.backends.object.VectorObject2D)
 
     # These tests just check that the rest of the implementations are sane.
 
     obj = vector.obj(x=1, y=2)
     out = one(obj)
-    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert isinstance(out, vector.backends.object.VectorObject2D)
     assert out.x == pytest.approx(1)
     assert out.y == pytest.approx(2)
 
     obj = vector.obj(px=1, py=2)
     out = one(obj)
-    assert isinstance(out, vector._backends.object_.MomentumObject2D)
+    assert isinstance(out, vector.backends.object.MomentumObject2D)
     assert out.x == pytest.approx(1)
     assert out.y == pytest.approx(2)
 
     obj = vector.obj(x=1, y=2, z=3)
     out = one(obj)
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
     assert out.x == pytest.approx(1)
     assert out.y == pytest.approx(2)
     assert out.z == pytest.approx(3)
 
     obj = vector.obj(px=1, py=2, pz=3)
     out = one(obj)
-    assert isinstance(out, vector._backends.object_.MomentumObject3D)
+    assert isinstance(out, vector.backends.object.MomentumObject3D)
     assert out.x == pytest.approx(1)
     assert out.y == pytest.approx(2)
     assert out.z == pytest.approx(3)
 
     obj = vector.obj(x=1, y=2, z=3, t=4)
     out = one(obj)
-    assert isinstance(out, vector._backends.object_.VectorObject4D)
+    assert isinstance(out, vector.backends.object.VectorObject4D)
     assert out.x == pytest.approx(1)
     assert out.y == pytest.approx(2)
     assert out.z == pytest.approx(3)
@@ -123,165 +117,165 @@ def test_VectorObjectType():
 
     obj = vector.obj(px=1, py=2, pz=3, t=4)
     out = one(obj)
-    assert isinstance(out, vector._backends.object_.MomentumObject4D)
+    assert isinstance(out, vector.backends.object.MomentumObject4D)
     assert out.x == pytest.approx(1)
     assert out.y == pytest.approx(2)
     assert out.z == pytest.approx(3)
     assert out.t == pytest.approx(4)
 
 
-def test_VectorObject_constructor():
+def test_VectorObjectconstructor():
     @numba.njit
     def vector_xy():
-        return vector._backends.object_.VectorObject2D(
-            vector._backends.object_.AzimuthalObjectXY(1, 2.2)
+        return vector.backends.object.VectorObject2D(
+            vector.backends.object.AzimuthalObjectXY(1, 2.2)
         )
 
     @numba.njit
     def vector_rhophi():
-        return vector._backends.object_.VectorObject2D(
-            vector._backends.object_.AzimuthalObjectRhoPhi(1, 2.2)
+        return vector.backends.object.VectorObject2D(
+            vector.backends.object.AzimuthalObjectRhoPhi(1, 2.2)
         )
 
     @numba.njit
     def momentum_xy():
-        return vector._backends.object_.MomentumObject2D(
-            vector._backends.object_.AzimuthalObjectXY(1, 2.2)
+        return vector.backends.object.MomentumObject2D(
+            vector.backends.object.AzimuthalObjectXY(1, 2.2)
         )
 
     @numba.njit
     def momentum_rhophi():
-        return vector._backends.object_.MomentumObject2D(
-            vector._backends.object_.AzimuthalObjectRhoPhi(1, 2.2)
+        return vector.backends.object.MomentumObject2D(
+            vector.backends.object.AzimuthalObjectRhoPhi(1, 2.2)
         )
 
     @numba.njit
     def vector_xyz():
-        return vector._backends.object_.VectorObject3D(
-            vector._backends.object_.AzimuthalObjectXY(1, 2.2),
-            vector._backends.object_.LongitudinalObjectZ(3),
+        return vector.backends.object.VectorObject3D(
+            vector.backends.object.AzimuthalObjectXY(1, 2.2),
+            vector.backends.object.LongitudinalObjectZ(3),
         )
 
     @numba.njit
     def momentum_xyz():
-        return vector._backends.object_.MomentumObject3D(
-            vector._backends.object_.AzimuthalObjectXY(1, 2.2),
-            vector._backends.object_.LongitudinalObjectZ(3),
+        return vector.backends.object.MomentumObject3D(
+            vector.backends.object.AzimuthalObjectXY(1, 2.2),
+            vector.backends.object.LongitudinalObjectZ(3),
         )
 
     @numba.njit
     def vector_rhophitheta():
-        return vector._backends.object_.VectorObject3D(
-            vector._backends.object_.AzimuthalObjectRhoPhi(1, 2.2),
-            vector._backends.object_.LongitudinalObjectTheta(3),
+        return vector.backends.object.VectorObject3D(
+            vector.backends.object.AzimuthalObjectRhoPhi(1, 2.2),
+            vector.backends.object.LongitudinalObjectTheta(3),
         )
 
     @numba.njit
     def momentum_rhophitheta():
-        return vector._backends.object_.MomentumObject3D(
-            vector._backends.object_.AzimuthalObjectRhoPhi(1, 2.2),
-            vector._backends.object_.LongitudinalObjectTheta(3),
+        return vector.backends.object.MomentumObject3D(
+            vector.backends.object.AzimuthalObjectRhoPhi(1, 2.2),
+            vector.backends.object.LongitudinalObjectTheta(3),
         )
 
     @numba.njit
     def vector_xyzt():
-        return vector._backends.object_.VectorObject4D(
-            vector._backends.object_.AzimuthalObjectXY(1, 2.2),
-            vector._backends.object_.LongitudinalObjectZ(3),
-            vector._backends.object_.TemporalObjectT(4),
+        return vector.backends.object.VectorObject4D(
+            vector.backends.object.AzimuthalObjectXY(1, 2.2),
+            vector.backends.object.LongitudinalObjectZ(3),
+            vector.backends.object.TemporalObjectT(4),
         )
 
     @numba.njit
     def momentum_xyzt():
-        return vector._backends.object_.MomentumObject4D(
-            vector._backends.object_.AzimuthalObjectXY(1, 2.2),
-            vector._backends.object_.LongitudinalObjectZ(3),
-            vector._backends.object_.TemporalObjectT(4),
+        return vector.backends.object.MomentumObject4D(
+            vector.backends.object.AzimuthalObjectXY(1, 2.2),
+            vector.backends.object.LongitudinalObjectZ(3),
+            vector.backends.object.TemporalObjectT(4),
         )
 
     @numba.njit
     def vector_rhophietatau():
-        return vector._backends.object_.VectorObject4D(
-            vector._backends.object_.AzimuthalObjectRhoPhi(1, 2.2),
-            vector._backends.object_.LongitudinalObjectEta(3),
-            vector._backends.object_.TemporalObjectTau(4),
+        return vector.backends.object.VectorObject4D(
+            vector.backends.object.AzimuthalObjectRhoPhi(1, 2.2),
+            vector.backends.object.LongitudinalObjectEta(3),
+            vector.backends.object.TemporalObjectTau(4),
         )
 
     @numba.njit
     def momentum_rhophietatau():
-        return vector._backends.object_.MomentumObject4D(
-            vector._backends.object_.AzimuthalObjectRhoPhi(1, 2.2),
-            vector._backends.object_.LongitudinalObjectEta(3),
-            vector._backends.object_.TemporalObjectTau(4),
+        return vector.backends.object.MomentumObject4D(
+            vector.backends.object.AzimuthalObjectRhoPhi(1, 2.2),
+            vector.backends.object.LongitudinalObjectEta(3),
+            vector.backends.object.TemporalObjectTau(4),
         )
 
     out = vector_xy()
-    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert isinstance(out, vector.backends.object.VectorObject2D)
     assert out.x == pytest.approx(1)
     assert out.y == pytest.approx(2.2)
 
     out = vector_rhophi()
-    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert isinstance(out, vector.backends.object.VectorObject2D)
     assert out.rho == pytest.approx(1)
     assert out.phi == pytest.approx(2.2)
 
     out = momentum_xy()
-    assert isinstance(out, vector._backends.object_.MomentumObject2D)
+    assert isinstance(out, vector.backends.object.MomentumObject2D)
     assert out.x == pytest.approx(1)
     assert out.y == pytest.approx(2.2)
 
     out = momentum_rhophi()
-    assert isinstance(out, vector._backends.object_.MomentumObject2D)
+    assert isinstance(out, vector.backends.object.MomentumObject2D)
     assert out.rho == pytest.approx(1)
     assert out.phi == pytest.approx(2.2)
 
     out = vector_xyz()
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
     assert out.x == pytest.approx(1)
     assert out.y == pytest.approx(2.2)
     assert out.z == pytest.approx(3)
 
     out = momentum_xyz()
-    assert isinstance(out, vector._backends.object_.MomentumObject3D)
+    assert isinstance(out, vector.backends.object.MomentumObject3D)
     assert out.x == pytest.approx(1)
     assert out.y == pytest.approx(2.2)
     assert out.z == pytest.approx(3)
 
     out = vector_rhophitheta()
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
     assert out.rho == pytest.approx(1)
     assert out.phi == pytest.approx(2.2)
     assert out.theta == pytest.approx(3)
 
     out = momentum_rhophitheta()
-    assert isinstance(out, vector._backends.object_.MomentumObject3D)
+    assert isinstance(out, vector.backends.object.MomentumObject3D)
     assert out.rho == pytest.approx(1)
     assert out.phi == pytest.approx(2.2)
     assert out.theta == pytest.approx(3)
 
     out = vector_xyzt()
-    assert isinstance(out, vector._backends.object_.VectorObject4D)
+    assert isinstance(out, vector.backends.object.VectorObject4D)
     assert out.x == pytest.approx(1)
     assert out.y == pytest.approx(2.2)
     assert out.z == pytest.approx(3)
     assert out.t == pytest.approx(4)
 
     out = momentum_xyzt()
-    assert isinstance(out, vector._backends.object_.MomentumObject4D)
+    assert isinstance(out, vector.backends.object.MomentumObject4D)
     assert out.x == pytest.approx(1)
     assert out.y == pytest.approx(2.2)
     assert out.z == pytest.approx(3)
     assert out.t == pytest.approx(4)
 
     out = vector_rhophietatau()
-    assert isinstance(out, vector._backends.object_.VectorObject4D)
+    assert isinstance(out, vector.backends.object.VectorObject4D)
     assert out.rho == pytest.approx(1)
     assert out.phi == pytest.approx(2.2)
     assert out.eta == pytest.approx(3)
     assert out.tau == pytest.approx(4)
 
     out = momentum_rhophietatau()
-    assert isinstance(out, vector._backends.object_.MomentumObject4D)
+    assert isinstance(out, vector.backends.object.MomentumObject4D)
     assert out.rho == pytest.approx(1)
     assert out.phi == pytest.approx(2.2)
     assert out.eta == pytest.approx(3)
@@ -302,75 +296,75 @@ def test_projections():
         return x.to_Vector4D()
 
     assert isinstance(
-        to_Vector2D(vector.obj(x=1.1, y=2.2)), vector._backends.object_.VectorObject2D
+        to_Vector2D(vector.obj(x=1.1, y=2.2)), vector.backends.object.VectorObject2D
     )
     assert isinstance(
         to_Vector2D(vector.obj(x=1.1, y=2.2, z=3.3)),
-        vector._backends.object_.VectorObject2D,
+        vector.backends.object.VectorObject2D,
     )
     assert isinstance(
         to_Vector2D(vector.obj(x=1.1, y=2.2, z=3.3, t=4.4)),
-        vector._backends.object_.VectorObject2D,
+        vector.backends.object.VectorObject2D,
     )
     assert isinstance(
         to_Vector2D(vector.obj(px=1.1, py=2.2)),
-        vector._backends.object_.MomentumObject2D,
+        vector.backends.object.MomentumObject2D,
     )
     assert isinstance(
         to_Vector2D(vector.obj(px=1.1, py=2.2, pz=3.3)),
-        vector._backends.object_.MomentumObject2D,
+        vector.backends.object.MomentumObject2D,
     )
     assert isinstance(
         to_Vector2D(vector.obj(px=1.1, py=2.2, pz=3.3, E=4.4)),
-        vector._backends.object_.MomentumObject2D,
+        vector.backends.object.MomentumObject2D,
     )
 
     assert isinstance(
-        to_Vector3D(vector.obj(x=1.1, y=2.2)), vector._backends.object_.VectorObject3D
+        to_Vector3D(vector.obj(x=1.1, y=2.2)), vector.backends.object.VectorObject3D
     )
     assert isinstance(
         to_Vector3D(vector.obj(x=1.1, y=2.2, z=3.3)),
-        vector._backends.object_.VectorObject3D,
+        vector.backends.object.VectorObject3D,
     )
     assert isinstance(
         to_Vector3D(vector.obj(x=1.1, y=2.2, z=3.3, t=4.4)),
-        vector._backends.object_.VectorObject3D,
+        vector.backends.object.VectorObject3D,
     )
     assert isinstance(
         to_Vector3D(vector.obj(px=1.1, py=2.2)),
-        vector._backends.object_.MomentumObject3D,
+        vector.backends.object.MomentumObject3D,
     )
     assert isinstance(
         to_Vector3D(vector.obj(px=1.1, py=2.2, pz=3.3)),
-        vector._backends.object_.MomentumObject3D,
+        vector.backends.object.MomentumObject3D,
     )
     assert isinstance(
         to_Vector3D(vector.obj(px=1.1, py=2.2, pz=3.3, E=4.4)),
-        vector._backends.object_.MomentumObject3D,
+        vector.backends.object.MomentumObject3D,
     )
 
     assert isinstance(
-        to_Vector4D(vector.obj(x=1.1, y=2.2)), vector._backends.object_.VectorObject4D
+        to_Vector4D(vector.obj(x=1.1, y=2.2)), vector.backends.object.VectorObject4D
     )
     assert isinstance(
         to_Vector4D(vector.obj(x=1.1, y=2.2, z=3.3)),
-        vector._backends.object_.VectorObject4D,
+        vector.backends.object.VectorObject4D,
     )
     assert isinstance(
         to_Vector4D(vector.obj(x=1.1, y=2.2, z=3.3, t=4.4)),
-        vector._backends.object_.VectorObject4D,
+        vector.backends.object.VectorObject4D,
     )
     assert isinstance(
         to_Vector4D(vector.obj(px=1.1, py=2.2)),
-        vector._backends.object_.MomentumObject4D,
+        vector.backends.object.MomentumObject4D,
     )
     assert isinstance(
         to_Vector4D(vector.obj(px=1.1, py=2.2, pz=3.3)),
-        vector._backends.object_.MomentumObject4D,
+        vector.backends.object.MomentumObject4D,
     )
     assert isinstance(
         to_Vector4D(vector.obj(px=1.1, py=2.2, pz=3.3, E=4.4)),
-        vector._backends.object_.MomentumObject4D,
+        vector.backends.object.MomentumObject4D,
     )
 
 
@@ -466,116 +460,112 @@ def test_conversions():
         print(v)
 
         out = to_xy(v)
-        assert isinstance(out, vector._backends.object_.VectorObject2D)
+        assert isinstance(out, vector.backends.object.VectorObject2D)
         if isinstance(v, vector._methods.Momentum):
-            assert isinstance(out, vector._backends.object_.MomentumObject2D)
-        assert isinstance(out.azimuthal, vector._backends.object_.AzimuthalObjectXY)
+            assert isinstance(out, vector.backends.object.MomentumObject2D)
+        assert isinstance(out.azimuthal, vector.backends.object.AzimuthalObjectXY)
         assert out.x == pytest.approx(1.1)
         assert out.y == pytest.approx(2.2)
 
         out = to_rhophi(v)
-        assert isinstance(out, vector._backends.object_.VectorObject2D)
+        assert isinstance(out, vector.backends.object.VectorObject2D)
         if isinstance(v, vector._methods.Momentum):
-            assert isinstance(out, vector._backends.object_.MomentumObject2D)
-        assert isinstance(out.azimuthal, vector._backends.object_.AzimuthalObjectRhoPhi)
+            assert isinstance(out, vector.backends.object.MomentumObject2D)
+        assert isinstance(out.azimuthal, vector.backends.object.AzimuthalObjectRhoPhi)
         assert out.x == pytest.approx(1.1)
         assert out.y == pytest.approx(2.2)
 
         out = to_xyz(v)
-        assert isinstance(out, vector._backends.object_.VectorObject3D)
+        assert isinstance(out, vector.backends.object.VectorObject3D)
         if isinstance(v, vector._methods.Momentum):
-            assert isinstance(out, vector._backends.object_.MomentumObject3D)
-        assert isinstance(out.azimuthal, vector._backends.object_.AzimuthalObjectXY)
-        assert isinstance(
-            out.longitudinal, vector._backends.object_.LongitudinalObjectZ
-        )
+            assert isinstance(out, vector.backends.object.MomentumObject3D)
+        assert isinstance(out.azimuthal, vector.backends.object.AzimuthalObjectXY)
+        assert isinstance(out.longitudinal, vector.backends.object.LongitudinalObjectZ)
         assert out.x == pytest.approx(1.1)
         assert out.y == pytest.approx(2.2)
-        if isinstance(v, vector._backends.object_.VectorObject2D):
+        if isinstance(v, vector.backends.object.VectorObject2D):
             assert out.z == pytest.approx(0)
         else:
             assert out.z == pytest.approx(3.3)
 
         out = to_rhophiz(v)
-        assert isinstance(out, vector._backends.object_.VectorObject3D)
+        assert isinstance(out, vector.backends.object.VectorObject3D)
         if isinstance(v, vector._methods.Momentum):
-            assert isinstance(out, vector._backends.object_.MomentumObject3D)
-        assert isinstance(out.azimuthal, vector._backends.object_.AzimuthalObjectRhoPhi)
-        assert isinstance(
-            out.longitudinal, vector._backends.object_.LongitudinalObjectZ
-        )
+            assert isinstance(out, vector.backends.object.MomentumObject3D)
+        assert isinstance(out.azimuthal, vector.backends.object.AzimuthalObjectRhoPhi)
+        assert isinstance(out.longitudinal, vector.backends.object.LongitudinalObjectZ)
         assert out.x == pytest.approx(1.1)
         assert out.y == pytest.approx(2.2)
-        if isinstance(v, vector._backends.object_.VectorObject2D):
+        if isinstance(v, vector.backends.object.VectorObject2D):
             assert out.z == pytest.approx(0)
         else:
             assert out.z == pytest.approx(3.3)
 
         out = to_xytheta(v)
-        assert isinstance(out, vector._backends.object_.VectorObject3D)
+        assert isinstance(out, vector.backends.object.VectorObject3D)
         if isinstance(v, vector._methods.Momentum):
-            assert isinstance(out, vector._backends.object_.MomentumObject3D)
-        assert isinstance(out.azimuthal, vector._backends.object_.AzimuthalObjectXY)
+            assert isinstance(out, vector.backends.object.MomentumObject3D)
+        assert isinstance(out.azimuthal, vector.backends.object.AzimuthalObjectXY)
         assert isinstance(
-            out.longitudinal, vector._backends.object_.LongitudinalObjectTheta
+            out.longitudinal, vector.backends.object.LongitudinalObjectTheta
         )
         assert out.x == pytest.approx(1.1)
         assert out.y == pytest.approx(2.2)
-        if isinstance(v, vector._backends.object_.VectorObject2D):
+        if isinstance(v, vector.backends.object.VectorObject2D):
             assert out.theta == pytest.approx(0)
         else:
             assert out.z == pytest.approx(3.3)
 
         out = to_rhophitheta(v)
-        assert isinstance(out, vector._backends.object_.VectorObject3D)
+        assert isinstance(out, vector.backends.object.VectorObject3D)
         if isinstance(v, vector._methods.Momentum):
-            assert isinstance(out, vector._backends.object_.MomentumObject3D)
-        assert isinstance(out.azimuthal, vector._backends.object_.AzimuthalObjectRhoPhi)
+            assert isinstance(out, vector.backends.object.MomentumObject3D)
+        assert isinstance(out.azimuthal, vector.backends.object.AzimuthalObjectRhoPhi)
         assert isinstance(
-            out.longitudinal, vector._backends.object_.LongitudinalObjectTheta
+            out.longitudinal, vector.backends.object.LongitudinalObjectTheta
         )
         assert out.x == pytest.approx(1.1)
         assert out.y == pytest.approx(2.2)
-        if isinstance(v, vector._backends.object_.VectorObject2D):
+        if isinstance(v, vector.backends.object.VectorObject2D):
             assert out.theta == pytest.approx(0)
         else:
             assert out.z == pytest.approx(3.3)
 
         out = to_xyeta(v)
-        assert isinstance(out, vector._backends.object_.VectorObject3D)
+        assert isinstance(out, vector.backends.object.VectorObject3D)
         if isinstance(v, vector._methods.Momentum):
-            assert isinstance(out, vector._backends.object_.MomentumObject3D)
-        assert isinstance(out.azimuthal, vector._backends.object_.AzimuthalObjectXY)
+            assert isinstance(out, vector.backends.object.MomentumObject3D)
+        assert isinstance(out.azimuthal, vector.backends.object.AzimuthalObjectXY)
         assert isinstance(
-            out.longitudinal, vector._backends.object_.LongitudinalObjectEta
+            out.longitudinal, vector.backends.object.LongitudinalObjectEta
         )
         assert out.x == pytest.approx(1.1)
         assert out.y == pytest.approx(2.2)
-        if isinstance(v, vector._backends.object_.VectorObject2D):
+        if isinstance(v, vector.backends.object.VectorObject2D):
             assert out.eta == pytest.approx(0)
         else:
             assert out.z == pytest.approx(3.3)
 
         out = to_rhophietatau(v)
-        assert isinstance(out, vector._backends.object_.VectorObject4D)
+        assert isinstance(out, vector.backends.object.VectorObject4D)
         if isinstance(v, vector._methods.Momentum):
-            assert isinstance(out, vector._backends.object_.MomentumObject4D)
-        assert isinstance(out.azimuthal, vector._backends.object_.AzimuthalObjectRhoPhi)
+            assert isinstance(out, vector.backends.object.MomentumObject4D)
+        assert isinstance(out.azimuthal, vector.backends.object.AzimuthalObjectRhoPhi)
         assert isinstance(
-            out.longitudinal, vector._backends.object_.LongitudinalObjectEta
+            out.longitudinal, vector.backends.object.LongitudinalObjectEta
         )
-        assert isinstance(out.temporal, vector._backends.object_.TemporalObjectTau)
+        assert isinstance(out.temporal, vector.backends.object.TemporalObjectTau)
         assert out.x == pytest.approx(1.1)
         assert out.y == pytest.approx(2.2)
-        if isinstance(v, vector._backends.object_.VectorObject2D):
+        if isinstance(v, vector.backends.object.VectorObject2D):
             assert out.eta == pytest.approx(0)
         else:
             assert out.z == pytest.approx(3.3)
         if isinstance(
             v,
             (
-                vector._backends.object_.VectorObject2D,
-                vector._backends.object_.VectorObject3D,
+                vector.backends.object.VectorObject2D,
+                vector.backends.object.VectorObject3D,
             ),
         ):
             assert out.tau == pytest.approx(0)
@@ -633,72 +623,72 @@ def test_factory():
         return vector.obj(rho=2, phi=3.3, z=5, energy=10)
 
     out = vector_xy()
-    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert isinstance(out, vector.backends.object.VectorObject2D)
     assert out.x == pytest.approx(2)
     assert out.y == pytest.approx(3.3)
 
     out = momentum_xy()
-    assert isinstance(out, vector._backends.object_.MomentumObject2D)
+    assert isinstance(out, vector.backends.object.MomentumObject2D)
     assert out.x == pytest.approx(2)
     assert out.y == pytest.approx(3.3)
 
     out = vector_rhophi()
-    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert isinstance(out, vector.backends.object.VectorObject2D)
     assert out.rho == pytest.approx(2)
     assert out.phi == pytest.approx(3.3)
 
     out = momentum_rhophi()
-    assert isinstance(out, vector._backends.object_.MomentumObject2D)
+    assert isinstance(out, vector.backends.object.MomentumObject2D)
     assert out.pt == pytest.approx(2)
     assert out.phi == pytest.approx(3.3)
 
     out = vector_xyz()
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
     assert out.x == pytest.approx(2)
     assert out.y == pytest.approx(3.3)
     assert out.z == pytest.approx(5)
 
     out = momentum_xyz()
-    assert isinstance(out, vector._backends.object_.MomentumObject3D)
+    assert isinstance(out, vector.backends.object.MomentumObject3D)
     assert out.x == pytest.approx(2)
     assert out.y == pytest.approx(3.3)
     assert out.z == pytest.approx(5)
 
     out = vector_rhophieta()
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
     assert out.rho == pytest.approx(2)
     assert out.phi == pytest.approx(3.3)
     assert out.eta == pytest.approx(5)
 
     out = momentum_rhophieta()
-    assert isinstance(out, vector._backends.object_.MomentumObject3D)
+    assert isinstance(out, vector.backends.object.MomentumObject3D)
     assert out.pt == pytest.approx(2)
     assert out.phi == pytest.approx(3.3)
     assert out.eta == pytest.approx(5)
 
     out = vector_xyztau()
-    assert isinstance(out, vector._backends.object_.VectorObject4D)
+    assert isinstance(out, vector.backends.object.VectorObject4D)
     assert out.x == pytest.approx(2)
     assert out.y == pytest.approx(3.3)
     assert out.z == pytest.approx(5)
     assert out.tau == pytest.approx(10)
 
     out = momentum_xyztau()
-    assert isinstance(out, vector._backends.object_.MomentumObject4D)
+    assert isinstance(out, vector.backends.object.MomentumObject4D)
     assert out.x == pytest.approx(2)
     assert out.y == pytest.approx(3.3)
     assert out.z == pytest.approx(5)
     assert out.tau == pytest.approx(10)
 
     out = vector_rhophizt()
-    assert isinstance(out, vector._backends.object_.VectorObject4D)
+    assert isinstance(out, vector.backends.object.VectorObject4D)
     assert out.rho == pytest.approx(2)
     assert out.phi == pytest.approx(3.3)
     assert out.z == pytest.approx(5)
     assert out.t == pytest.approx(10)
 
     out = momentum_rhophizt()
-    assert isinstance(out, vector._backends.object_.MomentumObject4D)
+    assert isinstance(out, vector.backends.object.MomentumObject4D)
     assert out.pt == pytest.approx(2)
     assert out.phi == pytest.approx(3.3)
     assert out.z == pytest.approx(5)
@@ -812,85 +802,85 @@ def test_method_add():
         return v1.add(v2)
 
     out = get_add(vector.obj(x=1.1, y=2.2), vector.obj(x=3, y=4))
-    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert isinstance(out, vector.backends.object.VectorObject2D)
     assert out.x == pytest.approx(4.1)
     assert out.y == pytest.approx(6.2)
 
     out = get_add(vector.obj(x=1.1, y=2.2), vector.obj(x=3, y=4, z=5))
-    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert isinstance(out, vector.backends.object.VectorObject2D)
     assert out.x == pytest.approx(4.1)
     assert out.y == pytest.approx(6.2)
 
     out = get_add(vector.obj(x=1.1, y=2.2, z=3.3), vector.obj(x=3, y=4))
-    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert isinstance(out, vector.backends.object.VectorObject2D)
     assert out.x == pytest.approx(4.1)
     assert out.y == pytest.approx(6.2)
 
     out = get_add(vector.obj(x=1.1, y=2.2, z=3.3), vector.obj(x=3, y=4, z=5))
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
     assert out.x == pytest.approx(4.1)
     assert out.y == pytest.approx(6.2)
     assert out.z == pytest.approx(8.3)
 
     out = get_add(vector.obj(px=1.1, py=2.2), vector.obj(px=3, py=4))
-    assert isinstance(out, vector._backends.object_.MomentumObject2D)
+    assert isinstance(out, vector.backends.object.MomentumObject2D)
     assert out.x == pytest.approx(4.1)
     assert out.y == pytest.approx(6.2)
 
     out = get_add(vector.obj(px=1.1, py=2.2), vector.obj(px=3, py=4, pz=5))
-    assert isinstance(out, vector._backends.object_.MomentumObject2D)
+    assert isinstance(out, vector.backends.object.MomentumObject2D)
     assert out.x == pytest.approx(4.1)
     assert out.y == pytest.approx(6.2)
 
     out = get_add(vector.obj(px=1.1, py=2.2, pz=3.3), vector.obj(px=3, py=4))
-    assert isinstance(out, vector._backends.object_.MomentumObject2D)
+    assert isinstance(out, vector.backends.object.MomentumObject2D)
     assert out.x == pytest.approx(4.1)
     assert out.y == pytest.approx(6.2)
 
     out = get_add(vector.obj(px=1.1, py=2.2, pz=3.3), vector.obj(px=3, py=4, pz=5))
-    assert isinstance(out, vector._backends.object_.MomentumObject3D)
+    assert isinstance(out, vector.backends.object.MomentumObject3D)
     assert out.x == pytest.approx(4.1)
     assert out.y == pytest.approx(6.2)
     assert out.z == pytest.approx(8.3)
 
     out = get_add(vector.obj(x=1.1, y=2.2), vector.obj(px=3, py=4))
-    assert not isinstance(out, vector._backends.object_.MomentumObject2D)
+    assert not isinstance(out, vector.backends.object.MomentumObject2D)
     assert out.x == pytest.approx(4.1)
     assert out.y == pytest.approx(6.2)
 
     out = get_add(vector.obj(x=1.1, y=2.2), vector.obj(px=3, py=4, pz=5))
-    assert not isinstance(out, vector._backends.object_.MomentumObject2D)
+    assert not isinstance(out, vector.backends.object.MomentumObject2D)
     assert out.x == pytest.approx(4.1)
     assert out.y == pytest.approx(6.2)
 
     out = get_add(vector.obj(x=1.1, y=2.2, z=3.3), vector.obj(px=3, py=4))
-    assert not isinstance(out, vector._backends.object_.MomentumObject2D)
+    assert not isinstance(out, vector.backends.object.MomentumObject2D)
     assert out.x == pytest.approx(4.1)
     assert out.y == pytest.approx(6.2)
 
     out = get_add(vector.obj(x=1.1, y=2.2, z=3.3), vector.obj(px=3, py=4, pz=5))
-    assert not isinstance(out, vector._backends.object_.MomentumObject3D)
+    assert not isinstance(out, vector.backends.object.MomentumObject3D)
     assert out.x == pytest.approx(4.1)
     assert out.y == pytest.approx(6.2)
     assert out.z == pytest.approx(8.3)
 
     out = get_add(vector.obj(px=1.1, py=2.2), vector.obj(x=3, y=4))
-    assert not isinstance(out, vector._backends.object_.MomentumObject2D)
+    assert not isinstance(out, vector.backends.object.MomentumObject2D)
     assert out.x == pytest.approx(4.1)
     assert out.y == pytest.approx(6.2)
 
     out = get_add(vector.obj(px=1.1, py=2.2), vector.obj(x=3, y=4, z=5))
-    assert not isinstance(out, vector._backends.object_.MomentumObject2D)
+    assert not isinstance(out, vector.backends.object.MomentumObject2D)
     assert out.x == pytest.approx(4.1)
     assert out.y == pytest.approx(6.2)
 
     out = get_add(vector.obj(px=1.1, py=2.2, pz=3.3), vector.obj(x=3, y=4))
-    assert not isinstance(out, vector._backends.object_.MomentumObject2D)
+    assert not isinstance(out, vector.backends.object.MomentumObject2D)
     assert out.x == pytest.approx(4.1)
     assert out.y == pytest.approx(6.2)
 
     out = get_add(vector.obj(px=1.1, py=2.2, pz=3.3), vector.obj(x=3, y=4, z=5))
-    assert not isinstance(out, vector._backends.object_.MomentumObject3D)
+    assert not isinstance(out, vector.backends.object.MomentumObject3D)
     assert out.x == pytest.approx(4.1)
     assert out.y == pytest.approx(6.2)
     assert out.z == pytest.approx(8.3)
@@ -936,17 +926,17 @@ def test_method_rotateZ():
         return v.rotateZ(angle)
 
     out = get_rotateZ(vector.obj(x=1, y=0), 0.1)
-    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert isinstance(out, vector.backends.object.VectorObject2D)
     assert out.x == pytest.approx(0.9950041652780258)
     assert out.y == pytest.approx(0.09983341664682815)
 
     out = get_rotateZ(vector.obj(rho=1, phi=0), 0.1)
-    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert isinstance(out, vector.backends.object.VectorObject2D)
     assert out.rho == pytest.approx(1)
     assert out.phi == pytest.approx(0.1)
 
     out = get_rotateZ(vector.obj(x=1, y=0, z=2.2), 0.1)
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
     assert out.x == pytest.approx(0.9950041652780258)
     assert out.y == pytest.approx(0.09983341664682815)
     assert out.z == pytest.approx(2.2)
@@ -964,17 +954,17 @@ def test_method_transform2D():
     obj["yy"] = numpy.cos(0.1)
 
     out = get_transform2D(vector.obj(x=1, y=0), obj)
-    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert isinstance(out, vector.backends.object.VectorObject2D)
     assert out.x == pytest.approx(0.9950041652780258)
     assert out.y == pytest.approx(0.09983341664682815)
 
     out = get_transform2D(vector.obj(rho=1, phi=0), obj)
-    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert isinstance(out, vector.backends.object.VectorObject2D)
     assert out.rho == pytest.approx(1)
     assert out.phi == pytest.approx(0.1)
 
     out = get_transform2D(vector.obj(x=1, y=0, z=2.2), obj)
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
     assert out.x == pytest.approx(0.9950041652780258)
     assert out.y == pytest.approx(0.09983341664682815)
     assert out.z == pytest.approx(2.2)
@@ -986,18 +976,18 @@ def test_method_unit():
         return v.unit()
 
     out = get_unit(vector.obj(x=1, y=1))
-    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert isinstance(out, vector.backends.object.VectorObject2D)
     assert out.x == pytest.approx(1 / numpy.sqrt(2))
     assert out.y == pytest.approx(1 / numpy.sqrt(2))
 
     out = get_unit(vector.obj(x=1, y=1, z=1))
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
     assert out.x == pytest.approx(1 / numpy.sqrt(3))
     assert out.y == pytest.approx(1 / numpy.sqrt(3))
     assert out.z == pytest.approx(1 / numpy.sqrt(3))
 
     out = get_unit(vector.obj(x=1, y=1, z=1, t=1))
-    assert isinstance(out, vector._backends.object_.VectorObject4D)
+    assert isinstance(out, vector.backends.object.VectorObject4D)
     assert out.x == pytest.approx(1 / numpy.sqrt(2))
     assert out.y == pytest.approx(1 / numpy.sqrt(2))
     assert out.z == pytest.approx(1 / numpy.sqrt(2))
@@ -1010,18 +1000,18 @@ def test_method_scale():
         return v.scale(2)
 
     out = get_scale(vector.obj(x=1.1, y=2.2))
-    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert isinstance(out, vector.backends.object.VectorObject2D)
     assert out.x == pytest.approx(2.2)
     assert out.y == pytest.approx(4.4)
 
     out = get_scale(vector.obj(x=1.1, y=2.2, z=3.3))
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
     assert out.x == pytest.approx(2.2)
     assert out.y == pytest.approx(4.4)
     assert out.z == pytest.approx(6.6)
 
     out = get_scale(vector.obj(x=1.1, y=2.2, z=3.3, t=4.4))
-    assert isinstance(out, vector._backends.object_.VectorObject4D)
+    assert isinstance(out, vector.backends.object.VectorObject4D)
     assert out.x == pytest.approx(2.2)
     assert out.y == pytest.approx(4.4)
     assert out.z == pytest.approx(6.6)
@@ -1034,33 +1024,33 @@ def test_method_cross():
         return v1.cross(v2)
 
     out = get_cross(vector.obj(x=0.1, y=0.2, z=0.3), vector.obj(x=0.4, y=0.5, z=0.6))
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
-    assert isinstance(out.azimuthal, vector._backends.object_.AzimuthalObjectXY)
-    assert isinstance(out.longitudinal, vector._backends.object_.LongitudinalObjectZ)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
+    assert isinstance(out.azimuthal, vector.backends.object.AzimuthalObjectXY)
+    assert isinstance(out.longitudinal, vector.backends.object.LongitudinalObjectZ)
     assert (out.x, out.y, out.z) == pytest.approx((-0.03, 0.06, -0.03))
 
     out = get_cross(
         vector.obj(x=0.1, y=0.2, z=0.3, t=999), vector.obj(x=0.4, y=0.5, z=0.6)
     )
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
-    assert isinstance(out.azimuthal, vector._backends.object_.AzimuthalObjectXY)
-    assert isinstance(out.longitudinal, vector._backends.object_.LongitudinalObjectZ)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
+    assert isinstance(out.azimuthal, vector.backends.object.AzimuthalObjectXY)
+    assert isinstance(out.longitudinal, vector.backends.object.LongitudinalObjectZ)
     assert (out.x, out.y, out.z) == pytest.approx((-0.03, 0.06, -0.03))
 
     out = get_cross(
         vector.obj(x=0.1, y=0.2, z=0.3), vector.obj(x=0.4, y=0.5, z=0.6, t=999)
     )
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
-    assert isinstance(out.azimuthal, vector._backends.object_.AzimuthalObjectXY)
-    assert isinstance(out.longitudinal, vector._backends.object_.LongitudinalObjectZ)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
+    assert isinstance(out.azimuthal, vector.backends.object.AzimuthalObjectXY)
+    assert isinstance(out.longitudinal, vector.backends.object.LongitudinalObjectZ)
     assert (out.x, out.y, out.z) == pytest.approx((-0.03, 0.06, -0.03))
 
     out = get_cross(
         vector.obj(x=0.1, y=0.2, z=0.3, t=999), vector.obj(x=0.4, y=0.5, z=0.6, t=999)
     )
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
-    assert isinstance(out.azimuthal, vector._backends.object_.AzimuthalObjectXY)
-    assert isinstance(out.longitudinal, vector._backends.object_.LongitudinalObjectZ)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
+    assert isinstance(out.azimuthal, vector.backends.object.AzimuthalObjectXY)
+    assert isinstance(out.longitudinal, vector.backends.object.LongitudinalObjectZ)
     assert (out.x, out.y, out.z) == pytest.approx((-0.03, 0.06, -0.03))
 
 
@@ -1070,13 +1060,13 @@ def test_method_rotateX():
         return v.rotateX(0.25)
 
     out = get_rotateX(vector.obj(x=0.1, y=0.2, z=0.3))
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
     assert out.x == pytest.approx(0.1)
     assert out.y == pytest.approx(0.1195612965657721)
     assert out.z == pytest.approx(0.340154518364098)
 
     out = get_rotateX(vector.obj(x=0.1, y=0.2, z=0.3, t=0.4))
-    assert isinstance(out, vector._backends.object_.VectorObject4D)
+    assert isinstance(out, vector.backends.object.VectorObject4D)
     assert out.x == pytest.approx(0.1)
     assert out.y == pytest.approx(0.1195612965657721)
     assert out.z == pytest.approx(0.340154518364098)
@@ -1089,13 +1079,13 @@ def test_method_rotateY():
         return v.rotateY(0.25)
 
     out = get_rotateY(vector.obj(x=0.1, y=0.2, z=0.3))
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
     assert out.x == pytest.approx(0.17111242994742137)
     assert out.y == pytest.approx(0.2)
     assert out.z == pytest.approx(0.2659333305877411)
 
     out = get_rotateY(vector.obj(x=0.1, y=0.2, z=0.3, t=0.4))
-    assert isinstance(out, vector._backends.object_.VectorObject4D)
+    assert isinstance(out, vector.backends.object.VectorObject4D)
     assert out.x == pytest.approx(0.17111242994742137)
     assert out.y == pytest.approx(0.2)
     assert out.z == pytest.approx(0.2659333305877411)
@@ -1110,7 +1100,7 @@ def test_method_rotate_axis():
     axis = vector.obj(x=0.1, y=0.2, z=0.3)
     vec = vector.obj(x=0.4, y=0.5, z=0.6)
     out = get_rotate_axis(vec, axis)
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
     assert out.x == pytest.approx(0.37483425404335763)
     assert out.y == pytest.approx(0.5383405688588193)
     assert out.z == pytest.approx(0.5828282027463345)
@@ -1118,7 +1108,7 @@ def test_method_rotate_axis():
     axis = vector.obj(x=0.1, y=0.2, z=0.3)
     vec = vector.obj(x=0.4, y=0.5, z=0.6, t=999)
     out = get_rotate_axis(vec, axis)
-    assert isinstance(out, vector._backends.object_.VectorObject4D)
+    assert isinstance(out, vector.backends.object.VectorObject4D)
     assert out.x == pytest.approx(0.37483425404335763)
     assert out.y == pytest.approx(0.5383405688588193)
     assert out.z == pytest.approx(0.5828282027463345)
@@ -1127,7 +1117,7 @@ def test_method_rotate_axis():
     axis = vector.obj(x=0.1, y=0.2, z=0.3, t=999)
     vec = vector.obj(x=0.4, y=0.5, z=0.6)
     out = get_rotate_axis(vec, axis)
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
     assert out.x == pytest.approx(0.37483425404335763)
     assert out.y == pytest.approx(0.5383405688588193)
     assert out.z == pytest.approx(0.5828282027463345)
@@ -1135,7 +1125,7 @@ def test_method_rotate_axis():
     axis = vector.obj(x=0.1, y=0.2, z=0.3, t=999)
     vec = vector.obj(x=0.4, y=0.5, z=0.6, t=999)
     out = get_rotate_axis(vec, axis)
-    assert isinstance(out, vector._backends.object_.VectorObject4D)
+    assert isinstance(out, vector.backends.object.VectorObject4D)
     assert out.x == pytest.approx(0.37483425404335763)
     assert out.y == pytest.approx(0.5383405688588193)
     assert out.z == pytest.approx(0.5828282027463345)
@@ -1149,7 +1139,7 @@ def test_method_rotate_euler():
 
     vec = vector.obj(x=0.4, y=0.5, z=0.6)
     out = get_rotate_euler(vec, 0.1, 0.2, 0.3)
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
     assert out.x == pytest.approx(0.5956646364506655)
     assert out.y == pytest.approx(0.409927258162962)
     assert out.z == pytest.approx(0.4971350761081869)
@@ -1162,7 +1152,7 @@ def test_method_rotate_quaternion():
 
     vec = vector.obj(x=0.5, y=0.6, z=0.7)
     out = get_rotate_quaternion(vec, 0.1, 0.2, 0.3, 0.4)
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
     assert out.x == pytest.approx(0.078)
     assert out.y == pytest.approx(0.18)
     assert out.z == pytest.approx(0.246)
@@ -1185,7 +1175,7 @@ def test_method_transform3D():
     obj["zz"] = 1
 
     out = get_transform3D(vector.obj(x=1, y=0, z=99), obj)
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
     assert out.x == pytest.approx(0.9950041652780258)
     assert out.y == pytest.approx(0.09983341664682815)
     assert out.z == pytest.approx(99)
@@ -1261,7 +1251,7 @@ def test_method_to_beta3():
         return vec.to_beta3()
 
     out = get_to_beta3(vector.obj(x=3, y=4, z=10, t=20))
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
     assert out.x == pytest.approx(3 / 20)
     assert out.y == pytest.approx(4 / 20)
     assert out.z == pytest.approx(10 / 20)
@@ -1291,7 +1281,7 @@ def test_method_transform4D():
     obj["tt"] = 1
 
     out = get_transform4D(vector.obj(x=1, y=0, z=99, t=123), obj)
-    assert isinstance(out, vector._backends.object_.VectorObject4D)
+    assert isinstance(out, vector.backends.object.VectorObject4D)
     assert out.x == pytest.approx(0.9950041652780258)
     assert out.y == pytest.approx(0.09983341664682815)
     assert out.z == pytest.approx(99)
@@ -1435,23 +1425,23 @@ def test_operator_add():
         return v1 - v2
 
     out = get_add(vector.obj(x=1, y=2), vector.obj(px=3, py=4))
-    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert isinstance(out, vector.backends.object.VectorObject2D)
     assert out.x == pytest.approx(4)
     assert out.y == pytest.approx(6)
 
     out = get_add(vector.obj(x=1, y=2), vector.obj(x=3, y=4, z=5))
-    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert isinstance(out, vector.backends.object.VectorObject2D)
     assert out.x == pytest.approx(4)
     assert out.y == pytest.approx(6)
 
     out = get_add(vector.obj(x=1, y=2, z=0), vector.obj(x=3, y=4, z=5))
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
     assert out.x == pytest.approx(4)
     assert out.y == pytest.approx(6)
     assert out.z == pytest.approx(5)
 
     out = get_subtract(vector.obj(x=1, y=2), vector.obj(px=3, py=4))
-    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert isinstance(out, vector.backends.object.VectorObject2D)
     assert out.x == pytest.approx(-2)
     assert out.y == pytest.approx(-2)
 
@@ -1466,17 +1456,17 @@ def test_operator_mul():
         return a / b
 
     out = get_mul(vector.obj(x=1, y=2), 2)
-    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert isinstance(out, vector.backends.object.VectorObject2D)
     assert out.x == pytest.approx(2)
     assert out.y == pytest.approx(4)
 
     out = get_mul(2, vector.obj(x=1, y=2))
-    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert isinstance(out, vector.backends.object.VectorObject2D)
     assert out.x == pytest.approx(2)
     assert out.y == pytest.approx(4)
 
     out = get_div(vector.obj(x=1, y=2), 2)
-    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert isinstance(out, vector.backends.object.VectorObject2D)
     assert out.x == pytest.approx(0.5)
     assert out.y == pytest.approx(1)
 
@@ -1518,7 +1508,7 @@ def test_numpy_functions():
         return numpy.add(v1, v2)
 
     out = get_add(vector.obj(x=3, y=4), vector.obj(x=10, y=20))
-    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert isinstance(out, vector.backends.object.VectorObject2D)
     assert out.x == pytest.approx(13)
     assert out.y == pytest.approx(24)
 
@@ -1533,36 +1523,36 @@ def test_scale2D_3D_4D():
         return v.neg2D
 
     out = get_scale2D(vector.obj(x=1, y=2), 10)
-    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert isinstance(out, vector.backends.object.VectorObject2D)
     assert out.x == pytest.approx(10)
     assert out.y == pytest.approx(20)
 
     out = get_scale2D(vector.obj(x=1, y=2, z=3), 10)
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
     assert out.x == pytest.approx(10)
     assert out.y == pytest.approx(20)
     assert out.z == pytest.approx(3)
 
     out = get_scale2D(vector.obj(x=1, y=2, z=3, t=4), 10)
-    assert isinstance(out, vector._backends.object_.VectorObject4D)
+    assert isinstance(out, vector.backends.object.VectorObject4D)
     assert out.x == pytest.approx(10)
     assert out.y == pytest.approx(20)
     assert out.z == pytest.approx(3)
     assert out.t == pytest.approx(4)
 
     out = get_neg2D(vector.obj(x=1, y=2))
-    assert isinstance(out, vector._backends.object_.VectorObject2D)
+    assert isinstance(out, vector.backends.object.VectorObject2D)
     assert out.x == pytest.approx(-1)
     assert out.y == pytest.approx(-2)
 
     out = get_neg2D(vector.obj(x=1, y=2, z=3))
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
     assert out.x == pytest.approx(-1)
     assert out.y == pytest.approx(-2)
     assert out.z == pytest.approx(3)
 
     out = get_neg2D(vector.obj(x=1, y=2, z=3, t=4))
-    assert isinstance(out, vector._backends.object_.VectorObject4D)
+    assert isinstance(out, vector.backends.object.VectorObject4D)
     assert out.x == pytest.approx(-1)
     assert out.y == pytest.approx(-2)
     assert out.z == pytest.approx(3)
@@ -1577,26 +1567,26 @@ def test_scale2D_3D_4D():
         return v.neg3D
 
     out = get_scale3D(vector.obj(x=1, y=2, z=3), 10)
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
     assert out.x == pytest.approx(10)
     assert out.y == pytest.approx(20)
     assert out.z == pytest.approx(30)
 
     out = get_scale3D(vector.obj(x=1, y=2, z=3, t=4), 10)
-    assert isinstance(out, vector._backends.object_.VectorObject4D)
+    assert isinstance(out, vector.backends.object.VectorObject4D)
     assert out.x == pytest.approx(10)
     assert out.y == pytest.approx(20)
     assert out.z == pytest.approx(30)
     assert out.t == pytest.approx(4)
 
     out = get_neg3D(vector.obj(x=1, y=2, z=3))
-    assert isinstance(out, vector._backends.object_.VectorObject3D)
+    assert isinstance(out, vector.backends.object.VectorObject3D)
     assert out.x == pytest.approx(-1)
     assert out.y == pytest.approx(-2)
     assert out.z == pytest.approx(-3)
 
     out = get_neg3D(vector.obj(x=1, y=2, z=3, t=4))
-    assert isinstance(out, vector._backends.object_.VectorObject4D)
+    assert isinstance(out, vector.backends.object.VectorObject4D)
     assert out.x == pytest.approx(-1)
     assert out.y == pytest.approx(-2)
     assert out.z == pytest.approx(-3)
@@ -1611,14 +1601,14 @@ def test_scale2D_3D_4D():
         return v.neg4D
 
     out = get_scale4D(vector.obj(x=1, y=2, z=3, t=4), 10)
-    assert isinstance(out, vector._backends.object_.VectorObject4D)
+    assert isinstance(out, vector.backends.object.VectorObject4D)
     assert out.x == pytest.approx(10)
     assert out.y == pytest.approx(20)
     assert out.z == pytest.approx(30)
     assert out.t == pytest.approx(40)
 
     out = get_neg4D(vector.obj(x=1, y=2, z=3, t=4))
-    assert isinstance(out, vector._backends.object_.VectorObject4D)
+    assert isinstance(out, vector.backends.object.VectorObject4D)
     assert out.x == pytest.approx(-1)
     assert out.y == pytest.approx(-2)
     assert out.z == pytest.approx(-3)
