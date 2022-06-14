@@ -1,7 +1,7 @@
-vector.\_backends.numba\_object module
+vector.backends.\_numba\_object module
 ======================================
 
-.. automodule:: vector._backends.numba_object
+.. automodule:: vector.backends._numba_object
    :members:
    :undoc-members:
    :show-inheritance:

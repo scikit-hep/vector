@@ -1,7 +1,7 @@
-vector.\_backends.object\_ module
+vector.backends.object module
 =================================
 
-.. automodule:: vector._backends.object_
+.. automodule:: vector.backends.object
    :members:
    :undoc-members:
    :show-inheritance:

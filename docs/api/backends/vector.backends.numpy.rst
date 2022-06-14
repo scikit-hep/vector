@@ -1,7 +1,7 @@
-vector.\_backends.numpy\_ module
+vector.backends.numpy module
 ================================
 
-.. automodule:: vector._backends.numpy_
+.. automodule:: vector.backends.numpy
    :members:
    :undoc-members:
    :show-inheritance:

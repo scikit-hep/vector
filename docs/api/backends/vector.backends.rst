@@ -17,5 +17,5 @@ Submodules
    vector.backends.numpy
    vector.backends.awkward
    vector.backends._numba
-   vector.backends._numba_numpy
-   vector.backends.numba_object
+   vector.backends.numba_numpy
+   vector.backends._numba_object

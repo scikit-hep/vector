@@ -1,7 +1,7 @@
-vector.\_backends.awkward\_ module
+vector.backends.awkward module
 ==================================
 
-.. automodule:: vector._backends.awkward_
+.. automodule:: vector.backends.awkward
    :members:
    :undoc-members:
    :show-inheritance:
