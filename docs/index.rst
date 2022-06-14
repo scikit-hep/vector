@@ -5,7 +5,7 @@
 
 .. image:: _images/vector-logo.png
 
-|Action status| |Documentation Status| |pre-commit.ci status| |GitHub Discussion| |Gitter| |Code style: black|
+|Action status| |Documentation Status| |pre-commit.ci status| |coverage| |GitHub Discussion| |Gitter| |Code style: black|
 |PyPI platforms| |PyPI version| |Conda latest releasetatus| |DOI| |Scikit-HEP|
 
 Overview
@@ -116,3 +116,5 @@ The API reference details the functionality of each ``class`` and ``function`` p
    :target: https://doi.org/10.5281/zenodo.5942082
 .. |Scikit-HEP| image:: https://scikit-hep.org/assets/images/Scikit--HEP-Project-blue.svg
    :target: https://scikit-hep.org/
+.. |coverage| image:: https://codecov.io/gh/scikit-hep/vector/branch/main/graph/badge.svg?token=YBv60ueORQ
+   :target: https://codecov.io/gh/scikit-hep/vector
