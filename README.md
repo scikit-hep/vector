@@ -6,6 +6,7 @@
 [![Actions Status][actions-badge]][actions-link]
 [![Documentation Status][rtd-badge]][rtd-link]
 [![pre-commit.ci status][pre-commit-badge]][pre-commit-link]
+[![codecov percentage][codecov-badge]][codecov-link]
 [![GitHub Discussion][github-discussions-badge]][github-discussions-link]
 [![Gitter][gitter-badge]][gitter-link]
 [![Code style: black][black-badge]][black-link]
@@ -620,6 +621,8 @@ Support for this work was provided by the National Science Foundation cooperativ
 [actions-link]:             https://github.com/scikit-hep/vector/actions
 [black-badge]:              https://img.shields.io/badge/code%20style-black-000000.svg
 [black-link]:               https://github.com/psf/black
+[codecov-badge]:            https://codecov.io/gh/scikit-hep/vector/branch/main/graph/badge.svg?token=YBv60ueORQ
+[codecov-link]:             https://codecov.io/gh/scikit-hep/vector
 [conda-version]:            https://img.shields.io/conda/vn/conda-forge/decaylanguage.svg
 [conda-link]:               https://github.com/conda-forge/decaylanguage-feedstock
 [github-discussions-badge]: https://img.shields.io/static/v1?label=Discussions&message=Ask&color=blue&logo=github
