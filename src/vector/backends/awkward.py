@@ -90,12 +90,30 @@ class CoordinatesAwkward:
 
 
 class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
+    """
+    Azimuthal class for the Awkward backend.
+    See -
+
+    - :meth:`AzimuthalAwkward.from_fields`
+    - :meth:`AzimuthalAwkward.from_momentum_fields`
+
+    to construct azimuthal type objects.
+    """
+
     @classmethod
     def from_fields(cls, array: ak.Array) -> "AzimuthalAwkward":
         """
         Create a :doc:`vector.backends.awkward.AzimuthalAwkwardXY` or a
         :doc:`vector.backends.awkward.AzimuthalAwkwardRhoPhi`, depending on
         the fields in ``array``.
+
+        Examples:
+            >>> import awkward as ak
+            >>> a = ak.Array([{"x": [1, 2]}, {"y": [1]}])
+            >>> az = vector.backends.awkward.AzimuthalAwkward.from_fields(a)
+            >>> az.elements
+            (<Array [[1, 2], None] type='2 * option[var * int64]'>, <Array [None, [1]] type='2 * option[var
+            * int64]'>)
         """
         fields = ak.fields(array)
         if "x" in fields and "y" in fields:
@@ -114,6 +132,14 @@ class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
         Create a :doc:`vector.backends.awkward.AzimuthalAwkwardXY` or a
         :doc:`vector.backends.awkward.AzimuthalAwkwardRhoPhi`, depending on
         the fields in ``array``, allowing momentum synonyms.
+
+        Examples:
+            >>> import awkward as ak
+            >>> a = ak.Array([{"px": [1, 2]}, {"py": [1]}])
+            >>> az = vector.backends.awkward.AzimuthalAwkward.from_momentum_fields(a)
+            >>> az.elements
+            (<Array [[1, 2], None] type='2 * option[var * int64]'>, <Array [None, [1]] type='2 * option[var
+            * int64]'>)
         """
         fields = ak.fields(array)
         if "x" in fields and "y" in fields:
@@ -136,6 +162,16 @@ class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
 
 
 class LongitudinalAwkward(CoordinatesAwkward, Longitudinal):
+    """
+    Longitudinal class for the Awkward backend.
+    See -
+
+    - :meth:`LongitudinalAwkward.from_fields`
+    - :meth:`LongitudinalAwkward.from_momentum_fields`
+
+    to construct longitudinal type objects.
+    """
+
     @classmethod
     def from_fields(cls, array: ak.Array) -> "LongitudinalAwkward":
         """
@@ -143,6 +179,13 @@ class LongitudinalAwkward(CoordinatesAwkward, Longitudinal):
         :doc:`vector.backends.awkward.LongitudinalAwkwardTheta`, or a
         :doc:`vector.backends.awkward.LongitudinalAwkwardEta`, depending on
         the fields in ``array``.
+
+        Examples:
+            >>> import awkward as  ak
+            >>> a = ak.Array([{"theta": [1, 0]}])
+            >>> l = vector.backends.awkward.LongitudinalAwkward.from_fields(a)
+            >>> l.elements
+            (<Array [[1, 0]] type='1 * var * int64'>,)
         """
         fields = ak.fields(array)
         if "z" in fields:
@@ -164,6 +207,13 @@ class LongitudinalAwkward(CoordinatesAwkward, Longitudinal):
         :doc:`vector.backends.awkward.LongitudinalAwkwardTheta`, or a
         :doc:`vector.backends.awkward.LongitudinalAwkwardEta`, depending on
         the fields in ``array``, allowing momentum synonyms.
+
+        Examples:
+            >>> import awkward as  ak
+            >>> a = ak.Array([{"theta": [1, 0]}])
+            >>> l = vector.backends.awkward.LongitudinalAwkward.from_momentum_fields(a)
+            >>> l.elements
+            (<Array [[1, 0]] type='1 * var * int64'>,)
         """
         fields = ak.fields(array)
         if "z" in fields:
@@ -182,12 +232,29 @@ class LongitudinalAwkward(CoordinatesAwkward, Longitudinal):
 
 
 class TemporalAwkward(CoordinatesAwkward, Temporal):
+    """
+    Temporal class for the Awkward backend.
+    See -
+
+    - :meth:`TemporalAwkward.from_fields`
+    - :meth:`TemporalAwkward.from_momentum_fields`
+
+    to construct longitudinal type objects.
+    """
+
     @classmethod
     def from_fields(cls, array: ak.Array) -> "TemporalAwkward":
         """
         Create a :doc:`vector.backends.awkward.TemporalT` or a
         :doc:`vector.backends.awkward.TemporalTau`, depending on
         the fields in ``array``.
+
+        Examples:
+            >>> import awkward as  ak
+            >>> a = ak.Array([{"tau": [1, 0]}])
+            >>> t = vector.backends.awkward.TemporalAwkward.from_fields(a)
+            >>> t.elements
+            (<Array [[1, 0]] type='1 * var * int64'>,)
         """
         fields = ak.fields(array)
         if "t" in fields:
@@ -206,6 +273,13 @@ class TemporalAwkward(CoordinatesAwkward, Temporal):
         Create a :doc:`vector.backends.awkward.TemporalT` or a
         :doc:`vector.backends.awkward.TemporalTau`, depending on
         the fields in ``array``, allowing momentum synonyms.
+
+        Examples:
+            >>> import awkward as  ak
+            >>> a = ak.Array([{"mass": [1, 0]}])
+            >>> t = vector.backends.awkward.TemporalAwkward.from_momentum_fields(a)
+            >>> t.elements
+            (<Array [[1, 0]] type='1 * var * int64'>,)
         """
         fields = ak.fields(array)
         if "t" in fields:
@@ -232,6 +306,15 @@ class TemporalAwkward(CoordinatesAwkward, Temporal):
 
 
 class AzimuthalAwkwardXY(AzimuthalAwkward, AzimuthalXY):
+    """
+    Class for the ``x`` and ``y`` (azimuthal) coordinates of Awkward backend.
+
+    Examples:
+        >>> a = ak.Array([{"x": [1, 2]}, {"y": [1]}])
+        >>> az = vector.backends.awkward.AzimuthalAwkwardXY(a["x"], a["y"])
+        >>> az.elements
+        (<Array [[1, 2], None] type='2 * option[var * int64]'>, <Array [None, [1]] type='2 * option[var * int64]'>)"""
+
     __slots__ = ("x", "y")
 
     def __init__(self, x: typing.Any, y: typing.Any) -> None:
@@ -240,10 +323,28 @@ class AzimuthalAwkwardXY(AzimuthalAwkward, AzimuthalXY):
 
     @property
     def elements(self) -> typing.Tuple[ArrayOrRecord, ArrayOrRecord]:
+        """
+        Azimuthal coordinates (``x`` and ``y``) as a tuple.
+
+        Examples:
+            >>> az = vector.backends.awkward.AzimuthalAwkwardXY([1, 2, 3], [1, 2])
+            >>> az.elements
+            ([1, 2, 3], [1, 2])
+        """
         return (self.x, self.y)
 
 
 class AzimuthalAwkwardRhoPhi(AzimuthalAwkward, AzimuthalRhoPhi):
+    """
+    Class for the ``rho`` and ``phi`` (azimuthal) coordinates of Awkward backend.
+
+    Examples:
+        >>> a = ak.Array([{"rho": [1, 2]}, {"phi": [1]}])
+        >>> az = vector.backends.awkward.AzimuthalAwkwardRhoPhi(a["rho"], a["phi"])
+        >>> az.elements
+        (<Array [[1, 2], None] type='2 * option[var * int64]'>, <Array [None, [1]] type='2 * option[var * int64]'>)
+    """
+
     __slots__ = ("rho", "phi")
 
     def __init__(self, rho: typing.Any, phi: typing.Any) -> None:
@@ -252,10 +353,28 @@ class AzimuthalAwkwardRhoPhi(AzimuthalAwkward, AzimuthalRhoPhi):
 
     @property
     def elements(self) -> typing.Tuple[ArrayOrRecord, ArrayOrRecord]:
+        """
+        Azimuthal coordinates (``rho`` and ``phi``) as a tuple.
+
+        Examples:
+            >>> az = vector.backends.awkward.AzimuthalAwkwardRhoPhi([1, 2, 3], [1, 2])
+            >>> az.elements
+            ([1, 2, 3], [1, 2])
+        """
         return (self.rho, self.phi)
 
 
 class LongitudinalAwkwardZ(LongitudinalAwkward, LongitudinalZ):
+    """
+    Class for the ``z`` (longitudinal) coordinate of Awkward backend.
+
+    Examples:
+        >>> a = ak.Array([{"z": [1, 2]}])
+        >>> l = vector.backends.awkward.LongitudinalAwkwardZ(a["z"])
+        >>> l.elements
+        (<Array [[1, 2]] type='1 * var * int64'>,)
+    """
+
     __slots__ = ("z",)
 
     def __init__(self, z: typing.Any) -> None:
@@ -263,10 +382,28 @@ class LongitudinalAwkwardZ(LongitudinalAwkward, LongitudinalZ):
 
     @property
     def elements(self) -> typing.Tuple[ArrayOrRecord]:
+        """
+        Longitudinal coordinates (``z``) as a tuple.
+
+        Examples:
+            >>> l = vector.backends.awkward.LongitudinalAwkwardZ(5)
+            >>> l.elements
+            (5,)
+        """
         return (self.z,)
 
 
 class LongitudinalAwkwardTheta(LongitudinalAwkward, LongitudinalTheta):
+    """
+    Class for the ``theta`` (longitudinal) coordinate of Awkward backend.
+
+    Examples:
+        >>> a = ak.Array([{"theta": [1, 2]}])
+        >>> l = vector.backends.awkward.LongitudinalAwkwardTheta(a["theta"])
+        >>> l.elements
+        (<Array [[1, 2]] type='1 * var * int64'>,)
+    """
+
     __slots__ = ("theta",)
 
     def __init__(self, theta: typing.Any) -> None:
@@ -274,10 +411,28 @@ class LongitudinalAwkwardTheta(LongitudinalAwkward, LongitudinalTheta):
 
     @property
     def elements(self) -> typing.Tuple[ArrayOrRecord]:
+        """
+        Longitudinal coordinates (``theta``) as a tuple.
+
+        Examples:
+            >>> l = vector.backends.awkward.LongitudinalAwkwardTheta(5)
+            >>> l.elements
+            (5,)
+        """
         return (self.theta,)
 
 
 class LongitudinalAwkwardEta(LongitudinalAwkward, LongitudinalEta):
+    """
+    Class for the ``eta`` (longitudinal) coordinate of Awkward backend.
+
+    Examples:
+        >>> a = ak.Array([{"eta": [1, 2]}])
+        >>> l = vector.backends.awkward.LongitudinalAwkwardEta(a["eta"])
+        >>> l.elements
+        (<Array [[1, 2]] type='1 * var * int64'>,)
+    """
+
     __slots__ = ("eta",)
 
     def __init__(self, eta: typing.Any) -> None:
@@ -285,10 +440,28 @@ class LongitudinalAwkwardEta(LongitudinalAwkward, LongitudinalEta):
 
     @property
     def elements(self) -> typing.Tuple[ArrayOrRecord]:
+        """
+        Longitudinal coordinates (``eta``) as a tuple.
+
+        Examples:
+            >>> l = vector.backends.awkward.LongitudinalAwkwardEta(5)
+            >>> l.elements
+            (5,)
+        """
         return (self.eta,)
 
 
 class TemporalAwkwardT(TemporalAwkward, TemporalT):
+    """
+    Class for the ``t`` (temporal) coordinate of Awkward backend.
+
+    Examples:
+        >>> a = ak.Array([{"t": [1, 2]}])
+        >>> t = vector.backends.awkward.TemporalAwkwardT(a["t"])
+        >>> t.elements
+        (<Array [[1, 2]] type='1 * var * int64'>,)
+    """
+
     __slots__ = ("t",)
 
     def __init__(self, t: typing.Any) -> None:
@@ -296,10 +469,28 @@ class TemporalAwkwardT(TemporalAwkward, TemporalT):
 
     @property
     def elements(self) -> typing.Tuple[ArrayOrRecord]:
+        """
+        Temporal coordinates (``t``) as a tuple.
+
+        Examples:
+            >>> t = vector.backends.awkward.TemporalAwkwardT(5)
+            >>> t.elements
+            (5,)
+        """
         return (self.t,)
 
 
 class TemporalAwkwardTau(TemporalAwkward, TemporalTau):
+    """
+    Class for the ``tau`` (temporal) coordinate of Awkward backend.
+
+    Examples:
+        >>> a = ak.Array([{"tau": [1, 2]}])
+        >>> t = vector.backends.awkward.TemporalAwkwardTau(a["tau"])
+        >>> t.elements
+        (<Array [[1, 2]] type='1 * var * int64'>,)
+    """
+
     __slots__ = ("tau",)
 
     def __init__(self, tau: typing.Any) -> None:
@@ -307,6 +498,14 @@ class TemporalAwkwardTau(TemporalAwkward, TemporalTau):
 
     @property
     def elements(self) -> typing.Tuple[ArrayOrRecord]:
+        """
+        Temporal coordinates (``tau``) as a tuple.
+
+        Examples:
+            >>> t = vector.backends.awkward.TemporalAwkwardTau(5)
+            >>> t.elements
+            (5,)
+        """
         return (self.tau,)
 
 
@@ -341,6 +540,10 @@ def _no_record(x: ak.Array) -> typing.Optional[ak.Array]:
 
 
 class VectorAwkward:
+    """
+    One dimensional vector class for the Awkward backend.
+    """
+
     lib: types.ModuleType = numpy
 
     def __getitem__(
@@ -357,6 +560,9 @@ class VectorAwkward:
         num_vecargs: typing.Any,
     ) -> typing.Any:
         """
+        Wraps the raw result of a compute function as an array of scalars or an
+        array of vectors.
+
         Args:
             result: Value or tuple of values from a compute function.
             returns: Signature from a ``dispatch_map``.
@@ -364,9 +570,6 @@ class VectorAwkward:
                 that would be treated on an equal footing (i.e. ``add``
                 has two, but ``rotate_axis`` has only one: the ``axis``
                 is secondary).
-
-        Wraps the raw result of a compute function as an array of scalars or an
-        array of vectors.
         """
         if returns == [float] or returns == [bool]:
             return result
@@ -653,62 +856,289 @@ class VectorAwkward:
 
 
 class VectorAwkward2D(VectorAwkward, Planar, Vector2D):
+    """
+    Two dimensional vector class for the Awkward backend.
+    Two dimensional awkward vectors for the users are defined using the
+    :class:`VectorArray2D` class.
+
+    See :class:`MomentumAwkward2D` for momentum vectors.
+    """
+
     @property
     def azimuthal(self) -> AzimuthalAwkward:
+        """
+        Returns an Azimuthal type object.
+
+        Use the ``elements`` property of the created object
+        to access the coordinates.
+
+        Examples:
+            >>> a = vector.Array(
+            ...      [{"x": 1, "y": 1.1}, {"x": 2, "y": 2.2}],
+            ... )
+            >>> a.azimuthal
+            <vector.backends.awkward.AzimuthalAwkwardXY object at 0x00000282311F3680>
+            >>> a.azimuthal.elements
+            (<Array [1, 2] type='2 * int64'>, <Array [1.1, 2.2] type='2 * float64'>)
+        """
         return AzimuthalAwkward.from_fields(self)
 
 
 class MomentumAwkward2D(PlanarMomentum, VectorAwkward2D):
+    """
+    Two dimensional momentum vector class for the Awkward backend.
+    Two dimensional momentum vectors for the users are defined using the
+    :class:`MomentumArray2D` class.
+
+    See :class:`VectorAwkward2D` for momentum vectors.
+    """
+
     @property
     def azimuthal(self) -> AzimuthalAwkward:
+        """
+        Returns an Azimuthal type object containing the azimuthal coordinates.
+
+        Use the ``elements`` property of the created object
+        to access the coordinates.
+
+        Examples:
+            >>> a = vector.Array(
+            ...      [{"px": 1, "py": 1.1}, {"px": 2, "py": 2.2}],
+            ... )
+            >>> a.azimuthal
+            <vector.backends.awkward.AzimuthalAwkwardXY object at 0x00000282311FBEC0>
+            >>> a.azimuthal.elements
+            (<Array [1, 2] type='2 * int64'>, <Array [1.1, 2.2] type='2 * float64'>)
+        """
         return AzimuthalAwkward.from_momentum_fields(self)
 
 
 class VectorAwkward3D(VectorAwkward, Spatial, Vector3D):
+    """
+    Three dimensional vector class for the Awkward backend.
+    Three dimensional awkward vectors for the users are defined using the
+    :class:`VectorArray3D` class.
+
+    See :class:`MomentumAwkward3D` for momentum vectors.
+    """
+
     @property
     def azimuthal(self) -> AzimuthalAwkward:
+        """
+        Returns an Azimuthal type object containing the azimuthal coordinates.
+
+        Use the ``elements`` property of the created object
+        to access the coordinates.
+
+        Examples:
+            >>> a = vector.Array(
+            ...       [{"x": 1, "y": 1.1, "z": 0.1}, {"x": 2, "y": 2.2, "z": 0.2}],
+            ... )
+            >>> a.azimuthal
+            <vector.backends.awkward.AzimuthalAwkwardXY object at 0x0000028231220580>
+            >>> a.azimuthal.elements
+            (<Array [1, 2] type='2 * int64'>, <Array [1.1, 2.2] type='2 * float64'>)
+        """
         return AzimuthalAwkward.from_fields(self)
 
     @property
     def longitudinal(self) -> LongitudinalAwkward:
+        """
+        Returns a Longitudinal type object containing the longitudinal coordinates.
+
+        Use the ``elements`` property of the created object
+        to access the coordinates.
+
+        Examples:
+            >>> a = vector.Array(
+            ...       [{"x": 1, "y": 1.1, "z": 0.1}, {"x": 2, "y": 2.2, "z": 0.2}],
+            ... )
+            >>> a.longitudinal
+            <vector.backends.awkward.LongitudinalAwkwardZ object at 0x0000028231215A80>
+            >>> a.longitudinal.elements
+            (<Array [0.1, 0.2] type='2 * float64'>,)
+        """
         return LongitudinalAwkward.from_fields(self)
 
 
 class MomentumAwkward3D(SpatialMomentum, VectorAwkward3D):
+    """
+    Three dimensional momentum vector class for the Awkward backend.
+    Three dimensional momentum vectors for the users are defined using the
+    :class:`MomentumArray3D` class.
+
+    See :class:`VectorAwkward3D` for momentum vectors.
+    """
+
     @property
     def azimuthal(self) -> AzimuthalAwkward:
+        """
+        Returns an Azimuthal type object containing the azimuthal coordinates.
+
+        Use the ``elements`` property of the created object
+        to access the coordinates.
+
+        Examples:
+            >>> a = vector.Array(
+            ...       [{"px": 1, "py": 1.1, "z": 0.1}, {"px": 2, "py": 2.2, "z": 0.2}],
+            ... )
+            >>> a.azimuthal
+            <vector.backends.awkward.AzimuthalAwkwardXY object at 0x0000028231220580>
+            >>> a.azimuthal.elements
+            (<Array [1, 2] type='2 * int64'>, <Array [1.1, 2.2] type='2 * float64'>)
+        """
         return AzimuthalAwkward.from_momentum_fields(self)
 
     @property
     def longitudinal(self) -> LongitudinalAwkward:
+        """
+        Returns a Longitudinal type object containing the longitudinal coordinates.
+
+        Use the ``elements`` property of the created object
+        to access the coordinates.
+
+        Examples:
+            >>> a = vector.Array(
+            ...       [{"px": 1, "py": 1.1, "z": 0.1}, {"px": 2, "py": 2.2, "z": 0.2}],
+            ... )
+            >>> a.longitudinal
+            <vector.backends.awkward.LongitudinalAwkwardZ object at 0x0000028231215A80>
+            >>> a.longitudinal.elements
+            (<Array [0.1, 0.2] type='2 * float64'>,)
+        """
         return LongitudinalAwkward.from_momentum_fields(self)
 
 
 class VectorAwkward4D(VectorAwkward, Lorentz, Vector4D):
+    """
+    Four dimensional momentum vector class for the Awkward backend.
+    Four dimensional momentum vectors for the users are defined using the
+    :class:`MomentumArray4D` class.
+
+    See :class:`VectorAwkward4D` for momentum vectors.
+    """
+
     @property
     def azimuthal(self) -> AzimuthalAwkward:
+        """
+        Returns an Azimuthal type object containing the azimuthal coordinates.
+
+        Use the ``elements`` property of the created object
+        to access the coordinates.
+
+        Examples:
+            >>> a = vector.Array(
+            ...       [{"x": 1, "y": 1.1, "z": 0.1, "tau": 1}, {"x": 2, "y": 2.2, "z": 0.2, "tau": 3}],
+            ... )
+            >>> a.azimuthal
+            <vector.backends.awkward.AzimuthalAwkwardXY object at 0x000001992A41BB40>
+            >>> a.azimuthal.elements
+            (<Array [1, 2] type='2 * int64'>, <Array [1.1, 2.2] type='2 * float64'>)
+        """
         return AzimuthalAwkward.from_fields(self)
 
     @property
     def longitudinal(self) -> LongitudinalAwkward:
+        """
+        Returns a Longitudinal type object containing the longitudinal coordinates.
+
+        Use the ``elements`` property of the created object
+        to access the coordinates.
+
+        Examples:
+            >>> a = vector.Array(
+            ...       [{"x": 1, "y": 1.1, "z": 0.1, "tau": 1}, {"x": 2, "y": 2.2, "z": 0.2, "tau": 3}],
+            ... )
+            >>> a.longitudinal
+            <vector.backends.awkward.LongitudinalAwkwardZ object at 0x000001992A40A380>
+            >>> a.longitudinal.elements
+            (<Array [0.1, 0.2] type='2 * float64'>,)
+        """
         return LongitudinalAwkward.from_fields(self)
 
     @property
     def temporal(self) -> TemporalAwkward:
+        """
+        Returns a Temporal type object containing the temporal coordinates.
+
+        Use the ``elements`` property of the created object
+        to access the coordinates.
+
+        Examples:
+            >>> a = vector.Array(
+            ...       [{"x": 1, "y": 1.1, "z": 0.1, "tau": 1}, {"x": 2, "y": 2.2, "z": 0.2, "tau": 3}],
+            ... )
+            >>> a.temporal
+            <vector.backends.awkward.TemporalAwkwardTau object at 0x000001992A40AC00>
+            >>> a.temporal.elements
+            (<Array [1, 3] type='2 * int64'>,)
+        """
         return TemporalAwkward.from_fields(self)
 
 
 class MomentumAwkward4D(LorentzMomentum, VectorAwkward4D):
+    """
+    Four dimensional momentum vector class for the Awkward backend.
+    Four dimensional momentum vectors for the users are defined using the
+    :class:`MomentumArray4D` class.
+
+    See :class:`VectorAwkward4D` for momentum vectors.
+    """
+
     @property
     def azimuthal(self) -> AzimuthalAwkward:
+        """
+        Returns an Azimuthal type object containing the azimuthal coordinates.
+
+        Use the ``elements`` property of the created object
+        to access the coordinates.
+
+        Examples:
+            >>> a = vector.Array(
+            ...       [{"px": 1, "py": 1.1, "z": 0.1, "m": 1}, {"px": 2, "py": 2.2, "z": 0.2, "m": 3}],
+            ... )
+            >>> a.azimuthal
+            <vector.backends.awkward.AzimuthalAwkwardXY object at 0x0000028231220580>
+            >>> a.azimuthal.elements
+            (<Array [1, 2] type='2 * int64'>, <Array [1.1, 2.2] type='2 * float64'>)
+        """
         return AzimuthalAwkward.from_momentum_fields(self)
 
     @property
     def longitudinal(self) -> LongitudinalAwkward:
+        """
+        Returns a Longitudinal type object containing the longitudinal coordinates.
+
+        Use the ``elements`` property of the created object
+        to access the coordinates.
+
+        Examples:
+            >>> a = vector.Array(
+            ...       [{"px": 1, "py": 1.1, "z": 0.1, "m": 1}, {"px": 2, "py": 2.2, "z": 0.2, "m": 3}],
+            ... )
+            >>> a.longitudinal
+            <vector.backends.awkward.LongitudinalAwkwardZ object at 0x0000028231215A80>
+            >>> a.longitudinal.elements
+            (<Array [0.1, 0.2] type='2 * float64'>,)
+        """
         return LongitudinalAwkward.from_momentum_fields(self)
 
     @property
     def temporal(self) -> TemporalAwkward:
+        """
+        Returns a Temporal type object containing the temporal coordinates.
+
+        Use the ``elements`` property of the created object
+        to access the coordinates.
+        Examples:
+            >>> a = vector.Array(
+            ...       [{"px": 1, "py": 1.1, "z": 0.1, "m": 1}, {"px": 2, "py": 2.2, "z": 0.2, "m": 3}],
+            ... )
+            >>> a.temporal
+            <vector.backends.awkward.TemporalAwkwardTau object at 0x000001992A40AC00>
+            >>> a.temporal.elements
+            (<Array [1, 3] type='2 * int64'>,)
+        """
         return TemporalAwkward.from_momentum_fields(self)
 
 
@@ -716,6 +1146,13 @@ class MomentumAwkward4D(LorentzMomentum, VectorAwkward4D):
 
 
 class VectorArray2D(VectorAwkward2D, ak.Array):  # type: ignore[misc]
+    """
+    Defines ``awkward`` behavior for a 2 dimensional vector.
+
+    See :class:`VectorRecord2D` and :class:`MomentumArray2D`
+    for the corresponding ``Record`` and ``Momentum`` classes.
+    """
+
     def allclose(
         self,
         other: VectorProtocol,
@@ -733,6 +1170,13 @@ behavior["*", "Vector2D"] = VectorArray2D
 
 
 class VectorRecord2D(VectorAwkward2D, ak.Record):  # type: ignore[misc]
+    """
+    Defines ``awkward`` behavior for a 2 dimensional vector record.
+
+    See :class:`VectorArray2D` and :class:`MomentumArray2D`
+    for the corresponding ``Vector`` and ``Momentum`` classes.
+    """
+
     pass
 
 
@@ -740,6 +1184,13 @@ behavior["Vector2D"] = VectorRecord2D
 
 
 class VectorArray3D(VectorAwkward3D, ak.Array):  # type: ignore[misc]
+    """
+    Defines ``awkward`` behavior for a 3 dimensional vector.
+
+    See :class:`VectorRecord3D` and :class:`MomentumArray3D`
+    for the corresponding ``Record`` and ``Momentum`` classes.
+    """
+
     def allclose(
         self,
         other: VectorProtocol,
@@ -757,6 +1208,13 @@ behavior["*", "Vector3D"] = VectorArray3D
 
 
 class VectorRecord3D(VectorAwkward3D, ak.Record):  # type: ignore[misc]
+    """
+    Defines ``awkward`` behavior for a 3 dimensional vector record.
+
+    See :class:`VectorArray3D` and :class:`MomentumArray3D`
+    for the corresponding ``Vector`` and ``Momentum`` classes.
+    """
+
     pass
 
 
@@ -764,6 +1222,13 @@ behavior["Vector3D"] = VectorRecord3D
 
 
 class VectorArray4D(VectorAwkward4D, ak.Array):  # type: ignore[misc]
+    """
+    Defines ``awkward`` behavior for a 4 dimensional vector.
+
+    See :class:`VectorRecord4D` and :class:`MomentumArray4D`
+    for the corresponding ``Record`` and ``Momentum`` classes.
+    """
+
     def allclose(
         self,
         other: VectorProtocol,
@@ -781,6 +1246,13 @@ behavior["*", "Vector4D"] = VectorArray4D
 
 
 class VectorRecord4D(VectorAwkward4D, ak.Record):  # type: ignore[misc]
+    """
+    Defines ``awkward`` behavior for a 4 dimensional vector record.
+
+    See :class:`VectorArray4D` and :class:`MomentumArray4D`
+    for the corresponding ``Vector`` and ``Momentum`` classes.
+    """
+
     pass
 
 
@@ -788,6 +1260,13 @@ behavior["Vector4D"] = VectorRecord4D
 
 
 class MomentumArray2D(MomentumAwkward2D, ak.Array):  # type: ignore[misc]
+    """
+    Defines ``awkward`` behavior for a 2 dimensional momentum vector.
+
+    See :class:`MomentumRecord2D` and :class:`VectorArray2D`
+    for the corresponding ``Record`` and ``Vector`` classes.
+    """
+
     def allclose(
         self,
         other: VectorProtocol,
@@ -795,6 +1274,9 @@ class MomentumArray2D(MomentumAwkward2D, ak.Array):  # type: ignore[misc]
         atol: ScalarCollection = 1e-08,
         equal_nan: BoolCollection = False,
     ) -> BoolCollection:
+        """
+        Like ``np.ndarray.allclose``, but for MomentumArray4D.
+        """
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
 
@@ -802,6 +1284,13 @@ behavior["*", "Momentum2D"] = MomentumArray2D
 
 
 class MomentumRecord2D(MomentumAwkward2D, ak.Record):  # type: ignore[misc]
+    """
+    Defines ``awkward`` behavior for a 2 dimensional momentum record.
+
+    See :class:`MomentumArray2D` and :class:`VectorArray2D`
+    for the corresponding ``Momentum`` and ``Vector`` classes.
+    """
+
     pass
 
 
@@ -809,6 +1298,13 @@ behavior["Momentum2D"] = MomentumRecord2D
 
 
 class MomentumArray3D(MomentumAwkward3D, ak.Array):  # type: ignore[misc]
+    """
+    Defines ``awkward`` behavior for a 3 dimensional momentum vector.
+
+    See :class:`MomentumRecord3D` and :class:`VectorArray3D`
+    for the corresponding ``Record`` and ``Vector`` classes.
+    """
+
     def allclose(
         self,
         other: VectorProtocol,
@@ -823,6 +1319,13 @@ behavior["*", "Momentum3D"] = MomentumArray3D
 
 
 class MomentumRecord3D(MomentumAwkward3D, ak.Record):  # type: ignore[misc]
+    """
+    Defines ``awkward`` behavior for a 3 dimensional momentum record.
+
+    See :class:`MomentumArray3D` and :class:`VectorArray3D`
+    for the corresponding ``Momentum`` and ``Vector`` classes.
+    """
+
     pass
 
 
@@ -830,6 +1333,13 @@ behavior["Momentum3D"] = MomentumRecord3D
 
 
 class MomentumArray4D(MomentumAwkward4D, ak.Array):  # type: ignore[misc]
+    """
+    Defines ``awkward`` behavior for a 4 dimensional momentum vector.
+
+    See :class:`MomentumRecord4D` and :class:`VectorArray4D`
+    for the corresponding ``Record`` and ``Vector`` classes.
+    """
+
     def allclose(
         self,
         other: VectorProtocol,
@@ -844,6 +1354,13 @@ behavior["*", "Momentum4D"] = MomentumArray4D
 
 
 class MomentumRecord4D(MomentumAwkward4D, ak.Record):  # type: ignore[misc]
+    """
+    Defines ``awkward`` behavior for a 4 dimensional momentum record.
+
+    See :class:`MomentumArray4D` and :class:`VectorArray4D`
+    for the corresponding ``Momentum`` and ``Vector`` classes.
+    """
+
     pass
 
 
