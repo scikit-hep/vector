@@ -2700,10 +2700,6 @@ def obj(**coordinates: float) -> VectorObject:
 
     to make the vector a momentum vector.
 
-    No constraints are placed on the types of the coordinate attributes, but
-    if they are not numbers, mathematical operations will fail. Usually, you want
-    them to be ``int`` or ``float``.
-
     Alternatively, the :doc:`vector.backends.object.VectorObject2D`,
     :doc:`vector.backends.object.VectorObject3D`, and
     :doc:`vector.backends.object.VectorObject4D` classes (with momentum
@@ -2734,6 +2730,11 @@ def obj(**coordinates: float) -> VectorObject:
     """
     is_momentum = False
     generic_coordinates = {}
+
+    for _, value in coordinates.items():
+        if not isinstance(value, (int, float)) or isinstance(value, bool):
+            raise TypeError("A coordinate must be of the type int or float")
+
     if "px" in coordinates:
         is_momentum = True
         generic_coordinates["x"] = coordinates.pop("px")
