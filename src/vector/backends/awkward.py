@@ -93,8 +93,8 @@ class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
     @classmethod
     def from_fields(cls, array: ak.Array) -> "AzimuthalAwkward":
         """
-        Create a :doc:`vector.backends.awkward.AzimuthalAwkwardXY` or a
-        :doc:`vector.backends.awkward.AzimuthalAwkwardRhoPhi`, depending on
+        Create a :class:`vector.backends.awkward.AzimuthalAwkwardXY` or a
+        :class:`vector.backends.awkward.AzimuthalAwkwardRhoPhi`, depending on
         the fields in ``array``.
         """
         fields = ak.fields(array)
@@ -111,8 +111,8 @@ class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
     @classmethod
     def from_momentum_fields(cls, array: ak.Array) -> "AzimuthalAwkward":
         """
-        Create a :doc:`vector.backends.awkward.AzimuthalAwkwardXY` or a
-        :doc:`vector.backends.awkward.AzimuthalAwkwardRhoPhi`, depending on
+        Create a :class:`vector.backends.awkward.AzimuthalAwkwardXY` or a
+        :class:`vector.backends.awkward.AzimuthalAwkwardRhoPhi`, depending on
         the fields in ``array``, allowing momentum synonyms.
         """
         fields = ak.fields(array)
@@ -139,9 +139,9 @@ class LongitudinalAwkward(CoordinatesAwkward, Longitudinal):
     @classmethod
     def from_fields(cls, array: ak.Array) -> "LongitudinalAwkward":
         """
-        Create a :doc:`vector.backends.awkward.LongitudinalAwkwardZ`, a
-        :doc:`vector.backends.awkward.LongitudinalAwkwardTheta`, or a
-        :doc:`vector.backends.awkward.LongitudinalAwkwardEta`, depending on
+        Create a :class:`vector.backends.awkward.LongitudinalAwkwardZ`, a
+        :class:`vector.backends.awkward.LongitudinalAwkwardTheta`, or a
+        :class:`vector.backends.awkward.LongitudinalAwkwardEta`, depending on
         the fields in ``array``.
         """
         fields = ak.fields(array)
@@ -160,9 +160,9 @@ class LongitudinalAwkward(CoordinatesAwkward, Longitudinal):
     @classmethod
     def from_momentum_fields(cls, array: ak.Array) -> "LongitudinalAwkward":
         """
-        Create a :doc:`vector.backends.awkward.LongitudinalAwkwardZ`, a
-        :doc:`vector.backends.awkward.LongitudinalAwkwardTheta`, or a
-        :doc:`vector.backends.awkward.LongitudinalAwkwardEta`, depending on
+        Create a :class:`vector.backends.awkward.LongitudinalAwkwardZ`, a
+        :class:`vector.backends.awkward.LongitudinalAwkwardTheta`, or a
+        :class:`vector.backends.awkward.LongitudinalAwkwardEta`, depending on
         the fields in ``array``, allowing momentum synonyms.
         """
         fields = ak.fields(array)
@@ -185,8 +185,8 @@ class TemporalAwkward(CoordinatesAwkward, Temporal):
     @classmethod
     def from_fields(cls, array: ak.Array) -> "TemporalAwkward":
         """
-        Create a :doc:`vector.backends.awkward.TemporalT` or a
-        :doc:`vector.backends.awkward.TemporalTau`, depending on
+        Create a :class:`vector.backends.awkward.TemporalT` or a
+        :class:`vector.backends.awkward.TemporalTau`, depending on
         the fields in ``array``.
         """
         fields = ak.fields(array)
@@ -203,8 +203,8 @@ class TemporalAwkward(CoordinatesAwkward, Temporal):
     @classmethod
     def from_momentum_fields(cls, array: ak.Array) -> "TemporalAwkward":
         """
-        Create a :doc:`vector.backends.awkward.TemporalT` or a
-        :doc:`vector.backends.awkward.TemporalTau`, depending on
+        Create a :class:`vector.backends.awkward.TemporalT` or a
+        :class:`vector.backends.awkward.TemporalTau`, depending on
         the fields in ``array``, allowing momentum synonyms.
         """
         fields = ak.fields(array)
