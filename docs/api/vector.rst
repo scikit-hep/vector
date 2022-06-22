@@ -5,10 +5,10 @@ Subpackages
 -----------
 
 .. toctree::
-   :maxdepth: 5
+   :maxdepth: 7
 
-   vector.backends
-   vector._compute
+   backends/vector.backends
+   compute/vector._compute
 
 Submodules
 ----------
