@@ -41,7 +41,7 @@ extensions = [
     "sphinx_math_dollar",
 ]
 
-mathjax_config = {
+mathjax3_config = {
     "tex2jax": {
         "inlineMath": [["\\(", "\\)"]],
         "displayMath": [["\\[", "\\]"]],
