@@ -5,6 +5,8 @@
 
 import typing
 
+import awkward
+
 
 def _recname(is_momentum: bool, dimension: int) -> str:
     name = "Momentum" if is_momentum else "Vector"
@@ -202,6 +204,19 @@ def _check_names(
     return is_momentum, dimension, names, columns
 
 
+def _is_type_safe(array: awkward.Array) -> bool:
+    for field in array.fields:
+        if all(isinstance(x, (int, float)) for x in array[field]):
+            continue
+        elif all(isinstance(x, awkward.Array) for x in array[field]):
+            for vals in array[field]:
+                if not all(isinstance(x, (int, float)) for x in vals):
+                    return False
+        else:
+            return False
+    return True
+
+
 def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     """
     Constructs an Awkward Array of vectors, whose type is determined by the fields
@@ -251,15 +266,22 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     are not numbers, mathematical operations will fail. Usually, you want them to be
     integers or floating-point numbers.
     """
-    import awkward
-
     import vector
     import vector.backends.awkward  # noqa: 401
+
+    if isinstance(args[0], dict):
+        if all(isinstance(x, list) for x in args[0].values()):
+            raise TypeError(
+                "Use vector.zip to construct vectors using a list of coordinates"
+            )
 
     akarray = awkward.Array(*args, **kwargs)
     fields = awkward.fields(akarray)
 
     is_momentum, dimension, names, arrays = _check_names(akarray, fields)
+
+    if not _is_type_safe(akarray):
+        raise TypeError("A coordinate must be of the type int or float")
 
     needs_behavior = not vector._awkward_registered
     for x in arrays:
@@ -346,6 +368,9 @@ def zip(
 
     import vector
     import vector.backends.awkward
+
+    if not isinstance(arrays, dict):
+        raise TypeError("Argument passed to vector.zip must be a dictionary")
 
     is_momentum, dimension, names, columns = _check_names(arrays, list(arrays.keys()))
 

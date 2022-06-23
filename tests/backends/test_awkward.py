@@ -12,6 +12,40 @@ ak = pytest.importorskip("awkward")
 pytestmark = pytest.mark.awkward
 
 
+def test_type_checks():
+    with pytest.raises(TypeError) as e:
+        vector.Array(
+            [
+                [{"x": 1, "y": 1.1, "z": 0.1}, {"x": 2, "y": 2.2, "z": [0.2]}],
+                [],
+            ]
+        )
+
+        assert e == "A coordinate must be of the type int or float"
+
+    with pytest.raises(TypeError) as e:
+        vector.Array(
+            [{"x": 1, "y": 1.1, "z": 0.1}, {"x": 2, "y": 2.2, "z": complex(1, 2)}]
+        )
+
+        assert e == "A coordinate must be of the type int or float"
+
+    with pytest.raises(TypeError) as e:
+        vector.Array({"x": [0], "y": [1]})
+
+        assert e == "Use vector.zip to construct vectors using a list of coordinates"
+
+    with pytest.raises(TypeError) as e:
+        vector.zip(
+            [
+                [{"x": 1, "y": 1.1, "z": 0.1}, {"x": 2, "y": 2.2, "z": 0.2}],
+                [],
+            ]
+        )
+
+        assert e == "Argument passed to vector.zip must be a dictionary"
+
+
 def test_basic():
     array = vector.Array([[{"x": 1, "y": 2}], [], [{"x": 3, "y": 4}]])
     assert isinstance(array, vector.backends.awkward.VectorArray2D)
