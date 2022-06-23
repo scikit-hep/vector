@@ -58,6 +58,9 @@ jobs:
     - name: Test package
       run: python -m pytest -ra --cov=vector tests/
 
+    - name: Run doctests
+      run: xdoctest ./src/vector/
+
     - name: Upload coverage report
       uses: codecov/codecov-action@v3.1.0
 

@@ -11,6 +11,7 @@ extras = {
     "test": [
         "pytest>=6",
         "pytest-cov>=3.0.0",
+        "xdoctest>=1.0.0",
     ],
     "test_extras": [
         "uncompyle6",
