@@ -5,8 +5,6 @@
 
 import typing
 
-import awkward
-
 
 def _recname(is_momentum: bool, dimension: int) -> str:
     name = "Momentum" if is_momentum else "Vector"
@@ -204,7 +202,9 @@ def _check_names(
     return is_momentum, dimension, names, columns
 
 
-def _is_type_safe(array: awkward.Array) -> bool:
+def _is_type_safe(array: typing.Any) -> bool:
+    import awkward
+
     for field in array.fields:
         if all(isinstance(x, (int, float)) for x in array[field]):
             continue
@@ -266,6 +266,8 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     are not numbers, mathematical operations will fail. Usually, you want them to be
     integers or floating-point numbers.
     """
+    import awkward
+
     import vector
     import vector.backends.awkward  # noqa: 401
 
