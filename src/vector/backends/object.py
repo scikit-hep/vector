@@ -112,6 +112,7 @@ class AzimuthalObjectXY(AzimuthalObject, AzimuthalXY, TupleXY):
         Each coordinate is a scalar and not a vector.
 
         Examples:
+            >>> import vector
             >>> v = vector.obj(x=1, y=2)
             >>> az = v.azimuthal
             >>> az.elements
@@ -142,6 +143,7 @@ class AzimuthalObjectRhoPhi(AzimuthalObject, AzimuthalRhoPhi, TupleRhoPhi):
         Each coordinate is a scalar and not a vector.
 
         Examples:
+            >>> import vector
             >>> v = vector.obj(rho=1, phi=2)
             >>> az = v.azimuthal
             >>> az.elements
@@ -171,6 +173,7 @@ class LongitudinalObjectZ(LongitudinalObject, LongitudinalZ, TupleZ):
         Each coordinate is a scalar and not a vector.
 
         Examples:
+            >>> import vector
             >>> v = vector.obj(rho=1, phi=2, z=3)
             >>> lc = v.longitudinal
             >>> lc.elements
@@ -200,6 +203,7 @@ class LongitudinalObjectTheta(LongitudinalObject, LongitudinalTheta, TupleTheta)
         Each coordinate is a scalar and not a vector.
 
         Examples:
+            >>> import vector
             >>> v = vector.obj(rho=1, phi=2, theta=3)
             >>> lc = v.longitudinal
             >>> lc.elements
@@ -231,6 +235,7 @@ class LongitudinalObjectEta(LongitudinalObject, LongitudinalEta, TupleEta):
         Each coordinate is a scalar and not a vector.
 
         Examples:
+            >>> import vector
             >>> v = vector.obj(rho=1, phi=2, eta=3)
             >>> lc = v.longitudinal
             >>> lc.elements
@@ -262,6 +267,7 @@ class TemporalObjectT(TemporalObject, TemporalT, TupleT):
         Each coordinate is a scalar and not a vector.
 
         Examples:
+            >>> import vector
             >>> v = vector.obj(rho=1, phi=2, theta=3, t=4)
             >>> tc = v.temporal
             >>> tc.elements
@@ -291,6 +297,7 @@ class TemporalObjectTau(TemporalObject, TemporalTau, TupleTau):
         Each coordinate is a scalar and not a vector.
 
         Examples:
+            >>> import vector
             >>> v = vector.obj(rho=1, phi=2, theta=3, tau=4)
             >>> tc = v.temporal
             >>> tc.elements
@@ -636,6 +643,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
         with momentum properties and methods.
 
         Examples:
+            >>> import vector
             >>> vec = vector.VectorObject2D.from_xy(1, 2)
             >>> vec
             vector.obj(x=1, y=2)
@@ -651,6 +659,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
         with momentum properties and methods.
 
         Examples:
+            >>> import vector
             >>> vec = vector.VectorObject2D.from_rhophi(1, 2)
             >>> vec
             vector.obj(rho=1, phi=2)
@@ -869,6 +878,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         with momentum properties and methods.
 
         Examples:
+            >>> import vector
             >>> vec = vector.VectorObject3D.from_xyz(1, 1, 1)
             >>> vec
             vector.obj(x=1, y=1, z=1)
@@ -885,6 +895,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         with momentum properties and methods.
 
         Examples:
+            >>> import vector
             >>> vec = vector.VectorObject3D.from_xytheta(1, 1, 1)
             >>> vec
             vector.obj(x=1, y=1, theta=1)
@@ -901,6 +912,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         with momentum properties and methods.
 
         Examples:
+            >>> import vector
             >>> vec = vector.VectorObject3D.from_xyeta(1, 1, 1)
             >>> vec
             vector.obj(x=1, y=1, eta=1)
@@ -917,6 +929,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         with momentum properties and methods.
 
         Examples:
+            >>> import vector
             >>> vec = vector.VectorObject3D.from_rhophiz(1, 1, 1)
             >>> vec
             vector.obj(rho=1, phi=1, z=1)
@@ -933,6 +946,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         with momentum properties and methods.
 
         Examples:
+            >>> import vector
             >>> vec = vector.VectorObject3D.from_rhophitheta(1, 1, 1)
             >>> vec
             vector.obj(rho=1, phi=1, theta=1)
@@ -949,6 +963,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         with momentum properties and methods.
 
         Examples:
+            >>> import vector
             >>> vec = vector.VectorObject3D.from_rhophieta(1, 1, 1)
             >>> vec
             vector.obj(rho=1, phi=1, eta=1)
@@ -1227,6 +1242,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         with momentum properties and methods.
 
         Examples:
+            >>> import vector
             >>> vec = vector.VectorObject4D.from_xyzt(1, 1, 1, 1)
             >>> vec
             vector.obj(x=1, y=1, z=1, t=1)
@@ -1249,6 +1265,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         with momentum properties and methods.
 
         Examples:
+            >>> import vector
             >>> vec = vector.VectorObject4D.from_xyztau(1, 1, 1, 1)
             >>> vec
             vector.obj(x=1, y=1, z=1, tau=1)
@@ -1273,6 +1290,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         with momentum properties and methods.
 
         Examples:
+            >>> import vector
             >>> vec = vector.VectorObject4D.from_xythetat(1, 1, 1, 1)
             >>> vec
             vector.obj(x=1, y=1, theta=1, t=1)
@@ -1297,6 +1315,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         with momentum properties and methods.
 
         Examples:
+            >>> import vector
             >>> vec = vector.VectorObject4D.from_xythetatau(1, 1, 1, 1)
             >>> vec
             vector.obj(x=1, y=1, theta=1, tau=1)
@@ -1323,6 +1342,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         with momentum properties and methods.
 
         Examples:
+            >>> import vector
             >>> vec = vector.VectorObject4D.from_xyetat(1, 1, 1, 1)
             >>> vec
             vector.obj(x=1, y=1, eta=1, t=1)
@@ -1347,6 +1367,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         with momentum properties and methods.
 
         Examples:
+            >>> import vector
             >>> vec = vector.VectorObject4D.from_xyetatau(1, 1, 1, 1)
             >>> vec
             vector.obj(x=1, y=1, eta=1, tau=1)
@@ -1371,6 +1392,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         with momentum properties and methods.
 
         Examples:
+            >>> import vector
             >>> vec = vector.VectorObject4D.from_rhophizt(1, 1, 1, 1)
             >>> vec
             vector.obj(rho=1, phi=1, z=1, t=1)
@@ -1395,6 +1417,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         with momentum properties and methods.
 
         Examples:
+            >>> import vector
             >>> vec = vector.VectorObject4D.from_rhophiztau(1, 1, 1, 1)
             >>> vec
             vector.obj(rho=1, phi=1, z=1, tau=1)
@@ -1421,6 +1444,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         with momentum properties and methods.
 
         Examples:
+            >>> import vector
             >>> vec = vector.VectorObject4D.from_rhophithetat(1, 1, 1, 1)
             >>> vec
             vector.obj(rho=1, phi=1, theta=1, t=1)
@@ -1447,6 +1471,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         with momentum properties and methods.
 
         Examples:
+            >>> import vector
             >>> vec = vector.VectorObject4D.from_rhophithetatau(1, 1, 1, 1)
             >>> vec
             vector.obj(rho=1, phi=1, theta=1, tau=1)
@@ -1473,6 +1498,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         with momentum properties and methods.
 
         Examples:
+            >>> import vector
             >>> vec = vector.VectorObject4D.from_rhophietat(1, 1, 1, 1)
             >>> vec
             vector.obj(rho=1, phi=1, eta=1, t=1)
@@ -1499,6 +1525,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         with momentum properties and methods.
 
         Examples:
+            >>> import vector
             >>> vec = vector.VectorObject4D.from_rhophietatau(1, 1, 1, 1)
             >>> vec
             vector.obj(rho=1, phi=1, eta=1, tau=1)
