@@ -100,6 +100,9 @@ class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
     to construct azimuthal type objects.
     """
 
+    def __repr__(self) -> str:
+        return type(self).__name__ + str(self.elements)
+
     @classmethod
     def from_fields(cls, array: ak.Array) -> "AzimuthalAwkward":
         """
@@ -174,6 +177,9 @@ class LongitudinalAwkward(CoordinatesAwkward, Longitudinal):
     to construct longitudinal type objects.
     """
 
+    def __repr__(self) -> str:
+        return type(self).__name__ + str(self.elements)
+
     @classmethod
     def from_fields(cls, array: ak.Array) -> "LongitudinalAwkward":
         """
@@ -245,6 +251,9 @@ class TemporalAwkward(CoordinatesAwkward, Temporal):
 
     to construct longitudinal type objects.
     """
+
+    def __repr__(self) -> str:
+        return type(self).__name__ + str(self.elements)
 
     @classmethod
     def from_fields(cls, array: ak.Array) -> "TemporalAwkward":
