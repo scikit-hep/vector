@@ -981,7 +981,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
         if obj is None:
             return
 
-        if not _is_type_safe(numpy.array(self.view(numpy.ndarray).tolist())):
+        if not _is_type_safe(numpy.array(self.tolist())):
             raise TypeError(
                 "a coordinate must be of the type numpy.integer or numpy.floating"
             )
@@ -1188,7 +1188,7 @@ class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore[misc]
         if obj is None:
             return
 
-        if not _is_type_safe(numpy.array(self.view(numpy.ndarray).tolist())):
+        if not _is_type_safe(numpy.array(self.tolist())):
             raise TypeError(
                 "a coordinate must be of the type numpy.integer or numpy.floating"
             )
@@ -1254,7 +1254,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
         if obj is None:
             return
 
-        if not _is_type_safe(numpy.array(self.view(numpy.ndarray).tolist())):
+        if not _is_type_safe(numpy.array(self.tolist())):
             raise TypeError(
                 "a coordinate must be of the type numpy.integer or numpy.floating"
             )
@@ -1477,7 +1477,7 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
         if obj is None:
             return
 
-        if not _is_type_safe(numpy.array(self.view(numpy.ndarray).tolist())):
+        if not _is_type_safe(numpy.array(self.tolist())):
             raise TypeError(
                 "a coordinate must be of the type numpy.integer or numpy.floating"
             )
@@ -1557,7 +1557,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
         if obj is None:
             return
 
-        if not _is_type_safe(numpy.array(self.view(numpy.ndarray).tolist())):
+        if not _is_type_safe(numpy.array(self.tolist())):
             raise TypeError(
                 "a coordinate must be of the type numpy.integer or numpy.floating"
             )
@@ -1808,7 +1808,7 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore[misc]
         if obj is None:
             return
 
-        if not _is_type_safe(numpy.array(self.view(numpy.ndarray).tolist())):
+        if not _is_type_safe(numpy.array(self.tolist())):
             raise TypeError(
                 "a coordinate must be of the type numpy.integer or numpy.floating"
             )
