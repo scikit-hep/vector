@@ -13,26 +13,18 @@ import vector.backends.numpy
 
 
 def test_type_checks():
-    with pytest.raises(TypeError) as e:
+    with pytest.raises(TypeError):
         vector.backends.numpy.VectorNumpy2D(
             [(0, 0), (0, 1), (3, 4)], dtype=[("x", bool), ("y", numpy.float64)]
         )
-        assert (
-            e
-            == "A coordinate must be of the type int, float, numpy.int64, or numpy.float64"
-        )
 
-    with pytest.raises(TypeError) as e:
+    with pytest.raises(TypeError):
         vector.backends.numpy.VectorNumpy3D(
-            [(0, 0, 0), (0, 1, 2), (3, 4, 5)],
+            [([0], 0, 0), ([0], 1, 2), ([3], 4, 5)],
             dtype=[("x", list), ("y", numpy.float64), ("z", numpy.float64)],
         )
-        assert (
-            e
-            == "A coordinate must be of the type int, float, numpy.int64, or numpy.float64"
-        )
 
-    with pytest.raises(TypeError) as e:
+    with pytest.raises(TypeError):
         vector.backends.numpy.VectorNumpy4D(
             [(0, 0, 0, 0), (0, 1, 2, 3), (3, 4, 5, 6)],
             [
@@ -41,28 +33,6 @@ def test_type_checks():
                 ("z", numpy.float64),
                 ("t", numpy.float64),
             ],
-        )
-        assert (
-            e
-            == "A coordinate must be of the type int, float, numpy.int64, or numpy.float64"
-        )
-
-    with pytest.raises(TypeError) as e:
-        vector.backends.numpy.VectorNumpy2D(
-            {"x": [1.1, 1.2, 1.3, 1.4, 1.5], "y": [2.1, 2.2, 2.3, 2.4, complex(1, 2)]}
-        )
-        assert (
-            e
-            == "A coordinate must be of the type int, float, numpy.int64, or numpy.float64"
-        )
-
-    with pytest.raises(TypeError) as e:
-        vector.backends.numpy.VectorNumpy2D(
-            {"x": [1.1, 1.2, 1.3, 1.4, 1.5], "y": [2.1, 2.2, 2.3, 2.4, [1]]}
-        )
-        assert (
-            e
-            == "A coordinate must be of the type int, float, numpy.int64, or numpy.float64"
         )
 
 

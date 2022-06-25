@@ -71,14 +71,6 @@ def _array_from_columns(columns: typing.Dict[str, ArrayLike]) -> ArrayLike:
         array([(1., 1.), (2., 2.), (3., 4.)], dtype=[('x', '<f8'), ('y', '<f8')])
     """
 
-    for coordinates in columns.values():
-        if not all(
-            isinstance(x, (int, float, numpy.float64, numpy.int64)) for x in coordinates
-        ):
-            raise TypeError(
-                "A coordinate must be of the type int, float, numpy.int64, or numpy.float64"
-            )
-
     if len(columns) == 0:
         raise ValueError("no columns have been provided")
     names = list(columns.keys())
@@ -307,21 +299,47 @@ def _shape_of(result: typing.Tuple[FloatArray, ...]) -> typing.Tuple[int, ...]:
 
 
 def _is_type_safe(
-    array: typing.Union[
-        "VectorNumpy2D",
-        "VectorNumpy3D",
-        "VectorNumpy4D",
-        "MomentumNumpy2D",
-        "MomentumNumpy3D",
-        "MomentumNumpy4D",
-        "CoordinatesNumpy",
-    ],
+    array_type: typing.Any,
 ) -> bool:
+    import awkward
 
-    dtypes = [x[0] for x in array.dtype.fields.values()]  # type: ignore[union-attr]
-    allowed_dtypes = [int, float, numpy.int64, numpy.float64]
+    while isinstance(
+        array_type,
+        (
+            awkward.types.ArrayType,
+            awkward.types.RegularType,
+            awkward.types.ListType,
+            awkward.types.OptionType,
+        ),
+    ):
+        array_type = array_type.type
 
-    return all(x in allowed_dtypes for x in dtypes)
+    if isinstance(array_type, awkward.types.PrimitiveType):
+        dt = array_type.dtype
+        if (
+            not dt.startswith("int")
+            and not dt.startswith("uint")
+            and not dt.startswith("float")
+        ):
+            return False
+        else:
+            return True
+
+    if not isinstance(array_type, awkward.types.RecordType):
+        return False
+
+    for field_type in array_type.fields():
+        if not isinstance(field_type, awkward.types.PrimitiveType):
+            return False
+        dt = field_type.dtype
+        if (
+            not dt.startswith("int")
+            and not dt.startswith("uint")
+            and not dt.startswith("float")
+        ):
+            return False
+
+    return True
 
 
 class GetItem:
@@ -999,9 +1017,14 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
         if obj is None:
             return
 
-        if not _is_type_safe(self):
+        import awkward
+
+        layout = awkward.to_layout(self.view(numpy.ndarray).tolist())
+        array_type = awkward.type(layout)
+
+        if not _is_type_safe(array_type):
             raise TypeError(
-                "A coordinate must be of the type int, float, numpy.int64, or numpy.float64"
+                "a coordinate must be of the type numpy.integer or numpy.floating"
             )
 
         if _has(self, ("x", "y")):
@@ -1206,9 +1229,14 @@ class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore[misc]
         if obj is None:
             return
 
-        if not _is_type_safe(self):
+        import awkward
+
+        layout = awkward.to_layout(self.view(numpy.ndarray).tolist())
+        array_type = awkward.type(layout)
+
+        if not _is_type_safe(array_type):
             raise TypeError(
-                "A coordinate must be of the type int, float, numpy.int64, or numpy.float64"
+                "a coordinate must be of type numpy.integer or numpy.floating"
             )
 
         self.dtype.names = tuple(
@@ -1269,12 +1297,17 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
         return array.view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
+        import awkward
+
         if obj is None:
             return
 
-        if not _is_type_safe(self):
+        layout = awkward.to_layout(self.view(numpy.ndarray).tolist())
+        array_type = awkward.type(layout)
+
+        if not _is_type_safe(array_type):
             raise TypeError(
-                "A coordinate must be of the type int, float, numpy.int64, or numpy.float64"
+                "a coordinate must be of type numpy.integer or numpy.floating"
             )
 
         if _has(self, ("x", "y")):
@@ -1492,12 +1525,17 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
     dtype: "numpy.dtype[typing.Any]"
 
     def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
+        import awkward
+
         if obj is None:
             return
 
-        if not _is_type_safe(self):
+        layout = awkward.to_layout(self.view(numpy.ndarray).tolist())
+        array_type = awkward.type(layout)
+
+        if not _is_type_safe(array_type):
             raise TypeError(
-                "A coordinate must be of the type int, float, numpy.int64, or numpy.float64"
+                "a coordinate must be of type numpy.integer or numpy.floating"
             )
 
         self.dtype.names = tuple(
@@ -1573,12 +1611,17 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
         return array.view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
+        import awkward
+
         if obj is None:
             return
 
-        if not _is_type_safe(self):
+        layout = awkward.to_layout(self.view(numpy.ndarray).tolist())
+        array_type = awkward.type(layout)
+
+        if not _is_type_safe(array_type):
             raise TypeError(
-                "A coordinate must be of the type int, float, numpy.int64, or numpy.float64"
+                "a coordinate must be of type numpy.integer or numpy.floating"
             )
 
         if _has(self, ("x", "y")):
@@ -1824,12 +1867,17 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore[misc]
     dtype: "numpy.dtype[typing.Any]"
 
     def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
+        import awkward
+
         if obj is None:
             return
 
-        if not _is_type_safe(self):
+        layout = awkward.to_layout(self.view(numpy.ndarray).tolist())
+        array_type = awkward.type(layout)
+
+        if not _is_type_safe(array_type):
             raise TypeError(
-                "A coordinate must be of the type int, float, numpy.int64, or numpy.float64"
+                "a coordinate must be of type numpy.integer or numpy.floating"
             )
 
         self.dtype.names = tuple(
