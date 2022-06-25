@@ -13,9 +13,16 @@ import vector.backends.numpy
 
 
 def test_type_checks():
+
     with pytest.raises(TypeError):
         vector.backends.numpy.VectorNumpy2D(
-            [(0, 0), (0, 1), (3, 4)], dtype=[("x", bool), ("y", numpy.float64)]
+            (0, 0), dtype=[("x", numpy.complex64), ("y", numpy.float64)]
+        )
+
+    with pytest.raises(TypeError):
+        vector.backends.numpy.VectorNumpy2D(
+            [(0, 0), (0, 1), (3, 4)],
+            dtype=[("x", numpy.complex64), ("y", numpy.float64)],
         )
 
     with pytest.raises(TypeError):
