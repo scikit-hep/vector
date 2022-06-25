@@ -3090,7 +3090,7 @@ def obj(**coordinates: float) -> VectorObject:
 
     for _, value in coordinates.items():
         if not isinstance(value, (int, float)) or isinstance(value, bool):
-            raise TypeError("A coordinate must be of the type int or float")
+            raise TypeError("a coordinate must be of the type int or float")
 
     if "px" in coordinates:
         is_momentum = True

@@ -40,14 +40,11 @@ def test_array_casting():
     assert isinstance(numpy.asanyarray(obj), vector.MomentumNumpy4D)
     assert numpy.asanyarray(obj).shape == ()
 
-    with pytest.raises(TypeError) as e:
+    with pytest.raises(TypeError):
         vector.obj(x=1, y=[1, 2])
-        assert e == "A single coordinate must be of the type int or float"
 
-    with pytest.raises(TypeError) as e:
+    with pytest.raises(TypeError):
         vector.obj(x=1, y=complex(1, 2))
-        assert e == "A single coordinate must be of the type int or float"
 
-    with pytest.raises(TypeError) as e:
+    with pytest.raises(TypeError):
         vector.obj(x=1, y=False)
-        assert e == "A single coordinate must be of the type int or float"
