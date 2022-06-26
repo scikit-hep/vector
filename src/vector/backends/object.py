@@ -794,6 +794,21 @@ class MomentumObject2D(PlanarMomentum, VectorObject2D):
     :class:`vector.backends.object.VectorObject2D`.
     """
 
+    def __init__(
+        self, azimuthal: typing.Optional[AzimuthalObject] = None, **kwargs: float
+    ) -> None:
+        if not kwargs and azimuthal is not None:
+            self.azimuthal = azimuthal
+        elif kwargs and azimuthal is None:
+            if set(kwargs) == {"px", "py"}:
+                self.azimuthal = AzimuthalObjectXY(kwargs["px"], kwargs["py"])
+            elif set(kwargs) == {"pt", "phi"}:
+                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["pt"], kwargs["phi"])
+            else:
+                raise TypeError("invalid arguments, must be px=, py= or pt=, phi=")
+        else:
+            raise TypeError("must give Azimuthal if not giving keyword arguments")
+
     def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         out = []
