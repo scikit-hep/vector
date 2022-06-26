@@ -11,7 +11,7 @@ import pytest
 import vector
 
 
-def test_constructors():
+def test_constructors_2D():
     vec = vector.VectorObject2D(x=1, y=2)
     assert vec.x == 1
     assert vec.y == 2
@@ -31,6 +31,26 @@ def test_constructors():
 
     with pytest.raises(TypeError):
         vector.VectorObject2D()
+
+    vec = vector.MomentumObject2D(px=1, py=2)
+    assert vec.x == 1
+    assert vec.y == 2
+
+    vec = vector.MomentumObject2D(pt=1, phi=2)
+    assert vec.rho == 1
+    assert vec.phi == 2
+
+    vec = vector.MomentumObject2D(
+        azimuthal=vector.backends.object.AzimuthalObjectXY(1, 2)
+    )
+    assert vec.x == 1
+    assert vec.y == 2
+
+    with pytest.raises(TypeError):
+        vector.MomentumObject2D(rho=1, phi=2)
+
+    with pytest.raises(TypeError):
+        vector.MomentumObject2D()
 
 
 def test_array_casting():
