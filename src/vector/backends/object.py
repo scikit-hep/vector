@@ -663,7 +663,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
     def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         out = [f"{x}={getattr(self.azimuthal, x)}" for x in aznames]
-        return type(self).__name__ + "(" + ", ".join(out) + ")"
+        return "VectorObject2D(" + ", ".join(out) + ")"
 
     def __array__(self) -> FloatArray:
         from vector.backends.numpy import VectorNumpy2D
@@ -800,7 +800,7 @@ class MomentumObject2D(PlanarMomentum, VectorObject2D):
         for x in aznames:
             y = _repr_generic_to_momentum.get(x, x)
             out.append(f"{y}={getattr(self.azimuthal, x)}")
-        return type(self).__name__ + "(" + ", ".join(out) + ")"
+        return "MomentumObject2D(" + ", ".join(out) + ")"
 
     def __array__(self) -> FloatArray:
         from vector.backends.numpy import MomentumNumpy2D

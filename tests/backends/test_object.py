@@ -11,6 +11,28 @@ import pytest
 import vector
 
 
+def test_constructors():
+    vec = vector.VectorObject2D(x=1, y=2)
+    assert vec.x == 1
+    assert vec.y == 2
+
+    vec = vector.VectorObject2D(rho=1, phi=2)
+    assert vec.rho == 1
+    assert vec.phi == 2
+
+    vec = vector.VectorObject2D(
+        azimuthal=vector.backends.object.AzimuthalObjectXY(1, 2)
+    )
+    assert vec.x == 1
+    assert vec.y == 2
+
+    with pytest.raises(TypeError):
+        vector.VectorObject2D(rho=1, wow=2)
+
+    with pytest.raises(TypeError):
+        vector.VectorObject2D()
+
+
 def test_array_casting():
     obj = vector.obj(x=1, y=1)
     assert isinstance(obj, vector.VectorObject2D)
