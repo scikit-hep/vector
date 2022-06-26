@@ -656,14 +656,14 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             elif set(kwargs) == {"rho", "phi"}:
                 self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
             else:
-                raise TypeError("Invalid arguments, must be x=, y= or rho=, phi=")
+                raise TypeError("invalid arguments, must be x=, y= or rho=, phi=")
         else:
-            raise TypeError("Must give Azimuthal if not giving keyword arguments")
+            raise TypeError("must give Azimuthal if not giving keyword arguments")
 
     def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         out = [f"{x}={getattr(self.azimuthal, x)}" for x in aznames]
-        return "vector.obj(" + ", ".join(out) + ")"
+        return type(self).__name__ + "(" + ", ".join(out) + ")"
 
     def __array__(self) -> FloatArray:
         from vector.backends.numpy import VectorNumpy2D
@@ -800,7 +800,7 @@ class MomentumObject2D(PlanarMomentum, VectorObject2D):
         for x in aznames:
             y = _repr_generic_to_momentum.get(x, x)
             out.append(f"{y}={getattr(self.azimuthal, x)}")
-        return "vector.obj(" + ", ".join(out) + ")"
+        return type(self).__name__ + "(" + ", ".join(out) + ")"
 
     def __array__(self) -> FloatArray:
         from vector.backends.numpy import MomentumNumpy2D
