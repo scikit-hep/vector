@@ -3,23 +3,27 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 """
-Defines behaviors for Object vectors. New vectors created with the
+Defines behaviors for Object vectors. New vectors created with the respective classes
 
 .. code-block:: python
 
-    vector.obj(...)
+    vector.VectorObject2D(x=..., y=...)
 
+will have these behaviors built in (and will pass them to any derived objects).
 
-function will have these behaviors built in (and will pass them to any derived
-objects).
-
-Additionally, the class methods can also be used to construct object type
-vectors -
+The class methods can also be used to construct object type vectors -
 
 .. code-block:: python
 
     vec = vector.VectorObject2D.from_xy(1, 2)
 
+Additionally, object type vectors can also be constructed using -
+
+.. code-block:: python
+
+    vector.obj(...)
+
+function.
 """
 from __future__ import annotations
 
@@ -106,7 +110,7 @@ class AzimuthalObjectXY(AzimuthalObject, AzimuthalXY, TupleXY):
 
         Examples:
             >>> import vector
-            >>> v = vector.obj(x=1, y=2)
+            >>> v = vector.VectorObject2D(x=1, y=2)
             >>> az = v.azimuthal
             >>> az.elements
             (1, 2)
@@ -135,7 +139,7 @@ class AzimuthalObjectRhoPhi(AzimuthalObject, AzimuthalRhoPhi, TupleRhoPhi):
 
         Examples:
             >>> import vector
-            >>> v = vector.obj(rho=1, phi=2)
+            >>> v = vector.VectorObject2D(rho=1, phi=2)
             >>> az = v.azimuthal
             >>> az.elements
             (1, 2)
@@ -598,12 +602,27 @@ class VectorObject(Vector):
 class VectorObject2D(VectorObject, Planar, Vector2D):
     """
     Two dimensional vector class for the object backend.
-    Use the class methods -
+
+    Examples:
+        >>> import vector
+        >>> vec = vector.VectorObject2D(x=1, y=2)
+        >>> vec.x, vec.y
+        (1, 2)
+        >>> vec = vector.VectorObject2D(rho=1, phi=2)
+        >>> vec.rho, vec.phi
+        (1, 2)
+        >>> vec = vector.VectorObject2D(azimuthal=vector.backends.object.AzimuthalObjectXY(1, 2))
+        >>> vec.x, vec.y
+        (1, 2)
+
+    The following class methods can also be used to
+    construct 2D object type vectors -
 
     - :meth:`VectorObject2D.from_xy`
     - :meth:`VectorObject2D.from_rhophi`
 
-    to construct 2D Vector objects.
+    Additionally, the :func:`vector.obj` function can
+    also be used to construct 2D object type vectors.
 
     For two dimensional momentum vector objects, see
     :class:`vector.backends.object.MomentumObject2D`.
@@ -625,7 +644,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             >>> import vector
             >>> vec = vector.VectorObject2D.from_xy(1, 2)
             >>> vec
-            vector.obj(x=1, y=2)
+            VectorObject2D(x=1, y=2)
         """
         return cls(azimuthal=AzimuthalObjectXY(x, y))
 
@@ -641,7 +660,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             >>> import vector
             >>> vec = vector.VectorObject2D.from_rhophi(1, 2)
             >>> vec
-            vector.obj(rho=1, phi=2)
+            VectorObject2D(rho=1, phi=2)
         """
         return cls(azimuthal=AzimuthalObjectRhoPhi(rho, phi))
 
@@ -789,6 +808,21 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
 class MomentumObject2D(PlanarMomentum, VectorObject2D):
     """
     Two dimensional momentum vector class for the object backend.
+
+    Examples:
+        >>> import vector
+        >>> vec = vector.MomentumObject2D(px=1, py=2)
+        >>> vec.px, vec.py
+        (1, 2)
+        >>> vec = vector.MomentumObject2D(pt=1, phi=2)
+        >>> vec.pt, vec.phi
+        (1, 2)
+        >>> vec = vector.MomentumObject2D(azimuthal=vector.backends.object.AzimuthalObjectXY(1, 2))
+        >>> vec.px, vec.py
+        (1, 2)
+
+    The :func:`vector.obj` function can also be
+    used to construct 2D momentum object type vectors.
 
     For two dimensional vector objects, see
     :class:`vector.backends.object.VectorObject2D`.
