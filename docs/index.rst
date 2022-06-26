@@ -110,8 +110,8 @@ The API reference details the functionality of each ``class`` and ``function`` p
    :target: https://pypi.org/project/vector/
 .. |PyPI version| image:: https://badge.fury.io/py/vector.svg
    :target: https://pypi.org/project/vector/
-.. |Conda latest releasetatus| image:: https://img.shields.io/conda/vn/conda-forge/decaylanguage.svg
-   :target: https://github.com/conda-forge/decaylanguage-feedstock
+.. |Conda latest releasetatus| image:: https://img.shields.io/conda/vn/conda-forge/vector.svg
+   :target: https://github.com/conda-forge/vector-feedstock
 .. |DOI| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.5942083.svg
    :target: https://doi.org/10.5281/zenodo.5942082
 .. |Scikit-HEP| image:: https://scikit-hep.org/assets/images/Scikit--HEP-Project-blue.svg
