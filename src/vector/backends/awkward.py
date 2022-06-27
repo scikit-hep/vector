@@ -101,7 +101,7 @@ class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
     """
 
     def __repr__(self) -> str:
-        return type(self).__name__ + str(self.elements)
+        return f"{type(self).__name__}{self.elements}"
 
     @classmethod
     def from_fields(cls, array: ak.Array) -> "AzimuthalAwkward":
