@@ -182,7 +182,7 @@ class LongitudinalAwkward(CoordinatesAwkward, Longitudinal):
     """
 
     def __repr__(self) -> str:
-        return type(self).__name__ + str(self.elements)
+        return f"{type(self).__name__}{self.elements}"
 
     @classmethod
     def from_fields(cls, array: ak.Array) -> "LongitudinalAwkward":
@@ -261,7 +261,7 @@ class TemporalAwkward(CoordinatesAwkward, Temporal):
     """
 
     def __repr__(self) -> str:
-        return type(self).__name__ + str(self.elements)
+        return f"{type(self).__name__}{self.elements}"
 
     @classmethod
     def from_fields(cls, array: ak.Array) -> "TemporalAwkward":
