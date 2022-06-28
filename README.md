@@ -623,8 +623,8 @@ Support for this work was provided by the National Science Foundation cooperativ
 [black-link]:               https://github.com/psf/black
 [codecov-badge]:            https://codecov.io/gh/scikit-hep/vector/branch/main/graph/badge.svg?token=YBv60ueORQ
 [codecov-link]:             https://codecov.io/gh/scikit-hep/vector
-[conda-version]:            https://img.shields.io/conda/vn/conda-forge/decaylanguage.svg
-[conda-link]:               https://github.com/conda-forge/decaylanguage-feedstock
+[conda-version]:            https://img.shields.io/conda/vn/conda-forge/vector.svg
+[conda-link]:               https://github.com/conda-forge/vector-feedstock
 [github-discussions-badge]: https://img.shields.io/static/v1?label=Discussions&message=Ask&color=blue&logo=github
 [github-discussions-link]:  https://github.com/scikit-hep/vector/discussions
 [gitter-badge]:             https://badges.gitter.im/Scikit-HEP/vector.svg
