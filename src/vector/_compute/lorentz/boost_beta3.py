@@ -3,8 +3,6 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-import typing
-
 """
 .. code-block:: python
 
@@ -16,6 +14,7 @@ or
 
     Lorentz.boost(self, beta3=...)
 """
+import typing
 
 import numpy
 
@@ -202,20 +201,18 @@ dispatch_map = {
         LongitudinalZ,
         TemporalTau,
     ),
-    (
+    (AzimuthalXY, LongitudinalZ, TemporalT, AzimuthalXY, LongitudinalTheta,): (
+        cartesian_t_xy_theta,
         AzimuthalXY,
         LongitudinalZ,
         TemporalT,
-        AzimuthalXY,
-        LongitudinalTheta,
-    ): (cartesian_t_xy_theta, AzimuthalXY, LongitudinalZ, TemporalT),
-    (
+    ),
+    (AzimuthalXY, LongitudinalZ, TemporalTau, AzimuthalXY, LongitudinalTheta,): (
+        cartesian_tau_xy_theta,
         AzimuthalXY,
         LongitudinalZ,
         TemporalTau,
-        AzimuthalXY,
-        LongitudinalTheta,
-    ): (cartesian_tau_xy_theta, AzimuthalXY, LongitudinalZ, TemporalTau),
+    ),
     (AzimuthalXY, LongitudinalZ, TemporalT, AzimuthalXY, LongitudinalEta): (
         cartesian_t_xy_eta,
         AzimuthalXY,
@@ -228,48 +225,42 @@ dispatch_map = {
         LongitudinalZ,
         TemporalTau,
     ),
-    (
+    (AzimuthalXY, LongitudinalZ, TemporalT, AzimuthalRhoPhi, LongitudinalZ,): (
+        cartesian_t_rhophi_z,
         AzimuthalXY,
         LongitudinalZ,
         TemporalT,
-        AzimuthalRhoPhi,
-        LongitudinalZ,
-    ): (cartesian_t_rhophi_z, AzimuthalXY, LongitudinalZ, TemporalT),
-    (
+    ),
+    (AzimuthalXY, LongitudinalZ, TemporalTau, AzimuthalRhoPhi, LongitudinalZ,): (
+        cartesian_tau_rhophi_z,
         AzimuthalXY,
         LongitudinalZ,
         TemporalTau,
-        AzimuthalRhoPhi,
-        LongitudinalZ,
-    ): (cartesian_tau_rhophi_z, AzimuthalXY, LongitudinalZ, TemporalTau),
-    (
+    ),
+    (AzimuthalXY, LongitudinalZ, TemporalT, AzimuthalRhoPhi, LongitudinalTheta,): (
+        cartesian_t_rhophi_theta,
         AzimuthalXY,
         LongitudinalZ,
         TemporalT,
-        AzimuthalRhoPhi,
-        LongitudinalTheta,
-    ): (cartesian_t_rhophi_theta, AzimuthalXY, LongitudinalZ, TemporalT),
-    (
+    ),
+    (AzimuthalXY, LongitudinalZ, TemporalTau, AzimuthalRhoPhi, LongitudinalTheta,): (
+        cartesian_tau_rhophi_theta,
         AzimuthalXY,
         LongitudinalZ,
         TemporalTau,
-        AzimuthalRhoPhi,
-        LongitudinalTheta,
-    ): (cartesian_tau_rhophi_theta, AzimuthalXY, LongitudinalZ, TemporalTau),
-    (
+    ),
+    (AzimuthalXY, LongitudinalZ, TemporalT, AzimuthalRhoPhi, LongitudinalEta,): (
+        cartesian_t_rhophi_eta,
         AzimuthalXY,
         LongitudinalZ,
         TemporalT,
-        AzimuthalRhoPhi,
-        LongitudinalEta,
-    ): (cartesian_t_rhophi_eta, AzimuthalXY, LongitudinalZ, TemporalT),
-    (
+    ),
+    (AzimuthalXY, LongitudinalZ, TemporalTau, AzimuthalRhoPhi, LongitudinalEta,): (
+        cartesian_tau_rhophi_eta,
         AzimuthalXY,
         LongitudinalZ,
         TemporalTau,
-        AzimuthalRhoPhi,
-        LongitudinalEta,
-    ): (cartesian_tau_rhophi_eta, AzimuthalXY, LongitudinalZ, TemporalTau),
+    ),
 }
 
 

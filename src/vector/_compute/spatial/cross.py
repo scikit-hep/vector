@@ -3,8 +3,6 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-import typing
-
 """
 .. code-block:: python
 
@@ -13,6 +11,7 @@ import typing
 Note that this returns a 3D vector even for 4D inputs. The ``None`` at the end
 of the return signature indicates termination.
 """
+import typing
 
 import numpy
 

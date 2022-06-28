@@ -3,8 +3,6 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-import typing
-
 """
 .. code-block:: python
 
@@ -12,6 +10,7 @@ import typing
 
 where ``obj`` has ``obj["xx"]``, ``obj["xy"]``, etc.
 """
+import typing
 
 import numpy
 
