@@ -889,8 +889,6 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         >>> vec.x, vec.y, vec.z
         (1, 2, 3)
         >>> vec = vector.VectorObject3D(rho=1, phi=2, eta=3)
-        >>> vec.rh, vec.phi, vec.eta
-        vec.rho  vec.rho2
         >>> vec.rho, vec.phi, vec.eta
         (1, 2, 3)
         >>> vec = vector.VectorObject3D(
@@ -922,12 +920,118 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
     azimuthal: AzimuthalObject
     longitudinal: LongitudinalObject
 
+    @classmethod
+    def from_xyz(cls, x: float, y: float, z: float) -> "VectorObject3D":
+        """
+        Constructs a ``VectorObject3D`` from Cartesian coordinates.
+
+        Use :class:`vector.backends.object.MomentumObject3D` to construct a vector
+        with momentum properties and methods.
+
+        Examples:
+            >>> import vector
+            >>> vec = vector.VectorObject3D.from_xyz(1, 1, 1)
+            >>> vec
+            VectorObject3D(x=1, y=1, z=1)
+        """
+        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z))
+
+    @classmethod
+    def from_xytheta(cls, x: float, y: float, theta: float) -> "VectorObject3D":
+        r"""
+        Constructs a ``VectorObject3D`` from Cartesian azimuthal coordinates and
+        a polar angle $\theta$.
+
+        Use :class:`vector.backends.object.MomentumObject3D` to construct a vector
+        with momentum properties and methods.
+
+        Examples:
+            >>> import vector
+            >>> vec = vector.VectorObject3D.from_xytheta(1, 1, 1)
+            >>> vec
+            VectorObject3D(x=1, y=1, theta=1)
+        """
+        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectTheta(theta))
+
+    @classmethod
+    def from_xyeta(cls, x: float, y: float, eta: float) -> "VectorObject3D":
+        r"""
+        Constructs a ``VectorObject3D`` from Cartesian coordinates and a
+        pseudorapidity $\eta$.
+
+        Use :class:`vector.backends.object.MomentumObject3D` to construct a vector
+        with momentum properties and methods.
+
+        Examples:
+            >>> import vector
+            >>> vec = vector.VectorObject3D.from_xyeta(1, 1, 1)
+            >>> vec
+            VectorObject3D(x=1, y=1, eta=1)
+        """
+        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta))
+
+    @classmethod
+    def from_rhophiz(cls, rho: float, phi: float, z: float) -> "VectorObject3D":
+        """
+        Constructs a ``VectorObject3D`` from polar azimuthal coordinates and a
+        Cartesian longitudinal coordinate $z$.
+
+        Use :class:`vector.backends.object.MomentumObject3D` to construct a vector
+        with momentum properties and methods.
+
+        Examples:
+            >>> import vector
+            >>> vec = vector.VectorObject3D.from_rhophiz(1, 1, 1)
+            >>> vec
+            VectorObject3D(rho=1, phi=1, z=1)
+        """
+        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectZ(z))
+
+    @classmethod
+    def from_rhophitheta(cls, rho: float, phi: float, theta: float) -> "VectorObject3D":
+        r"""
+        Constructs a ``VectorObject3D`` from polar azimuthal coordinates and a
+        polar angle $\theta$.
+
+        Use :class:`vector.backends.object.MomentumObject3D` to construct a vector
+        with momentum properties and methods.
+
+        Examples:
+            >>> import vector
+            >>> vec = vector.VectorObject3D.from_rhophitheta(1, 1, 1)
+            >>> vec
+            VectorObject3D(rho=1, phi=1, theta=1)
+        """
+        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectTheta(theta))
+
+    @classmethod
+    def from_rhophieta(cls, rho: float, phi: float, eta: float) -> "VectorObject3D":
+        r"""
+        Constructs a ``VectorObject3D`` from polar azimuthal coordinates and a
+        pseudorapidity $\eta$.
+
+        Use :class:`vector.backends.object.MomentumObject3D` to construct a vector
+        with momentum properties and methods.
+
+        Examples:
+            >>> import vector
+            >>> vec = vector.VectorObject3D.from_rhophieta(1, 1, 1)
+            >>> vec
+            VectorObject3D(rho=1, phi=1, eta=1)
+        """
+        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectEta(eta))
+
     def __init__(
         self,
         azimuthal: typing.Optional[AzimuthalObject] = None,
         longitudinal: typing.Optional[LongitudinalObject] = None,
         **kwargs: float,
     ) -> None:
+
+        for k, v in kwargs.copy().items():
+            kwargs.pop(k)
+            kwargs[_repr_momentum_to_generic.get(k, k)] = v
+
         if not kwargs and azimuthal is not None and longitudinal is not None:
             self.azimuthal = azimuthal
             self.longitudinal = longitudinal
@@ -957,6 +1061,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
                 "must give Azimuthal and Longitudinal if not giving keyword arguments"
             )
 
+<<<<<<< HEAD
     @classmethod
     def from_xyz(cls, x: float, y: float, z: float) -> VectorObject3D:
         """
@@ -1058,6 +1163,8 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         """
         return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectEta(eta))
 
+=======
+>>>>>>> a836b12 (Modify constructor for `MomentumObject3D` + typing overloads + docs)
     def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         lnames = _coordinate_class_to_names[_ltype(self)]
@@ -1216,6 +1323,24 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
 class MomentumObject3D(SpatialMomentum, VectorObject3D):
     """
     Three dimensional momentum vector class for the object backend.
+
+    Examples:
+        >>> import vector
+        >>> vec = vector.MomentumObject3D(px=1, py=2, pz=3)
+        >>> vec.px, vec.py, vec.pz
+        (1, 2, 3)
+        >>> vec = vector.MomentumObject3D(pt=1, phi=2, pz=3)
+        >>> vec.pt, vec.phi, vec.pz
+        (1, 2, 3)
+        >>> vec = vector.MomentumObject3D(
+        ...     azimuthal=vector.backends.object.AzimuthalObjectXY(1, 2),
+        ...     longitudinal=vector.backends.object.LongitudinalObjectTheta(3)
+        ... )
+        >>> vec.x, vec.y, vec.theta
+        (1, 2, 3)
+
+    The :func:`vector.obj` function can also be
+    used to construct 3D momentum object type vectors.
 
     For three dimensional vector objects, see
     :class:`vector.backends.object.VectorObject3D`.
