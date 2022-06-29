@@ -681,7 +681,12 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             elif set(kwargs) == {"rho", "phi"}:
                 self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
             else:
-                raise TypeError("invalid arguments, must be x=, y= or rho=, phi=")
+                if type(self) == VectorObject2D:
+                    raise TypeError("invalid arguments, must be x=, y= or rho=, phi=")
+                else:
+                    raise TypeError(
+                        "invalid arguments, must be x=, y= or rho=, phi= or their momentum equivalents"
+                    )
         else:
             raise TypeError("must give Azimuthal if not giving keyword arguments")
 
