@@ -86,8 +86,6 @@ API reference
 -------------
 The API reference details the functionality of each ``class`` and ``function`` present in ``vector``'s codebase.
 
-**Note**: Adding missing docstrings is still in progress.
-
 .. toctree::
    :maxdepth: 8
    :caption: API Reference

@@ -3,15 +3,14 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-import typing
-from math import inf, nan
-
 """
 .. code-block:: python
 
     @property
     Spatial.eta(self)
 """
+import typing
+from math import inf, nan
 
 import numpy
 
