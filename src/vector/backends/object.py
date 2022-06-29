@@ -681,12 +681,15 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             elif set(kwargs) == {"rho", "phi"}:
                 self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
             else:
+                complaint = """unrecognized combination of coordinates, allowed combinations are:\n
+                    x= y=
+                    rho= phi=""".replace(
+                    "                    ", "    "
+                )
                 if type(self) == VectorObject2D:
-                    raise TypeError("invalid arguments, must be x=, y= or rho=, phi=")
+                    raise TypeError(complaint)
                 else:
-                    raise TypeError(
-                        "invalid arguments, must be x=, y= or rho=, phi= or their momentum equivalents"
-                    )
+                    raise TypeError(f"{complaint}\n\nor their momentum equivalents")
         else:
             raise TypeError("must give Azimuthal if not giving keyword arguments")
 
