@@ -7,7 +7,8 @@ Defines behaviors for Object vectors. New vectors created with the respective cl
 
 .. code-block:: python
 
-    vector.VectorObject2D(x=..., y=...)
+    vector.VectorObject2D(...)
+    vector.VectorObject3D(...)
 
 will have these behaviors built in (and will pass them to any derived objects).
 
@@ -908,6 +909,26 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
     Three dimensional vector class for the object backend.
     Use the class methods -
 
+    Examples:
+        >>> import vector
+        >>> vec = vector.VectorObject3D(x=1, y=2, z=3)
+        >>> vec.x, vec.y, vec.z
+        (1, 2, 3)
+        >>> vec = vector.VectorObject3D(rho=1, phi=2, eta=3)
+        >>> vec.rh, vec.phi, vec.eta
+        vec.rho  vec.rho2
+        >>> vec.rho, vec.phi, vec.eta
+        (1, 2, 3)
+        >>> vec = vector.VectorObject3D(
+        ...     azimuthal=vector.backends.object.AzimuthalObjectXY(1, 2),
+        ...     longitudinal=vector.backends.object.LongitudinalObjectTheta(3)
+        ... )
+        >>> vec.x, vec.y, vec.theta
+
+
+    The following class methods can also be used to
+    construct 3D object type vectors -
+
     - :meth:`VectorObject3D.from_xyz`
     - :meth:`VectorObject3D.from_xytheta`
     - :meth:`VectorObject3D.from_xyeta`
@@ -915,7 +936,8 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
     - :meth:`VectorObject3D.from_rhophitheta`
     - :meth:`VectorObject3D.from_rhophieta`
 
-    to construct 3D Vector objects.
+    Additionally, the :func:`vector.obj` function can
+    also be used to construct 3D object type vectors.
 
     For three dimensional momentum vector objects, see
     :class:`vector.backends.object.MomentumObject3D`.
