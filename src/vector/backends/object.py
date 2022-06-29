@@ -995,7 +995,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             >>> import vector
             >>> vec = vector.VectorObject3D.from_xyz(1, 1, 1)
             >>> vec
-            vector.obj(x=1, y=1, z=1)
+            vector.VectorObject3D(x=1, y=1, z=1)
         """
         return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z))
 
@@ -1012,7 +1012,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             >>> import vector
             >>> vec = vector.VectorObject3D.from_xytheta(1, 1, 1)
             >>> vec
-            vector.obj(x=1, y=1, theta=1)
+            vector.VectorObject3D(x=1, y=1, theta=1)
         """
         return cls(AzimuthalObjectXY(x, y), LongitudinalObjectTheta(theta))
 
@@ -1029,7 +1029,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             >>> import vector
             >>> vec = vector.VectorObject3D.from_xyeta(1, 1, 1)
             >>> vec
-            vector.obj(x=1, y=1, eta=1)
+            vector.VectorObject3D(x=1, y=1, eta=1)
         """
         return cls(AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta))
 
@@ -1046,7 +1046,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             >>> import vector
             >>> vec = vector.VectorObject3D.from_rhophiz(1, 1, 1)
             >>> vec
-            vector.obj(rho=1, phi=1, z=1)
+            vector.VectorObject3D(rho=1, phi=1, z=1)
         """
         return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectZ(z))
 
@@ -1063,7 +1063,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             >>> import vector
             >>> vec = vector.VectorObject3D.from_rhophitheta(1, 1, 1)
             >>> vec
-            vector.obj(rho=1, phi=1, theta=1)
+            vector.VectorObject3D(rho=1, phi=1, theta=1)
         """
         return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectTheta(theta))
 
@@ -1080,7 +1080,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             >>> import vector
             >>> vec = vector.VectorObject3D.from_rhophieta(1, 1, 1)
             >>> vec
-            vector.obj(rho=1, phi=1, eta=1)
+            vector.VectorObject3D(rho=1, phi=1, eta=1)
         """
         return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectEta(eta))
 
@@ -1257,7 +1257,7 @@ class MomentumObject3D(SpatialMomentum, VectorObject3D):
         for x in lnames:
             y = _repr_generic_to_momentum.get(x, x)
             out.append(f"{y}={getattr(self.longitudinal, x)}")
-        return "vector.obj(" + ", ".join(out) + ")"
+        return "vector.MomentumObject3D(" + ", ".join(out) + ")"
 
     def __array__(self) -> FloatArray:
         from vector.backends.numpy import MomentumNumpy3D
