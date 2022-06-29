@@ -12,8 +12,8 @@ import vector.backends.object
 
 def test_spatial_object():
     vec = vector.backends.object.VectorObject3D(
-        vector.backends.object.AzimuthalObjectXY(0.4, 0.5),
-        vector.backends.object.LongitudinalObjectZ(0.6),
+        azimuthal=vector.backends.object.AzimuthalObjectXY(0.4, 0.5),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(0.6),
     )
     out = vec.rotate_euler(0.1, 0.2, 0.3)
     assert isinstance(out, vector.backends.object.VectorObject3D)
