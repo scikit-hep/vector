@@ -1360,10 +1360,42 @@ class Vector(VectorProtocol):
         ...
 
     @typing.overload
+    def __new__(cls, *, x: float, y: float, z: float) -> "vector.VectorObject3D":
+        ...
+
+    @typing.overload
+    def __new__(cls, *, x: float, y: float, eta: float) -> "vector.VectorObject3D":
+        ...
+
+    @typing.overload
+    def __new__(cls, *, x: float, y: float, theta: float) -> "vector.VectorObject3D":
+        ...
+
+    @typing.overload
+    def __new__(cls, *, rho: float, phi: float, z: float) -> "vector.VectorObject3D":
+        ...
+
+    @typing.overload
+    def __new__(cls, *, rho: float, phi: float, eta: float) -> "vector.VectorObject3D":
+        ...
+
+    @typing.overload
+    def __new__(
+        cls, *, rho: float, phi: float, theta: float
+    ) -> "vector.VectorObject3D":
+        ...
+
+    @typing.overload
     def __new__(cls, __azumthal: "Azimuthal") -> "Vector":
         ...
 
-    def __new__(cls, *args: "Azimuthal", **kwargs: float) -> "Vector":
+    @typing.overload
+    def __new__(
+        cls, __azumthal: "Azimuthal", __longitudinal: "Longitudinal"
+    ) -> "Vector":
+        ...
+
+    def __new__(cls, *args: typing.Any, **kwargs: float) -> "Vector":
         if cls is not Vector:
             return super().__new__(cls)
 
