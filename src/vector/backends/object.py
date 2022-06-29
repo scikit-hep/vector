@@ -60,6 +60,7 @@ from vector._methods import (
     _handler_of,
     _ltype,
     _repr_generic_to_momentum,
+    _repr_momentum_to_generic,
     _ttype,
 )
 from vector._typeutils import FloatArray
@@ -667,6 +668,11 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
     def __init__(
         self, azimuthal: typing.Optional[AzimuthalObject] = None, **kwargs: float
     ) -> None:
+
+        for k, v in kwargs.copy().items():
+            kwargs.pop(k)
+            kwargs[_repr_momentum_to_generic.get(k, k)] = v
+
         if not kwargs and azimuthal is not None:
             self.azimuthal = azimuthal
         elif kwargs and azimuthal is None:
@@ -827,21 +833,6 @@ class MomentumObject2D(PlanarMomentum, VectorObject2D):
     For two dimensional vector objects, see
     :class:`vector.backends.object.VectorObject2D`.
     """
-
-    def __init__(
-        self, azimuthal: typing.Optional[AzimuthalObject] = None, **kwargs: float
-    ) -> None:
-        if not kwargs and azimuthal is not None:
-            self.azimuthal = azimuthal
-        elif kwargs and azimuthal is None:
-            if set(kwargs) == {"px", "py"}:
-                self.azimuthal = AzimuthalObjectXY(kwargs["px"], kwargs["py"])
-            elif set(kwargs) == {"pt", "phi"}:
-                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["pt"], kwargs["phi"])
-            else:
-                raise TypeError("invalid arguments, must be px=, py= or pt=, phi=")
-        else:
-            raise TypeError("must give Azimuthal if not giving keyword arguments")
 
     def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
