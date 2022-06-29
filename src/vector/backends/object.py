@@ -1066,7 +1066,19 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
                 self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
                 self.longitudinal = LongitudinalObjectTheta(kwargs["theta"])
             else:
-                raise TypeError("invalid arguments, must be x=, y= or rho=, phi=")
+                complaint = """unrecognized combination of coordinates, allowed combinations are:\n
+                    x= y= z=
+                    x= y= theta=
+                    x= y= eta=
+                    rho= phi= z=
+                    rho= phi= theta=
+                    rho= phi= eta=""".replace(
+                    "                    ", "    "
+                )
+                if type(self) == VectorObject3D:
+                    raise TypeError(complaint)
+                else:
+                    raise TypeError(f"{complaint}\n\nor their momentum equivalents")
         else:
             raise TypeError(
                 "must give Azimuthal and Longitudinal if not giving keyword arguments"
