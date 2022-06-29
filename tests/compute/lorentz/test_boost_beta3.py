@@ -18,8 +18,8 @@ def test():
         vector.backends.object.TemporalObjectT(4),
     )
     beta = vector.backends.object.VectorObject3D(
-        vector.backends.object.AzimuthalObjectXY(5 / 15, 6 / 15),
-        vector.backends.object.LongitudinalObjectZ(7 / 15),
+        azimuthal=vector.backends.object.AzimuthalObjectXY(5 / 15, 6 / 15),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(7 / 15),
     )
     out = vec.boost_beta3(beta)
     assert out.x == pytest.approx(3.5537720741941676)

@@ -945,7 +945,9 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             >>> vec
             VectorObject3D(x=1, y=1, z=1)
         """
-        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z))
+        return cls(
+            azimuthal=AzimuthalObjectXY(x, y), longitudinal=LongitudinalObjectZ(z)
+        )
 
     @classmethod
     def from_xytheta(cls, x: float, y: float, theta: float) -> "VectorObject3D":
@@ -962,7 +964,10 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             >>> vec
             VectorObject3D(x=1, y=1, theta=1)
         """
-        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectTheta(theta))
+        return cls(
+            azimuthal=AzimuthalObjectXY(x, y),
+            longitudinal=LongitudinalObjectTheta(theta),
+        )
 
     @classmethod
     def from_xyeta(cls, x: float, y: float, eta: float) -> "VectorObject3D":
@@ -979,7 +984,9 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             >>> vec
             VectorObject3D(x=1, y=1, eta=1)
         """
-        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta))
+        return cls(
+            azimuthal=AzimuthalObjectXY(x, y), longitudinal=LongitudinalObjectEta(eta)
+        )
 
     @classmethod
     def from_rhophiz(cls, rho: float, phi: float, z: float) -> "VectorObject3D":
@@ -996,7 +1003,10 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             >>> vec
             VectorObject3D(rho=1, phi=1, z=1)
         """
-        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectZ(z))
+        return cls(
+            azimuthal=AzimuthalObjectRhoPhi(rho, phi),
+            longitudinal=LongitudinalObjectZ(z),
+        )
 
     @classmethod
     def from_rhophitheta(cls, rho: float, phi: float, theta: float) -> "VectorObject3D":
@@ -1013,7 +1023,10 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             >>> vec
             VectorObject3D(rho=1, phi=1, theta=1)
         """
-        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectTheta(theta))
+        return cls(
+            azimuthal=AzimuthalObjectRhoPhi(rho, phi),
+            longitudinal=LongitudinalObjectTheta(theta),
+        )
 
     @classmethod
     def from_rhophieta(cls, rho: float, phi: float, eta: float) -> "VectorObject3D":
@@ -1030,7 +1043,10 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             >>> vec
             VectorObject3D(rho=1, phi=1, eta=1)
         """
-        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectEta(eta))
+        return cls(
+            azimuthal=AzimuthalObjectRhoPhi(rho, phi),
+            longitudinal=LongitudinalObjectEta(eta),
+        )
 
     def __init__(
         self,
