@@ -926,6 +926,41 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
     azimuthal: AzimuthalObject
     longitudinal: LongitudinalObject
 
+    def __init__(
+        self,
+        azimuthal: typing.Optional[AzimuthalObject] = None,
+        longitudinal: typing.Optional[LongitudinalObject] = None,
+        **kwargs: float,
+    ) -> None:
+        if not kwargs and azimuthal is not None and longitudinal is not None:
+            self.azimuthal = azimuthal
+            self.longitudinal = longitudinal
+        elif kwargs and azimuthal is None:
+            if set(kwargs) == {"x", "y", "z"}:
+                self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
+                self.longitudinal = LongitudinalObjectZ(kwargs["z"])
+            elif set(kwargs) == {"x", "y", "eta"}:
+                self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
+                self.longitudinal = LongitudinalObjectEta(kwargs["eta"])
+            elif set(kwargs) == {"x", "y", "theta"}:
+                self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
+                self.longitudinal = LongitudinalObjectTheta(kwargs["theta"])
+            elif set(kwargs) == {"rho", "phi", "z"}:
+                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
+                self.longitudinal = LongitudinalObjectZ(kwargs["z"])
+            elif set(kwargs) == {"rho", "phi", "eta"}:
+                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
+                self.longitudinal = LongitudinalObjectEta(kwargs["eta"])
+            elif set(kwargs) == {"rho", "phi", "theta"}:
+                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
+                self.longitudinal = LongitudinalObjectTheta(kwargs["theta"])
+            else:
+                raise TypeError("invalid arguments, must be x=, y= or rho=, phi=")
+        else:
+            raise TypeError(
+                "must give Azimuthal and Longitudinal if not giving keyword arguments"
+            )
+
     @classmethod
     def from_xyz(cls, x: float, y: float, z: float) -> VectorObject3D:
         """
@@ -1027,19 +1062,13 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         """
         return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectEta(eta))
 
-    def __init__(
-        self, azimuthal: AzimuthalObject, longitudinal: LongitudinalObject
-    ) -> None:
-        self.azimuthal = azimuthal
-        self.longitudinal = longitudinal
-
     def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         lnames = _coordinate_class_to_names[_ltype(self)]
         out = [f"{x}={getattr(self.azimuthal, x)}" for x in aznames]
         for x in lnames:
             out.append(f"{x}={getattr(self.longitudinal, x)}")
-        return "vector.obj(" + ", ".join(out) + ")"
+        return "VectorObject3D(" + ", ".join(out) + ")"
 
     def __array__(self) -> FloatArray:
         from vector.backends.numpy import VectorNumpy3D
