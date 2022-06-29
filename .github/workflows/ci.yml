@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Check SDist
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: actions/setup-python@v2
       with:
         python-version: 3.x
@@ -39,7 +39,7 @@ jobs:
         - 3.9
     name: Check Python ${{ matrix.python-version }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - uses: actions/setup-python@v2
       with:
@@ -70,7 +70,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Disassemble check
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - uses: actions/setup-python@v2
       with:
@@ -88,7 +88,7 @@ jobs:
   # root:
   #   runs-on: ubuntu-latest
   #   steps:
-  #   - uses: actions/checkout@v2
+  #   - uses: actions/checkout@v3
 
   #   - name: Get Conda
   #     uses: conda-incubator/setup-miniconda@v2
