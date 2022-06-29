@@ -1360,6 +1360,22 @@ class Vector(VectorProtocol):
         ...
 
     @typing.overload
+    def __new__(cls, *, px: float, py: float) -> "vector.MomentumObject2D":
+        ...
+
+    @typing.overload
+    def __new__(cls, *, x: float, py: float) -> "vector.MomentumObject2D":
+        ...
+
+    @typing.overload
+    def __new__(cls, *, px: float, y: float) -> "vector.MomentumObject2D":
+        ...
+
+    @typing.overload
+    def __new__(cls, *, pt: float, phi: float) -> "vector.MomentumObject2D":
+        ...
+
+    @typing.overload
     def __new__(cls, __azumthal: "Azimuthal") -> "Vector":
         ...
 
