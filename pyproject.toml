@@ -9,9 +9,13 @@ build-backend = "setuptools.build_meta"
 write_to = "src/vector/version.py"
 
 [tool.pytest.ini_options]
-addopts = "-ra --strict-markers"
+minversion = "6.0"
+xfail_strict = true
+addopts = ["-ra", "--strict-markers", "--strict-config"]
 testpaths = ["tests"]
 markers = ["slow", "numba", "awkward", "dis"]
+log_cli_level = "DEBUG"
+filterwarnings = ["error"]
 
 [tool.isort]
 profile = "black"
@@ -21,6 +25,9 @@ files = ["src/vector"]
 python_version = "3.8"
 strict = true
 warn_return_any = false
+show_error_codes = true
+warn_unreachable = true
+enable_error_code = ["ignore-without-code", "truthy-bool", "redundant-expr"]
 
 [[tool.mypy.overrides]]
 module = "vector._compute.*.*"
