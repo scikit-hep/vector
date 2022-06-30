@@ -166,11 +166,11 @@ def _getitem(
                 *(out[x] for x in _coordinate_class_to_names[_ttype(array)])  # type: ignore[arg-type]
             )
         if temporal is not None:
-            return array.ObjectClass(azimuthal, longitudinal, temporal)  # type: ignore[call-arg, arg-type, return-value]
+            return array.ObjectClass(azimuthal=azimuthal, longitudinal=longitudinal, temporal=temporal)  # type: ignore[arg-type, return-value]
         elif longitudinal is not None:
-            return array.ObjectClass(azimuthal, longitudinal)  # type: ignore[call-arg, arg-type, return-value]
+            return array.ObjectClass(azimuthal=azimuthal, longitudinal=longitudinal)  # type: ignore[arg-type, return-value]
         elif azimuthal is not None:
-            return array.ObjectClass(azimuthal)  # type: ignore[call-arg, return-value]
+            return array.ObjectClass(azimuthal=azimuthal)  # type: ignore[return-value]
         else:
             return array.ObjectClass(*out.view(numpy.ndarray))  # type: ignore[misc, return-value]
 

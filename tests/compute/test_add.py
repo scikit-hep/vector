@@ -114,14 +114,14 @@ def test_spatial_numpy():
 
 def test_lorentz_object():
     v1 = vector.backends.object.VectorObject4D(
-        vector.backends.object.AzimuthalObjectXY(3, 4),
-        vector.backends.object.LongitudinalObjectZ(2),
-        vector.backends.object.TemporalObjectT(10),
+        azimuthal=vector.backends.object.AzimuthalObjectXY(3, 4),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(2),
+        temporal=vector.backends.object.TemporalObjectT(10),
     )
     v2 = vector.backends.object.VectorObject4D(
-        vector.backends.object.AzimuthalObjectXY(5, 12),
-        vector.backends.object.LongitudinalObjectZ(4),
-        vector.backends.object.TemporalObjectT(15),
+        azimuthal=vector.backends.object.AzimuthalObjectXY(5, 12),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(4),
+        temporal=vector.backends.object.TemporalObjectT(15),
     )
     out = v1.add(v2)
     assert out.x == pytest.approx(8)

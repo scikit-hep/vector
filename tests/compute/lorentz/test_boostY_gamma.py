@@ -13,9 +13,9 @@ import vector.backends.object
 
 def test():
     vec = vector.backends.object.VectorObject4D(
-        vector.backends.object.AzimuthalObjectXY(2, 3),
-        vector.backends.object.LongitudinalObjectZ(1),
-        vector.backends.object.TemporalObjectT(4),
+        azimuthal=vector.backends.object.AzimuthalObjectXY(2, 3),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(1),
+        temporal=vector.backends.object.TemporalObjectT(4),
     )
     out = vec.boostY(gamma=-3)
     assert out.x == pytest.approx(2)
