@@ -344,7 +344,8 @@ class AzimuthalAwkwardXY(AzimuthalAwkward, AzimuthalXY):
         >>> az
         AzimuthalAwkwardXY(<Array [[1, 2], None] type='2 * option[var * int64]'>, <Array [None, [1]] type='2 * option[var * int64]'>)
         >>> az.elements
-        (<Array [[1, 2], None] type='2 * option[var * int64]'>, <Array [None, [1]] type='2 * option[var * int64]'>)"""
+        (<Array [[1, 2], None] type='2 * option[var * int64]'>, <Array [None, [1]] type='2 * option[var * int64]'>)
+    """
 
     __slots__ = ("x", "y")
 
@@ -573,12 +574,12 @@ class TemporalAwkwardTau(TemporalAwkward, TemporalTau):
 
 def _class_to_name(cls: typing.Type[VectorProtocol]) -> str:
     if issubclass(cls, Momentum):
-        if issubclass(cls, Vector2D):
-            return "Momentum2D"
-        elif issubclass(cls, Vector3D):
-            return "Momentum3D"
-        elif issubclass(cls, Vector4D):
-            return "Momentum4D"
+        if issubclass(cls, Vector2D):  # type: ignore[unreachable]
+            return "Momentum2D"  # type: ignore[unreachable]
+        elif issubclass(cls, Vector3D):  # type: ignore[unreachable]
+            return "Momentum3D"  # type: ignore[unreachable]
+        elif issubclass(cls, Vector4D):  # type: ignore[unreachable]
+            return "Momentum4D"  # type: ignore[unreachable]
     else:
         if issubclass(cls, Vector2D):
             return "Vector2D"
@@ -602,9 +603,7 @@ def _no_record(x: ak.Array) -> typing.Optional[ak.Array]:
 
 
 class VectorAwkward:
-    """
-    One dimensional vector class for the Awkward backend.
-    """
+    """One dimensional vector class for the Awkward backend."""
 
     lib: types.ModuleType = numpy
 
@@ -1234,9 +1233,7 @@ class VectorArray2D(VectorAwkward2D, ak.Array):  # type: ignore[misc]
         atol: ScalarCollection = 1e-08,
         equal_nan: BoolCollection = False,
     ) -> BoolCollection:
-        """
-        Like ``np.ndarray.allclose``, but for VectorArray2D.
-        """
+        """Like ``np.ndarray.allclose``, but for VectorArray2D."""
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
 
@@ -1272,9 +1269,7 @@ class VectorArray3D(VectorAwkward3D, ak.Array):  # type: ignore[misc]
         atol: ScalarCollection = 1e-08,
         equal_nan: BoolCollection = False,
     ) -> BoolCollection:
-        """
-        Like ``np.ndarray.allclose``, but for VectorArray3D.
-        """
+        """Like ``np.ndarray.allclose``, but for VectorArray3D."""
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
 
@@ -1310,9 +1305,7 @@ class VectorArray4D(VectorAwkward4D, ak.Array):  # type: ignore[misc]
         atol: ScalarCollection = 1e-08,
         equal_nan: BoolCollection = False,
     ) -> BoolCollection:
-        """
-        Like ``np.ndarray.allclose``, but for VectorArray4D.
-        """
+        """Like ``np.ndarray.allclose``, but for VectorArray4D."""
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
 
@@ -1348,9 +1341,7 @@ class MomentumArray2D(MomentumAwkward2D, ak.Array):  # type: ignore[misc]
         atol: ScalarCollection = 1e-08,
         equal_nan: BoolCollection = False,
     ) -> BoolCollection:
-        """
-        Like ``np.ndarray.allclose``, but for MomentumArray4D.
-        """
+        """Like ``np.ndarray.allclose``, but for MomentumArray4D."""
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
 

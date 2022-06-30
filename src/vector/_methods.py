@@ -171,9 +171,7 @@ class VectorProtocol:
     GenericClass: typing.Type["VectorProtocol"]
 
     def to_Vector2D(self) -> "VectorProtocolPlanar":
-        """
-        Projects this vector/these vectors onto azimuthal coordinates only.
-        """
+        """Projects this vector/these vectors onto azimuthal coordinates only."""
         raise AssertionError
 
     def to_Vector3D(self) -> "VectorProtocolSpatial":
@@ -432,16 +430,12 @@ class VectorProtocolPlanar(VectorProtocol):
 
     @property
     def x(self) -> ScalarCollection:
-        """
-        The Cartesian $x$ coordinate of the vector or every vector in the array.
-        """
+        """The Cartesian $x$ coordinate of the vector or every vector in the array."""
         raise AssertionError
 
     @property
     def y(self) -> ScalarCollection:
-        """
-        The Cartesian $y$ coordinate of the vector or every vector in the array.
-        """
+        """The Cartesian $y$ coordinate of the vector or every vector in the array."""
         raise AssertionError
 
     @property
@@ -456,9 +450,7 @@ class VectorProtocolPlanar(VectorProtocol):
 
     @property
     def rho2(self) -> ScalarCollection:
-        r"""
-        The polar $\rho$ coordinate squared of the vector or every vector in the array.
-        """
+        r"""The polar $\rho$ coordinate squared of the vector or every vector in the array."""
         raise AssertionError
 
     @property
@@ -485,9 +477,7 @@ class VectorProtocolPlanar(VectorProtocol):
         raise AssertionError
 
     def deltaphi(self, other: VectorProtocol) -> ScalarCollection:
-        r"""
-        Signed difference in $\phi$ of ``self`` minus ``other`` (in radians).
-        """
+        r"""Signed difference in $\phi$ of ``self`` minus ``other`` (in radians)."""
         raise AssertionError
 
     def rotateZ(self: SameVectorType, angle: ScalarCollection) -> SameVectorType:
@@ -563,9 +553,7 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
 
     @property
     def z(self) -> ScalarCollection:
-        """
-        The Cartesian $z$ coordinate of the vector or every vector in the array.
-        """
+        """The Cartesian $z$ coordinate of the vector or every vector in the array."""
         raise AssertionError
 
     @property
@@ -602,16 +590,12 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
 
     @property
     def mag(self) -> ScalarCollection:
-        """
-        The magnitude of the vector(s) in 3D (not including any temporal parts).
-        """
+        """The magnitude of the vector(s) in 3D (not including any temporal parts)."""
         raise AssertionError
 
     @property
     def mag2(self) -> ScalarCollection:
-        """
-        The magnitude-squared of the vector(s) in 3D (not including any temporal parts).
-        """
+        """The magnitude-squared of the vector(s) in 3D (not including any temporal parts)."""
         raise AssertionError
 
     def scale3D(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
@@ -645,9 +629,7 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
         raise AssertionError
 
     def deltaeta(self, other: "VectorProtocol") -> ScalarCollection:
-        r"""
-        Signed difference in $\eta$ of ``self`` minus ``other``.
-        """
+        r"""Signed difference in $\eta$ of ``self`` minus ``other``."""
         raise AssertionError
 
     def deltaR(self, other: "VectorProtocol") -> ScalarCollection:
@@ -918,16 +900,12 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         raise AssertionError
 
     def scale4D(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
-        """
-        Same as ``scale``.
-        """
+        """Same as ``scale``."""
         raise AssertionError
 
     @property
     def neg4D(self: SameVectorType) -> SameVectorType:
-        """
-        Same as multiplying by -1.
-        """
+        """Same as multiplying by -1."""
         raise AssertionError
 
     def boost_p4(self: SameVectorType, p4: "VectorProtocolLorentz") -> SameVectorType:
@@ -1180,146 +1158,106 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
 class MomentumProtocolPlanar(VectorProtocolPlanar):
     @property
     def px(self) -> ScalarCollection:
-        """
-        Momentum-synonym for :attr:`vector._methods.VectorProtocolPlanar.x`.
-        """
+        """Momentum-synonym for :attr:`vector._methods.VectorProtocolPlanar.x`."""
         raise AssertionError
 
     @property
     def py(self) -> ScalarCollection:
-        """
-        Momentum-synonym for :attr:`vector._methods.VectorProtocolPlanar.y`.
-        """
+        """Momentum-synonym for :attr:`vector._methods.VectorProtocolPlanar.y`."""
         raise AssertionError
 
     @property
     def pt(self) -> ScalarCollection:
-        """
-        Momentum-synonym for :attr:`vector._methods.VectorProtocolPlanar.rho`.
-        """
+        """Momentum-synonym for :attr:`vector._methods.VectorProtocolPlanar.rho`."""
         raise AssertionError
 
     @property
     def pt2(self) -> ScalarCollection:
-        """
-        Momentum-synonym for :attr:`vector._methods.VectorProtocolPlanar.rho2`.
-        """
+        """Momentum-synonym for :attr:`vector._methods.VectorProtocolPlanar.rho2`."""
         raise AssertionError
 
 
 class MomentumProtocolSpatial(VectorProtocolSpatial, MomentumProtocolPlanar):
     @property
     def pz(self) -> ScalarCollection:
-        """
-        Momentum-synonym for :attr:`vector._methods.VectorProtocolSpatial.z`.
-        """
+        """Momentum-synonym for :attr:`vector._methods.VectorProtocolSpatial.z`."""
         raise AssertionError
 
     @property
     def pseudorapidity(self) -> ScalarCollection:
-        """
-        Momentum-synonym for :attr:`vector._methods.VectorProtocolSpatial.eta`.
-        """
+        """Momentum-synonym for :attr:`vector._methods.VectorProtocolSpatial.eta`."""
         raise AssertionError
 
     @property
     def p(self) -> ScalarCollection:
-        """
-        Momentum-synonym for :attr:`vector._methods.VectorProtocolSpatial.mag`.
-        """
+        """Momentum-synonym for :attr:`vector._methods.VectorProtocolSpatial.mag`."""
         raise AssertionError
 
     @property
     def p2(self) -> ScalarCollection:
-        """
-        Momentum-synonym for :attr:`vector._methods.VectorProtocolSpatial.mag2`.
-        """
+        """Momentum-synonym for :attr:`vector._methods.VectorProtocolSpatial.mag2`."""
         raise AssertionError
 
 
 class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
     @property
     def E(self) -> ScalarCollection:
-        """
-        Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.t`.
-        """
+        """Momentum-synonyor :attr:`vector._methods.VectorProtocolLorentz.t`."""
         raise AssertionError
 
     @property
     def e(self) -> ScalarCollection:
-        """
-        Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.t`.
-        """
+        """Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.t`."""
         raise AssertionError
 
     @property
     def energy(self) -> ScalarCollection:
-        """
-        Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.t`.
-        """
+        """Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.t`."""
         raise AssertionError
 
     @property
     def E2(self) -> ScalarCollection:
-        """
-        Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.t2`.
-        """
+        """Momentum-synonym for :attr:`vector._methods.VectorProtocolLorent2`."""
         raise AssertionError
 
     @property
     def e2(self) -> ScalarCollection:
-        """
-        Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.t2`.
-        """
+        """Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.t2`."""
         raise AssertionError
 
     @property
     def energy2(self) -> ScalarCollection:
-        """
-        Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.t2`.
-        """
+        """Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.t2`."""
         raise AssertionError
 
     @property
     def M(self) -> ScalarCollection:
-        """
-        Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.tau`.
-        """
+        """Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.tau`."""
         raise AssertionError
 
     @property
     def m(self) -> ScalarCollection:
-        """
-        Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.tau`.
-        """
+        """Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.tau`."""
         raise AssertionError
 
     @property
     def mass(self) -> ScalarCollection:
-        """
-        Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.tau`.
-        """
+        """Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.tau`."""
         raise AssertionError
 
     @property
     def M2(self) -> ScalarCollection:
-        """
-        Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.tau2`.
-        """
+        """Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.tau2`."""
         raise AssertionError
 
     @property
     def m2(self) -> ScalarCollection:
-        """
-        Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.tau2`.
-        """
+        """Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.tau2`."""
         raise AssertionError
 
     @property
     def mass2(self) -> ScalarCollection:
-        """
-        Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.tau2`.
-        """
+        """Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.tau2`."""
         raise AssertionError
 
     @property
@@ -1340,9 +1278,7 @@ class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
 
     @property
     def transverse_energy(self) -> ScalarCollection:
-        """
-        Synonym for :attr:`vector._methods.MomentumProtocolLorentz.Et`.
-        """
+        """Synonym for :attr:`vector._methods.MomentumProtocolLorentz.Et`."""
         raise AssertionError
 
     @property
@@ -1363,9 +1299,7 @@ class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
 
     @property
     def transverse_energy2(self) -> ScalarCollection:
-        """
-        Synonym for :attr:`vector._methods.MomentumProtocolLorentz.Et2`.
-        """
+        """Synonym for :attr:`vector._methods.MomentumProtocolLorentz.Et2`."""
         raise AssertionError
 
     @property
@@ -1386,9 +1320,7 @@ class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
 
     @property
     def transverse_mass(self) -> ScalarCollection:
-        """
-        Synonym for :attr:`vector._methods.MomentumProtocolLorentz.Mt`.
-        """
+        """Synonym for :attr:`vector._methods.MomentumProtocolLorentz.Mt`."""
         raise AssertionError
 
     @property
@@ -1409,9 +1341,7 @@ class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
 
     @property
     def transverse_mass2(self) -> ScalarCollection:
-        """
-        Synonym for :attr:`vector._methods.MomentumProtocolLorentz.Mt2`.
-        """
+        """Synonym for :attr:`vector._methods.MomentumProtocolLorentz.Mt2`."""
         raise AssertionError
 
 
@@ -2579,9 +2509,7 @@ class LorentzMomentum(SpatialMomentum, MomentumProtocolLorentz):
 
 
 def dim(v: VectorProtocol) -> int:
-    """
-    Returns the number of dimensions in a vector: 2, 3, or 4.
-    """
+    """Returns the number of dimensions in a vector: 2, 3, or 4."""
     if isinstance(v, Vector2D):
         return 2
     elif isinstance(v, Vector3D):
@@ -2742,7 +2670,7 @@ def _lib_of(*objects: VectorProtocol) -> Module:  # NumPy-like module
         if isinstance(obj, Vector):
             if lib is None:
                 lib = obj.lib
-            elif lib is not obj.lib:
+            elif lib is not obj.lib:  # type: ignore[unreachable]
                 raise TypeError(
                     f"cannot use {lib} and {obj.lib} in the same calculation"
                 )
@@ -2800,7 +2728,7 @@ def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
             continue
         if handler is None:
             handler = obj
-        elif _get_handler_index(obj) > _get_handler_index(handler):
+        elif _get_handler_index(obj) > _get_handler_index(handler):  # type: ignore[unreachable]
             handler = obj
 
     assert handler is not None
@@ -2823,7 +2751,7 @@ def _flavor_of(*objects: VectorProtocol) -> typing.Type[VectorProtocol]:
                 is_momentum = False
             if handler is None:
                 handler = obj
-            elif isinstance(obj, VectorObject):
+            elif isinstance(obj, VectorObject):  # type: ignore[unreachable]
                 pass
             elif isinstance(obj, VectorNumpy):
                 handler = obj
