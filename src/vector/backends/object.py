@@ -759,7 +759,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             lcoords = _coord_object_type[returns[1]](result[2])
-            return cls.ProjectionClass3D(azcoords, lcoords)
+            return cls.ProjectionClass3D(azimuthal=azcoords, longitudinal=lcoords)
 
         elif (
             len(returns) == 3
@@ -771,7 +771,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             lcoords = _coord_object_type[returns[1]](result[2])
-            return cls.ProjectionClass3D(azcoords, lcoords)
+            return cls.ProjectionClass3D(azimuthal=azcoords, longitudinal=lcoords)
 
         elif (
             len(returns) == 3
@@ -1147,7 +1147,9 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             and issubclass(returns[0], Azimuthal)
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
-            return cls.ProjectionClass3D(azcoords, self.longitudinal)
+            return cls.ProjectionClass3D(
+                azimuthal=azcoords, longitudinal=self.longitudinal
+            )
 
         elif (
             len(returns) == 2
@@ -1167,7 +1169,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             lcoords = _coord_object_type[returns[1]](result[2])
-            return cls.ProjectionClass3D(azcoords, lcoords)
+            return cls.ProjectionClass3D(azimuthal=azcoords, longitudinal=lcoords)
 
         elif (
             len(returns) == 3
@@ -1179,7 +1181,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             lcoords = _coord_object_type[returns[1]](result[2])
-            return cls.ProjectionClass3D(azcoords, lcoords)
+            return cls.ProjectionClass3D(azimuthal=azcoords, longitudinal=lcoords)
 
         elif (
             len(returns) == 3
@@ -1773,7 +1775,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             lcoords = _coord_object_type[returns[1]](result[2])
-            return cls.ProjectionClass3D(azcoords, lcoords)
+            return cls.ProjectionClass3D(azimuthal=azcoords, longitudinal=lcoords)
 
         elif (
             len(returns) == 3
@@ -2047,7 +2049,7 @@ def _gather_coordinates(
         if azimuthal is not None and longitudinal is None and temporal is None:
             return planar_class(azimuthal=azimuthal)
         if azimuthal is not None and longitudinal is not None and temporal is None:
-            return spatial_class(azimuthal, longitudinal)
+            return spatial_class(azimuthal=azimuthal, longitudinal=longitudinal)
         if azimuthal is not None and longitudinal is not None and temporal is not None:
             return lorentz_class(azimuthal, longitudinal, temporal)
 
