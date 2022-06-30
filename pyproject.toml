@@ -15,7 +15,7 @@ addopts = ["-ra", "--strict-markers", "--strict-config"]
 testpaths = ["tests"]
 markers = ["slow", "numba", "awkward", "dis"]
 log_cli_level = "DEBUG"
-filterwarnings = ["error"]
+filterwarnings = ["error", "ignore::DeprecationWarning"]
 
 [tool.isort]
 profile = "black"
