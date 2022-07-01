@@ -229,7 +229,7 @@ def _has(
 
 
 def _toarrays(
-    result: typing.Tuple[ScalarCollection, ...]
+    result: typing.Union[typing.Tuple[ScalarCollection, ...], ScalarCollection]
 ) -> typing.Tuple[FloatArray, ...]:
     """
     Converts a tuple of values to a tuple of ``numpy.array``s.
@@ -251,7 +251,7 @@ def _toarrays(
     """
     istuple = True
     if not isinstance(result, tuple):
-        istuple = False  # type: ignore[unreachable]
+        istuple = False
         result = (result,)
     result = tuple(
         x if isinstance(x, numpy.ndarray) else numpy.array([x], numpy.float64)
@@ -263,7 +263,9 @@ def _toarrays(
         return result[0]
 
 
-def _shape_of(result: typing.Tuple[FloatArray, ...]) -> typing.Tuple[int, ...]:
+def _shape_of(
+    result: typing.Union[typing.Tuple[FloatArray, ...], ScalarCollection]
+) -> typing.Tuple[int, ...]:
     """
     Calculates the shape of a tuple of ``numpy.array``s. The shape returned
     is the highest (numerical) value of the shapes present in the tuple.
@@ -285,14 +287,14 @@ def _shape_of(result: typing.Tuple[FloatArray, ...]) -> typing.Tuple[int, ...]:
         (2,)
     """
     if not isinstance(result, tuple):
-        result = (result,)  # type: ignore[unreachable]
-    shape = None
+        result = (result,)
+    shape: typing.Optional[typing.List[int]] = None
     for x in result:
         if hasattr(x, "shape"):
             thisshape = list(x.shape)
         elif isinstance(x, collections.abc.Sized):
             thisshape = [len(x)]
-        if shape is None or thisshape[0] > shape[0]:  # type: ignore[unreachable]
+        if shape is None or thisshape[0] > shape[0]:
             shape = thisshape
 
     assert shape is not None

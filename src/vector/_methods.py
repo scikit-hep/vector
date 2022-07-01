@@ -2665,12 +2665,12 @@ def _lib_of(*objects: VectorProtocol) -> Module:  # NumPy-like module
     Determines the ``lib`` of a vector or set of vectors, complaining
     if they're incompatible.
     """
-    lib = None
+    lib: typing.Optional[typing.Any] = None
     for obj in objects:
         if isinstance(obj, Vector):
             if lib is None:
                 lib = obj.lib
-            elif lib is not obj.lib:  # type: ignore[unreachable]
+            elif lib is not obj.lib:
                 raise TypeError(
                     f"cannot use {lib} and {obj.lib} in the same calculation"
                 )
@@ -2722,13 +2722,13 @@ def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
     objects to NumPy arrays to Awkward Arrays whenever two are used in the
     same formula.
     """
-    handler = None
+    handler: typing.Optional[VectorProtocol] = None
     for obj in objects:
         if not isinstance(obj, Vector):
             continue
         if handler is None:
             handler = obj
-        elif _get_handler_index(obj) > _get_handler_index(handler):  # type: ignore[unreachable]
+        elif _get_handler_index(obj) > _get_handler_index(handler):
             handler = obj
 
     assert handler is not None
@@ -2743,7 +2743,7 @@ def _flavor_of(*objects: VectorProtocol) -> typing.Type[VectorProtocol]:
     from vector.backends.numpy import VectorNumpy
     from vector.backends.object import VectorObject
 
-    handler = None
+    handler: typing.Optional[VectorProtocol] = None
     is_momentum = True
     for obj in objects:
         if isinstance(obj, Vector):
@@ -2751,7 +2751,7 @@ def _flavor_of(*objects: VectorProtocol) -> typing.Type[VectorProtocol]:
                 is_momentum = False
             if handler is None:
                 handler = obj
-            elif isinstance(obj, VectorObject):  # type: ignore[unreachable]
+            elif isinstance(obj, VectorObject):
                 pass
             elif isinstance(obj, VectorNumpy):
                 handler = obj

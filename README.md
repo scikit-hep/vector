@@ -57,63 +57,57 @@ The easiest way to create one or many vectors is with a helper function:
 ### Pure Python vectors
 
 ```python
-vector.obj(x=3, y=4)  # Cartesian 2D vector
-vector.obj(rho=5, phi=0.9273)  # same in polar coordinates
-vector.obj(x=3, y=4).isclose(
-    vector.obj(rho=5, phi=0.9273)
-)  # use "isclose" unless they are exactly equal
-vector.obj(x=3, y=4, z=-2)  # Cartesian 3D vector
-vector.obj(x=3, y=4, z=-2, t=10)  # Cartesian 4D vector
-vector.obj(
-    rho=5, phi=0.9273, eta=-0.39, t=10
-)  # in rho-phi-eta-t cylindrical coordinates
-vector.obj(
-    pt=5, phi=0.9273, eta=-0.39, E=10
-)  # use momentum-synonyms to get a momentum vector
+# Cartesian 2D vector
+vector.obj(x=3, y=4)
+# same in polar coordinates
+vector.obj(rho=5, phi=0.9273)
+# use "isclose" unless they are exactly equal
+vector.obj(x=3, y=4).isclose(vector.obj(rho=5, phi=0.9273))
+# Cartesian 3D vector
+vector.obj(x=3, y=4, z=-2)
+# Cartesian 4D vector
+vector.obj(x=3, y=4, z=-2, t=10)
+# in rho-phi-eta-t cylindrical coordinates
+vector.obj(rho=5, phi=0.9273, eta=-0.39, t=10)
+# use momentum-synonyms to get a momentum vector
+vector.obj(pt=5, phi=0.9273, eta=-0.39, E=10)
 vector.obj(rho=5, phi=0.9273, eta=-0.39, t=10) == vector.obj(
     pt=5, phi=0.9273, eta=-0.390035, E=10
 )
-vector.obj(
-    rho=5, phi=0.9273, eta=-0.39, t=10
-).tau  # geometrical vectors have to use geometrical names ("tau", not "mass")
-vector.obj(
-    pt=5, phi=0.9273, eta=-0.39, E=10
-).mass  # momentum vectors can use momentum names (as well as geometrical ones)
-vector.obj(
-    pt=5, phi=0.9273, theta=1.9513, mass=8.4262
-)  # any combination of azimuthal, longitudinal, and temporal coordinates is allowed
+# geometrical vectors have to use geometrical names ("tau", not "mass")
+vector.obj(rho=5, phi=0.9273, eta=-0.39, t=10).tau
+# momentum vectors can use momentum names (as well as geometrical ones)
+vector.obj(pt=5, phi=0.9273, eta=-0.39, E=10).mass
+# any combination of azimuthal, longitudinal, and temporal coordinates is allowed
+vector.obj(pt=5, phi=0.9273, theta=1.9513, mass=8.4262)
 vector.obj(x=3, y=4, z=-2, t=10).isclose(
     vector.obj(pt=5, phi=0.9273, theta=1.9513, mass=8.4262)
 )
 
 # Test instance type for any level of granularity.
 (
-    isinstance(
-        vector.obj(x=1.1, y=2.2), vector.Vector
-    ),  # is a vector or array of vectors
-    isinstance(vector.obj(x=1.1, y=2.2), vector.Vector2D),  # is 2D (not 3D or 4D)
-    isinstance(
-        vector.obj(x=1.1, y=2.2), vector.VectorObject
-    ),  # is a vector object (not an array)
-    isinstance(vector.obj(px=1.1, py=2.2), vector.Momentum),  # has momentum synonyms
-    isinstance(
-        vector.obj(x=1.1, y=2.2, z=3.3, t=4.4), vector.Planar
-    ),  # has transverse plane (2D, 3D, or 4D)
-    isinstance(
-        vector.obj(x=1.1, y=2.2, z=3.3, t=4.4), vector.Spatial
-    ),  # has all spatial coordinates (3D or 4D)
-    isinstance(
-        vector.obj(x=1.1, y=2.2, z=3.3, t=4.4), vector.Lorentz
-    ),  # has temporal coordinates (4D)
-    isinstance(
-        vector.obj(x=1.1, y=2.2, z=3.3, t=4.4).azimuthal, vector.AzimuthalXY
-    ),  # azimuthal coordinate type
+    # is a vector or array of vectors
+    isinstance(vector.obj(x=1.1, y=2.2), vector.Vector),
+    # is 2D (not 3D or 4D)
+    isinstance(vector.obj(x=1.1, y=2.2), vector.Vector2D),
+    # is a vector object (not an array)
+    isinstance(vector.obj(x=1.1, y=2.2), vector.VectorObject),
+    # has momentum synonyms
+    isinstance(vector.obj(px=1.1, py=2.2), vector.Momentum),
+    # has transverse plane (2D, 3D, or 4D)
+    isinstance(vector.obj(x=1.1, y=2.2, z=3.3, t=4.4), vector.Planar),
+    # has all spatial coordinates (3D or 4D)
+    isinstance(vector.obj(x=1.1, y=2.2, z=3.3, t=4.4), vector.Spatial),
+    # has temporal coordinates (4D)
+    isinstance(vector.obj(x=1.1, y=2.2, z=3.3, t=4.4), vector.Lorentz),
+    # azimuthal coordinate type
+    isinstance(vector.obj(x=1.1, y=2.2, z=3.3, t=4.4).azimuthal, vector.AzimuthalXY),
+    # longitudinal coordinate type
     isinstance(
         vector.obj(x=1.1, y=2.2, z=3.3, t=4.4).longitudinal, vector.LongitudinalZ
-    ),  # longitudinal coordinate type
-    isinstance(
-        vector.obj(x=1.1, y=2.2, z=3.3, t=4.4).temporal, vector.TemporalT
-    ),  # temporal coordinate type
+    ),
+    # temporal coordinate type
+    isinstance(vector.obj(x=1.1, y=2.2, z=3.3, t=4.4).temporal, vector.TemporalT),
 )
 ```
 
@@ -185,10 +179,16 @@ vector.array(
 Existing NumPy arrays can be viewed as arrays of vectors, but it needs to be a [structured array](https://numpy.org/doc/stable/user/basics.rec.html) with recognized field names.
 
 ```python
-# NumPy array         # interpret groups of four values as named fields              # give it vector properties and methods
-np.arange(0, 24, 0.1).view(
-    [("x", float), ("y", float), ("z", float), ("t", float)]
-).view(vector.VectorNumpy4D)
+np.arange(0, 24, 0.1).view(  # NumPy array
+    [
+        ("x", float),
+        ("y", float),
+        ("z", float),
+        ("t", float),
+    ]  # interpret groups of four values as named fields
+).view(
+    vector.VectorNumpy4D
+)  # give it vector properties and methods
 ```
 
 Since `VectorNumpy2D`, `VectorNumpy3D`, `VectorNumpy4D`, and their momentum equivalents are NumPy array subclasses, all of the normal NumPy methods and functions work on them.
@@ -402,16 +402,14 @@ vector.obj(x=1, y=2) @ vector.obj(x=5, y=5)
 The vectors can use different coordinate systems. Conversions are necessary, but minimized for speed and numeric stability.
 
 ```python
-vector.obj(x=3, y=4) @ vector.obj(x=6, y=8)  # both are Cartesian, dot product is exact
-vector.obj(rho=5, phi=0.9273) @ vector.obj(
-    x=6, y=8
-)  # one is polar, dot product is approximate
-vector.obj(x=3, y=4) @ vector.obj(
-    rho=10, phi=0.9273
-)  # one is polar, dot product is approximate
-vector.obj(rho=5, phi=0.9273) @ vector.obj(
-    rho=10, phi=0.9273
-)  # both are polar, a formula that depends on phi differences is used
+# both are Cartesian, dot product is exact
+vector.obj(x=3, y=4) @ vector.obj(x=6, y=8)
+# one is polar, dot product is approximate
+vector.obj(rho=5, phi=0.9273) @ vector.obj(x=6, y=8)
+# one is polar, dot product is approximate
+vector.obj(x=3, y=4) @ vector.obj(rho=10, phi=0.9273)
+# both are polar, a formula that depends on phi differences is used
+vector.obj(rho=5, phi=0.9273) @ vector.obj(rho=10, phi=0.9273)
 ```
 
 In Python, some "operators" are actually built-in functions, such as `abs`.
@@ -465,18 +463,16 @@ vector.arr({"x": [1, 2, 3, 4, 5], "y": [0.1, 0.2, 0.3, 0.4, 0.5]}) + vector.obj(
 Some operations are defined for 2D or 3D vectors, but are usable on higher-dimensional vectors because the additional components can be ignored or are passed through unaffected.
 
 ```python
-vector.obj(rho=1, phi=0.5).deltaphi(
-    vector.obj(rho=2, phi=0.3)
-)  # deltaphi is a planar operation (defined on the transverse plane)
-vector.obj(rho=1, phi=0.5, z=10).deltaphi(
-    vector.obj(rho=2, phi=0.3, theta=1.4)
-)  # but we can use it on 3D vectors
+# deltaphi is a planar operation (defined on the transverse plane)
+vector.obj(rho=1, phi=0.5).deltaphi(vector.obj(rho=2, phi=0.3))
+# but we can use it on 3D vectors
+vector.obj(rho=1, phi=0.5, z=10).deltaphi(vector.obj(rho=2, phi=0.3, theta=1.4))
+# and 4D vectors
 vector.obj(rho=1, phi=0.5, z=10, t=100).deltaphi(
     vector.obj(rho=2, phi=0.3, theta=1.4, tau=1000)
-)  # and 4D vectors
-vector.obj(rho=1, phi=0.5).deltaphi(
-    vector.obj(rho=2, phi=0.3, theta=1.4, tau=1000)
-)  # and mixed dimensionality
+)
+# and mixed dimensionality
+vector.obj(rho=1, phi=0.5).deltaphi(vector.obj(rho=2, phi=0.3, theta=1.4, tau=1000))
 ```
 
 This is especially useful for giving 4D vectors all the capabilities of 3D vectors.

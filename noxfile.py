@@ -1,15 +1,9 @@
-"""
-Use ``nox`` to run various test suites of vector locally.
-
-Execute ``nox`` to run the default sessions ("lint", "tests", "doctests")
-and ``nox --session <session>`` to run a specific session.
-"""
 import shutil
 from pathlib import Path
 
 import nox
 
-ALL_PYTHONS = ["3.6", "3.7", "3.8", "3.9"]
+ALL_PYTHONS = ["3.6", "3.7", "3.8", "3.9", "3.10"]
 
 nox.options.sessions = ["lint", "tests", "doctests"]
 
@@ -47,12 +41,10 @@ def docs(session):
 
     if session.posargs:
         if "serve" in session.posargs:
-            print(  # noqa: T201
-                "Launching docs at http://localhost:8001/ - use Ctrl-C to quit"
-            )
+            print("Launching docs at http://localhost:8001/ - use Ctrl-C to quit")
             session.run("python", "-m", "http.server", "8001", "-d", "_build/html")
         else:
-            print("Unsupported argument to docs")  # noqa: T201
+            print("Unsupported argument to docs")
 
 
 @nox.session
