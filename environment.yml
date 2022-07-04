@@ -9,7 +9,7 @@ dependencies:
   - root >=6.18.04
   - numba >=0.50
   - pip:
-    - "awkward1>=0.2.29"
-    - "uproot==3.*"
-    - "scikit-hep-testdata>=0.2.0"
-    - -e .
+      - "awkward1>=0.2.29"
+      - "uproot==3.*"
+      - "scikit-hep-testdata>=0.2.0"
+      - -e .

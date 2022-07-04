@@ -229,7 +229,7 @@ def _has(
 
 
 def _toarrays(
-    result: typing.Tuple[ScalarCollection, ...]
+    result: typing.Union[typing.Tuple[ScalarCollection, ...], ScalarCollection]
 ) -> typing.Tuple[FloatArray, ...]:
     """
     Converts a tuple of values to a tuple of ``numpy.array``s.
@@ -263,7 +263,9 @@ def _toarrays(
         return result[0]
 
 
-def _shape_of(result: typing.Tuple[FloatArray, ...]) -> typing.Tuple[int, ...]:
+def _shape_of(
+    result: typing.Union[typing.Tuple[FloatArray, ...], ScalarCollection]
+) -> typing.Tuple[int, ...]:
     """
     Calculates the shape of a tuple of ``numpy.array``s. The shape returned
     is the highest (numerical) value of the shapes present in the tuple.
@@ -286,7 +288,7 @@ def _shape_of(result: typing.Tuple[FloatArray, ...]) -> typing.Tuple[int, ...]:
     """
     if not isinstance(result, tuple):
         result = (result,)
-    shape = None
+    shape: typing.Optional[typing.List[int]] = None
     for x in result:
         if hasattr(x, "shape"):
             thisshape = list(x.shape)
@@ -315,34 +317,26 @@ class GetItem:
 
 
 class CoordinatesNumpy:
-    """
-    Coordinates class for the Numpy backend.
-    """
+    """Coordinates class for the Numpy backend."""
 
     lib = numpy
     dtype: "numpy.dtype[typing.Any]"
 
 
 class AzimuthalNumpy(CoordinatesNumpy, Azimuthal):
-    """
-    Azimuthal class for the NumPy backend.
-    """
+    """Azimuthal class for the NumPy backend."""
 
     ObjectClass: typing.Type[vector.backends.object.AzimuthalObject]
 
 
 class LongitudinalNumpy(CoordinatesNumpy, Longitudinal):
-    """
-    Longitudinal class for the NumPy backend.
-    """
+    """Longitudinal class for the NumPy backend."""
 
     ObjectClass: typing.Type[vector.backends.object.LongitudinalObject]
 
 
 class TemporalNumpy(CoordinatesNumpy, Temporal):
-    """
-    Temporal class for the NumPy backend.
-    """
+    """Temporal class for the NumPy backend."""
 
     ObjectClass: typing.Type[vector.backends.object.TemporalObject]
 
@@ -389,16 +383,12 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # typ
 
     @property
     def x(self) -> FloatArray:
-        """
-        The ``x`` coordinates.
-        """
+        """The ``x`` coordinates."""
         return self["x"]
 
     @property
     def y(self) -> FloatArray:
-        """
-        The ``y`` coordinates.
-        """
+        """The ``y`` coordinates."""
         return self["y"]
 
 
@@ -444,16 +434,12 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray)
 
     @property
     def rho(self) -> FloatArray:
-        """
-        The ``rho`` coordinates.
-        """
+        """The ``rho`` coordinates."""
         return self["rho"]
 
     @property
     def phi(self) -> FloatArray:
-        """
-        The ``phi`` coordinates.
-        """
+        """The ``phi`` coordinates."""
         return self["phi"]
 
 
@@ -498,9 +484,7 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):
 
     @property
     def z(self) -> FloatArray:
-        """
-        The ``z`` coordinates.
-        """
+        """The ``z`` coordinates."""
         return self["z"]
 
 
@@ -547,9 +531,7 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, Floa
 
     @property
     def theta(self) -> FloatArray:
-        """
-        The ``theta`` coordinates.
-        """
+        """The ``theta`` coordinates."""
         return self["theta"]
 
 
@@ -594,9 +576,7 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArr
 
     @property
     def eta(self) -> FloatArray:
-        """
-        The ``eta`` coordinates.
-        """
+        """The ``eta`` coordinates."""
         return self["eta"]
 
 
@@ -641,16 +621,12 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ig
 
     @property
     def t(self) -> FloatArray:
-        """
-        The ``t`` coordinates.
-        """
+        """The ``t`` coordinates."""
         return self["t"]
 
 
 class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type: ignore[misc]
-    """
-    Class for the ``tau`` (temporal) coordinate of NumPy backend.
-    """
+    """Class for the ``tau`` (temporal) coordinate of NumPy backend."""
 
     ObjectClass = vector.backends.object.TemporalObjectTau
     _IS_MOMENTUM = False
@@ -682,16 +658,12 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type
 
     @property
     def tau(self) -> FloatArray:
-        """
-        The ``tau`` coordinates.
-        """
+        """The ``tau`` coordinates."""
         return self["tau"]
 
 
 class VectorNumpy(Vector, GetItem):
-    """
-    One dimensional vector class for the NumPy backend.
-    """
+    """One dimensional vector class for the NumPy backend."""
 
     lib = numpy
     dtype: "numpy.dtype[typing.Any]"
@@ -703,9 +675,7 @@ class VectorNumpy(Vector, GetItem):
         atol: typing.Union[float, FloatArray] = 1e-08,
         equal_nan: typing.Union[bool, FloatArray] = False,
     ) -> FloatArray:
-        """
-        Like ``np.ndarray.allclose``, but for VectorNumpy.
-        """
+        """Like ``np.ndarray.allclose``, but for VectorNumpy."""
         return self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan).all()
 
     def __eq__(self, other: typing.Any) -> typing.Any:
@@ -975,9 +945,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
     ]
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "VectorNumpy2D":
-        """
-        Returns the object of ``VectorNumpy2D``. Behaves as ``__init__`` in this case.
-        """
+        """Returns the object of ``VectorNumpy2D``. Behaves as ``__init__`` in this case."""
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             array = _array_from_columns(args[0])
         else:
@@ -1241,9 +1209,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
     ]
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "VectorNumpy3D":
-        """
-        Returns the object of ``VectorNumpy3D``. Behaves as ``__init__`` in this case.
-        """
+        """Returns the object of ``VectorNumpy3D``. Behaves as ``__init__`` in this case."""
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             array = _array_from_columns(args[0])
         else:
@@ -1283,17 +1249,13 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
 
     @property
     def azimuthal(self) -> AzimuthalNumpy:
-        """
-        Returns the azimuthal type class for the given ``VectorNumpy3D`` object.
-        """
+        """Returns the azimuthal type class for the given ``VectorNumpy3D`` object."""
         # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
         return self.view(self._azimuthal_type)  # type: ignore[return-value]
 
     @property
     def longitudinal(self) -> LongitudinalNumpy:
-        """
-        Returns the longitudinal type class for the given ``VectorNumpy3D`` object.
-        """
+        """Returns the longitudinal type class for the given ``VectorNumpy3D`` object."""
         # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
         return self.view(self._longitudinal_type)  # type: ignore[return-value]
 
@@ -1537,9 +1499,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
     ]
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "VectorNumpy4D":
-        """
-        Returns the object of ``VectorNumpy4D``. Behaves as ``__init__`` in this case.
-        """
+        """Returns the object of ``VectorNumpy4D``. Behaves as ``__init__`` in this case."""
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             array = _array_from_columns(args[0])
         else:
@@ -1590,25 +1550,19 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
 
     @property
     def azimuthal(self) -> AzimuthalNumpy:
-        """
-        Returns the azimuthal type class for the given ``VectorNumpy4D`` object.
-        """
+        """Returns the azimuthal type class for the given ``VectorNumpy4D`` object."""
         # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
         return self.view(self._azimuthal_type)  # type: ignore[return-value]
 
     @property
     def longitudinal(self) -> LongitudinalNumpy:
-        """
-        Returns the longitudinal type class for the given ``Vectornumpy4D`` object.
-        """
+        """Returns the longitudinal type class for the given ``Vectornumpy4D`` object."""
         # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
         return self.view(self._longitudinal_type)  # type: ignore[return-value]
 
     @property
     def temporal(self) -> TemporalNumpy:
-        """
-        Returns the azimuthal type class for the given ``VectorNumpy4D`` object.
-        """
+        """Returns the azimuthal type class for the given ``VectorNumpy4D`` object."""
         # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
         return self.view(self._temporal_type)  # type: ignore[return-value]
 
@@ -1897,7 +1851,6 @@ def array(*args: typing.Any, **kwargs: typing.Any) -> VectorNumpy:
     are not numbers, mathematical operations will fail. Usually, you want them to be
     ``np.integer`` or ``np.floating``.
     """
-
     names: typing.Tuple[str, ...]
     if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
         names = tuple(args[0].keys())

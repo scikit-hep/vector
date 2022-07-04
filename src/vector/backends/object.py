@@ -59,41 +59,31 @@ from vector._typeutils import FloatArray
 
 
 class CoordinatesObject:
-    """
-    Coordinates class for the Object backend.
-    """
+    """Coordinates class for the Object backend."""
 
     pass
 
 
 class AzimuthalObject(CoordinatesObject, Azimuthal):
-    """
-    Azimuthal class for the Object backend.
-    """
+    """Azimuthal class for the Object backend."""
 
     pass
 
 
 class LongitudinalObject(CoordinatesObject, Longitudinal):
-    """
-    Longitudinal class for the Object backend.
-    """
+    """Longitudinal class for the Object backend."""
 
     pass
 
 
 class TemporalObject(CoordinatesObject, Temporal):
-    """
-    Temporal class for the Object backend.
-    """
+    """Temporal class for the Object backend."""
 
     pass
 
 
 class TupleXY(typing.NamedTuple):
-    """
-    ``x`` and ``y`` coordinates as a ``NamedTuple``.
-    """
+    """``x`` and ``y`` coordinates as a ``NamedTuple``."""
 
     x: float
     y: float
@@ -122,9 +112,7 @@ class AzimuthalObjectXY(AzimuthalObject, AzimuthalXY, TupleXY):
 
 
 class TupleRhoPhi(typing.NamedTuple):
-    """
-    ``rho`` and ``phi`` coordinates as a ``NamedTuple``.
-    """
+    """``rho`` and ``phi`` coordinates as a ``NamedTuple``."""
 
     rho: float
     phi: float
@@ -153,9 +141,7 @@ class AzimuthalObjectRhoPhi(AzimuthalObject, AzimuthalRhoPhi, TupleRhoPhi):
 
 
 class TupleZ(typing.NamedTuple):
-    """
-    ``z`` coordinate as a ``NamedTuple``.
-    """
+    """``z`` coordinate as a ``NamedTuple``."""
 
     z: float
 
@@ -183,9 +169,7 @@ class LongitudinalObjectZ(LongitudinalObject, LongitudinalZ, TupleZ):
 
 
 class TupleTheta(typing.NamedTuple):
-    """
-    ``theta`` coordinates as a ``NamedTuple``.
-    """
+    """``theta`` coordinates as a ``NamedTuple``."""
 
     theta: float
 
@@ -213,9 +197,7 @@ class LongitudinalObjectTheta(LongitudinalObject, LongitudinalTheta, TupleTheta)
 
 
 class TupleEta(typing.NamedTuple):
-    """
-    ``eta`` coordinate as a ``NamedTuple``.
-    """
+    """``eta`` coordinate as a ``NamedTuple``."""
 
     eta: float
 
@@ -245,9 +227,7 @@ class LongitudinalObjectEta(LongitudinalObject, LongitudinalEta, TupleEta):
 
 
 class TupleT(typing.NamedTuple):
-    """
-    ``t`` coordinate as a ``NamedTuple``.
-    """
+    """``t`` coordinate as a ``NamedTuple``."""
 
     t: float
 
@@ -277,9 +257,7 @@ class TemporalObjectT(TemporalObject, TemporalT, TupleT):
 
 
 class TupleTau(typing.NamedTuple):
-    """
-    ``tau`` coordinate as a ``NamedTuple``.
-    """
+    """``tau`` coordinate as a ``NamedTuple``."""
 
     tau: float
 
@@ -351,9 +329,7 @@ def _replace_data(obj: typing.Any, result: typing.Any) -> typing.Any:
 
 
 class VectorObject(Vector):
-    """
-    One dimensional vector class for the object backend.
-    """
+    """One dimensional vector class for the object backend."""
 
     lib = numpy
 
