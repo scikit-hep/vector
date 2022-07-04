@@ -14,6 +14,7 @@
 [![PyPI version][pypi-version]][pypi-link]
 [![Conda latest release][conda-version]][conda-link]
 [![DOI][zenodo-badge]][zenodo-link]
+[![LICENSE][license-badge]][license-link]
 [![Scikit-HEP][sk-badge]][sk-link]
 
 Vector is a Python 3.6+ library for 2D, 3D, and [Lorentz vectors](https://en.wikipedia.org/wiki/Special_relativity#Physics_in_spacetime), especially _arrays of vectors_, to solve common physics problems in a NumPy-like way.
@@ -682,6 +683,8 @@ Support for this work was provided by the National Science Foundation cooperativ
 [github-discussions-link]: https://github.com/scikit-hep/vector/discussions
 [gitter-badge]: https://badges.gitter.im/Scikit-HEP/vector.svg
 [gitter-link]: https://gitter.im/Scikit-HEP/vector?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+[license-badge]: https://img.shields.io/badge/License-BSD_3--Clause-blue.svg
+[license-link]: https://opensource.org/licenses/BSD-3-Clause
 [pre-commit-badge]: https://results.pre-commit.ci/badge/github/scikit-hep/vector/develop.svg
 [pre-commit-link]: https://results.pre-commit.ci/repo/github/scikit-hep/vector
 [pypi-link]: https://pypi.org/project/vector/

@@ -44,4 +44,5 @@ ignore = [
   "environment.yml",
   "src/vector/version.py",
   "docs/**",
+  "noxfile.py",
 ]
