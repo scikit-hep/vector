@@ -75,7 +75,7 @@ test = [
     "pytest>=6",
     "xdoctest>=1.0.0",
 ]
-test_extras = [
+testextras = [
     "spark-parser",
     "uncompyle6",
 ]
