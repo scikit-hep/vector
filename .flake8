@@ -1,0 +1,6 @@
+[flake8]
+extend-select = B9
+extend-ignore = E501, E203, D103, D102, D101, D100, D107, D105, D205, D400, D401, D104, D412
+per-file-ignores =
+    tests/*: T
+    noxfile.py: T
