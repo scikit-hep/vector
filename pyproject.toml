@@ -1,9 +1,124 @@
 [build-system]
 requires = [
-    "setuptools>=42.0",
-    "setuptools_scm[toml]>=3.4"
+    "hatchling>=1.4.1",
 ]
-build-backend = "setuptools.build_meta"
+build-backend = "hatchling.build"
+
+[project]
+name = "vector"
+description = "Vector classes and utilities"
+readme = { file = "README.md", content-type = "text/markdown" }
+maintainers = [ {name = "The Scikit-HEP admins", email = "scikit-hep-admins@googlegroups.com"} ]
+license = "BSD-3-Clause"
+requires-python = ">=3.6"
+keywords = [
+    "vector",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Typing :: Typed",
+]
+dependencies = [
+    "importlib-metadata>=0.22;python_version<\"3.8\"",
+    "numpy>=1.13.3",
+    "packaging>=19.0",
+    "typing-extensions;python_version<\"3.8\"",
+]
+dynamic = [
+    "version",
+]
+
+[[project.authors]]
+name = "Jim Pivarski, Henry Schreiner, Eduardo Rodrigues"
+email = "eduardo.rodrigues@cern.ch"
+
+[project.optional-dependencies]
+all = [
+    "awkward",
+    "awkward>=1.2.0",
+    "awkward>=1.2.0",
+    "ipykernel",
+    "myst-parser>0.13",
+    "nbsphinx",
+    "nbsphinx",
+    "numba>=0.50; python_version>=\"3.6\"",
+    "pytest-cov>=3.0.0",
+    "pytest-cov>=3.0.0",
+    "pytest>=6",
+    "pytest>=6",
+    "spark-parser",
+    "sphinx-math-dollar",
+    "Sphinx>=4.0",
+    "sphinx_book_theme>=0.0.42",
+    "sphinx_copybutton",
+    "uncompyle6",
+    "xdoctest>=1.0.0",
+    "xdoctest>=1.0.0",
+]
+awkward = [
+    "awkward>=1.2.0",
+]
+dev = [
+    "awkward>=1.2.0",
+    "numba>=0.50; python_version>=\"3.6\"",
+    "pytest-cov>=3.0.0",
+    "pytest>=6",
+    "xdoctest>=1.0.0",
+]
+docs = [
+    "awkward",
+    "ipykernel",
+    "myst-parser>0.13",
+    "nbsphinx",
+    "nbsphinx",
+    "sphinx-math-dollar",
+    "Sphinx>=4.0",
+    "sphinx_book_theme>=0.0.42",
+    "sphinx_copybutton",
+]
+test = [
+    "pytest-cov>=3.0.0",
+    "pytest>=6",
+    "xdoctest>=1.0.0",
+]
+test_extras = [
+    "spark-parser",
+    "uncompyle6",
+]
+
+[project.entry-points.numba_extensions]
+init = "vector:register_numba"
+
+[project.urls]
+"Bug Tracker" = "https://github.com/scikit-hep/vector/issues"
+Changelog = "https://vector.readthedocs.io/en/latest/changelog.html"
+Discussions = "https://github.com/scikit-hep/vector/discussions"
+Documentation = "https://vector.readthedocs.io/"
+Homepage = "https://github.com/scikit-hep/vector"
+
+[tool.hatch.version]
+path = "vector/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+]
 
 [tool.setuptools_scm]
 write_to = "src/vector/version.py"
@@ -11,23 +126,44 @@ write_to = "src/vector/version.py"
 [tool.pytest.ini_options]
 minversion = "6.0"
 xfail_strict = true
-addopts = ["-ra", "--strict-markers", "--strict-config"]
-testpaths = ["tests"]
-markers = ["slow", "numba", "awkward", "dis"]
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+]
+testpaths = [
+    "tests",
+]
+markers = [
+    "slow",
+    "numba",
+    "awkward",
+    "dis",
+]
 log_cli_level = "DEBUG"
-filterwarnings = ["error", "ignore::DeprecationWarning", "ignore::UserWarning"]
+filterwarnings = [
+    "error",
+    "ignore::DeprecationWarning",
+    "ignore::UserWarning",
+]
 
 [tool.isort]
 profile = "black"
 
 [tool.mypy]
-files = ["src/vector"]
+files = [
+    "src/vector",
+]
 python_version = "3.8"
 strict = true
 warn_return_any = false
 show_error_codes = true
 warn_unreachable = true
-enable_error_code = ["ignore-without-code", "truthy-bool", "redundant-expr"]
+enable_error_code = [
+    "ignore-without-code",
+    "truthy-bool",
+    "redundant-expr",
+]
 
 [[tool.mypy.overrides]]
 module = "vector._compute.*.*"
@@ -35,14 +171,17 @@ disallow_untyped_defs = false
 disallow_untyped_calls = false
 
 [[tool.mypy.overrides]]
-module = ["numba.*", "awkward.*"]
+module = [
+    "numba.*",
+    "awkward.*",
+]
 ignore_missing_imports = true
 
 [tool.check-manifest]
 ignore = [
-  ".*",
-  "environment.yml",
-  "src/vector/version.py",
-  "docs/**",
-  "noxfile.py",
+    ".*",
+    "environment.yml",
+    "src/vector/version.py",
+    "docs/**",
+    "noxfile.py",
 ]

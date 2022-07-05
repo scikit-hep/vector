@@ -1,4 +1,3 @@
-import shutil
 from pathlib import Path
 
 import nox
@@ -45,14 +44,3 @@ def docs(session):
             session.run("python", "-m", "http.server", "8001", "-d", "_build/html")
         else:
             print("Unsupported argument to docs")
-
-
-@nox.session
-def build(session):
-    """Build an SDist and wheel."""
-    build_p = DIR.joinpath("build")
-    if build_p.exists():
-        shutil.rmtree(build_p)
-
-    session.install("build")
-    session.run("python", "-m", "build")
