@@ -1,6 +1,7 @@
 [build-system]
 requires = [
     "hatchling>=1.4.1",
+    "hatch-vcs",
 ]
 build-backend = "hatchling.build"
 
@@ -50,17 +51,12 @@ email = "eduardo.rodrigues@cern.ch"
 
 [project.optional-dependencies]
 all = [
-    "awkward",
-    "awkward>=1.2.0",
     "awkward>=1.2.0",
     "ipykernel",
     "myst-parser>0.13",
     "nbsphinx",
-    "nbsphinx",
     "numba>=0.50; python_version>=\"3.6\"",
     "pytest-cov>=3.0.0",
-    "pytest-cov>=3.0.0",
-    "pytest>=6",
     "pytest>=6",
     "spark-parser",
     "sphinx-math-dollar",
@@ -68,7 +64,6 @@ all = [
     "sphinx_book_theme>=0.0.42",
     "sphinx_copybutton",
     "uncompyle6",
-    "xdoctest>=1.0.0",
     "xdoctest>=1.0.0",
 ]
 awkward = [
@@ -85,7 +80,6 @@ docs = [
     "awkward",
     "ipykernel",
     "myst-parser>0.13",
-    "nbsphinx",
     "nbsphinx",
     "sphinx-math-dollar",
     "Sphinx>=4.0",
@@ -112,16 +106,14 @@ Discussions = "https://github.com/scikit-hep/vector/discussions"
 Documentation = "https://vector.readthedocs.io/"
 Homepage = "https://github.com/scikit-hep/vector"
 
-[tool.hatch.version]
-path = "vector/__init__.py"
+[tool.hatch]
+version.source = "vcs"
+build.hooks.vcs.version-file = "src/vector/version.py"
 
 [tool.hatch.build.targets.sdist]
 include = [
     "/src",
 ]
-
-[tool.setuptools_scm]
-write_to = "src/vector/version.py"
 
 [tool.pytest.ini_options]
 minversion = "6.0"
