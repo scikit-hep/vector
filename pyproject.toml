@@ -1,6 +1,6 @@
 [build-system]
 requires = [
-    "hatchling>=1.4.1",
+    "hatchling",
     "hatch-vcs",
 ]
 build-backend = "hatchling.build"
@@ -50,22 +50,6 @@ name = "Jim Pivarski, Henry Schreiner, Eduardo Rodrigues"
 email = "eduardo.rodrigues@cern.ch"
 
 [project.optional-dependencies]
-all = [
-    "awkward>=1.2.0",
-    "ipykernel",
-    "myst-parser>0.13",
-    "nbsphinx",
-    "numba>=0.50; python_version>=\"3.6\"",
-    "pytest-cov>=3.0.0",
-    "pytest>=6",
-    "spark-parser",
-    "sphinx-math-dollar",
-    "Sphinx>=4.0",
-    "sphinx_book_theme>=0.0.42",
-    "sphinx_copybutton",
-    "uncompyle6",
-    "xdoctest>=1.0.0",
-]
 awkward = [
     "awkward>=1.2.0",
 ]
@@ -109,11 +93,6 @@ Homepage = "https://github.com/scikit-hep/vector"
 [tool.hatch]
 version.source = "vcs"
 build.hooks.vcs.version-file = "src/vector/version.py"
-
-[tool.hatch.build.targets.sdist]
-include = [
-    "/src",
-]
 
 [tool.pytest.ini_options]
 minversion = "6.0"

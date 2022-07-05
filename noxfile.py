@@ -44,3 +44,10 @@ def docs(session):
             session.run("python", "-m", "http.server", "8001", "-d", "_build/html")
         else:
             print("Unsupported argument to docs")
+
+
+@nox.session
+def build(session):
+    """Build an SDist and wheel."""
+    session.install("build")
+    session.run("python", "-m", "build")
