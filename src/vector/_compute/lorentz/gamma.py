@@ -10,6 +10,7 @@
     Lorentz.gamma(self)
 """
 import typing
+from math import inf
 
 import numpy
 
@@ -31,53 +32,93 @@ from vector._methods import (
 
 
 def xy_z_t(lib, x, y, z, t):
-    return lib.nan_to_num(t / tau.xy_z_t(lib, x, y, z, t), nan=lib.inf)
+    return lib.nan_to_num(
+        t / tau.xy_z_t(lib, x, y, z, t), nan=lib.inf, posinf=inf, neginf=-inf
+    )
 
 
 def xy_z_tau(lib, x, y, z, tau):
-    return lib.nan_to_num(t.xy_z_tau(lib, x, y, z, tau) / tau, nan=lib.inf)
+    return lib.nan_to_num(
+        t.xy_z_tau(lib, x, y, z, tau) / tau, nan=lib.inf, posinf=inf, neginf=-inf
+    )
 
 
 def xy_theta_t(lib, x, y, theta, t):
-    return lib.nan_to_num(t / tau.xy_theta_t(lib, x, y, theta, t), nan=lib.inf)
+    return lib.nan_to_num(
+        t / tau.xy_theta_t(lib, x, y, theta, t), nan=lib.inf, posinf=inf, neginf=-inf
+    )
 
 
 def xy_theta_tau(lib, x, y, theta, tau):
-    return lib.nan_to_num(t.xy_theta_tau(lib, x, y, theta, tau) / tau, nan=lib.inf)
+    return lib.nan_to_num(
+        t.xy_theta_tau(lib, x, y, theta, tau) / tau,
+        nan=lib.inf,
+        posinf=inf,
+        neginf=-inf,
+    )
 
 
 def xy_eta_t(lib, x, y, eta, t):
-    return lib.nan_to_num(t / tau.xy_eta_t(lib, x, y, eta, t), nan=lib.inf)
+    return lib.nan_to_num(
+        t / tau.xy_eta_t(lib, x, y, eta, t), nan=lib.inf, posinf=inf, neginf=-inf
+    )
 
 
 def xy_eta_tau(lib, x, y, eta, tau):
-    return lib.nan_to_num(t.xy_eta_tau(lib, x, y, eta, tau) / tau, nan=lib.inf)
+    return lib.nan_to_num(
+        t.xy_eta_tau(lib, x, y, eta, tau) / tau, nan=lib.inf, posinf=inf, neginf=-inf
+    )
 
 
 def rhophi_z_t(lib, rho, phi, z, t):
-    return lib.nan_to_num(t / tau.rhophi_z_t(lib, rho, phi, z, t), nan=lib.inf)
+    return lib.nan_to_num(
+        t / tau.rhophi_z_t(lib, rho, phi, z, t), nan=lib.inf, posinf=inf, neginf=-inf
+    )
 
 
 def rhophi_z_tau(lib, rho, phi, z, tau):
-    return lib.nan_to_num(t.rhophi_z_tau(lib, rho, phi, z, tau) / tau, nan=lib.inf)
+    return lib.nan_to_num(
+        t.rhophi_z_tau(lib, rho, phi, z, tau) / tau,
+        nan=lib.inf,
+        posinf=inf,
+        neginf=-inf,
+    )
 
 
 def rhophi_theta_t(lib, rho, phi, theta, t):
-    return lib.nan_to_num(t / tau.rhophi_theta_t(lib, rho, phi, theta, t), nan=lib.inf)
+    return lib.nan_to_num(
+        t / tau.rhophi_theta_t(lib, rho, phi, theta, t),
+        nan=lib.inf,
+        posinf=inf,
+        neginf=-inf,
+    )
 
 
 def rhophi_theta_tau(lib, rho, phi, theta, tau):
     return lib.nan_to_num(
-        t.rhophi_theta_tau(lib, rho, phi, theta, tau) / tau, nan=lib.inf
+        t.rhophi_theta_tau(lib, rho, phi, theta, tau) / tau,
+        nan=lib.inf,
+        posinf=inf,
+        neginf=-inf,
     )
 
 
 def rhophi_eta_t(lib, rho, phi, eta, t):
-    return lib.nan_to_num(t / tau.rhophi_eta_t(lib, rho, phi, eta, t), nan=lib.inf)
+    return lib.nan_to_num(
+        t / tau.rhophi_eta_t(lib, rho, phi, eta, t),
+        nan=lib.inf,
+        posinf=inf,
+        neginf=-inf,
+    )
 
 
 def rhophi_eta_tau(lib, rho, phi, eta, tau):
-    return lib.nan_to_num(t.rhophi_eta_tau(lib, rho, phi, eta, tau) / tau, nan=lib.inf)
+    return lib.nan_to_num(
+        t.rhophi_eta_tau(lib, rho, phi, eta, tau) / tau,
+        nan=lib.inf,
+        posinf=inf,
+        neginf=-inf,
+    )
 
 
 dispatch_map = {

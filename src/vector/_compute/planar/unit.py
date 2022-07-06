@@ -9,6 +9,7 @@
     Planar.unit(self)
 """
 import typing
+from math import inf
 
 import numpy
 
@@ -24,7 +25,10 @@ from vector._methods import (
 
 def xy(lib, x, y):
     norm = rho.xy(lib, x, y)
-    return (lib.nan_to_num(x / norm, nan=0), lib.nan_to_num(y / norm, nan=0))
+    return (
+        lib.nan_to_num(x / norm, nan=0, posinf=inf, neginf=-inf),
+        lib.nan_to_num(y / norm, nan=0, posinf=inf, neginf=-inf),
+    )
 
 
 def rhophi(lib, rho, phi):

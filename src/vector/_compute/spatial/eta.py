@@ -37,7 +37,9 @@ def xy_z(lib, x, y, z):
 
 
 def xy_theta(lib, x, y, theta):
-    return lib.nan_to_num(-lib.log(lib.tan(0.5 * theta)), nan=0.0)
+    return lib.nan_to_num(
+        -lib.log(lib.tan(0.5 * theta)), nan=0.0, posinf=inf, neginf=-inf
+    )
 
 
 def xy_eta(lib, x, y, eta):
