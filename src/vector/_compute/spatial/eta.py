@@ -3,15 +3,14 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-import typing
-from math import inf
-
 """
 .. code-block:: python
 
     @property
     Spatial.eta(self)
 """
+import typing
+from math import inf, nan
 
 import numpy
 
@@ -30,11 +29,11 @@ from vector._methods import (
 
 def xy_z(lib, x, y, z):
     return lib.nan_to_num(
-        lib.arctanh(z / lib.sqrt(x**2 + y**2 + z**2)),
-        nan=0.0,
+        lib.arcsinh(z / lib.sqrt(x**2 + y**2)),
+        nan=lib.nan_to_num((z != 0) * inf, posinf=nan),
         posinf=inf,
         neginf=-inf,
-    ) * lib.absolute(lib.sign(z))
+    )
 
 
 def xy_theta(lib, x, y, theta):
@@ -49,8 +48,11 @@ def xy_eta(lib, x, y, eta):
 
 def rhophi_z(lib, rho, phi, z):
     return lib.nan_to_num(
-        lib.arctanh(z / lib.sqrt(rho**2 + z**2)), nan=0.0, posinf=inf, neginf=-inf
-    ) * lib.absolute(lib.sign(z))
+        lib.arcsinh(z / rho),
+        nan=lib.nan_to_num((z != 0) * inf, posinf=nan),
+        posinf=inf,
+        neginf=-inf,
+    )
 
 
 def rhophi_theta(lib, rho, phi, theta):

@@ -3,15 +3,14 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-import typing
-from math import inf
-
 """
 .. code-block:: python
 
     @property
     Spatial.cottheta(self)
 """
+import typing
+from math import inf
 
 import numpy
 

@@ -9,7 +9,9 @@ from setuptools import setup
 extras = {
     "awkward": ["awkward>=1.2.0"],
     "test": [
-        "pytest>=4.6",
+        "pytest>=6",
+        "pytest-cov>=3.0.0",
+        "xdoctest>=1.0.0",
     ],
     "test_extras": [
         "uncompyle6",
@@ -18,9 +20,9 @@ extras = {
     "docs": [
         "nbsphinx",
         "myst-parser>0.13",
-        "Sphinx~=3.0",
+        "Sphinx>=4.0",
         "sphinx_copybutton",
-        "sphinx_book_theme~=0.0.42",
+        "sphinx_book_theme>=0.0.42",
         "nbsphinx",
         "sphinx-math-dollar",
         "ipykernel",

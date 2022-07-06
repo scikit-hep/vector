@@ -5,46 +5,18 @@ Subpackages
 -----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 7
 
-   vector._backends
-   vector._compute
+   backends/vector.backends
+   compute/vector._compute
 
 Submodules
 ----------
 
-vector.\_methods module
------------------------
+.. toctree::
+   :maxdepth: 1
 
-.. automodule:: vector._methods
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
+   vector._methods
+   vector._typeutils
+   vector.version
 
-vector.\_typeutils module
--------------------------
-
-.. automodule:: vector._typeutils
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
-
-vector.version module
----------------------
-
-.. automodule:: vector.version
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
-
-Module contents
----------------
-
-.. automodule:: vector
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:

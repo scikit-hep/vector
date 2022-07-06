@@ -31,6 +31,8 @@ import vector._compute.lorentz.boostY_beta  # noqa: F401
 import vector._compute.lorentz.boostY_gamma  # noqa: F401
 import vector._compute.lorentz.boostZ_beta  # noqa: F401
 import vector._compute.lorentz.boostZ_gamma  # noqa: F401
+import vector._compute.lorentz.deltaRapidityPhi  # noqa: F401
+import vector._compute.lorentz.deltaRapidityPhi2  # noqa: F401
 import vector._compute.lorentz.dot  # noqa: F401
 import vector._compute.lorentz.equal  # noqa: F401
 import vector._compute.lorentz.Et  # noqa: F401

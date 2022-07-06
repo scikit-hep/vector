@@ -371,6 +371,9 @@ allowed_lib_functions = [
     "arctan2",
     "sinh",
     "cosh",
+    "tanh",
+    "arcsinh",
+    "arccosh",
     "arctanh",
     "isclose",
 ]

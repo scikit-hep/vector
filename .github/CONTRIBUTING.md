@@ -1,7 +1,6 @@
-
 ## Development install
 
-You should *always* use a virtual environment when developing software. Setup:
+You should _always_ use a virtual environment when developing software. Setup:
 
 ```bash
 python3 -m venv .env
@@ -20,7 +19,6 @@ python -m ipykernel install --user --name vector # For notebooks
 ```
 
 You can update the environment with `conda env update`.
-
 
 ## Docs
 

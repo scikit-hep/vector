@@ -6,13 +6,13 @@
 import numpy
 import pytest
 
-import vector._backends.numpy_
-import vector._backends.object_
+import vector.backends.numpy
+import vector.backends.object
 
 
 def test_planar_object():
-    v = vector._backends.object_.VectorObject2D(
-        vector._backends.object_.AzimuthalObjectXY(0.1, 0.2)
+    v = vector.backends.object.VectorObject2D(
+        vector.backends.object.AzimuthalObjectXY(0.1, 0.2)
     )
     u = v.unit()
     assert type(u) is type(v)  # noqa: E721
@@ -28,7 +28,7 @@ def test_planar_object():
 
 
 def test_planar_numpy():
-    v = vector._backends.numpy_.VectorNumpy2D(
+    v = vector.backends.numpy.VectorNumpy2D(
         [(0.1, 0.2)],
         dtype=[("x", numpy.float64), ("y", numpy.float64)],
     )
@@ -46,9 +46,9 @@ def test_planar_numpy():
 
 
 def test_spatial_object():
-    v = vector._backends.object_.VectorObject3D(
-        vector._backends.object_.AzimuthalObjectXY(0.1, 0.2),
-        vector._backends.object_.LongitudinalObjectZ(0.3),
+    v = vector.backends.object.VectorObject3D(
+        vector.backends.object.AzimuthalObjectXY(0.1, 0.2),
+        vector.backends.object.LongitudinalObjectZ(0.3),
     )
     u = v.unit()
     assert type(u) is type(v)  # noqa: E721
@@ -66,7 +66,7 @@ def test_spatial_object():
 
 
 def test_spatial_numpy():
-    v = vector._backends.numpy_.VectorNumpy3D(
+    v = vector.backends.numpy.VectorNumpy3D(
         [(0.1, 0.2, 0.3)],
         dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
     )
@@ -86,10 +86,10 @@ def test_spatial_numpy():
 
 
 def test_lorentz_object():
-    v = vector._backends.object_.VectorObject4D(
-        vector._backends.object_.AzimuthalObjectXY(0.1, 0.2),
-        vector._backends.object_.LongitudinalObjectZ(0.3),
-        vector._backends.object_.TemporalObjectT(0.4),
+    v = vector.backends.object.VectorObject4D(
+        vector.backends.object.AzimuthalObjectXY(0.1, 0.2),
+        vector.backends.object.LongitudinalObjectZ(0.3),
+        vector.backends.object.TemporalObjectT(0.4),
     )
     u = v.unit()
     assert type(u) is type(v)  # noqa: E721
@@ -122,7 +122,7 @@ def test_lorentz_object():
 
 
 def test_lorentz_numpy():
-    v = vector._backends.numpy_.VectorNumpy4D(
+    v = vector.backends.numpy.VectorNumpy4D(
         [(0.1, 0.2, 0.3, 0.4)],
         dtype=[
             ("x", numpy.float64),

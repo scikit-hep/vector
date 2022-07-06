@@ -3,13 +3,12 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-import typing
-
 """
 .. code-block:: python
 
     Lorentz.is_lightlike(self, tolerance=...)
 """
+import typing
 
 import numpy
 

@@ -5,20 +5,20 @@
 
 import pytest
 
-import vector._backends.numpy_
-import vector._backends.object_
+import vector.backends.numpy
+import vector.backends.object
 
 
 def test():
-    vec = vector._backends.object_.VectorObject4D(
-        vector._backends.object_.AzimuthalObjectXY(1, 2),
-        vector._backends.object_.LongitudinalObjectZ(3),
-        vector._backends.object_.TemporalObjectT(4),
+    vec = vector.backends.object.VectorObject4D(
+        vector.backends.object.AzimuthalObjectXY(1, 2),
+        vector.backends.object.LongitudinalObjectZ(3),
+        vector.backends.object.TemporalObjectT(4),
     )
-    p4 = vector._backends.object_.VectorObject4D(
-        vector._backends.object_.AzimuthalObjectXY(5, 6),
-        vector._backends.object_.LongitudinalObjectZ(7),
-        vector._backends.object_.TemporalObjectT(15),
+    p4 = vector.backends.object.VectorObject4D(
+        vector.backends.object.AzimuthalObjectXY(5, 6),
+        vector.backends.object.LongitudinalObjectZ(7),
+        vector.backends.object.TemporalObjectT(15),
     )
     out = vec.boost_p4(p4)
     assert out.x == pytest.approx(3.5537720741941676)
