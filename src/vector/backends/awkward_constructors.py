@@ -220,6 +220,8 @@ def _is_type_safe(array_type: typing.Any) -> bool:
         return False
 
     for field_type in array_type.fields():
+        if isinstance(field_type, awkward.types.OptionType):
+            field_type = field_type.type
         if not isinstance(field_type, awkward.types.PrimitiveType):
             return False
         dt = field_type.dtype
