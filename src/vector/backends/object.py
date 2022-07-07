@@ -21,6 +21,7 @@ vectors -
     vec = vector.VectorObject2D.from_xy(1, 2)
 
 """
+import numbers
 import typing
 
 import numpy
