@@ -302,11 +302,25 @@ def _shape_of(
 
 
 def _is_type_safe(
-    array: typing.Any,
+    array: typing.Union[
+        "VectorNumpy2D",
+        "VectorNumpy3D",
+        "VectorNumpy4D",
+        "MomentumNumpy2D",
+        "MomentumNumpy3D",
+        "MomentumNumpy4D",
+        "CoordinatesNumpy",
+    ],
 ) -> bool:
-    return issubclass(
-        array.dtype.type, (numpy.integer, numpy.floating)
-    ) and not issubclass(array.dtype.type, numpy.timedelta64)
+    for name in array.dtype.names:  # type: ignore[union-attr]
+        if not issubclass(
+            array.dtype.fields[name][0].type, (numpy.integer, numpy.floating)  # type: ignore[index]
+        ) or issubclass(
+            array.dtype.fields[name][0].type, numpy.timedelta64  # type: ignore[index]
+        ):
+            return False
+
+    return True
 
 
 class GetItem:
@@ -964,11 +978,6 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
         if obj is None:
             return
 
-        if not _is_type_safe(numpy.array(self.tolist())):
-            raise TypeError(
-                "a coordinate must be of the type numpy.integer or numpy.floating"
-            )
-
         if _has(self, ("x", "y")):
             self._azimuthal_type = AzimuthalNumpyXY
         elif _has(self, ("rho", "phi")):
@@ -977,6 +986,11 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype containing "
                 'fields ("x", "y") or ("rho", "phi")'
+            )
+
+        if not _is_type_safe(self):
+            raise TypeError(
+                "a coordinate must be of the type numpy.integer or numpy.floating"
             )
 
     def __str__(self) -> str:
@@ -1173,11 +1187,6 @@ class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore[misc]
         if obj is None:
             return
 
-        if not _is_type_safe(numpy.array(self.tolist())):
-            raise TypeError(
-                "a coordinate must be of the type numpy.integer or numpy.floating"
-            )
-
         self.dtype.names = tuple(
             _repr_momentum_to_generic.get(x, x) for x in (self.dtype.names or ())
         )
@@ -1190,6 +1199,11 @@ class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore[misc]
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype containing "
                 'fields ("x", "y") or ("rho", "phi") or ("px", "py") or ("pt", "phi")'
+            )
+
+        if not _is_type_safe(self):
+            raise TypeError(
+                "a coordinate must be of the type numpy.integer or numpy.floating"
             )
 
     def __repr__(self) -> str:
@@ -1238,11 +1252,6 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
         if obj is None:
             return
 
-        if not _is_type_safe(numpy.array(self.tolist())):
-            raise TypeError(
-                "a coordinate must be of the type numpy.integer or numpy.floating"
-            )
-
         if _has(self, ("x", "y")):
             self._azimuthal_type = AzimuthalNumpyXY
         elif _has(self, ("rho", "phi")):
@@ -1262,6 +1271,11 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype containing "
                 'field "z" or "theta" or "eta"'
+            )
+
+        if not _is_type_safe(self):
+            raise TypeError(
+                "a coordinate must be of the type numpy.integer or numpy.floating"
             )
 
     def __str__(self) -> str:
@@ -1458,10 +1472,6 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
         if obj is None:
             return
 
-        if not _is_type_safe(numpy.array(self.tolist())):
-            raise TypeError(
-                "a coordinate must be of the type numpy.integer or numpy.floating"
-            )
         self.dtype.names = tuple(
             _repr_momentum_to_generic.get(x, x) for x in (self.dtype.names or ())
         )
@@ -1484,6 +1494,11 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype containing "
                 'field "z" or "theta" or "eta" or "pz"'
+            )
+
+        if not _is_type_safe(self):
+            raise TypeError(
+                "a coordinate must be of the type numpy.integer or numpy.floating"
             )
 
     def __repr__(self) -> str:
@@ -1537,11 +1552,6 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
         if obj is None:
             return
 
-        if not _is_type_safe(numpy.array(self.tolist())):
-            raise TypeError(
-                "a coordinate must be of the type numpy.integer or numpy.floating"
-            )
-
         if _has(self, ("x", "y")):
             self._azimuthal_type = AzimuthalNumpyXY
         elif _has(self, ("rho", "phi")):
@@ -1572,6 +1582,11 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype containing "
                 'field "t" or "tau"'
+            )
+
+        if not _is_type_safe(self):
+            raise TypeError(
+                "a coordinate must be of the type numpy.integer or numpy.floating"
             )
 
     def __str__(self) -> str:
@@ -1783,11 +1798,6 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore[misc]
         if obj is None:
             return
 
-        if not _is_type_safe(numpy.array(self.tolist())):
-            raise TypeError(
-                "a coordinate must be of the type numpy.integer or numpy.floating"
-            )
-
         self.dtype.names = tuple(
             _repr_momentum_to_generic.get(x, x) for x in (self.dtype.names or ())
         )
@@ -1822,6 +1832,11 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore[misc]
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype containing "
                 'field "t" or "tau" or "E" or "e" or "energy" or "M" or "m" or "mass"'
+            )
+
+        if not _is_type_safe(self):
+            raise TypeError(
+                "a coordinate must be of the type numpy.integer or numpy.floating"
             )
 
     def __repr__(self) -> str:
