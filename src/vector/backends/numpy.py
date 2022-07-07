@@ -312,12 +312,10 @@ def _is_type_safe(
         "CoordinatesNumpy",
     ],
 ) -> bool:
-    for name in array.dtype.names:  # type: ignore[union-attr]
+    for i in range(0, len(array.dtype)):  # type: ignore[arg-type]
         if not issubclass(
-            array.dtype.fields[name][0].type, (numpy.integer, numpy.floating)  # type: ignore[index]
-        ) or issubclass(
-            array.dtype.fields[name][0].type, numpy.timedelta64  # type: ignore[index]
-        ):
+            array.dtype[i].type, (numpy.integer, numpy.floating)
+        ) or issubclass(array.dtype[i].type, numpy.timedelta64):
             return False
 
     return True
