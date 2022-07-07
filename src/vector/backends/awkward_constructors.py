@@ -289,14 +289,11 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     import vector
     import vector.backends.awkward  # noqa: 401
 
-    layout = awkward.to_layout(args[0])
-    array_type = awkward.type(layout)
-    args = args[1:]
+    akarray = awkward.Array(*args, **kwargs)
+    array_type = akarray.type
 
     if not _is_type_safe(array_type):
         raise TypeError("a coordinate must be of the type int or float")
-
-    akarray = awkward.Array(layout, *args, **kwargs)
     fields = awkward.fields(akarray)
 
     is_momentum, dimension, names, arrays = _check_names(akarray, fields)
