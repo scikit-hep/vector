@@ -78,7 +78,7 @@ jobs:
         run: python -m pip list
 
       - name: Check compute features
-        run: python -m pip install .[test,testextras]
+        run: python -m pip install .[test,test-extras]
 
       - name: Test package
         run: python -m pytest -ra -m dis
