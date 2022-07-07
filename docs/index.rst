@@ -6,7 +6,7 @@
 .. image:: _images/vector-logo.png
 
 |Action status| |Documentation Status| |pre-commit.ci status| |coverage| |GitHub Discussion| |Gitter| |Code style: black|
-|PyPI platforms| |PyPI version| |Conda latest releasetatus| |DOI| |Scikit-HEP|
+|PyPI platforms| |PyPI version| |Conda latest releasetatus| |DOI| |License| |Scikit-HEP|
 
 Overview
 --------
@@ -86,8 +86,6 @@ API reference
 -------------
 The API reference details the functionality of each ``class`` and ``function`` present in ``vector``'s codebase.
 
-**Note**: Adding missing docstrings is still in progress.
-
 .. toctree::
    :maxdepth: 8
    :caption: API Reference
@@ -110,10 +108,12 @@ The API reference details the functionality of each ``class`` and ``function`` p
    :target: https://pypi.org/project/vector/
 .. |PyPI version| image:: https://badge.fury.io/py/vector.svg
    :target: https://pypi.org/project/vector/
-.. |Conda latest releasetatus| image:: https://img.shields.io/conda/vn/conda-forge/decaylanguage.svg
-   :target: https://github.com/conda-forge/decaylanguage-feedstock
+.. |Conda latest releasetatus| image:: https://img.shields.io/conda/vn/conda-forge/vector.svg
+   :target: https://github.com/conda-forge/vector-feedstock
 .. |DOI| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.5942083.svg
    :target: https://doi.org/10.5281/zenodo.5942082
+.. |License| image:: https://img.shields.io/badge/License-BSD_3--Clause-blue.svg
+   :target: https://opensource.org/licenses/BSD-3-Clause
 .. |Scikit-HEP| image:: https://scikit-hep.org/assets/images/Scikit--HEP-Project-blue.svg
    :target: https://scikit-hep.org/
 .. |coverage| image:: https://codecov.io/gh/scikit-hep/vector/branch/main/graph/badge.svg?token=YBv60ueORQ

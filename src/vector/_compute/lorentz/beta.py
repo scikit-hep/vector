@@ -3,14 +3,14 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-import typing
-
 """
 .. code-block:: python
 
     @property
     Lorentz.beta(self)
 """
+import typing
+from math import inf
 
 import numpy
 
@@ -33,45 +33,67 @@ from vector._methods import (
 
 
 def xy_z_t(lib, x, y, z, t):
-    return lib.nan_to_num(mag.xy_z(lib, x, y, z) / t, nan=0)
+    return lib.nan_to_num(mag.xy_z(lib, x, y, z) / t, nan=0, posinf=inf, neginf=-inf)
 
 
 def xy_z_tau(lib, x, y, z, tau):
-    return lib.nan_to_num(mag.xy_z(lib, x, y, z) / t.xy_z_tau(lib, x, y, z, tau), nan=0)
+    return lib.nan_to_num(
+        mag.xy_z(lib, x, y, z) / t.xy_z_tau(lib, x, y, z, tau),
+        nan=0,
+        posinf=inf,
+        neginf=-inf,
+    )
 
 
 def xy_theta_t(lib, x, y, theta, t):
-    return lib.nan_to_num(mag.xy_theta(lib, x, y, theta) / t, nan=0)
+    return lib.nan_to_num(
+        mag.xy_theta(lib, x, y, theta) / t, nan=0, posinf=inf, neginf=-inf
+    )
 
 
 def xy_theta_tau(lib, x, y, theta, tau):
     return lib.nan_to_num(
-        mag.xy_theta(lib, x, y, theta) / t.xy_theta_tau(lib, x, y, theta, tau), nan=0
+        mag.xy_theta(lib, x, y, theta) / t.xy_theta_tau(lib, x, y, theta, tau),
+        nan=0,
+        posinf=inf,
+        neginf=-inf,
     )
 
 
 def xy_eta_t(lib, x, y, eta, t):
-    return lib.nan_to_num(mag.xy_eta(lib, x, y, eta) / t, nan=0)
+    return lib.nan_to_num(
+        mag.xy_eta(lib, x, y, eta) / t, nan=0, posinf=inf, neginf=-inf
+    )
 
 
 def xy_eta_tau(lib, x, y, eta, tau):
     return lib.nan_to_num(
-        mag.xy_eta(lib, x, y, eta) / t.xy_eta_tau(lib, x, y, eta, tau), nan=0
+        mag.xy_eta(lib, x, y, eta) / t.xy_eta_tau(lib, x, y, eta, tau),
+        nan=0,
+        posinf=inf,
+        neginf=-inf,
     )
 
 
 def rhophi_z_t(lib, rho, phi, z, t):
-    return lib.nan_to_num(mag.rhophi_z(lib, rho, phi, z) / t, nan=0)
+    return lib.nan_to_num(
+        mag.rhophi_z(lib, rho, phi, z) / t, nan=0, posinf=inf, neginf=-inf
+    )
 
 
 def rhophi_z_tau(lib, rho, phi, z, tau):
     return lib.nan_to_num(
-        mag.rhophi_z(lib, rho, phi, z) / t.rhophi_z_tau(lib, rho, phi, z, tau), nan=0
+        mag.rhophi_z(lib, rho, phi, z) / t.rhophi_z_tau(lib, rho, phi, z, tau),
+        nan=0,
+        posinf=inf,
+        neginf=-inf,
     )
 
 
 def rhophi_theta_t(lib, rho, phi, theta, t):
-    return lib.nan_to_num(mag.rhophi_theta(lib, rho, phi, theta) / t, nan=0)
+    return lib.nan_to_num(
+        mag.rhophi_theta(lib, rho, phi, theta) / t, nan=0, posinf=inf, neginf=-inf
+    )
 
 
 def rhophi_theta_tau(lib, rho, phi, theta, tau):
@@ -79,17 +101,23 @@ def rhophi_theta_tau(lib, rho, phi, theta, tau):
         mag.rhophi_theta(lib, rho, phi, theta)
         / t.rhophi_theta_tau(lib, rho, phi, theta, tau),
         nan=0,
+        posinf=inf,
+        neginf=-inf,
     )
 
 
 def rhophi_eta_t(lib, rho, phi, eta, t):
-    return lib.nan_to_num(mag.rhophi_eta(lib, rho, phi, eta) / t, nan=0)
+    return lib.nan_to_num(
+        mag.rhophi_eta(lib, rho, phi, eta) / t, nan=0, posinf=inf, neginf=-inf
+    )
 
 
 def rhophi_eta_tau(lib, rho, phi, eta, tau):
     return lib.nan_to_num(
         mag.rhophi_eta(lib, rho, phi, eta) / t.rhophi_eta_tau(lib, rho, phi, eta, tau),
         nan=0,
+        posinf=inf,
+        neginf=-inf,
     )
 
 

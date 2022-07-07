@@ -3,13 +3,12 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-import typing
-
 """
 .. code-block:: python
 
     Spatial.deltaR2(self, other)
 """
+import typing
 
 import numpy
 

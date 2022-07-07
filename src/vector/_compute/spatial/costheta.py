@@ -3,14 +3,14 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-import typing
-
 """
 .. code-block:: python
 
     @property
     Spatial.costheta(self)
 """
+import typing
+from math import inf
 
 import numpy
 
@@ -29,7 +29,7 @@ from vector._methods import (
 
 
 def xy_z(lib, x, y, z):
-    return lib.nan_to_num(z / mag.xy_z(lib, x, y, z), nan=1.0)
+    return lib.nan_to_num(z / mag.xy_z(lib, x, y, z), nan=1.0, posinf=inf, neginf=-inf)
 
 
 def xy_theta(lib, x, y, theta):
@@ -41,7 +41,9 @@ def xy_eta(lib, x, y, eta):
 
 
 def rhophi_z(lib, rho, phi, z):
-    return lib.nan_to_num(z / mag.rhophi_z(lib, rho, phi, z), nan=1.0)
+    return lib.nan_to_num(
+        z / mag.rhophi_z(lib, rho, phi, z), nan=1.0, posinf=inf, neginf=-inf
+    )
 
 
 def rhophi_theta(lib, rho, phi, theta):

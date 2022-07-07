@@ -67,7 +67,8 @@ def _array_from_columns(columns: typing.Dict[str, ArrayLike]) -> ArrayLike:
         ``np.ndarray``: A structured array of coordinates.
 
     Examples:
-        >>> _array_from_columns({"x": [1, 2, 3], "y": [1, 2, 4]})
+        >>> import vector
+        >>> vector.backends.numpy._array_from_columns({"x": [1, 2, 3], "y": [1, 2, 4]})
         array([(1., 1.), (2., 2.), (3., 4.)], dtype=[('x', '<f8'), ('y', '<f8')])
     """
 
@@ -229,7 +230,7 @@ def _has(
 
 
 def _toarrays(
-    result: typing.Tuple[ScalarCollection, ...]
+    result: typing.Union[typing.Tuple[ScalarCollection, ...], ScalarCollection]
 ) -> typing.Tuple[FloatArray, ...]:
     """
     Converts a tuple of values to a tuple of ``numpy.array``s.
@@ -263,7 +264,9 @@ def _toarrays(
         return result[0]
 
 
-def _shape_of(result: typing.Tuple[FloatArray, ...]) -> typing.Tuple[int, ...]:
+def _shape_of(
+    result: typing.Union[typing.Tuple[FloatArray, ...], ScalarCollection]
+) -> typing.Tuple[int, ...]:
     """
     Calculates the shape of a tuple of ``numpy.array``s. The shape returned
     is the highest (numerical) value of the shapes present in the tuple.
@@ -276,6 +279,7 @@ def _shape_of(result: typing.Tuple[FloatArray, ...]) -> typing.Tuple[int, ...]:
 
     Examples:
         >>> from vector.backends.numpy import _shape_of
+        >>> import numpy as np
         >>> _shape_of((np.array([1]), np.array([2])))
         (1,)
         >>> _shape_of((np.array([1]), np.array([2, 8]), np.array([0])))
@@ -285,7 +289,7 @@ def _shape_of(result: typing.Tuple[FloatArray, ...]) -> typing.Tuple[int, ...]:
     """
     if not isinstance(result, tuple):
         result = (result,)
-    shape = None
+    shape: typing.Optional[typing.List[int]] = None
     for x in result:
         if hasattr(x, "shape"):
             thisshape = list(x.shape)
@@ -322,34 +326,26 @@ class GetItem:
 
 
 class CoordinatesNumpy:
-    """
-    Coordinates class for the Numpy backend.
-    """
+    """Coordinates class for the Numpy backend."""
 
     lib = numpy
     dtype: "numpy.dtype[typing.Any]"
 
 
 class AzimuthalNumpy(CoordinatesNumpy, Azimuthal):
-    """
-    Azimuthal class for the NumPy backend.
-    """
+    """Azimuthal class for the NumPy backend."""
 
     ObjectClass: typing.Type[vector.backends.object.AzimuthalObject]
 
 
 class LongitudinalNumpy(CoordinatesNumpy, Longitudinal):
-    """
-    Longitudinal class for the NumPy backend.
-    """
+    """Longitudinal class for the NumPy backend."""
 
     ObjectClass: typing.Type[vector.backends.object.LongitudinalObject]
 
 
 class TemporalNumpy(CoordinatesNumpy, Temporal):
-    """
-    Temporal class for the NumPy backend.
-    """
+    """Temporal class for the NumPy backend."""
 
     ObjectClass: typing.Type[vector.backends.object.TemporalObject]
 
@@ -360,6 +356,7 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # typ
     Creates a structured NumPy array and returns it as an AzimuthalNumpyXY object.
 
     Examples:
+        >>> import vector
         >>> vector.backends.numpy.AzimuthalNumpyXY([(1, 1), (2.1, 3.1)], dtype=[("x", float), ("y", float)])
         AzimuthalNumpyXY([(1. , 1. ), (2.1, 3.1)],
                         dtype=[('x', '<f8'), ('y', '<f8')])
@@ -386,6 +383,7 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # typ
         Each coordinate is a NumPy array of values and not a vector.
 
         Examples:
+            >>> import vector
             >>> vec = vector.backends.numpy.AzimuthalNumpyXY([(1, 1), (2.1, 3.1)], dtype=[("x", float), ("y", float)])
             >>> vec.elements
             (array([1. , 2.1]), array([1. , 3.1]))
@@ -394,16 +392,12 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # typ
 
     @property
     def x(self) -> FloatArray:
-        """
-        The ``x`` coordinates.
-        """
+        """The ``x`` coordinates."""
         return self["x"]
 
     @property
     def y(self) -> FloatArray:
-        """
-        The ``y`` coordinates.
-        """
+        """The ``y`` coordinates."""
         return self["y"]
 
 
@@ -413,6 +407,7 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray)
     Creates a structured NumPy array and returns it as an AzimuthalNumpyXY object.
 
     Examples:
+        >>> import vector
         >>> vector.backends.numpy.AzimuthalNumpyRhoPhi([(1, 1), (2.1, 3.1)], dtype=[("rho", float), ("phi", float)])
         AzimuthalNumpyRhoPhi([(1. , 1. ), (2.1, 3.1)],
                             dtype=[('rho', '<f8'), ('phi', '<f8')])
@@ -439,6 +434,7 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray)
         Each coordinate is a NumPy array of values and not a vector.
 
         Examples:
+            >>> import vector
             >>> vec = vector.backends.numpy.AzimuthalNumpyRhoPhi([(1, 1), (2.1, 3.1)], dtype=[("rho", float), ("phi", float)])
             >>> vec.elements
             (array([1. , 2.1]), array([1. , 3.1]))
@@ -447,16 +443,12 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray)
 
     @property
     def rho(self) -> FloatArray:
-        """
-        The ``rho`` coordinates.
-        """
+        """The ``rho`` coordinates."""
         return self["rho"]
 
     @property
     def phi(self) -> FloatArray:
-        """
-        The ``phi`` coordinates.
-        """
+        """The ``phi`` coordinates."""
         return self["phi"]
 
 
@@ -466,6 +458,7 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):
     Creates a structured NumPy array and returns it as a LongitudinalNumpyZ object.
 
     Examples:
+        >>> import vector
         >>> vector.backends.numpy.LongitudinalNumpyZ([(1), (2.1)], dtype=[("z", float)])
         LongitudinalNumpyZ([(1. ,), (2.1,)], dtype=[('z', '<f8')])
     """
@@ -491,6 +484,7 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):
         Each coordinate is a NumPy array of values and not a vector.
 
         Examples:
+            >>> import vector
             >>> vec = vector.backends.numpy.LongitudinalNumpyZ([(1), (2.1)], dtype=[("z", float)])
             >>> vec.elements
             (array([1. , 2.1]),)
@@ -499,9 +493,7 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):
 
     @property
     def z(self) -> FloatArray:
-        """
-        The ``z`` coordinates.
-        """
+        """The ``z`` coordinates."""
         return self["z"]
 
 
@@ -511,6 +503,7 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, Floa
     Creates a structured NumPy array and returns it as a LongitudinalNumpyTheta object.
 
     Examples:
+        >>> import vector
         >>> vector.backends.numpy.LongitudinalNumpyTheta([(1), (2.1)], dtype=[("theta", float)])
         LongitudinalNumpyTheta([(1. ,), (2.1,)], dtype=[('theta', '<f8')])
     """
@@ -538,6 +531,7 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, Floa
         Each coordinate is a NumPy array of values and not a vector.
 
         Examples:
+            >>> import vector
             >>> vec = vector.backends.numpy.LongitudinalNumpyTheta([(1), (2.1)], dtype=[("theta", float)])
             >>> vec.elements
             (array([1. , 2.1]),)
@@ -546,9 +540,7 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, Floa
 
     @property
     def theta(self) -> FloatArray:
-        """
-        The ``theta`` coordinates.
-        """
+        """The ``theta`` coordinates."""
         return self["theta"]
 
 
@@ -558,6 +550,7 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArr
     Creates a structured NumPy array and returns it as a LongitudinalNumpyEta object.
 
     Examples:
+        >>> import vector
         >>> vector.backends.numpy.LongitudinalNumpyEta([(1), (2.1)], dtype=[("eta", float)])
         LongitudinalNumpyEta([(1. ,), (2.1,)], dtype=[('eta', '<f8')])
     """
@@ -583,6 +576,7 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArr
         Each coordinate is a NumPy array of values and not a vector.
 
         Examples:
+            >>> import vector
             >>> vec = vector.backends.numpy.LongitudinalNumpyTheta([(1), (2.1)], dtype=[("theta", float)])
             >>> vec.elements
             (array([1. , 2.1]),)
@@ -591,9 +585,7 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArr
 
     @property
     def eta(self) -> FloatArray:
-        """
-        The ``eta`` coordinates.
-        """
+        """The ``eta`` coordinates."""
         return self["eta"]
 
 
@@ -603,6 +595,7 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ig
     Creates a structured NumPy array and returns it as a TemporalNumpyT object.
 
     Examples:
+        >>> import vector
         >>> vector.backends.numpy.TemporalNumpyT([(1), (2.1)], dtype=[("t", float)])
         TemporalNumpyT([(1. ,), (2.1,)], dtype=[('t', '<f8')])
     """
@@ -628,6 +621,7 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ig
         Each coordinate is a NumPy array of values and not a vector.
 
         Examples:
+            >>> import vector
             >>> vec = vector.backends.numpy.TemporalNumpyT([(1), (2.1)], dtype=[("t", float)])
             >>> vec.elements
             (array([1. , 2.1]),)
@@ -636,16 +630,12 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ig
 
     @property
     def t(self) -> FloatArray:
-        """
-        The ``t`` coordinates.
-        """
+        """The ``t`` coordinates."""
         return self["t"]
 
 
 class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type: ignore[misc]
-    """
-    Class for the ``tau`` (temporal) coordinate of NumPy backend.
-    """
+    """Class for the ``tau`` (temporal) coordinate of NumPy backend."""
 
     ObjectClass = vector.backends.object.TemporalObjectTau
     _IS_MOMENTUM = False
@@ -668,6 +658,7 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type
         Each coordinate is a NumPy array of values and not a vector.
 
         Examples:
+            >>> import vector
             >>> vec = vector.backends.numpy.TemporalNumpyTau([(1), (2.1)], dtype=[("tau", float)])
             >>> vec.elements
             (array([1. , 2.1]),)
@@ -676,16 +667,12 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type
 
     @property
     def tau(self) -> FloatArray:
-        """
-        The ``tau`` coordinates.
-        """
+        """The ``tau`` coordinates."""
         return self["tau"]
 
 
 class VectorNumpy(Vector, GetItem):
-    """
-    One dimensional vector class for the NumPy backend.
-    """
+    """One dimensional vector class for the NumPy backend."""
 
     lib = numpy
     dtype: "numpy.dtype[typing.Any]"
@@ -697,9 +684,7 @@ class VectorNumpy(Vector, GetItem):
         atol: typing.Union[float, FloatArray] = 1e-08,
         equal_nan: typing.Union[bool, FloatArray] = False,
     ) -> FloatArray:
-        """
-        Like ``np.ndarray.allclose``, but for VectorNumpy.
-        """
+        """Like ``np.ndarray.allclose``, but for VectorNumpy."""
         return self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan).all()
 
     def __eq__(self, other: typing.Any) -> typing.Any:
@@ -954,6 +939,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
     NumPy vectors see :class:`vector.backends.numpy.MomentumNumpy2D`.
 
     Examples:
+        >>> import vector
         >>> vec = vector.VectorNumpy2D([(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)],
         ...               dtype=[('x', float), ('y', float)])
         >>> vec
@@ -968,9 +954,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
     ]
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "VectorNumpy2D":
-        """
-        Returns the object of ``VectorNumpy2D``. Behaves as ``__init__`` in this case.
-        """
+        """Returns the object of ``VectorNumpy2D``. Behaves as ``__init__`` in this case."""
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             array = _array_from_columns(args[0])
         else:
@@ -1008,6 +992,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
         Returns the azimuthal type class for the given ``VectorNumpy2D`` object.
 
         Examples:
+            >>> import vector
             >>> vec = vector.array([
             ...     (1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)
             ... ], dtype=[("x", float), ("y", float)])
@@ -1173,6 +1158,7 @@ class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore[misc]
     NumPy vectors see :class:`vector.backends.numpy.VectorNumpy2D`.
 
     Examples:
+        >>> import vector
         >>> vec = vector.MomentumNumpy2D([(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)],
         ...               dtype=[('px', float), ('py', float)])
         >>> vec
@@ -1221,6 +1207,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
     NumPy vectors see :class:`vector.backends.numpy.MomentumNumpy3D`.
 
     Examples:
+        >>> import vector
         >>> vec = vector.VectorNumpy3D([(1.1, 2.1, 3.1), (1.2, 2.2, 3.2), (1.3, 2.3, 3.3), (1.4, 2.4, 3.4), (1.5, 2.5, 3.5)],
         ...               dtype=[('x', float), ('y', float), ('z', float)])
         >>> vec
@@ -1241,9 +1228,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
     ]
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "VectorNumpy3D":
-        """
-        Returns the object of ``VectorNumpy3D``. Behaves as ``__init__`` in this case.
-        """
+        """Returns the object of ``VectorNumpy3D``. Behaves as ``__init__`` in this case."""
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             array = _array_from_columns(args[0])
         else:
@@ -1288,17 +1273,13 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
 
     @property
     def azimuthal(self) -> AzimuthalNumpy:
-        """
-        Returns the azimuthal type class for the given ``VectorNumpy3D`` object.
-        """
+        """Returns the azimuthal type class for the given ``VectorNumpy3D`` object."""
         # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
         return self.view(self._azimuthal_type)  # type: ignore[return-value]
 
     @property
     def longitudinal(self) -> LongitudinalNumpy:
-        """
-        Returns the longitudinal type class for the given ``VectorNumpy3D`` object.
-        """
+        """Returns the longitudinal type class for the given ``VectorNumpy3D`` object."""
         # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
         return self.view(self._longitudinal_type)  # type: ignore[return-value]
 
@@ -1462,6 +1443,7 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
     NumPy vectors see :class:`vector.backends.numpy.VectorNumpy3D`.
 
     Examples:
+        >>> import vector
         >>> vec = vector.MomentumNumpy3D([(1.1, 2.1, 3.1), (1.2, 2.2, 3.2), (1.3, 2.3, 3.3), (1.4, 2.4, 3.4), (1.5, 2.5, 3.5)],
         ...               dtype=[('px', float), ('py', float), ('pz', float)])
         >>> vec
@@ -1519,6 +1501,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
     NumPy vectors see :class:`vector.backends.numpy.MomentumNumpy4D`.
 
     Examples:
+        >>> import vector
         >>> vec = vector.VectorNumpy4D([(1.1, 2.1, 3.1, 4.1), (1.2, 2.2, 3.2, 4.2), (1.3, 2.3, 3.3, 4.3), (1.4, 2.4, 3.4, 4.4), (1.5, 2.5, 3.5, 4.5)],
         ...               dtype=[('x', float), ('y', float), ('z', float), ('t', float)])
         >>> vec
@@ -1544,9 +1527,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
     ]
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "VectorNumpy4D":
-        """
-        Returns the object of ``VectorNumpy4D``. Behaves as ``__init__`` in this case.
-        """
+        """Returns the object of ``VectorNumpy4D``. Behaves as ``__init__`` in this case."""
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             array = _array_from_columns(args[0])
         else:
@@ -1602,25 +1583,19 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
 
     @property
     def azimuthal(self) -> AzimuthalNumpy:
-        """
-        Returns the azimuthal type class for the given ``VectorNumpy4D`` object.
-        """
+        """Returns the azimuthal type class for the given ``VectorNumpy4D`` object."""
         # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
         return self.view(self._azimuthal_type)  # type: ignore[return-value]
 
     @property
     def longitudinal(self) -> LongitudinalNumpy:
-        """
-        Returns the longitudinal type class for the given ``Vectornumpy4D`` object.
-        """
+        """Returns the longitudinal type class for the given ``Vectornumpy4D`` object."""
         # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
         return self.view(self._longitudinal_type)  # type: ignore[return-value]
 
     @property
     def temporal(self) -> TemporalNumpy:
-        """
-        Returns the azimuthal type class for the given ``VectorNumpy4D`` object.
-        """
+        """Returns the azimuthal type class for the given ``VectorNumpy4D`` object."""
         # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
         return self.view(self._temporal_type)  # type: ignore[return-value]
 
@@ -1792,6 +1767,7 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore[misc]
     NumPy vectors see :class:`vector.backends.numpy.VectorNumpy4D`.
 
     Examples:
+        >>> import vector
         >>> vec = vector.MomentumNumpy4D([(1.1, 2.1, 3.1, 4.1), (1.2, 2.2, 3.2, 4.2), (1.3, 2.3, 3.3, 4.3), (1.4, 2.4, 3.4, 4.4), (1.5, 2.5, 3.5, 4.5)],
         ...               dtype=[('px', float), ('py', float), ('pz', float), ('t', float)])
         >>> vec
@@ -1909,7 +1885,6 @@ def array(*args: typing.Any, **kwargs: typing.Any) -> VectorNumpy:
 
     to make the vector a momentum vector.
     """
-
     names: typing.Tuple[str, ...]
     if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
         names = tuple(args[0].keys())

@@ -3,13 +3,13 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-import typing
-
 """
 .. code-block:: python
 
     Spatial.unit(self)
 """
+import typing
+from math import inf
 
 import numpy
 
@@ -30,35 +30,47 @@ from vector._methods import (
 def xy_z(lib, x, y, z):
     norm = mag.xy_z(lib, x, y, z)
     return (
-        lib.nan_to_num(x / norm, nan=0),
-        lib.nan_to_num(y / norm, nan=0),
-        lib.nan_to_num(z / norm, nan=0),
+        lib.nan_to_num(x / norm, nan=0, posinf=inf, neginf=-inf),
+        lib.nan_to_num(y / norm, nan=0, posinf=inf, neginf=-inf),
+        lib.nan_to_num(z / norm, nan=0, posinf=inf, neginf=-inf),
     )
 
 
 def xy_theta(lib, x, y, theta):
     norm = mag.xy_theta(lib, x, y, theta)
-    return (lib.nan_to_num(x / norm, nan=0), lib.nan_to_num(y / norm, nan=0), theta)
+    return (
+        lib.nan_to_num(x / norm, nan=0, posinf=inf, neginf=-inf),
+        lib.nan_to_num(y / norm, nan=0, posinf=inf, neginf=-inf),
+        theta,
+    )
 
 
 def xy_eta(lib, x, y, eta):
     norm = mag.xy_eta(lib, x, y, eta)
-    return (lib.nan_to_num(x / norm, nan=0), lib.nan_to_num(y / norm, nan=0), eta)
+    return (
+        lib.nan_to_num(x / norm, nan=0, posinf=inf, neginf=-inf),
+        lib.nan_to_num(y / norm, nan=0, posinf=inf, neginf=-inf),
+        eta,
+    )
 
 
 def rhophi_z(lib, rho, phi, z):
     norm = mag.rhophi_z(lib, rho, phi, z)
-    return (lib.nan_to_num(rho / norm, nan=0), phi, lib.nan_to_num(z / norm, nan=0))
+    return (
+        lib.nan_to_num(rho / norm, nan=0, posinf=inf, neginf=-inf),
+        phi,
+        lib.nan_to_num(z / norm, nan=0, posinf=inf, neginf=-inf),
+    )
 
 
 def rhophi_theta(lib, rho, phi, theta):
     norm = mag.rhophi_theta(lib, rho, phi, theta)
-    return (lib.nan_to_num(rho / norm, nan=0), phi, theta)
+    return (lib.nan_to_num(rho / norm, nan=0, posinf=inf, neginf=-inf), phi, theta)
 
 
 def rhophi_eta(lib, rho, phi, eta):
     norm = mag.rhophi_eta(lib, rho, phi, eta)
-    return (lib.nan_to_num(rho / norm, nan=0), phi, eta)
+    return (lib.nan_to_num(rho / norm, nan=0, posinf=inf, neginf=-inf), phi, eta)
 
 
 dispatch_map = {
