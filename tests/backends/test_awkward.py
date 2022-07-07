@@ -27,9 +27,6 @@ def test_type_checks():
         )
 
     with pytest.raises(TypeError):
-        vector.Array({"x": [0], "y": [1]})
-
-    with pytest.raises(TypeError):
         vector.zip(
             [
                 [{"x": 1, "y": 1.1, "z": 0.1}, {"x": 2, "y": 2.2, "z": 0.2}],

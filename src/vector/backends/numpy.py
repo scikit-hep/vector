@@ -71,7 +71,6 @@ def _array_from_columns(columns: typing.Dict[str, ArrayLike]) -> ArrayLike:
         >>> vector.backends.numpy._array_from_columns({"x": [1, 2, 3], "y": [1, 2, 4]})
         array([(1., 1.), (2., 2.), (3., 4.)], dtype=[('x', '<f8'), ('y', '<f8')])
     """
-
     if len(columns) == 0:
         raise ValueError("no columns have been provided")
     names = list(columns.keys())

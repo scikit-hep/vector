@@ -3093,7 +3093,7 @@ def obj(**coordinates: float) -> VectorObject:
     generic_coordinates = {}
 
     for _, value in coordinates.items():
-        if not isinstance(value, numbers.Real) or isinstance(value, bool):
+        if not issubclass(type(value), numbers.Real) or isinstance(value, bool):
             raise TypeError("a coordinate must be of the type int or float")
 
     if "px" in coordinates:
