@@ -64,11 +64,15 @@ else:
 
 def _import_awkward() -> None:
     awk_version = packaging.version.Version(importlib_metadata.version("awkward"))
-    if awk_version < packaging.version.Version("1.2.0rc5"):
-        # the only context users will see this message is if they're trying to use vector.awk
-        # VectorAwkward is still set to None
-        msg = f"awkward {awk_version} is too old; please upgrade to 1.2.0 or later"
-        raise ImportError(msg)
+    # the only context users will see this message is if they're trying to use vector.awk
+    # VectorAwkward is still set to None
+    if awk_version < packaging.version.Version("1.2.0rc5") or (
+        awk_version >= packaging.version.Version("2")
+        and packaging.version.Version(__version__) < packaging.version.Version("2")
+    ):
+        raise ModuleNotFoundError(
+            f"vector 1.x and 0.x can only be used with awkward >= 1.2.0 or awkward < 2; you have awkward {awk_version}"
+        )
 
 
 try:
