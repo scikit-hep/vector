@@ -12,6 +12,29 @@ ak = pytest.importorskip("awkward")
 pytestmark = pytest.mark.awkward
 
 
+def test_type_checks():
+    with pytest.raises(TypeError):
+        vector.Array(
+            [
+                [{"x": 1, "y": 1.1, "z": 0.1}, {"x": 2, "y": 2.2, "z": [0.2]}],
+                [],
+            ]
+        )
+
+    with pytest.raises(TypeError):
+        vector.Array(
+            [{"x": 1, "y": 1.1, "z": 0.1}, {"x": 2, "y": 2.2, "z": complex(1, 2)}]
+        )
+
+    with pytest.raises(TypeError):
+        vector.zip(
+            [
+                [{"x": 1, "y": 1.1, "z": 0.1}, {"x": 2, "y": 2.2, "z": 0.2}],
+                [],
+            ]
+        )
+
+
 def test_basic():
     array = vector.Array([[{"x": 1, "y": 2}], [], [{"x": 3, "y": 4}]])
     assert isinstance(array, vector.backends.awkward.VectorArray2D)

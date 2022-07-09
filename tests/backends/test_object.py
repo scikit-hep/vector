@@ -4,6 +4,7 @@
 # or https://github.com/scikit-hep/vector for details.
 
 import numpy
+import pytest
 
 import vector
 
@@ -38,3 +39,12 @@ def test_array_casting():
     assert isinstance(obj, vector.MomentumObject4D)
     assert isinstance(numpy.asanyarray(obj), vector.MomentumNumpy4D)
     assert numpy.asanyarray(obj).shape == ()
+
+    with pytest.raises(TypeError):
+        vector.obj(x=1, y=[1, 2])
+
+    with pytest.raises(TypeError):
+        vector.obj(x=1, y=complex(1, 2))
+
+    with pytest.raises(TypeError):
+        vector.obj(x=1, y=False)

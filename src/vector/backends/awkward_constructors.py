@@ -202,6 +202,39 @@ def _check_names(
     return is_momentum, dimension, names, columns
 
 
+def _is_type_safe(array_type: typing.Any) -> bool:
+    import awkward
+
+    while isinstance(
+        array_type,
+        (
+            awkward.types.ArrayType,
+            awkward.types.RegularType,
+            awkward.types.ListType,
+            awkward.types.OptionType,
+        ),
+    ):
+        array_type = array_type.type
+
+    if not isinstance(array_type, awkward.types.RecordType):
+        return False
+
+    for field_type in array_type.fields():
+        if isinstance(field_type, awkward.types.OptionType):
+            field_type = field_type.type
+        if not isinstance(field_type, awkward.types.PrimitiveType):
+            return False
+        dt = field_type.dtype
+        if (
+            not dt.startswith("int")
+            and not dt.startswith("uint")
+            and not dt.startswith("float")
+        ):
+            return False
+
+    return True
+
+
 def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     """
     Constructs an Awkward Array of vectors, whose type is determined by the fields
@@ -257,6 +290,10 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     import vector.backends.awkward  # noqa: 401
 
     akarray = awkward.Array(*args, **kwargs)
+    array_type = akarray.type
+
+    if not _is_type_safe(array_type):
+        raise TypeError("a coordinate must be of the type int or float")
     fields = awkward.fields(akarray)
 
     is_momentum, dimension, names, arrays = _check_names(akarray, fields)
@@ -337,15 +374,14 @@ def zip(
     - ``mass`` may be substituted for ``tau``
 
     to make the vector a momentum vector.
-
-    No constraints are placed on the types of the vector fields, though if they
-    are not numbers, mathematical operations will fail. Usually, you want them to be
-    integers or floating-point numbers.
     """
     import awkward
 
     import vector
     import vector.backends.awkward
+
+    if not isinstance(arrays, dict):
+        raise TypeError("argument passed to vector.zip must be a dictionary")
 
     is_momentum, dimension, names, columns = _check_names(arrays, list(arrays.keys()))
 

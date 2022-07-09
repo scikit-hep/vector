@@ -21,6 +21,7 @@ vectors -
     vec = vector.VectorObject2D.from_xy(1, 2)
 
 """
+import numbers
 import typing
 
 import numpy
@@ -3060,10 +3061,6 @@ def obj(**coordinates: float) -> VectorObject:
 
     to make the vector a momentum vector.
 
-    No constraints are placed on the types of the coordinate attributes, but
-    if they are not numbers, mathematical operations will fail. Usually, you want
-    them to be ``int`` or ``float``.
-
     Alternatively, the :class:`vector.backends.object.VectorObject2D`,
     :class:`vector.backends.object.VectorObject3D`, and
     :class:`vector.backends.object.VectorObject4D` classes (with momentum
@@ -3094,6 +3091,11 @@ def obj(**coordinates: float) -> VectorObject:
     """
     is_momentum = False
     generic_coordinates = {}
+
+    for _, value in coordinates.items():
+        if not issubclass(type(value), numbers.Real) or isinstance(value, bool):
+            raise TypeError("a coordinate must be of the type int or float")
+
     if "px" in coordinates:
         is_momentum = True
         generic_coordinates["x"] = coordinates.pop("px")

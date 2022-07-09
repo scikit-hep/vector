@@ -7,8 +7,78 @@ import math
 import pickle
 
 import numpy
+import pytest
 
 import vector.backends.numpy
+
+
+def test_type_checks():
+
+    with pytest.raises(TypeError):
+        vector.backends.numpy.VectorNumpy2D(
+            (0, 0), dtype=[("x", numpy.float64), ("y", numpy.timedelta64)]
+        )
+
+    with pytest.raises(TypeError):
+        vector.backends.numpy.VectorNumpy2D(
+            (0, 0), dtype=[("x", numpy.complex64), ("y", numpy.float64)]
+        )
+
+    with pytest.raises(TypeError):
+        vector.backends.numpy.VectorNumpy2D(
+            [(0, 0), (0, 1), (3, 4)],
+            dtype=[("x", numpy.complex64), ("y", numpy.float64)],
+        )
+
+    with pytest.raises(TypeError):
+        vector.backends.numpy.VectorNumpy3D(
+            [([0], 0, 0), ([0], 1, 2), ([3], 4, 5)],
+            dtype=[("x", list), ("y", numpy.float64), ("z", numpy.float64)],
+        )
+
+    with pytest.raises(TypeError):
+        vector.backends.numpy.VectorNumpy4D(
+            [(0, 0, 0, 0), (0, 1, 2, 3), (3, 4, 5, 6)],
+            [
+                ("x", complex),
+                ("y", numpy.float64),
+                ("z", numpy.float64),
+                ("t", numpy.float64),
+            ],
+        )
+
+    with pytest.raises(TypeError):
+        vector.backends.numpy.MomentumNumpy2D(
+            (0, 0), dtype=[("x", numpy.float64), ("y", numpy.timedelta64)]
+        )
+
+    with pytest.raises(TypeError):
+        vector.backends.numpy.MomentumNumpy2D(
+            (0, 0), dtype=[("x", numpy.complex64), ("y", numpy.float64)]
+        )
+
+    with pytest.raises(TypeError):
+        vector.backends.numpy.MomentumNumpy3D(
+            [(0, 0), (0, 1), (3, 4)],
+            dtype=[("x", numpy.complex64), ("y", numpy.float64)],
+        )
+
+    with pytest.raises(TypeError):
+        vector.backends.numpy.MomentumNumpy4D(
+            [([0], 0, 0), ([0], 1, 2), ([3], 4, 5)],
+            dtype=[("x", list), ("y", numpy.float64), ("z", numpy.float64)],
+        )
+
+    with pytest.raises(TypeError):
+        vector.backends.numpy.MomentumNumpy4D(
+            [(0, 0, 0, 0), (0, 1, 2, 3), (3, 4, 5, 6)],
+            [
+                ("x", complex),
+                ("y", numpy.float64),
+                ("z", numpy.float64),
+                ("t", numpy.float64),
+            ],
+        )
 
 
 def test_xy():
