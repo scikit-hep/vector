@@ -1,4 +1,3 @@
-import shutil
 from pathlib import Path
 
 import nox
@@ -50,9 +49,5 @@ def docs(session):
 @nox.session
 def build(session):
     """Build an SDist and wheel."""
-    build_p = DIR.joinpath("build")
-    if build_p.exists():
-        shutil.rmtree(build_p)
-
     session.install("build")
     session.run("python", "-m", "build")
