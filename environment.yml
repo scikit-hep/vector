@@ -10,7 +10,7 @@ dependencies:
   - numpy >=1.13.3
   - root >=6.18.04
   - pip:
-      - "awkward>=1.2.0,<=2.0.0"
+      - "awkward>=1.2.0"
       - "uproot==4.*"
       - "scikit-hep-testdata>=0.2.0"
       - -e .

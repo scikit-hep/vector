@@ -205,6 +205,8 @@ def _check_names(
 def _is_type_safe(array_type: typing.Any) -> bool:
     import awkward
 
+    import vector
+
     while isinstance(
         array_type,
         (
@@ -214,17 +216,25 @@ def _is_type_safe(array_type: typing.Any) -> bool:
             awkward.types.OptionType,
         ),
     ):
-        array_type = array_type.type
+        array_type = array_type.content if vector._is_awkward_v2() else array_type.type
 
     if not isinstance(array_type, awkward.types.RecordType):
         return False
 
-    for field_type in array_type.fields():
+    contents = array_type.contents if vector._is_awkward_v2() else array_type.fields()
+    for field_type in contents:
         if isinstance(field_type, awkward.types.OptionType):
-            field_type = field_type.type
-        if not isinstance(field_type, awkward.types.PrimitiveType):
+            field_type = (
+                field_type.content if vector._is_awkward_v2() else field_type.type
+            )
+        if not isinstance(
+            field_type,
+            awkward.types.NumpyType
+            if vector._is_awkward_v2()
+            else awkward.types.PrimitiveType,
+        ):
             return False
-        dt = field_type.dtype
+        dt = field_type.primitive if vector._is_awkward_v2() else field_type.dtype
         if (
             not dt.startswith("int")
             and not dt.startswith("uint")
@@ -383,7 +393,9 @@ def zip(
     if not isinstance(arrays, dict):
         raise TypeError("argument passed to vector.zip must be a dictionary")
 
-    is_momentum, dimension, names, columns = _check_names(arrays, list(arrays.keys()))
+    is_momentum, dimension, names, columns = _check_names(
+        arrays, list(arrays.fields if vector._is_awkward_v2() else arrays.keys())  # type: ignore[attr-defined]
+    )
 
     behavior = None
     if not vector._awkward_registered:
