@@ -1601,14 +1601,14 @@ def _arraytype_of(awkwardtype: typing.Any, component: str) -> typing.Any:
     if isinstance(
         awkwardtype,
         ak._connect.numba.layout.NumpyArrayType
-        if vector._is_awkward_v2()
+        if hasattr(ak._connect, "numba")  # Awkward v2
         else ak._connect._numba.layout.NumpyArrayType,
     ):
         return awkwardtype.arraytype
     elif isinstance(
         awkwardtype,
         ak._connect.numba.layout.IndexedArrayType
-        if vector._is_awkward_v2()
+        if hasattr(ak._connect, "numba")  # Awkward v2
         else ak._connect._numba.layout.IndexedArrayType,
     ):
         return _arraytype_of(awkwardtype.contenttype, component)

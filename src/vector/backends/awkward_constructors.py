@@ -205,8 +205,6 @@ def _check_names(
 def _is_type_safe(array_type: typing.Any) -> bool:
     import awkward
 
-    import vector
-
     while isinstance(
         array_type,
         (
@@ -216,25 +214,37 @@ def _is_type_safe(array_type: typing.Any) -> bool:
             awkward.types.OptionType,
         ),
     ):
-        array_type = array_type.content if vector._is_awkward_v2() else array_type.type
+        # .content is Awkward v2
+        array_type = (
+            array_type.content if hasattr(array_type, "content") else array_type.type
+        )
 
     if not isinstance(array_type, awkward.types.RecordType):
         return False
 
-    contents = array_type.contents if vector._is_awkward_v2() else array_type.fields()
+    # .contents is Awkward v2
+    contents = (
+        array_type.contents if hasattr(array_type, "contents") else array_type.fields()
+    )
     for field_type in contents:
         if isinstance(field_type, awkward.types.OptionType):
             field_type = (
-                field_type.content if vector._is_awkward_v2() else field_type.type
+                field_type.content
+                if hasattr(array_type, "content")
+                else field_type.type
             )
         if not isinstance(
             field_type,
             awkward.types.NumpyType
-            if vector._is_awkward_v2()
+            if hasattr(awkward.types, "NumpyType")
             else awkward.types.PrimitiveType,
         ):
             return False
-        dt = field_type.primitive if vector._is_awkward_v2() else field_type.dtype
+        dt = (
+            field_type.primitive
+            if hasattr(field_type, "primitive")
+            else field_type.dtype
+        )
         if (
             not dt.startswith("int")
             and not dt.startswith("uint")
@@ -393,8 +403,9 @@ def zip(
     if not isinstance(arrays, dict):
         raise TypeError("argument passed to vector.zip must be a dictionary")
 
+    # Awkward v2
     is_momentum, dimension, names, columns = _check_names(
-        arrays, list(arrays.fields if vector._is_awkward_v2() else arrays.keys())  # type: ignore[attr-defined]
+        arrays, list(arrays.fields if hasattr(arrays, "fields") else arrays.keys())  # type: ignore[attr-defined]
     )
 
     behavior = None
