@@ -403,10 +403,7 @@ def zip(
     if not isinstance(arrays, dict):
         raise TypeError("argument passed to vector.zip must be a dictionary")
 
-    # Awkward v2
-    is_momentum, dimension, names, columns = _check_names(
-        arrays, list(arrays.fields if hasattr(arrays, "fields") else arrays.keys())  # type: ignore[attr-defined]
-    )
+    is_momentum, dimension, names, columns = _check_names(arrays, list(arrays.keys()))
 
     behavior = None
     if not vector._awkward_registered:

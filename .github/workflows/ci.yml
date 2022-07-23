@@ -55,8 +55,11 @@ jobs:
       - name: Install develop extras
         run: python -m pip install -e .[dev]
 
-      - name: Test package
+      - name: Test package with awkward v1.x
         run: python -m pytest -ra --cov=vector tests/
+
+      - name: Test package with awkward._v2
+        run: VECTOR_USE_AWKWARDV2=1 python -m pytest -ra --cov=vector tests/
 
       - name: Run doctests
         run: xdoctest ./src/vector/
