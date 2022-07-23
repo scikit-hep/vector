@@ -314,7 +314,7 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
 
     if not _is_type_safe(array_type):
         raise TypeError("a coordinate must be of the type int or float")
-    fields = awkward.fields(akarray)
+    fields = awkward.fields(akarray).copy()
 
     is_momentum, dimension, names, arrays = _check_names(akarray, fields)
 

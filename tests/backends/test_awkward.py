@@ -65,7 +65,12 @@ def test_rotateZ():
     array = vector.Array([[{"pt": 1, "phi": 0}], [], [{"pt": 2, "phi": 1}]])
     out = array.rotateZ(1)
     assert isinstance(out, vector.backends.awkward.MomentumArray2D)
-    assert out.tolist() == [[{"rho": 1, "phi": 1}], [], [{"rho": 2, "phi": 2}]]
+    lst = (
+        [arr.tolist() for arr in out.tolist()]
+        if hasattr(out.tolist(), "tolist")
+        else out.tolist()
+    )
+    assert lst == [[{"rho": 1, "phi": 1}], [], [{"rho": 2, "phi": 2}]]
 
     array = vector.Array(
         [[{"x": 1, "y": 0, "wow": 99}], [], [{"x": 2, "y": 1, "wow": 123}]]
@@ -85,7 +90,12 @@ def test_projection():
     )
     out = array.to_Vector2D()
     assert isinstance(out, vector.backends.awkward.VectorArray2D)
-    assert out.tolist() == [
+    lst = (
+        [arr.tolist() for arr in out.tolist()]
+        if hasattr(out.tolist(), "tolist")
+        else out.tolist()
+    )
+    assert lst == [
         [{"x": 1, "y": 2, "wow": 99}],
         [],
         [{"x": 4, "y": 5, "wow": 123}],
@@ -93,7 +103,12 @@ def test_projection():
 
     out = array.to_Vector4D()
     assert isinstance(out, vector.backends.awkward.VectorArray4D)
-    assert out.tolist() == [
+    lst = (
+        [arr.tolist() for arr in out.tolist()]
+        if hasattr(out.tolist(), "tolist")
+        else out.tolist()
+    )
+    assert lst == [
         [{"x": 1, "y": 2, "z": 3, "t": 0, "wow": 99}],
         [],
         [{"x": 4, "y": 5, "z": 6, "t": 0, "wow": 123}],
@@ -101,7 +116,11 @@ def test_projection():
 
     out = array.to_rhophietatau()
     assert isinstance(out, vector.backends.awkward.VectorArray4D)
-    (a,), (), (c,) = out.tolist()
+    (a,), (), (c,) = (
+        [arr.tolist() for arr in out.tolist()]
+        if hasattr(out.tolist(), "tolist")
+        else out.tolist()
+    )
     assert a == pytest.approx(
         {
             "rho": 2.23606797749979,
@@ -132,12 +151,22 @@ def test_add():
     )
     assert isinstance(one.add(two), vector.backends.awkward.VectorArray2D)
     assert isinstance(two.add(one), vector.backends.awkward.VectorArray2D)
-    assert one.add(two).tolist() == [
+    lst = (
+        [arr.tolist() for arr in one.add(two).tolist()]
+        if hasattr(one.add(two).tolist(), "tolist")
+        else one.add(two).tolist()
+    )
+    assert lst == [
         [{"x": 11, "y": 21.1}, {"x": 12, "y": 22.2}],
         [],
         [{"x": 1003, "y": 2003.3}],
     ]
-    assert two.add(one).tolist() == [
+    lst = (
+        [arr.tolist() for arr in two.add(one).tolist()]
+        if hasattr(two.add(one).tolist(), "tolist")
+        else two.add(one).tolist()
+    )
+    assert lst == [
         [{"x": 11, "y": 21.1}, {"x": 12, "y": 22.2}],
         [],
         [{"x": 1003, "y": 2003.3}],
@@ -146,12 +175,22 @@ def test_add():
     two = vector.array({"x": [10, 100, 1000], "y": [20, 200, 2000]})
     assert isinstance(one.add(two), vector.backends.awkward.VectorArray2D)
     assert isinstance(two.add(one), vector.backends.awkward.VectorArray2D)
-    assert one.add(two).tolist() == [
+    lst = (
+        [arr.tolist() for arr in one.add(two).tolist()]
+        if hasattr(one.add(two).tolist(), "tolist")
+        else one.add(two).tolist()
+    )
+    assert lst == [
         [{"x": 11, "y": 21.1}, {"x": 12, "y": 22.2}],
         [],
         [{"x": 1003, "y": 2003.3}],
     ]
-    assert two.add(one).tolist() == [
+    lst = (
+        [arr.tolist() for arr in two.add(one).tolist()]
+        if hasattr(two.add(one).tolist(), "tolist")
+        else two.add(one).tolist()
+    )
+    assert lst == [
         [{"x": 11, "y": 21.1}, {"x": 12, "y": 22.2}],
         [],
         [{"x": 1003, "y": 2003.3}],
@@ -160,12 +199,22 @@ def test_add():
     two = vector.obj(x=10, y=20)
     assert isinstance(one.add(two), vector.backends.awkward.VectorArray2D)
     assert isinstance(two.add(one), vector.backends.awkward.VectorArray2D)
-    assert one.add(two).tolist() == [
+    lst = (
+        [arr.tolist() for arr in one.add(two).tolist()]
+        if hasattr(one.add(two).tolist(), "tolist")
+        else one.add(two).tolist()
+    )
+    assert lst == [
         [{"x": 11, "y": 21.1}, {"x": 12, "y": 22.2}],
         [],
         [{"x": 13, "y": 23.3}],
     ]
-    assert two.add(one).tolist() == [
+    lst = (
+        [arr.tolist() for arr in two.add(one).tolist()]
+        if hasattr(two.add(one).tolist(), "tolist")
+        else two.add(one).tolist()
+    )
+    assert lst == [
         [{"x": 11, "y": 21.1}, {"x": 12, "y": 22.2}],
         [],
         [{"x": 13, "y": 23.3}],
@@ -203,6 +252,11 @@ def test_zip():
     assert isinstance(v, vector.backends.awkward.VectorArray2D)
     assert isinstance(v[1], vector.backends.awkward.VectorArray2D)
     assert isinstance(v[1, 0], vector.backends.awkward.VectorRecord2D)
-    assert v.tolist() == [[], [{"x": 1, "y": 1}]]
+    lst = (
+        [arr.tolist() for arr in v.tolist()]
+        if hasattr(v.tolist(), "tolist")
+        else v.tolist()
+    )
+    assert lst == [[], [{"x": 1, "y": 1}]]
     assert v.x.tolist() == [[], [1]]
     assert v.y.tolist() == [[], [1]]
