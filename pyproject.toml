@@ -14,10 +14,7 @@ keywords = [
 ]
 license = "BSD-3-Clause"
 maintainers = [ {name = "The Scikit-HEP admins", email = "scikit-hep-admins@googlegroups.com"} ]
-[[project.authors]]
-name = "Jim Pivarski, Henry Schreiner, Eduardo Rodrigues"
-email = "eduardo.rodrigues@cern.ch"
-
+authors = [ {name = "Jim Pivarski, Henry Schreiner, Eduardo Rodrigues", email = "eduardo.rodrigues@cern.ch"} ]
 requires-python = ">=3.6"
 dependencies = [
   'importlib-metadata>=0.22; python_version < "3.8"',
