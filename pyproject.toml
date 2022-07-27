@@ -1,19 +1,32 @@
 [build-system]
-requires = [
-    "hatchling",
-    "hatch-vcs",
-]
 build-backend = "hatchling.build"
+requires = [
+  "hatch-vcs",
+  "hatchling",
+]
 
 [project]
 name = "vector"
 description = "Vector classes and utilities"
 readme = { file = "README.md", content-type = "text/markdown" }
-maintainers = [ {name = "The Scikit-HEP admins", email = "scikit-hep-admins@googlegroups.com"} ]
-license = "BSD-3-Clause"
-requires-python = ">=3.6"
 keywords = [
-    "vector",
+  "vector",
+]
+license = "BSD-3-Clause"
+maintainers = [ {name = "The Scikit-HEP admins", email = "scikit-hep-admins@googlegroups.com"} ]
+[[project.authors]]
+name = "Jim Pivarski, Henry Schreiner, Eduardo Rodrigues"
+email = "eduardo.rodrigues@cern.ch"
+
+requires-python = ">=3.6"
+dependencies = [
+  'importlib-metadata>=0.22; python_version < "3.8"',
+  "numpy>=1.13.3",
+  "packaging>=19",
+  'typing-extensions; python_version < "3.8"',
+]
+dynamic = [
+  "version",
 ]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -35,53 +48,36 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Physics",
     "Typing :: Typed",
 ]
-dependencies = [
-    "importlib-metadata>=0.22;python_version<\"3.8\"",
-    "numpy>=1.13.3",
-    "packaging>=19.0",
-    "typing-extensions;python_version<\"3.8\"",
-]
-dynamic = [
-    "version",
-]
-
-[[project.authors]]
-name = "Jim Pivarski, Henry Schreiner, Eduardo Rodrigues"
-email = "eduardo.rodrigues@cern.ch"
-
 [project.optional-dependencies]
 awkward = [
-    "awkward>=1.2.0",
+  "awkward>=1.2",
 ]
 dev = [
-    "awkward>=1.2.0",
-    "numba>=0.50; python_version>=\"3.6\"",
-    "pytest-cov>=3.0.0",
-    "pytest>=6",
-    "xdoctest>=1.0.0",
+  "awkward>=1.2",
+  'numba>=0.50; python_version >= "3.6"',
+  "pytest>=6",
+  "pytest-cov>=3",
+  "xdoctest>=1",
 ]
 docs = [
-    "awkward",
-    "ipykernel",
-    "myst-parser>0.13",
-    "nbsphinx",
-    "sphinx-math-dollar",
-    "Sphinx>=4.0",
-    "sphinx_book_theme>=0.0.42",
-    "sphinx_copybutton",
+  "awkward",
+  "ipykernel",
+  "myst-parser>0.13",
+  "nbsphinx",
+  "Sphinx>=4",
+  "sphinx-math-dollar",
+  "sphinx_book_theme>=0.0.42",
+  "sphinx_copybutton",
 ]
 test = [
-    "pytest-cov>=3.0.0",
-    "pytest>=6",
-    "xdoctest>=1.0.0",
+  "pytest>=6",
+  "pytest-cov>=3",
+  "xdoctest>=1",
 ]
 test-extras = [
-    "spark-parser",
-    "uncompyle6",
+  "spark-parser",
+  "uncompyle6",
 ]
-
-[project.entry-points.numba_extensions]
-init = "vector:register_numba"
 
 [project.urls]
 "Bug Tracker" = "https://github.com/scikit-hep/vector/issues"
@@ -89,6 +85,11 @@ Changelog = "https://vector.readthedocs.io/en/latest/changelog.html"
 Discussions = "https://github.com/scikit-hep/vector/discussions"
 Documentation = "https://vector.readthedocs.io/"
 Homepage = "https://github.com/scikit-hep/vector"
+
+[project.entry-points.numba_extensions]
+init = "vector:register_numba"
+
+
 
 [tool.hatch]
 version.source = "vcs"
