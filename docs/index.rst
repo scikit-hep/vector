@@ -75,12 +75,13 @@ Getting help
 
 Developing vector
 -----------------
-If you are planning to develop ``vector`` (thank you!), or if you want to use the latest commit of ``vector`` on your local machine,
-you might want to install it from the source. The developer guide introduces a user to the various tasks a developer might perform,
-including installing from source, testing the library, documenting the library, etc. For a general developer guide for all the
-Scikit-HEP projects, refer to the `Scikit-HEP website <https://scikit-hep.org/developer>`_.
+If you are planning to develop ``vector`` (thank you!), or if you want to use the latest commit of ``vector`` on your local machine, you might want to install it from the source. The developer guide introduces a user to the various tasks a developer might perform, including installing from source, testing the library, documenting the library, etc. For a general developer guide applicable to all the ``Scikit-HEP`` projects, refer to the `Scikit-HEP website <https://scikit-hep.org/developer>`_.
 
-**Note**: The developer guide is still in progress.
+.. toctree::
+   :maxdepth: 3
+   :caption: Developing vector
+
+   dev_guide.rst
 
 API reference
 -------------
