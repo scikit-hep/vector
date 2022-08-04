@@ -145,12 +145,3 @@ module = [
     "awkward.*",
 ]
 ignore_missing_imports = true
-
-[tool.check-manifest]
-ignore = [
-    ".*",
-    "environment.yml",
-    "src/vector/version.py",
-    "docs/**",
-    "noxfile.py",
-]
