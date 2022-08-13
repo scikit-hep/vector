@@ -35,7 +35,7 @@ repos:
       - id: isort
 
   - repo: https://github.com/tox-dev/pyproject-fmt
-    rev: "0.3.4"
+    rev: "0.3.5"
     hooks:
       - id: pyproject-fmt
 
@@ -50,7 +50,7 @@ repos:
           - packaging
 
   - repo: https://github.com/PyCQA/flake8
-    rev: 5.0.2
+    rev: 5.0.4
     hooks:
       - id: flake8
         additional_dependencies:
