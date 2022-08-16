@@ -24,7 +24,7 @@ to install the behaviors globally, so that any record named ``Vector2D``,
 will have these properties and methods.
 
 The Awkward-Vectors-in-Numba extension is also implemented here, since it requires
-two non-strict dependencies of Vector: Awkward and Numba. Awkward's ``awkward.behavior``
+two non-strict dependencies of Vector: Awkward and Numba. Awkward's ``ak.behavior``
 manages this non-strictness well.
 """
 
@@ -32,7 +32,7 @@ import numbers
 import types
 import typing
 
-import awkward
+import awkward as ak
 import numpy
 
 import vector
@@ -77,9 +77,7 @@ from vector.backends.object import (
 # Throws an error if awkward is too old
 vector._import_awkward()
 
-ArrayOrRecord = typing.TypeVar(
-    "ArrayOrRecord", bound=typing.Union[awkward.Array, awkward.Record]
-)
+ArrayOrRecord = typing.TypeVar("ArrayOrRecord", bound=typing.Union[ak.Array, ak.Record])
 
 behavior: typing.Any = {}
 
@@ -106,7 +104,7 @@ class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
         return f"{type(self).__name__}{self.elements}"
 
     @classmethod
-    def from_fields(cls, array: awkward.Array) -> "AzimuthalAwkward":
+    def from_fields(cls, array: ak.Array) -> "AzimuthalAwkward":
         """
         Create a :class:`vector.backends.awkward.AzimuthalAwkwardXY` or a
         :class:`vector.backends.awkward.AzimuthalAwkwardRhoPhi`, depending on
@@ -114,8 +112,8 @@ class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
 
         Examples:
             >>> import vector
-            >>> import awkward
-            >>> a = awkward.Array([{"x": [1, 2]}, {"y": [1]}])
+            >>> import awkward as ak
+            >>> a = ak.Array([{"x": [1, 2]}, {"y": [1]}])
             >>> az = vector.backends.awkward.AzimuthalAwkward.from_fields(a)
             >>> az
             AzimuthalAwkwardXY(<Array [[1, 2], None] type='2 * option[var * int64]'>, <Array [None, [1]] type='2 * option[var * int64]'>)
@@ -123,7 +121,7 @@ class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
             (<Array [[1, 2], None] type='2 * option[var * int64]'>, <Array [None, [1]] type='2 * option[var
             * int64]'>)
         """
-        fields = awkward.fields(array)
+        fields = ak.fields(array)
         if "x" in fields and "y" in fields:
             return AzimuthalAwkwardXY(array["x"], array["y"])
         elif "rho" in fields and "phi" in fields:
@@ -135,7 +133,7 @@ class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
             )
 
     @classmethod
-    def from_momentum_fields(cls, array: awkward.Array) -> "AzimuthalAwkward":
+    def from_momentum_fields(cls, array: ak.Array) -> "AzimuthalAwkward":
         """
         Create a :class:`vector.backends.awkward.AzimuthalAwkwardXY` or a
         :class:`vector.backends.awkward.AzimuthalAwkwardRhoPhi`, depending on
@@ -143,8 +141,8 @@ class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
 
         Examples:
             >>> import vector
-            >>> import awkward
-            >>> a = awkward.Array([{"px": [1, 2]}, {"py": [1]}])
+            >>> import awkward as ak
+            >>> a = ak.Array([{"px": [1, 2]}, {"py": [1]}])
             >>> az = vector.backends.awkward.AzimuthalAwkward.from_momentum_fields(a)
             >>> az
             AzimuthalAwkwardXY(<Array [[1, 2], None] type='2 * option[var * int64]'>, <Array [None, [1]] type='2 * option[var * int64]'>)
@@ -152,7 +150,7 @@ class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
             (<Array [[1, 2], None] type='2 * option[var * int64]'>, <Array [None, [1]] type='2 * option[var
             * int64]'>)
         """
-        fields = awkward.fields(array)
+        fields = ak.fields(array)
         if "x" in fields and "y" in fields:
             return AzimuthalAwkwardXY(array["x"], array["y"])
         elif "x" in fields and "py" in fields:
@@ -187,7 +185,7 @@ class LongitudinalAwkward(CoordinatesAwkward, Longitudinal):
         return f"{type(self).__name__}{self.elements}"
 
     @classmethod
-    def from_fields(cls, array: awkward.Array) -> "LongitudinalAwkward":
+    def from_fields(cls, array: ak.Array) -> "LongitudinalAwkward":
         """
         Create a :class:`vector.backends.awkward.LongitudinalAwkwardZ`, a
         :class:`vector.backends.awkward.LongitudinalAwkwardTheta`, or a
@@ -196,15 +194,15 @@ class LongitudinalAwkward(CoordinatesAwkward, Longitudinal):
 
         Examples:
             >>> import vector
-            >>> import awkward as  awkward
-            >>> a = awkward.Array([{"theta": [1, 0]}])
+            >>> import awkward as ak
+            >>> a = ak.Array([{"theta": [1, 0]}])
             >>> l = vector.backends.awkward.LongitudinalAwkward.from_fields(a)
             >>> l
             LongitudinalAwkwardTheta(<Array [[1, 0]] type='1 * var * int64'>,)
             >>> l.elements
             (<Array [[1, 0]] type='1 * var * int64'>,)
         """
-        fields = awkward.fields(array)
+        fields = ak.fields(array)
         if "z" in fields:
             return LongitudinalAwkwardZ(array["z"])
         elif "theta" in fields:
@@ -218,7 +216,7 @@ class LongitudinalAwkward(CoordinatesAwkward, Longitudinal):
             )
 
     @classmethod
-    def from_momentum_fields(cls, array: awkward.Array) -> "LongitudinalAwkward":
+    def from_momentum_fields(cls, array: ak.Array) -> "LongitudinalAwkward":
         """
         Create a :class:`vector.backends.awkward.LongitudinalAwkwardZ`, a
         :class:`vector.backends.awkward.LongitudinalAwkwardTheta`, or a
@@ -227,15 +225,15 @@ class LongitudinalAwkward(CoordinatesAwkward, Longitudinal):
 
         Examples:
             >>> import vector
-            >>> import awkward as  awkward
-            >>> a = awkward.Array([{"theta": [1, 0]}])
+            >>> import awkward as ak
+            >>> a = ak.Array([{"theta": [1, 0]}])
             >>> l = vector.backends.awkward.LongitudinalAwkward.from_momentum_fields(a)
             >>> l
             LongitudinalAwkwardTheta(<Array [[1, 0]] type='1 * var * int64'>,)
             >>> l.elements
             (<Array [[1, 0]] type='1 * var * int64'>,)
         """
-        fields = awkward.fields(array)
+        fields = ak.fields(array)
         if "z" in fields:
             return LongitudinalAwkwardZ(array["z"])
         elif "pz" in fields:
@@ -266,7 +264,7 @@ class TemporalAwkward(CoordinatesAwkward, Temporal):
         return f"{type(self).__name__}{self.elements}"
 
     @classmethod
-    def from_fields(cls, array: awkward.Array) -> "TemporalAwkward":
+    def from_fields(cls, array: ak.Array) -> "TemporalAwkward":
         """
         Create a :class:`vector.backends.awkward.TemporalT` or a
         :class:`vector.backends.awkward.TemporalTau`, depending on
@@ -274,15 +272,15 @@ class TemporalAwkward(CoordinatesAwkward, Temporal):
 
         Examples:
             >>> import vector
-            >>> import awkward as  awkward
-            >>> a = awkward.Array([{"tau": [1, 0]}])
+            >>> import awkward as ak
+            >>> a = ak.Array([{"tau": [1, 0]}])
             >>> t = vector.backends.awkward.TemporalAwkward.from_fields(a)
             >>> t
             TemporalAwkwardTau(<Array [[1, 0]] type='1 * var * int64'>,)
             >>> t.elements
             (<Array [[1, 0]] type='1 * var * int64'>,)
         """
-        fields = awkward.fields(array)
+        fields = ak.fields(array)
         if "t" in fields:
             return TemporalAwkwardT(array["t"])
         elif "tau" in fields:
@@ -294,7 +292,7 @@ class TemporalAwkward(CoordinatesAwkward, Temporal):
             )
 
     @classmethod
-    def from_momentum_fields(cls, array: awkward.Array) -> "TemporalAwkward":
+    def from_momentum_fields(cls, array: ak.Array) -> "TemporalAwkward":
         """
         Create a :class:`vector.backends.awkward.TemporalT` or a
         :class:`vector.backends.awkward.TemporalTau`, depending on
@@ -302,15 +300,15 @@ class TemporalAwkward(CoordinatesAwkward, Temporal):
 
         Examples:
             >>> import vector
-            >>> import awkward as  awkward
-            >>> a = awkward.Array([{"mass": [1, 0]}])
+            >>> import awkward as ak
+            >>> a = ak.Array([{"mass": [1, 0]}])
             >>> t = vector.backends.awkward.TemporalAwkward.from_momentum_fields(a)
             >>> t
             TemporalAwkwardTau(<Array [[1, 0]] type='1 * var * int64'>,)
             >>> t.elements
             (<Array [[1, 0]] type='1 * var * int64'>,)
         """
-        fields = awkward.fields(array)
+        fields = ak.fields(array)
         if "t" in fields:
             return TemporalAwkwardT(array["t"])
         elif "E" in fields:
@@ -340,8 +338,8 @@ class AzimuthalAwkwardXY(AzimuthalAwkward, AzimuthalXY):
 
     Examples:
         >>> import vector
-        >>> import awkward
-        >>> a = awkward.Array([{"x": [1, 2]}, {"y": [1]}])
+        >>> import awkward as ak
+        >>> a = ak.Array([{"x": [1, 2]}, {"y": [1]}])
         >>> az = vector.backends.awkward.AzimuthalAwkwardXY(a["x"], a["y"])
         >>> az
         AzimuthalAwkwardXY(<Array [[1, 2], None] type='2 * option[var * int64]'>, <Array [None, [1]] type='2 * option[var * int64]'>)
@@ -375,8 +373,8 @@ class AzimuthalAwkwardRhoPhi(AzimuthalAwkward, AzimuthalRhoPhi):
 
     Examples:
         >>> import vector
-        >>> import awkward
-        >>> a = awkward.Array([{"rho": [1, 2]}, {"phi": [1]}])
+        >>> import awkward as ak
+        >>> a = ak.Array([{"rho": [1, 2]}, {"phi": [1]}])
         >>> az = vector.backends.awkward.AzimuthalAwkwardRhoPhi(a["rho"], a["phi"])
         >>> az
         AzimuthalAwkwardRhoPhi(<Array [[1, 2], None] type='2 * option[var * int64]'>, <Array [None, [1]] type='2 * option[var * int64]'>)
@@ -410,8 +408,8 @@ class LongitudinalAwkwardZ(LongitudinalAwkward, LongitudinalZ):
 
     Examples:
         >>> import vector
-        >>> import awkward
-        >>> a = awkward.Array([{"z": [1, 2]}])
+        >>> import awkward as ak
+        >>> a = ak.Array([{"z": [1, 2]}])
         >>> l = vector.backends.awkward.LongitudinalAwkwardZ(a["z"])
         >>> l
         LongitudinalAwkwardZ(<Array [[1, 2]] type='1 * var * int64'>,)
@@ -444,8 +442,8 @@ class LongitudinalAwkwardTheta(LongitudinalAwkward, LongitudinalTheta):
 
     Examples:
         >>> import vector
-        >>> import awkward
-        >>> a = awkward.Array([{"theta": [1, 2]}])
+        >>> import awkward as ak
+        >>> a = ak.Array([{"theta": [1, 2]}])
         >>> l = vector.backends.awkward.LongitudinalAwkwardTheta(a["theta"])
         >>> l
         LongitudinalAwkwardTheta(<Array [[1, 2]] type='1 * var * int64'>,)
@@ -478,8 +476,8 @@ class LongitudinalAwkwardEta(LongitudinalAwkward, LongitudinalEta):
 
     Examples:
         >>> import vector
-        >>> import awkward
-        >>> a = awkward.Array([{"eta": [1, 2]}])
+        >>> import awkward as ak
+        >>> a = ak.Array([{"eta": [1, 2]}])
         >>> l = vector.backends.awkward.LongitudinalAwkwardEta(a["eta"])
         >>> l
         LongitudinalAwkwardEta(<Array [[1, 2]] type='1 * var * int64'>,)
@@ -512,8 +510,8 @@ class TemporalAwkwardT(TemporalAwkward, TemporalT):
 
     Examples:
         >>> import vector
-        >>> import awkward
-        >>> a = awkward.Array([{"t": [1, 2]}])
+        >>> import awkward as ak
+        >>> a = ak.Array([{"t": [1, 2]}])
         >>> t = vector.backends.awkward.TemporalAwkwardT(a["t"])
         >>> t
         TemporalAwkwardT(<Array [[1, 2]] type='1 * var * int64'>,)
@@ -546,8 +544,8 @@ class TemporalAwkwardTau(TemporalAwkward, TemporalTau):
 
     Examples:
         >>> import vector
-        >>> import awkward
-        >>> a = awkward.Array([{"tau": [1, 2]}])
+        >>> import awkward as ak
+        >>> a = ak.Array([{"tau": [1, 2]}])
         >>> t = vector.backends.awkward.TemporalAwkwardTau(a["tau"])
         >>> t
         TemporalAwkwardTau(<Array [[1, 2]] type='1 * var * int64'>,)
@@ -597,12 +595,12 @@ def _class_to_name(cls: typing.Type[VectorProtocol]) -> str:
 
 
 def _yes_record(
-    x: awkward.Array,
-) -> typing.Optional[typing.Union[float, awkward.Record]]:
+    x: ak.Array,
+) -> typing.Optional[typing.Union[float, ak.Record]]:
     return x[0]
 
 
-def _no_record(x: awkward.Array) -> typing.Optional[awkward.Array]:
+def _no_record(x: ak.Array) -> typing.Optional[ak.Array]:
     return x
 
 
@@ -613,7 +611,7 @@ class VectorAwkward:
 
     def __getitem__(
         self, where: typing.Any
-    ) -> typing.Optional[typing.Union[float, awkward.Array, awkward.Record]]:
+    ) -> typing.Optional[typing.Union[float, ak.Array, ak.Record]]:
         # "__getitem__" undefined in superclass
         return super().__getitem__(where)  # type: ignore[misc]
 
@@ -639,12 +637,12 @@ class VectorAwkward:
         if returns == [float] or returns == [bool]:
             return result
 
-        if all(not isinstance(x, awkward.Array) for x in result):
+        if all(not isinstance(x, ak.Array) for x in result):
             maybe_record = _yes_record
             result = [
-                awkward.Array(x.layout.array[x.layout.at : x.layout.at + 1])
-                if isinstance(x, awkward.Record)
-                else awkward.Array([x])
+                ak.Array(x.layout.array[x.layout.at : x.layout.at + 1])
+                if isinstance(x, ak.Record)
+                else ak.Array([x])
                 for x in result
             ]
         else:
@@ -655,11 +653,9 @@ class VectorAwkward:
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
         ):
-            first = [x for x in result if isinstance(x, awkward.Array)][0]
+            first = [x for x in result if isinstance(x, ak.Array)][0]
             result = [
-                x
-                if isinstance(x, awkward.Array)
-                else awkward.broadcast_arrays(first, x)[1]
+                x if isinstance(x, ak.Array) else ak.broadcast_arrays(first, x)[1]
                 for x in result
             ]
 
@@ -672,7 +668,7 @@ class VectorAwkward:
                 names.extend(["rho", "phi"])
                 arrays.extend([result[0], result[1]])
 
-            fields = awkward.fields(self)
+            fields = ak.fields(self)
             if num_vecargs == 1:
                 for name in fields:
                     if name not in ("x", "y", "rho", "phi"):
@@ -687,7 +683,7 @@ class VectorAwkward:
                 cls = cls.ProjectionClass2D
 
             return maybe_record(
-                awkward.zip(
+                ak.zip(
                     dict(zip(names, arrays)),
                     depth_limit=first.layout.purelist_depth,
                     with_name=_class_to_name(cls),
@@ -701,11 +697,9 @@ class VectorAwkward:
             and issubclass(returns[0], Azimuthal)
             and returns[1] is None
         ):
-            first = [x for x in result if isinstance(x, awkward.Array)][0]
+            first = [x for x in result if isinstance(x, ak.Array)][0]
             result = [
-                x
-                if isinstance(x, awkward.Array)
-                else awkward.broadcast_arrays(first, x)[1]
+                x if isinstance(x, ak.Array) else ak.broadcast_arrays(first, x)[1]
                 for x in result
             ]
 
@@ -719,7 +713,7 @@ class VectorAwkward:
                 arrays.extend([result[0], result[1]])
 
             if num_vecargs == 1:
-                for name in awkward.fields(self):
+                for name in ak.fields(self):
                     if name not in (
                         "x",
                         "y",
@@ -735,7 +729,7 @@ class VectorAwkward:
                         arrays.append(self[name])
 
             return maybe_record(
-                awkward.zip(
+                ak.zip(
                     dict(zip(names, arrays)),
                     depth_limit=first.layout.purelist_depth,
                     with_name=_class_to_name(cls.ProjectionClass2D),
@@ -750,11 +744,9 @@ class VectorAwkward:
             and isinstance(returns[1], type)
             and issubclass(returns[1], Longitudinal)
         ):
-            first = [x for x in result if isinstance(x, awkward.Array)][0]
+            first = [x for x in result if isinstance(x, ak.Array)][0]
             result = [
-                x
-                if isinstance(x, awkward.Array)
-                else awkward.broadcast_arrays(first, x)[1]
+                x if isinstance(x, ak.Array) else ak.broadcast_arrays(first, x)[1]
                 for x in result
             ]
 
@@ -777,7 +769,7 @@ class VectorAwkward:
                 names.append("eta")
                 arrays.append(result[2])
 
-            fields = awkward.fields(self)
+            fields = ak.fields(self)
             if num_vecargs == 1:
                 for name in fields:
                     if name not in ("x", "y", "rho", "phi", "z", "theta", "eta"):
@@ -790,7 +782,7 @@ class VectorAwkward:
                 cls = cls.ProjectionClass3D
 
             return maybe_record(
-                awkward.zip(
+                ak.zip(
                     dict(zip(names, arrays)),
                     depth_limit=first.layout.purelist_depth,
                     with_name=_class_to_name(cls),
@@ -806,11 +798,9 @@ class VectorAwkward:
             and issubclass(returns[1], Longitudinal)
             and returns[2] is None
         ):
-            first = [x for x in result if isinstance(x, awkward.Array)][0]
+            first = [x for x in result if isinstance(x, ak.Array)][0]
             result = [
-                x
-                if isinstance(x, awkward.Array)
-                else awkward.broadcast_arrays(first, x)[1]
+                x if isinstance(x, ak.Array) else ak.broadcast_arrays(first, x)[1]
                 for x in result
             ]
 
@@ -834,7 +824,7 @@ class VectorAwkward:
                 arrays.append(result[2])
 
             if num_vecargs == 1:
-                for name in awkward.fields(self):
+                for name in ak.fields(self):
                     if name not in (
                         "x",
                         "y",
@@ -850,7 +840,7 @@ class VectorAwkward:
                         arrays.append(self[name])
 
             return maybe_record(
-                awkward.zip(
+                ak.zip(
                     dict(zip(names, arrays)),
                     depth_limit=first.layout.purelist_depth,
                     with_name=_class_to_name(cls.ProjectionClass3D),
@@ -867,11 +857,9 @@ class VectorAwkward:
             and isinstance(returns[2], type)
             and issubclass(returns[2], Temporal)
         ):
-            first = [x for x in result if isinstance(x, awkward.Array)][0]
+            first = [x for x in result if isinstance(x, ak.Array)][0]
             result = [
-                x
-                if isinstance(x, awkward.Array)
-                else awkward.broadcast_arrays(first, x)[1]
+                x if isinstance(x, ak.Array) else ak.broadcast_arrays(first, x)[1]
                 for x in result
             ]
 
@@ -902,7 +890,7 @@ class VectorAwkward:
                 arrays.append(result[3])
 
             if num_vecargs == 1:
-                for name in awkward.fields(self):
+                for name in ak.fields(self):
                     if name not in (
                         "x",
                         "y",
@@ -918,7 +906,7 @@ class VectorAwkward:
                         arrays.append(self[name])
 
             return maybe_record(
-                awkward.zip(
+                ak.zip(
                     dict(zip(names, arrays)),
                     depth_limit=first.layout.purelist_depth,
                     with_name=_class_to_name(cls.ProjectionClass4D),
@@ -1229,10 +1217,10 @@ class MomentumAwkward4D(LorentzMomentum, VectorAwkward4D):
         return TemporalAwkward.from_momentum_fields(self)
 
 
-# awkward.Array and awkward.Record subclasses ###########################################
+# ak.Array and ak.Record subclasses ###########################################
 
 
-class VectorArray2D(VectorAwkward2D, awkward.Array):  # type: ignore[misc]
+class VectorArray2D(VectorAwkward2D, ak.Array):  # type: ignore[misc]
     """
     Defines ``awkward`` behavior for a 2 dimensional vector.
 
@@ -1248,15 +1236,13 @@ class VectorArray2D(VectorAwkward2D, awkward.Array):  # type: ignore[misc]
         equal_nan: BoolCollection = False,
     ) -> BoolCollection:
         """Like ``np.ndarray.allclose``, but for VectorArray2D."""
-        return awkward.all(
-            self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan)
-        )
+        return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
 
 behavior["*", "Vector2D"] = VectorArray2D
 
 
-class VectorRecord2D(VectorAwkward2D, awkward.Record):  # type: ignore[misc]
+class VectorRecord2D(VectorAwkward2D, ak.Record):  # type: ignore[misc]
     """
     Defines ``awkward`` behavior for a 2 dimensional vector record.
 
@@ -1270,7 +1256,7 @@ class VectorRecord2D(VectorAwkward2D, awkward.Record):  # type: ignore[misc]
 behavior["Vector2D"] = VectorRecord2D
 
 
-class VectorArray3D(VectorAwkward3D, awkward.Array):  # type: ignore[misc]
+class VectorArray3D(VectorAwkward3D, ak.Array):  # type: ignore[misc]
     """
     Defines ``awkward`` behavior for a 3 dimensional vector.
 
@@ -1286,15 +1272,13 @@ class VectorArray3D(VectorAwkward3D, awkward.Array):  # type: ignore[misc]
         equal_nan: BoolCollection = False,
     ) -> BoolCollection:
         """Like ``np.ndarray.allclose``, but for VectorArray3D."""
-        return awkward.all(
-            self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan)
-        )
+        return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
 
 behavior["*", "Vector3D"] = VectorArray3D
 
 
-class VectorRecord3D(VectorAwkward3D, awkward.Record):  # type: ignore[misc]
+class VectorRecord3D(VectorAwkward3D, ak.Record):  # type: ignore[misc]
     """
     Defines ``awkward`` behavior for a 3 dimensional vector record.
 
@@ -1308,7 +1292,7 @@ class VectorRecord3D(VectorAwkward3D, awkward.Record):  # type: ignore[misc]
 behavior["Vector3D"] = VectorRecord3D
 
 
-class VectorArray4D(VectorAwkward4D, awkward.Array):  # type: ignore[misc]
+class VectorArray4D(VectorAwkward4D, ak.Array):  # type: ignore[misc]
     """
     Defines ``awkward`` behavior for a 4 dimensional vector.
 
@@ -1324,15 +1308,13 @@ class VectorArray4D(VectorAwkward4D, awkward.Array):  # type: ignore[misc]
         equal_nan: BoolCollection = False,
     ) -> BoolCollection:
         """Like ``np.ndarray.allclose``, but for VectorArray4D."""
-        return awkward.all(
-            self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan)
-        )
+        return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
 
 behavior["*", "Vector4D"] = VectorArray4D
 
 
-class VectorRecord4D(VectorAwkward4D, awkward.Record):  # type: ignore[misc]
+class VectorRecord4D(VectorAwkward4D, ak.Record):  # type: ignore[misc]
     """
     Defines ``awkward`` behavior for a 4 dimensional vector record.
 
@@ -1346,7 +1328,7 @@ class VectorRecord4D(VectorAwkward4D, awkward.Record):  # type: ignore[misc]
 behavior["Vector4D"] = VectorRecord4D
 
 
-class MomentumArray2D(MomentumAwkward2D, awkward.Array):  # type: ignore[misc]
+class MomentumArray2D(MomentumAwkward2D, ak.Array):  # type: ignore[misc]
     """
     Defines ``awkward`` behavior for a 2 dimensional momentum vector.
 
@@ -1362,15 +1344,13 @@ class MomentumArray2D(MomentumAwkward2D, awkward.Array):  # type: ignore[misc]
         equal_nan: BoolCollection = False,
     ) -> BoolCollection:
         """Like ``np.ndarray.allclose``, but for MomentumArray4D."""
-        return awkward.all(
-            self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan)
-        )
+        return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
 
 behavior["*", "Momentum2D"] = MomentumArray2D
 
 
-class MomentumRecord2D(MomentumAwkward2D, awkward.Record):  # type: ignore[misc]
+class MomentumRecord2D(MomentumAwkward2D, ak.Record):  # type: ignore[misc]
     """
     Defines ``awkward`` behavior for a 2 dimensional momentum record.
 
@@ -1384,7 +1364,7 @@ class MomentumRecord2D(MomentumAwkward2D, awkward.Record):  # type: ignore[misc]
 behavior["Momentum2D"] = MomentumRecord2D
 
 
-class MomentumArray3D(MomentumAwkward3D, awkward.Array):  # type: ignore[misc]
+class MomentumArray3D(MomentumAwkward3D, ak.Array):  # type: ignore[misc]
     """
     Defines ``awkward`` behavior for a 3 dimensional momentum vector.
 
@@ -1399,15 +1379,13 @@ class MomentumArray3D(MomentumAwkward3D, awkward.Array):  # type: ignore[misc]
         atol: ScalarCollection = 1e-08,
         equal_nan: BoolCollection = False,
     ) -> BoolCollection:
-        return awkward.all(
-            self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan)
-        )
+        return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
 
 behavior["*", "Momentum3D"] = MomentumArray3D
 
 
-class MomentumRecord3D(MomentumAwkward3D, awkward.Record):  # type: ignore[misc]
+class MomentumRecord3D(MomentumAwkward3D, ak.Record):  # type: ignore[misc]
     """
     Defines ``awkward`` behavior for a 3 dimensional momentum record.
 
@@ -1421,7 +1399,7 @@ class MomentumRecord3D(MomentumAwkward3D, awkward.Record):  # type: ignore[misc]
 behavior["Momentum3D"] = MomentumRecord3D
 
 
-class MomentumArray4D(MomentumAwkward4D, awkward.Array):  # type: ignore[misc]
+class MomentumArray4D(MomentumAwkward4D, ak.Array):  # type: ignore[misc]
     """
     Defines ``awkward`` behavior for a 4 dimensional momentum vector.
 
@@ -1436,15 +1414,13 @@ class MomentumArray4D(MomentumAwkward4D, awkward.Array):  # type: ignore[misc]
         atol: ScalarCollection = 1e-08,
         equal_nan: BoolCollection = False,
     ) -> BoolCollection:
-        return awkward.all(
-            self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan)
-        )
+        return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
 
 behavior["*", "Momentum4D"] = MomentumArray4D
 
 
-class MomentumRecord4D(MomentumAwkward4D, awkward.Record):  # type: ignore[misc]
+class MomentumRecord4D(MomentumAwkward4D, ak.Record):  # type: ignore[misc]
     """
     Defines ``awkward`` behavior for a 4 dimensional momentum record.
 
@@ -1626,16 +1602,16 @@ def _arraytype_of(awkwardtype: typing.Any, component: str) -> typing.Any:
 
     if isinstance(
         awkwardtype,
-        awkward._connect.numba.layout.NumpyArrayType
-        if hasattr(awkward._connect, "numba")  # Awkward v2
-        else awkward._connect._numba.layout.NumpyArrayType,
+        ak._connect.numba.layout.NumpyArrayType
+        if hasattr(ak._connect, "numba")  # Awkward v2
+        else ak._connect._numba.layout.NumpyArrayType,
     ):
         return awkwardtype.arraytype
     elif isinstance(
         awkwardtype,
-        awkward._connect.numba.layout.IndexedArrayType
-        if hasattr(awkward._connect, "numba")  # Awkward v2
-        else awkward._connect._numba.layout.IndexedArrayType,
+        ak._connect.numba.layout.IndexedArrayType
+        if hasattr(ak._connect, "numba")  # Awkward v2
+        else ak._connect._numba.layout.IndexedArrayType,
     ):
         return _arraytype_of(awkwardtype.contenttype, component)
     else:
@@ -2007,16 +1983,16 @@ def _numba_lower(
     return context.compile_internal(builder, impl, sig, args)
 
 
-awkward.behavior["__numba_typer__", "Vector2D"] = _numba_typer_Vector2D
-awkward.behavior["__numba_typer__", "Vector3D"] = _numba_typer_Vector3D
-awkward.behavior["__numba_typer__", "Vector4D"] = _numba_typer_Vector4D
-awkward.behavior["__numba_typer__", "Momentum2D"] = _numba_typer_Momentum2D
-awkward.behavior["__numba_typer__", "Momentum3D"] = _numba_typer_Momentum3D
-awkward.behavior["__numba_typer__", "Momentum4D"] = _numba_typer_Momentum4D
+ak.behavior["__numba_typer__", "Vector2D"] = _numba_typer_Vector2D
+ak.behavior["__numba_typer__", "Vector3D"] = _numba_typer_Vector3D
+ak.behavior["__numba_typer__", "Vector4D"] = _numba_typer_Vector4D
+ak.behavior["__numba_typer__", "Momentum2D"] = _numba_typer_Momentum2D
+ak.behavior["__numba_typer__", "Momentum3D"] = _numba_typer_Momentum3D
+ak.behavior["__numba_typer__", "Momentum4D"] = _numba_typer_Momentum4D
 
-awkward.behavior["__numba_lower__", "Vector2D"] = _numba_lower
-awkward.behavior["__numba_lower__", "Vector3D"] = _numba_lower
-awkward.behavior["__numba_lower__", "Vector4D"] = _numba_lower
-awkward.behavior["__numba_lower__", "Momentum2D"] = _numba_lower
-awkward.behavior["__numba_lower__", "Momentum3D"] = _numba_lower
-awkward.behavior["__numba_lower__", "Momentum4D"] = _numba_lower
+ak.behavior["__numba_lower__", "Vector2D"] = _numba_lower
+ak.behavior["__numba_lower__", "Vector3D"] = _numba_lower
+ak.behavior["__numba_lower__", "Vector4D"] = _numba_lower
+ak.behavior["__numba_lower__", "Momentum2D"] = _numba_lower
+ak.behavior["__numba_lower__", "Momentum3D"] = _numba_lower
+ak.behavior["__numba_lower__", "Momentum4D"] = _numba_lower
