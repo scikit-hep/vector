@@ -59,14 +59,14 @@ repos:
           - flake8-print
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.1.0
+    rev: v2.2.1
     hooks:
       - id: codespell
         args: ["-L", "hist,nd,circularly,ba"]
         exclude: ^(notebooks/xarray.ipynb|notebooks/BoostHistogramHandsOn.ipynb)$
 
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: "v2.7.1"
+    rev: "v3.0.0-alpha.0"
     hooks:
       - id: prettier
         types_or: [yaml, markdown, html, css, scss, javascript, json]
