@@ -59,7 +59,7 @@ from vector._methods import (
     Vector4D,
     VectorProtocol,
 )
-from vector._typeutils import BoolCollection, ScalarCollection
+from vector._typeutils import BoolCollection, Protocol, ScalarCollection
 from vector.backends.numpy import VectorNumpy2D, VectorNumpy3D, VectorNumpy4D
 from vector.backends.object import (
     AzimuthalObjectRhoPhi,
@@ -604,19 +604,21 @@ def _no_record(x: ak.Array) -> typing.Optional[ak.Array]:
     return x
 
 
+# Type for mixing in Awkward later
+class AwkwardProtocol(Protocol):
+    def __getitem__(
+        self, where: typing.Any
+    ) -> typing.Optional[typing.Union[float, ak.Array, ak.Record]]:
+        ...
+
+
 class VectorAwkward:
     """One dimensional vector class for the Awkward backend."""
 
     lib: types.ModuleType = numpy
 
-    def __getitem__(
-        self, where: typing.Any
-    ) -> typing.Optional[typing.Union[float, ak.Array, ak.Record]]:
-        # "__getitem__" undefined in superclass
-        return super().__getitem__(where)  # type: ignore[misc]
-
     def _wrap_result(
-        self,
+        self: AwkwardProtocol,
         cls: typing.Any,
         result: typing.Any,
         returns: typing.Any,

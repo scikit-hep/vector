@@ -9,9 +9,24 @@ import typing
 import numpy
 
 if sys.version_info < (3, 8):
-    from typing_extensions import TypedDict
+    from typing_extensions import Protocol, TypedDict
 else:
-    from typing import TypedDict
+    from typing import Protocol, TypedDict
+
+
+__all__ = [
+    "Protocol",
+    "ScalarCollection",
+    "BoolCollection",
+    "TransformProtocol2D",
+    "TransformProtocol3D",
+    "TransformProtocol4D",
+    "FloatArray",
+]
+
+
+def __dir__() -> typing.List[str]:
+    return __all__
 
 
 # Represents a number, a NumPy array, an Awkward Array, etc., of non-vectors.
