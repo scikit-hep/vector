@@ -35,7 +35,7 @@ repos:
       - id: isort
 
   - repo: https://github.com/tox-dev/pyproject-fmt
-    rev: "0.3.4"
+    rev: "0.3.5"
     hooks:
       - id: pyproject-fmt
 
@@ -50,7 +50,7 @@ repos:
           - packaging
 
   - repo: https://github.com/PyCQA/flake8
-    rev: 5.0.2
+    rev: 5.0.4
     hooks:
       - id: flake8
         additional_dependencies:
@@ -59,14 +59,14 @@ repos:
           - flake8-print
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.1.0
+    rev: v2.2.1
     hooks:
       - id: codespell
         args: ["-L", "hist,nd,circularly,ba"]
         exclude: ^(notebooks/xarray.ipynb|notebooks/BoostHistogramHandsOn.ipynb)$
 
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: "v2.7.1"
+    rev: "v3.0.0-alpha.0"
     hooks:
       - id: prettier
         types_or: [yaml, markdown, html, css, scss, javascript, json]
