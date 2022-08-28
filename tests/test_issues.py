@@ -36,6 +36,13 @@ def test_issue_161():
             for generator_like_constituent in sublist:
                 s += generator_like_constituent.pt
 
-    with open(os.path.join("tests", "samples", "issue-161.pkl"), "rb") as f:
-        a = ak.from_buffers(*pickle.load(f))
-        repro(generator_like_jet_constituents=a.constituents)
+    file_path = (
+        os.path.join("tests", "samples", "issue-161.pkl")
+        if os.getenv("VECTOR_USE_AWKWARDV2") is None
+        else os.path.join("tests", "samples", "issue-161-v2.pkl")
+    )
+
+    f = open(file_path, "rb")
+    a = ak.from_buffers(*pickle.load(f))
+    f.close()
+    repro(generator_like_jet_constituents=a.constituents)
