@@ -59,7 +59,7 @@ jobs:
         run: python -m pytest -ra --cov=vector tests/
 
       - name: Use latest release candidate for v2 support
-        run: python -m pip install -U awkward>=1.9.0rc12
+        run: python -m pip install -U "awkward>=1.9.0rc12"
 
       - name: Test package with awkward._v2
         run: VECTOR_USE_AWKWARDV2=1 python -m pytest -ra --cov=vector tests/
