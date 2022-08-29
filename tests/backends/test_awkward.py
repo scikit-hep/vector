@@ -3,6 +3,8 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+import os
+
 import pytest
 
 import vector
@@ -75,6 +77,12 @@ def test_rotateZ():
     assert out.wow.tolist() == [[99], [], [123]]
 
 
+# awkward._v2 has not yet registered NumPy dispatch mechanisms
+# see https://github.com/scikit-hep/awkward/issues/1638
+# TODO: ensure this passes once awkward v2 is out
+@pytest.mark.xfail(
+    strict=True if os.environ.get("VECTOR_USE_AWKWARDV2") is not None else False
+)
 def test_projection():
     array = vector.Array(
         [
