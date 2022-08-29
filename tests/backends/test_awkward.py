@@ -9,7 +9,7 @@ import pytest
 
 import vector
 
-awkward = pytest.importorskip("awkward")
+pytest.importorskip("awkward")
 
 pytestmark = pytest.mark.awkward
 
