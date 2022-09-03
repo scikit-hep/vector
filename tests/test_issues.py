@@ -11,12 +11,6 @@ import pytest
 import vector
 
 
-# this is a known issue in awkward._v2
-# see https://github.com/scikit-hep/awkward/issues/1600
-# TODO: ensure this passes once awkward v2 is out
-@pytest.mark.xfail(
-    strict=True if os.environ.get("VECTOR_USE_AWKWARDV2") is not None else False
-)
 def test_issue_99():
     ak = pytest.importorskip("awkward")
     vector.register_awkward()
