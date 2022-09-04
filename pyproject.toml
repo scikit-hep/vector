@@ -57,7 +57,7 @@ dev = [
   "xdoctest>=1",
 ]
 docs = [
-  "awkward",
+  "awkward>=1.2",
   "ipykernel",
   "myst-parser>0.13",
   "nbsphinx",

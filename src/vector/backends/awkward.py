@@ -59,7 +59,7 @@ from vector._methods import (
     Vector4D,
     VectorProtocol,
 )
-from vector._typeutils import BoolCollection, ScalarCollection
+from vector._typeutils import BoolCollection, Protocol, ScalarCollection
 from vector.backends.numpy import VectorNumpy2D, VectorNumpy3D, VectorNumpy4D
 from vector.backends.object import (
     AzimuthalObjectRhoPhi,
@@ -194,7 +194,7 @@ class LongitudinalAwkward(CoordinatesAwkward, Longitudinal):
 
         Examples:
             >>> import vector
-            >>> import awkward as  ak
+            >>> import awkward as ak
             >>> a = ak.Array([{"theta": [1, 0]}])
             >>> l = vector.backends.awkward.LongitudinalAwkward.from_fields(a)
             >>> l
@@ -225,7 +225,7 @@ class LongitudinalAwkward(CoordinatesAwkward, Longitudinal):
 
         Examples:
             >>> import vector
-            >>> import awkward as  ak
+            >>> import awkward as ak
             >>> a = ak.Array([{"theta": [1, 0]}])
             >>> l = vector.backends.awkward.LongitudinalAwkward.from_momentum_fields(a)
             >>> l
@@ -272,7 +272,7 @@ class TemporalAwkward(CoordinatesAwkward, Temporal):
 
         Examples:
             >>> import vector
-            >>> import awkward as  ak
+            >>> import awkward as ak
             >>> a = ak.Array([{"tau": [1, 0]}])
             >>> t = vector.backends.awkward.TemporalAwkward.from_fields(a)
             >>> t
@@ -300,7 +300,7 @@ class TemporalAwkward(CoordinatesAwkward, Temporal):
 
         Examples:
             >>> import vector
-            >>> import awkward as  ak
+            >>> import awkward as ak
             >>> a = ak.Array([{"mass": [1, 0]}])
             >>> t = vector.backends.awkward.TemporalAwkward.from_momentum_fields(a)
             >>> t
@@ -594,7 +594,9 @@ def _class_to_name(cls: typing.Type[VectorProtocol]) -> str:
 # the vector class ############################################################
 
 
-def _yes_record(x: ak.Array) -> typing.Optional[typing.Union[float, ak.Record]]:
+def _yes_record(
+    x: ak.Array,
+) -> typing.Optional[typing.Union[float, ak.Record]]:
     return x[0]
 
 
@@ -602,19 +604,21 @@ def _no_record(x: ak.Array) -> typing.Optional[ak.Array]:
     return x
 
 
+# Type for mixing in Awkward later
+class AwkwardProtocol(Protocol):
+    def __getitem__(
+        self, where: typing.Any
+    ) -> typing.Optional[typing.Union[float, ak.Array, ak.Record]]:
+        ...
+
+
 class VectorAwkward:
     """One dimensional vector class for the Awkward backend."""
 
     lib: types.ModuleType = numpy
 
-    def __getitem__(
-        self, where: typing.Any
-    ) -> typing.Optional[typing.Union[float, ak.Array, ak.Record]]:
-        # "__getitem__" undefined in superclass
-        return super().__getitem__(where)  # type: ignore[misc]
-
     def _wrap_result(
-        self,
+        self: AwkwardProtocol,
         cls: typing.Any,
         result: typing.Any,
         returns: typing.Any,
@@ -1598,9 +1602,19 @@ MomentumRecord4D.GenericClass = VectorRecord4D
 def _arraytype_of(awkwardtype: typing.Any, component: str) -> typing.Any:
     import numba
 
-    if isinstance(awkwardtype, ak._connect._numba.layout.NumpyArrayType):
+    if isinstance(
+        awkwardtype,
+        ak._connect.numba.layout.NumpyArrayType
+        if hasattr(ak._connect, "numba")  # Awkward v2
+        else ak._connect._numba.layout.NumpyArrayType,
+    ):
         return awkwardtype.arraytype
-    elif isinstance(awkwardtype, ak._connect._numba.layout.IndexedArrayType):
+    elif isinstance(
+        awkwardtype,
+        ak._connect.numba.layout.IndexedArrayType
+        if hasattr(ak._connect, "numba")  # Awkward v2
+        else ak._connect._numba.layout.IndexedArrayType,
+    ):
         return _arraytype_of(awkwardtype.contenttype, component)
     else:
         raise numba.TypingError(

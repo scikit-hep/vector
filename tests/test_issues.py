@@ -24,6 +24,12 @@ def test_issue_99():
     }
 
 
+# awkward._v2 has not yet registered Numba dispatch mechanisms
+# see https://github.com/scikit-hep/awkward/discussions/1639
+# TODO: ensure this passes once awkward v2 is out
+@pytest.mark.xfail(
+    strict=True if os.environ.get("VECTOR_USE_AWKWARDV2") is not None else False
+)
 def test_issue_161():
     ak = pytest.importorskip("awkward")
     nb = pytest.importorskip("numba")
@@ -36,6 +42,13 @@ def test_issue_161():
             for generator_like_constituent in sublist:
                 s += generator_like_constituent.pt
 
-    with open(os.path.join("tests", "samples", "issue-161.pkl"), "rb") as f:
-        a = ak.from_buffers(*pickle.load(f))
-        repro(generator_like_jet_constituents=a.constituents)
+    file_path = (
+        os.path.join("tests", "samples", "issue-161.pkl")
+        if os.getenv("VECTOR_USE_AWKWARDV2") is None
+        else os.path.join("tests", "samples", "issue-161-v2.pkl")
+    )
+
+    f = open(file_path, "rb")
+    a = ak.from_buffers(*pickle.load(f))
+    f.close()
+    repro(generator_like_jet_constituents=a.constituents)
