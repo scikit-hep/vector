@@ -3,6 +3,8 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+from __future__ import annotations
+
 import typing
 
 
@@ -12,8 +14,8 @@ def _recname(is_momentum: bool, dimension: int) -> str:
 
 
 def _check_names(
-    projectable: typing.Any, fieldnames: typing.List[str]
-) -> typing.Tuple[bool, int, typing.List[str], typing.Any]:
+    projectable: typing.Any, fieldnames: list[str]
+) -> tuple[bool, int, list[str], typing.Any]:
     complaint1 = "duplicate coordinates (through momentum-aliases): " + ", ".join(
         repr(x) for x in fieldnames
     )
@@ -339,9 +341,7 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     )
 
 
-def zip(
-    arrays: typing.Dict[str, typing.Any], depth_limit: typing.Optional[int] = None
-) -> typing.Any:
+def zip(arrays: dict[str, typing.Any], depth_limit: int | None = None) -> typing.Any:
     """
     Constructs an Awkward Array of vectors, whose type is determined by the fields
     of the record array (which may be nested within lists or other non-record structures).

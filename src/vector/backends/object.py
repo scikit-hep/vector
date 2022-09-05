@@ -21,6 +21,8 @@ vectors -
     vec = vector.VectorObject2D.from_xy(1, 2)
 
 """
+from __future__ import annotations
+
 import numbers
 import typing
 
@@ -97,7 +99,7 @@ class AzimuthalObjectXY(AzimuthalObject, AzimuthalXY, TupleXY):
     """
 
     @property
-    def elements(self) -> typing.Tuple[float, float]:
+    def elements(self) -> tuple[float, float]:
         """
         Azimuthal coordinates (``x`` and ``y``) as a tuple.
         Each coordinate is a scalar and not a vector.
@@ -126,7 +128,7 @@ class AzimuthalObjectRhoPhi(AzimuthalObject, AzimuthalRhoPhi, TupleRhoPhi):
     """
 
     @property
-    def elements(self) -> typing.Tuple[float, float]:
+    def elements(self) -> tuple[float, float]:
         """
         Azimuthal coordinates (``rho`` and ``phi``) as a tuple.
         Each coordinate is a scalar and not a vector.
@@ -154,7 +156,7 @@ class LongitudinalObjectZ(LongitudinalObject, LongitudinalZ, TupleZ):
     """
 
     @property
-    def elements(self) -> typing.Tuple[float]:
+    def elements(self) -> tuple[float]:
         """
         Longitudinal coordinates (``z``) as a tuple.
         Each coordinate is a scalar and not a vector.
@@ -182,7 +184,7 @@ class LongitudinalObjectTheta(LongitudinalObject, LongitudinalTheta, TupleTheta)
     """
 
     @property
-    def elements(self) -> typing.Tuple[float]:
+    def elements(self) -> tuple[float]:
         """
         Longitudinal coordinates (``theta``) as a tuple.
         Each coordinate is a scalar and not a vector.
@@ -212,7 +214,7 @@ class LongitudinalObjectEta(LongitudinalObject, LongitudinalEta, TupleEta):
     eta: float
 
     @property
-    def elements(self) -> typing.Tuple[float]:
+    def elements(self) -> tuple[float]:
         """
         Longitudinal coordinates (``theta``) as a tuple.
         Each coordinate is a scalar and not a vector.
@@ -242,7 +244,7 @@ class TemporalObjectT(TemporalObject, TemporalT, TupleT):
     t: float
 
     @property
-    def elements(self) -> typing.Tuple[float]:
+    def elements(self) -> tuple[float]:
         """
         Temporal coordinates (``t``) as a tuple.
         Each coordinate is a scalar and not a vector.
@@ -270,7 +272,7 @@ class TemporalObjectTau(TemporalObject, TemporalTau, TupleTau):
     """
 
     @property
-    def elements(self) -> typing.Tuple[float]:
+    def elements(self) -> tuple[float]:
         """
         Temporal coordinates (``tau``) as a tuple.
         Each coordinate is a scalar and not a vector.
@@ -612,7 +614,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
     azimuthal: AzimuthalObject
 
     @classmethod
-    def from_xy(cls, x: float, y: float) -> "VectorObject2D":
+    def from_xy(cls, x: float, y: float) -> VectorObject2D:
         """
         Constructs a ``VectorObject2D`` from Cartesian coordinates.
 
@@ -628,7 +630,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
         return cls(AzimuthalObjectXY(x, y))
 
     @classmethod
-    def from_rhophi(cls, rho: float, phi: float) -> "VectorObject2D":
+    def from_rhophi(cls, rho: float, phi: float) -> VectorObject2D:
         """
         Constructs a ``VectorObject2D`` from polar coordinates.
 
@@ -847,7 +849,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
     longitudinal: LongitudinalObject
 
     @classmethod
-    def from_xyz(cls, x: float, y: float, z: float) -> "VectorObject3D":
+    def from_xyz(cls, x: float, y: float, z: float) -> VectorObject3D:
         """
         Constructs a ``VectorObject3D`` from Cartesian coordinates.
 
@@ -863,7 +865,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z))
 
     @classmethod
-    def from_xytheta(cls, x: float, y: float, theta: float) -> "VectorObject3D":
+    def from_xytheta(cls, x: float, y: float, theta: float) -> VectorObject3D:
         r"""
         Constructs a ``VectorObject3D`` from Cartesian azimuthal coordinates and
         a polar angle $\theta$.
@@ -880,7 +882,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         return cls(AzimuthalObjectXY(x, y), LongitudinalObjectTheta(theta))
 
     @classmethod
-    def from_xyeta(cls, x: float, y: float, eta: float) -> "VectorObject3D":
+    def from_xyeta(cls, x: float, y: float, eta: float) -> VectorObject3D:
         r"""
         Constructs a ``VectorObject3D`` from Cartesian coordinates and a
         pseudorapidity $\eta$.
@@ -897,7 +899,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         return cls(AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta))
 
     @classmethod
-    def from_rhophiz(cls, rho: float, phi: float, z: float) -> "VectorObject3D":
+    def from_rhophiz(cls, rho: float, phi: float, z: float) -> VectorObject3D:
         """
         Constructs a ``VectorObject3D`` from polar azimuthal coordinates and a
         Cartesian longitudinal coordinate $z$.
@@ -914,7 +916,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectZ(z))
 
     @classmethod
-    def from_rhophitheta(cls, rho: float, phi: float, theta: float) -> "VectorObject3D":
+    def from_rhophitheta(cls, rho: float, phi: float, theta: float) -> VectorObject3D:
         r"""
         Constructs a ``VectorObject3D`` from polar azimuthal coordinates and a
         polar angle $\theta$.
@@ -931,7 +933,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectTheta(theta))
 
     @classmethod
-    def from_rhophieta(cls, rho: float, phi: float, eta: float) -> "VectorObject3D":
+    def from_rhophieta(cls, rho: float, phi: float, eta: float) -> VectorObject3D:
         r"""
         Constructs a ``VectorObject3D`` from polar azimuthal coordinates and a
         pseudorapidity $\eta$.
@@ -1210,7 +1212,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         y: float,
         z: float,
         t: float,
-    ) -> "VectorObject4D":
+    ) -> VectorObject4D:
         """
         Constructs a ``VectorObject3D`` from Cartesian coordinates and a time
         coordinate $t$.
@@ -1233,7 +1235,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         y: float,
         z: float,
         tau: float,
-    ) -> "VectorObject4D":
+    ) -> VectorObject4D:
         r"""
         Constructs a ``VectorObject3D`` from Cartesian coordinates and a proper time
         coordinate $\tau$.
@@ -1258,7 +1260,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         y: float,
         theta: float,
         t: float,
-    ) -> "VectorObject4D":
+    ) -> VectorObject4D:
         r"""
         Constructs a ``VectorObject3D`` from Cartesian azimuthal coordinates, a
         polar angle $\theta$, and a time coordinate $t$.
@@ -1283,7 +1285,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         y: float,
         theta: float,
         tau: float,
-    ) -> "VectorObject4D":
+    ) -> VectorObject4D:
         r"""
         Constructs a ``VectorObject3D`` from Cartesian azimuthal coordinates, a
         polar angle $\theta$, and a proper time coordinate $\tau$.
@@ -1310,7 +1312,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         y: float,
         eta: float,
         t: float,
-    ) -> "VectorObject4D":
+    ) -> VectorObject4D:
         r"""
         Constructs a ``VectorObject3D`` from Cartesian coordinates, a pseudorapidity
         $\eta$, and a time coordinate $t$.
@@ -1335,7 +1337,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         y: float,
         eta: float,
         tau: float,
-    ) -> "VectorObject4D":
+    ) -> VectorObject4D:
         r"""
         Constructs a ``VectorObject3D`` from Cartesian coordinates, a pseudorapidity
         $\eta$, and a proper time coordinate $\tau$.
@@ -1360,7 +1362,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         phi: float,
         z: float,
         t: float,
-    ) -> "VectorObject4D":
+    ) -> VectorObject4D:
         """
         Constructs a ``VectorObject3D`` from polar azimuthal coordinates, a Cartesian
         longitudinal coordinate $z$, and a time coordinate $t$.
@@ -1385,7 +1387,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         phi: float,
         z: float,
         tau: float,
-    ) -> "VectorObject4D":
+    ) -> VectorObject4D:
         r"""
         Constructs a ``VectorObject3D`` from polar azimuthal coordinates, a Cartesian
         longitudinal coordinate $z$, and a proper time coordinate $\tau$.
@@ -1412,7 +1414,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         phi: float,
         theta: float,
         t: float,
-    ) -> "VectorObject4D":
+    ) -> VectorObject4D:
         r"""
         Constructs a ``VectorObject3D`` from polar azimuthal coordinates, a polar
         angle $\theta$, and a time coordinate $t$.
@@ -1439,7 +1441,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         phi: float,
         theta: float,
         tau: float,
-    ) -> "VectorObject4D":
+    ) -> VectorObject4D:
         r"""
         Constructs a ``VectorObject3D`` from polar azimuthal coordinates, a polar
         angle $\theta$, and a proper time coordinate $\tau$.
@@ -1466,7 +1468,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         phi: float,
         eta: float,
         t: float,
-    ) -> "VectorObject4D":
+    ) -> VectorObject4D:
         r"""
         Constructs a ``VectorObject3D`` from polar azimuthal coordinates, a
         pseudorapidity $\eta$, and a time coordinate $t$.
@@ -1493,7 +1495,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         phi: float,
         eta: float,
         tau: float,
-    ) -> "VectorObject4D":
+    ) -> VectorObject4D:
         r"""
         Constructs a ``VectorObject3D`` from polar azimuthal coordinates, a
         pseudorapidity $\eta$, and a proper time coordinate $\tau$.
@@ -1821,10 +1823,10 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
 
 
 def _gather_coordinates(
-    planar_class: typing.Type[VectorObject2D],
-    spatial_class: typing.Type[VectorObject3D],
-    lorentz_class: typing.Type[VectorObject4D],
-    coordinates: typing.Dict[str, typing.Any],
+    planar_class: type[VectorObject2D],
+    spatial_class: type[VectorObject3D],
+    lorentz_class: type[VectorObject4D],
+    coordinates: dict[str, typing.Any],
 ) -> typing.Any:
     """
     Helper function for :func:`vector.backends.object.obj`.
@@ -1834,9 +1836,7 @@ def _gather_coordinates(
     spatial (``VectorObject3D`` or ``MomentumObject3D``), and lorentz
     (``VectorObject4D`` or ``MomentumObject4D``) classes.
     """
-    azimuthal: typing.Optional[
-        typing.Union[AzimuthalObjectXY, AzimuthalObjectRhoPhi]
-    ] = None
+    azimuthal: None | (AzimuthalObjectXY | AzimuthalObjectRhoPhi) = None
 
     if "x" in coordinates and "y" in coordinates:
         if "rho" in coordinates or "phi" in coordinates:
@@ -1849,11 +1849,9 @@ def _gather_coordinates(
             coordinates.pop("rho"), coordinates.pop("phi")
         )
 
-    longitudinal: typing.Optional[
-        typing.Union[
-            LongitudinalObjectZ, LongitudinalObjectTheta, LongitudinalObjectEta
-        ]
-    ] = None
+    longitudinal: None | (
+        LongitudinalObjectZ | LongitudinalObjectTheta | LongitudinalObjectEta
+    ) = None
 
     if "z" in coordinates:
         if "theta" in coordinates or "eta" in coordinates:
@@ -1866,7 +1864,7 @@ def _gather_coordinates(
     elif "eta" in coordinates:
         longitudinal = LongitudinalObjectEta(coordinates.pop("eta"))
 
-    temporal: typing.Optional[typing.Union[TemporalObjectT, TemporalObjectTau]] = None
+    temporal: TemporalObjectT | TemporalObjectTau | None = None
 
     if "t" in coordinates:
         if "tau" in coordinates:

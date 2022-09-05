@@ -14,6 +14,8 @@ function will have these behaviors built in (and will pass them to any derived
 arrays).
 """
 
+from __future__ import annotations
+
 import collections.abc
 import typing
 
@@ -55,7 +57,7 @@ from vector._typeutils import FloatArray, ScalarCollection
 ArrayLike = ScalarCollection
 
 
-def _array_from_columns(columns: typing.Dict[str, ArrayLike]) -> ArrayLike:
+def _array_from_columns(columns: dict[str, ArrayLike]) -> ArrayLike:
     """
     Converts a dictionary (or columns) of coordinates to an array.
 
@@ -81,7 +83,7 @@ def _array_from_columns(columns: typing.Dict[str, ArrayLike]) -> ArrayLike:
     )
 
     dtype = []
-    shape: typing.Optional[typing.Tuple[int, ...]] = None
+    shape: tuple[int, ...] | None = None
     for x in names:
         if hasattr(columns[x], "dtype"):
             thisdtype = (x, columns[x].dtype)
@@ -109,7 +111,7 @@ def _array_from_columns(columns: typing.Dict[str, ArrayLike]) -> ArrayLike:
 
 
 def _setitem(
-    array: typing.Union["VectorNumpy2D", "VectorNumpy3D", "VectorNumpy4D"],
+    array: VectorNumpy2D | VectorNumpy3D | VectorNumpy4D,
     where: typing.Any,
     what: typing.Any,
     is_momentum: bool,
@@ -133,10 +135,10 @@ def _setitem(
 
 
 def _getitem(
-    array: typing.Union["VectorNumpy2D", "VectorNumpy3D", "VectorNumpy4D"],
+    array: VectorNumpy2D | VectorNumpy3D | VectorNumpy4D,
     where: typing.Any,
     is_momentum: bool,
-) -> typing.Union[float, FloatArray]:
+) -> float | FloatArray:
     """
     Implementation for the ``__getitem__`` method. See :class:`GetItem` for
     more details.
@@ -174,7 +176,7 @@ def _getitem(
 
 
 def _array_repr(
-    array: typing.Union["VectorNumpy2D", "VectorNumpy3D", "VectorNumpy4D"],
+    array: VectorNumpy2D | VectorNumpy3D | VectorNumpy4D,
     is_momentum: bool,
 ) -> str:
     """
@@ -187,16 +189,14 @@ def _array_repr(
 
 
 def _has(
-    array: typing.Union[
-        "VectorNumpy2D",
-        "VectorNumpy3D",
-        "VectorNumpy4D",
-        "MomentumNumpy2D",
-        "MomentumNumpy3D",
-        "MomentumNumpy4D",
-        "CoordinatesNumpy",
-    ],
-    names: typing.Tuple[str, ...],
+    array: VectorNumpy2D
+    | VectorNumpy3D
+    | VectorNumpy4D
+    | MomentumNumpy2D
+    | MomentumNumpy3D
+    | MomentumNumpy4D
+    | CoordinatesNumpy,
+    names: tuple[str, ...],
 ) -> bool:
     """
     Checks if a NumPy vector has the provided coordinate attributes.
@@ -229,8 +229,8 @@ def _has(
 
 
 def _toarrays(
-    result: typing.Union[typing.Tuple[ScalarCollection, ...], ScalarCollection]
-) -> typing.Tuple[FloatArray, ...]:
+    result: tuple[ScalarCollection, ...] | ScalarCollection
+) -> tuple[FloatArray, ...]:
     """
     Converts a tuple of values to a tuple of ``numpy.array``s.
 
@@ -263,9 +263,7 @@ def _toarrays(
         return result[0]
 
 
-def _shape_of(
-    result: typing.Union[typing.Tuple[FloatArray, ...], ScalarCollection]
-) -> typing.Tuple[int, ...]:
+def _shape_of(result: tuple[FloatArray, ...] | ScalarCollection) -> tuple[int, ...]:
     """
     Calculates the shape of a tuple of ``numpy.array``s. The shape returned
     is the highest (numerical) value of the shapes present in the tuple.
@@ -288,7 +286,7 @@ def _shape_of(
     """
     if not isinstance(result, tuple):
         result = (result,)
-    shape: typing.Optional[typing.List[int]] = None
+    shape: list[int] | None = None
     for x in result:
         if hasattr(x, "shape"):
             thisshape = list(x.shape)
@@ -302,15 +300,13 @@ def _shape_of(
 
 
 def _is_type_safe(
-    array: typing.Union[
-        "VectorNumpy2D",
-        "VectorNumpy3D",
-        "VectorNumpy4D",
-        "MomentumNumpy2D",
-        "MomentumNumpy3D",
-        "MomentumNumpy4D",
-        "CoordinatesNumpy",
-    ],
+    array: VectorNumpy2D
+    | VectorNumpy3D
+    | VectorNumpy4D
+    | MomentumNumpy2D
+    | MomentumNumpy3D
+    | MomentumNumpy4D
+    | CoordinatesNumpy,
 ) -> bool:
     for i in range(0, len(array.dtype)):  # type: ignore[arg-type]
         if not issubclass(
@@ -329,10 +325,10 @@ class GetItem:
         ...
 
     @typing.overload
-    def __getitem__(self, where: typing.Any) -> typing.Union[float, FloatArray]:
+    def __getitem__(self, where: typing.Any) -> float | FloatArray:
         ...
 
-    def __getitem__(self, where: typing.Any) -> typing.Union[float, FloatArray]:
+    def __getitem__(self, where: typing.Any) -> float | FloatArray:
         return _getitem(self, where, self.__class__._IS_MOMENTUM)  # type: ignore[arg-type]
 
 
@@ -340,25 +336,25 @@ class CoordinatesNumpy:
     """Coordinates class for the Numpy backend."""
 
     lib = numpy
-    dtype: "numpy.dtype[typing.Any]"
+    dtype: numpy.dtype[typing.Any]
 
 
 class AzimuthalNumpy(CoordinatesNumpy, Azimuthal):
     """Azimuthal class for the NumPy backend."""
 
-    ObjectClass: typing.Type[vector.backends.object.AzimuthalObject]
+    ObjectClass: type[vector.backends.object.AzimuthalObject]
 
 
 class LongitudinalNumpy(CoordinatesNumpy, Longitudinal):
     """Longitudinal class for the NumPy backend."""
 
-    ObjectClass: typing.Type[vector.backends.object.LongitudinalObject]
+    ObjectClass: type[vector.backends.object.LongitudinalObject]
 
 
 class TemporalNumpy(CoordinatesNumpy, Temporal):
     """Temporal class for the NumPy backend."""
 
-    ObjectClass: typing.Type[vector.backends.object.TemporalObject]
+    ObjectClass: type[vector.backends.object.TemporalObject]
 
 
 class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # type: ignore[misc]
@@ -376,7 +372,7 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # typ
     ObjectClass = vector.backends.object.AzimuthalObjectXY
     _IS_MOMENTUM = False
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "AzimuthalNumpyXY":
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> AzimuthalNumpyXY:
         return numpy.array(*args, **kwargs).view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
@@ -387,7 +383,7 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # typ
             )
 
     @property
-    def elements(self) -> typing.Tuple[FloatArray, FloatArray]:
+    def elements(self) -> tuple[FloatArray, FloatArray]:
         """
         Azimuthal coordinates (``x`` and ``y``) as a tuple.
 
@@ -427,7 +423,7 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray)
     ObjectClass = vector.backends.object.AzimuthalObjectRhoPhi
     _IS_MOMENTUM = False
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "AzimuthalNumpyRhoPhi":
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> AzimuthalNumpyRhoPhi:
         return numpy.array(*args, **kwargs).view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
@@ -438,7 +434,7 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray)
             )
 
     @property
-    def elements(self) -> typing.Tuple[FloatArray, FloatArray]:
+    def elements(self) -> tuple[FloatArray, FloatArray]:
         """
         Azimuthal coordinates (``rho`` and ``phi``) as a tuple.
 
@@ -477,7 +473,7 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):
     ObjectClass = vector.backends.object.LongitudinalObjectZ
     _IS_MOMENTUM = False
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "LongitudinalNumpyZ":
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> LongitudinalNumpyZ:
         return numpy.array(*args, **kwargs).view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
@@ -488,7 +484,7 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):
             )
 
     @property
-    def elements(self) -> typing.Tuple[FloatArray]:
+    def elements(self) -> tuple[FloatArray]:
         """
         Longitudinal coordinates (``z``) as a tuple.
 
@@ -522,9 +518,7 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, Floa
     ObjectClass = vector.backends.object.LongitudinalObjectTheta
     _IS_MOMENTUM = False
 
-    def __new__(
-        cls, *args: typing.Any, **kwargs: typing.Any
-    ) -> "LongitudinalNumpyTheta":
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> LongitudinalNumpyTheta:
         return numpy.array(*args, **kwargs).view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
@@ -535,7 +529,7 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, Floa
             )
 
     @property
-    def elements(self) -> typing.Tuple[FloatArray]:
+    def elements(self) -> tuple[FloatArray]:
         """
         Longitudinal coordinates (``theta``) as a tuple.
 
@@ -569,7 +563,7 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArr
     ObjectClass = vector.backends.object.LongitudinalObjectEta
     _IS_MOMENTUM = False
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "LongitudinalNumpyEta":
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> LongitudinalNumpyEta:
         return numpy.array(*args, **kwargs).view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
@@ -580,7 +574,7 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArr
             )
 
     @property
-    def elements(self) -> typing.Tuple[FloatArray]:
+    def elements(self) -> tuple[FloatArray]:
         """
         Longitudinal coordinates (``eta``) as a tuple.
 
@@ -614,7 +608,7 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ig
     ObjectClass = vector.backends.object.TemporalObjectT
     _IS_MOMENTUM = False
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "TemporalNumpyT":
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> TemporalNumpyT:
         return numpy.array(*args, **kwargs).view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
@@ -625,7 +619,7 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ig
             )
 
     @property
-    def elements(self) -> typing.Tuple[FloatArray]:
+    def elements(self) -> tuple[FloatArray]:
         """
         Temporal coordinates (``t``) as a tuple.
 
@@ -651,7 +645,7 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type
     ObjectClass = vector.backends.object.TemporalObjectTau
     _IS_MOMENTUM = False
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "TemporalNumpyTau":
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> TemporalNumpyTau:
         return numpy.array(*args, **kwargs).view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
@@ -662,7 +656,7 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type
             )
 
     @property
-    def elements(self) -> typing.Tuple[FloatArray]:
+    def elements(self) -> tuple[FloatArray]:
         """
         Temporal coordinates (``tau``) as a tuple.
 
@@ -686,14 +680,14 @@ class VectorNumpy(Vector, GetItem):
     """One dimensional vector class for the NumPy backend."""
 
     lib = numpy
-    dtype: "numpy.dtype[typing.Any]"
+    dtype: numpy.dtype[typing.Any]
 
     def allclose(
         self,
         other: VectorProtocol,
-        rtol: typing.Union[float, FloatArray] = 1e-05,
-        atol: typing.Union[float, FloatArray] = 1e-08,
-        equal_nan: typing.Union[bool, FloatArray] = False,
+        rtol: float | FloatArray = 1e-05,
+        atol: float | FloatArray = 1e-08,
+        equal_nan: bool | FloatArray = False,
     ) -> FloatArray:
         """Like ``np.ndarray.allclose``, but for VectorNumpy."""
         return self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan).all()
@@ -704,7 +698,7 @@ class VectorNumpy(Vector, GetItem):
     def __ne__(self, other: typing.Any) -> typing.Any:
         return numpy.not_equal(self, other)
 
-    def __reduce__(self) -> typing.Union[str, typing.Tuple[typing.Any, ...]]:
+    def __reduce__(self) -> str | tuple[typing.Any, ...]:
         pickled_state = super().__reduce__()
         new_state = (*pickled_state[2], self.__dict__)
         return pickled_state[0], pickled_state[1], new_state
@@ -731,7 +725,7 @@ class VectorNumpy(Vector, GetItem):
             # Let a higher-precedence backend handle it.
             return NotImplemented
 
-        outputs: typing.Tuple["VectorNumpy", ...] = kwargs.get("out", ())
+        outputs: tuple[VectorNumpy, ...] = kwargs.get("out", ())
         if any(not isinstance(x, VectorNumpy) for x in outputs):
             raise TypeError(
                 "ufunc operating on VectorNumpys can only use the 'out' keyword "
@@ -960,11 +954,9 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
 
     ObjectClass = vector.backends.object.VectorObject2D
     _IS_MOMENTUM = False
-    _azimuthal_type: typing.Union[
-        typing.Type[AzimuthalNumpyXY], typing.Type[AzimuthalNumpyRhoPhi]
-    ]
+    _azimuthal_type: type[AzimuthalNumpyXY] | type[AzimuthalNumpyRhoPhi]
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "VectorNumpy2D":
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> VectorNumpy2D:
         """Returns the object of ``VectorNumpy2D``. Behaves as ``__init__`` in this case."""
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             array = _array_from_columns(args[0])
@@ -1179,7 +1171,7 @@ class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore[misc]
 
     ObjectClass = vector.backends.object.MomentumObject2D
     _IS_MOMENTUM = True
-    dtype: "numpy.dtype[typing.Any]"
+    dtype: numpy.dtype[typing.Any]
 
     def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
         if obj is None:
@@ -1229,16 +1221,12 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
     ObjectClass = vector.backends.object.VectorObject3D
     _IS_MOMENTUM = False
 
-    _azimuthal_type: typing.Union[
-        typing.Type[AzimuthalNumpyXY], typing.Type[AzimuthalNumpyRhoPhi]
-    ]
-    _longitudinal_type: typing.Union[
-        typing.Type[LongitudinalNumpyZ],
-        typing.Type[LongitudinalNumpyTheta],
-        typing.Type[LongitudinalNumpyEta],
+    _azimuthal_type: type[AzimuthalNumpyXY] | type[AzimuthalNumpyRhoPhi]
+    _longitudinal_type: type[LongitudinalNumpyZ] | type[LongitudinalNumpyTheta] | type[
+        LongitudinalNumpyEta
     ]
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "VectorNumpy3D":
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> VectorNumpy3D:
         """Returns the object of ``VectorNumpy3D``. Behaves as ``__init__`` in this case."""
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             array = _array_from_columns(args[0])
@@ -1464,7 +1452,7 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
 
     ObjectClass = vector.backends.object.MomentumObject3D
     _IS_MOMENTUM = True
-    dtype: "numpy.dtype[typing.Any]"
+    dtype: numpy.dtype[typing.Any]
 
     def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
         if obj is None:
@@ -1525,20 +1513,13 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
     ObjectClass = vector.backends.object.VectorObject4D
     _IS_MOMENTUM = False
 
-    _azimuthal_type: typing.Union[
-        typing.Type[AzimuthalNumpyXY], typing.Type[AzimuthalNumpyRhoPhi]
+    _azimuthal_type: type[AzimuthalNumpyXY] | type[AzimuthalNumpyRhoPhi]
+    _longitudinal_type: type[LongitudinalNumpyZ] | type[LongitudinalNumpyTheta] | type[
+        LongitudinalNumpyEta
     ]
-    _longitudinal_type: typing.Union[
-        typing.Type[LongitudinalNumpyZ],
-        typing.Type[LongitudinalNumpyTheta],
-        typing.Type[LongitudinalNumpyEta],
-    ]
-    _temporal_type: typing.Union[
-        typing.Type[TemporalNumpyT],
-        typing.Type[TemporalNumpyTau],
-    ]
+    _temporal_type: type[TemporalNumpyT] | type[TemporalNumpyTau]
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> "VectorNumpy4D":
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> VectorNumpy4D:
         """Returns the object of ``VectorNumpy4D``. Behaves as ``__init__`` in this case."""
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             array = _array_from_columns(args[0])
@@ -1790,7 +1771,7 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore[misc]
 
     ObjectClass = vector.backends.object.MomentumObject4D
     _IS_MOMENTUM = True
-    dtype: "numpy.dtype[typing.Any]"
+    dtype: numpy.dtype[typing.Any]
 
     def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
         if obj is None:
@@ -1897,7 +1878,7 @@ def array(*args: typing.Any, **kwargs: typing.Any) -> VectorNumpy:
 
     to make the vector a momentum vector.
     """
-    names: typing.Tuple[str, ...]
+    names: tuple[str, ...]
     if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
         names = tuple(args[0].keys())
     elif "dtype" in kwargs:
@@ -1907,7 +1888,7 @@ def array(*args: typing.Any, **kwargs: typing.Any) -> VectorNumpy:
     else:
         names = ()
 
-    cls: typing.Type[VectorNumpy]
+    cls: type[VectorNumpy]
 
     is_momentum = any(x in _repr_momentum_to_generic for x in names)
 
