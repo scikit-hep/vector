@@ -33,6 +33,7 @@
 - Add git archive support [#244][]
 - Add CITATION.cff Citation File Format file [#243][]
 - Test `Vector` on `Awkward` `v1` and `v2` together [#226][]
+- Build and test on Python `3.10` and `3.11-dev` [#252][]
 
 [#176]: https://github.com/scikit-hep/vector/pull/176
 [#172]: https://github.com/scikit-hep/vector/pull/172
@@ -62,6 +63,7 @@
 [#244]: https://github.com/scikit-hep/vector/pull/244
 [#243]: https://github.com/scikit-hep/vector/pull/243
 [#226]: https://github.com/scikit-hep/vector/pull/226
+[#252]: https://github.com/scikit-hep/vector/pull/252
 
 ## Version 0.8
 
