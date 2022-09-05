@@ -15,7 +15,7 @@ keywords = [
 license = "BSD-3-Clause"
 maintainers = [ {name = "The Scikit-HEP admins", email = "scikit-hep-admins@googlegroups.com"} ]
 authors = [ {name = "Jim Pivarski, Henry Schreiner, Eduardo Rodrigues", email = "eduardo.rodrigues@cern.ch"} ]
-requires-python = ">=3.6"
+requires-python = ">=3.7"
 dependencies = [
   'importlib-metadata>=0.22; python_version < "3.8"',
   "numpy>=1.13.3",
@@ -34,7 +34,6 @@ classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",

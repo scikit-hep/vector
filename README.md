@@ -17,7 +17,7 @@
 [![LICENSE][license-badge]][license-link]
 [![Scikit-HEP][sk-badge]][sk-link]
 
-Vector is a Python 3.6+ library for 2D, 3D, and [Lorentz vectors](https://en.wikipedia.org/wiki/Special_relativity#Physics_in_spacetime), especially _arrays of vectors_, to solve common physics problems in a NumPy-like way.
+Vector is a Python 3.7+ library for 2D, 3D, and [Lorentz vectors](https://en.wikipedia.org/wiki/Special_relativity#Physics_in_spacetime), especially _arrays of vectors_, to solve common physics problems in a NumPy-like way.
 
 Main features of Vector:
 
