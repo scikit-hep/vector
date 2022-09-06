@@ -8,6 +8,8 @@
 
     Spatial.rotate_euler(self, phi, theta, psi, order=...)
 """
+from __future__ import annotations
+
 import typing
 
 import numpy

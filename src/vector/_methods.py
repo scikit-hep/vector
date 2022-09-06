@@ -3,6 +3,8 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+from __future__ import annotations
+
 import typing
 from contextlib import suppress
 
@@ -23,7 +25,7 @@ class Coordinates:
 
 class Azimuthal(Coordinates):
     @property
-    def elements(self) -> typing.Tuple[ScalarCollection, ScalarCollection]:
+    def elements(self) -> tuple[ScalarCollection, ScalarCollection]:
         """
         Azimuthal coordinates as a tuple.
 
@@ -35,7 +37,7 @@ class Azimuthal(Coordinates):
 
 class Longitudinal(Coordinates):
     @property
-    def elements(self) -> typing.Tuple[ScalarCollection]:
+    def elements(self) -> tuple[ScalarCollection]:
         """
         Longitudinal coordinates as a tuple.
 
@@ -47,7 +49,7 @@ class Longitudinal(Coordinates):
 
 class Temporal(Coordinates):
     @property
-    def elements(self) -> typing.Tuple[ScalarCollection]:
+    def elements(self) -> tuple[ScalarCollection]:
         """
         Temporal coordinates as a tuple.
 
@@ -165,16 +167,16 @@ class VectorProtocol:
         """
         raise AssertionError
 
-    ProjectionClass2D: typing.Type["VectorProtocolPlanar"]
-    ProjectionClass3D: typing.Type["VectorProtocolSpatial"]
-    ProjectionClass4D: typing.Type["VectorProtocolLorentz"]
-    GenericClass: typing.Type["VectorProtocol"]
+    ProjectionClass2D: type[VectorProtocolPlanar]
+    ProjectionClass3D: type[VectorProtocolSpatial]
+    ProjectionClass4D: type[VectorProtocolLorentz]
+    GenericClass: type[VectorProtocol]
 
-    def to_Vector2D(self) -> "VectorProtocolPlanar":
+    def to_Vector2D(self) -> VectorProtocolPlanar:
         """Projects this vector/these vectors onto azimuthal coordinates only."""
         raise AssertionError
 
-    def to_Vector3D(self) -> "VectorProtocolSpatial":
+    def to_Vector3D(self) -> VectorProtocolSpatial:
         """
         Projects this vector/these vectors onto azimuthal and longitudinal
         coordinates only.
@@ -183,7 +185,7 @@ class VectorProtocol:
         """
         raise AssertionError
 
-    def to_Vector4D(self) -> "VectorProtocolLorentz":
+    def to_Vector4D(self) -> VectorProtocolLorentz:
         """
         Projects this vector/these vectors onto azimuthal, longitudinal,
         and temporal coordinates.
@@ -194,140 +196,140 @@ class VectorProtocol:
         """
         raise AssertionError
 
-    def to_xy(self) -> "VectorProtocolPlanar":
+    def to_xy(self) -> VectorProtocolPlanar:
         """
         Converts to $x$-$y$ coordinates, possibly eliminating dimensions with a
         projection.
         """
         raise AssertionError
 
-    def to_rhophi(self) -> "VectorProtocolPlanar":
+    def to_rhophi(self) -> VectorProtocolPlanar:
         r"""
         Converts to $\rho$-$\phi$ coordinates, possibly eliminating dimensions with a
         projection.
         """
         raise AssertionError
 
-    def to_xyz(self) -> "VectorProtocolSpatial":
+    def to_xyz(self) -> VectorProtocolSpatial:
         """
         Converts to $x$-$y$-$z$ coordinates, possibly eliminating or imputing
         dimensions with a projection.
         """
         raise AssertionError
 
-    def to_xytheta(self) -> "VectorProtocolSpatial":
+    def to_xytheta(self) -> VectorProtocolSpatial:
         r"""
         Converts to $x$-$y$-$\theta$ coordinates, possibly eliminating or imputing
         dimensions with a projection.
         """
         raise AssertionError
 
-    def to_xyeta(self) -> "VectorProtocolSpatial":
+    def to_xyeta(self) -> VectorProtocolSpatial:
         r"""
         Converts to $x$-$y$-$\eta$ coordinates, possibly eliminating or imputing
         dimensions with a projection.
         """
         raise AssertionError
 
-    def to_rhophiz(self) -> "VectorProtocolSpatial":
+    def to_rhophiz(self) -> VectorProtocolSpatial:
         r"""
         Converts to $\rho$-$\phi$-$z$ coordinates, possibly eliminating or imputing
         dimensions with a projection.
         """
         raise AssertionError
 
-    def to_rhophitheta(self) -> "VectorProtocolSpatial":
+    def to_rhophitheta(self) -> VectorProtocolSpatial:
         r"""
         Converts to $\rho$-$\phi$-$\theta$ coordinates, possibly eliminating or
         imputing dimensions with a projection.
         """
         raise AssertionError
 
-    def to_rhophieta(self) -> "VectorProtocolSpatial":
+    def to_rhophieta(self) -> VectorProtocolSpatial:
         r"""
         Converts to $\rho$-$\phi$-$\eta$ coordinates, possibly eliminating or
         imputing dimensions with a projection.
         """
         raise AssertionError
 
-    def to_xyzt(self) -> "VectorProtocolLorentz":
+    def to_xyzt(self) -> VectorProtocolLorentz:
         """
         Converts to $x$-$y$-$z$-$t$ coordinates, possibly imputing dimensions with
         a projection.
         """
         raise AssertionError
 
-    def to_xyztau(self) -> "VectorProtocolLorentz":
+    def to_xyztau(self) -> VectorProtocolLorentz:
         r"""
         Converts to $x$-$y$-$z$-$\tau$ coordinates, possibly imputing dimensions
         with a projection.
         """
         raise AssertionError
 
-    def to_xythetat(self) -> "VectorProtocolLorentz":
+    def to_xythetat(self) -> VectorProtocolLorentz:
         r"""
         Converts to $x$-$y$-$\theta$-$t$ coordinates, possibly imputing dimensions
         with a projection.
         """
         raise AssertionError
 
-    def to_xythetatau(self) -> "VectorProtocolLorentz":
+    def to_xythetatau(self) -> VectorProtocolLorentz:
         r"""
         Converts to $x$-$y$-$\theta$-$\tau$ coordinates, possibly imputing
         dimensions with a projection.
         """
         raise AssertionError
 
-    def to_xyetat(self) -> "VectorProtocolLorentz":
+    def to_xyetat(self) -> VectorProtocolLorentz:
         r"""
         Converts to $x$-$y$-$\eta$-$t$ coordinates, possibly imputing dimensions
         with a projection.
         """
         raise AssertionError
 
-    def to_xyetatau(self) -> "VectorProtocolLorentz":
+    def to_xyetatau(self) -> VectorProtocolLorentz:
         r"""
         Converts to $x$-$y$-$\eta$-$\tau$ coordinates, possibly imputing dimensions
         with a projection.
         """
         raise AssertionError
 
-    def to_rhophizt(self) -> "VectorProtocolLorentz":
+    def to_rhophizt(self) -> VectorProtocolLorentz:
         r"""
         Converts to $\rho$-$\phi$-$z$-$t$ coordinates, possibly imputing dimensions
         with a projection.
         """
         raise AssertionError
 
-    def to_rhophiztau(self) -> "VectorProtocolLorentz":
+    def to_rhophiztau(self) -> VectorProtocolLorentz:
         r"""
         Converts to $\rho$-$\phi$-$z$-$\tau$ coordinates, possibly imputing
         dimensions with a projection.
         """
         raise AssertionError
 
-    def to_rhophithetat(self) -> "VectorProtocolLorentz":
+    def to_rhophithetat(self) -> VectorProtocolLorentz:
         r"""
         Converts to $\rho$-$\phi$-$\theta$-$t$ coordinates, possibly imputing
         dimensions with a projection.
         """
         raise AssertionError
 
-    def to_rhophithetatau(self) -> "VectorProtocolLorentz":
+    def to_rhophithetatau(self) -> VectorProtocolLorentz:
         r"""
         Converts to $\rho$-$\phi$-$\theta$-$\tau$ coordinates, possibly imputing
         dimensions with a projection.
         """
         raise AssertionError
 
-    def to_rhophietat(self) -> "VectorProtocolLorentz":
+    def to_rhophietat(self) -> VectorProtocolLorentz:
         r"""
         Converts to $\rho$-$\phi$-$\eta$-$t$ coordinates, possibly imputing
         dimensions with a projection.
         """
         raise AssertionError
 
-    def to_rhophietatau(self) -> "VectorProtocolLorentz":
+    def to_rhophietatau(self) -> VectorProtocolLorentz:
         r"""
         Converts to $\rho$-$\phi$-$\eta$-$\tau$ coordinates, possibly imputing
         dimensions with a projection.
@@ -341,7 +343,7 @@ class VectorProtocol:
         """
         raise AssertionError
 
-    def dot(self, other: "VectorProtocol") -> ScalarCollection:
+    def dot(self, other: VectorProtocol) -> ScalarCollection:
         """
         Vector dot product of ``self`` with ``other``.
 
@@ -349,7 +351,7 @@ class VectorProtocol:
         """
         raise AssertionError
 
-    def add(self, other: "VectorProtocol") -> "VectorProtocol":
+    def add(self, other: VectorProtocol) -> VectorProtocol:
         """
         Sum of ``self`` and ``other``.
 
@@ -357,7 +359,7 @@ class VectorProtocol:
         """
         raise AssertionError
 
-    def subtract(self, other: "VectorProtocol") -> "VectorProtocol":
+    def subtract(self, other: VectorProtocol) -> VectorProtocol:
         """
         Difference of ``self`` minus ``other``.
 
@@ -374,7 +376,7 @@ class VectorProtocol:
         """
         raise AssertionError
 
-    def equal(self, other: "VectorProtocol") -> BoolCollection:
+    def equal(self, other: VectorProtocol) -> BoolCollection:
         """
         Returns True if ``self`` is exactly equal to ``other`` (possibly for arrays
         of vectors), False otherwise.
@@ -386,7 +388,7 @@ class VectorProtocol:
         """
         raise AssertionError
 
-    def not_equal(self, other: "VectorProtocol") -> BoolCollection:
+    def not_equal(self, other: VectorProtocol) -> BoolCollection:
         """
         Returns False if ``self`` is exactly equal to ``other`` (possibly for arrays
         of vectors), True otherwise.
@@ -400,7 +402,7 @@ class VectorProtocol:
 
     def isclose(
         self,
-        other: "VectorProtocol",
+        other: VectorProtocol,
         rtol: ScalarCollection = 1e-05,
         atol: ScalarCollection = 1e-08,
         equal_nan: BoolCollection = False,
@@ -613,7 +615,7 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
         """
         raise AssertionError
 
-    def cross(self, other: "VectorProtocol") -> "VectorProtocolSpatial":
+    def cross(self, other: VectorProtocol) -> VectorProtocolSpatial:
         """
         The 3D cross-product of ``self`` with ``other``.
 
@@ -621,18 +623,18 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
         """
         raise AssertionError
 
-    def deltaangle(self, other: "VectorProtocol") -> ScalarCollection:
+    def deltaangle(self, other: VectorProtocol) -> ScalarCollection:
         r"""
         Angle in 3D space between ``self`` and ``other``, which is always
         positive, between $0$ and $\pi$.
         """
         raise AssertionError
 
-    def deltaeta(self, other: "VectorProtocol") -> ScalarCollection:
+    def deltaeta(self, other: VectorProtocol) -> ScalarCollection:
         r"""Signed difference in $\eta$ of ``self`` minus ``other``."""
         raise AssertionError
 
-    def deltaR(self, other: "VectorProtocol") -> ScalarCollection:
+    def deltaR(self, other: VectorProtocol) -> ScalarCollection:
         r"""
         Sum in quadrature of :meth:`vector._methods.VectorProtocolPlanar.deltaphi`
         and :meth:`vector._methods.VectorProtocolSpatial.deltaeta`:
@@ -641,7 +643,7 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
         """
         raise AssertionError
 
-    def deltaR2(self, other: "VectorProtocol") -> ScalarCollection:
+    def deltaR2(self, other: VectorProtocol) -> ScalarCollection:
         r"""
         Square of the sum in quadrature of
         :meth:`vector._methods.VectorProtocolPlanar.deltaphi` and
@@ -672,7 +674,7 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
         raise AssertionError
 
     def rotate_axis(
-        self: SameVectorType, axis: "VectorProtocol", angle: ScalarCollection
+        self: SameVectorType, axis: VectorProtocol, angle: ScalarCollection
     ) -> SameVectorType:
         """
         Rotates the vector(s) by a given ``angle`` (in radians) around the
@@ -773,17 +775,17 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
         raise AssertionError
 
     def is_parallel(
-        self, other: "VectorProtocol", tolerance: ScalarCollection = 1e-5
+        self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
     ) -> BoolCollection:
         raise AssertionError
 
     def is_antiparallel(
-        self, other: "VectorProtocol", tolerance: ScalarCollection = 1e-5
+        self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
     ) -> BoolCollection:
         raise AssertionError
 
     def is_perpendicular(
-        self, other: "VectorProtocol", tolerance: ScalarCollection = 1e-5
+        self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
     ) -> BoolCollection:
         raise AssertionError
 
@@ -879,7 +881,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """
         raise AssertionError
 
-    def deltaRapidityPhi(self, other: "VectorProtocol") -> ScalarCollection:
+    def deltaRapidityPhi(self, other: VectorProtocol) -> ScalarCollection:
         r"""
         Sum in quadrature of :meth:`vector._methods.VectorProtocolPlanar.deltaphi`
         and the difference in :attr:`vector._methods.VectorProtocolLorentz.rapidity`
@@ -889,7 +891,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """
         raise AssertionError
 
-    def deltaRapidityPhi2(self, other: "VectorProtocol") -> ScalarCollection:
+    def deltaRapidityPhi2(self, other: VectorProtocol) -> ScalarCollection:
         r"""
         Square of the sum in quadrature of
         :meth:`vector._methods.VectorProtocolPlanar.deltaphi` and the difference in
@@ -908,7 +910,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """Same as multiplying by -1."""
         raise AssertionError
 
-    def boost_p4(self: SameVectorType, p4: "VectorProtocolLorentz") -> SameVectorType:
+    def boost_p4(self: SameVectorType, p4: VectorProtocolLorentz) -> SameVectorType:
         """
         Boosts the vector or array of vectors in a direction and magnitude given
         by the 4D vector or array of vectors ``p4``.
@@ -935,7 +937,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         raise AssertionError
 
     def boost_beta3(
-        self: SameVectorType, beta3: "VectorProtocolSpatial"
+        self: SameVectorType, beta3: VectorProtocolSpatial
     ) -> SameVectorType:
         """
         Boosts the vector or array of vectors in a direction and magnitude given
@@ -953,7 +955,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """
         raise AssertionError
 
-    def boost(self: SameVectorType, booster: "VectorProtocol") -> SameVectorType:
+    def boost(self: SameVectorType, booster: VectorProtocol) -> SameVectorType:
         """
         Boosts the vector or array of vectors using the 3D or 4D ``booster``.
 
@@ -976,7 +978,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         raise AssertionError
 
     def boostCM_of_p4(
-        self: SameVectorType, p4: "VectorProtocolLorentz"
+        self: SameVectorType, p4: VectorProtocolLorentz
     ) -> SameVectorType:
         """
         Boosts the vector or array of vectors to the center-of-mass (CM) frame of
@@ -994,7 +996,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         raise AssertionError
 
     def boostCM_of_beta3(
-        self: SameVectorType, beta3: "VectorProtocolSpatial"
+        self: SameVectorType, beta3: VectorProtocolSpatial
     ) -> SameVectorType:
         """
         Boosts the vector or array of vectors to the center-of-mass (CM) frame of
@@ -1005,7 +1007,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """
         raise AssertionError
 
-    def boostCM_of(self: SameVectorType, booster: "VectorProtocol") -> SameVectorType:
+    def boostCM_of(self: SameVectorType, booster: VectorProtocol) -> SameVectorType:
         """
         Boosts the vector or array of vectors to the center-of-mass (CM) frame of
         the 3D or 4D ``booster``.
@@ -1024,8 +1026,8 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
 
     def boostX(
         self: SameVectorType,
-        beta: typing.Optional[ScalarCollection] = None,
-        gamma: typing.Optional[ScalarCollection] = None,
+        beta: ScalarCollection | None = None,
+        gamma: ScalarCollection | None = None,
     ) -> SameVectorType:
         """
         Boosts the vector or array of vectors in the $x$ direction by a speed
@@ -1041,8 +1043,8 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
 
     def boostY(
         self: SameVectorType,
-        beta: typing.Optional[ScalarCollection] = None,
-        gamma: typing.Optional[ScalarCollection] = None,
+        beta: ScalarCollection | None = None,
+        gamma: ScalarCollection | None = None,
     ) -> SameVectorType:
         """
         Boosts the vector or array of vectors in the $y$ direction by a speed
@@ -1058,8 +1060,8 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
 
     def boostZ(
         self: SameVectorType,
-        beta: typing.Optional[ScalarCollection] = None,
-        gamma: typing.Optional[ScalarCollection] = None,
+        beta: ScalarCollection | None = None,
+        gamma: ScalarCollection | None = None,
     ) -> SameVectorType:
         """
         Boosts the vector or array of vectors in the $z$ direction by a speed
@@ -1089,7 +1091,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """
         raise AssertionError
 
-    def to_beta3(self) -> "VectorProtocolSpatial":
+    def to_beta3(self) -> VectorProtocolSpatial:
         """
         Converts the 4D Lorentz vector or array of vectors into a 3D velocity
         vector or array of vectors, in which lightlike velocities have
@@ -2172,20 +2174,20 @@ class Lorentz(Spatial, VectorProtocolLorentz):
             )
 
     def boostCM_of_p4(
-        self: SameVectorType, p4: "VectorProtocolLorentz"
+        self: SameVectorType, p4: VectorProtocolLorentz
     ) -> SameVectorType:
         from vector._compute.lorentz import boost_p4
 
         return boost_p4.dispatch(self, p4.neg3D)
 
     def boostCM_of_beta3(
-        self: SameVectorType, beta3: "VectorProtocolSpatial"
+        self: SameVectorType, beta3: VectorProtocolSpatial
     ) -> SameVectorType:
         from vector._compute.lorentz import boost_beta3
 
         return boost_beta3.dispatch(self, beta3.neg3D)
 
-    def boostCM_of(self: SameVectorType, booster: "VectorProtocol") -> SameVectorType:
+    def boostCM_of(self: SameVectorType, booster: VectorProtocol) -> SameVectorType:
         from vector._compute.lorentz import boost_beta3, boost_p4
 
         if isinstance(booster, Vector3D):
@@ -2200,8 +2202,8 @@ class Lorentz(Spatial, VectorProtocolLorentz):
 
     def boostX(
         self: SameVectorType,
-        beta: typing.Optional[ScalarCollection] = None,
-        gamma: typing.Optional[ScalarCollection] = None,
+        beta: ScalarCollection | None = None,
+        gamma: ScalarCollection | None = None,
     ) -> SameVectorType:
         from vector._compute.lorentz import boostX_beta, boostX_gamma
 
@@ -2214,8 +2216,8 @@ class Lorentz(Spatial, VectorProtocolLorentz):
 
     def boostY(
         self: SameVectorType,
-        beta: typing.Optional[ScalarCollection] = None,
-        gamma: typing.Optional[ScalarCollection] = None,
+        beta: ScalarCollection | None = None,
+        gamma: ScalarCollection | None = None,
     ) -> SameVectorType:
         from vector._compute.lorentz import boostY_beta, boostY_gamma
 
@@ -2228,8 +2230,8 @@ class Lorentz(Spatial, VectorProtocolLorentz):
 
     def boostZ(
         self: SameVectorType,
-        beta: typing.Optional[ScalarCollection] = None,
-        gamma: typing.Optional[ScalarCollection] = None,
+        beta: ScalarCollection | None = None,
+        gamma: ScalarCollection | None = None,
     ) -> SameVectorType:
         from vector._compute.lorentz import boostZ_beta, boostZ_gamma
 
@@ -2624,7 +2626,7 @@ _coordinate_order = [
 ]
 
 
-def _aztype(obj: VectorProtocolPlanar) -> typing.Type[Coordinates]:
+def _aztype(obj: VectorProtocolPlanar) -> type[Coordinates]:
     """
     Determines the Azimuthal type of a vector for use in looking up a
     dispatched function.
@@ -2636,7 +2638,7 @@ def _aztype(obj: VectorProtocolPlanar) -> typing.Type[Coordinates]:
     raise AssertionError(repr(obj))
 
 
-def _ltype(obj: VectorProtocolSpatial) -> typing.Type[Coordinates]:
+def _ltype(obj: VectorProtocolSpatial) -> type[Coordinates]:
     """
     Determines the Longitudinal type of a vector for use in looking up a
     dispatched function.
@@ -2648,7 +2650,7 @@ def _ltype(obj: VectorProtocolSpatial) -> typing.Type[Coordinates]:
     raise AssertionError(repr(obj))
 
 
-def _ttype(obj: VectorProtocolLorentz) -> typing.Type[Coordinates]:
+def _ttype(obj: VectorProtocolLorentz) -> type[Coordinates]:
     """
     Determines the Temporal type of a vector for use in looking up a
     dispatched function.
@@ -2665,7 +2667,7 @@ def _lib_of(*objects: VectorProtocol) -> Module:  # NumPy-like module
     Determines the ``lib`` of a vector or set of vectors, complaining
     if they're incompatible.
     """
-    lib: typing.Optional[typing.Any] = None
+    lib: typing.Any | None = None
     for obj in objects:
         if isinstance(obj, Vector):
             if lib is None:
@@ -2681,9 +2683,9 @@ def _lib_of(*objects: VectorProtocol) -> Module:  # NumPy-like module
 
 def _from_signature(
     name: str,
-    dispatch_map: typing.Dict[typing.Any, typing.Any],
-    signature: typing.Tuple[typing.Any, ...],
-) -> typing.Tuple[typing.Any, ...]:
+    dispatch_map: dict[typing.Any, typing.Any],
+    signature: tuple[typing.Any, ...],
+) -> tuple[typing.Any, ...]:
     """
     Gets a function and its return type from a ``dispatch_map`` and the
     ``signature`` to search for (complaining if none is found).
@@ -2722,7 +2724,7 @@ def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
     objects to NumPy arrays to Awkward Arrays whenever two are used in the
     same formula.
     """
-    handler: typing.Optional[VectorProtocol] = None
+    handler: VectorProtocol | None = None
     for obj in objects:
         if not isinstance(obj, Vector):
             continue
@@ -2735,7 +2737,7 @@ def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
     return handler
 
 
-def _flavor_of(*objects: VectorProtocol) -> typing.Type[VectorProtocol]:
+def _flavor_of(*objects: VectorProtocol) -> type[VectorProtocol]:
     """
     Determines the flavor of the output of a dispatched function, where
     "flavor" is generic vs momentum.
@@ -2743,7 +2745,7 @@ def _flavor_of(*objects: VectorProtocol) -> typing.Type[VectorProtocol]:
     from vector.backends.numpy import VectorNumpy
     from vector.backends.object import VectorObject
 
-    handler: typing.Optional[VectorProtocol] = None
+    handler: VectorProtocol | None = None
     is_momentum = True
     for obj in objects:
         if isinstance(obj, Vector):

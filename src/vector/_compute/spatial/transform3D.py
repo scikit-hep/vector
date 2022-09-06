@@ -10,6 +10,8 @@
 
 where ``obj` has ``obj["xx"]``, ``obj["xy"]``, etc.
 """
+from __future__ import annotations
+
 import typing
 
 import numpy
@@ -138,7 +140,7 @@ def dispatch(obj: typing.Any, v: typing.Any) -> typing.Any:
                 obj["zy"],
                 obj["zz"],
                 *v.azimuthal.elements,
-                *v.longitudinal.elements
+                *v.longitudinal.elements,
             ),
             returns,
             1,

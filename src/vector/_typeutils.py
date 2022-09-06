@@ -3,6 +3,8 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+from __future__ import annotations
+
 import sys
 import typing
 
@@ -25,7 +27,7 @@ __all__ = [
 ]
 
 
-def __dir__() -> typing.List[str]:
+def __dir__() -> list[str]:
     return __all__
 
 

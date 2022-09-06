@@ -3,6 +3,8 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
+from __future__ import annotations
+
 import sys
 import typing
 
@@ -83,7 +85,7 @@ else:
     from vector.backends.awkward import VectorAwkward
 
 
-__all__: typing.Tuple[str, ...] = (
+__all__: tuple[str, ...] = (
     "Array",
     "Azimuthal",
     "AzimuthalRhoPhi",
@@ -131,7 +133,7 @@ __all__: typing.Tuple[str, ...] = (
 )
 
 
-def __dir__() -> typing.Tuple[str, ...]:
+def __dir__() -> tuple[str, ...]:
     return (
         tuple(s for s in __all__ if s != "VectorAwkward")
         if awkward is None

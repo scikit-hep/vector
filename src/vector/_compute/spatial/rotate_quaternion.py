@@ -8,6 +8,8 @@
 
     Spatial.rotate_quaternion(self, u, i, j, k)
 """
+from __future__ import annotations
+
 import typing
 
 import numpy

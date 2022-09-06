@@ -4,6 +4,7 @@
 # or https://github.com/scikit-hep/vector for details.
 
 # type: ignore
+from __future__ import annotations
 
 """
 Implements VectorObjects in Numba.

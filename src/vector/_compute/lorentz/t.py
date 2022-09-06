@@ -9,6 +9,8 @@
     @property
     Lorentz.t(self)
 """
+from __future__ import annotations
+
 import typing
 
 import numpy
@@ -111,7 +113,7 @@ def dispatch(v: typing.Any) -> typing.Any:
                 v.lib,
                 *v.azimuthal.elements,
                 *v.longitudinal.elements,
-                *v.temporal.elements
+                *v.temporal.elements,
             ),
             returns,
             1,

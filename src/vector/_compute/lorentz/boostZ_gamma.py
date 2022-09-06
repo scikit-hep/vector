@@ -8,6 +8,8 @@
 
     Lorentz.boostZ(self, gamma=...)
 """
+from __future__ import annotations
+
 import typing
 
 import numpy
@@ -220,7 +222,7 @@ def dispatch(gamma: typing.Any, v: typing.Any) -> typing.Any:
                 gamma,
                 *v.azimuthal.elements,
                 *v.longitudinal.elements,
-                *v.temporal.elements
+                *v.temporal.elements,
             ),
             returns,
             1,

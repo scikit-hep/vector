@@ -29,6 +29,8 @@ new features, to ask yourself if they can be supported by all current and hoped-
 backends, and whether a (formally) simpler implementation is possible.
 """
 
+from __future__ import annotations
+
 import collections
 import inspect
 import sys

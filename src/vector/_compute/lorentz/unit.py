@@ -8,6 +8,8 @@
 
     Lorentz.unit(self)
 """
+from __future__ import annotations
+
 import typing
 from math import inf
 
@@ -249,7 +251,7 @@ def dispatch(v: typing.Any) -> typing.Any:
                 v.lib,
                 *v.azimuthal.elements,
                 *v.longitudinal.elements,
-                *v.temporal.elements
+                *v.temporal.elements,
             ),
             returns,
             1,

@@ -28,6 +28,8 @@ two non-strict dependencies of Vector: Awkward and Numba. Awkward's ``ak.behavio
 manages this non-strictness well.
 """
 
+from __future__ import annotations
+
 import numbers
 import types
 import typing
@@ -104,7 +106,7 @@ class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
         return f"{type(self).__name__}{self.elements}"
 
     @classmethod
-    def from_fields(cls, array: ak.Array) -> "AzimuthalAwkward":
+    def from_fields(cls, array: ak.Array) -> AzimuthalAwkward:
         """
         Create a :class:`vector.backends.awkward.AzimuthalAwkwardXY` or a
         :class:`vector.backends.awkward.AzimuthalAwkwardRhoPhi`, depending on
@@ -133,7 +135,7 @@ class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
             )
 
     @classmethod
-    def from_momentum_fields(cls, array: ak.Array) -> "AzimuthalAwkward":
+    def from_momentum_fields(cls, array: ak.Array) -> AzimuthalAwkward:
         """
         Create a :class:`vector.backends.awkward.AzimuthalAwkwardXY` or a
         :class:`vector.backends.awkward.AzimuthalAwkwardRhoPhi`, depending on
@@ -185,7 +187,7 @@ class LongitudinalAwkward(CoordinatesAwkward, Longitudinal):
         return f"{type(self).__name__}{self.elements}"
 
     @classmethod
-    def from_fields(cls, array: ak.Array) -> "LongitudinalAwkward":
+    def from_fields(cls, array: ak.Array) -> LongitudinalAwkward:
         """
         Create a :class:`vector.backends.awkward.LongitudinalAwkwardZ`, a
         :class:`vector.backends.awkward.LongitudinalAwkwardTheta`, or a
@@ -216,7 +218,7 @@ class LongitudinalAwkward(CoordinatesAwkward, Longitudinal):
             )
 
     @classmethod
-    def from_momentum_fields(cls, array: ak.Array) -> "LongitudinalAwkward":
+    def from_momentum_fields(cls, array: ak.Array) -> LongitudinalAwkward:
         """
         Create a :class:`vector.backends.awkward.LongitudinalAwkwardZ`, a
         :class:`vector.backends.awkward.LongitudinalAwkwardTheta`, or a
@@ -264,7 +266,7 @@ class TemporalAwkward(CoordinatesAwkward, Temporal):
         return f"{type(self).__name__}{self.elements}"
 
     @classmethod
-    def from_fields(cls, array: ak.Array) -> "TemporalAwkward":
+    def from_fields(cls, array: ak.Array) -> TemporalAwkward:
         """
         Create a :class:`vector.backends.awkward.TemporalT` or a
         :class:`vector.backends.awkward.TemporalTau`, depending on
@@ -292,7 +294,7 @@ class TemporalAwkward(CoordinatesAwkward, Temporal):
             )
 
     @classmethod
-    def from_momentum_fields(cls, array: ak.Array) -> "TemporalAwkward":
+    def from_momentum_fields(cls, array: ak.Array) -> TemporalAwkward:
         """
         Create a :class:`vector.backends.awkward.TemporalT` or a
         :class:`vector.backends.awkward.TemporalTau`, depending on
@@ -354,7 +356,7 @@ class AzimuthalAwkwardXY(AzimuthalAwkward, AzimuthalXY):
         self.y = y
 
     @property
-    def elements(self) -> typing.Tuple[ArrayOrRecord, ArrayOrRecord]:
+    def elements(self) -> tuple[ArrayOrRecord, ArrayOrRecord]:
         """
         Azimuthal coordinates (``x`` and ``y``) as a tuple.
 
@@ -389,7 +391,7 @@ class AzimuthalAwkwardRhoPhi(AzimuthalAwkward, AzimuthalRhoPhi):
         self.phi = phi
 
     @property
-    def elements(self) -> typing.Tuple[ArrayOrRecord, ArrayOrRecord]:
+    def elements(self) -> tuple[ArrayOrRecord, ArrayOrRecord]:
         """
         Azimuthal coordinates (``rho`` and ``phi``) as a tuple.
 
@@ -423,7 +425,7 @@ class LongitudinalAwkwardZ(LongitudinalAwkward, LongitudinalZ):
         self.z = z
 
     @property
-    def elements(self) -> typing.Tuple[ArrayOrRecord]:
+    def elements(self) -> tuple[ArrayOrRecord]:
         """
         Longitudinal coordinates (``z``) as a tuple.
 
@@ -457,7 +459,7 @@ class LongitudinalAwkwardTheta(LongitudinalAwkward, LongitudinalTheta):
         self.theta = theta
 
     @property
-    def elements(self) -> typing.Tuple[ArrayOrRecord]:
+    def elements(self) -> tuple[ArrayOrRecord]:
         """
         Longitudinal coordinates (``theta``) as a tuple.
 
@@ -491,7 +493,7 @@ class LongitudinalAwkwardEta(LongitudinalAwkward, LongitudinalEta):
         self.eta = eta
 
     @property
-    def elements(self) -> typing.Tuple[ArrayOrRecord]:
+    def elements(self) -> tuple[ArrayOrRecord]:
         """
         Longitudinal coordinates (``eta``) as a tuple.
 
@@ -525,7 +527,7 @@ class TemporalAwkwardT(TemporalAwkward, TemporalT):
         self.t = t
 
     @property
-    def elements(self) -> typing.Tuple[ArrayOrRecord]:
+    def elements(self) -> tuple[ArrayOrRecord]:
         """
         Temporal coordinates (``t``) as a tuple.
 
@@ -559,7 +561,7 @@ class TemporalAwkwardTau(TemporalAwkward, TemporalTau):
         self.tau = tau
 
     @property
-    def elements(self) -> typing.Tuple[ArrayOrRecord]:
+    def elements(self) -> tuple[ArrayOrRecord]:
         """
         Temporal coordinates (``tau``) as a tuple.
 
@@ -572,7 +574,7 @@ class TemporalAwkwardTau(TemporalAwkward, TemporalTau):
         return (self.tau,)
 
 
-def _class_to_name(cls: typing.Type[VectorProtocol]) -> str:
+def _class_to_name(cls: type[VectorProtocol]) -> str:
     if issubclass(cls, Momentum):
         if issubclass(cls, Vector2D):  # type: ignore[unreachable]
             return "Momentum2D"  # type: ignore[unreachable]
@@ -596,19 +598,17 @@ def _class_to_name(cls: typing.Type[VectorProtocol]) -> str:
 
 def _yes_record(
     x: ak.Array,
-) -> typing.Optional[typing.Union[float, ak.Record]]:
+) -> float | ak.Record | None:
     return x[0]
 
 
-def _no_record(x: ak.Array) -> typing.Optional[ak.Array]:
+def _no_record(x: ak.Array) -> ak.Array | None:
     return x
 
 
 # Type for mixing in Awkward later
 class AwkwardProtocol(Protocol):
-    def __getitem__(
-        self, where: typing.Any
-    ) -> typing.Optional[typing.Union[float, ak.Array, ak.Record]]:
+    def __getitem__(self, where: typing.Any) -> float | ak.Array | ak.Record | None:
         ...
 
 
@@ -1625,10 +1625,7 @@ def _arraytype_of(awkwardtype: typing.Any, component: str) -> typing.Any:
 def _aztype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
     import numba
 
-    cls: typing.Union[
-        typing.Type[AzimuthalObjectXY],
-        typing.Type[AzimuthalObjectRhoPhi],
-    ]
+    cls: type[AzimuthalObjectXY] | type[AzimuthalObjectRhoPhi]
 
     x_index = None
     y_index = None
@@ -1696,10 +1693,8 @@ def _aztype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
 def _ltype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
     import numba
 
-    cls: typing.Union[
-        typing.Type[LongitudinalObjectZ],
-        typing.Type[LongitudinalObjectTheta],
-        typing.Type[LongitudinalObjectEta],
+    cls: type[LongitudinalObjectZ] | type[LongitudinalObjectTheta] | type[
+        LongitudinalObjectEta
     ]
 
     z_index = None
@@ -1753,10 +1748,7 @@ def _ltype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
 def _ttype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
     import numba
 
-    cls: typing.Union[
-        typing.Type[TemporalObjectT],
-        typing.Type[TemporalObjectTau],
-    ]
+    cls: type[TemporalObjectT] | type[TemporalObjectTau]
 
     t_index = None
     tau_index = None

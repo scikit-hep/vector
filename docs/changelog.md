@@ -1,5 +1,13 @@
 # Changelog
 
+## Version 0.10
+
+### Version 0.10.0
+
+- Remove Python `3.6` support [#251][]
+
+[#251]: https://github.com/scikit-hep/vector/pull/251
+
 ## Version 0.9
 
 ### Version 0.9.0

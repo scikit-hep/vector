@@ -21,6 +21,8 @@ that set of allowed features can be expanded if it doesn't prevent the addition
 of new backends).
 """
 
+from __future__ import annotations
+
 import vector._compute.planar.add  # noqa: F401
 import vector._compute.planar.deltaphi  # noqa: F401
 import vector._compute.planar.dot  # noqa: F401
