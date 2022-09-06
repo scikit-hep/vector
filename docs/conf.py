@@ -6,6 +6,8 @@
 
 from __future__ import annotations
 
+from pkg_resources import get_distribution
+
 # -- Path setup --------------------------------------------------------------
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -15,7 +17,6 @@ from __future__ import annotations
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
-from pkg_resources import get_distribution
 
 # -- Project information -----------------------------------------------------
 
