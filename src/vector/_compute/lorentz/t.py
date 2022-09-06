@@ -9,6 +9,8 @@
     @property
     Lorentz.t(self)
 """
+from __future__ import annotations
+
 import typing
 
 import numpy

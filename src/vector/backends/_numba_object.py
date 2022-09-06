@@ -3,8 +3,9 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-# type: ignore
+from __future__ import annotations
 
+# type: ignore
 """
 Implements VectorObjects in Numba.
 Every function should be made usable in Numba.

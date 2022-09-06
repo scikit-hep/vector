@@ -9,6 +9,8 @@
     @property
     Lorentz.Et2(self)
 """
+from __future__ import annotations
+
 import typing
 
 import numpy

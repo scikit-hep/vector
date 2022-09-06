@@ -8,6 +8,8 @@
 
     Lorentz.boostZ(self, beta=...)
 """
+from __future__ import annotations
+
 import typing
 
 import numpy
