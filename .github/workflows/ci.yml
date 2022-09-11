@@ -59,7 +59,7 @@ jobs:
       - name: Test package with awkward v1.x
         run: python -m pytest -ra --cov=vector tests/
 
-      - name: Use awkward v1.9.0 for v2 support
+      - name: Use awkward v1.10.x for v2 support
         run: python -m pip install -U --pre "awkward<2"
 
       - name: Test package with awkward._v2
