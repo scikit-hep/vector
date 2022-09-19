@@ -33,7 +33,6 @@ from vector._methods import (
     dim,
 )
 from vector.backends.awkward_constructors import Array as Array
-from vector.backends.awkward_constructors import Array as arr
 from vector.backends.awkward_constructors import Array as awk
 from vector.backends.awkward_constructors import zip
 from vector.backends.numpy import (
@@ -44,8 +43,9 @@ from vector.backends.numpy import (
     VectorNumpy2D,
     VectorNumpy3D,
     VectorNumpy4D,
-    array,
 )
+from vector.backends.numpy import array
+from vector.backends.numpy import array as arr
 from vector.backends.object import (
     MomentumObject2D,
     MomentumObject3D,

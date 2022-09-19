@@ -3,8 +3,10 @@
 ## Unreleased
 
 - chore: test on `awkard v1.10.0` and add cov to `noxfile` [#256][]
+- `vector.arr` is now an alias for `vector.array` (`NumPy` vectors) [#254][]
 
 [#256]: https://github.com/scikit-hep/vector/pull/256
+[#254]: https://github.com/scikit-hep/vector/pull/254
 
 ## Version 0.10
 
