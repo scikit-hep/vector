@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- chore: test on `awkard v1.10.0` and add cov to `noxfile` [#256][]
+
+[#256]: https://github.com/scikit-hep/vector/pull/256
+
 ## Version 0.10
 
 ### Version 0.10.0

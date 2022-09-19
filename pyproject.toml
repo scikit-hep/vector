@@ -135,13 +135,11 @@ enable_error_code = [
 ]
 
 [[tool.mypy.overrides]]
-module = "vector._compute.*.*"
-disallow_untyped_defs = false
-disallow_untyped_calls = false
-
-[[tool.mypy.overrides]]
 module = [
+    "vector._compute.*.*",
     "numba.*",
     "awkward.*",
 ]
+disallow_untyped_defs = false
+disallow_untyped_calls = false
 ignore_missing_imports = true
