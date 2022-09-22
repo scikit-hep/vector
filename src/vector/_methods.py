@@ -1352,34 +1352,34 @@ class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
 
 class Vector(VectorProtocol):
     @typing.overload
-    def __new__(cls, *, x: float, y: float) -> "vector.VectorObject2D":
+    def __new__(cls, *, x: float, y: float) -> vector.VectorObject2D:
         ...
 
     @typing.overload
-    def __new__(cls, *, rho: float, phi: float) -> "vector.VectorObject2D":
+    def __new__(cls, *, rho: float, phi: float) -> vector.VectorObject2D:
         ...
 
     @typing.overload
-    def __new__(cls, *, px: float, py: float) -> "vector.MomentumObject2D":
+    def __new__(cls, *, px: float, py: float) -> vector.MomentumObject2D:
         ...
 
     @typing.overload
-    def __new__(cls, *, x: float, py: float) -> "vector.MomentumObject2D":
+    def __new__(cls, *, x: float, py: float) -> vector.MomentumObject2D:
         ...
 
     @typing.overload
-    def __new__(cls, *, px: float, y: float) -> "vector.MomentumObject2D":
+    def __new__(cls, *, px: float, y: float) -> vector.MomentumObject2D:
         ...
 
     @typing.overload
-    def __new__(cls, *, pt: float, phi: float) -> "vector.MomentumObject2D":
+    def __new__(cls, *, pt: float, phi: float) -> vector.MomentumObject2D:
         ...
 
     @typing.overload
-    def __new__(cls, __azumthal: "Azimuthal") -> "Vector":
+    def __new__(cls, __azumthal: Azimuthal) -> Vector:
         ...
 
-    def __new__(cls, *args: "Azimuthal", **kwargs: float) -> "Vector":
+    def __new__(cls, *args: Azimuthal, **kwargs: float) -> Vector:
         if cls is not Vector:
             return super().__new__(cls)
 

@@ -666,7 +666,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
         return cls(azimuthal=AzimuthalObjectRhoPhi(rho, phi))
 
     def __init__(
-        self, azimuthal: typing.Optional[AzimuthalObject] = None, **kwargs: float
+        self, azimuthal: AzimuthalObject | None = None, **kwargs: float
     ) -> None:
 
         for k, v in kwargs.copy().items():
