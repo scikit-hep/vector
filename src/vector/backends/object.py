@@ -932,7 +932,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
     longitudinal: LongitudinalObject
 
     @classmethod
-    def from_xyz(cls, x: float, y: float, z: float) -> "VectorObject3D":
+    def from_xyz(cls, x: float, y: float, z: float) -> VectorObject3D:
         """
         Constructs a ``VectorObject3D`` from Cartesian coordinates.
 
@@ -950,7 +950,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         )
 
     @classmethod
-    def from_xytheta(cls, x: float, y: float, theta: float) -> "VectorObject3D":
+    def from_xytheta(cls, x: float, y: float, theta: float) -> VectorObject3D:
         r"""
         Constructs a ``VectorObject3D`` from Cartesian azimuthal coordinates and
         a polar angle $\theta$.
@@ -970,7 +970,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         )
 
     @classmethod
-    def from_xyeta(cls, x: float, y: float, eta: float) -> "VectorObject3D":
+    def from_xyeta(cls, x: float, y: float, eta: float) -> VectorObject3D:
         r"""
         Constructs a ``VectorObject3D`` from Cartesian coordinates and a
         pseudorapidity $\eta$.
@@ -989,7 +989,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         )
 
     @classmethod
-    def from_rhophiz(cls, rho: float, phi: float, z: float) -> "VectorObject3D":
+    def from_rhophiz(cls, rho: float, phi: float, z: float) -> VectorObject3D:
         """
         Constructs a ``VectorObject3D`` from polar azimuthal coordinates and a
         Cartesian longitudinal coordinate $z$.
@@ -1009,7 +1009,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         )
 
     @classmethod
-    def from_rhophitheta(cls, rho: float, phi: float, theta: float) -> "VectorObject3D":
+    def from_rhophitheta(cls, rho: float, phi: float, theta: float) -> VectorObject3D:
         r"""
         Constructs a ``VectorObject3D`` from polar azimuthal coordinates and a
         polar angle $\theta$.
@@ -1029,7 +1029,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         )
 
     @classmethod
-    def from_rhophieta(cls, rho: float, phi: float, eta: float) -> "VectorObject3D":
+    def from_rhophieta(cls, rho: float, phi: float, eta: float) -> VectorObject3D:
         r"""
         Constructs a ``VectorObject3D`` from polar azimuthal coordinates and a
         pseudorapidity $\eta$.
@@ -1050,8 +1050,8 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
 
     def __init__(
         self,
-        azimuthal: typing.Optional[AzimuthalObject] = None,
-        longitudinal: typing.Optional[LongitudinalObject] = None,
+        azimuthal: AzimuthalObject | None = None,
+        longitudinal: LongitudinalObject | None = None,
         **kwargs: float,
     ) -> None:
 
