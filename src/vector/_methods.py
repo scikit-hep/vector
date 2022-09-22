@@ -1352,1303 +1352,1295 @@ class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
 
 class Vector(VectorProtocol):
     @typing.overload
-    def __new__(cls, *, x: float, y: float) -> "vector.VectorObject2D":
+    def __new__(cls, *, x: float, y: float) -> vector.VectorObject2D:
         ...
 
     @typing.overload
-    def __new__(cls, *, rho: float, phi: float) -> "vector.VectorObject2D":
+    def __new__(cls, *, rho: float, phi: float) -> vector.VectorObject2D:
         ...
 
     @typing.overload
-    def __new__(cls, *, x: float, y: float, z: float) -> "vector.VectorObject3D":
+    def __new__(cls, *, x: float, y: float, z: float) -> vector.VectorObject3D:
         ...
 
     @typing.overload
-    def __new__(cls, *, x: float, y: float, eta: float) -> "vector.VectorObject3D":
+    def __new__(cls, *, x: float, y: float, eta: float) -> vector.VectorObject3D:
         ...
 
     @typing.overload
-    def __new__(cls, *, x: float, y: float, theta: float) -> "vector.VectorObject3D":
+    def __new__(cls, *, x: float, y: float, theta: float) -> vector.VectorObject3D:
         ...
 
     @typing.overload
-    def __new__(cls, *, rho: float, phi: float, z: float) -> "vector.VectorObject3D":
+    def __new__(cls, *, rho: float, phi: float, z: float) -> vector.VectorObject3D:
         ...
 
     @typing.overload
-    def __new__(cls, *, rho: float, phi: float, eta: float) -> "vector.VectorObject3D":
+    def __new__(cls, *, rho: float, phi: float, eta: float) -> vector.VectorObject3D:
         ...
 
     @typing.overload
-    def __new__(
-        cls, *, rho: float, phi: float, theta: float
-    ) -> "vector.VectorObject3D":
+    def __new__(cls, *, rho: float, phi: float, theta: float) -> vector.VectorObject3D:
         ...
 
     @typing.overload
-    def __new__(cls, *, px: float, py: float) -> "vector.MomentumObject2D":
+    def __new__(cls, *, px: float, py: float) -> vector.MomentumObject2D:
         ...
 
     @typing.overload
-    def __new__(cls, *, x: float, py: float) -> "vector.MomentumObject2D":
+    def __new__(cls, *, x: float, py: float) -> vector.MomentumObject2D:
         ...
 
     @typing.overload
-    def __new__(cls, *, px: float, y: float) -> "vector.MomentumObject2D":
+    def __new__(cls, *, px: float, y: float) -> vector.MomentumObject2D:
         ...
 
     @typing.overload
-    def __new__(cls, *, pt: float, phi: float) -> "vector.MomentumObject2D":
-        ...
-    
-    @typing.overload
-    def __new__(cls, *, x: float, y: float, pz: float) -> "vector.MomentumObject3D":
+    def __new__(cls, *, pt: float, phi: float) -> vector.MomentumObject2D:
         ...
 
     @typing.overload
-    def __new__(cls, *, x: float, py: float, z: float) -> "vector.MomentumObject3D":
+    def __new__(cls, *, x: float, y: float, pz: float) -> vector.MomentumObject3D:
         ...
 
     @typing.overload
-    def __new__(cls, *, x: float, py: float, pz: float) -> "vector.MomentumObject3D":
+    def __new__(cls, *, x: float, py: float, z: float) -> vector.MomentumObject3D:
         ...
 
     @typing.overload
-    def __new__(cls, *, px: float, y: float, z: float) -> "vector.MomentumObject3D":
+    def __new__(cls, *, x: float, py: float, pz: float) -> vector.MomentumObject3D:
         ...
 
     @typing.overload
-    def __new__(cls, *, px: float, y: float, pz: float) -> "vector.MomentumObject3D":
+    def __new__(cls, *, px: float, y: float, z: float) -> vector.MomentumObject3D:
         ...
 
     @typing.overload
-    def __new__(cls, *, px: float, py: float, z: float) -> "vector.MomentumObject3D":
+    def __new__(cls, *, px: float, y: float, pz: float) -> vector.MomentumObject3D:
         ...
 
     @typing.overload
-    def __new__(cls, *, px: float, py: float, pz: float) -> "vector.MomentumObject3D":
+    def __new__(cls, *, px: float, py: float, z: float) -> vector.MomentumObject3D:
         ...
 
     @typing.overload
-    def __new__(cls, *, rho: float, phi: float, pz: float) -> "vector.MomentumObject3D":
+    def __new__(cls, *, px: float, py: float, pz: float) -> vector.MomentumObject3D:
         ...
 
     @typing.overload
-    def __new__(cls, *, pt: float, phi: float, z: float) -> "vector.MomentumObject3D":
+    def __new__(cls, *, rho: float, phi: float, pz: float) -> vector.MomentumObject3D:
         ...
 
     @typing.overload
-    def __new__(cls, *, pt: float, phi: float, pz: float) -> "vector.MomentumObject3D":
+    def __new__(cls, *, pt: float, phi: float, z: float) -> vector.MomentumObject3D:
         ...
 
     @typing.overload
-    def __new__(cls, *, x: float, py: float, theta: float) -> "vector.MomentumObject3D":
+    def __new__(cls, *, pt: float, phi: float, pz: float) -> vector.MomentumObject3D:
         ...
 
     @typing.overload
-    def __new__(cls, *, px: float, y: float, theta: float) -> "vector.MomentumObject3D":
+    def __new__(cls, *, x: float, py: float, theta: float) -> vector.MomentumObject3D:
         ...
 
     @typing.overload
-    def __new__(
-        cls, *, px: float, py: float, theta: float
-    ) -> "vector.MomentumObject3D":
+    def __new__(cls, *, px: float, y: float, theta: float) -> vector.MomentumObject3D:
         ...
 
     @typing.overload
-    def __new__(
-        cls, *, pt: float, phi: float, theta: float
-    ) -> "vector.MomentumObject3D":
+    def __new__(cls, *, px: float, py: float, theta: float) -> vector.MomentumObject3D:
         ...
 
     @typing.overload
-    def __new__(cls, *, x: float, py: float, eta: float) -> "vector.MomentumObject3D":
+    def __new__(cls, *, pt: float, phi: float, theta: float) -> vector.MomentumObject3D:
         ...
 
     @typing.overload
-    def __new__(cls, *, px: float, y: float, eta: float) -> "vector.MomentumObject3D":
+    def __new__(cls, *, x: float, py: float, eta: float) -> vector.MomentumObject3D:
         ...
 
     @typing.overload
-    def __new__(cls, *, px: float, py: float, eta: float) -> "vector.MomentumObject3D":
+    def __new__(cls, *, px: float, y: float, eta: float) -> vector.MomentumObject3D:
         ...
 
     @typing.overload
-    def __new__(cls, *, pt: float, phi: float, eta: float) -> "vector.MomentumObject3D":
+    def __new__(cls, *, px: float, py: float, eta: float) -> vector.MomentumObject3D:
+        ...
+
+    @typing.overload
+    def __new__(cls, *, pt: float, phi: float, eta: float) -> vector.MomentumObject3D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, z: float, t: float
-    ) -> "vector.VectorObject4D":
+    ) -> vector.VectorObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, pz: float, t: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, z: float, t: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, pz: float, t: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, z: float, t: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, pz: float, t: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, z: float, t: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, pz: float, t: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, z: float, t: float
-    ) -> "vector.VectorObject4D":
+    ) -> vector.VectorObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, pz: float, t: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pt: float, phi: float, z: float, t: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pt: float, phi: float, pz: float, t: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, theta: float, t: float
-    ) -> "vector.VectorObject4D":
+    ) -> vector.VectorObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, theta: float, t: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, theta: float, t: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, theta: float, t: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, theta: float, t: float
-    ) -> "vector.VectorObject4D":
+    ) -> vector.VectorObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pt: float, phi: float, theta: float, t: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, eta: float, t: float
-    ) -> "vector.VectorObject4D":
+    ) -> vector.VectorObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, eta: float, t: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, eta: float, t: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, eta: float, t: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, eta: float, t: float
-    ) -> "vector.VectorObject4D":
+    ) -> vector.VectorObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pt: float, phi: float, eta: float, t: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, z: float, tau: float
-    ) -> "vector.VectorObject4D":
+    ) -> vector.VectorObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, pz: float, tau: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, z: float, tau: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, pz: float, tau: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, z: float, tau: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, pz: float, tau: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, z: float, tau: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, pz: float, tau: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, z: float, tau: float
-    ) -> "vector.VectorObject4D":
+    ) -> vector.VectorObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, pz: float, tau: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, ptau: float, phi: float, z: float, tau: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, ptau: float, phi: float, pz: float, tau: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, theta: float, tau: float
-    ) -> "vector.VectorObject4D":
+    ) -> vector.VectorObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, theta: float, tau: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, theta: float, tau: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, theta: float, tau: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, theta: float, tau: float
-    ) -> "vector.VectorObject4D":
+    ) -> vector.VectorObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, ptau: float, phi: float, theta: float, tau: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, eta: float, tau: float
-    ) -> "vector.VectorObject4D":
+    ) -> vector.VectorObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, eta: float, tau: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, eta: float, tau: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, eta: float, tau: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, eta: float, tau: float
-    ) -> "vector.VectorObject4D":
+    ) -> vector.VectorObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, ptau: float, phi: float, eta: float, tau: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, z: float, E: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, pz: float, E: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, z: float, E: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, pz: float, E: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, z: float, E: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, pz: float, E: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, z: float, E: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, pz: float, E: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, z: float, E: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, pz: float, E: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pE: float, phi: float, z: float, E: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pE: float, phi: float, pz: float, E: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, theta: float, E: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, theta: float, E: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, theta: float, E: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, theta: float, E: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, theta: float, E: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pE: float, phi: float, theta: float, E: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, eta: float, E: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, eta: float, E: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, eta: float, E: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, eta: float, E: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, eta: float, E: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pE: float, phi: float, eta: float, E: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, z: float, e: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, pz: float, e: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, z: float, e: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, pz: float, e: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, z: float, e: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, pz: float, e: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, z: float, e: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, pz: float, e: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, z: float, e: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, pz: float, e: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pe: float, phi: float, z: float, e: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pe: float, phi: float, pz: float, e: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, theta: float, e: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, theta: float, e: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, theta: float, e: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, theta: float, e: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, theta: float, e: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pe: float, phi: float, theta: float, e: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, eta: float, e: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, eta: float, e: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, eta: float, e: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, eta: float, e: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, eta: float, e: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pe: float, phi: float, eta: float, e: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, z: float, energy: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, pz: float, energy: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, z: float, energy: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, pz: float, energy: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, z: float, energy: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, pz: float, energy: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, z: float, energy: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, pz: float, energy: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, z: float, energy: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, pz: float, energy: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pt: float, phi: float, z: float, energy: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pt: float, phi: float, pz: float, energy: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, theta: float, energy: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, theta: float, energy: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, theta: float, energy: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, theta: float, energy: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, theta: float, energy: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pt: float, phi: float, theta: float, energy: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, eta: float, energy: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, eta: float, energy: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, eta: float, energy: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, eta: float, energy: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, eta: float, energy: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pt: float, phi: float, eta: float, energy: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, z: float, M: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, pz: float, M: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, z: float, M: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, pz: float, M: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, z: float, M: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, pz: float, M: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, z: float, M: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, pz: float, M: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, z: float, M: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, pz: float, M: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pM: float, phi: float, z: float, M: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pM: float, phi: float, pz: float, M: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, theta: float, M: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, theta: float, M: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, theta: float, M: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, theta: float, M: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, theta: float, M: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pM: float, phi: float, theta: float, M: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, eta: float, M: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, eta: float, M: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, eta: float, M: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, eta: float, M: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, eta: float, M: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pM: float, phi: float, eta: float, M: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, z: float, m: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, pz: float, m: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, z: float, m: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, pz: float, m: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, z: float, m: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, pz: float, m: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, z: float, m: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, pz: float, m: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, z: float, m: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, pz: float, m: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pm: float, phi: float, z: float, m: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pm: float, phi: float, pz: float, m: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, theta: float, m: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, theta: float, m: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, theta: float, m: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, theta: float, m: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, theta: float, m: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pm: float, phi: float, theta: float, m: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, eta: float, m: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, eta: float, m: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, eta: float, m: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, eta: float, m: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, eta: float, m: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pm: float, phi: float, eta: float, m: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, z: float, mass: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, pz: float, mass: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, z: float, mass: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, pz: float, mass: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, z: float, mass: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, pz: float, mass: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, z: float, mass: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, pz: float, mass: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, z: float, mass: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, pz: float, mass: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pt: float, phi: float, z: float, mass: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pt: float, phi: float, pz: float, mass: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, theta: float, mass: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, theta: float, mass: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, theta: float, mass: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, theta: float, mass: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, theta: float, mass: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pt: float, phi: float, theta: float, mass: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, y: float, eta: float, mass: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, x: float, py: float, eta: float, mass: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, y: float, eta: float, mass: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, px: float, py: float, eta: float, mass: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, rho: float, phi: float, eta: float, mass: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
     def __new__(
         cls, *, pt: float, phi: float, eta: float, mass: float
-    ) -> "vector.MomentumObject4D":
+    ) -> vector.MomentumObject4D:
         ...
 
     @typing.overload
-    def __new__(cls, __azumthal: "Azimuthal") -> "Vector":
+    def __new__(cls, __azumthal: Azimuthal) -> Vector:
         ...
 
     @typing.overload
-    def __new__(
-        cls, __azumthal: "Azimuthal", __longitudinal: "Longitudinal"
-    ) -> "Vector":
+    def __new__(cls, __azumthal: Azimuthal, __longitudinal: Longitudinal) -> Vector:
         ...
 
     @typing.overload
     def __new__(
         cls,
-        __azumthal: "Azimuthal",
-        __longitudinal: "Longitudinal",
-        __temporal: "Temporal",
-    ) -> "Vector":
+        __azumthal: Azimuthal,
+        __longitudinal: Longitudinal,
+        __temporal: Temporal,
+    ) -> Vector:
         ...
 
-    def __new__(cls, *args: typing.Any, **kwargs: float) -> "Vector":
+    def __new__(cls, *args: typing.Any, **kwargs: float) -> Vector:
         if cls is not Vector:
             return super().__new__(cls)
 
@@ -3978,10 +3970,10 @@ def _lib_of(*objects: VectorProtocol) -> Module:  # NumPy-like module
         if isinstance(obj, Vector):
             if lib is None:
                 # Not sure why mypy complains about member not being assignable here
-                lib = obj.lib  # type: ignore
-            elif lib is not obj.lib:
+                lib = obj.lib  # type: ignore[misc]
+            elif lib is not obj.lib:  # type: ignore[misc]
                 raise TypeError(
-                    f"cannot use {lib} and {obj.lib} in the same calculation"
+                    f"cannot use {lib} and {obj.lib} in the same calculation"  # type: ignore[misc]
                 )
 
     assert lib is not None
