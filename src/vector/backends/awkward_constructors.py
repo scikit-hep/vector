@@ -214,17 +214,17 @@ def _is_type_safe(array_type: typing.Any) -> bool:
             awkward.types.OptionType,
         ),
     ):
-        array_type = array_type.type
+        array_type = array_type.content
 
     if not isinstance(array_type, awkward.types.RecordType):
         return False
 
-    for field_type in array_type.fields():
+    for field_type in array_type.contents:
         if isinstance(field_type, awkward.types.OptionType):
-            field_type = field_type.type
-        if not isinstance(field_type, awkward.types.PrimitiveType):
+            field_type = field_type.content
+        if not isinstance(field_type, awkward.types.NumpyType):
             return False
-        dt = field_type.dtype
+        dt = field_type.primitive
         if (
             not dt.startswith("int")
             and not dt.startswith("uint")
