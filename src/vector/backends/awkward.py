@@ -636,7 +636,7 @@ class VectorAwkward:
                 has two, but ``rotate_axis`` has only one: the ``axis``
                 is secondary).
         """
-        if returns == [float] or returns == [bool]:
+        if returns in ([float], [bool]):
             return result
 
         if all(not isinstance(x, ak.Array) for x in result):
@@ -1616,10 +1616,9 @@ def _arraytype_of(awkwardtype: typing.Any, component: str) -> typing.Any:
         else ak._connect._numba.layout.IndexedArrayType,
     ):
         return _arraytype_of(awkwardtype.contenttype, component)
-    else:
-        raise numba.TypingError(
-            f"vector components like {repr(component)} must be NumpyArrayType, not {awkwardtype}"
-        )
+    raise numba.TypingError(
+        f"vector components like {repr(component)} must be NumpyArrayType, not {awkwardtype}"
+    )
 
 
 def _aztype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:

@@ -90,3 +90,22 @@ repos:
       - id: rst-backticks
       - id: rst-directive-colons
       - id: rst-inline-touching-normal
+
+  - repo: https://github.com/asottile/yesqa
+    rev: "v1.4.0"
+    hooks:
+      - id: yesqa
+
+  - repo: https://github.com/nbQA-dev/nbQA
+    rev: 1.5.1
+    hooks:
+      - id: nbqa-black
+      - id: nbqa-pyupgrade
+        args: ["--py37-plus"]
+      - id: nbqa-isort
+        args: ["--float-to-top"]
+
+  - repo: https://github.com/hadialqattan/pycln
+    rev: "v2.1.1"
+    hooks:
+      - id: pycln

@@ -119,6 +119,63 @@ filterwarnings = [
 [tool.isort]
 profile = "black"
 
+[tool.pylint]
+master.py-version = "3.7"
+reports.output-format = "colorized"
+similarities.ignore-imports = "yes"
+master.jobs = "0"
+messages_control.enable = [
+  "useless-suppression",
+]
+messages_control.disable = [
+  "fixme",
+  "invalid-name",
+  "line-too-long",
+  "missing-class-docstring",
+  "missing-function-docstring",
+  "missing-module-docstring",
+  "protected-access",
+  "too-few-public-methods",
+  "too-many-arguments",
+  "too-many-branches",
+  "too-many-lines",
+  "too-many-locals",
+  "too-many-return-statements",
+  "too-many-statements",
+  "wrong-import-position",
+  "duplicate-code",
+  "import-outside-toplevel",
+  "import-error",
+  "disallowed-name",
+  "cyclic-import",
+  "no-self-use",
+  "unnecessary-lambda",
+  "unnecessary-pass",
+  "too-many-ancestors",
+  "redefined-outer-name",
+  "unused-argument",
+  "no-else-return",
+  "redefined-builtin",
+  "too-many-boolean-expressions",
+  "too-many-public-methods",
+  "inconsistent-return-statements",
+  "reimported",
+  "cast_python_value",
+  "unused-variable",
+  "unsubscriptable-object",
+  "abstract-method",
+  "no-member",
+  "consider-using-enumerate",
+  "global-statement",
+  "function-redefined",
+  "ungrouped-imports",
+  "unused-import",
+  "pointless-string-statement",
+  "useless-option-value",
+  "cast_python_value",
+  "unknown-option-value",
+]
+
 [tool.mypy]
 files = [
     "src/vector",
