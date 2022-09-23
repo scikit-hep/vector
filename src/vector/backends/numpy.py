@@ -1024,7 +1024,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
                 has two, but ``rotate_axis`` has only one: the ``axis``
                 is secondary).
         """
-        if returns == [float] or returns == [bool]:
+        if returns in ([float], [bool]):
             return result
 
         elif (
@@ -1301,7 +1301,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
                 has two, but ``rotate_axis`` has only one: the ``axis``
                 is secondary).
         """
-        if returns == [float] or returns == [bool]:
+        if returns in ([float], [bool]):
             return result
 
         elif (
@@ -1611,7 +1611,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
                 has two, but ``rotate_axis`` has only one: the ``axis``
                 is secondary).
         """
-        if returns == [float] or returns == [bool]:
+        if returns in ([float], [bool]):
             return result
 
         elif (

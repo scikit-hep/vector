@@ -681,7 +681,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
                 has two, but ``rotate_axis`` has only one: the ``axis``
                 is secondary).
         """
-        if returns == [float] or returns == [bool]:
+        if returns in ([float], [bool]):
             return result
 
         elif (
@@ -993,7 +993,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
                 has two, but ``rotate_axis`` has only one: the ``axis``
                 is secondary).
         """
-        if returns == [float] or returns == [bool]:
+        if returns in ([float], [bool]):
             return result
 
         elif (
@@ -1569,7 +1569,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
                 has two, but ``rotate_axis`` has only one: the ``axis``
                 is secondary).
         """
-        if returns == [float] or returns == [bool]:
+        if returns in ([float], [bool]):
             return result
 
         elif (

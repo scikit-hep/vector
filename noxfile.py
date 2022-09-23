@@ -19,6 +19,14 @@ def lint(session: nox.Session) -> None:
     session.run("pre-commit", "run", "--all-files", *session.posargs)
 
 
+@nox.session
+def pylint(session: nox.Session) -> None:
+    """Run pylint."""
+    session.install("pylint~=2.14.0")
+    session.install("-e", ".")
+    session.run("pylint", "src/vector/", *session.posargs)
+
+
 @nox.session(python=ALL_PYTHONS, reuse_venv=True)
 def tests(session: nox.Session) -> None:
     """Run the unit and regular tests."""
