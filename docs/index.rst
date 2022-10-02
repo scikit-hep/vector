@@ -11,7 +11,7 @@
 Overview
 --------
 
-Vector is a Python 3.7+ library for 2D, 3D, and `Lorentz vectors <https://en.wikipedia.org/wiki/Special_relativity#Physics_in_spacetime>`_, especially _arrays of vectors\_, to solve common physics problems in a NumPy-like way.
+Vector is a Python 3.7+ library for 2D, 3D, and `Lorentz vectors <https://en.wikipedia.org/wiki/Special_relativity#Physics_in_spacetime>`_, especially *arrays of vectors*, to solve common physics problems in a NumPy-like way.
 
 Main features of Vector:
 
@@ -54,6 +54,29 @@ covers almost all the features offered by ``vector`` and any new additions to th
    usage/intro
    usage/structure
    usage/vector_design_prototype
+
+Talks about vector
+------------------
+
+-  13th September 2022 - `Constructing HEP vectors and analyzing HEP
+   data using Vector <https://indi.to/bPmMc>`__ - `PyHEP 2022
+   (virtual) <https://indico.cern.ch/event/1150631/>`__
+   `🎥 <https://www.youtube.com/watch?v=4iveMzrbe7s&list=PLKZ9c4ONm-VkohKG-skzEG_gklMaSgaO7&index=15>`__
+-  20th July 2022 - `Analysis Grand Challenge / HEP Scientific Python
+   Ecosystem <https://indico.cern.ch/event/1151329/timetable/#3-analysis-grand-challenge-hep>`__
+   - `DANCE/CoDaS@Snowmass 2022 computational and data science software
+   training <https://indico.cern.ch/event/1151329/>`__
+-  25th April 2022 - `Foundation libraries (uproot, awkward, hist,
+   mplhep) <https://indico.cern.ch/event/1126109/contributions/4780138/>`__
+   - `IRIS-HEP AGC Tools 2022
+   Workshop <https://indico.cern.ch/event/1126109/>`__
+   `🎥 <https://www.youtube.com/watch?v=O9KvsDMKOmY>`__
+-  3rd November 2021 - `Data handling: uproot, awkward &
+   vector <https://indico.cern.ch/event/1076231/contributions/4560398/>`__
+   - `IRIS-HEP AGC Tools 2021
+   Workshop <https://indico.cern.ch/event/1076231/>`__
+   `🎥 <https://indico.cern.ch/event/1076231/contributions/4560398/attachments/2338579/4017718/agc_uproot_awk.mp4>`__
+
 
 Changes in vector's API
 -----------------------
