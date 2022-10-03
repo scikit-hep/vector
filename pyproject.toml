@@ -87,6 +87,7 @@ Homepage = "https://github.com/scikit-hep/vector"
 init = "vector:register_numba"
 
 
+
 [tool.hatch]
 version.source = "vcs"
 build.hooks.vcs.version-file = "src/vector/version.py"
