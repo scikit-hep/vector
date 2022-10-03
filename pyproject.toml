@@ -87,10 +87,10 @@ Homepage = "https://github.com/scikit-hep/vector"
 init = "vector:register_numba"
 
 
-
 [tool.hatch]
 version.source = "vcs"
 build.hooks.vcs.version-file = "src/vector/version.py"
+
 
 [tool.pytest.ini_options]
 minversion = "6.0"
@@ -178,7 +178,7 @@ messages_control.disable = [
 
 [tool.mypy]
 files = [
-    "src/vector",
+  "src/vector",
 ]
 python_version = "3.8"
 strict = true
@@ -186,16 +186,16 @@ warn_return_any = false
 show_error_codes = true
 warn_unreachable = true
 enable_error_code = [
-    "ignore-without-code",
-    "truthy-bool",
-    "redundant-expr",
+  "ignore-without-code",
+  "truthy-bool",
+  "redundant-expr",
 ]
 
 [[tool.mypy.overrides]]
 module = [
-    "vector._compute.*.*",
-    "numba.*",
-    "awkward.*",
+  "vector._compute.*.*",
+  "numba.*",
+  "awkward.*",
 ]
 disallow_untyped_defs = false
 disallow_untyped_calls = false
