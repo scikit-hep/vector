@@ -30,6 +30,9 @@ def test_constructors_2D():
         vector.VectorObject2D(rho=1, wow=2)
 
     with pytest.raises(TypeError):
+        vector.VectorObject2D(rho=complex(1, 2), wow=2)
+
+    with pytest.raises(TypeError):
         vector.VectorObject2D()
 
     vec = vector.MomentumObject2D(px=1, py=2)
@@ -60,6 +63,9 @@ def test_constructors_2D():
 
     with pytest.raises(TypeError):
         vector.MomentumObject2D(rho=1, wow=2)
+
+    with pytest.raises(TypeError):
+        vector.MomentumObject2D(rho=False, wow=2)
 
     with pytest.raises(TypeError):
         vector.MomentumObject2D()
