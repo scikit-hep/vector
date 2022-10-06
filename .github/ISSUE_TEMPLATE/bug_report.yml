@@ -12,7 +12,7 @@ body:
     attributes:
       label: Vector Version
       description: What version of vector are you using?
-      placeholder: python -m pip show vector 
+      placeholder: python -m pip show vector
     validations:
       required: true
   - type: input
