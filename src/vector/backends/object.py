@@ -669,6 +669,9 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
         self, azimuthal: AzimuthalObject | None = None, **kwargs: float
     ) -> None:
 
+        if not _is_type_safe(kwargs):
+            raise TypeError("a coordinate must be of the type int or float")
+
         for k, v in kwargs.copy().items():
             kwargs.pop(k)
             kwargs[_repr_momentum_to_generic.get(k, k)] = v
@@ -1880,6 +1883,13 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
     @mass.setter
     def mass(self, mass: float) -> None:
         self.temporal = TemporalObjectTau(mass)
+
+
+def _is_type_safe(coordinates: dict[str, typing.Any]) -> bool:
+    for _, value in coordinates.items():
+        if not issubclass(type(value), numbers.Real) or isinstance(value, bool):
+            return False
+    return True
 
 
 def _gather_coordinates(
@@ -3150,9 +3160,8 @@ def obj(**coordinates: float) -> VectorObject:
     is_momentum = False
     generic_coordinates = {}
 
-    for _, value in coordinates.items():
-        if not issubclass(type(value), numbers.Real) or isinstance(value, bool):
-            raise TypeError("a coordinate must be of the type int or float")
+    if not _is_type_safe(coordinates):
+        raise TypeError("a coordinate must be of the type int or float")
 
     if "px" in coordinates:
         is_momentum = True
