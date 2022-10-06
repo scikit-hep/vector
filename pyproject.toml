@@ -175,6 +175,8 @@ messages_control.disable = [
   "useless-option-value",
   "cast_python_value",
   "unknown-option-value",
+  "no-else-raise",
+  "unidiomatic-typecheck",
 ]
 
 [tool.mypy]
