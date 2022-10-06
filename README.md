@@ -24,7 +24,7 @@ Main features of Vector:
 - Pure Python with NumPy as its only dependency. This makes it easier to install.
 - Vectors may be represented in a variety of coordinate systems: Cartesian, cylindrical, pseudorapidity, and any combination of these with time or proper time for Lorentz vectors. In all, there are 12 coordinate systems: {_x_-_y_ vs _ρ_-_φ_ in the azimuthal plane} × {_z_ vs _θ_ vs _η_ longitudinally} × {_t_ vs _τ_ temporally}.
 - Uses names and conventions set by [ROOT](https://root.cern/)'s [TLorentzVector](https://root.cern.ch/doc/master/classTLorentzVector.html) and [Math::LorentzVector](https://root.cern.ch/doc/master/classROOT_1_1Math_1_1LorentzVector.html), as well as [scikit-hep/math](https://github.com/scikit-hep/scikit-hep/tree/master/skhep/math), [uproot-methods TLorentzVector](https://github.com/scikit-hep/uproot3-methods/blob/master/uproot3_methods/classes/TLorentzVector.py), [henryiii/hepvector](https://github.com/henryiii/hepvector), and [coffea.nanoevents.methods.vector](https://coffeateam.github.io/coffea/modules/coffea.nanoevents.methods.vector.html).
-- Implemented on a variety of backends:
+- **Implemented on a variety of backends:**
   - pure Python objects
   - NumPy arrays of vectors (as a [structured array](https://numpy.org/doc/stable/user/basics.rec.html) subclass)
   - [Awkward Arrays](https://awkward-array.org/) of vectors
@@ -701,5 +701,5 @@ Support for this work was provided by the National Science Foundation cooperativ
 [rtd-link]: https://vector.readthedocs.io/en/latest/?badge=latest
 [sk-badge]: https://scikit-hep.org/assets/images/Scikit--HEP-Project-blue.svg
 [sk-link]: https://scikit-hep.org/
-[zenodo-badge]: https://zenodo.org/badge/DOI/10.5281/zenodo.5942083.svg
-[zenodo-link]: https://doi.org/10.5281/zenodo.5942082
+[zenodo-badge]: https://zenodo.org/badge/DOI/10.5281/zenodo.7054478.svg
+[zenodo-link]: https://doi.org/10.5281/zenodo.7054478
