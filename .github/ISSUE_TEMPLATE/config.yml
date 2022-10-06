@@ -1,0 +1,10 @@
+blank_issues_enabled: true
+contact_links:
+  - name: GitHub Discussions
+    url: https://github.com/scikit-hep/vector/discussions
+    about: |
+      How do I do 'X' with vector and the Scikit-HEP ecosystem?
+  - name: Gitter
+    url: https://gitter.im/Scikit-HEP/vector?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+    about: |
+      How do I do 'X' with vector and the Scikit-HEP ecosystem?
