@@ -6,6 +6,7 @@
 .. image:: _images/vector-logo.png
 
 |Action status| |Documentation Status| |pre-commit.ci status| |coverage| |GitHub Discussion| |Gitter| |Code style: black|
+
 |PyPI platforms| |PyPI version| |Conda latest releasetatus| |DOI| |License| |Scikit-HEP|
 
 Overview
