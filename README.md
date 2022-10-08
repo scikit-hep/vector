@@ -701,5 +701,5 @@ Support for this work was provided by the National Science Foundation cooperativ
 [rtd-link]: https://vector.readthedocs.io/en/latest/?badge=latest
 [sk-badge]: https://scikit-hep.org/assets/images/Scikit--HEP-Project-blue.svg
 [sk-link]: https://scikit-hep.org/
-[zenodo-badge]: https://zenodo.org/badge/DOI/10.5281/zenodo.5942083.svg
-[zenodo-link]: https://doi.org/10.5281/zenodo.5942082
+[zenodo-badge]: https://zenodo.org/badge/DOI/10.5281/zenodo.7054478.svg
+[zenodo-link]: https://doi.org/10.5281/zenodo.7054478
