@@ -47,12 +47,14 @@ def doctests(session: nox.Session) -> None:
     session.install("-e", ".[awkward,test,test-extras]")
     session.run("xdoctest", "./src/vector/", *session.posargs)
 
+
 @nox.session(python=ALL_PYTHONS, reuse_venv=True)
 def notebooks(session: nox.Session) -> None:
     """Run the notebook tests"""
     session.install("-e", ".[awkward,test,test-extras]", "numba")
     session.install("jupyter", "papermill")
     session.run("pytest", "tests/test_notebooks.py", *session.posargs)
+
 
 @nox.session(reuse_venv=True)
 def docs(session: nox.Session) -> None:
