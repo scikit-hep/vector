@@ -20,10 +20,3 @@ def common_kwargs(tmpdir):
 def test_intro(common_kwargs):
     execution_dir = Path.cwd() / "docs" / "usage"
     pm.execute_notebook(execution_dir / "intro.ipynb", **common_kwargs)
-
-
-def test_vector_design_prototype(common_kwargs):
-    execution_dir = Path.cwd() / "docs" / "usage"
-    pm.execute_notebook(
-        execution_dir / "vector_design_prototype.ipynb", **common_kwargs
-    )
