@@ -55,19 +55,19 @@ jobs:
         run: python -m pip install -e .[test]
 
       - name: Test light package
-        run: python -m pytest -ra
+        run: python -m pytest -ra --ignore tests/test_notebooks.py
 
       - name: Install develop extras
         run: python -m pip install -e .[dev]
 
       - name: Test package with awkward v1.x
-        run: python -m pytest -ra --cov=vector tests/
+        run: python -m pytest -ra --cov=vector --ignore tests/test_notebooks.py tests/
 
       - name: Use awkward v1.10.x for v2 support
         run: python -m pip install -U --pre "awkward<2"
 
       - name: Test package with awkward._v2
-        run: VECTOR_USE_AWKWARDV2=1 python -m pytest -ra --cov=vector tests/
+        run: VECTOR_USE_AWKWARDV2=1 python -m pytest -ra --cov=vector --ignore tests/test_notebooks.py tests/
 
       - name: Run doctests
         run: xdoctest ./src/vector/
@@ -92,7 +92,7 @@ jobs:
         run: python -m pip install .[test,test-extras]
 
       - name: Test package
-        run: python -m pytest -ra -m dis
+        run: python -m pytest -ra -m dis --ignore tests/test_notebooks.py
 
   # root:
   #   runs-on: ubuntu-latest
