@@ -146,7 +146,7 @@ folder. You can view this build in any browser by opening the `index.html` file.
 
 ## Nox
 
-`vector` supports running various critical commands using [nox](https://github.com/wntrblm/nox) to make them less intimidating for new developers. All of these commands (or sessions in the language of `nox`) - `lint`, `tests`, `doctests`, `docs`, and `build` - are defined in [noxfile.py](https://github.com/scikit-hep/vector/blob/main/noxfile.py).
+`vector` supports running various critical commands using [nox](https://github.com/wntrblm/nox) to make them less intimidating for new developers. All of these commands (or sessions in the language of `nox`) - `lint`, `tests`, `notebooks`, `doctests`, `docs`, and `build` - are defined in [noxfile.py](https://github.com/scikit-hep/vector/blob/main/noxfile.py).
 
 `nox` can be installed via `pip` using -
 
@@ -174,6 +174,12 @@ Tests can be run with `nox` in the following way -
 
 ```
 nox -s tests
+```
+
+Notebooks can be tested with `nox` in the following way -
+
+```
+nox -s notebooks
 ```
 
 ### Building documentation with nox

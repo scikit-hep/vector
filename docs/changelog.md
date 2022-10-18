@@ -4,9 +4,29 @@
 
 - chore: test on `awkard v1.10.0` and add cov to `noxfile` [#256][]
 - `vector.arr` is now an alias for `vector.array` (`NumPy` vectors) [#254][]
+- Add PyLint and additional pre-commit hooks [#260][]
+- Fix the failing mypy hook by pinning python-version [#261][]
+- chore: bump mypy and revert python-version [#263][]
+- docs: add a section for talks [#264][]
+- chore: minor cleanups [#266][]
+- chore: add issue templates [#267][]
+- zenodo-badge-sync [#269][]
+- Pull request template [#271][]
+- docs: add a developer guide [#233][]
+- ci: Test notebooks on PRs [#272][]
 
 [#256]: https://github.com/scikit-hep/vector/pull/256
 [#254]: https://github.com/scikit-hep/vector/pull/254
+[#260]: https://github.com/scikit-hep/vector/pull/260
+[#261]: https://github.com/scikit-hep/vector/pull/261
+[#263]: https://github.com/scikit-hep/vector/pull/263
+[#264]: https://github.com/scikit-hep/vector/pull/264
+[#266]: https://github.com/scikit-hep/vector/pull/266
+[#267]: https://github.com/scikit-hep/vector/pull/267
+[#269]: https://github.com/scikit-hep/vector/pull/269
+[#271]: https://github.com/scikit-hep/vector/pull/271
+[#233]: https://github.com/scikit-hep/vector/pull/233
+[#272]: https://github.com/scikit-hep/vector/pull/272
 
 ## Version 0.10
 
