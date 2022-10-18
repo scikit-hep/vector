@@ -15,6 +15,7 @@
 - docs: add a developer guide [#233][]
 - ci: Test notebooks on PRs [#272][]
 - feat: add constructors for `VectorObject2D` and `MomentumObject2D` [#89][]
+- feat: add constructors for `VectorObject3D` and `MomentumObject3D` [#231][]
 
 [#256]: https://github.com/scikit-hep/vector/pull/256
 [#254]: https://github.com/scikit-hep/vector/pull/254
@@ -29,6 +30,7 @@
 [#233]: https://github.com/scikit-hep/vector/pull/233
 [#272]: https://github.com/scikit-hep/vector/pull/272
 [#89]: https://github.com/scikit-hep/vector/pull/89
+[#231]: https://github.com/scikit-hep/vector/pull/231
 
 ## Version 0.10
 
