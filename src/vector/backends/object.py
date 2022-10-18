@@ -1055,6 +1055,9 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         **kwargs: float,
     ) -> None:
 
+        if not _is_type_safe(kwargs):
+            raise TypeError("a coordinate must be of the type int or float")
+
         for k, v in kwargs.copy().items():
             kwargs.pop(k)
             kwargs[_repr_momentum_to_generic.get(k, k)] = v
