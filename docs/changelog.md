@@ -14,6 +14,7 @@
 - Pull request template [#271][]
 - docs: add a developer guide [#233][]
 - ci: Test notebooks on PRs [#272][]
+- feat: add constructors for `VectorObject2D` and `MomentumObject2D` [#89][]
 
 [#256]: https://github.com/scikit-hep/vector/pull/256
 [#254]: https://github.com/scikit-hep/vector/pull/254
@@ -27,6 +28,7 @@
 [#271]: https://github.com/scikit-hep/vector/pull/271
 [#233]: https://github.com/scikit-hep/vector/pull/233
 [#272]: https://github.com/scikit-hep/vector/pull/272
+[#89]: https://github.com/scikit-hep/vector/pull/89
 
 ## Version 0.10
 

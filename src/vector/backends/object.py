@@ -3,23 +3,27 @@
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 """
-Defines behaviors for Object vectors. New vectors created with the
+Defines behaviors for Object vectors. New vectors created with the respective classes
 
 .. code-block:: python
 
-    vector.obj(...)
+    vector.VectorObject2D(x=..., y=...)
 
+will have these behaviors built in (and will pass them to any derived objects).
 
-function will have these behaviors built in (and will pass them to any derived
-objects).
-
-Additionally, the class methods can also be used to construct object type
-vectors -
+The class methods can also be used to construct object type vectors -
 
 .. code-block:: python
 
     vec = vector.VectorObject2D.from_xy(1, 2)
 
+Additionally, object type vectors can also be constructed using -
+
+.. code-block:: python
+
+    vector.obj(...)
+
+function.
 """
 from __future__ import annotations
 
@@ -56,6 +60,7 @@ from vector._methods import (
     _handler_of,
     _ltype,
     _repr_generic_to_momentum,
+    _repr_momentum_to_generic,
     _ttype,
 )
 from vector._typeutils import FloatArray
@@ -106,7 +111,7 @@ class AzimuthalObjectXY(AzimuthalObject, AzimuthalXY, TupleXY):
 
         Examples:
             >>> import vector
-            >>> v = vector.obj(x=1, y=2)
+            >>> v = vector.VectorObject2D(x=1, y=2)
             >>> az = v.azimuthal
             >>> az.elements
             (1, 2)
@@ -135,7 +140,7 @@ class AzimuthalObjectRhoPhi(AzimuthalObject, AzimuthalRhoPhi, TupleRhoPhi):
 
         Examples:
             >>> import vector
-            >>> v = vector.obj(rho=1, phi=2)
+            >>> v = vector.VectorObject2D(rho=1, phi=2)
             >>> az = v.azimuthal
             >>> az.elements
             (1, 2)
@@ -598,12 +603,27 @@ class VectorObject(Vector):
 class VectorObject2D(VectorObject, Planar, Vector2D):
     """
     Two dimensional vector class for the object backend.
-    Use the class methods -
+
+    Examples:
+        >>> import vector
+        >>> vec = vector.VectorObject2D(x=1, y=2)
+        >>> vec.x, vec.y
+        (1, 2)
+        >>> vec = vector.VectorObject2D(rho=1, phi=2)
+        >>> vec.rho, vec.phi
+        (1, 2)
+        >>> vec = vector.VectorObject2D(azimuthal=vector.backends.object.AzimuthalObjectXY(1, 2))
+        >>> vec.x, vec.y
+        (1, 2)
+
+    The following class methods can also be used to
+    construct 2D object type vectors -
 
     - :meth:`VectorObject2D.from_xy`
     - :meth:`VectorObject2D.from_rhophi`
 
-    to construct 2D Vector objects.
+    Additionally, the :func:`vector.obj` function can
+    also be used to construct 2D object type vectors.
 
     For two dimensional momentum vector objects, see
     :class:`vector.backends.object.MomentumObject2D`.
@@ -625,9 +645,9 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             >>> import vector
             >>> vec = vector.VectorObject2D.from_xy(1, 2)
             >>> vec
-            vector.obj(x=1, y=2)
+            VectorObject2D(x=1, y=2)
         """
-        return cls(AzimuthalObjectXY(x, y))
+        return cls(azimuthal=AzimuthalObjectXY(x, y))
 
     @classmethod
     def from_rhophi(cls, rho: float, phi: float) -> VectorObject2D:
@@ -641,17 +661,45 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             >>> import vector
             >>> vec = vector.VectorObject2D.from_rhophi(1, 2)
             >>> vec
-            vector.obj(rho=1, phi=2)
+            VectorObject2D(rho=1, phi=2)
         """
-        return cls(AzimuthalObjectRhoPhi(rho, phi))
+        return cls(azimuthal=AzimuthalObjectRhoPhi(rho, phi))
 
-    def __init__(self, azimuthal: AzimuthalObject) -> None:
-        self.azimuthal = azimuthal
+    def __init__(
+        self, azimuthal: AzimuthalObject | None = None, **kwargs: float
+    ) -> None:
+
+        if not _is_type_safe(kwargs):
+            raise TypeError("a coordinate must be of the type int or float")
+
+        for k, v in kwargs.copy().items():
+            kwargs.pop(k)
+            kwargs[_repr_momentum_to_generic.get(k, k)] = v
+
+        if not kwargs and azimuthal is not None:
+            self.azimuthal = azimuthal
+        elif kwargs and azimuthal is None:
+            if set(kwargs) == {"x", "y"}:
+                self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
+            elif set(kwargs) == {"rho", "phi"}:
+                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
+            else:
+                complaint = """unrecognized combination of coordinates, allowed combinations are:\n
+                    x= y=
+                    rho= phi=""".replace(
+                    "                    ", "    "
+                )
+                if type(self) == VectorObject2D:
+                    raise TypeError(complaint)
+                else:
+                    raise TypeError(f"{complaint}\n\nor their momentum equivalents")
+        else:
+            raise TypeError("must give Azimuthal if not giving keyword arguments")
 
     def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         out = [f"{x}={getattr(self.azimuthal, x)}" for x in aznames]
-        return "vector.obj(" + ", ".join(out) + ")"
+        return "VectorObject2D(" + ", ".join(out) + ")"
 
     def __array__(self) -> FloatArray:
         from vector.backends.numpy import VectorNumpy2D
@@ -690,7 +738,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             and issubclass(returns[0], Azimuthal)
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
-            return cls.ProjectionClass2D(azcoords)
+            return cls.ProjectionClass2D(azimuthal=azcoords)
 
         elif (
             len(returns) == 2
@@ -699,7 +747,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             and returns[1] is None
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
-            return cls.ProjectionClass2D(azcoords)
+            return cls.ProjectionClass2D(azimuthal=azcoords)
 
         elif (
             len(returns) == 2
@@ -778,6 +826,21 @@ class MomentumObject2D(PlanarMomentum, VectorObject2D):
     """
     Two dimensional momentum vector class for the object backend.
 
+    Examples:
+        >>> import vector
+        >>> vec = vector.MomentumObject2D(px=1, py=2)
+        >>> vec.px, vec.py
+        (1, 2)
+        >>> vec = vector.MomentumObject2D(pt=1, phi=2)
+        >>> vec.pt, vec.phi
+        (1, 2)
+        >>> vec = vector.MomentumObject2D(azimuthal=vector.backends.object.AzimuthalObjectXY(1, 2))
+        >>> vec.px, vec.py
+        (1, 2)
+
+    The :func:`vector.obj` function can also be
+    used to construct 2D momentum object type vectors.
+
     For two dimensional vector objects, see
     :class:`vector.backends.object.VectorObject2D`.
     """
@@ -788,7 +851,7 @@ class MomentumObject2D(PlanarMomentum, VectorObject2D):
         for x in aznames:
             y = _repr_generic_to_momentum.get(x, x)
             out.append(f"{y}={getattr(self.azimuthal, x)}")
-        return "vector.obj(" + ", ".join(out) + ")"
+        return "MomentumObject2D(" + ", ".join(out) + ")"
 
     def __array__(self) -> FloatArray:
         from vector.backends.numpy import MomentumNumpy2D
@@ -1011,7 +1074,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             and returns[1] is None
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
-            return cls.ProjectionClass2D(azcoords)
+            return cls.ProjectionClass2D(azimuthal=azcoords)
 
         elif (
             len(returns) == 2
@@ -1587,7 +1650,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             and returns[1] is None
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
-            return cls.ProjectionClass2D(azcoords)
+            return cls.ProjectionClass2D(azimuthal=azcoords)
 
         elif (
             len(returns) == 2
@@ -1822,6 +1885,13 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
         self.temporal = TemporalObjectTau(mass)
 
 
+def _is_type_safe(coordinates: dict[str, typing.Any]) -> bool:
+    for _, value in coordinates.items():
+        if not issubclass(type(value), numbers.Real) or isinstance(value, bool):
+            return False
+    return True
+
+
 def _gather_coordinates(
     planar_class: type[VectorObject2D],
     spatial_class: type[VectorObject3D],
@@ -1875,7 +1945,7 @@ def _gather_coordinates(
 
     if not coordinates:
         if azimuthal is not None and longitudinal is None and temporal is None:
-            return planar_class(azimuthal)
+            return planar_class(azimuthal=azimuthal)
         if azimuthal is not None and longitudinal is not None and temporal is None:
             return spatial_class(azimuthal, longitudinal)
         if azimuthal is not None and longitudinal is not None and temporal is not None:
@@ -3090,9 +3160,8 @@ def obj(**coordinates: float) -> VectorObject:
     is_momentum = False
     generic_coordinates = {}
 
-    for _, value in coordinates.items():
-        if not issubclass(type(value), numbers.Real) or isinstance(value, bool):
-            raise TypeError("a coordinate must be of the type int or float")
+    if not _is_type_safe(coordinates):
+        raise TypeError("a coordinate must be of the type int or float")
 
     if "px" in coordinates:
         is_momentum = True

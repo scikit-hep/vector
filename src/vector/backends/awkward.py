@@ -576,12 +576,12 @@ class TemporalAwkwardTau(TemporalAwkward, TemporalTau):
 
 def _class_to_name(cls: type[VectorProtocol]) -> str:
     if issubclass(cls, Momentum):
-        if issubclass(cls, Vector2D):  # type: ignore[unreachable]
-            return "Momentum2D"  # type: ignore[unreachable]
-        elif issubclass(cls, Vector3D):  # type: ignore[unreachable]
-            return "Momentum3D"  # type: ignore[unreachable]
-        elif issubclass(cls, Vector4D):  # type: ignore[unreachable]
-            return "Momentum4D"  # type: ignore[unreachable]
+        if issubclass(cls, Vector2D):
+            return "Momentum2D"
+        elif issubclass(cls, Vector3D):
+            return "Momentum3D"
+        elif issubclass(cls, Vector4D):
+            return "Momentum4D"
     else:
         if issubclass(cls, Vector2D):
             return "Vector2D"

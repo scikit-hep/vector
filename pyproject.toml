@@ -175,6 +175,8 @@ messages_control.disable = [
   "useless-option-value",
   "cast_python_value",
   "unknown-option-value",
+  "no-else-raise",
+  "unidiomatic-typecheck",
 ]
 
 [tool.mypy]
@@ -185,7 +187,6 @@ python_version = "3.8"
 strict = true
 warn_return_any = false
 show_error_codes = true
-warn_unreachable = true
 enable_error_code = [
   "ignore-without-code",
   "truthy-bool",
