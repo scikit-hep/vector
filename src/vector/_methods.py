@@ -4,9 +4,9 @@
 # or https://github.com/scikit-hep/vector for details.
 
 from __future__ import annotations
-from argparse import ArgumentError
 
 import typing
+from argparse import ArgumentError
 from contextlib import suppress
 
 import vector
