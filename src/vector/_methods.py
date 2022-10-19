@@ -4,6 +4,7 @@
 # or https://github.com/scikit-hep/vector for details.
 
 from __future__ import annotations
+from argparse import ArgumentError
 
 import typing
 from contextlib import suppress
@@ -1698,11 +1699,23 @@ class Vector2D(Vector, VectorProtocolPlanar):
     def to_Vector2D(self) -> VectorProtocolPlanar:
         return self
 
-    def to_Vector3D(self) -> VectorProtocolSpatial:
+    def to_Vector3D(self, **coord) -> VectorProtocolSpatial:
+        if len(coord) > 1:
+            raise ArgumentError(coord, "can be `z`, `theta`, or `eta`")
+
+        coord_type, coord_value = list(coord.keys())[0], list(coord.values())[0]
+
+        if coord_type == "z":
+            l_type = LongitudinalZ
+        elif coord_type == "eta":
+            l_type = LongitudinalEta
+        elif coord_type == "theta":
+            l_type = LongitudinalTheta
+
         return self._wrap_result(
             type(self),
-            self.azimuthal.elements + (0,),
-            [_aztype(self), LongitudinalZ, None],
+            self.azimuthal.elements + (coord_value,),
+            [_aztype(self), l_type, None],
             1,
         )
 
