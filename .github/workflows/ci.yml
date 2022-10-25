@@ -94,6 +94,12 @@ jobs:
       - name: Test package
         run: python -m pytest -ra -m dis --ignore tests/test_notebooks.py
 
+  pass:
+    needs: [pre-commit, checks, discheck]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "All jobs passed"
+
   # root:
   #   runs-on: ubuntu-latest
   #   steps:
