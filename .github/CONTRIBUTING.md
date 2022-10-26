@@ -122,6 +122,14 @@ xdoctest ./src/vector/
 
 A much more detailed guide on testing with `pytest` for `Scikit-HEP` packages is available [here](https://scikit-hep.org/developer/pytest).
 
+### Running doctests
+
+The Notebook tests can be executed individually in the following way - 
+
+```bash
+pytest tests/test_notebooks.py
+```
+
 ## Documenting vector
 
 `vector`'s documentation is mainly written in the form of [docstrings](https://peps.python.org/pep-0257) and [reStructurredText](https://docutils.sourceforge.io/docs/user/rst/quickref.html). The docstrings include the description, arguments, examples, return values, and attributes of a class or a function, and the `.rst` files enable us to render this documentation on `vector`'s documentation website.
