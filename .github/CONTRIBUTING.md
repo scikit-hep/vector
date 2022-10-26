@@ -124,7 +124,7 @@ A much more detailed guide on testing with `pytest` for `Scikit-HEP` packages is
 
 ### Running doctests
 
-The Notebook tests can be executed individually in the following way - 
+The Notebook tests can be executed individually in the following way -
 
 ```bash
 pytest tests/test_notebooks.py
