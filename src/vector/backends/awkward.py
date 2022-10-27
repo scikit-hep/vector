@@ -1633,36 +1633,64 @@ def _aztype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
 
     if is_momentum:
         try:
-            x_index = recordarraytype.recordlookup.index("px")
+            x_index = (
+                recordarraytype.fields.index("px")
+                if vector._is_awkward_v2()
+                else recordarraytype.recordlookup.index("px")
+            )
         except ValueError:
             x_index = None
     if x_index is None:
         try:
-            x_index = recordarraytype.recordlookup.index("x")
+            x_index = (
+                recordarraytype.fields.index("x")
+                if vector._is_awkward_v2()
+                else recordarraytype.recordlookup.index("x")
+            )
         except ValueError:
             x_index = None
     if is_momentum:
         try:
-            y_index = recordarraytype.recordlookup.index("py")
+            y_index = (
+                recordarraytype.fields.index("py")
+                if vector._is_awkward_v2()
+                else recordarraytype.recordlookup.index("py")
+            )
         except ValueError:
             y_index = None
     if y_index is None:
         try:
-            y_index = recordarraytype.recordlookup.index("y")
+            y_index = (
+                recordarraytype.fields.index("y")
+                if vector._is_awkward_v2()
+                else recordarraytype.recordlookup.index("y")
+            )
         except ValueError:
             y_index = None
     if is_momentum:
         try:
-            rho_index = recordarraytype.recordlookup.index("pt")
+            rho_index = (
+                recordarraytype.fields.index("pt")
+                if vector._is_awkward_v2()
+                else recordarraytype.recordlookup.index("pt")
+            )
         except ValueError:
             rho_index = None
     if rho_index is None:
         try:
-            rho_index = recordarraytype.recordlookup.index("rho")
+            rho_index = (
+                recordarraytype.fields.index("rho")
+                if vector._is_awkward_v2()
+                else recordarraytype.recordlookup.index("rho")
+            )
         except ValueError:
             rho_index = None
     try:
-        phi_index = recordarraytype.recordlookup.index("phi")
+        phi_index = (
+            recordarraytype.fields.index("phi")
+            if vector._is_awkward_v2()
+            else recordarraytype.recordlookup.index("phi")
+        )
     except ValueError:
         phi_index = None
 
@@ -1702,20 +1730,36 @@ def _ltype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
 
     if is_momentum:
         try:
-            z_index = recordarraytype.recordlookup.index("pz")
+            z_index = (
+                recordarraytype.fields.index("pz")
+                if vector._is_awkward_v2()
+                else recordarraytype.recordlookup.index("pz")
+            )
         except ValueError:
             z_index = None
     if z_index is None:
         try:
-            z_index = recordarraytype.recordlookup.index("z")
+            z_index = (
+                recordarraytype.fields.index("z")
+                if vector._is_awkward_v2()
+                else recordarraytype.recordlookup.index("z")
+            )
         except ValueError:
             z_index = None
     try:
-        theta_index = recordarraytype.recordlookup.index("theta")
+        theta_index = (
+            recordarraytype.fields.index("theta")
+            if vector._is_awkward_v2()
+            else recordarraytype.recordlookup.index("theta")
+        )
     except ValueError:
         theta_index = None
     try:
-        eta_index = recordarraytype.recordlookup.index("eta")
+        eta_index = (
+            recordarraytype.fields.index("eta")
+            if vector._is_awkward_v2()
+            else recordarraytype.recordlookup.index("eta")
+        )
     except ValueError:
         eta_index = None
 
@@ -1754,42 +1798,74 @@ def _ttype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
 
     if is_momentum:
         try:
-            t_index = recordarraytype.recordlookup.index("E")
+            t_index = (
+                recordarraytype.fields.index("E")
+                if vector._is_awkward_v2()
+                else recordarraytype.recordlookup.index("E")
+            )
         except ValueError:
             t_index = None
     if is_momentum and t_index is None:
         try:
-            t_index = recordarraytype.recordlookup.index("e")
+            t_index = (
+                recordarraytype.fields.index("e")
+                if vector._is_awkward_v2()
+                else recordarraytype.recordlookup.index("e")
+            )
         except ValueError:
             t_index = None
     if is_momentum and t_index is None:
         try:
-            t_index = recordarraytype.recordlookup.index("energy")
+            t_index = (
+                recordarraytype.fields.index("energy")
+                if vector._is_awkward_v2()
+                else recordarraytype.recordlookup.index("energy")
+            )
         except ValueError:
             t_index = None
     if t_index is None:
         try:
-            t_index = recordarraytype.recordlookup.index("t")
+            t_index = (
+                recordarraytype.fields.index("t")
+                if vector._is_awkward_v2()
+                else recordarraytype.recordlookup.index("t")
+            )
         except ValueError:
             t_index = None
     if is_momentum:
         try:
-            tau_index = recordarraytype.recordlookup.index("M")
+            tau_index = (
+                recordarraytype.fields.index("M")
+                if vector._is_awkward_v2()
+                else recordarraytype.recordlookup.index("M")
+            )
         except ValueError:
             tau_index = None
     if is_momentum and tau_index is None:
         try:
-            tau_index = recordarraytype.recordlookup.index("m")
+            tau_index = (
+                recordarraytype.fields.index("m")
+                if vector._is_awkward_v2()
+                else recordarraytype.recordlookup.index("m")
+            )
         except ValueError:
             tau_index = None
     if is_momentum and tau_index is None:
         try:
-            tau_index = recordarraytype.recordlookup.index("mass")
+            tau_index = (
+                recordarraytype.fields.index("mass")
+                if vector._is_awkward_v2()
+                else recordarraytype.recordlookup.index("mass")
+            )
         except ValueError:
             tau_index = None
     if tau_index is None:
         try:
-            tau_index = recordarraytype.recordlookup.index("tau")
+            tau_index = (
+                recordarraytype.fields.index("tau")
+                if vector._is_awkward_v2()
+                else recordarraytype.recordlookup.index("tau")
+            )
         except ValueError:
             tau_index = None
 
@@ -1895,7 +1971,11 @@ def _numba_lower(
 
     vectorcls = sig.return_type.instance_class
 
-    fields = sig.args[0].arrayviewtype.type.recordlookup
+    fields = (
+        sig.args[0].arrayviewtype.type.fields
+        if vector._is_awkward_v2()
+        else sig.args[0].arrayviewtype.type.recordlookup
+    )
 
     if issubclass(vectorcls, (VectorObject2D, VectorObject3D, VectorObject4D)):
         if issubclass(sig.return_type.azimuthaltype.instance_class, AzimuthalXY):
