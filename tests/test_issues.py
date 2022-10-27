@@ -26,12 +26,6 @@ def test_issue_99():
     }
 
 
-# awkward._v2 has not yet registered Numba dispatch mechanisms
-# see https://github.com/scikit-hep/awkward/discussions/1639
-# TODO: ensure this passes once awkward v2 is out
-@pytest.mark.xfail(
-    strict=True if os.environ.get("VECTOR_USE_AWKWARDV2") is not None else False
-)
 def test_issue_161():
     ak = pytest.importorskip("awkward")
     nb = pytest.importorskip("numba")
@@ -46,7 +40,7 @@ def test_issue_161():
 
     file_path = (
         os.path.join("tests", "samples", "issue-161.pkl")
-        if os.getenv("VECTOR_USE_AWKWARDV2") is None
+        if not vector._is_awkward_v2()
         else os.path.join("tests", "samples", "issue-161-v2.pkl")
     )
 

@@ -60,14 +60,17 @@ jobs:
       - name: Install develop extras
         run: python -m pip install -e .[dev]
 
+      - name: Install awkward v1
+        run: python -m pip install -U "awkward<2"
+
       - name: Test package with awkward v1.x
         run: python -m pytest -ra --cov=vector --ignore tests/test_notebooks.py tests/
 
-      - name: Use awkward v1.10.x for v2 support
-        run: python -m pip install -U --pre "awkward<2"
+      - name: Install awkward v2
+        run: python -m pip install -U --pre awkward
 
-      - name: Test package with awkward._v2
-        run: VECTOR_USE_AWKWARDV2=1 python -m pytest -ra --cov=vector --ignore tests/test_notebooks.py tests/
+      - name: Test package with awkward v2.x
+        run: python -m pytest -ra --cov=vector --ignore tests/test_notebooks.py tests/
 
       - name: Run doctests
         run: xdoctest ./src/vector/
