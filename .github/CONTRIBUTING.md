@@ -104,6 +104,8 @@ The tests can be executed using the `test` and `test-extras` dependencies of `ve
 python -m pytest
 ```
 
+To skip the notebook tests, use `--ignore=tests/test_notebooks.py`
+
 ### Running tests with coverage locally
 
 The coverage value can be obtained while running the tests using `pytest-cov` in the following way -
@@ -121,6 +123,14 @@ xdoctest ./src/vector/
 ```
 
 A much more detailed guide on testing with `pytest` for `Scikit-HEP` packages is available [here](https://scikit-hep.org/developer/pytest).
+
+### Running notebook tests
+
+The Notebook tests can be executed individually in the following way -
+
+```bash
+pytest tests/test_notebooks.py
+```
 
 ## Documenting vector
 
