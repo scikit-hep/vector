@@ -58,9 +58,6 @@ jobs:
       - name: Test light package
         run: python -m pytest -ra --ignore tests/test_notebooks.py
 
-      - name: Run doctests
-        run: xdoctest ./src/vector/
-
   check-awkward-v1:
     needs: [pre-commit, check-light]
     runs-on: ubuntu-latest
@@ -93,6 +90,9 @@ jobs:
       - name: Test package with awkward v1.x
         run: python -m pytest -ra --cov=vector --ignore tests/test_notebooks.py tests/
 
+      - name: Run doctests
+        run: xdoctest ./src/vector/
+
   check-awkward-v2:
     needs: [pre-commit, check-light]
     runs-on: ubuntu-latest
@@ -124,6 +124,9 @@ jobs:
 
       - name: Test package with awkward v2.x
         run: python -m pytest -ra --cov=vector --ignore tests/test_notebooks.py tests/
+
+      - name: Run doctests
+        run: xdoctest ./src/vector/
 
       - name: Upload coverage report
         uses: codecov/codecov-action@v3.1.1
