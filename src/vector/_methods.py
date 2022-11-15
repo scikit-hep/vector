@@ -2708,11 +2708,10 @@ def _lib_of(*objects: VectorProtocol) -> Module:  # NumPy-like module
     for obj in objects:
         if isinstance(obj, Vector):
             if lib is None:
-                # Not sure why mypy complains about member not being assignable here
-                lib = obj.lib  # type: ignore[misc]
-            elif lib is not obj.lib:  # type: ignore[misc]
+                lib = obj.lib
+            elif lib is not obj.lib:
                 raise TypeError(
-                    f"cannot use {lib} and {obj.lib} in the same calculation"  # type: ignore[misc]
+                    f"cannot use {lib} and {obj.lib} in the same calculation"
                 )
 
     assert lib is not None

@@ -158,11 +158,11 @@ def _getitem(
                 *(out[x] for x in _coordinate_class_to_names[_aztype(array)])
             )
         if hasattr(array, "_longitudinal_type"):
-            longitudinal = array._longitudinal_type.ObjectClass(  # type: ignore[union-attr]
+            longitudinal = array._longitudinal_type.ObjectClass(
                 *(out[x] for x in _coordinate_class_to_names[_ltype(array)])  # type: ignore[arg-type]
             )
         if hasattr(array, "_temporal_type"):
-            temporal = array._temporal_type.ObjectClass(  # type: ignore[union-attr]
+            temporal = array._temporal_type.ObjectClass(
                 *(out[x] for x in _coordinate_class_to_names[_ttype(array)])  # type: ignore[arg-type]
             )
         if temporal is not None:
