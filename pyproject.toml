@@ -17,7 +17,7 @@ maintainers = [ {name = "The Scikit-HEP admins", email = "scikit-hep-admins@goog
 authors = [ {name = "Jim Pivarski, Henry Schreiner, Eduardo Rodrigues", email = "eduardo.rodrigues@cern.ch"} ]
 requires-python = ">=3.7"
 dependencies = [
-  'importlib-metadata>=0.22; python_version < "3.8"',
+  "importlib-metadata>=0.22",
   "numpy>=1.13.3",
   "packaging>=19",
   'typing-extensions; python_version < "3.8"',
