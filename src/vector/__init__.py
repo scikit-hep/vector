@@ -73,10 +73,9 @@ def _import_awkward() -> None:
         raise ImportError(msg)
 
 
-def _is_awkward_v2() -> bool:
-    return packaging.version.Version(
-        importlib_metadata.version("awkward")
-    ) >= packaging.version.Version("2.0.0rc1")
+_is_awkward_v2: bool = packaging.version.Version(
+    importlib_metadata.version("awkward")
+) >= packaging.version.Version("2.0.0rc1")
 
 
 try:

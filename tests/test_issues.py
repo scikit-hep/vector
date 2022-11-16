@@ -40,7 +40,7 @@ def test_issue_161():
 
     file_path = (
         os.path.join("tests", "samples", "issue-161.pkl")
-        if not vector._is_awkward_v2()
+        if not vector._is_awkward_v2
         else os.path.join("tests", "samples", "issue-161-v2.pkl")
     )
 
