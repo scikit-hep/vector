@@ -5,9 +5,9 @@
 
 from __future__ import annotations
 
+import sys
 import typing
 
-import importlib_metadata
 import packaging.version
 
 from vector._methods import (
@@ -58,6 +58,11 @@ from vector.backends.object import (
 )
 from vector.version import version as __version__
 
+if sys.version_info < (3, 8):
+    import importlib_metadata
+else:
+    import importlib.metadata as importlib_metadata
+
 
 def _import_awkward() -> None:
     awk_version = packaging.version.Version(importlib_metadata.version("awkward"))
@@ -68,7 +73,7 @@ def _import_awkward() -> None:
         raise ImportError(msg)
 
 
-_is_awkward_v2: bool
+_is_awkward_v2: bool | None
 try:
     _is_awkward_v2 = packaging.version.Version(
         importlib_metadata.version("awkward")
