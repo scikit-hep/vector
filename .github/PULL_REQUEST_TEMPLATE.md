@@ -8,7 +8,7 @@ _Please describe the purpose of this pull request. Reference and link to any rel
 
 - [ ] Have you followed the guidelines in our Contributing document?
 - [ ] Have you checked to ensure there aren't any other open Pull Requests for the required change?
-- [ ] Does your submission passes pre-commit? (`$ pre-commit run --all-files` or `$ nox -s lint`)
+- [ ] Does your submission pass pre-commit? (`$ pre-commit run --all-files` or `$ nox -s lint`)
 - [ ] Does your submission pass tests? (`$ pytest` or `$ nox -s tests`)
 - [ ] Does the documentation build with your changes? (`$ cd docs; make clean; make html` or `$ nox -s docs`)
 - [ ] Does your submission passes doctests? (`$ xdoctest ./src/vector` or `$ nox -s doctests`)
