@@ -194,9 +194,6 @@ enable_error_code = [
   "truthy-bool",
   "redundant-expr",
 ]
-ignore_missing_imports = true
-disallow_untyped_defs = false
-disallow_untyped_calls = false
 
 [[tool.mypy.overrides]]
 module = [
@@ -204,3 +201,6 @@ module = [
   "numba.*",
   "awkward.*",
 ]
+ignore_missing_imports = true
+disallow_untyped_defs = false
+disallow_untyped_calls = false
