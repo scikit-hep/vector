@@ -35,33 +35,12 @@ body:
     id: describe
     attributes:
       label: Describe the bug
-      description: A clear and concise description of the bug.
-    validations:
-      required: true
-  - type: textarea
-    id: reproduce
-    attributes:
-      label: Steps to Reproduce
-      description: Describe how to reproduce this bug using a [Minimum Workable Example](https://stackoverflow.com/help/minimal-reproducible-example).
-    validations:
-      required: true
-  - type: textarea
-    id: expected-results
-    attributes:
-      label: Expected Results
-      description: Describe how you expected your MWE to work.
-      placeholder: X was expected to behave like this because the docs / tutorials / API reference / ... say so.
-    validations:
-      required: true
-  - type: textarea
-    id: observed-results
-    attributes:
-      label: Observed Results
-      description: Describe the results your MWE outputs.
-      placeholder: X does not behave according to the docs / tutorials / API reference / ...
+      description: |
+        - A clear and concise description of the bug.
+        - Describe how to reproduce this bug using a [Minimum Workable Example](https://stackoverflow.com/help/minimal-reproducible-example).
     validations:
       required: true
   - type: textarea
     id: log-output
     attributes:
-      label: Relevant log output
+      label: Any additional but relevant log output
