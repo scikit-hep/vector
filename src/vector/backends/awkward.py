@@ -1600,12 +1600,12 @@ MomentumRecord4D.GenericClass = VectorRecord4D
 
 if vector._is_awkward_v2:
 
-    def lookup_field(record_type: typing.Any, name: str) -> int:
+    def _lookup_field(record_type: typing.Any, name: str) -> int:
         return record_type.fields.index(name)
 
 else:
 
-    def lookup_field(record_type: typing.Any, name: str) -> int:
+    def _lookup_field(record_type: typing.Any, name: str) -> int:
         return record_type.recordlookup.index(name)
 
 
@@ -1643,36 +1643,36 @@ def _aztype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
 
     if is_momentum:
         try:
-            x_index = lookup_field(recordarraytype, "px")
+            x_index = _lookup_field(recordarraytype, "px")
         except ValueError:
             x_index = None
     if x_index is None:
         try:
-            x_index = lookup_field(recordarraytype, "x")
+            x_index = _lookup_field(recordarraytype, "x")
         except ValueError:
             x_index = None
     if is_momentum:
         try:
-            y_index = lookup_field(recordarraytype, "py")
+            y_index = _lookup_field(recordarraytype, "py")
         except ValueError:
             y_index = None
     if y_index is None:
         try:
-            y_index = lookup_field(recordarraytype, "y")
+            y_index = _lookup_field(recordarraytype, "y")
         except ValueError:
             y_index = None
     if is_momentum:
         try:
-            rho_index = lookup_field(recordarraytype, "pt")
+            rho_index = _lookup_field(recordarraytype, "pt")
         except ValueError:
             rho_index = None
     if rho_index is None:
         try:
-            rho_index = lookup_field(recordarraytype, "rho")
+            rho_index = _lookup_field(recordarraytype, "rho")
         except ValueError:
             rho_index = None
     try:
-        phi_index = lookup_field(recordarraytype, "phi")
+        phi_index = _lookup_field(recordarraytype, "phi")
     except ValueError:
         phi_index = None
 
@@ -1712,20 +1712,20 @@ def _ltype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
 
     if is_momentum:
         try:
-            z_index = lookup_field(recordarraytype, "pz")
+            z_index = _lookup_field(recordarraytype, "pz")
         except ValueError:
             z_index = None
     if z_index is None:
         try:
-            z_index = lookup_field(recordarraytype, "z")
+            z_index = _lookup_field(recordarraytype, "z")
         except ValueError:
             z_index = None
     try:
-        theta_index = lookup_field(recordarraytype, "theta")
+        theta_index = _lookup_field(recordarraytype, "theta")
     except ValueError:
         theta_index = None
     try:
-        eta_index = lookup_field(recordarraytype, "eta")
+        eta_index = _lookup_field(recordarraytype, "eta")
     except ValueError:
         eta_index = None
 
@@ -1764,42 +1764,42 @@ def _ttype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
 
     if is_momentum:
         try:
-            t_index = lookup_field(recordarraytype, "E")
+            t_index = _lookup_field(recordarraytype, "E")
         except ValueError:
             t_index = None
     if is_momentum and t_index is None:
         try:
-            t_index = lookup_field(recordarraytype, "e")
+            t_index = _lookup_field(recordarraytype, "e")
         except ValueError:
             t_index = None
     if is_momentum and t_index is None:
         try:
-            t_index = lookup_field(recordarraytype, "energy")
+            t_index = _lookup_field(recordarraytype, "energy")
         except ValueError:
             t_index = None
     if t_index is None:
         try:
-            t_index = lookup_field(recordarraytype, "t")
+            t_index = _lookup_field(recordarraytype, "t")
         except ValueError:
             t_index = None
     if is_momentum:
         try:
-            tau_index = lookup_field(recordarraytype, "M")
+            tau_index = _lookup_field(recordarraytype, "M")
         except ValueError:
             tau_index = None
     if is_momentum and tau_index is None:
         try:
-            tau_index = lookup_field(recordarraytype, "m")
+            tau_index = _lookup_field(recordarraytype, "m")
         except ValueError:
             tau_index = None
     if is_momentum and tau_index is None:
         try:
-            tau_index = lookup_field(recordarraytype, "mass")
+            tau_index = _lookup_field(recordarraytype, "mass")
         except ValueError:
             tau_index = None
     if tau_index is None:
         try:
-            tau_index = lookup_field(recordarraytype, "tau")
+            tau_index = _lookup_field(recordarraytype, "tau")
         except ValueError:
             tau_index = None
 
