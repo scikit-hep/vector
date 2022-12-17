@@ -23,7 +23,7 @@
 - Fix missing backslash in latex for readme [#285][]
 - chore: ignore flake8 B905 + improve bug report template [#297][]
 - chore: better and long term fix for flake8-bugbear [#298][]
-- feat: migrate to awkward v2 [#284][]
+- feat: migrate to awkward v2 (and keep supporting v1) [#284][]
 
 [#256]: https://github.com/scikit-hep/vector/pull/256
 [#254]: https://github.com/scikit-hep/vector/pull/254
