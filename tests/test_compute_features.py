@@ -45,7 +45,6 @@ uncompyle6 = pytest.importorskip("uncompyle6")
 spark_parser = pytest.importorskip("spark_parser")
 pytestmark = pytest.mark.dis
 
-
 Context = collections.namedtuple("Context", ["name", "closure"])
 
 
