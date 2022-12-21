@@ -122,6 +122,12 @@ The doctests can be executed using the `test` dependencies of `vector` in the fo
 xdoctest ./src/vector/
 ```
 
+or, one can run the doctests along with the unit tests in the following way -
+
+```bash
+python -m pytest --xdoctest .
+```
+
 A much more detailed guide on testing with `pytest` for `Scikit-HEP` packages is available [here](https://scikit-hep.org/developer/pytest).
 
 ### Running notebook tests
