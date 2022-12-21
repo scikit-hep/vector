@@ -45,7 +45,9 @@ def test_basic():
     assert array.x.tolist() == [[1], [], [3]]
     assert array.y.tolist() == [[2], [], [4]]
     assert array.rho.tolist() == [[2.23606797749979], [], [5]]
-    assert array.phi.tolist() == [[1.1071487177940904], [], [0.9272952180016122]]
+    (a,), (), (c,) = array.phi.tolist()
+    assert a == pytest.approx(1.1071487177940904)
+    assert c == pytest.approx(0.9272952180016122)
     assert isinstance(array[2, 0], vector.backends.awkward.VectorRecord2D)
     assert array[2, 0].rho == 5
     assert array.deltaphi(array).tolist() == [[0], [], [0]]
