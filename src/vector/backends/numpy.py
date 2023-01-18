@@ -693,10 +693,10 @@ class VectorNumpy(Vector, GetItem):
         return self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan).all()
 
     def __eq__(self, other: typing.Any) -> typing.Any:
-        return numpy.equal(self, other)
+        return numpy.equal(self, other)  # type: ignore[call-overload]
 
     def __ne__(self, other: typing.Any) -> typing.Any:
-        return numpy.not_equal(self, other)
+        return numpy.not_equal(self, other)  # type: ignore[call-overload]
 
     def __reduce__(self) -> str | tuple[typing.Any, ...]:
         pickled_state = super().__reduce__()
