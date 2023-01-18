@@ -375,7 +375,7 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # typ
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> AzimuthalNumpyXY:
         return numpy.array(*args, **kwargs).view(cls)
 
-    def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
+    def __array_finalize__(self, obj: typing.Any) -> None:
         if not _has(self, ("x", "y")):
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype containing "
@@ -426,7 +426,7 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray)
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> AzimuthalNumpyRhoPhi:
         return numpy.array(*args, **kwargs).view(cls)
 
-    def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
+    def __array_finalize__(self, obj: typing.Any) -> None:
         if not _has(self, ("rho", "phi")):
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype containing "
@@ -476,7 +476,7 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> LongitudinalNumpyZ:
         return numpy.array(*args, **kwargs).view(cls)
 
-    def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
+    def __array_finalize__(self, obj: typing.Any) -> None:
         if not _has(self, ("z",)):
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype containing "
@@ -521,7 +521,7 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, Floa
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> LongitudinalNumpyTheta:
         return numpy.array(*args, **kwargs).view(cls)
 
-    def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
+    def __array_finalize__(self, obj: typing.Any) -> None:
         if not _has(self, ("theta",)):
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype containing "
@@ -566,7 +566,7 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArr
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> LongitudinalNumpyEta:
         return numpy.array(*args, **kwargs).view(cls)
 
-    def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
+    def __array_finalize__(self, obj: typing.Any) -> None:
         if not _has(self, ("eta",)):
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype containing "
@@ -611,7 +611,7 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ig
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> TemporalNumpyT:
         return numpy.array(*args, **kwargs).view(cls)
 
-    def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
+    def __array_finalize__(self, obj: typing.Any) -> None:
         if not _has(self, ("t",)):
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype containing "
@@ -648,7 +648,7 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> TemporalNumpyTau:
         return numpy.array(*args, **kwargs).view(cls)
 
-    def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
+    def __array_finalize__(self, obj: typing.Any) -> None:
         if not _has(self, ("tau",)):
             raise TypeError(
                 f"{type(self).__name__} must have a structured dtype containing "
@@ -964,7 +964,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
             array = numpy.array(*args, **kwargs)
         return array.view(cls)
 
-    def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
+    def __array_finalize__(self, obj: typing.Any) -> None:
         if obj is None:
             return
 
@@ -1173,7 +1173,7 @@ class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore[misc]
     _IS_MOMENTUM = True
     dtype: numpy.dtype[typing.Any]
 
-    def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
+    def __array_finalize__(self, obj: typing.Any) -> None:
         if obj is None:
             return
 
@@ -1234,7 +1234,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
             array = numpy.array(*args, **kwargs)
         return array.view(cls)
 
-    def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
+    def __array_finalize__(self, obj: typing.Any) -> None:
         if obj is None:
             return
 
@@ -1454,7 +1454,7 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
     _IS_MOMENTUM = True
     dtype: numpy.dtype[typing.Any]
 
-    def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
+    def __array_finalize__(self, obj: typing.Any) -> None:
         if obj is None:
             return
 
@@ -1527,7 +1527,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
             array = numpy.array(*args, **kwargs)
         return array.view(cls)
 
-    def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
+    def __array_finalize__(self, obj: typing.Any) -> None:
         if obj is None:
             return
 
@@ -1773,7 +1773,7 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore[misc]
     _IS_MOMENTUM = True
     dtype: numpy.dtype[typing.Any]
 
-    def __array_finalize__(self, obj: typing.Any) -> None:  # type: ignore[override]
+    def __array_finalize__(self, obj: typing.Any) -> None:
         if obj is None:
             return
 
