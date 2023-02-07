@@ -668,7 +668,6 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
     def __init__(
         self, azimuthal: AzimuthalObject | None = None, **kwargs: float
     ) -> None:
-
         if not _is_type_safe(kwargs):
             raise TypeError("a coordinate must be of the type int or float")
 

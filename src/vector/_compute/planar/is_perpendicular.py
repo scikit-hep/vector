@@ -30,12 +30,8 @@ dispatch_map = {}
 
 def make_function(azimuthal1, azimuthal2):
     dot_function, _ = dot.dispatch_map[azimuthal1, azimuthal2]
-    rho1_function, _ = rho.dispatch_map[
-        azimuthal1,
-    ]
-    rho2_function, _ = rho.dispatch_map[
-        azimuthal2,
-    ]
+    rho1_function, _ = rho.dispatch_map[azimuthal1,]
+    rho2_function, _ = rho.dispatch_map[azimuthal2,]
 
     def f(lib, tolerance, coord11, coord12, coord21, coord22):
         return dot_function(lib, coord11, coord12, coord21, coord22) < lib.absolute(
