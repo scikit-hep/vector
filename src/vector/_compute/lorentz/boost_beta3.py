@@ -203,13 +203,25 @@ dispatch_map = {
         LongitudinalZ,
         TemporalTau,
     ),
-    (AzimuthalXY, LongitudinalZ, TemporalT, AzimuthalXY, LongitudinalTheta,): (
+    (
+        AzimuthalXY,
+        LongitudinalZ,
+        TemporalT,
+        AzimuthalXY,
+        LongitudinalTheta,
+    ): (
         cartesian_t_xy_theta,
         AzimuthalXY,
         LongitudinalZ,
         TemporalT,
     ),
-    (AzimuthalXY, LongitudinalZ, TemporalTau, AzimuthalXY, LongitudinalTheta,): (
+    (
+        AzimuthalXY,
+        LongitudinalZ,
+        TemporalTau,
+        AzimuthalXY,
+        LongitudinalTheta,
+    ): (
         cartesian_tau_xy_theta,
         AzimuthalXY,
         LongitudinalZ,
@@ -227,37 +239,73 @@ dispatch_map = {
         LongitudinalZ,
         TemporalTau,
     ),
-    (AzimuthalXY, LongitudinalZ, TemporalT, AzimuthalRhoPhi, LongitudinalZ,): (
+    (
+        AzimuthalXY,
+        LongitudinalZ,
+        TemporalT,
+        AzimuthalRhoPhi,
+        LongitudinalZ,
+    ): (
         cartesian_t_rhophi_z,
         AzimuthalXY,
         LongitudinalZ,
         TemporalT,
     ),
-    (AzimuthalXY, LongitudinalZ, TemporalTau, AzimuthalRhoPhi, LongitudinalZ,): (
+    (
+        AzimuthalXY,
+        LongitudinalZ,
+        TemporalTau,
+        AzimuthalRhoPhi,
+        LongitudinalZ,
+    ): (
         cartesian_tau_rhophi_z,
         AzimuthalXY,
         LongitudinalZ,
         TemporalTau,
     ),
-    (AzimuthalXY, LongitudinalZ, TemporalT, AzimuthalRhoPhi, LongitudinalTheta,): (
+    (
+        AzimuthalXY,
+        LongitudinalZ,
+        TemporalT,
+        AzimuthalRhoPhi,
+        LongitudinalTheta,
+    ): (
         cartesian_t_rhophi_theta,
         AzimuthalXY,
         LongitudinalZ,
         TemporalT,
     ),
-    (AzimuthalXY, LongitudinalZ, TemporalTau, AzimuthalRhoPhi, LongitudinalTheta,): (
+    (
+        AzimuthalXY,
+        LongitudinalZ,
+        TemporalTau,
+        AzimuthalRhoPhi,
+        LongitudinalTheta,
+    ): (
         cartesian_tau_rhophi_theta,
         AzimuthalXY,
         LongitudinalZ,
         TemporalTau,
     ),
-    (AzimuthalXY, LongitudinalZ, TemporalT, AzimuthalRhoPhi, LongitudinalEta,): (
+    (
+        AzimuthalXY,
+        LongitudinalZ,
+        TemporalT,
+        AzimuthalRhoPhi,
+        LongitudinalEta,
+    ): (
         cartesian_t_rhophi_eta,
         AzimuthalXY,
         LongitudinalZ,
         TemporalT,
     ),
-    (AzimuthalXY, LongitudinalZ, TemporalTau, AzimuthalRhoPhi, LongitudinalEta,): (
+    (
+        AzimuthalXY,
+        LongitudinalZ,
+        TemporalTau,
+        AzimuthalRhoPhi,
+        LongitudinalEta,
+    ): (
         cartesian_tau_rhophi_eta,
         AzimuthalXY,
         LongitudinalZ,

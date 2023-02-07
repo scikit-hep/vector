@@ -15,7 +15,6 @@ import vector.backends.numpy
 
 
 def test_type_checks():
-
     with pytest.raises(TypeError):
         vector.backends.numpy.VectorNumpy2D(
             (0, 0), dtype=[("x", numpy.float64), ("y", numpy.timedelta64)]
