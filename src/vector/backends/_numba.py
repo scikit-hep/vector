@@ -44,11 +44,10 @@ for groupname, module in names_and_modules:
                     numba.extending.register_jitable(obj)
                     registered.add(obj)
 
-            # MyPy doesn't know that submodule contains dispatch_map, so getattr
-            for key, value in getattr(submodule, "dispatch_map").items():
+            for key, value in submodule.dispatch_map.items():
                 function, *returns = value
                 if function not in registered:
                     numba.extending.register_jitable(function)
                     registered.add(function)
 
-                numba_modules[groupname][modname][key] = tuple([function] + returns)
+                numba_modules[groupname][modname][key] = (function, *returns)

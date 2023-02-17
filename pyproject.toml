@@ -119,9 +119,6 @@ filterwarnings = [
     "ignore::UserWarning",
 ]
 
-[tool.isort]
-profile = "black"
-
 [tool.pylint]
 master.py-version = "3.7"
 reports.output-format = "colorized"
@@ -204,3 +201,40 @@ module = [
 ignore_missing_imports = true
 disallow_untyped_defs = false
 disallow_untyped_calls = false
+
+[tool.ruff]
+select = [
+  "E", "F", "W", # flake8
+  "B", "B904",   # flake8-bugbear
+  "I",           # isort
+  "C4",          # flake8-comprehensions
+  "ISC",         # flake8-implicit-str-concat
+  "PGH",         # pygrep-hooks
+  "PIE",         # flake8-pie
+  "PL",          # pylint
+  "PT",          # flake8-pytest-style
+  "RUF",         # Ruff-specific
+  "SIM",         # flake8-simplify
+  "T20",         # flake8-print
+  "UP",          # pyupgrade
+  "YTT",         # flake8-2020
+]
+extend-ignore = [
+  "PLR",   # Design related pylint codes
+  "E501",  # Line too long
+]
+target-version = "py37"
+typing-modules = ["vector._typeutils"]
+src = ["src"]
+unfixable = [
+  "T20",  # Removes print statements
+  "F841", # Removes unused variables
+]
+exclude = []
+isort.required-imports = ["from __future__ import annotations"]
+
+[tool.ruff.per-file-ignores]
+"noxfile.py" = ["T20"]
+"tests/*" = ["T20"]
+"src/vector/backends/_numba_object.py" = ["PGH003"]
+"tests/backends/test_operators.py" = ["SIM201", "SIM202"]
