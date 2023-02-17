@@ -1053,7 +1053,6 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         longitudinal: LongitudinalObject | None = None,
         **kwargs: float,
     ) -> None:
-
         if not _is_type_safe(kwargs):
             raise TypeError("a coordinate must be of the type int or float")
 
