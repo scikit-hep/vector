@@ -6,7 +6,6 @@
 from __future__ import annotations
 
 import typing
-from argparse import ArgumentError
 from contextlib import suppress
 
 import vector
@@ -2960,17 +2959,26 @@ class Vector2D(Vector, VectorProtocolPlanar):
     def to_Vector2D(self) -> VectorProtocolPlanar:
         return self
 
-    def to_Vector3D(self, **coord) -> VectorProtocolSpatial:
-        if len(coord) > 1:
-            raise ArgumentError(coord, "can be `z`, `theta`, or `eta`")
+    def to_Vector3D(
+        self,
+        *,
+        z: float | None = None,
+        theta: float | None = None,
+        eta: float | None = None,
+    ) -> VectorProtocolSpatial:
+        if sum(x is not None for x in (z, theta, eta)) > 1:
+            raise TypeError("Only one non-None parameter allowed")
 
-        coord_type, coord_value = list(coord.keys())[0], list(coord.values())[0]
+        coord_value = 0.0
+        l_type: type[Longitudinal] = LongitudinalZ
 
-        if coord_type == "z":
-            l_type = LongitudinalZ
-        elif coord_type == "eta":
+        if z is not None:
+            coord_value = z
+        elif eta is not None:
+            coord_value = eta
             l_type = LongitudinalEta
-        elif coord_type == "theta":
+        elif theta is not None:
+            coord_value = theta
             l_type = LongitudinalTheta
 
         return self._wrap_result(
