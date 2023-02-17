@@ -1,6 +1,14 @@
 # Changelog
 
-## Unreleased
+## Next
+
+- feat: add constructors for `VectorObject3D` and `MomentumObject3D` [#231][]
+
+[#231]: https://github.com/scikit-hep/vector/pull/231
+
+## Version 0.11
+
+### Version 0.11.0
 
 - chore: test on `awkard v1.10.0` and add cov to `noxfile` [#256][]
 - `vector.arr` is now an alias for `vector.array` (`NumPy` vectors) [#254][]
@@ -15,7 +23,13 @@
 - docs: add a developer guide [#233][]
 - ci: Test notebooks on PRs [#272][]
 - feat: add constructors for `VectorObject2D` and `MomentumObject2D` [#89][]
-- feat: add constructors for `VectorObject3D` and `MomentumObject3D` [#231][]
+- docs: update changelog.md, PR template, and CONTRIBUTING.md [#275][]
+- chore: add papermill as a dev dependency [#280][]
+- chore: use Python 3.11! [#282][]
+- Fix missing backslash in latex for readme [#285][]
+- chore: ignore flake8 B905 + improve bug report template [#297][]
+- chore: better and long term fix for flake8-bugbear [#298][]
+- feat: migrate to awkward v2 (and keep supporting v1) [#284][]
 
 [#256]: https://github.com/scikit-hep/vector/pull/256
 [#254]: https://github.com/scikit-hep/vector/pull/254
@@ -30,7 +44,13 @@
 [#233]: https://github.com/scikit-hep/vector/pull/233
 [#272]: https://github.com/scikit-hep/vector/pull/272
 [#89]: https://github.com/scikit-hep/vector/pull/89
-[#231]: https://github.com/scikit-hep/vector/pull/231
+[#275]: https://github.com/scikit-hep/vector/pull/275
+[#280]: https://github.com/scikit-hep/vector/pull/280
+[#282]: https://github.com/scikit-hep/vector/pull/282
+[#285]: https://github.com/scikit-hep/vector/pull/285
+[#297]: https://github.com/scikit-hep/vector/pull/297
+[#298]: https://github.com/scikit-hep/vector/pull/298
+[#284]: https://github.com/scikit-hep/vector/pull/284
 
 ## Version 0.10
 

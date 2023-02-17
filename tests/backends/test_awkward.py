@@ -5,8 +5,6 @@
 
 from __future__ import annotations
 
-import os
-
 import pytest
 
 import vector
@@ -45,7 +43,9 @@ def test_basic():
     assert array.x.tolist() == [[1], [], [3]]
     assert array.y.tolist() == [[2], [], [4]]
     assert array.rho.tolist() == [[2.23606797749979], [], [5]]
-    assert array.phi.tolist() == [[1.1071487177940904], [], [0.9272952180016122]]
+    (a,), (), (c,) = array.phi.tolist()
+    assert a == pytest.approx(1.1071487177940904)
+    assert c == pytest.approx(0.9272952180016122)
     assert isinstance(array[2, 0], vector.backends.awkward.VectorRecord2D)
     assert array[2, 0].rho == 5
     assert array.deltaphi(array).tolist() == [[0], [], [0]]
@@ -79,12 +79,6 @@ def test_rotateZ():
     assert out.wow.tolist() == [[99], [], [123]]
 
 
-# awkward._v2 has not yet registered NumPy dispatch mechanisms
-# see https://github.com/scikit-hep/awkward/issues/1638
-# TODO: ensure this passes once awkward v2 is out
-@pytest.mark.xfail(
-    strict=True if os.environ.get("VECTOR_USE_AWKWARDV2") is not None else False
-)
 def test_projection():
     array = vector.Array(
         [

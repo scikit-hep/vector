@@ -16,15 +16,6 @@ license = "BSD-3-Clause"
 maintainers = [ {name = "The Scikit-HEP admins", email = "scikit-hep-admins@googlegroups.com"} ]
 authors = [ {name = "Jim Pivarski, Henry Schreiner, Eduardo Rodrigues", email = "eduardo.rodrigues@cern.ch"} ]
 requires-python = ">=3.7"
-dependencies = [
-  'importlib-metadata>=0.22; python_version < "3.8"',
-  "numpy>=1.13.3",
-  "packaging>=19",
-  'typing-extensions; python_version < "3.8"',
-]
-dynamic = [
-  "version",
-]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
@@ -45,6 +36,15 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Physics",
     "Typing :: Typed",
 ]
+dynamic = [
+  "version",
+]
+dependencies = [
+  'importlib-metadata>=0.22; python_version < "3.8"',
+  "numpy>=1.13.3",
+  "packaging>=19",
+  'typing-extensions; python_version < "3.8"',
+]
 [project.optional-dependencies]
 awkward = [
   "awkward>=1.2",
@@ -52,6 +52,7 @@ awkward = [
 dev = [
   "awkward>=1.2",
   'numba>=0.50; python_version < "3.11"',
+  "papermill>=2.4",
   "pytest>=6",
   "pytest-cov>=3",
   "xdoctest>=1",
@@ -67,6 +68,7 @@ docs = [
   "sphinx_copybutton",
 ]
 test = [
+  "papermill>=2.4",
   "pytest>=6",
   "pytest-cov>=3",
   "xdoctest>=1",
@@ -199,6 +201,6 @@ module = [
   "numba.*",
   "awkward.*",
 ]
+ignore_missing_imports = true
 disallow_untyped_defs = false
 disallow_untyped_calls = false
-ignore_missing_imports = true
