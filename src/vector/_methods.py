@@ -2962,7 +2962,7 @@ class Vector2D(Vector, VectorProtocolPlanar):
     def to_Vector3D(self) -> VectorProtocolSpatial:
         return self._wrap_result(
             type(self),
-            self.azimuthal.elements + (0,),
+            (*self.azimuthal.elements, 0),
             [_aztype(self), LongitudinalZ, None],
             1,
         )
@@ -2970,7 +2970,7 @@ class Vector2D(Vector, VectorProtocolPlanar):
     def to_Vector4D(self) -> VectorProtocolLorentz:
         return self._wrap_result(
             type(self),
-            self.azimuthal.elements + (0, 0),
+            (*self.azimuthal.elements, 0, 0),
             [_aztype(self), LongitudinalZ, TemporalT],
             1,
         )

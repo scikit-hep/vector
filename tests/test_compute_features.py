@@ -99,7 +99,7 @@ else:
 
 
 @pytest.mark.skipif(is_unsupported, reason=unsupported_message)
-@pytest.mark.slow
+@pytest.mark.slow()
 @pytest.mark.parametrize("signature", functions.keys())
 def test(signature):
     analyze_function(functions[signature])
@@ -277,10 +277,7 @@ def analyze_expression(node, context):
         analyze_callable(expr(node[0]), context)
 
         for argument in node[1:-1]:
-            if argument.kind == "pos_arg":
-                expr_arg = argument[0]
-            else:
-                expr_arg = argument
+            expr_arg = argument[0] if argument.kind == "pos_arg" else argument
             assert expr_arg.kind == "expr", "only positional arguments"
             analyze_expression(expr(expr_arg), context)
 
