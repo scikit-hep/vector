@@ -1065,7 +1065,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         if not kwargs and azimuthal is not None and longitudinal is not None:
             self.azimuthal = azimuthal
             self.longitudinal = longitudinal
-        elif kwargs and azimuthal is None:
+        elif kwargs and azimuthal is None and longitudinal is None:
             if set(kwargs) == {"x", "y", "z"}:
                 self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
                 self.longitudinal = LongitudinalObjectZ(kwargs["z"])
@@ -1739,7 +1739,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             self.azimuthal = azimuthal
             self.longitudinal = longitudinal
             self.temporal = temporal
-        elif kwargs and azimuthal is None:
+        elif kwargs and azimuthal is None and longitudinal is None and temporal is None:
             if set(kwargs) == {"x", "y", "z", "t"}:
                 self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
                 self.longitudinal = LongitudinalObjectZ(kwargs["z"])
