@@ -57,9 +57,9 @@ def test_spatial_numpy():
 
 def test_lorentz_object():
     vec = vector.backends.object.VectorObject4D(
-        vector.backends.object.AzimuthalObjectXY(0.1, 0.2),
-        vector.backends.object.LongitudinalObjectZ(0.3),
-        vector.backends.object.TemporalObjectT(99),
+        azimuthal=vector.backends.object.AzimuthalObjectXY(0.1, 0.2),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(0.3),
+        temporal=vector.backends.object.TemporalObjectT(99),
     )
     out = vec.rotateY(0.25)
     assert isinstance(out.azimuthal, vector._methods.AzimuthalXY)

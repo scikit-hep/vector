@@ -89,9 +89,9 @@ def test_spatial_numpy():
 
 def test_lorentz_object():
     v = vector.backends.object.VectorObject4D(
-        vector.backends.object.AzimuthalObjectXY(0.1, 0.2),
-        vector.backends.object.LongitudinalObjectZ(0.3),
-        vector.backends.object.TemporalObjectT(0.4),
+        azimuthal=vector.backends.object.AzimuthalObjectXY(0.1, 0.2),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(0.3),
+        temporal=vector.backends.object.TemporalObjectT(0.4),
     )
     u = v.unit()
     assert type(u) is type(v)

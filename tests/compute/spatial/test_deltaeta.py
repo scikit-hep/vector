@@ -56,14 +56,14 @@ def test_spatial_numpy():
 
 def test_lorentz_object():
     v1 = vector.backends.object.VectorObject4D(
-        vector.backends.object.AzimuthalObjectXY(0.1, 0.2),
-        vector.backends.object.LongitudinalObjectZ(0.3),
-        vector.backends.object.TemporalObjectT(99),
+        azimuthal=vector.backends.object.AzimuthalObjectXY(0.1, 0.2),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(0.3),
+        temporal=vector.backends.object.TemporalObjectT(99),
     )
     v2 = vector.backends.object.VectorObject4D(
-        vector.backends.object.AzimuthalObjectXY(0.4, 0.5),
-        vector.backends.object.LongitudinalObjectZ(0.6),
-        vector.backends.object.TemporalObjectT(99),
+        azimuthal=vector.backends.object.AzimuthalObjectXY(0.4, 0.5),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(0.6),
+        temporal=vector.backends.object.TemporalObjectT(99),
     )
     assert v1.deltaeta(v2) == pytest.approx(0.2674387219518324)
 

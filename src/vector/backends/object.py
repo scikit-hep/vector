@@ -784,7 +784,9 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             lcoords = _coord_object_type[returns[1]](result[2])
             tcoords = _coord_object_type[returns[2]](result[3])
-            return cls.ProjectionClass4D(azcoords, lcoords, tcoords)
+            return cls.ProjectionClass4D(
+                azimuthal=azcoords, longitudinal=lcoords, temporal=tcoords
+            )
 
         else:
             raise AssertionError(repr(returns))
@@ -1196,7 +1198,9 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             lcoords = _coord_object_type[returns[1]](result[2])
             tcoords = _coord_object_type[returns[2]](result[3])
-            return cls.ProjectionClass4D(azcoords, lcoords, tcoords)
+            return cls.ProjectionClass4D(
+                azimuthal=azcoords, longitudinal=lcoords, temporal=tcoords
+            )
 
         else:
             raise AssertionError(repr(returns))
@@ -1346,6 +1350,25 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
     Four dimensional vector class for the object backend.
     Use the class methods -
 
+    Examples:
+        >>> import vector
+        >>> vec = vector.VectorObject4D(x=1, y=2, z=3, t=4)
+        >>> vec.x, vec.y, vec.z, vec.t
+        (1, 2, 3, 4)
+        >>> vec = vector.VectorObject4D(rho=1, phi=2, eta=3, tau=4)
+        >>> vec.rho, vec.phi, vec.eta, vec.tau
+        (1, 2, 3, 4)
+        >>> vec = vector.VectorObject4D(
+        ...     azimuthal=vector.backends.object.AzimuthalObjectXY(1, 2),
+        ...     longitudinal=vector.backends.object.LongitudinalObjectTheta(3),
+        ...     temporal=vector.backends.object.TemporalObjectTau(4)
+        ... )
+        >>> vec.x, vec.y, vec.theta, vec.tau
+        (1, 2, 3, 4)
+
+    The following class methods can also be used to
+    construct 4D object type vectors -
+
     - :meth:`VectorObject4D.from_xyzt`
     - :meth:`VectorObject4D.from_xythetat`
     - :meth:`VectorObject4D.from_xyetat`
@@ -1359,7 +1382,8 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
     - :meth:`VectorObject4D.from_rhophithetatau`
     - :meth:`VectorObject4D.from_rhophietatau`
 
-    to construct 4D Vector objects.
+    Additionally, the :func:`vector.obj` function can
+    also be used to construct 4D object type vectors.
 
     For four dimensional momentum vector objects, see
     :class:`vector.backends.object.MomentumObject4D`.
@@ -1390,9 +1414,13 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             >>> import vector
             >>> vec = vector.VectorObject4D.from_xyzt(1, 1, 1, 1)
             >>> vec
-            vector.obj(x=1, y=1, z=1, t=1)
+            VectorObject4D(x=1, y=1, z=1, t=1)
         """
-        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z), TemporalObjectT(t))
+        return cls(
+            azimuthal=AzimuthalObjectXY(x, y),
+            longitudinal=LongitudinalObjectZ(z),
+            temporal=TemporalObjectT(t),
+        )
 
     @classmethod
     def from_xyztau(
@@ -1413,10 +1441,12 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             >>> import vector
             >>> vec = vector.VectorObject4D.from_xyztau(1, 1, 1, 1)
             >>> vec
-            vector.obj(x=1, y=1, z=1, tau=1)
+            VectorObject4D(x=1, y=1, z=1, tau=1)
         """
         return cls(
-            AzimuthalObjectXY(x, y), LongitudinalObjectZ(z), TemporalObjectTau(tau)
+            azimuthal=AzimuthalObjectXY(x, y),
+            longitudinal=LongitudinalObjectZ(z),
+            temporal=TemporalObjectTau(tau),
         )
 
     @classmethod
@@ -1438,10 +1468,12 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             >>> import vector
             >>> vec = vector.VectorObject4D.from_xythetat(1, 1, 1, 1)
             >>> vec
-            vector.obj(x=1, y=1, theta=1, t=1)
+            VectorObject4D(x=1, y=1, theta=1, t=1)
         """
         return cls(
-            AzimuthalObjectXY(x, y), LongitudinalObjectTheta(theta), TemporalObjectT(t)
+            azimuthal=AzimuthalObjectXY(x, y),
+            longitudinal=LongitudinalObjectTheta(theta),
+            temporal=TemporalObjectT(t),
         )
 
     @classmethod
@@ -1463,12 +1495,12 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             >>> import vector
             >>> vec = vector.VectorObject4D.from_xythetatau(1, 1, 1, 1)
             >>> vec
-            vector.obj(x=1, y=1, theta=1, tau=1)
+            VectorObject4D(x=1, y=1, theta=1, tau=1)
         """
         return cls(
-            AzimuthalObjectXY(x, y),
-            LongitudinalObjectTheta(theta),
-            TemporalObjectTau(tau),
+            azimuthal=AzimuthalObjectXY(x, y),
+            longitudinal=LongitudinalObjectTheta(theta),
+            temporal=TemporalObjectTau(tau),
         )
 
     @classmethod
@@ -1490,10 +1522,12 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             >>> import vector
             >>> vec = vector.VectorObject4D.from_xyetat(1, 1, 1, 1)
             >>> vec
-            vector.obj(x=1, y=1, eta=1, t=1)
+            VectorObject4D(x=1, y=1, eta=1, t=1)
         """
         return cls(
-            AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta), TemporalObjectT(t)
+            azimuthal=AzimuthalObjectXY(x, y),
+            longitudinal=LongitudinalObjectEta(eta),
+            temporal=TemporalObjectT(t),
         )
 
     @classmethod
@@ -1515,10 +1549,12 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             >>> import vector
             >>> vec = vector.VectorObject4D.from_xyetatau(1, 1, 1, 1)
             >>> vec
-            vector.obj(x=1, y=1, eta=1, tau=1)
+            VectorObject4D(x=1, y=1, eta=1, tau=1)
         """
         return cls(
-            AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta), TemporalObjectTau(tau)
+            azimuthal=AzimuthalObjectXY(x, y),
+            longitudinal=LongitudinalObjectEta(eta),
+            temporal=TemporalObjectTau(tau),
         )
 
     @classmethod
@@ -1540,10 +1576,12 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             >>> import vector
             >>> vec = vector.VectorObject4D.from_rhophizt(1, 1, 1, 1)
             >>> vec
-            vector.obj(rho=1, phi=1, z=1, t=1)
+            VectorObject4D(rho=1, phi=1, z=1, t=1)
         """
         return cls(
-            AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectZ(z), TemporalObjectT(t)
+            azimuthal=AzimuthalObjectRhoPhi(rho, phi),
+            longitudinal=LongitudinalObjectZ(z),
+            temporal=TemporalObjectT(t),
         )
 
     @classmethod
@@ -1565,12 +1603,12 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             >>> import vector
             >>> vec = vector.VectorObject4D.from_rhophiztau(1, 1, 1, 1)
             >>> vec
-            vector.obj(rho=1, phi=1, z=1, tau=1)
+            VectorObject4D(rho=1, phi=1, z=1, tau=1)
         """
         return cls(
-            AzimuthalObjectRhoPhi(rho, phi),
-            LongitudinalObjectZ(z),
-            TemporalObjectTau(tau),
+            azimuthal=AzimuthalObjectRhoPhi(rho, phi),
+            longitudinal=LongitudinalObjectZ(z),
+            temporal=TemporalObjectTau(tau),
         )
 
     @classmethod
@@ -1592,12 +1630,12 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             >>> import vector
             >>> vec = vector.VectorObject4D.from_rhophithetat(1, 1, 1, 1)
             >>> vec
-            vector.obj(rho=1, phi=1, theta=1, t=1)
+            VectorObject4D(rho=1, phi=1, theta=1, t=1)
         """
         return cls(
-            AzimuthalObjectRhoPhi(rho, phi),
-            LongitudinalObjectTheta(theta),
-            TemporalObjectT(t),
+            azimuthal=AzimuthalObjectRhoPhi(rho, phi),
+            longitudinal=LongitudinalObjectTheta(theta),
+            temporal=TemporalObjectT(t),
         )
 
     @classmethod
@@ -1619,12 +1657,12 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             >>> import vector
             >>> vec = vector.VectorObject4D.from_rhophithetatau(1, 1, 1, 1)
             >>> vec
-            vector.obj(rho=1, phi=1, theta=1, tau=1)
+            VectorObject4D(rho=1, phi=1, theta=1, tau=1)
         """
         return cls(
-            AzimuthalObjectRhoPhi(rho, phi),
-            LongitudinalObjectTheta(theta),
-            TemporalObjectTau(tau),
+            azimuthal=AzimuthalObjectRhoPhi(rho, phi),
+            longitudinal=LongitudinalObjectTheta(theta),
+            temporal=TemporalObjectTau(tau),
         )
 
     @classmethod
@@ -1646,12 +1684,12 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             >>> import vector
             >>> vec = vector.VectorObject4D.from_rhophietat(1, 1, 1, 1)
             >>> vec
-            vector.obj(rho=1, phi=1, eta=1, t=1)
+            VectorObject4D(rho=1, phi=1, eta=1, t=1)
         """
         return cls(
-            AzimuthalObjectRhoPhi(rho, phi),
-            LongitudinalObjectEta(eta),
-            TemporalObjectT(t),
+            azimuthal=AzimuthalObjectRhoPhi(rho, phi),
+            longitudinal=LongitudinalObjectEta(eta),
+            temporal=TemporalObjectT(t),
         )
 
     @classmethod
@@ -1673,23 +1711,107 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             >>> import vector
             >>> vec = vector.VectorObject4D.from_rhophietatau(1, 1, 1, 1)
             >>> vec
-            vector.obj(rho=1, phi=1, eta=1, tau=1)
+            VectorObject4D(rho=1, phi=1, eta=1, tau=1)
         """
         return cls(
-            AzimuthalObjectRhoPhi(rho, phi),
-            LongitudinalObjectEta(eta),
-            TemporalObjectTau(tau),
+            azimuthal=AzimuthalObjectRhoPhi(rho, phi),
+            longitudinal=LongitudinalObjectEta(eta),
+            temporal=TemporalObjectTau(tau),
         )
 
     def __init__(
         self,
-        azimuthal: AzimuthalObject,
-        longitudinal: LongitudinalObject,
-        temporal: TemporalObject,
+        azimuthal: AzimuthalObject | None = None,
+        longitudinal: LongitudinalObject | None = None,
+        temporal: TemporalObject | None = None,
+        **kwargs: float,
     ) -> None:
-        self.azimuthal = azimuthal
-        self.longitudinal = longitudinal
-        self.temporal = temporal
+        for k, v in kwargs.copy().items():
+            kwargs.pop(k)
+            kwargs[_repr_momentum_to_generic.get(k, k)] = v
+
+        if (
+            not kwargs
+            and azimuthal is not None
+            and longitudinal is not None
+            and temporal is not None
+        ):
+            self.azimuthal = azimuthal
+            self.longitudinal = longitudinal
+            self.temporal = temporal
+        elif kwargs and azimuthal is None:
+            if set(kwargs) == {"x", "y", "z", "t"}:
+                self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
+                self.longitudinal = LongitudinalObjectZ(kwargs["z"])
+                self.temporal = TemporalObjectT(kwargs["t"])
+            elif set(kwargs) == {"x", "y", "eta", "t"}:
+                self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
+                self.longitudinal = LongitudinalObjectEta(kwargs["eta"])
+                self.temporal = TemporalObjectT(kwargs["t"])
+            elif set(kwargs) == {"x", "y", "theta", "t"}:
+                self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
+                self.longitudinal = LongitudinalObjectTheta(kwargs["theta"])
+                self.temporal = TemporalObjectT(kwargs["t"])
+            elif set(kwargs) == {"rho", "phi", "z", "t"}:
+                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
+                self.longitudinal = LongitudinalObjectZ(kwargs["z"])
+                self.temporal = TemporalObjectT(kwargs["t"])
+            elif set(kwargs) == {"rho", "phi", "eta", "t"}:
+                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
+                self.longitudinal = LongitudinalObjectEta(kwargs["eta"])
+                self.temporal = TemporalObjectT(kwargs["t"])
+            elif set(kwargs) == {"rho", "phi", "theta", "t"}:
+                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
+                self.longitudinal = LongitudinalObjectTheta(kwargs["theta"])
+                self.temporal = TemporalObjectT(kwargs["t"])
+            elif set(kwargs) == {"x", "y", "z", "tau"}:
+                self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
+                self.longitudinal = LongitudinalObjectZ(kwargs["z"])
+                self.temporal = TemporalObjectTau(kwargs["tau"])
+            elif set(kwargs) == {"x", "y", "eta", "tau"}:
+                self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
+                self.longitudinal = LongitudinalObjectEta(kwargs["eta"])
+                self.temporal = TemporalObjectTau(kwargs["tau"])
+            elif set(kwargs) == {"x", "y", "theta", "tau"}:
+                self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
+                self.longitudinal = LongitudinalObjectTheta(kwargs["theta"])
+                self.temporal = TemporalObjectTau(kwargs["tau"])
+            elif set(kwargs) == {"rho", "phi", "z", "tau"}:
+                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
+                self.longitudinal = LongitudinalObjectZ(kwargs["z"])
+                self.temporal = TemporalObjectTau(kwargs["tau"])
+            elif set(kwargs) == {"rho", "phi", "eta", "tau"}:
+                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
+                self.longitudinal = LongitudinalObjectEta(kwargs["eta"])
+                self.temporal = TemporalObjectTau(kwargs["tau"])
+            elif set(kwargs) == {"rho", "phi", "theta", "tau"}:
+                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
+                self.longitudinal = LongitudinalObjectTheta(kwargs["theta"])
+                self.temporal = TemporalObjectTau(kwargs["tau"])
+            else:
+                complaint = """unrecognized combination of coordinates, allowed combinations are:\n
+                    x= y= z= tau=
+                    x= y= theta= t=
+                    x= y= theta= tau=
+                    x= y= eta= t=
+                    x= y= z= t=
+                    x= y= eta= tau=
+                    rho= phi= z= t=
+                    rho= phi= z= tau=
+                    rho= phi= theta= t=
+                    rho= phi= theta= tau=
+                    rho= phi= eta= t=
+                    rho= phi= eta= tau=""".replace(
+                    "                    ", "    "
+                )
+                if type(self) == VectorObject4D:
+                    raise TypeError(complaint)
+                else:
+                    raise TypeError(f"{complaint}\n\nor their momentum equivalents")
+        else:
+            raise TypeError(
+                "must give Azimuthal, Longitudinal, and Temporal if not giving keyword arguments"
+            )
 
     def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
@@ -1700,7 +1822,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             out.append(f"{x}={getattr(self.longitudinal, x)}")
         for x in tnames:
             out.append(f"{x}={getattr(self.temporal, x)}")
-        return "vector.obj(" + ", ".join(out) + ")"
+        return "VectorObject4D(" + ", ".join(out) + ")"
 
     def __array__(self) -> FloatArray:
         from vector.backends.numpy import VectorNumpy4D
@@ -1744,7 +1866,11 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             and issubclass(returns[0], Azimuthal)
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
-            return cls.ProjectionClass4D(azcoords, self.longitudinal, self.temporal)
+            return cls.ProjectionClass4D(
+                azimuthal=azcoords,
+                longitudinal=self.longitudinal,
+                temporal=self.temporal,
+            )
 
         elif (
             len(returns) == 2
@@ -1764,7 +1890,9 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             lcoords = _coord_object_type[returns[1]](result[2])
-            return cls.ProjectionClass4D(azcoords, lcoords, self.temporal)
+            return cls.ProjectionClass4D(
+                azimuthal=azcoords, longitudinal=lcoords, temporal=self.temporal
+            )
 
         elif (
             len(returns) == 3
@@ -1790,7 +1918,9 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             lcoords = _coord_object_type[returns[1]](result[2])
             tcoords = _coord_object_type[returns[2]](result[3])
-            return cls.ProjectionClass4D(azcoords, lcoords, tcoords)
+            return cls.ProjectionClass4D(
+                azimuthal=azcoords, longitudinal=lcoords, temporal=tcoords
+            )
 
         else:
             raise AssertionError(repr(returns))
@@ -1872,6 +2002,25 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
     """
     Four dimensional momentum vector class for the object backend.
 
+    Examples:
+        >>> import vector
+        >>> vec = vector.MomentumObject4D(px=1, py=2, pz=3, t=4)
+        >>> vec.px, vec.py, vec.pz, vec.t
+        (1, 2, 3, 4)
+        >>> vec = vector.MomentumObject4D(pt=1, phi=2, pz=3, M=4)
+        >>> vec.pt, vec.phi, vec.pz, vec.M
+        (1, 2, 3, 4)
+        >>> vec = vector.MomentumObject4D(
+        ...     azimuthal=vector.backends.object.AzimuthalObjectXY(1, 2),
+        ...     longitudinal=vector.backends.object.LongitudinalObjectTheta(3),
+        ...     temporal=vector.backends.object.TemporalObjectTau(4)
+        ... )
+        >>> vec.x, vec.y, vec.theta, vec.tau
+        (1, 2, 3, 4)
+
+    The :func:`vector.obj` function can also be
+    used to construct 4D momentum object type vectors.
+
     For four dimensional vector objects, see
     :class:`vector.backends.object.VectorObject4D`.
     """
@@ -1890,7 +2039,7 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
         for x in tnames:
             y = _repr_generic_to_momentum.get(x, x)
             out.append(f"{y}={getattr(self.temporal, x)}")
-        return "vector.obj(" + ", ".join(out) + ")"
+        return "MomentumObject4D(" + ", ".join(out) + ")"
 
     def __array__(self) -> FloatArray:
         from vector.backends.numpy import MomentumNumpy4D
@@ -2052,7 +2201,9 @@ def _gather_coordinates(
         if azimuthal is not None and longitudinal is not None and temporal is None:
             return spatial_class(azimuthal=azimuthal, longitudinal=longitudinal)
         if azimuthal is not None and longitudinal is not None and temporal is not None:
-            return lorentz_class(azimuthal, longitudinal, temporal)
+            return lorentz_class(
+                azimuthal=azimuthal, longitudinal=longitudinal, temporal=temporal
+            )
 
     raise TypeError(
         "unrecognized combination of coordinates, allowed combinations are:\n\n"
