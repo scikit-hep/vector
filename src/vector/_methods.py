@@ -4026,9 +4026,7 @@ def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
     for obj in objects:
         if not isinstance(obj, Vector):
             continue
-        if handler is None:
-            handler = obj
-        elif _get_handler_index(obj) > _get_handler_index(handler):
+        if handler is None or _get_handler_index(obj) > _get_handler_index(handler):
             handler = obj
 
     assert handler is not None
