@@ -12,8 +12,8 @@ import vector.backends.object
 
 def test_spatial_object():
     vec = vector.backends.object.VectorObject3D(
-        vector.backends.object.AzimuthalObjectXY(0.5, 0.6),
-        vector.backends.object.LongitudinalObjectZ(0.7),
+        azimuthal=vector.backends.object.AzimuthalObjectXY(0.5, 0.6),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(0.7),
     )
     out = vec.rotate_quaternion(0.1, 0.2, 0.3, 0.4)
     assert isinstance(out, vector.backends.object.VectorObject3D)

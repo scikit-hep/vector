@@ -1,5 +1,11 @@
 # Changelog
 
+## Next
+
+- feat: add constructors for `VectorObject3D` and `MomentumObject3D` [#231][]
+
+[#231]: https://github.com/scikit-hep/vector/pull/231
+
 ## Version 0.11
 
 ### Version 0.11.0

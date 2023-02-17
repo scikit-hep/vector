@@ -47,8 +47,8 @@ def test_planar_negfactor():
 
 def test_spatial_posfactor():
     vec = vector.backends.object.VectorObject3D(
-        vector.backends.object.AzimuthalObjectXY(1, 2),
-        vector.backends.object.LongitudinalObjectZ(3),
+        azimuthal=vector.backends.object.AzimuthalObjectXY(1, 2),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(3),
     )
     out = vec.scale(1.75)
     assert type(out.azimuthal) == type(vec.azimuthal)  # noqa: E721
@@ -76,8 +76,8 @@ def test_spatial_posfactor():
 
 def test_spatial_negfactor():
     vec = vector.backends.object.VectorObject3D(
-        vector.backends.object.AzimuthalObjectXY(1, 2),
-        vector.backends.object.LongitudinalObjectZ(3),
+        azimuthal=vector.backends.object.AzimuthalObjectXY(1, 2),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(3),
     )
     out = vec.scale(-1.75)
     assert type(out.azimuthal) == type(vec.azimuthal)  # noqa: E721

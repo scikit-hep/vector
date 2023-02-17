@@ -14,12 +14,12 @@ import vector.backends.object
 
 def test_spatial_object():
     axis = vector.backends.object.VectorObject3D(
-        vector.backends.object.AzimuthalObjectXY(0.1, 0.2),
-        vector.backends.object.LongitudinalObjectZ(0.3),
+        azimuthal=vector.backends.object.AzimuthalObjectXY(0.1, 0.2),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(0.3),
     )
     vec = vector.backends.object.VectorObject3D(
-        vector.backends.object.AzimuthalObjectXY(0.4, 0.5),
-        vector.backends.object.LongitudinalObjectZ(0.6),
+        azimuthal=vector.backends.object.AzimuthalObjectXY(0.4, 0.5),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(0.6),
     )
     out = vec.rotate_axis(axis, 0.25)
     assert isinstance(out, vector.backends.object.VectorObject3D)

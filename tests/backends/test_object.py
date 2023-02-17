@@ -71,6 +71,116 @@ def test_constructors_2D():
         vector.MomentumObject2D()
 
 
+def test_constructors_3D():
+    vec = vector.VectorObject3D(x=1, y=2, z=3)
+    assert vec.x == 1
+    assert vec.y == 2
+    assert vec.z == 3
+
+    vec = vector.VectorObject3D(x=1, y=2, eta=3)
+    assert vec.x == 1
+    assert vec.y == 2
+    assert vec.eta == 3
+
+    vec = vector.VectorObject3D(x=1, y=2, theta=3)
+    assert vec.x == 1
+    assert vec.y == 2
+    assert vec.theta == 3
+
+    vec = vector.VectorObject3D(rho=1, phi=2, z=3)
+    assert vec.rho == 1
+    assert vec.phi == 2
+    assert vec.z == 3
+
+    vec = vector.VectorObject3D(rho=1, phi=2, eta=3)
+    assert vec.rho == 1
+    assert vec.phi == 2
+    assert vec.eta == 3
+
+    vec = vector.VectorObject3D(rho=1, phi=2, theta=3)
+    assert vec.rho == 1
+    assert vec.phi == 2
+    assert vec.theta == 3
+
+    vec = vector.VectorObject3D(
+        azimuthal=vector.backends.object.AzimuthalObjectXY(1, 2),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(3),
+    )
+    assert vec.x == 1
+    assert vec.y == 2
+    assert vec.z == 3
+
+    with pytest.raises(TypeError):
+        vector.VectorObject3D(rho=1, wow=2, z=3)
+
+    with pytest.raises(TypeError):
+        vector.VectorObject3D()
+
+    with pytest.raises(TypeError):
+        vector.VectorObject3D(x=complex(1, 2), y=2, z=3)
+
+    vec = vector.MomentumObject3D(px=1, py=2, pz=3)
+    assert vec.px == 1
+    assert vec.py == 2
+    assert vec.pz == 3
+    assert vec.x == 1
+    assert vec.y == 2
+    assert vec.z == 3
+
+    vec = vector.MomentumObject3D(px=1, py=2, eta=3)
+    assert vec.px == 1
+    assert vec.py == 2
+    assert vec.eta == 3
+    assert vec.x == 1
+    assert vec.y == 2
+
+    vec = vector.MomentumObject3D(px=1, py=2, theta=3)
+    assert vec.px == 1
+    assert vec.py == 2
+    assert vec.theta == 3
+    assert vec.x == 1
+    assert vec.y == 2
+
+    vec = vector.MomentumObject3D(pt=1, phi=2, pz=3)
+    assert vec.pt == 1
+    assert vec.phi == 2
+    assert vec.pz == 3
+    assert vec.rho == 1
+    assert vec.z == 3
+
+    vec = vector.MomentumObject3D(pt=1, phi=2, eta=3)
+    assert vec.pt == 1
+    assert vec.phi == 2
+    assert vec.eta == 3
+    assert vec.rho == 1
+
+    vec = vector.MomentumObject3D(pt=1, phi=2, theta=3)
+    assert vec.pt == 1
+    assert vec.phi == 2
+    assert vec.theta == 3
+    assert vec.rho == 1
+
+    vec = vector.MomentumObject3D(
+        azimuthal=vector.backends.object.AzimuthalObjectXY(1, 2),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(3),
+    )
+    assert vec.px == 1
+    assert vec.py == 2
+    assert vec.pz == 3
+    assert vec.x == 1
+    assert vec.y == 2
+    assert vec.z == 3
+
+    with pytest.raises(TypeError):
+        vector.MomentumObject3D(rho=1, wow=2, pz=3)
+
+    with pytest.raises(TypeError):
+        vector.MomentumObject3D()
+
+    with pytest.raises(TypeError):
+        vector.MomentumObject3D(x=complex(1, 2), y=2, z=3)
+
+
 def test_array_casting():
     obj = vector.obj(x=1, y=1)
     assert isinstance(obj, vector.VectorObject2D)

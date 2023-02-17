@@ -16,12 +16,12 @@ import vector.backends.object
 
 def test_spatial_object():
     v1 = vector.backends.object.VectorObject3D(
-        vector.backends.object.AzimuthalObjectXY(0.1, 0.2),
-        vector.backends.object.LongitudinalObjectZ(0.3),
+        azimuthal=vector.backends.object.AzimuthalObjectXY(0.1, 0.2),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(0.3),
     )
     v2 = vector.backends.object.VectorObject3D(
-        vector.backends.object.AzimuthalObjectXY(0.4, 0.5),
-        vector.backends.object.LongitudinalObjectZ(0.6),
+        azimuthal=vector.backends.object.AzimuthalObjectXY(0.4, 0.5),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(0.6),
     )
     assert v1.deltaR(v2) == pytest.approx(math.sqrt(0.116083865330319))
 

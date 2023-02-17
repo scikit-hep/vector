@@ -7,7 +7,8 @@ Defines behaviors for Object vectors. New vectors created with the respective cl
 
 .. code-block:: python
 
-    vector.VectorObject2D(x=..., y=...)
+    vector.VectorObject2D(...)
+    vector.VectorObject3D(...)
 
 will have these behaviors built in (and will pass them to any derived objects).
 
@@ -757,7 +758,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             lcoords = _coord_object_type[returns[1]](result[2])
-            return cls.ProjectionClass3D(azcoords, lcoords)
+            return cls.ProjectionClass3D(azimuthal=azcoords, longitudinal=lcoords)
 
         elif (
             len(returns) == 3
@@ -769,7 +770,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             lcoords = _coord_object_type[returns[1]](result[2])
-            return cls.ProjectionClass3D(azcoords, lcoords)
+            return cls.ProjectionClass3D(azimuthal=azcoords, longitudinal=lcoords)
 
         elif (
             len(returns) == 3
@@ -892,6 +893,24 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
     Three dimensional vector class for the object backend.
     Use the class methods -
 
+    Examples:
+        >>> import vector
+        >>> vec = vector.VectorObject3D(x=1, y=2, z=3)
+        >>> vec.x, vec.y, vec.z
+        (1, 2, 3)
+        >>> vec = vector.VectorObject3D(rho=1, phi=2, eta=3)
+        >>> vec.rho, vec.phi, vec.eta
+        (1, 2, 3)
+        >>> vec = vector.VectorObject3D(
+        ...     azimuthal=vector.backends.object.AzimuthalObjectXY(1, 2),
+        ...     longitudinal=vector.backends.object.LongitudinalObjectTheta(3)
+        ... )
+        >>> vec.x, vec.y, vec.theta
+
+
+    The following class methods can also be used to
+    construct 3D object type vectors -
+
     - :meth:`VectorObject3D.from_xyz`
     - :meth:`VectorObject3D.from_xytheta`
     - :meth:`VectorObject3D.from_xyeta`
@@ -899,7 +918,8 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
     - :meth:`VectorObject3D.from_rhophitheta`
     - :meth:`VectorObject3D.from_rhophieta`
 
-    to construct 3D Vector objects.
+    Additionally, the :func:`vector.obj` function can
+    also be used to construct 3D object type vectors.
 
     For three dimensional momentum vector objects, see
     :class:`vector.backends.object.MomentumObject3D`.
@@ -922,9 +942,11 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             >>> import vector
             >>> vec = vector.VectorObject3D.from_xyz(1, 1, 1)
             >>> vec
-            vector.obj(x=1, y=1, z=1)
+            VectorObject3D(x=1, y=1, z=1)
         """
-        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectZ(z))
+        return cls(
+            azimuthal=AzimuthalObjectXY(x, y), longitudinal=LongitudinalObjectZ(z)
+        )
 
     @classmethod
     def from_xytheta(cls, x: float, y: float, theta: float) -> VectorObject3D:
@@ -939,9 +961,12 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             >>> import vector
             >>> vec = vector.VectorObject3D.from_xytheta(1, 1, 1)
             >>> vec
-            vector.obj(x=1, y=1, theta=1)
+            VectorObject3D(x=1, y=1, theta=1)
         """
-        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectTheta(theta))
+        return cls(
+            azimuthal=AzimuthalObjectXY(x, y),
+            longitudinal=LongitudinalObjectTheta(theta),
+        )
 
     @classmethod
     def from_xyeta(cls, x: float, y: float, eta: float) -> VectorObject3D:
@@ -956,9 +981,11 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             >>> import vector
             >>> vec = vector.VectorObject3D.from_xyeta(1, 1, 1)
             >>> vec
-            vector.obj(x=1, y=1, eta=1)
+            VectorObject3D(x=1, y=1, eta=1)
         """
-        return cls(AzimuthalObjectXY(x, y), LongitudinalObjectEta(eta))
+        return cls(
+            azimuthal=AzimuthalObjectXY(x, y), longitudinal=LongitudinalObjectEta(eta)
+        )
 
     @classmethod
     def from_rhophiz(cls, rho: float, phi: float, z: float) -> VectorObject3D:
@@ -973,9 +1000,12 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             >>> import vector
             >>> vec = vector.VectorObject3D.from_rhophiz(1, 1, 1)
             >>> vec
-            vector.obj(rho=1, phi=1, z=1)
+            VectorObject3D(rho=1, phi=1, z=1)
         """
-        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectZ(z))
+        return cls(
+            azimuthal=AzimuthalObjectRhoPhi(rho, phi),
+            longitudinal=LongitudinalObjectZ(z),
+        )
 
     @classmethod
     def from_rhophitheta(cls, rho: float, phi: float, theta: float) -> VectorObject3D:
@@ -990,9 +1020,12 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             >>> import vector
             >>> vec = vector.VectorObject3D.from_rhophitheta(1, 1, 1)
             >>> vec
-            vector.obj(rho=1, phi=1, theta=1)
+            VectorObject3D(rho=1, phi=1, theta=1)
         """
-        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectTheta(theta))
+        return cls(
+            azimuthal=AzimuthalObjectRhoPhi(rho, phi),
+            longitudinal=LongitudinalObjectTheta(theta),
+        )
 
     @classmethod
     def from_rhophieta(cls, rho: float, phi: float, eta: float) -> VectorObject3D:
@@ -1007,15 +1040,66 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             >>> import vector
             >>> vec = vector.VectorObject3D.from_rhophieta(1, 1, 1)
             >>> vec
-            vector.obj(rho=1, phi=1, eta=1)
+            VectorObject3D(rho=1, phi=1, eta=1)
         """
-        return cls(AzimuthalObjectRhoPhi(rho, phi), LongitudinalObjectEta(eta))
+        return cls(
+            azimuthal=AzimuthalObjectRhoPhi(rho, phi),
+            longitudinal=LongitudinalObjectEta(eta),
+        )
 
     def __init__(
-        self, azimuthal: AzimuthalObject, longitudinal: LongitudinalObject
+        self,
+        azimuthal: AzimuthalObject | None = None,
+        longitudinal: LongitudinalObject | None = None,
+        **kwargs: float,
     ) -> None:
-        self.azimuthal = azimuthal
-        self.longitudinal = longitudinal
+        if not _is_type_safe(kwargs):
+            raise TypeError("a coordinate must be of the type int or float")
+
+        for k, v in kwargs.copy().items():
+            kwargs.pop(k)
+            kwargs[_repr_momentum_to_generic.get(k, k)] = v
+
+        if not kwargs and azimuthal is not None and longitudinal is not None:
+            self.azimuthal = azimuthal
+            self.longitudinal = longitudinal
+        elif kwargs and azimuthal is None:
+            if set(kwargs) == {"x", "y", "z"}:
+                self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
+                self.longitudinal = LongitudinalObjectZ(kwargs["z"])
+            elif set(kwargs) == {"x", "y", "eta"}:
+                self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
+                self.longitudinal = LongitudinalObjectEta(kwargs["eta"])
+            elif set(kwargs) == {"x", "y", "theta"}:
+                self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
+                self.longitudinal = LongitudinalObjectTheta(kwargs["theta"])
+            elif set(kwargs) == {"rho", "phi", "z"}:
+                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
+                self.longitudinal = LongitudinalObjectZ(kwargs["z"])
+            elif set(kwargs) == {"rho", "phi", "eta"}:
+                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
+                self.longitudinal = LongitudinalObjectEta(kwargs["eta"])
+            elif set(kwargs) == {"rho", "phi", "theta"}:
+                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
+                self.longitudinal = LongitudinalObjectTheta(kwargs["theta"])
+            else:
+                complaint = """unrecognized combination of coordinates, allowed combinations are:\n
+                    x= y= z=
+                    x= y= theta=
+                    x= y= eta=
+                    rho= phi= z=
+                    rho= phi= theta=
+                    rho= phi= eta=""".replace(
+                    "                    ", "    "
+                )
+                if type(self) == VectorObject3D:
+                    raise TypeError(complaint)
+                else:
+                    raise TypeError(f"{complaint}\n\nor their momentum equivalents")
+        else:
+            raise TypeError(
+                "must give Azimuthal and Longitudinal if not giving keyword arguments"
+            )
 
     def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
@@ -1023,7 +1107,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         out = [f"{x}={getattr(self.azimuthal, x)}" for x in aznames]
         for x in lnames:
             out.append(f"{x}={getattr(self.longitudinal, x)}")
-        return "vector.obj(" + ", ".join(out) + ")"
+        return "VectorObject3D(" + ", ".join(out) + ")"
 
     def __array__(self) -> FloatArray:
         from vector.backends.numpy import VectorNumpy3D
@@ -1064,7 +1148,9 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             and issubclass(returns[0], Azimuthal)
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
-            return cls.ProjectionClass3D(azcoords, self.longitudinal)
+            return cls.ProjectionClass3D(
+                azimuthal=azcoords, longitudinal=self.longitudinal
+            )
 
         elif (
             len(returns) == 2
@@ -1084,7 +1170,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             lcoords = _coord_object_type[returns[1]](result[2])
-            return cls.ProjectionClass3D(azcoords, lcoords)
+            return cls.ProjectionClass3D(azimuthal=azcoords, longitudinal=lcoords)
 
         elif (
             len(returns) == 3
@@ -1096,7 +1182,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             lcoords = _coord_object_type[returns[1]](result[2])
-            return cls.ProjectionClass3D(azcoords, lcoords)
+            return cls.ProjectionClass3D(azimuthal=azcoords, longitudinal=lcoords)
 
         elif (
             len(returns) == 3
@@ -1176,6 +1262,24 @@ class MomentumObject3D(SpatialMomentum, VectorObject3D):
     """
     Three dimensional momentum vector class for the object backend.
 
+    Examples:
+        >>> import vector
+        >>> vec = vector.MomentumObject3D(px=1, py=2, pz=3)
+        >>> vec.px, vec.py, vec.pz
+        (1, 2, 3)
+        >>> vec = vector.MomentumObject3D(pt=1, phi=2, pz=3)
+        >>> vec.pt, vec.phi, vec.pz
+        (1, 2, 3)
+        >>> vec = vector.MomentumObject3D(
+        ...     azimuthal=vector.backends.object.AzimuthalObjectXY(1, 2),
+        ...     longitudinal=vector.backends.object.LongitudinalObjectTheta(3)
+        ... )
+        >>> vec.x, vec.y, vec.theta
+        (1, 2, 3)
+
+    The :func:`vector.obj` function can also be
+    used to construct 3D momentum object type vectors.
+
     For three dimensional vector objects, see
     :class:`vector.backends.object.VectorObject3D`.
     """
@@ -1190,7 +1294,7 @@ class MomentumObject3D(SpatialMomentum, VectorObject3D):
         for x in lnames:
             y = _repr_generic_to_momentum.get(x, x)
             out.append(f"{y}={getattr(self.longitudinal, x)}")
-        return "vector.obj(" + ", ".join(out) + ")"
+        return "vector.MomentumObject3D(" + ", ".join(out) + ")"
 
     def __array__(self) -> FloatArray:
         from vector.backends.numpy import MomentumNumpy3D
@@ -1672,7 +1776,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             lcoords = _coord_object_type[returns[1]](result[2])
-            return cls.ProjectionClass3D(azcoords, lcoords)
+            return cls.ProjectionClass3D(azimuthal=azcoords, longitudinal=lcoords)
 
         elif (
             len(returns) == 3
@@ -1946,7 +2050,7 @@ def _gather_coordinates(
         if azimuthal is not None and longitudinal is None and temporal is None:
             return planar_class(azimuthal=azimuthal)
         if azimuthal is not None and longitudinal is not None and temporal is None:
-            return spatial_class(azimuthal, longitudinal)
+            return spatial_class(azimuthal=azimuthal, longitudinal=longitudinal)
         if azimuthal is not None and longitudinal is not None and temporal is not None:
             return lorentz_class(azimuthal, longitudinal, temporal)
 

@@ -60,12 +60,12 @@ def test_planar_numpy():
 
 def test_spatial_object():
     v1 = vector.backends.object.VectorObject3D(
-        vector.backends.object.AzimuthalObjectXY(3, 4),
-        vector.backends.object.LongitudinalObjectZ(2),
+        azimuthal=vector.backends.object.AzimuthalObjectXY(3, 4),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(2),
     )
     v2 = vector.backends.object.VectorObject3D(
-        vector.backends.object.AzimuthalObjectXY(5, 12),
-        vector.backends.object.LongitudinalObjectZ(4),
+        azimuthal=vector.backends.object.AzimuthalObjectXY(5, 12),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(4),
     )
     out = v1.add(v2)
     assert out.x == pytest.approx(8)
