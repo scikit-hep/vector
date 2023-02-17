@@ -32,7 +32,7 @@ from vector._methods import (
     Vector4D,
     dim,
 )
-from vector.backends.awkward_constructors import Array as Array
+from vector.backends.awkward_constructors import Array
 from vector.backends.awkward_constructors import Array as awk
 from vector.backends.awkward_constructors import zip
 from vector.backends.numpy import (
@@ -73,6 +73,13 @@ def _import_awkward() -> None:
         raise ImportError(msg)
 
 
+_is_awkward_v2: bool | None
+try:
+    _is_awkward_v2 = packaging.version.Version(
+        importlib_metadata.version("awkward")
+    ) >= packaging.version.Version("2.0.0rc1")
+except importlib_metadata.PackageNotFoundError:
+    _is_awkward_v2 = None
 try:
     import awkward
 
@@ -149,7 +156,7 @@ def register_numba() -> None:
     This usually isn't necessary, as it is passed to Numba's ``entry_point`` and
     is therefore executed as soon as Numba is imported.
     """
-    import vector.backends._numba_object  # noqa: 401
+    import vector.backends._numba_object
     import vector.backends.numba_numpy  # noqa: 401
 
 
@@ -170,7 +177,7 @@ def register_awkward() -> None:
     """
     import awkward
 
-    import vector.backends.awkward  # noqa: 401
+    import vector.backends.awkward
 
     global _awkward_registered
     awkward.behavior.update(vector.backends.awkward.behavior)

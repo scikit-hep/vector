@@ -17,14 +17,14 @@ def test_planar_object():
         azimuthal=vector.backends.object.AzimuthalObjectXY(0.1, 0.2)
     )
     u = v.unit()
-    assert type(u) is type(v)  # noqa: E721
+    assert type(u) is type(v)
     assert type(u.azimuthal) is type(v.azimuthal)  # noqa: E721
     assert u.rho == pytest.approx(1)
 
     for t1 in "xy", "rhophi":
         t = getattr(v, "to_" + t1)()
         u = t.unit()
-        assert type(u) is type(t)  # noqa: E721
+        assert type(u) is type(t)
         assert type(u.azimuthal) is type(t.azimuthal)  # noqa: E721
         assert u.rho == pytest.approx(1)
 
@@ -35,14 +35,14 @@ def test_planar_numpy():
         dtype=[("x", numpy.float64), ("y", numpy.float64)],
     )
     u = v.unit()
-    assert type(u) is type(v)  # noqa: E721
+    assert type(u) is type(v)
     assert type(u.azimuthal) is type(v.azimuthal)  # noqa: E721
     assert u.rho[0] == pytest.approx(1)
 
     for t1 in "xy", "rhophi":
         t = getattr(v, "to_" + t1)()
         u = t.unit()
-        assert type(u) is type(t)  # noqa: E721
+        assert type(u) is type(t)
         assert type(u.azimuthal) is type(t.azimuthal)  # noqa: E721
         assert u.rho[0] == pytest.approx(1)
 
@@ -53,7 +53,7 @@ def test_spatial_object():
         longitudinal=vector.backends.object.LongitudinalObjectZ(0.3),
     )
     u = v.unit()
-    assert type(u) is type(v)  # noqa: E721
+    assert type(u) is type(v)
     assert type(u.azimuthal) is type(v.azimuthal)  # noqa: E721
     assert type(u.longitudinal) is type(v.longitudinal)  # noqa: E721
     assert u.mag == pytest.approx(1)
@@ -61,7 +61,7 @@ def test_spatial_object():
     for t1 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
         t = getattr(v, "to_" + t1)()
         u = t.unit()
-        assert type(u) is type(t)  # noqa: E721
+        assert type(u) is type(t)
         assert type(u.azimuthal) is type(t.azimuthal)  # noqa: E721
         assert type(u.longitudinal) is type(t.longitudinal)  # noqa: E721
         assert u.mag == pytest.approx(1)
@@ -73,7 +73,7 @@ def test_spatial_numpy():
         dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
     )
     u = v.unit()
-    assert type(u) is type(v)  # noqa: E721
+    assert type(u) is type(v)
     assert type(u.azimuthal) is type(v.azimuthal)  # noqa: E721
     assert type(u.longitudinal) is type(v.longitudinal)  # noqa: E721
     assert u.mag[0] == pytest.approx(1)
@@ -81,7 +81,7 @@ def test_spatial_numpy():
     for t1 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
         t = getattr(v, "to_" + t1)()
         u = t.unit()
-        assert type(u) is type(t)  # noqa: E721
+        assert type(u) is type(t)
         assert type(u.azimuthal) is type(t.azimuthal)  # noqa: E721
         assert type(u.longitudinal) is type(t.longitudinal)  # noqa: E721
         assert u.mag[0] == pytest.approx(1)
@@ -94,7 +94,7 @@ def test_lorentz_object():
         temporal=vector.backends.object.TemporalObjectT(0.4),
     )
     u = v.unit()
-    assert type(u) is type(v)  # noqa: E721
+    assert type(u) is type(v)
     assert type(u.azimuthal) is type(v.azimuthal)  # noqa: E721
     assert type(u.longitudinal) is type(v.longitudinal)  # noqa: E721
     assert type(u.temporal) is type(v.temporal)  # noqa: E721
@@ -116,7 +116,7 @@ def test_lorentz_object():
     ):
         t = getattr(v, "to_" + t1)()
         u = t.unit()
-        assert type(u) is type(t)  # noqa: E721
+        assert type(u) is type(t)
         assert type(u.azimuthal) is type(t.azimuthal)  # noqa: E721
         assert type(u.longitudinal) is type(t.longitudinal)  # noqa: E721
         assert type(u.temporal) is type(t.temporal)  # noqa: E721
@@ -134,7 +134,7 @@ def test_lorentz_numpy():
         ],
     )
     u = v.unit()
-    assert type(u) is type(v)  # noqa: E721
+    assert type(u) is type(v)
     assert type(u.azimuthal) is type(v.azimuthal)  # noqa: E721
     assert type(u.longitudinal) is type(v.longitudinal)  # noqa: E721
     assert type(u.temporal) is type(v.temporal)  # noqa: E721
@@ -156,7 +156,7 @@ def test_lorentz_numpy():
     ):
         t = getattr(v, "to_" + t1)()
         u = t.unit()
-        assert type(u) is type(t)  # noqa: E721
+        assert type(u) is type(t)
         assert type(u.azimuthal) is type(t.azimuthal)  # noqa: E721
         assert type(u.longitudinal) is type(t.longitudinal)  # noqa: E721
         assert type(u.temporal) is type(t.temporal)  # noqa: E721

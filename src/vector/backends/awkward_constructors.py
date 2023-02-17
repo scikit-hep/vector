@@ -309,7 +309,7 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     import awkward
 
     import vector
-    import vector.backends.awkward  # noqa: 401
+    import vector.backends.awkward
 
     akarray = awkward.Array(*args, **kwargs)
     array_type = akarray.type

@@ -1,0 +1,34 @@
+name: Feature Request
+description: Suggest an idea for vector
+labels: ["feature"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping us by suggesting a feature!
+        Please verify that a similar feature has not been suggested before through the [issue tracker](https://github.com/scikit-hep/vector/issues).
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the potential feature
+      description: A detailed description of the suggested feature.
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Why is this feature needed? How will it help the HEP community?
+      placeholder: |
+        X would help users to perform Y with a better accuracy / speed.
+        X is a novel feature required to perform W.
+        ...
+  - type: textarea
+    id: implementation
+    attributes:
+      label: Possible Implementation
+      description: If possible, add a possible implementation for the suggested feature.
+      placeholder: |
+        X can be implemented by referring to the Y paper or the Z blog post.
+        I have implemented X locally using the following code -
+        ...

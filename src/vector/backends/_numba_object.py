@@ -53,7 +53,6 @@ from vector.backends.object import (
 @numba.extending.overload(numpy.nan_to_num)  # FIXME: This needs to go into Numba!
 def nan_to_num(x, copy=True, nan=0.0, posinf=None, neginf=None):
     if isinstance(x, numba.types.Array):
-
         if isinstance(nan, numba.types.Array):
 
             def nan_to_num_impl(x, copy=True, nan=0.0, posinf=None, neginf=None):
@@ -1471,9 +1470,9 @@ def add_binary_method(vectortype, gn, methodname):
 
         min_dimension = min(dimension_of(v1), dimension_of(v2))
 
-        if (methodname == "equal" or methodname == "not_equal") and dimension_of(
-            v1
-        ) != dimension_of(v2):
+        if (methodname in ("equal", "not_equal")) and dimension_of(v1) != dimension_of(
+            v2
+        ):
             raise numba.TypingError(
                 f"{type(v1).__name__} and {type(v2).__name__} do not have the same dimension"
             )
@@ -1535,7 +1534,7 @@ def add_binary_method(vectortype, gn, methodname):
             signature,
         )
 
-        if returns == [bool] or returns == [float]:
+        if returns in ([bool], [float]):
             if groupname == "planar":
 
                 def overloader_impl(v1, v2):

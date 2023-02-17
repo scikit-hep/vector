@@ -19,11 +19,19 @@ def lint(session: nox.Session) -> None:
     session.run("pre-commit", "run", "--all-files", *session.posargs)
 
 
+@nox.session
+def pylint(session: nox.Session) -> None:
+    """Run pylint."""
+    session.install("pylint~=2.14.0")
+    session.install("-e", ".")
+    session.run("pylint", "src/vector/", *session.posargs)
+
+
 @nox.session(python=ALL_PYTHONS, reuse_venv=True)
 def tests(session: nox.Session) -> None:
     """Run the unit and regular tests."""
     session.install("-e", ".[awkward,test,test-extras]")
-    session.run("pytest", *session.posargs)
+    session.run("pytest", "--ignore", "tests/test_notebooks.py", *session.posargs)
 
 
 @nox.session(reuse_venv=True)
@@ -38,6 +46,14 @@ def doctests(session: nox.Session) -> None:
     """Run the doctests."""
     session.install("-e", ".[awkward,test,test-extras]")
     session.run("xdoctest", "./src/vector/", *session.posargs)
+
+
+@nox.session(python=ALL_PYTHONS, reuse_venv=True)
+def notebooks(session: nox.Session) -> None:
+    """Run the notebook tests"""
+    session.install("-e", ".[awkward,test,test-extras]", "numba")
+    session.install("jupyter", "papermill")
+    session.run("pytest", "tests/test_notebooks.py", *session.posargs)
 
 
 @nox.session(reuse_venv=True)

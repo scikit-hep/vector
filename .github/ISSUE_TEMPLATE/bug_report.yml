@@ -1,0 +1,46 @@
+name: Bug Report
+description: Create a bug report
+labels: ["bug (unverified)"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping us by filing out this bug report!
+        Please verify that this bug has not been reported before through the [issue tracker](https://github.com/scikit-hep/vector/issues).
+  - type: input
+    id: vector-version
+    attributes:
+      label: Vector Version
+      description: What version of vector are you using?
+      placeholder: python -m pip show vector
+    validations:
+      required: true
+  - type: input
+    id: python-version
+    attributes:
+      label: Python Version
+      description: What version of Python are you running?
+      placeholder: $ python --version
+    validations:
+      required: true
+  - type: textarea
+    id: os
+    attributes:
+      label: OS / Environment
+      description: What Operating System or environment are you using?
+      placeholder: Describe your environment.
+    validations:
+      required: true
+  - type: textarea
+    id: describe
+    attributes:
+      label: Describe the bug
+      description: |
+        - A clear and concise description of the bug.
+        - Describe how to reproduce this bug using a [Minimum Workable Example](https://stackoverflow.com/help/minimal-reproducible-example).
+    validations:
+      required: true
+  - type: textarea
+    id: log-output
+    attributes:
+      label: Any additional but relevant log output

@@ -45,7 +45,6 @@ uncompyle6 = pytest.importorskip("uncompyle6")
 spark_parser = pytest.importorskip("spark_parser")
 pytestmark = pytest.mark.dis
 
-
 Context = collections.namedtuple("Context", ["name", "closure"])
 
 
@@ -216,7 +215,7 @@ def analyze_return(node, context):
 
     assert node[0].kind == "return", "compute function must end with a 'return'"
     assert len(node[0]) == 2
-    assert node[0][0].kind == "ret_expr"
+    assert node[0][0].kind in ("ret_expr", "return_expr")
     assert len(node[0][0]) == 1
     expr(node[0][0][0])
     assert node[0][1].kind == "RETURN_VALUE"
@@ -278,8 +277,12 @@ def analyze_expression(node, context):
         analyze_callable(expr(node[0]), context)
 
         for argument in node[1:-1]:
-            assert argument.kind == "pos_arg", "only positional arguments"
-            analyze_expression(expr(argument[0]), context)
+            if argument.kind == "pos_arg":
+                expr_arg = argument[0]
+            else:
+                expr_arg = argument
+            assert expr_arg.kind == "expr", "only positional arguments"
+            analyze_expression(expr(expr_arg), context)
 
     elif is_nan_to_num(node):
         analyze_expression(expr(node[1]), context)

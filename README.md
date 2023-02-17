@@ -550,7 +550,7 @@ The (current) list of properties and methods is:
 - `tau` (`M`, `mass`): see note above
 - `tau2` (`M2`, `mass2`)
 - `beta`: scalar(s) between $0$ (inclusive) and $1$ (exclusive, unless the vector components are infinite)
-- `deltaRapidityPhi`: $Delta R_{\mbox{rapidity}} = \Delta\phi^2 + \Delta \mbox{rapidity}^2$
+- `deltaRapidityPhi`: $\Delta R_{\mbox{rapidity}} = \Delta\phi^2 + \Delta \mbox{rapidity}^2$
 - `deltaRapidityPhi2`: the above, squared
 - `gamma`: scalar(s) between $1$ (inclusive) and $\infty$
 - `rapidity`: scalar(s) between $0$ (inclusive) and $\infty$
@@ -628,6 +628,13 @@ def compute_masses(array):
 compute_masses(array)
 ```
 
+## Talks about vector
+
+- 13th September 2022 - [Constructing HEP vectors and analyzing HEP data using Vector](https://indi.to/bPmMc) - [PyHEP 2022 (virtual)](https://indico.cern.ch/event/1150631/) [🎥](https://www.youtube.com/watch?v=4iveMzrbe7s&list=PLKZ9c4ONm-VkohKG-skzEG_gklMaSgaO7&index=15)
+- 20th July 2022 - [Analysis Grand Challenge / HEP Scientific Python Ecosystem](https://indico.cern.ch/event/1151329/timetable/#3-analysis-grand-challenge-hep) - [DANCE/CoDaS@Snowmass 2022 computational and data science software training](https://indico.cern.ch/event/1151329/)
+- 25th April 2022 - [Foundation libraries (uproot, awkward, hist, mplhep)](https://indico.cern.ch/event/1126109/contributions/4780138/) - [IRIS-HEP AGC Tools 2022 Workshop](https://indico.cern.ch/event/1126109/) [🎥](https://www.youtube.com/watch?v=O9KvsDMKOmY)
+- 3rd November 2021 - [Data handling: uproot, awkward & vector](https://indico.cern.ch/event/1076231/contributions/4560398/) - [IRIS-HEP AGC Tools 2021 Workshop](https://indico.cern.ch/event/1076231/) [🎥](https://indico.cern.ch/event/1076231/contributions/4560398/attachments/2338579/4017718/agc_uproot_awk.mp4)
+
 ### Status as of April 8, 2021
 
 Undoubtedly, there are rough edges, but most of the functionality is there and Vector is ready for user-testing. It can only be improved by your feedback!
@@ -694,5 +701,5 @@ Support for this work was provided by the National Science Foundation cooperativ
 [rtd-link]: https://vector.readthedocs.io/en/latest/?badge=latest
 [sk-badge]: https://scikit-hep.org/assets/images/Scikit--HEP-Project-blue.svg
 [sk-link]: https://scikit-hep.org/
-[zenodo-badge]: https://zenodo.org/badge/DOI/10.5281/zenodo.5942083.svg
-[zenodo-link]: https://doi.org/10.5281/zenodo.5942082
+[zenodo-badge]: https://zenodo.org/badge/DOI/10.5281/zenodo.7054478.svg
+[zenodo-link]: https://doi.org/10.5281/zenodo.7054478

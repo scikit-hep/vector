@@ -16,15 +16,6 @@ license = "BSD-3-Clause"
 maintainers = [ {name = "The Scikit-HEP admins", email = "scikit-hep-admins@googlegroups.com"} ]
 authors = [ {name = "Jim Pivarski, Henry Schreiner, Eduardo Rodrigues", email = "eduardo.rodrigues@cern.ch"} ]
 requires-python = ">=3.7"
-dependencies = [
-  'importlib-metadata>=0.22; python_version < "3.8"',
-  "numpy>=1.13.3",
-  "packaging>=19",
-  'typing-extensions; python_version < "3.8"',
-]
-dynamic = [
-  "version",
-]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
@@ -45,6 +36,15 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Physics",
     "Typing :: Typed",
 ]
+dynamic = [
+  "version",
+]
+dependencies = [
+  'importlib-metadata>=0.22; python_version < "3.8"',
+  "numpy>=1.13.3",
+  "packaging>=19",
+  'typing-extensions; python_version < "3.8"',
+]
 [project.optional-dependencies]
 awkward = [
   "awkward>=1.2",
@@ -52,6 +52,7 @@ awkward = [
 dev = [
   "awkward>=1.2",
   'numba>=0.50; python_version < "3.11"',
+  "papermill>=2.4",
   "pytest>=6",
   "pytest-cov>=3",
   "xdoctest>=1",
@@ -67,6 +68,7 @@ docs = [
   "sphinx_copybutton",
 ]
 test = [
+  "papermill>=2.4",
   "pytest>=6",
   "pytest-cov>=3",
   "xdoctest>=1",
@@ -91,6 +93,7 @@ init = "vector:register_numba"
 [tool.hatch]
 version.source = "vcs"
 build.hooks.vcs.version-file = "src/vector/version.py"
+
 
 [tool.pytest.ini_options]
 minversion = "6.0"
@@ -119,27 +122,85 @@ filterwarnings = [
 [tool.isort]
 profile = "black"
 
+[tool.pylint]
+master.py-version = "3.7"
+reports.output-format = "colorized"
+similarities.ignore-imports = "yes"
+master.jobs = "0"
+messages_control.enable = [
+  "useless-suppression",
+]
+messages_control.disable = [
+  "fixme",
+  "invalid-name",
+  "line-too-long",
+  "missing-class-docstring",
+  "missing-function-docstring",
+  "missing-module-docstring",
+  "protected-access",
+  "too-few-public-methods",
+  "too-many-arguments",
+  "too-many-branches",
+  "too-many-lines",
+  "too-many-locals",
+  "too-many-return-statements",
+  "too-many-statements",
+  "wrong-import-position",
+  "duplicate-code",
+  "import-outside-toplevel",
+  "import-error",
+  "disallowed-name",
+  "cyclic-import",
+  "no-self-use",
+  "unnecessary-lambda",
+  "unnecessary-pass",
+  "too-many-ancestors",
+  "redefined-outer-name",
+  "unused-argument",
+  "no-else-return",
+  "redefined-builtin",
+  "too-many-boolean-expressions",
+  "too-many-public-methods",
+  "inconsistent-return-statements",
+  "reimported",
+  "cast_python_value",
+  "unused-variable",
+  "unsubscriptable-object",
+  "abstract-method",
+  "no-member",
+  "consider-using-enumerate",
+  "global-statement",
+  "function-redefined",
+  "ungrouped-imports",
+  "unused-import",
+  "pointless-string-statement",
+  "useless-option-value",
+  "cast_python_value",
+  "unknown-option-value",
+  "no-else-raise",
+  "unidiomatic-typecheck",
+]
+
 [tool.mypy]
 files = [
-    "src/vector",
+  "src/vector",
 ]
 python_version = "3.8"
 strict = true
 warn_return_any = false
 show_error_codes = true
-warn_unreachable = true
 enable_error_code = [
-    "ignore-without-code",
-    "truthy-bool",
-    "redundant-expr",
+  "ignore-without-code",
+  "truthy-bool",
+  "redundant-expr",
 ]
 
 [[tool.mypy.overrides]]
 module = [
-    "vector._compute.*.*",
-    "numba.*",
-    "awkward.*",
+  "vector._compute.*.*",
+  "numba.*",
+  "awkward.*",
 ]
+ignore_missing_imports = true
 disallow_untyped_defs = false
 disallow_untyped_calls = false
-ignore_missing_imports = true

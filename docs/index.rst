@@ -6,12 +6,13 @@
 .. image:: _images/vector-logo.png
 
 |Action status| |Documentation Status| |pre-commit.ci status| |coverage| |GitHub Discussion| |Gitter| |Code style: black|
+
 |PyPI platforms| |PyPI version| |Conda latest releasetatus| |DOI| |License| |Scikit-HEP|
 
 Overview
 --------
 
-Vector is a Python 3.7+ library for 2D, 3D, and `Lorentz vectors <https://en.wikipedia.org/wiki/Special_relativity#Physics_in_spacetime>`_, especially _arrays of vectors\_, to solve common physics problems in a NumPy-like way.
+Vector is a Python 3.7+ library for 2D, 3D, and `Lorentz vectors <https://en.wikipedia.org/wiki/Special_relativity#Physics_in_spacetime>`_, especially *arrays of vectors*, to solve common physics problems in a NumPy-like way.
 
 Main features of Vector:
 
@@ -55,6 +56,29 @@ covers almost all the features offered by ``vector`` and any new additions to th
    usage/structure
    usage/vector_design_prototype
 
+Talks about vector
+------------------
+
+-  13th September 2022 - `Constructing HEP vectors and analyzing HEP
+   data using Vector <https://indi.to/bPmMc>`__ - `PyHEP 2022
+   (virtual) <https://indico.cern.ch/event/1150631/>`__
+   `🎥 <https://www.youtube.com/watch?v=4iveMzrbe7s&list=PLKZ9c4ONm-VkohKG-skzEG_gklMaSgaO7&index=15>`__
+-  20th July 2022 - `Analysis Grand Challenge / HEP Scientific Python
+   Ecosystem <https://indico.cern.ch/event/1151329/timetable/#3-analysis-grand-challenge-hep>`__
+   - `DANCE/CoDaS@Snowmass 2022 computational and data science software
+   training <https://indico.cern.ch/event/1151329/>`__
+-  25th April 2022 - `Foundation libraries (uproot, awkward, hist,
+   mplhep) <https://indico.cern.ch/event/1126109/contributions/4780138/>`__
+   - `IRIS-HEP AGC Tools 2022
+   Workshop <https://indico.cern.ch/event/1126109/>`__
+   `🎥 <https://www.youtube.com/watch?v=O9KvsDMKOmY>`__
+-  3rd November 2021 - `Data handling: uproot, awkward &
+   vector <https://indico.cern.ch/event/1076231/contributions/4560398/>`__
+   - `IRIS-HEP AGC Tools 2021
+   Workshop <https://indico.cern.ch/event/1076231/>`__
+   `🎥 <https://indico.cern.ch/event/1076231/contributions/4560398/attachments/2338579/4017718/agc_uproot_awk.mp4>`__
+
+
 Changes in vector's API
 -----------------------
 The ``changelog`` file describes the changes in ``vector``'s API and usage introduced in every new version. These changes can
@@ -73,14 +97,9 @@ Getting help
 * If something is not working the way it should, or if you want to request a new feature, create a new `issue <https://github.com/scikit-hep/vector/issues>`_ on GitHub.
 * To discuss something related to ``vector``, use the `discussions <https://github.com/scikit-hep/vector/discussions/>`_ tab on GitHub or ``vector``'s gitter (`Scikit-HEP/vector <https://gitter.im/Scikit-HEP/vector>`_) chat room.
 
-Developing vector
------------------
-If you are planning to develop ``vector`` (thank you!), or if you want to use the latest commit of ``vector`` on your local machine,
-you might want to install it from the source. The developer guide introduces a user to the various tasks a developer might perform,
-including installing from source, testing the library, documenting the library, etc. For a general developer guide for all the
-Scikit-HEP projects, refer to the `Scikit-HEP website <https://scikit-hep.org/developer>`_.
-
-**Note**: The developer guide is still in progress.
+Contributing to vector
+----------------------
+If you are planning to develop ``vector`` (thank you!), or if you want to use the latest commit of ``vector`` on your local machine, you might want to install it from the source. Refer to our `Contributing Guidelines <https://github.com/scikit-hep/vector/blob/main/.github/CONTRIBUTING.md>`_ for more information.
 
 API reference
 -------------
@@ -110,8 +129,8 @@ The API reference details the functionality of each ``class`` and ``function`` p
    :target: https://pypi.org/project/vector/
 .. |Conda latest releasetatus| image:: https://img.shields.io/conda/vn/conda-forge/vector.svg
    :target: https://github.com/conda-forge/vector-feedstock
-.. |DOI| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.5942083.svg
-   :target: https://doi.org/10.5281/zenodo.5942082
+.. |DOI| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.7054478.svg
+   :target: https://doi.org/10.5281/zenodo.7054478
 .. |License| image:: https://img.shields.io/badge/License-BSD_3--Clause-blue.svg
    :target: https://opensource.org/licenses/BSD-3-Clause
 .. |Scikit-HEP| image:: https://scikit-hep.org/assets/images/Scikit--HEP-Project-blue.svg
