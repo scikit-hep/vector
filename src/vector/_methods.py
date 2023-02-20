@@ -2969,16 +2969,16 @@ class Vector2D(Vector, VectorProtocolPlanar):
         if sum(x is not None for x in (z, theta, eta)) > 1:
             raise TypeError("Only one non-None parameter allowed")
 
-        z = 0
+        coord_value = 0.0
         l_type = LongitudinalZ
         if z is not None:
             coord_value = z
         elif eta is not None:
             coord_value = eta
-            l_type = LongitudinalEta
+            l_type = LongitudinalEta  # type: ignore[assignment]
         elif theta is not None:
             coord_value = theta
-            l_type = LongitudinalTheta
+            l_type = LongitudinalTheta  # type: ignore[assignment]
 
         return self._wrap_result(
             type(self),
