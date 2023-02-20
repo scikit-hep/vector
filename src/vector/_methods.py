@@ -2983,15 +2983,15 @@ class Vector2D(Vector, VectorProtocolPlanar):
 
         return self._wrap_result(
             type(self),
-            self.azimuthal.elements + (coord_value,),
-            [_aztype(self), l_type, None],
+            (*self.azimuthal.elements, 0),
+            [_aztype(self), LongitudinalZ, None],
             1,
         )
 
     def to_Vector4D(self) -> VectorProtocolLorentz:
         return self._wrap_result(
             type(self),
-            self.azimuthal.elements + (0, 0),
+            (*self.azimuthal.elements, 0, 0),
             [_aztype(self), LongitudinalZ, TemporalT],
             1,
         )
@@ -4047,9 +4047,7 @@ def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
     for obj in objects:
         if not isinstance(obj, Vector):
             continue
-        if handler is None:
-            handler = obj
-        elif _get_handler_index(obj) > _get_handler_index(handler):
+        if handler is None or _get_handler_index(obj) > _get_handler_index(handler):
             handler = obj
 
     assert handler is not None

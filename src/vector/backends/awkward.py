@@ -1252,8 +1252,6 @@ class VectorRecord2D(VectorAwkward2D, ak.Record):  # type: ignore[misc]
     for the corresponding ``Vector`` and ``Momentum`` classes.
     """
 
-    pass
-
 
 behavior["Vector2D"] = VectorRecord2D
 
@@ -1287,8 +1285,6 @@ class VectorRecord3D(VectorAwkward3D, ak.Record):  # type: ignore[misc]
     See :class:`VectorArray3D` and :class:`MomentumArray3D`
     for the corresponding ``Vector`` and ``Momentum`` classes.
     """
-
-    pass
 
 
 behavior["Vector3D"] = VectorRecord3D
@@ -1324,8 +1320,6 @@ class VectorRecord4D(VectorAwkward4D, ak.Record):  # type: ignore[misc]
     for the corresponding ``Vector`` and ``Momentum`` classes.
     """
 
-    pass
-
 
 behavior["Vector4D"] = VectorRecord4D
 
@@ -1360,8 +1354,6 @@ class MomentumRecord2D(MomentumAwkward2D, ak.Record):  # type: ignore[misc]
     for the corresponding ``Momentum`` and ``Vector`` classes.
     """
 
-    pass
-
 
 behavior["Momentum2D"] = MomentumRecord2D
 
@@ -1395,8 +1387,6 @@ class MomentumRecord3D(MomentumAwkward3D, ak.Record):  # type: ignore[misc]
     for the corresponding ``Momentum`` and ``Vector`` classes.
     """
 
-    pass
-
 
 behavior["Momentum3D"] = MomentumRecord3D
 
@@ -1429,8 +1419,6 @@ class MomentumRecord4D(MomentumAwkward4D, ak.Record):  # type: ignore[misc]
     See :class:`MomentumArray4D` and :class:`VectorArray4D`
     for the corresponding ``Momentum`` and ``Vector`` classes.
     """
-
-    pass
 
 
 behavior["Momentum4D"] = MomentumRecord4D

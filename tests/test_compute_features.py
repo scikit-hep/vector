@@ -32,6 +32,7 @@ backends, and whether a (formally) simpler implementation is possible.
 from __future__ import annotations
 
 import collections
+import contextlib
 import inspect
 import sys
 
@@ -98,7 +99,7 @@ else:
 
 
 @pytest.mark.skipif(is_unsupported, reason=unsupported_message)
-@pytest.mark.slow
+@pytest.mark.slow()
 @pytest.mark.parametrize("signature", functions.keys())
 def test(signature):
     analyze_function(functions[signature])
@@ -117,10 +118,9 @@ def analyze_function(function):
         closure = dict(function.__globals__)
         if function.__closure__ is not None:
             for var, cell in zip(function.__code__.co_freevars, function.__closure__):
-                try:
+                # the cell has not been filled yet, so ignore it
+                with contextlib.suppress(ValueError):
                     closure[var] = cell.cell_contents
-                except ValueError:
-                    pass  # the cell has not been filled yet, so ignore it
 
         analyze_code(function.__code__, Context(function.__name__, closure))
         analyze_function.done.add(function)
@@ -277,10 +277,7 @@ def analyze_expression(node, context):
         analyze_callable(expr(node[0]), context)
 
         for argument in node[1:-1]:
-            if argument.kind == "pos_arg":
-                expr_arg = argument[0]
-            else:
-                expr_arg = argument
+            expr_arg = argument[0] if argument.kind == "pos_arg" else argument
             assert expr_arg.kind == "expr", "only positional arguments"
             analyze_expression(expr(expr_arg), context)
 

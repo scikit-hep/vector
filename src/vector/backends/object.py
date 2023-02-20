@@ -70,25 +70,17 @@ from vector._typeutils import FloatArray
 class CoordinatesObject:
     """Coordinates class for the Object backend."""
 
-    pass
-
 
 class AzimuthalObject(CoordinatesObject, Azimuthal):
     """Azimuthal class for the Object backend."""
-
-    pass
 
 
 class LongitudinalObject(CoordinatesObject, Longitudinal):
     """Longitudinal class for the Object backend."""
 
-    pass
-
 
 class TemporalObject(CoordinatesObject, Temporal):
     """Temporal class for the Object backend."""
-
-    pass
 
 
 class TupleXY(typing.NamedTuple):
@@ -733,7 +725,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             return result
 
         elif (
-            len(returns) == 1
+            (len(returns) == 1 or (len(returns) == 2 and returns[1] is None))
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
         ):
@@ -742,31 +734,11 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
 
         elif (
             len(returns) == 2
-            and isinstance(returns[0], type)
-            and issubclass(returns[0], Azimuthal)
-            and returns[1] is None
-        ):
-            azcoords = _coord_object_type[returns[0]](result[0], result[1])
-            return cls.ProjectionClass2D(azimuthal=azcoords)
-
-        elif (
-            len(returns) == 2
+            or (len(returns) == 3 and returns[2] is None)
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
             and isinstance(returns[1], type)
             and issubclass(returns[1], Longitudinal)
-        ):
-            azcoords = _coord_object_type[returns[0]](result[0], result[1])
-            lcoords = _coord_object_type[returns[1]](result[2])
-            return cls.ProjectionClass3D(azimuthal=azcoords, longitudinal=lcoords)
-
-        elif (
-            len(returns) == 3
-            and isinstance(returns[0], type)
-            and issubclass(returns[0], Azimuthal)
-            and isinstance(returns[1], type)
-            and issubclass(returns[1], Longitudinal)
-            and returns[2] is None
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             lcoords = _coord_object_type[returns[1]](result[2])
@@ -1165,22 +1137,11 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
 
         elif (
             len(returns) == 2
+            or (len(returns) == 3 and returns[2] is None)
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
             and isinstance(returns[1], type)
             and issubclass(returns[1], Longitudinal)
-        ):
-            azcoords = _coord_object_type[returns[0]](result[0], result[1])
-            lcoords = _coord_object_type[returns[1]](result[2])
-            return cls.ProjectionClass3D(azimuthal=azcoords, longitudinal=lcoords)
-
-        elif (
-            len(returns) == 3
-            and isinstance(returns[0], type)
-            and issubclass(returns[0], Azimuthal)
-            and isinstance(returns[1], type)
-            and issubclass(returns[1], Longitudinal)
-            and returns[2] is None
         ):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             lcoords = _coord_object_type[returns[1]](result[2])

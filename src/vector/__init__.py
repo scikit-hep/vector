@@ -32,9 +32,8 @@ from vector._methods import (
     Vector4D,
     dim,
 )
-from vector.backends.awkward_constructors import Array
+from vector.backends.awkward_constructors import Array, zip
 from vector.backends.awkward_constructors import Array as awk
-from vector.backends.awkward_constructors import zip
 from vector.backends.numpy import (
     MomentumNumpy2D,
     MomentumNumpy3D,
@@ -43,8 +42,8 @@ from vector.backends.numpy import (
     VectorNumpy2D,
     VectorNumpy3D,
     VectorNumpy4D,
+    array,
 )
-from vector.backends.numpy import array
 from vector.backends.numpy import array as arr
 from vector.backends.object import (
     MomentumObject2D,

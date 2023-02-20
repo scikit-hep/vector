@@ -694,7 +694,7 @@ def test_factory():
     assert out.pt == pytest.approx(2)
     assert out.phi == pytest.approx(3.3)
     assert out.z == pytest.approx(5)
-    assert out.E == pytest.approx(10)
+    assert out.E == pytest.approx(10)  # noqa: SIM300
 
 
 def test_property_float():
@@ -1368,11 +1368,11 @@ def test_operator_bool():
 def test_operator_truth():
     @numba.njit
     def get_true(v):
-        return True if v else False
+        return True if v else False  # noqa: SIM210
 
     @numba.njit
     def get_false(v):
-        return False if v else True
+        return False if v else True  # noqa: SIM211
 
     assert not get_true(vector.obj(x=0, y=0))
     assert get_true(vector.obj(x=0, y=0.1))

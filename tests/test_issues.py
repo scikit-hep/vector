@@ -44,7 +44,6 @@ def test_issue_161():
         else os.path.join("tests", "samples", "issue-161-v2.pkl")
     )
 
-    f = open(file_path, "rb")
-    a = ak.from_buffers(*pickle.load(f))
-    f.close()
+    with open(file_path, "rb") as f:
+        a = ak.from_buffers(*pickle.load(f))
     repro(generator_like_jet_constituents=a.constituents)
