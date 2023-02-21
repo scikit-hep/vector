@@ -77,14 +77,18 @@ test-extras = [
   "spark-parser",
   "uncompyle6",
 ]
+
 [project.urls]
 "Bug Tracker" = "https://github.com/scikit-hep/vector/issues"
 Changelog = "https://vector.readthedocs.io/en/latest/changelog.html"
 Discussions = "https://github.com/scikit-hep/vector/discussions"
 Documentation = "https://vector.readthedocs.io/"
 Homepage = "https://github.com/scikit-hep/vector"
+
 [project.entry-points.numba_extensions]
 init = "vector:register_numba"
+
+
 
 [tool.hatch]
 version.source = "vcs"
