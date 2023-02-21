@@ -77,23 +77,18 @@ test-extras = [
   "spark-parser",
   "uncompyle6",
 ]
-
 [project.urls]
 "Bug Tracker" = "https://github.com/scikit-hep/vector/issues"
 Changelog = "https://vector.readthedocs.io/en/latest/changelog.html"
 Discussions = "https://github.com/scikit-hep/vector/discussions"
 Documentation = "https://vector.readthedocs.io/"
 Homepage = "https://github.com/scikit-hep/vector"
-
 [project.entry-points.numba_extensions]
 init = "vector:register_numba"
-
-
 
 [tool.hatch]
 version.source = "vcs"
 build.hooks.vcs.version-file = "src/vector/version.py"
-
 
 [tool.pytest.ini_options]
 minversion = "6.0"
@@ -118,6 +113,31 @@ filterwarnings = [
     "ignore::DeprecationWarning",
     "ignore::UserWarning",
 ]
+
+[tool.mypy]
+files = [
+  "src/vector",
+]
+python_version = "3.8"
+strict = true
+warn_return_any = false
+show_error_codes = true
+enable_error_code = [
+  "ignore-without-code",
+  "truthy-bool",
+  "redundant-expr",
+]
+
+[[tool.mypy.overrides]]
+module = [
+  "vector._compute.*.*",
+  "numba.*",
+  "awkward.*",
+]
+ignore_missing_imports = true
+disallow_untyped_defs = false
+disallow_untyped_calls = false
+
 
 [tool.pylint]
 master.py-version = "3.7"
@@ -177,30 +197,6 @@ messages_control.disable = [
   "no-else-raise",
   "unidiomatic-typecheck",
 ]
-
-[tool.mypy]
-files = [
-  "src/vector",
-]
-python_version = "3.8"
-strict = true
-warn_return_any = false
-show_error_codes = true
-enable_error_code = [
-  "ignore-without-code",
-  "truthy-bool",
-  "redundant-expr",
-]
-
-[[tool.mypy.overrides]]
-module = [
-  "vector._compute.*.*",
-  "numba.*",
-  "awkward.*",
-]
-ignore_missing_imports = true
-disallow_untyped_defs = false
-disallow_untyped_calls = false
 
 [tool.ruff]
 select = [
