@@ -2959,11 +2959,31 @@ class Vector2D(Vector, VectorProtocolPlanar):
     def to_Vector2D(self) -> VectorProtocolPlanar:
         return self
 
-    def to_Vector3D(self) -> VectorProtocolSpatial:
+    def to_Vector3D(
+        self,
+        *,
+        z: float | None = None,
+        theta: float | None = None,
+        eta: float | None = None,
+    ) -> VectorProtocolSpatial:
+        if sum(x is not None for x in (z, theta, eta)) > 1:
+            raise TypeError("Only one non-None parameter allowed")
+
+        coord_value = 0.0
+        l_type: type[Longitudinal] = LongitudinalZ
+        if z is not None:
+            coord_value = z
+        elif eta is not None:
+            coord_value = eta
+            l_type = LongitudinalEta
+        elif theta is not None:
+            coord_value = theta
+            l_type = LongitudinalTheta
+
         return self._wrap_result(
             type(self),
-            (*self.azimuthal.elements, 0),
-            [_aztype(self), LongitudinalZ, None],
+            (*self.azimuthal.elements, coord_value),
+            [_aztype(self), l_type, None],
             1,
         )
 
