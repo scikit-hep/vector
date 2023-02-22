@@ -2966,6 +2966,18 @@ class Vector2D(Vector, VectorProtocolPlanar):
         theta: float | None = None,
         eta: float | None = None,
     ) -> VectorProtocolSpatial:
+        """
+        Converts a 2D vector to 3D vector.
+
+        The scalar longitudinal coordinate is broadcasted for NumPy and
+        Awkward vectors. Only a single longitudinal coordinate should be provided.
+
+        Examples:
+            >>> import vector
+            >>> vec = vector.VectorObject2D(x=1, y=2)
+            >>> vec.to_Vector3D(z=1)
+            VectorObject3D(x=1, y=2, z=1)
+        """
         if sum(x is not None for x in (z, theta, eta)) > 1:
             raise TypeError("Only one non-None longitudinal coordinate allowed")
 
@@ -2996,6 +3008,19 @@ class Vector2D(Vector, VectorProtocolPlanar):
         t: float | None = None,
         tau: float | None = None,
     ) -> VectorProtocolLorentz:
+        """
+        Converts a 2D vector to 4D vector.
+
+        The scalar longitudinal and temporal coordinates are broadcasted for NumPy and
+        Awkward vectors. Only a single longitudinal and temporal coordinate should be
+        provided.
+
+        Examples:
+            >>> import vector
+            >>> vec = vector.VectorObject2D(x=1, y=2)
+            >>> vec.to_Vector4D(z=3, t=4)
+            VectorObject4D(x=1, y=2, z=3, t=4)
+        """
         if sum(x is not None for x in (z, theta, eta)) > 1:
             raise TypeError("Only one non-None longitudinal coordinate allowed")
         elif sum(x is not None for x in (t, tau)) > 1:
@@ -3046,6 +3071,18 @@ class Vector3D(Vector, VectorProtocolSpatial):
         t: float | None = None,
         tau: float | None = None,
     ) -> VectorProtocolLorentz:
+        """
+        Converts a 3D vector to 4D vector.
+
+        The scalar temporal coordinate are broadcasted for NumPy and Awkward vectors.
+        Only a single temporal coordinate should be provided.
+
+        Examples:
+            >>> import vector
+            >>> vec = vector.VectorObject3D(x=1, y=2, z=3)
+            >>> vec.to_Vector4D(t=4)
+            VectorObject4D(x=1, y=2, z=3, t=4)
+        """
         if sum(x is not None for x in (t, tau)) > 1:
             raise TypeError("Only one non-None temporal coordinate allowed")
 
