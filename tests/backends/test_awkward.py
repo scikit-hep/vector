@@ -5,12 +5,11 @@
 
 from __future__ import annotations
 
-import awkward as ak
 import pytest
 
 import vector
 
-pytest.importorskip("awkward")
+ak = pytest.importorskip("awkward")
 
 pytestmark = pytest.mark.awkward
 
