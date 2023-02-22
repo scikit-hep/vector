@@ -2967,31 +2967,63 @@ class Vector2D(Vector, VectorProtocolPlanar):
         eta: float | None = None,
     ) -> VectorProtocolSpatial:
         if sum(x is not None for x in (z, theta, eta)) > 1:
-            raise TypeError("Only one non-None parameter allowed")
+            raise TypeError("Only one non-None longitudinal coordinate allowed")
 
-        coord_value = 0.0
+        l_value = 0.0
         l_type: type[Longitudinal] = LongitudinalZ
         if z is not None:
-            coord_value = z
+            l_value = z
         elif eta is not None:
-            coord_value = eta
+            l_value = eta
             l_type = LongitudinalEta
         elif theta is not None:
-            coord_value = theta
+            l_value = theta
             l_type = LongitudinalTheta
 
         return self._wrap_result(
             type(self),
-            (*self.azimuthal.elements, coord_value),
+            (*self.azimuthal.elements, l_value),
             [_aztype(self), l_type, None],
             1,
         )
 
-    def to_Vector4D(self) -> VectorProtocolLorentz:
+    def to_Vector4D(
+        self,
+        *,
+        z: float | None = None,
+        theta: float | None = None,
+        eta: float | None = None,
+        t: float | None = None,
+        tau: float | None = None,
+    ) -> VectorProtocolLorentz:
+        if sum(x is not None for x in (z, theta, eta)) > 1:
+            raise TypeError("Only one non-None longitudinal coordinate allowed")
+        elif sum(x is not None for x in (t, tau)) > 1:
+            raise TypeError("Only one non-None temporal coordinate allowed")
+
+        t_value = 0.0
+        t_type: type[Temporal] = TemporalT
+        if t is not None:
+            t_value = t
+        elif tau is not None:
+            t_value = tau
+            t_type = TemporalTau
+
+        l_value = 0.0
+        l_type: type[Longitudinal] = LongitudinalZ
+        if z is not None:
+            l_value = z
+        elif eta is not None:
+            l_value = eta
+            l_type = LongitudinalEta
+        elif theta is not None:
+            l_value = theta
+            l_type = LongitudinalTheta
+
         return self._wrap_result(
             type(self),
-            (*self.azimuthal.elements, 0, 0),
-            [_aztype(self), LongitudinalZ, TemporalT],
+            (*self.azimuthal.elements, l_value, t_value),
+            [_aztype(self), l_type, t_type],
             1,
         )
 
@@ -3008,11 +3040,27 @@ class Vector3D(Vector, VectorProtocolSpatial):
     def to_Vector3D(self) -> VectorProtocolSpatial:
         return self
 
-    def to_Vector4D(self) -> VectorProtocolLorentz:
+    def to_Vector4D(
+        self,
+        *,
+        t: float | None = None,
+        tau: float | None = None,
+    ) -> VectorProtocolLorentz:
+        if sum(x is not None for x in (t, tau)) > 1:
+            raise TypeError("Only one non-None temporal coordinate allowed")
+
+        t_value = 0.0
+        t_type: type[Temporal] = TemporalT
+        if t is not None:
+            t_value = t
+        elif tau is not None:
+            t_value = tau
+            t_type = TemporalTau
+
         return self._wrap_result(
             type(self),
-            self.azimuthal.elements + self.longitudinal.elements + (0,),
-            [_aztype(self), _ltype(self), TemporalT],
+            (*self.azimuthal.elements, *self.longitudinal.elements, t_value),
+            [_aztype(self), _ltype(self), t_type],
             1,
         )
 
