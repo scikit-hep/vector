@@ -2970,15 +2970,15 @@ class Vector2D(Vector, VectorProtocolPlanar):
             raise TypeError("Only one non-None parameter allowed")
 
         coord_value = 0.0
-        l_type = LongitudinalZ
+        l_type: type[Longitudinal] = LongitudinalZ
         if z is not None:
             coord_value = z
         elif eta is not None:
             coord_value = eta
-            l_type = LongitudinalEta  # type: ignore[assignment]
+            l_type = LongitudinalEta
         elif theta is not None:
             coord_value = theta
-            l_type = LongitudinalTheta  # type: ignore[assignment]
+            l_type = LongitudinalTheta
 
         return self._wrap_result(
             type(self),
