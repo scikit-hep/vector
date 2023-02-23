@@ -2983,7 +2983,9 @@ class Vector2D(Vector, VectorProtocolPlanar):
             MomentumObject3D(px=1, py=2, pz=4)
         """
         if sum(x is not None for x in (z, theta, eta)) > 1:
-            raise TypeError("At most one longitudinal coordinate (`z`, `theta`, or `eta`) may be assigned (non-None)")
+            raise TypeError(
+                "At most one longitudinal coordinate (`z`, `theta`, or `eta`) may be assigned (non-None)"
+            )
 
         l_value = 0.0
         l_type: type[Longitudinal] = LongitudinalZ
