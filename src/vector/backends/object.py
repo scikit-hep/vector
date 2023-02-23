@@ -1259,7 +1259,7 @@ class MomentumObject3D(SpatialMomentum, VectorObject3D):
         for x in lnames:
             y = _repr_generic_to_momentum.get(x, x)
             out.append(f"{y}={getattr(self.longitudinal, x)}")
-        return "vector.MomentumObject3D(" + ", ".join(out) + ")"
+        return "MomentumObject3D(" + ", ".join(out) + ")"
 
     def __array__(self) -> FloatArray:
         from vector.backends.numpy import MomentumNumpy3D

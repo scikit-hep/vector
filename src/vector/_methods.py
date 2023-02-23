@@ -2980,7 +2980,7 @@ class Vector2D(Vector, VectorProtocolPlanar):
             VectorObject3D(x=1, y=2, z=1)
             >>> vec = vector.MomentumObject2D(px=1, py=2)
             >>> vec.to_Vector3D(z=4)
-            vector.MomentumObject3D(px=1, py=2, pz=4)
+            MomentumObject3D(px=1, py=2, pz=4)
         """
         if sum(x is not None for x in (z, theta, eta)) > 1:
             raise TypeError("Only one non-None longitudinal coordinate allowed")
