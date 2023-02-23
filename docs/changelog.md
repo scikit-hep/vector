@@ -9,7 +9,7 @@
 - feat: add constructors for `VectorObject3D` and `MomentumObject3D` [#231][]
 - feat: add constructors for `VectorObject4D` and `MomentumObject4D` [#232][]
 - feat: update `to_Vector3D` to pass new coordinate values [#278][]
-- feat: allow passing coordinates to to_Vector-D
+- feat: allow passing coordinates to to_Vector-D [#319][]
 
 #### Fixes
 
@@ -17,7 +17,7 @@
 
 #### Documentation
 
-- docs: a readable changelog [#319][]
+- docs: a readable changelog [#320][]
 
 #### Maintenance
 
@@ -25,6 +25,7 @@
 - fix: update discheck [#305][]
 - ci: update number of builds for codecov bot [#314][]
 - chore: move to using Ruff [#315][]
+- chore: update copyright and license for 2022 and 2023 [#321][]
 
 [#231]: https://github.com/scikit-hep/vector/pull/231
 [#232]: https://github.com/scikit-hep/vector/pull/232
@@ -35,6 +36,8 @@
 [#314]: https://github.com/scikit-hep/vector/pull/314
 [#315]: https://github.com/scikit-hep/vector/pull/315
 [#319]: https://github.com/scikit-hep/vector/pull/319
+[#320]: https://github.com/scikit-hep/vector/pull/320
+[#321]: https://github.com/scikit-hep/vector/pull/321
 
 ## Version 0.11
 
