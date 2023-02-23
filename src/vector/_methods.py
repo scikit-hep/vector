@@ -2983,7 +2983,9 @@ class Vector2D(Vector, VectorProtocolPlanar):
             MomentumObject3D(px=1, py=2, pz=4)
         """
         if sum(x is not None for x in (z, theta, eta)) > 1:
-            raise TypeError("Only one non-None longitudinal coordinate allowed")
+            raise TypeError(
+                "At most one longitudinal coordinate (`z`, `theta`, or `eta`) may be assigned (non-None)"
+            )
 
         l_value = 0.0
         l_type: type[Longitudinal] = LongitudinalZ
@@ -3030,9 +3032,13 @@ class Vector2D(Vector, VectorProtocolPlanar):
             MomentumObject4D(px=1, py=2, pz=4, E=4)
         """
         if sum(x is not None for x in (z, theta, eta)) > 1:
-            raise TypeError("Only one non-None longitudinal coordinate allowed")
+            raise TypeError(
+                "At most one longitudinal coordinate (`z`, `theta`, or `eta`) may be assigned (non-None)"
+            )
         elif sum(x is not None for x in (t, tau)) > 1:
-            raise TypeError("Only one non-None temporal coordinate allowed")
+            raise TypeError(
+                "At most one longitudinal coordinate (`t`, `tau`) may be assigned (non-None)"
+            )
 
         t_value = 0.0
         t_type: type[Temporal] = TemporalT
@@ -3096,7 +3102,9 @@ class Vector3D(Vector, VectorProtocolSpatial):
             MomentumObject4D(px=1, py=2, pz=3, mass=4)
         """
         if sum(x is not None for x in (t, tau)) > 1:
-            raise TypeError("Only one non-None temporal coordinate allowed")
+            raise TypeError(
+                "At most one longitudinal coordinate (`t`, `tau`) may be assigned (non-None)"
+            )
 
         t_value = 0.0
         t_type: type[Temporal] = TemporalT
