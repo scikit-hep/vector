@@ -2969,14 +2969,18 @@ class Vector2D(Vector, VectorProtocolPlanar):
         """
         Converts a 2D vector to 3D vector.
 
-        The scalar longitudinal coordinate is broadcasted for NumPy and
-        Awkward vectors. Only a single longitudinal coordinate should be provided.
+        The scalar longitudinal coordinate is broadcasted for NumPy and Awkward
+        vectors. Only a single longitudinal coordinate should be provided. Generic
+        coordinate counterparts should be provided for the momentum coordinates.
 
         Examples:
             >>> import vector
             >>> vec = vector.VectorObject2D(x=1, y=2)
             >>> vec.to_Vector3D(z=1)
             VectorObject3D(x=1, y=2, z=1)
+            >>> vec = vector.MomentumObject2D(px=1, py=2)
+            >>> vec.to_Vector3D(z=4)
+            vector.MomentumObject3D(px=1, py=2, pz=4)
         """
         if sum(x is not None for x in (z, theta, eta)) > 1:
             raise TypeError("Only one non-None longitudinal coordinate allowed")
@@ -3013,13 +3017,17 @@ class Vector2D(Vector, VectorProtocolPlanar):
 
         The scalar longitudinal and temporal coordinates are broadcasted for NumPy and
         Awkward vectors. Only a single longitudinal and temporal coordinate should be
-        provided.
+        provided. Generic coordinate counterparts should be provided for the momentum
+        coordinates.
 
         Examples:
             >>> import vector
             >>> vec = vector.VectorObject2D(x=1, y=2)
             >>> vec.to_Vector4D(z=3, t=4)
             VectorObject4D(x=1, y=2, z=3, t=4)
+            >>> vec = vector.MomentumObject2D(px=1, py=2)
+            >>> vec.to_Vector4D(z=4, t=4)
+            MomentumObject4D(px=1, py=2, pz=4, E=4)
         """
         if sum(x is not None for x in (z, theta, eta)) > 1:
             raise TypeError("Only one non-None longitudinal coordinate allowed")
@@ -3075,13 +3083,17 @@ class Vector3D(Vector, VectorProtocolSpatial):
         Converts a 3D vector to 4D vector.
 
         The scalar temporal coordinate are broadcasted for NumPy and Awkward vectors.
-        Only a single temporal coordinate should be provided.
+        Only a single temporal coordinate should be provided. Generic coordinate
+        counterparts should be provided for the momentum coordinates.
 
         Examples:
             >>> import vector
             >>> vec = vector.VectorObject3D(x=1, y=2, z=3)
             >>> vec.to_Vector4D(t=4)
             VectorObject4D(x=1, y=2, z=3, t=4)
+            >>> vec = vector.MomentumObject3D(px=1, py=2, pz=3)
+            >>> vec.to_Vector4D(tau=4)
+            MomentumObject4D(px=1, py=2, pz=3, mass=4)
         """
         if sum(x is not None for x in (t, tau)) > 1:
             raise TypeError("Only one non-None temporal coordinate allowed")
