@@ -1,35 +1,76 @@
 # Changelog
 
-## Next
+## Version 1.0
+
+### Version 1.0.0
+
+#### Features
 
 - feat: add constructors for `VectorObject3D` and `MomentumObject3D` [#231][]
+- feat: add constructors for `VectorObject4D` and `MomentumObject4D` [#232][]
+- feat: update `to_Vector3D` to pass new coordinate values [#278][]
+- feat: allow passing coordinates to to_Vector-D
+
+#### Fixes
+
+- fix: better elif conditions for obj \_\_init\_\_ methods [#316][]
+
+#### Documentation
+
+- docs: a readable changelog [#319][]
+
+#### Maintenance
+
+- ci: use numpy~=1.24.0 in pre-commit [#308][]
+- fix: update discheck [#305][]
+- ci: update number of builds for codecov bot [#314][]
+- chore: move to using Ruff [#315][]
 
 [#231]: https://github.com/scikit-hep/vector/pull/231
+[#232]: https://github.com/scikit-hep/vector/pull/232
+[#278]: https://github.com/scikit-hep/vector/pull/278
+[#316]: https://github.com/scikit-hep/vector/pull/316
+[#308]: https://github.com/scikit-hep/vector/pull/308
+[#305]: https://github.com/scikit-hep/vector/pull/305
+[#314]: https://github.com/scikit-hep/vector/pull/314
+[#315]: https://github.com/scikit-hep/vector/pull/315
+[#319]: https://github.com/scikit-hep/vector/pull/319
 
 ## Version 0.11
 
 ### Version 0.11.0
 
-- chore: test on `awkard v1.10.0` and add cov to `noxfile` [#256][]
-- `vector.arr` is now an alias for `vector.array` (`NumPy` vectors) [#254][]
-- Add PyLint and additional pre-commit hooks [#260][]
-- Fix the failing mypy hook by pinning python-version [#261][]
-- chore: bump mypy and revert python-version [#263][]
+#### Features
+
+- Add constructors for `VectorObject2D` and `MomentumObject2D`[#89][]
+- Add support for awkward v2 (and keep supporting v1) [#284][]
+
+#### Fixes
+
+- `vector.arr` should construct `NumPy` vectors [#254][]
+- Development dependency missing-Priyadarshi [#280][]
+
+#### Documentation
+
 - docs: add a section for talks [#264][]
-- chore: minor cleanups [#266][]
-- chore: add issue templates [#267][]
-- zenodo-badge-sync [#269][]
-- Pull request template [#271][]
-- docs: add a developer guide [#233][]
-- ci: Test notebooks on PRs [#272][]
-- feat: add constructors for `VectorObject2D` and `MomentumObject2D` [#89][]
+- docs: fix missing backslash in latex for readme [#285][]
 - docs: update changelog.md, PR template, and CONTRIBUTING.md [#275][]
-- chore: add papermill as a dev dependency [#280][]
-- chore: use Python 3.11! [#282][]
-- Fix missing backslash in latex for readme [#285][]
-- chore: ignore flake8 B905 + improve bug report template [#297][]
+- docs: add a developer guide [#233][]
+
+#### Maintenance
+
+- chore: add PyLint and additional pre-commit hooks [#260][]
+- chore: pull request template-Priyadarshi [#271][]
+- chore: add issue templates [#267][]
 - chore: better and long term fix for flake8-bugbear [#298][]
-- feat: migrate to awkward v2 (and keep supporting v1) [#284][]
+- chore: bump mypy and revert python-version [#263][]
+- chore: fix the failing mypy hook by pinning python-version [#261][]
+- chore: ignore flake8 B905 + improve bug report template [#297][]
+- chore: minor cleanups [#266][]
+- chore: test on `awkward v1.10.0` and add cov to `noxfile` [#256][]
+- chore: use Python 3.11! [#282][]
+- chore: zenodo-badge-sync-mishra1 [#269][]
+- ci: test notebooks on PRs [#272][]
 
 [#256]: https://github.com/scikit-hep/vector/pull/256
 [#254]: https://github.com/scikit-hep/vector/pull/254
@@ -56,6 +97,8 @@
 
 ### Version 0.10.0
 
+#### Maintenance
+
 - Remove Python `3.6` support [#251][]
 
 [#251]: https://github.com/scikit-hep/vector/pull/251
@@ -64,36 +107,48 @@
 
 ### Version 0.9.0
 
-- Wheel not required for setuptools PEP 517 (all-repos) [#176][]
-- Fix bad values for high (abs) eta [#172][]
-- Bump black to 22.3.0 due to click 8.1 release [#181][]
-- Add Conda and Zenodo badges to the README [#183][]
-- Implement deltaRapidityPhi and deltaRapidityPhi2 [#175][]
-- Tests and docs for deltaRapidityPhi [#187][]
-- Fix intro notebook, and submodule and subpackage index [#191][]
-- Fix a test and update CI to catch errors regularly [#199][]
-- Remove underscores from `_backend` subpackage and every backend module [#192][]
-- Add codecov badge to README [#203][]
-- Fix documentation warnings [#193][]
-- Add docstrings in the `backends.numpy` module [#195][]
-- Add docstrings in the `backends.object` module [#201][]
-- Improve the landing page and API docs structure [#204][]
-- Add docstrings in the `backends.awkward` module [#207][]
-- Implement doctests in CI [#211][]
+#### Features
+
+- Implements deltaRapidityPhi and deltaRapidityPhi2. [#175][]
+- Remove underscores [#192][]
+- feat: add git archive support [#244][]
+
+#### Fixes
+
+- fix bad values for high (abs) eta [#172][]
 - Add custom reprs to awkward coordinate classes [#212][]
-- Fix conda badge and update dependabot [#213][]
-- Render module level docstrings in documentation [#218][]
-- Pass repo review https[#219][]
-- Explicitly set posinf and neginf in nan_to_num so they stay infinite [#173][]
-- Add type checks in constructors https[#210][]
-- Migrate to hatchling [#223][]
-- Add `codecov.yml` [#229][]
-- Add `pyproject-fmt` pre-commit hook [#230][]
-- Remove redundant `tool.check-manifest` from `pyproject.toml` [#235][]
-- Add git archive support [#244][]
-- Add CITATION.cff Citation File Format file [#243][]
-- Test `Vector` on `Awkward` `v1` and `v2` together [#226][]
-- Build and test on Python `3.10` and `3.11-dev` [#252][]
+- Explicitly set posinf and neginf in nan_to_num so they stay infinite. [#173][]
+- Add type checks in constructors [#210][]
+
+#### Documentation
+
+- Add Conda and Zenodo badges to the README-rodrigues [#183][]
+- Tests and docs for deltaRapidityPhi [#187][]
+- docs: fix intro notebook, and submodule and subpackage index [#191][]
+- docs: add codecov badge to README [#203][]
+- docs: fix warnings [#193][]
+- docs: add docstrings in the `backends.numpy` module [#195][]
+- docs: add docstrings in the `backends.object` module [#201][]
+- docs: improve the landing page and API docs structure [#204][]
+- docs: add docstrings in the `backends.awkward` module [#207][]
+- Implement doctests in CI [#211][]
+- docs: Add CITATION.cff Citation File Format file [#243][]
+- docs: update changelog [#248][]
+
+#### Maintenance
+
+- chore: wheel not required for setuptools PEP 517 (all-repos) [#176][]
+- fix: bump black to 22.3.0 due to click 8.1 release [#181][]
+- ci: fix a test and update CI to catch errors regularly [#199][]
+- chore: fix conda badge and update dependabot [#213][]
+- docs: render module level docstrings in documentation [#218][]
+- chore: pass repo review [#219][]
+- chore: migrate to hatchling [#223][]
+- chore: add `codecov.yml` [#229][]
+- chore: add `pyproject-fmt` pre-commit hook [#230][]
+- chore: remove redundant `tool.check-manifest` from `pyproject.toml` [#235][]
+- chore: support `awkward` `v1` and `v2` together [#226][]
+- chore: build and test on Python `3.10` and `3.11-dev` [#252][]
 
 [#176]: https://github.com/scikit-hep/vector/pull/176
 [#172]: https://github.com/scikit-hep/vector/pull/172
