@@ -3074,7 +3074,7 @@ class Vector3D(Vector, VectorProtocolSpatial):
         """
         Converts a 3D vector to 4D vector.
 
-        The scalar temporal coordinate are broadcasted for NumPy and Awkward vectors.
+        The scalar temporal coordinate is broadcasted for NumPy and Awkward vectors.
         Only a single temporal coordinate should be provided.
 
         Examples:
