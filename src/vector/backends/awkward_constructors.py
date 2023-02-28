@@ -230,7 +230,7 @@ def _is_type_safe(array_type: typing.Any) -> bool:
     )
     for field_type in contents:
         if isinstance(field_type, awkward.types.OptionType):
-            field_type = (
+            field_type = (  # noqa: PLW2901
                 field_type.content
                 if hasattr(array_type, "content")
                 else field_type.type

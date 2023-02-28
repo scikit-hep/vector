@@ -178,6 +178,6 @@ def register_awkward() -> None:
 
     import vector.backends.awkward
 
-    global _awkward_registered
+    global _awkward_registered  # noqa: PLW0603
     awkward.behavior.update(vector.backends.awkward.behavior)
     _awkward_registered = True
