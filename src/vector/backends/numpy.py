@@ -973,7 +973,7 @@ class VectorNumpy(Vector, GetItem):
             if not arguments.get("keepdims"):
                 new_shape = list(result.shape)
                 del new_shape[effective_axis]
-                result = numpy.reshape(result, tuple(effective_axis))
+                result = numpy.reshape(result, tuple(new_shape))
 
             return result.view(array_cls)
         else:
