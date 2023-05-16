@@ -325,9 +325,7 @@ def analyze_callable(node, context):
 
     elif node.kind in {"LOAD_GLOBAL", "LOAD_DEREF"}:
         function = context.closure.get(node.attr)
-        assert (
-            function is not None
-        ), f"unrecognized function in scope: {node.attr!r}"
+        assert function is not None, f"unrecognized function in scope: {node.attr!r}"
         analyze_function(function)
 
     else:
