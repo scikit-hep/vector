@@ -57,6 +57,42 @@ from vector._typeutils import FloatArray, ScalarCollection
 
 ArrayLike = ScalarCollection
 
+T = typing.TypeVar("T", "VectorNumpy2D", "VectorNumpy3D", "VectorNumpy4D")
+V = typing.TypeVar("V", bound=ArrayLike)
+
+
+def _perform_reduction(
+    array: T, axis: int | None, reducer: typing.Callable[[T], V], keepdims: bool
+) -> V:
+    # Drop vector view
+    array_cls = type(array)
+    array = array.view(numpy.ndarray)
+
+    if axis is None:
+        array = numpy.reshape(array, -1)
+        effective_axis = -1
+    else:
+        array = numpy.moveaxis(array, axis, -1)
+        effective_axis = axis
+
+    result = reducer(array.view(array_cls))
+    result_type = type(result)
+    result = result.view(numpy.ndarray)
+
+    # Keep the reduced dimension
+    result = numpy.reshape(result, (*result.shape, 1))
+    # Move reduced dimension to correct location
+    if axis is not None:
+        result = numpy.moveaxis(result, -1, axis)
+
+    # To drop the dimension, remove the effective axis
+    if not keepdims:
+        new_shape = list(result.shape)
+        del new_shape[effective_axis]
+        result = numpy.reshape(result, tuple(new_shape))
+
+    return result.view(result_type)
+
 
 def _array_from_columns(columns: dict[str, ArrayLike]) -> ArrayLike:
     """
@@ -946,35 +982,30 @@ class VectorNumpy(Vector, GetItem):
             if "out" in arguments:
                 raise ValueError("cannot invoke reducer with `out` argument")
 
-            array = arguments["a"]
-            axis = arguments.get("axis", None)
+            return _perform_reduction(
+                arguments["a"],
+                arguments.get("axis", None),
+                type(arguments["a"]).sum,
+                arguments.get("keepdims", False),
+            )
+        elif func is numpy.count_nonzero:
+            # We can expose _more_ options for sum here
+            bound_args = inspect.signature(numpy.count_nonzero).bind(*args, **kwargs)
+            arguments = bound_args.arguments
 
-            # Drop vector view
-            array_cls = type(array)
-            array = array.view(numpy.ndarray)
+            if "where" in arguments:
+                raise ValueError("cannot invoke reducer with `where` argument")
+            if "initial" in arguments:
+                raise ValueError("cannot invoke reducer with `initial` argument")
+            if "out" in arguments:
+                raise ValueError("cannot invoke reducer with `out` argument")
 
-            if axis is None:
-                array = numpy.reshape(array, -1)
-                effective_axis = 1
-            else:
-                array = numpy.moveaxis(array, axis, -1)
-                effective_axis = axis
-
-            result = array.view(array_cls).sum().view(numpy.ndarray)
-
-            # Keep the reduced dimension
-            result = numpy.reshape(result, (*result.shape, 1))
-            # Move reduced dimension to correct location
-            if axis is not None:
-                result = numpy.moveaxis(result, -1, axis)
-
-            # To drop the dimension, remove the effective axis
-            if not arguments.get("keepdims"):
-                new_shape = list(result.shape)
-                del new_shape[effective_axis]
-                result = numpy.reshape(result, tuple(new_shape))
-
-            return result.view(array_cls)
+            return _perform_reduction(
+                arguments["a"],
+                arguments.get("axis", None),
+                type(arguments["a"]).count_nonzero,
+                arguments.get("keepdims", False),
+            )
         else:
             return NotImplemented
 
