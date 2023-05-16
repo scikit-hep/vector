@@ -14,7 +14,7 @@ import typing
 
 import numpy
 
-from vector._compute.planar import x, y, rho, phi
+from vector._compute.planar import phi, rho, x, y
 from vector._compute.spatial import eta, theta, z
 from vector._methods import (
     AzimuthalRhoPhi,
