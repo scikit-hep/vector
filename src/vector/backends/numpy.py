@@ -95,13 +95,13 @@ def _array_from_columns(columns: dict[str, ArrayLike]) -> ArrayLike:
         elif isinstance(columns[x], collections.abc.Sized):
             thisshape = (len(columns[x]),)
         else:
-            raise TypeError(f"column {repr(x)} has no length")
+            raise TypeError(f"column {x!r} has no length")
 
         dtype.append(thisdtype)
         if shape is None:
             shape = thisshape
         elif shape != thisshape:
-            raise ValueError(f"column {repr(x)} has a different shape than the others")
+            raise ValueError(f"column {x!r} has a different shape than the others")
 
     assert shape is not None
     array = numpy.empty(shape, dtype)
