@@ -17,6 +17,7 @@ arrays).
 from __future__ import annotations
 
 import collections.abc
+import inspect
 import typing
 
 import numpy
@@ -933,6 +934,48 @@ class VectorNumpy(Vector, GetItem):
             return type(self).isclose(*args, **kwargs)
         elif func is numpy.allclose:
             return type(self).allclose(*args, **kwargs)
+        elif func is numpy.sum:
+            # We can expose _more_ options for sum here
+            bound_args = inspect.signature(numpy.sum).bind(*args, **kwargs)
+            arguments = bound_args.arguments
+
+            if "where" in arguments:
+                raise ValueError("cannot invoke reducer with `where` argument")
+            if "initial" in arguments:
+                raise ValueError("cannot invoke reducer with `initial` argument")
+            if "out" in arguments:
+                raise ValueError("cannot invoke reducer with `out` argument")
+
+            array = arguments["a"]
+            axis = arguments.get("axis", None)
+
+            # Drop vector view
+            array_cls = type(array)
+            array = array.view(numpy.ndarray)
+
+            if axis is None:
+                array = numpy.reshape(array, -1)
+                effective_axis = 1
+            else:
+                array = numpy.moveaxis(array, axis, -1)
+                effective_axis = axis
+
+            # HACK: pretend this is a binary method to get the module
+            result = array.view(array_cls).sum().view(numpy.ndarray)
+
+            # Keep the reduced dimension
+            result = numpy.reshape(result, (*result.shape, 1))
+            # Move reduced dimension to correct location
+            if axis is not None:
+                result = numpy.moveaxis(result, -1, axis)
+
+            # To drop the dimension, remove the effective axis
+            if not arguments.get("keepdims"):
+                new_shape = list(result.shape)
+                del new_shape[effective_axis]
+                result = numpy.reshape(result, tuple(effective_axis))
+
+            return result.view(array_cls)
         else:
             return NotImplemented
 

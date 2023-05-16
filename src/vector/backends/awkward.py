@@ -1978,16 +1978,25 @@ def _numba_lower(
     return context.compile_internal(builder, impl, sig, args)
 
 
-ak.behavior["__numba_typer__", "Vector2D"] = _numba_typer_Vector2D
-ak.behavior["__numba_typer__", "Vector3D"] = _numba_typer_Vector3D
-ak.behavior["__numba_typer__", "Vector4D"] = _numba_typer_Vector4D
-ak.behavior["__numba_typer__", "Momentum2D"] = _numba_typer_Momentum2D
-ak.behavior["__numba_typer__", "Momentum3D"] = _numba_typer_Momentum3D
-ak.behavior["__numba_typer__", "Momentum4D"] = _numba_typer_Momentum4D
+behavior["__numba_typer__", "Vector2D"] = _numba_typer_Vector2D
+behavior["__numba_typer__", "Vector3D"] = _numba_typer_Vector3D
+behavior["__numba_typer__", "Vector4D"] = _numba_typer_Vector4D
+behavior["__numba_typer__", "Momentum2D"] = _numba_typer_Momentum2D
+behavior["__numba_typer__", "Momentum3D"] = _numba_typer_Momentum3D
+behavior["__numba_typer__", "Momentum4D"] = _numba_typer_Momentum4D
 
-ak.behavior["__numba_lower__", "Vector2D"] = _numba_lower
-ak.behavior["__numba_lower__", "Vector3D"] = _numba_lower
-ak.behavior["__numba_lower__", "Vector4D"] = _numba_lower
-ak.behavior["__numba_lower__", "Momentum2D"] = _numba_lower
-ak.behavior["__numba_lower__", "Momentum3D"] = _numba_lower
-ak.behavior["__numba_lower__", "Momentum4D"] = _numba_lower
+behavior["__numba_lower__", "Vector2D"] = _numba_lower
+behavior["__numba_lower__", "Vector3D"] = _numba_lower
+behavior["__numba_lower__", "Vector4D"] = _numba_lower
+behavior["__numba_lower__", "Momentum2D"] = _numba_lower
+behavior["__numba_lower__", "Momentum3D"] = _numba_lower
+behavior["__numba_lower__", "Momentum4D"] = _numba_lower
+
+
+def _reduce_sum(array, mask_identity):
+    return array.sum()
+
+
+behavior[ak.sum, "Vector2D"] = _reduce_sum
+behavior[ak.sum, "Vector3D"] = _reduce_sum
+behavior[ak.sum, "Vector4D"] = _reduce_sum
