@@ -14,7 +14,7 @@ import typing
 
 import numpy
 
-from vector._compute.planar import phi, rho, x, y
+from vector._compute.planar import sum
 from vector._compute.spatial import eta, theta, z
 from vector._methods import (
     AzimuthalRhoPhi,
@@ -31,23 +31,13 @@ from vector._methods import (
 )
 
 
-# planar
-def xy(lib, x_v, y_v):
-    return lib.sum(x_v, axis=-1), lib.sum(y_v, axis=-1)
-
-
 def xy_z(lib, x_v, y_v, z_v):
-    x_u, y_u = xy(lib, x_v, y_v)
+    x_u, y_u = sum.xy(lib, x_v, y_v)
     return x_u, y_u, lib.sum(z_v, axis=-1)
 
 
-def rhophi(lib, rho_v, phi_v):
-    x_u, y_u = xy(lib, x.rhophi(lib, rho_v, phi_v), y.rhophi(lib, rho_v, phi_v))
-    return rho.xy(lib, x_u, y_u), phi.xy(lib, x_u, y_u)
-
-
 def rhophi_z(lib, rho_v, phi_v, z_v):
-    rho_u, phi_u = rhophi(lib, rho_v, phi_v)
+    rho_u, phi_u = sum.rhophi(lib, rho_v, phi_v)
     return rho_u, phi_u, lib.sum(z_v, axis=-1)
 
 
