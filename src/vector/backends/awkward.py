@@ -1993,7 +1993,10 @@ behavior["__numba_lower__", "Momentum3D"] = _numba_lower
 behavior["__numba_lower__", "Momentum4D"] = _numba_lower
 
 
-def _reduce_sum(array, mask_identity):
+T = typing.TypeVar("T", base=VectorProtocol)
+
+
+def _reduce_sum(array: T, mask_identity: bool) -> T:
     return array.sum()
 
 
