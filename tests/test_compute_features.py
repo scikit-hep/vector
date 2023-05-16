@@ -266,7 +266,7 @@ def analyze_expression(node, context):
         assert node[0][2].kind == "COMPARE_OP"
         assert (
             node[0][2].attr in allowed_comparisons
-        ), f"add {repr(node[0][2].attr)} to allowed_comparisons"
+        ), f"add {node[0][2].attr!r} to allowed_comparisons"
 
     elif node.kind == "call":
         assert len(node) >= 2
@@ -292,13 +292,13 @@ def analyze_expression(node, context):
 def analyze_unary_operator(node, context):
     assert (
         node.kind in allowed_unary_operators
-    ), f"add {repr(node.kind)} to allowed_unary_operators"
+    ), f"add {node.kind!r} to allowed_unary_operators"
 
 
 def analyze_binary_operator(node, context):
     assert (
         node.kind in allowed_binary_operators
-    ), f"add {repr(node.kind)} to allowed_binary_operators"
+    ), f"add {node.kind!r} to allowed_binary_operators"
 
 
 def analyze_callable(node, context):
@@ -311,7 +311,7 @@ def analyze_callable(node, context):
         if module.attr == "lib":
             assert (
                 node[1].attr in allowed_lib_functions
-            ), f"add {repr(node[1].attr)} to allowed_lib_functions"
+            ), f"add {node[1].attr!r} to allowed_lib_functions"
 
         else:
             module_name = ".".join(
@@ -325,9 +325,7 @@ def analyze_callable(node, context):
 
     elif node.kind in {"LOAD_GLOBAL", "LOAD_DEREF"}:
         function = context.closure.get(node.attr)
-        assert (
-            function is not None
-        ), f"unrecognized function in scope: {repr(node.attr)}"
+        assert function is not None, f"unrecognized function in scope: {node.attr!r}"
         analyze_function(function)
 
     else:
