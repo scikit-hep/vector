@@ -103,9 +103,7 @@ def make_conversion(azimuthal1, longitudinal1, temporal1):
                 to_tau = tau.rhophi_eta_t
 
         def f(lib, coord11, coord12, coord13, coord14):
-            coord1, coord2, coord3 = spatial_sum(
-                lib, coord11, coord12, coord13
-            )
+            coord1, coord2, coord3 = spatial_sum(lib, coord11, coord12, coord13)
             t1 = to_t1(lib, coord11, coord12, coord13, coord14)
             return (
                 coord1,
