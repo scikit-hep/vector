@@ -960,7 +960,6 @@ class VectorNumpy(Vector, GetItem):
                 array = numpy.moveaxis(array, axis, -1)
                 effective_axis = axis
 
-            # HACK: pretend this is a binary method to get the module
             result = array.view(array_cls).sum().view(numpy.ndarray)
 
             # Keep the reduced dimension
