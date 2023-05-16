@@ -2000,3 +2000,6 @@ def _reduce_sum(array, mask_identity):
 behavior[ak.sum, "Vector2D"] = _reduce_sum
 behavior[ak.sum, "Vector3D"] = _reduce_sum
 behavior[ak.sum, "Vector4D"] = _reduce_sum
+behavior[ak.sum, "Momentum2D"] = _reduce_sum
+behavior[ak.sum, "Momentum3D"] = _reduce_sum
+behavior[ak.sum, "Momentum4D"] = _reduce_sum
