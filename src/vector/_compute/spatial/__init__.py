@@ -48,7 +48,6 @@ import vector._compute.spatial.rotateX
 import vector._compute.spatial.rotateY
 import vector._compute.spatial.scale
 import vector._compute.spatial.subtract
-import vector._compute.spatial.sum
 import vector._compute.spatial.theta
 import vector._compute.spatial.transform3D
 import vector._compute.spatial.unit

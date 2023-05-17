@@ -38,7 +38,6 @@ import vector._compute.planar.rho2
 import vector._compute.planar.rotateZ
 import vector._compute.planar.scale
 import vector._compute.planar.subtract
-import vector._compute.planar.sum
 import vector._compute.planar.transform2D
 import vector._compute.planar.unit
 import vector._compute.planar.x
