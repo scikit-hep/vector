@@ -729,12 +729,6 @@ class VectorNumpy(Vector, GetItem):
         """Like ``np.ndarray.allclose``, but for VectorNumpy."""
         return self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan).all()
 
-    def sum(self) -> VectorProtocol:
-        raise AssertionError
-
-    def count_nonzero(self) -> ScalarCollection:
-        raise AssertionError
-
     def __eq__(self, other: typing.Any) -> typing.Any:
         return numpy.equal(self, other)  # type: ignore[call-overload]
 
@@ -977,6 +971,7 @@ class VectorNumpy(Vector, GetItem):
         elif func is numpy.allclose:
             return type(self).allclose(*args, **kwargs)
         elif func is numpy.sum:
+            from vector._methods import _compute_module_of
             # We can expose _more_ options for sum here
             bound_args = inspect.signature(numpy.sum).bind(*args, **kwargs)
             arguments = bound_args.arguments
@@ -988,10 +983,11 @@ class VectorNumpy(Vector, GetItem):
             if "out" in arguments:
                 raise ValueError("cannot invoke reducer with `out` argument")
 
+            module = _compute_module_of(self, self)
             return _perform_reduction(
                 arguments["a"],
                 arguments.get("axis", None),
-                type(arguments["a"]).sum,
+                module.sum.dispatch,
                 arguments.get("keepdims", False),
             )
         elif func is numpy.count_nonzero:
@@ -1009,7 +1005,7 @@ class VectorNumpy(Vector, GetItem):
             return _perform_reduction(
                 arguments["a"],
                 arguments.get("axis", None),
-                type(arguments["a"]).count_nonzero,
+                lambda x: self.lib.count_nonzero(abs(x), axis=-1),
                 arguments.get("keepdims", False),
             )
         else:
@@ -1188,14 +1184,6 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
 
     def __setitem__(self, where: typing.Any, what: typing.Any) -> None:
         return _setitem(self, where, what, False)
-
-    def sum(self) -> VectorProtocol:
-        from vector._compute.planar import sum
-
-        return sum.dispatch(self)
-
-    def count_nonzero(self) -> ScalarCollection:
-        return self.lib.count_nonzero(self.rho2, axis=-1)
 
 
 class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore[misc]
@@ -1451,14 +1439,6 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
 
     def __setitem__(self, where: typing.Any, what: typing.Any) -> None:
         return _setitem(self, where, what, False)
-
-    def sum(self) -> VectorProtocol:
-        from vector._compute.spatial import sum
-
-        return sum.dispatch(self)
-
-    def count_nonzero(self) -> ScalarCollection:
-        return self.lib.count_nonzero(self.mag2, axis=-1)
 
 
 class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
@@ -1777,14 +1757,6 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
 
     def __setitem__(self, where: typing.Any, what: typing.Any) -> None:
         return _setitem(self, where, what, False)
-
-    def sum(self) -> VectorProtocol:
-        from vector._compute.lorentz import sum
-
-        return sum.dispatch(self)
-
-    def count_nonzero(self) -> ScalarCollection:
-        return self.lib.count_nonzero(self.tau2, axis=-1)
 
 
 class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore[misc]

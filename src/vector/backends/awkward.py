@@ -1240,14 +1240,6 @@ class VectorArray2D(VectorAwkward2D, ak.Array):  # type: ignore[misc]
         """Like ``np.ndarray.allclose``, but for VectorArray2D."""
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
-    def sum(self) -> VectorProtocol:
-        from vector._compute.planar import sum
-
-        return sum.dispatch(self)
-
-    def count_nonzero(self) -> ScalarCollection:
-        return self.lib.count_nonzero(self.rho2, axis=-1)
-
 
 behavior["*", "Vector2D"] = VectorArray2D
 
@@ -1281,14 +1273,6 @@ class VectorArray3D(VectorAwkward3D, ak.Array):  # type: ignore[misc]
     ) -> BoolCollection:
         """Like ``np.ndarray.allclose``, but for VectorArray3D."""
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
-
-    def sum(self) -> VectorProtocol:
-        from vector._compute.spatial import sum
-
-        return sum.dispatch(self)
-
-    def count_nonzero(self) -> ScalarCollection:
-        return self.lib.count_nonzero(self.mag2, axis=-1)
 
 
 behavior["*", "Vector3D"] = VectorArray3D
@@ -1324,14 +1308,6 @@ class VectorArray4D(VectorAwkward4D, ak.Array):  # type: ignore[misc]
         """Like ``np.ndarray.allclose``, but for VectorArray4D."""
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
-    def sum(self) -> VectorProtocol:
-        from vector._compute.lorentz import sum
-
-        return sum.dispatch(self)
-
-    def count_nonzero(self) -> ScalarCollection:
-        return self.lib.count_nonzero(self.tau2, axis=-1)
-
 
 behavior["*", "Vector4D"] = VectorArray4D
 
@@ -1366,14 +1342,6 @@ class MomentumArray2D(MomentumAwkward2D, ak.Array):  # type: ignore[misc]
         """Like ``np.ndarray.allclose``, but for MomentumArray4D."""
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
-    def sum(self) -> VectorProtocol:
-        from vector._compute.planar import sum
-
-        return sum.dispatch(self)
-
-    def count_nonzero(self) -> ScalarCollection:
-        return self.lib.count_nonzero(self.rho2, axis=-1)
-
 
 behavior["*", "Momentum2D"] = MomentumArray2D
 
@@ -1407,14 +1375,6 @@ class MomentumArray3D(MomentumAwkward3D, ak.Array):  # type: ignore[misc]
     ) -> BoolCollection:
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
-    def sum(self) -> VectorProtocol:
-        from vector._compute.spatial import sum
-
-        return sum.dispatch(self)
-
-    def count_nonzero(self) -> ScalarCollection:
-        return self.lib.count_nonzero(self.mag2, axis=-1)
-
 
 behavior["*", "Momentum3D"] = MomentumArray3D
 
@@ -1447,14 +1407,6 @@ class MomentumArray4D(MomentumAwkward4D, ak.Array):  # type: ignore[misc]
         equal_nan: BoolCollection = False,
     ) -> BoolCollection:
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
-
-    def sum(self) -> VectorProtocol:
-        from vector._compute.lorentz import sum
-
-        return sum.dispatch(self)
-
-    def count_nonzero(self) -> ScalarCollection:
-        return self.lib.count_nonzero(self.tau2, axis=-1)
 
 
 behavior["*", "Momentum4D"] = MomentumArray4D
@@ -2050,7 +2002,10 @@ def _reduce_sum(
     | MomentumArray4D,
     mask_identity: bool,
 ) -> VectorProtocol:
-    return array.sum()
+    from vector._methods import _compute_module_of
+
+    module = _compute_module_of(array, array)
+    return module.sum.dispatch(array)
 
 
 def _reduce_count(
@@ -2075,7 +2030,7 @@ def _reduce_count_nonzero(
     | MomentumArray4D,
     mask_identity: bool,
 ) -> VectorProtocol:
-    return array.count_nonzero()
+    return ak.count_nonzero(abs(array), axis=-1)
 
 
 for reducer, impl in (
