@@ -66,32 +66,32 @@ def _perform_reduction(
 ) -> V:
     # Drop vector view
     array_cls = type(array)
-    array = array.view(numpy.ndarray)
+    raw_array = array.view(numpy.ndarray)
 
     if axis is None:
-        array = numpy.reshape(array, -1)
+        raw_array = numpy.reshape(raw_array, -1)
         effective_axis = -1
     else:
-        array = numpy.moveaxis(array, axis, -1)
+        raw_array = numpy.moveaxis(raw_array, axis, -1)
         effective_axis = axis
 
-    result = reducer(array.view(array_cls))
+    result = reducer(raw_array.view(array_cls))
     result_type = type(result)
-    result = result.view(numpy.ndarray)
+    raw_result: ScalarCollection = result.view(numpy.ndarray)
 
     # Keep the reduced dimension
-    result = numpy.reshape(result, (*result.shape, 1))
+    raw_result = numpy.reshape(raw_result, (*raw_result.shape, 1))
     # Move reduced dimension to correct location
     if axis is not None:
-        result = numpy.moveaxis(result, -1, axis)
+        raw_result = numpy.moveaxis(raw_result, -1, axis)
 
     # To drop the dimension, remove the effective axis
     if not keepdims:
-        new_shape = list(result.shape)
+        new_shape = list(raw_result.shape)
         del new_shape[effective_axis]
-        result = numpy.reshape(result, tuple(new_shape))
+        raw_result = numpy.reshape(raw_result, tuple(new_shape))
 
-    return result.view(result_type)
+    return raw_result.view(result_type)
 
 
 def _array_from_columns(columns: dict[str, ArrayLike]) -> ArrayLike:

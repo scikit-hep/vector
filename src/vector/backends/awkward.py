@@ -1993,19 +1993,40 @@ behavior["__numba_lower__", "Momentum3D"] = _numba_lower
 behavior["__numba_lower__", "Momentum4D"] = _numba_lower
 
 
-T = typing.TypeVar("T", bound=VectorProtocol)
-
-
-def _reduce_sum(array: T, mask_identity: bool) -> T:
+def _reduce_sum(
+    array: VectorArray2D
+    | VectorArray3D
+    | VectorArray4D
+    | MomentumArray2D
+    | MomentumArray3D
+    | MomentumArray4D,
+    mask_identity: bool,
+) -> VectorProtocol:
     return array.sum()
 
 
-def _reduce_count(array: T, mask_identity: bool) -> T:
+def _reduce_count(
+    array: VectorArray2D
+    | VectorArray3D
+    | VectorArray4D
+    | MomentumArray2D
+    | MomentumArray3D
+    | MomentumArray4D,
+    mask_identity: bool,
+) -> VectorProtocol:
     first_field = array[array.fields[0]]
     return ak.count(first_field, axis=1)
 
 
-def _reduce_count_nonzero(array: T, mask_identity: bool) -> T:
+def _reduce_count_nonzero(
+    array: VectorArray2D
+    | VectorArray3D
+    | VectorArray4D
+    | MomentumArray2D
+    | MomentumArray3D
+    | MomentumArray4D,
+    mask_identity: bool,
+) -> VectorProtocol:
     return array.count_nonzero()
 
 
