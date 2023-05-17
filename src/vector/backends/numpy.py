@@ -972,6 +972,7 @@ class VectorNumpy(Vector, GetItem):
             return type(self).allclose(*args, **kwargs)
         elif func is numpy.sum:
             from vector._methods import _compute_module_of
+
             # We can expose _more_ options for sum here
             bound_args = inspect.signature(numpy.sum).bind(*args, **kwargs)
             arguments = bound_args.arguments
