@@ -53,7 +53,7 @@ from vector._methods import (
     _repr_momentum_to_generic,
     _ttype,
 )
-from vector._typeutils import FloatArray, ScalarCollection
+from vector._typeutils import BoolCollection, FloatArray, ScalarCollection
 
 ArrayLike = ScalarCollection
 
@@ -725,9 +725,15 @@ class VectorNumpy(Vector, GetItem):
         rtol: float | FloatArray = 1e-05,
         atol: float | FloatArray = 1e-08,
         equal_nan: bool | FloatArray = False,
-    ) -> FloatArray:
+    ) -> BoolCollection:
         """Like ``np.ndarray.allclose``, but for VectorNumpy."""
         return self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan).all()
+
+    def sum(self) -> VectorProtocol:
+        raise AssertionError
+
+    def count_nonzero(self) -> ScalarCollection:
+        raise AssertionError
 
     def __eq__(self, other: typing.Any) -> typing.Any:
         return numpy.equal(self, other)  # type: ignore[call-overload]
@@ -1183,6 +1189,14 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
     def __setitem__(self, where: typing.Any, what: typing.Any) -> None:
         return _setitem(self, where, what, False)
 
+    def sum(self) -> VectorProtocol:
+        from vector._compute.planar import sum
+
+        return sum.dispatch(self)
+
+    def count_nonzero(self) -> ScalarCollection:
+        return self.lib.count_nonzero(self.rho2, axis=-1)
+
 
 class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore[misc]
     """
@@ -1437,6 +1451,14 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
 
     def __setitem__(self, where: typing.Any, what: typing.Any) -> None:
         return _setitem(self, where, what, False)
+
+    def sum(self) -> VectorProtocol:
+        from vector._compute.spatial import sum
+
+        return sum.dispatch(self)
+
+    def count_nonzero(self) -> ScalarCollection:
+        return self.lib.count_nonzero(self.mag2, axis=-1)
 
 
 class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
@@ -1755,6 +1777,14 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
 
     def __setitem__(self, where: typing.Any, what: typing.Any) -> None:
         return _setitem(self, where, what, False)
+
+    def sum(self) -> VectorProtocol:
+        from vector._compute.lorentz import sum
+
+        return sum.dispatch(self)
+
+    def count_nonzero(self) -> ScalarCollection:
+        return self.lib.count_nonzero(self.tau2, axis=-1)
 
 
 class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore[misc]

@@ -423,12 +423,6 @@ class VectorProtocol:
         """
         raise AssertionError
 
-    def sum(self) -> VectorProtocol:
-        raise AssertionError
-
-    def count_nonzero(self) -> ScalarCollection:
-        raise AssertionError
-
 
 class VectorProtocolPlanar(VectorProtocol):
     @property
@@ -3291,14 +3285,6 @@ class Planar(VectorProtocolPlanar):
             )
         return isclose.dispatch(rtol, atol, equal_nan, self, other)
 
-    def sum(self) -> VectorProtocol:
-        from vector._compute.planar import sum
-
-        return sum.dispatch(self)
-
-    def count_nonzero(self) -> ScalarCollection:
-        return self.lib.count_nonzero(self.rho2, axis=-1)
-
 
 class Spatial(Planar, VectorProtocolSpatial):
     @property
@@ -3530,14 +3516,6 @@ class Spatial(Planar, VectorProtocolSpatial):
                 f"{repr(self)} and {repr(other)} do not have the same dimension"
             )
         return isclose.dispatch(rtol, atol, equal_nan, self, other)
-
-    def sum(self) -> VectorProtocol:
-        from vector._compute.spatial import sum
-
-        return sum.dispatch(self)
-
-    def count_nonzero(self) -> ScalarCollection:
-        return self.lib.count_nonzero(self.mag2, axis=-1)
 
 
 class Lorentz(Spatial, VectorProtocolLorentz):
@@ -3799,14 +3777,6 @@ class Lorentz(Spatial, VectorProtocolLorentz):
                 f"{repr(self)} and {repr(other)} do not have the same dimension"
             )
         return isclose.dispatch(rtol, atol, equal_nan, self, other)
-
-    def sum(self) -> VectorProtocol:
-        from vector._compute.lorentz import sum
-
-        return sum.dispatch(self)
-
-    def count_nonzero(self) -> ScalarCollection:
-        return self.lib.count_nonzero(self.tau2, axis=-1)
 
 
 class Momentum:
