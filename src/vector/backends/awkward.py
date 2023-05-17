@@ -2002,7 +2002,7 @@ def _reduce_sum(
     | MomentumArray4D,
     mask_identity: bool,
 ) -> VectorProtocol:
-    from vector._compute import lorentz, spatial, planar
+    from vector._compute import lorentz, planar, spatial
 
     fields = {}
     if isinstance(array, Lorentz):
@@ -2043,7 +2043,7 @@ def _reduce_count_nonzero(
     | MomentumArray4D,
     mask_identity: bool,
 ) -> ScalarCollection:
-    from vector._compute import lorentz, spatial, planar
+    from vector._compute import lorentz, planar, spatial
 
     mag_2 = planar.rho2.dispatch(array)
     if isinstance(array, Spatial):
