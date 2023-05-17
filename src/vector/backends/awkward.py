@@ -2051,7 +2051,7 @@ def _reduce_count_nonzero(
     if isinstance(array, Lorentz):
         mag_2 = mag_2 + lorentz.t2.dispatch(array)
 
-    return ak.count_nonzero(mag_2, axis=-1)
+    return ak.count_nonzero(mag_2, axis=1)
 
 
 for reducer, impl in (
