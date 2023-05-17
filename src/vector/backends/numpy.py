@@ -17,7 +17,6 @@ arrays).
 from __future__ import annotations
 
 import collections.abc
-import functools
 import typing
 
 import numpy
@@ -82,7 +81,7 @@ def _reduce_sum(
         raise ValueError("cannot invoke reducer with `dtype` argument")
 
     def sum_impl(vec: U) -> U:
-        from vector._compute import lorentz, spatial, planar
+        from vector._compute import lorentz, planar, spatial
 
         fields = {}
         if isinstance(vec, Lorentz):
@@ -111,7 +110,7 @@ def _reduce_count_nonzero(
     a: VectorProtocol, axis: int | None = None, *, keepdims: bool = False
 ) -> ScalarCollection:
     def count_nonzero_impl(vec: T) -> ScalarCollection:
-        from vector._compute import lorentz, spatial, planar
+        from vector._compute import lorentz, planar, spatial
 
         mag_2 = planar.rho2.dispatch(vec)
         if isinstance(vec, Spatial):
