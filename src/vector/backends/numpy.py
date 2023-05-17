@@ -114,7 +114,6 @@ def _reduce_count_nonzero(
         from vector._compute import lorentz, spatial, planar
 
         mag_2 = planar.rho2.dispatch(vec)
-
         if isinstance(vec, Spatial):
             mag_2 += spatial.z.dispatch(vec) ** 2
         if isinstance(vec, Lorentz):

@@ -2002,10 +2002,23 @@ def _reduce_sum(
     | MomentumArray4D,
     mask_identity: bool,
 ) -> VectorProtocol:
-    from vector._methods import _compute_module_of
+    from vector._compute import lorentz, spatial, planar
 
-    module = _compute_module_of(array, array)
-    return module.sum.dispatch(array)
+    fields = {}
+    if isinstance(array, Lorentz):
+        fields["t"] = numpy.sum(lorentz.t.dispatch(array), axis=1)
+    if isinstance(array, Spatial):
+        fields["z"] = numpy.sum(spatial.z.dispatch(array), axis=1)
+
+    assert isinstance(array, Planar)
+    fields["x"] = numpy.sum(planar.x.dispatch(array), axis=1)
+    fields["y"] = numpy.sum(planar.y.dispatch(array), axis=1)
+
+    return ak.zip(
+        fields,
+        behavior=array.behavior,
+        with_name=array.layout.content.parameter("__record__"),
+    )
 
 
 def _reduce_count(
@@ -2029,8 +2042,16 @@ def _reduce_count_nonzero(
     | MomentumArray3D
     | MomentumArray4D,
     mask_identity: bool,
-) -> VectorProtocol:
-    return ak.count_nonzero(abs(array), axis=-1)
+) -> ScalarCollection:
+    from vector._compute import lorentz, spatial, planar
+
+    mag_2 = planar.rho2.dispatch(array)
+    if isinstance(array, Spatial):
+        mag_2 = mag_2 + spatial.z.dispatch(array)
+    if isinstance(array, Lorentz):
+        mag_2 = mag_2 + lorentz.t2.dispatch(array)
+
+    return ak.count_nonzero(mag_2, axis=-1)
 
 
 for reducer, impl in (
