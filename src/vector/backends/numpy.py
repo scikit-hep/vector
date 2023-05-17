@@ -17,7 +17,6 @@ arrays).
 from __future__ import annotations
 
 import collections.abc
-import inspect
 import typing
 
 import numpy
@@ -59,6 +58,41 @@ ArrayLike = ScalarCollection
 
 T = typing.TypeVar("T", "VectorNumpy2D", "VectorNumpy3D", "VectorNumpy4D")
 V = typing.TypeVar("V", bound=ArrayLike)
+
+
+def _reduce_sum(
+    a, axis=None, dtype=None, out=None, keepdims=None, initial=None, where=None
+) -> VectorProtocol:
+    if where is not None:
+        raise ValueError("cannot invoke reducer with `where` argument")
+    if initial is not None:
+        raise ValueError("cannot invoke reducer with `initial` argument")
+    if out is not None:
+        raise ValueError("cannot invoke reducer with `out` argument")
+    if dtype is not None:
+        raise ValueError("cannot invoke reducer with `dtype` argument")
+
+    from vector._methods import _compute_module_of
+
+    module = _compute_module_of(a, a)
+    return _perform_reduction(
+        a,
+        axis,
+        module.sum.dispatch,
+        keepdims or False,
+    )
+
+
+def _reduce_count_nonzero(a, axis=None, *, keepdims=False) -> ScalarCollection:
+    from vector._methods import _compute_module_of
+
+    module = _compute_module_of(a, a)
+    return _perform_reduction(
+        a,
+        axis,
+        module.sum.dispatch,
+        keepdims,
+    )
 
 
 def _perform_reduction(
@@ -971,43 +1005,9 @@ class VectorNumpy(Vector, GetItem):
         elif func is numpy.allclose:
             return type(self).allclose(*args, **kwargs)
         elif func is numpy.sum:
-            from vector._methods import _compute_module_of
-            # We can expose _more_ options for sum here
-            bound_args = inspect.signature(numpy.sum).bind(*args, **kwargs)
-            arguments = bound_args.arguments
-
-            if "where" in arguments:
-                raise ValueError("cannot invoke reducer with `where` argument")
-            if "initial" in arguments:
-                raise ValueError("cannot invoke reducer with `initial` argument")
-            if "out" in arguments:
-                raise ValueError("cannot invoke reducer with `out` argument")
-
-            module = _compute_module_of(self, self)
-            return _perform_reduction(
-                arguments["a"],
-                arguments.get("axis", None),
-                module.sum.dispatch,
-                arguments.get("keepdims", False),
-            )
+            return _reduce_sum(*args, **kwargs)
         elif func is numpy.count_nonzero:
-            # We can expose _more_ options for sum here
-            bound_args = inspect.signature(numpy.count_nonzero).bind(*args, **kwargs)
-            arguments = bound_args.arguments
-
-            if "where" in arguments:
-                raise ValueError("cannot invoke reducer with `where` argument")
-            if "initial" in arguments:
-                raise ValueError("cannot invoke reducer with `initial` argument")
-            if "out" in arguments:
-                raise ValueError("cannot invoke reducer with `out` argument")
-
-            return _perform_reduction(
-                arguments["a"],
-                arguments.get("axis", None),
-                lambda x: self.lib.count_nonzero(abs(x), axis=-1),
-                arguments.get("keepdims", False),
-            )
+            return _reduce_count_nonzero(*args, **kwargs)
         else:
             return NotImplemented
 
