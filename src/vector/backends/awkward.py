@@ -2043,14 +2043,13 @@ def _reduce_count_nonzero(
     | MomentumArray4D,
     mask_identity: bool,
 ) -> ScalarCollection:
-
-    mag_2 = array.rho2
+    is_nonzero = array.rho2 != 0
     if isinstance(array, Spatial):
-        mag_2 = mag_2 + array.z**2
+        is_nonzero = numpy.logical_or(is_nonzero, array.z != 0)
     if isinstance(array, Lorentz):
-        mag_2 = mag_2 + array.t2
+        is_nonzero = numpy.logical_or(is_nonzero, array.t2 != 0)
 
-    return ak.count_nonzero(mag_2, axis=1)
+    return ak.count_nonzero(is_nonzero, axis=1)
 
 
 for reducer, impl in (

@@ -108,13 +108,13 @@ def _reduce_count_nonzero(
     a: T, axis: int | None = None, *, keepdims: bool = False
 ) -> ScalarCollection:
     def count_nonzero_impl(vec: T) -> ScalarCollection:
-        mag_2 = vec.rho2
+        is_nonzero = vec.rho2 != 0
         if isinstance(vec, Spatial):
-            mag_2 += vec.z**2
+            is_nonzero = numpy.logical_or(is_nonzero, vec.z != 0)
         if isinstance(vec, Lorentz):
-            mag_2 += vec.t2
+            is_nonzero = numpy.logical_or(is_nonzero, vec.t2 != 0)
 
-        return numpy.count_nonzero(mag_2, axis=-1)
+        return numpy.count_nonzero(is_nonzero, axis=1)
 
     return _perform_reduction(
         a,
