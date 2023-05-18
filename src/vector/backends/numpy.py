@@ -79,82 +79,37 @@ def _reduce_sum(
     if dtype is not None:
         raise ValueError("cannot invoke reducer with `dtype` argument")
 
-    def sum_impl(vec: T) -> T:
-        fields = {}
-        if isinstance(vec, Lorentz):
-            fields["E"] = numpy.sum(vec.t, axis=1)
-        if isinstance(vec, Spatial):
-            fields["pz"] = numpy.sum(vec.z, axis=1)
+    fields = {}
+    if isinstance(a, Lorentz):
+        fields["E"] = numpy.sum(a.t, axis=axis, keepdims=keepdims)
+    if isinstance(a, Spatial):
+        fields["pz"] = numpy.sum(a.z, axis=axis, keepdims=keepdims)
 
-        assert isinstance(vec, Planar)
-        fields["px"] = numpy.sum(vec.x, axis=1)
-        fields["py"] = numpy.sum(vec.y, axis=1)
+    assert isinstance(a, Planar)
+    fields["px"] = numpy.sum(a.x, axis=axis, keepdims=keepdims)
+    fields["py"] = numpy.sum(a.y, axis=axis, keepdims=keepdims)
 
-        # Convert between representations
-        if isinstance(vec, Momentum):
-            fields = {_repr_momentum_to_generic[n]: v for n, v in fields.items()}
+    # Convert between representations
+    if isinstance(a, Momentum):
+        fields = {_repr_momentum_to_generic[n]: v for n, v in fields.items()}
 
-        return array(fields)
-
-    return _perform_reduction(
-        a,
-        axis,
-        sum_impl,
-        keepdims or False,
-    )
+    return array(fields)
 
 
 def _reduce_count_nonzero(
     a: T, axis: int | None = None, *, keepdims: bool = False
 ) -> ScalarCollection:
-    def count_nonzero_impl(vec: T) -> ScalarCollection:
-        is_nonzero = vec.rho2 != 0
-        if isinstance(vec, Spatial):
-            is_nonzero = numpy.logical_or(is_nonzero, vec.z != 0)
-        if isinstance(vec, Lorentz):
-            is_nonzero = numpy.logical_or(is_nonzero, vec.t2 != 0)
+    is_nonzero = a.rho2 != 0
+    if isinstance(a, Spatial):
+        is_nonzero = numpy.logical_or(
+            is_nonzero, a.z != 0
+        )
+    if isinstance(a, Lorentz):
+        is_nonzero = numpy.logical_or(
+            is_nonzero, a.t2 != 0
+        )
 
-        return numpy.count_nonzero(is_nonzero, axis=1)
-
-    return _perform_reduction(
-        a,
-        axis,
-        count_nonzero_impl,
-        keepdims,
-    )
-
-
-def _perform_reduction(
-    array: T, axis: int | None, reducer: typing.Callable[[T], V], keepdims: bool
-) -> V:
-    # Drop vector view
-    array_cls = type(array)
-    raw_array = array.view(numpy.ndarray)
-
-    if axis is None:
-        raw_array = numpy.reshape(raw_array, -1)
-        effective_axis = -1
-    else:
-        raw_array = numpy.moveaxis(raw_array, axis, -1)
-        effective_axis = axis
-
-    result = reducer(raw_array.view(array_cls))
-    result_type = type(result)
-    raw_result: ScalarCollection = result.view(numpy.ndarray)
-
-    # Keep the reduced dimension
-    raw_result = numpy.reshape(raw_result, (*raw_result.shape, 1))
-    # Move reduced dimension to correct location
-    if axis is not None:
-        raw_result = numpy.moveaxis(raw_result, -1, axis)
-
-    # To drop the dimension, remove the effective axis
-    if not keepdims:
-        new_shape = list(raw_result.shape)
-        del new_shape[effective_axis]
-        raw_result = numpy.reshape(raw_result, tuple(new_shape))
-
-    return raw_result.view(result_type)
+    return numpy.count_nonzero(is_nonzero, axis=axis, keepdims=keepdims)
 
 
 def _array_from_columns(columns: dict[str, ArrayLike]) -> ArrayLike:
