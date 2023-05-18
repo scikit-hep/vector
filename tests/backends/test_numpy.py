@@ -276,3 +276,20 @@ def test_count_nonzero():
     assert numpy.count_nonzero(v, axis=1, keepdims=True).tolist() == [[2], [3]]
     assert numpy.count_nonzero(v, axis=0).tolist() == [2, 2, 1]
     assert numpy.count_nonzero(v, axis=0, keepdims=True).tolist() == [[2, 2, 1]]
+
+    v2 = vector.VectorNumpy4D(
+        [
+            [(1, 2, 3, 1), (4, 5, 6, 2), (0, 0, 0, 2)],
+            [(1, 2, 3, 0), (4, 5, 6, 1), (0, 0, 0, 0)],
+        ],
+        dtype=[
+            ("x", numpy.int64),
+            ("y", numpy.int64),
+            ("z", numpy.int64),
+            ("t", numpy.int64),
+        ],
+    )
+    assert numpy.count_nonzero(v2, axis=1).tolist() == [3, 2]
+    assert numpy.count_nonzero(v2, axis=1, keepdims=True).tolist() == [[3], [2]]
+    assert numpy.count_nonzero(v2, axis=0).tolist() == [2, 2, 1]
+    assert numpy.count_nonzero(v2, axis=0, keepdims=True).tolist() == [[2, 2, 1]]
