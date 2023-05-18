@@ -2043,7 +2043,6 @@ def _reduce_count_nonzero(
     | MomentumArray4D,
     mask_identity: bool,
 ) -> ScalarCollection:
-    from vector._compute import lorentz, planar, spatial
 
     mag_2 = array.rho2
     if isinstance(array, Spatial):
