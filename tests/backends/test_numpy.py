@@ -240,3 +240,39 @@ def test_pickle_momentum_numpy_4d():
     assert numpy.allclose(array_new.phi, array.phi)
     assert numpy.allclose(array_new.theta, array.theta)
     assert numpy.allclose(array_new.tau, array.tau)
+
+
+def test_sum():
+    v = vector.VectorNumpy3D(
+        [[(1, 2, 3), (4, 5, 6), (0, 0, 0)], [(1, 2, 3), (4, 5, 6), (1, 1, 1)]],
+        dtype=[
+            ("x", numpy.int64),
+            ("y", numpy.int64),
+            ("z", numpy.int64),
+        ],
+    )
+    assert numpy.sum(v, axis=0, keepdims=True).tolist() == [
+        [(2, 4, 6), (8, 10, 12), (1, 1, 1)]
+    ]
+    assert numpy.sum(v, axis=0, keepdims=False).tolist() == [
+        (2, 4, 6),
+        (8, 10, 12),
+        (1, 1, 1),
+    ]
+    assert numpy.sum(v, axis=1, keepdims=True).tolist() == [[(5, 7, 9)], [(6, 8, 10)]]
+    assert numpy.sum(v, axis=1, keepdims=False).tolist() == [(5, 7, 9), (6, 8, 10)]
+
+
+def test_count_nonzero():
+    v = vector.VectorNumpy3D(
+        [[(1, 2, 3), (4, 5, 6), (0, 0, 0)], [(1, 2, 3), (4, 5, 6), (1, 1, 1)]],
+        dtype=[
+            ("x", numpy.int64),
+            ("y", numpy.int64),
+            ("z", numpy.int64),
+        ],
+    )
+    assert numpy.count_nonzero(v, axis=1).tolist() == [2, 3]
+    assert numpy.count_nonzero(v, axis=1, keepdims=True).tolist() == [[2], [3]]
+    assert numpy.count_nonzero(v, axis=0).tolist() == [2, 2, 1]
+    assert numpy.count_nonzero(v, axis=0, keepdims=True).tolist() == [[2, 2, 1]]

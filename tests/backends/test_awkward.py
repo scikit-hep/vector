@@ -257,3 +257,89 @@ def test_zip():
     assert v.tolist() == [[], [{"x": 1, "y": 1}]]
     assert v.x.tolist() == [[], [1]]
     assert v.y.tolist() == [[], [1]]
+
+
+def test_sum():
+    v = vector.Array(
+        [
+            [
+                {"x": 1, "y": 2, "z": 3},
+                {"x": 4, "y": 5, "z": 6},
+            ],
+            [
+                {"x": 1, "y": 2, "z": 3},
+                {"x": 4, "y": 5, "z": 6},
+                {"x": 1, "y": 1, "z": 1},
+            ],
+        ]
+    )
+    assert ak.sum(v, axis=0, keepdims=True).to_list() == [
+        [{"x": 2, "y": 4, "z": 6}, {"x": 8, "y": 10, "z": 12}, {"x": 1, "y": 1, "z": 1}]
+    ]
+    assert ak.sum(v, axis=0, keepdims=False).to_list() == [
+        {"x": 2, "y": 4, "z": 6},
+        {"x": 8, "y": 10, "z": 12},
+        {"x": 1, "y": 1, "z": 1},
+    ]
+    assert ak.sum(v, axis=1, keepdims=True).to_list() == [
+        [{"x": 5, "y": 7, "z": 9}],
+        [{"x": 6, "y": 8, "z": 10}],
+    ]
+    assert ak.sum(v, axis=1, keepdims=False).to_list() == [
+        {"x": 5, "y": 7, "z": 9},
+        {"x": 6, "y": 8, "z": 10},
+    ]
+    assert ak.sum(v.mask[[False, True]], axis=1).tolist() == [
+        None,
+        {"x": 6, "y": 8, "z": 10},
+    ]
+
+
+def test_count_nonzero():
+    v = vector.Array(
+        [
+            [
+                {"x": 1, "y": 2, "z": 3},
+                {"x": 4, "y": 5, "z": 6},
+                {"x": 0, "y": 0, "z": 0},
+            ],
+            [
+                {"x": 1, "y": 2, "z": 3},
+                {"x": 4, "y": 5, "z": 6},
+                {"x": 1, "y": 1, "z": 1},
+            ],
+        ]
+    )
+    assert ak.count_nonzero(v, axis=1).to_list() == [2, 3]
+    assert ak.count_nonzero(v, axis=1, keepdims=True).to_list() == [[2], [3]]
+    assert ak.count_nonzero(v, axis=0).to_list() == [2, 2, 1]
+    assert ak.count_nonzero(v, axis=0, keepdims=True).to_list() == [[2, 2, 1]]
+    assert ak.count_nonzero(v.mask[[False, True]], axis=1).tolist() == [
+        None,
+        3,
+    ]
+
+
+def test_count():
+    v = vector.Array(
+        [
+            [
+                {"x": 1, "y": 2, "z": 3},
+                {"x": 4, "y": 5, "z": 6},
+                {"x": 0, "y": 0, "z": 0},
+            ],
+            [
+                {"x": 1, "y": 2, "z": 3},
+                {"x": 4, "y": 5, "z": 6},
+                {"x": 1, "y": 1, "z": 1},
+            ],
+        ]
+    )
+    assert ak.count(v, axis=1).to_list() == [3, 3]
+    assert ak.count(v, axis=1, keepdims=True).to_list() == [[3], [3]]
+    assert ak.count(v, axis=0).to_list() == [2, 2, 2]
+    assert ak.count(v, axis=0, keepdims=True).to_list() == [[2, 2, 2]]
+    assert ak.count(v.mask[[False, True]], axis=1).tolist() == [
+        None,
+        3,
+    ]
