@@ -110,7 +110,7 @@ def _reduce_count_nonzero(
     def count_nonzero_impl(vec: T) -> ScalarCollection:
         mag_2 = vec.rho2
         if isinstance(vec, Spatial):
-            mag_2 += vec.z ** 2
+            mag_2 += vec.z**2
         if isinstance(vec, Lorentz):
             mag_2 += vec.t2
 
