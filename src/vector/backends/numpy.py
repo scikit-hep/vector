@@ -57,20 +57,19 @@ from vector._typeutils import BoolCollection, FloatArray, ScalarCollection
 
 ArrayLike = ScalarCollection
 
-T = typing.TypeVar("T", "VectorNumpy2D", "VectorNumpy3D", "VectorNumpy4D")
+T = typing.TypeVar("T", bound="VectorNumpy")
 V = typing.TypeVar("V")
-U = typing.TypeVar("U", bound="VectorNumpy")
 
 
 def _reduce_sum(
-    a: VectorProtocol,
+    a: T,
     axis: int | None = None,
     dtype: typing.Any = None,
     out: typing.Any = None,
     keepdims: bool | None = None,
     initial: typing.Any = None,
     where: typing.Any = None,
-) -> VectorProtocol:
+) -> T:
     if where is not None:
         raise ValueError("cannot invoke reducer with `where` argument")
     if initial is not None:
@@ -80,19 +79,18 @@ def _reduce_sum(
     if dtype is not None:
         raise ValueError("cannot invoke reducer with `dtype` argument")
 
-    def sum_impl(vec: U) -> U:
-        from vector._compute import lorentz, planar, spatial
-
+    def sum_impl(vec: T) -> T:
         fields = {}
         if isinstance(vec, Lorentz):
-            fields["E"] = numpy.sum(lorentz.t.dispatch(vec), axis=1)
+            fields["E"] = numpy.sum(vec.t, axis=1)
         if isinstance(vec, Spatial):
-            fields["pz"] = numpy.sum(spatial.z.dispatch(vec), axis=1)
+            fields["pz"] = numpy.sum(vec.z, axis=1)
 
         assert isinstance(vec, Planar)
-        fields["px"] = numpy.sum(planar.x.dispatch(vec), axis=1)
-        fields["py"] = numpy.sum(planar.y.dispatch(vec), axis=1)
+        fields["px"] = numpy.sum(vec.x, axis=1)
+        fields["py"] = numpy.sum(vec.y, axis=1)
 
+        # Convert between representations
         if isinstance(vec, Momentum):
             fields = {_repr_momentum_to_generic[n]: v for n, v in fields.items()}
 
@@ -107,16 +105,14 @@ def _reduce_sum(
 
 
 def _reduce_count_nonzero(
-    a: VectorProtocol, axis: int | None = None, *, keepdims: bool = False
+    a: T, axis: int | None = None, *, keepdims: bool = False
 ) -> ScalarCollection:
     def count_nonzero_impl(vec: T) -> ScalarCollection:
-        from vector._compute import lorentz, planar, spatial
-
-        mag_2 = planar.rho2.dispatch(vec)
+        mag_2 = vec.rho2
         if isinstance(vec, Spatial):
-            mag_2 += spatial.z.dispatch(vec) ** 2
+            mag_2 += vec.z ** 2
         if isinstance(vec, Lorentz):
-            mag_2 += lorentz.t2.dispatch(vec)
+            mag_2 += vec.t2
 
         return numpy.count_nonzero(mag_2, axis=-1)
 

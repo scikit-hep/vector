@@ -2002,22 +2002,22 @@ def _reduce_sum(
     | MomentumArray4D,
     mask_identity: bool,
 ) -> VectorProtocol:
-    from vector._compute import lorentz, planar, spatial
-
     fields = {}
     if isinstance(array, Lorentz):
-        fields["t"] = numpy.sum(lorentz.t.dispatch(array), axis=1)
+        fields["t"] = numpy.sum(array.t, axis=1)
     if isinstance(array, Spatial):
-        fields["z"] = numpy.sum(spatial.z.dispatch(array), axis=1)
+        fields["z"] = numpy.sum(array.z, axis=1)
 
     assert isinstance(array, Planar)
-    fields["x"] = numpy.sum(planar.x.dispatch(array), axis=1)
-    fields["y"] = numpy.sum(planar.y.dispatch(array), axis=1)
+    fields["x"] = numpy.sum(array.x, axis=1)
+    fields["y"] = numpy.sum(array.y, axis=1)
+
+    layout = ak.to_layout(array)
 
     return ak.zip(
         fields,
         behavior=array.behavior,
-        with_name=array.layout.content.parameter("__record__"),
+        with_name=layout.purelist_parameter("__record__"),
     )
 
 
@@ -2045,11 +2045,11 @@ def _reduce_count_nonzero(
 ) -> ScalarCollection:
     from vector._compute import lorentz, planar, spatial
 
-    mag_2 = planar.rho2.dispatch(array)
+    mag_2 = array.rho2
     if isinstance(array, Spatial):
-        mag_2 = mag_2 + spatial.z.dispatch(array)
+        mag_2 = mag_2 + array.z**2
     if isinstance(array, Lorentz):
-        mag_2 = mag_2 + lorentz.t2.dispatch(array)
+        mag_2 = mag_2 + array.t2
 
     return ak.count_nonzero(mag_2, axis=1)
 
