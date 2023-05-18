@@ -101,13 +101,9 @@ def _reduce_count_nonzero(
 ) -> ScalarCollection:
     is_nonzero = a.rho2 != 0
     if isinstance(a, Spatial):
-        is_nonzero = numpy.logical_or(
-            is_nonzero, a.z != 0
-        )
+        is_nonzero = numpy.logical_or(is_nonzero, a.z != 0)
     if isinstance(a, Lorentz):
-        is_nonzero = numpy.logical_or(
-            is_nonzero, a.t2 != 0
-        )
+        is_nonzero = numpy.logical_or(is_nonzero, a.t2 != 0)
 
     return numpy.count_nonzero(is_nonzero, axis=axis, keepdims=keepdims)
 
