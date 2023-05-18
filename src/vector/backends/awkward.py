@@ -2043,7 +2043,6 @@ def _reduce_count_nonzero(
     | MomentumArray4D,
     mask_identity: bool,
 ) -> ScalarCollection:
-
     mag_2 = array.rho2
     if isinstance(array, Spatial):
         mag_2 = mag_2 + array.z**2
