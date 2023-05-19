@@ -60,6 +60,8 @@ ArrayLike = ScalarCollection
 T = typing.TypeVar("T", bound="VectorNumpy")
 V = typing.TypeVar("V")
 
+SameVectorNumpyType = typing.TypeVar("SameVectorNumpyType", bound="VectorNumpy")
+
 
 def _reduce_sum(
     a: T,
@@ -79,7 +81,7 @@ def _reduce_sum(
     if dtype is not None:
         raise ValueError("cannot invoke reducer with `dtype` argument")
 
-    fields = {}
+    fields: dict[str, typing.Any] = {}
     if isinstance(a, Lorentz):
         fields["E"] = numpy.sum(a.t, axis=axis, keepdims=keepdims)
     if isinstance(a, Spatial):
@@ -99,7 +101,10 @@ def _reduce_sum(
 def _reduce_count_nonzero(
     a: T, axis: int | None = None, *, keepdims: bool = False
 ) -> ScalarCollection:
-    is_nonzero = a.rho2 != 0
+    if isinstance(a, Planar):
+        is_nonzero = a.rho2 != 0
+    else:
+        raise AssertionError
     if isinstance(a, Spatial):
         is_nonzero = numpy.logical_or(is_nonzero, a.z != 0)
     if isinstance(a, Lorentz):
@@ -744,15 +749,18 @@ class VectorNumpy(Vector, GetItem):
         return self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan).all()
 
     def sum(
-        self,
+        self: SameVectorNumpyType,
         axis: int | None = None,
-        dtype: numpy.dtype | str = None,
+        dtype: numpy.dtype[typing.Any] | str | None = None,
         out: ArrayLike = None,
         keepdims: bool | None = None,
         initial: typing.Any = None,
         where: typing.Any = None,
-    ):
-        return numpy.sum(self, axis, dtype, out, keepdims, initial, where)
+    ) -> SameVectorNumpyType:
+        return typing.cast(
+            SameVectorNumpyType,
+            numpy.sum(self, axis, dtype, out, keepdims, initial, where)  # type: ignore[call-overload]
+        )
 
     def __eq__(self, other: typing.Any) -> typing.Any:
         return numpy.equal(self, other)  # type: ignore[call-overload]
