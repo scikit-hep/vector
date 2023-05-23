@@ -94,39 +94,6 @@ def nan_to_num(x, copy=True, nan=0.0, posinf=None, neginf=None):
     return nan_to_num_impl
 
 
-@numba.extending.overload(numpy.isclose)  # FIXME: This needs to go into Numba!
-def isclose(a, b, rtol=1e-05, atol=1e-08, equal_nan=False):
-    if isinstance(a, numba.types.Array) and isinstance(b, numba.types.Array):
-
-        def isclose_impl(a, b, rtol=1e-05, atol=1e-08, equal_nan=False):
-            a, b = numpy.broadcast_arrays(a, b)
-            x = a.reshape(-1)
-            y = b.astype(numpy.float64).reshape(-1)
-            out = numpy.zeros(len(x), numpy.bool_)
-            for i in range(len(out)):
-                if numpy.isnan(x[i]) and numpy.isnan(y[i]):
-                    out[i] = equal_nan
-                elif numpy.isinf(x[i]) and numpy.isinf(y[i]):
-                    out[i] = (x[i] > 0) == (y[i] > 0)
-                else:
-                    out[i] = abs(x[i] - y[i]) <= atol + rtol * abs(y[i])
-            return out.reshape(a.shape)
-
-    else:
-
-        def isclose_impl(a, b, rtol=1e-05, atol=1e-08, equal_nan=False):
-            x = a
-            y = numpy.float64(b)
-            if numpy.isnan(x) and numpy.isnan(y):
-                return equal_nan
-            elif numpy.isinf(x) and numpy.isinf(y):
-                return (x > 0) == (y > 0)
-            else:
-                return abs(x - y) <= atol + rtol * abs(y)
-
-    return isclose_impl
-
-
 # Since CoordinateObjects are NamedTuples, we get their types wrapped for free.
 
 
