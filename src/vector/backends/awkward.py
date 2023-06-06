@@ -1615,7 +1615,7 @@ def _arraytype_of(awkwardtype: typing.Any, component: str) -> typing.Any:
     ):
         return _arraytype_of(awkwardtype.contenttype, component)
     raise numba.TypingError(
-        f"vector components like {repr(component)} must be NumpyArrayType, not {awkwardtype}"
+        f"vector components like {component!r} must be NumpyArrayType, not {awkwardtype}"
     )
 
 

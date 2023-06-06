@@ -3256,18 +3256,14 @@ class Planar(VectorProtocolPlanar):
         from vector._compute.planar import equal
 
         if dim(self) != dim(other):
-            raise TypeError(
-                f"{repr(self)} and {repr(other)} do not have the same dimension"
-            )
+            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
         return equal.dispatch(self, other)
 
     def not_equal(self, other: VectorProtocol) -> BoolCollection:
         from vector._compute.planar import not_equal
 
         if dim(self) != dim(other):
-            raise TypeError(
-                f"{repr(self)} and {repr(other)} do not have the same dimension"
-            )
+            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
         return not_equal.dispatch(self, other)
 
     def isclose(
@@ -3280,9 +3276,7 @@ class Planar(VectorProtocolPlanar):
         from vector._compute.planar import isclose
 
         if dim(self) != dim(other):
-            raise TypeError(
-                f"{repr(self)} and {repr(other)} do not have the same dimension"
-            )
+            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
         return isclose.dispatch(rtol, atol, equal_nan, self, other)
 
 
@@ -3488,18 +3482,14 @@ class Spatial(Planar, VectorProtocolSpatial):
         from vector._compute.spatial import equal
 
         if dim(self) != dim(other):
-            raise TypeError(
-                f"{repr(self)} and {repr(other)} do not have the same dimension"
-            )
+            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
         return equal.dispatch(self, other)
 
     def not_equal(self, other: VectorProtocol) -> BoolCollection:
         from vector._compute.spatial import not_equal
 
         if dim(self) != dim(other):
-            raise TypeError(
-                f"{repr(self)} and {repr(other)} do not have the same dimension"
-            )
+            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
         return not_equal.dispatch(self, other)
 
     def isclose(
@@ -3512,9 +3502,7 @@ class Spatial(Planar, VectorProtocolSpatial):
         from vector._compute.spatial import isclose
 
         if dim(self) != dim(other):
-            raise TypeError(
-                f"{repr(self)} and {repr(other)} do not have the same dimension"
-            )
+            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
         return isclose.dispatch(rtol, atol, equal_nan, self, other)
 
 
@@ -3749,18 +3737,14 @@ class Lorentz(Spatial, VectorProtocolLorentz):
         from vector._compute.lorentz import equal
 
         if dim(self) != dim(other):
-            raise TypeError(
-                f"{repr(self)} and {repr(other)} do not have the same dimension"
-            )
+            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
         return equal.dispatch(self, other)
 
     def not_equal(self, other: VectorProtocol) -> BoolCollection:
         from vector._compute.lorentz import not_equal
 
         if dim(self) != dim(other):
-            raise TypeError(
-                f"{repr(self)} and {repr(other)} do not have the same dimension"
-            )
+            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
         return not_equal.dispatch(self, other)
 
     def isclose(
@@ -3773,9 +3757,7 @@ class Lorentz(Spatial, VectorProtocolLorentz):
         from vector._compute.lorentz import isclose
 
         if dim(self) != dim(other):
-            raise TypeError(
-                f"{repr(self)} and {repr(other)} do not have the same dimension"
-            )
+            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
         return isclose.dispatch(rtol, atol, equal_nan, self, other)
 
 
@@ -3942,7 +3924,7 @@ def dim(v: VectorProtocol) -> int:
     elif isinstance(v, Vector4D):
         return 4
     else:
-        raise TypeError(f"{repr(v)} is not a vector.Vector")
+        raise TypeError(f"{v!r} is not a vector.Vector")
 
 
 def _compute_module_of(
@@ -3955,9 +3937,9 @@ def _compute_module_of(
     If ``nontemporal``, use a spatial module even if both vectors are 4D.
     """
     if not isinstance(one, Vector):
-        raise TypeError(f"{repr(one)} is not a Vector")
+        raise TypeError(f"{one!r} is not a Vector")
     if not isinstance(two, Vector):
-        raise TypeError(f"{repr(two)} is not a Vector")
+        raise TypeError(f"{two!r} is not a Vector")
 
     if isinstance(one, Vector2D):
         import vector._compute.planar
@@ -4116,7 +4098,7 @@ def _from_signature(
     result = dispatch_map.get(signature)
     if result is None:
         raise TypeError(
-            f"function {repr('.'.join(name.split('.')[-2:]))} has no signature {signature}"
+            f"function {'.'.join(name.split('.')[-2:])!r} has no signature {signature}"
         )
     return result
 

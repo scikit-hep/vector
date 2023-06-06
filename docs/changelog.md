@@ -2,6 +2,14 @@
 
 ## Version 1.0
 
+### Unreleased
+
+#### Maintenance
+
+- chore: replace custom definition of np.isclose with numba's np.isclose [#348][]
+
+[#348]: https://github.com/scikit-hep/vector/pull/2348
+
 ### Version 1.0.0
 
 #### Features
