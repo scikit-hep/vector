@@ -759,7 +759,8 @@ class VectorNumpy(Vector, GetItem):
     ) -> SameVectorNumpyType:
         return typing.cast(
             SameVectorNumpyType,
-            numpy.sum(self, axis, dtype, out, keepdims, initial, where),  # type: ignore[call-overload]
+            # pylint: disable-next=unexpected-keyword-arg
+            numpy.sum(self, axis=axis, dtype=dtype, out=out, keepdims=keepdims, initial=initial, where=where),  # type: ignore[call-overload]
         )
 
     def __eq__(self, other: typing.Any) -> typing.Any:
