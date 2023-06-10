@@ -5,10 +5,12 @@
 
 from __future__ import annotations
 
-import pytest
-import packaging.version
-import vector
 import sys
+
+import packaging.version
+import pytest
+
+import vector
 
 if sys.version_info < (3, 8):
     import importlib_metadata
