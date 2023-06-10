@@ -259,6 +259,10 @@ def test_zip():
     assert v.y.tolist() == [[], [1]]
 
 
+@pytest.mark.skipif(
+    not vector._is_awkward_v2,
+    reason="record reducers not implemented before awkward v2",
+)
 def test_sum_2d():
     v = vector.Array(
         [
@@ -325,6 +329,10 @@ def test_sum_2d():
     )
 
 
+@pytest.mark.skipif(
+    not vector._is_awkward_v2,
+    reason="record reducers not implemented before awkward v2",
+)
 def test_sum_3d():
     v = vector.Array(
         [
@@ -361,6 +369,10 @@ def test_sum_3d():
     ]
 
 
+@pytest.mark.skipif(
+    not vector._is_awkward_v2,
+    reason="record reducers not implemented before awkward v2",
+)
 def test_sum_4d():
     v = vector.Array(
         [
@@ -402,6 +414,10 @@ def test_sum_4d():
     ]
 
 
+@pytest.mark.skipif(
+    not vector._is_awkward_v2,
+    reason="record reducers not implemented before awkward v2",
+)
 def test_count_nonzero_2d():
     v = vector.Array(
         [
@@ -423,6 +439,10 @@ def test_count_nonzero_2d():
     assert ak.count_nonzero(v, axis=0, keepdims=True).tolist() == [[2, 2, 1]]
 
 
+@pytest.mark.skipif(
+    not vector._is_awkward_v2,
+    reason="record reducers not implemented before awkward v2",
+)
 def test_count_nonzero_3d():
     v = vector.Array(
         [
@@ -444,6 +464,10 @@ def test_count_nonzero_3d():
     assert ak.count_nonzero(v, axis=0, keepdims=True).tolist() == [[2, 2, 1]]
 
 
+@pytest.mark.skipif(
+    not vector._is_awkward_v2,
+    reason="record reducers not implemented before awkward v2",
+)
 def test_count_nonzero_4d():
     v = vector.Array(
         [
@@ -484,6 +508,10 @@ def test_count_nonzero_4d():
     assert ak.count_nonzero(v2, axis=0, keepdims=True).tolist() == [[2, 2, 1]]
 
 
+@pytest.mark.skipif(
+    not vector._is_awkward_v2,
+    reason="record reducers not implemented before awkward v2",
+)
 def test_count_2d():
     v = vector.Array(
         [
@@ -509,6 +537,10 @@ def test_count_2d():
     ]
 
 
+@pytest.mark.skipif(
+    not vector._is_awkward_v2,
+    reason="record reducers not implemented before awkward v2",
+)
 def test_count_3d():
     v = vector.Array(
         [
@@ -534,6 +566,10 @@ def test_count_3d():
     ]
 
 
+@pytest.mark.skipif(
+    not vector._is_awkward_v2,
+    reason="record reducers not implemented before awkward v2",
+)
 def test_count_4d():
     v = vector.Array(
         [
