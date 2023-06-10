@@ -25,7 +25,7 @@ pytestmark = pytest.mark.awkward
 # Record reducers were added before awkward==2.2.2, but had some bugs.
 awkward_without_record_reducers = packaging.version.Version(
     importlib_metadata.version("awkward")
-) < packaging.version.Version("2.2.2")
+) < packaging.version.Version("2.2.3")
 
 
 def test_dimension_conversion():
