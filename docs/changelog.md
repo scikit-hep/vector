@@ -1,14 +1,21 @@
 # Changelog
 
-## Version 1.0
+## Version 1.1
 
-### Unreleased
+### Version 1.1.0
+
+#### Features
+
+- feat: implement `sum`, `count`, and `count_nonzero` reductions [#347][]
 
 #### Maintenance
 
 - chore: replace custom definition of np.isclose with numba's np.isclose [#348][]
 
-[#348]: https://github.com/scikit-hep/vector/pull/2348
+[#347]: https://github.com/scikit-hep/vector/pull/347
+[#348]: https://github.com/scikit-hep/vector/pull/348
+
+## Version 1.0
 
 ### Version 1.0.0
 
