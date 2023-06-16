@@ -8,8 +8,6 @@ from __future__ import annotations
 import sys
 import typing
 
-import numpy
-
 if sys.version_info < (3, 8):
     from typing_extensions import Protocol, TypedDict
 else:
@@ -81,4 +79,6 @@ if typing.TYPE_CHECKING:
 
     FloatArray = numpy.typing.NDArray[numpy.float64]
 else:
+    import numpy
+
     FloatArray = numpy.ndarray
