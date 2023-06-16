@@ -32,6 +32,7 @@ from vector._methods import (
     LongitudinalZ,
     Lorentz,
     LorentzMomentum,
+    Momentum,
     Planar,
     PlanarMomentum,
     Spatial,
@@ -52,9 +53,64 @@ from vector._methods import (
     _repr_momentum_to_generic,
     _ttype,
 )
-from vector._typeutils import FloatArray, ScalarCollection
+from vector._typeutils import BoolCollection, FloatArray, ScalarCollection
 
 ArrayLike = ScalarCollection
+
+T = typing.TypeVar("T", bound="VectorNumpy")
+V = typing.TypeVar("V")
+
+SameVectorNumpyType = typing.TypeVar("SameVectorNumpyType", bound="VectorNumpy")
+
+
+def _reduce_sum(
+    a: T,
+    axis: int | None = None,
+    dtype: typing.Any = None,
+    out: typing.Any = None,
+    keepdims: bool | None = None,
+    initial: typing.Any = None,
+    where: typing.Any = None,
+) -> T:
+    if where is not None:
+        raise ValueError("cannot invoke reducer with `where` argument")
+    if initial is not None:
+        raise ValueError("cannot invoke reducer with `initial` argument")
+    if out is not None:
+        raise ValueError("cannot invoke reducer with `out` argument")
+    if dtype is not None:
+        raise ValueError("cannot invoke reducer with `dtype` argument")
+
+    fields: dict[str, typing.Any] = {}
+    if isinstance(a, Lorentz):
+        fields["E"] = numpy.sum(a.t, axis=axis, keepdims=keepdims)
+    if isinstance(a, Spatial):
+        fields["pz"] = numpy.sum(a.z, axis=axis, keepdims=keepdims)
+
+    assert isinstance(a, Planar)
+    fields["px"] = numpy.sum(a.x, axis=axis, keepdims=keepdims)
+    fields["py"] = numpy.sum(a.y, axis=axis, keepdims=keepdims)
+
+    # Convert between representations
+    if not isinstance(a, Momentum):
+        fields = {_repr_momentum_to_generic[n]: v for n, v in fields.items()}
+
+    return array(fields)
+
+
+def _reduce_count_nonzero(
+    a: T, axis: int | None = None, *, keepdims: bool = False
+) -> ScalarCollection:
+    if isinstance(a, Planar):
+        is_nonzero = a.rho2 != 0
+    else:
+        raise AssertionError
+    if isinstance(a, Spatial):
+        is_nonzero = numpy.logical_or(is_nonzero, a.z != 0)
+    if isinstance(a, Lorentz):
+        is_nonzero = numpy.logical_or(is_nonzero, a.t2 != 0)
+
+    return numpy.count_nonzero(is_nonzero, axis=axis, keepdims=keepdims)
 
 
 def _array_from_columns(columns: dict[str, ArrayLike]) -> ArrayLike:
@@ -688,9 +744,24 @@ class VectorNumpy(Vector, GetItem):
         rtol: float | FloatArray = 1e-05,
         atol: float | FloatArray = 1e-08,
         equal_nan: bool | FloatArray = False,
-    ) -> FloatArray:
+    ) -> BoolCollection:
         """Like ``np.ndarray.allclose``, but for VectorNumpy."""
         return self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan).all()
+
+    def sum(
+        self: SameVectorNumpyType,
+        axis: int | None = None,
+        dtype: numpy.dtype[typing.Any] | str | None = None,
+        out: ArrayLike = None,
+        keepdims: bool | None = None,
+        initial: typing.Any = None,
+        where: typing.Any = None,
+    ) -> SameVectorNumpyType:
+        return typing.cast(
+            SameVectorNumpyType,
+            # pylint: disable-next=unexpected-keyword-arg
+            numpy.sum(self, axis=axis, dtype=dtype, out=out, keepdims=keepdims, initial=initial, where=where),  # type: ignore[call-overload]
+        )
 
     def __eq__(self, other: typing.Any) -> typing.Any:
         return numpy.equal(self, other)  # type: ignore[call-overload]
@@ -933,6 +1004,10 @@ class VectorNumpy(Vector, GetItem):
             return type(self).isclose(*args, **kwargs)
         elif func is numpy.allclose:
             return type(self).allclose(*args, **kwargs)
+        elif func is numpy.sum:
+            return _reduce_sum(*args, **kwargs)
+        elif func is numpy.count_nonzero:
+            return _reduce_count_nonzero(*args, **kwargs)
         else:
             return NotImplemented
 

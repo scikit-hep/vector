@@ -5,13 +5,27 @@
 
 from __future__ import annotations
 
+import sys
+
+import packaging.version
 import pytest
 
 import vector
 
+if sys.version_info < (3, 8):
+    import importlib_metadata
+else:
+    import importlib.metadata as importlib_metadata
+
 ak = pytest.importorskip("awkward")
 
 pytestmark = pytest.mark.awkward
+
+
+# Record reducers were added before awkward==2.2.3, but had some bugs.
+awkward_without_record_reducers = packaging.version.Version(
+    importlib_metadata.version("awkward")
+) < packaging.version.Version("2.2.3")
 
 
 def test_dimension_conversion():
@@ -257,3 +271,339 @@ def test_zip():
     assert v.tolist() == [[], [{"x": 1, "y": 1}]]
     assert v.x.tolist() == [[], [1]]
     assert v.y.tolist() == [[], [1]]
+
+
+@pytest.mark.skipif(
+    awkward_without_record_reducers,
+    reason="record reducers not implemented before awkward v2",
+)
+def test_sum_2d():
+    v = vector.Array(
+        [
+            [
+                {"rho": 1.0, "phi": 0.1},
+                {"rho": 4.0, "phi": 0.2},
+            ],
+            [
+                {"rho": 1.0, "phi": 0.3},
+                {"rho": 4.0, "phi": 0.4},
+                {"rho": 1.0, "phi": 0.1},
+            ],
+        ]
+    )
+    assert ak.almost_equal(
+        ak.sum(v, axis=0, keepdims=True),
+        vector.Array(
+            [
+                [
+                    {"x": 1.950340654403632, "y": 0.3953536233081677},
+                    {"x": 7.604510287376507, "y": 2.3523506924148467},
+                    {"x": 0.9950041652780258, "y": 0.09983341664682815},
+                ]
+            ]
+        ),
+    )
+    assert ak.almost_equal(
+        ak.sum(v, axis=0, keepdims=False),
+        vector.Array(
+            [
+                {"x": 1.950340654403632, "y": 0.3953536233081677},
+                {"x": 7.604510287376507, "y": 2.3523506924148467},
+                {"x": 0.9950041652780258, "y": 0.09983341664682815},
+            ]
+        ),
+    )
+    assert ak.almost_equal(
+        ak.sum(v, axis=1, keepdims=True),
+        ak.to_regular(
+            vector.Array(
+                [
+                    [{"x": 4.915270, "y": 0.89451074}],
+                    [{"x": 5.63458463, "y": 1.95302699}],
+                ]
+            )
+        ),
+    )
+    assert ak.almost_equal(
+        ak.sum(v, axis=1, keepdims=False),
+        vector.Array(
+            [
+                {"x": 4.915270, "y": 0.89451074},
+                {"x": 5.63458463, "y": 1.95302699},
+            ]
+        ),
+    )
+    assert ak.almost_equal(
+        ak.sum(v.mask[[False, True]], axis=1),
+        vector.Array(
+            [
+                {"x": 5.63458463, "y": 1.95302699},
+            ]
+        )[[None, 0]],
+    )
+
+
+@pytest.mark.skipif(
+    awkward_without_record_reducers,
+    reason="record reducers not implemented before awkward v2",
+)
+def test_sum_3d():
+    v = vector.Array(
+        [
+            [
+                {"x": 1, "y": 2, "z": 3},
+                {"x": 4, "y": 5, "z": 6},
+            ],
+            [
+                {"x": 1, "y": 2, "z": 3},
+                {"x": 4, "y": 5, "z": 6},
+                {"x": 1, "y": 1, "z": 1},
+            ],
+        ]
+    )
+    assert ak.sum(v, axis=0, keepdims=True).to_list() == [
+        [{"x": 2, "y": 4, "z": 6}, {"x": 8, "y": 10, "z": 12}, {"x": 1, "y": 1, "z": 1}]
+    ]
+    assert ak.sum(v, axis=0, keepdims=False).to_list() == [
+        {"x": 2, "y": 4, "z": 6},
+        {"x": 8, "y": 10, "z": 12},
+        {"x": 1, "y": 1, "z": 1},
+    ]
+    assert ak.sum(v, axis=1, keepdims=True).to_list() == [
+        [{"x": 5, "y": 7, "z": 9}],
+        [{"x": 6, "y": 8, "z": 10}],
+    ]
+    assert ak.sum(v, axis=1, keepdims=False).to_list() == [
+        {"x": 5, "y": 7, "z": 9},
+        {"x": 6, "y": 8, "z": 10},
+    ]
+    assert ak.sum(v.mask[[False, True]], axis=1).tolist() == [
+        None,
+        {"x": 6, "y": 8, "z": 10},
+    ]
+
+
+@pytest.mark.skipif(
+    awkward_without_record_reducers,
+    reason="record reducers not implemented before awkward v2",
+)
+def test_sum_4d():
+    v = vector.Array(
+        [
+            [
+                {"x": 1, "y": 2, "z": 3, "t": 4},
+                {"x": 4, "y": 5, "z": 6, "t": 2},
+                {"x": 0, "y": 0, "z": 0, "t": 3},
+            ],
+            [
+                {"x": 1, "y": 2, "z": 3, "t": 8},
+                {"x": 4, "y": 5, "z": 6, "t": 0},
+                {"x": 1, "y": 1, "z": 1, "t": 0},
+            ],
+        ]
+    )
+    assert ak.sum(v, axis=0, keepdims=True).to_list() == [
+        [
+            {"t": 12, "z": 6, "x": 2, "y": 4},
+            {"t": 2, "z": 12, "x": 8, "y": 10},
+            {"t": 3, "z": 1, "x": 1, "y": 1},
+        ]
+    ]
+    assert ak.sum(v, axis=0, keepdims=False).to_list() == [
+        {"t": 12, "z": 6, "x": 2, "y": 4},
+        {"t": 2, "z": 12, "x": 8, "y": 10},
+        {"t": 3, "z": 1, "x": 1, "y": 1},
+    ]
+    assert ak.sum(v, axis=1, keepdims=True).to_list() == [
+        [{"t": 9, "z": 9, "x": 5, "y": 7}],
+        [{"t": 8, "z": 10, "x": 6, "y": 8}],
+    ]
+    assert ak.sum(v, axis=1, keepdims=False).to_list() == [
+        {"t": 9, "z": 9, "x": 5, "y": 7},
+        {"t": 8, "z": 10, "x": 6, "y": 8},
+    ]
+    assert ak.sum(v.mask[[False, True]], axis=1).tolist() == [
+        None,
+        {"t": 8, "z": 10, "x": 6, "y": 8},
+    ]
+
+
+@pytest.mark.skipif(
+    awkward_without_record_reducers,
+    reason="record reducers not implemented before awkward v2",
+)
+def test_count_nonzero_2d():
+    v = vector.Array(
+        [
+            [
+                {"rho": 1.0, "phi": 0.1},
+                {"rho": 4.0, "phi": 0.2},
+                {"rho": 0.0, "phi": 0.0},
+            ],
+            [
+                {"rho": 1.0, "phi": 0.3},
+                {"rho": 4.0, "phi": 0.4},
+                {"rho": 1.0, "phi": 0.1},
+            ],
+        ]
+    )
+    assert ak.count_nonzero(v, axis=1).tolist() == [2, 3]
+    assert ak.count_nonzero(v, axis=1, keepdims=True).tolist() == [[2], [3]]
+    assert ak.count_nonzero(v, axis=0).tolist() == [2, 2, 1]
+    assert ak.count_nonzero(v, axis=0, keepdims=True).tolist() == [[2, 2, 1]]
+
+
+@pytest.mark.skipif(
+    awkward_without_record_reducers,
+    reason="record reducers not implemented before awkward v2",
+)
+def test_count_nonzero_3d():
+    v = vector.Array(
+        [
+            [
+                {"x": 1.0, "y": 2.0, "theta": 0.1},
+                {"x": 4.0, "y": 5.0, "theta": 0.2},
+                {"x": 0.0, "y": 0.0, "theta": 0.0},
+            ],
+            [
+                {"x": 1.0, "y": 2.0, "theta": 0.6},
+                {"x": 4.0, "y": 5.0, "theta": 1.3},
+                {"x": 1.0, "y": 1.0, "theta": 1.9},
+            ],
+        ]
+    )
+    assert ak.count_nonzero(v, axis=1).tolist() == [2, 3]
+    assert ak.count_nonzero(v, axis=1, keepdims=True).tolist() == [[2], [3]]
+    assert ak.count_nonzero(v, axis=0).tolist() == [2, 2, 1]
+    assert ak.count_nonzero(v, axis=0, keepdims=True).tolist() == [[2, 2, 1]]
+
+
+@pytest.mark.skipif(
+    awkward_without_record_reducers,
+    reason="record reducers not implemented before awkward v2",
+)
+def test_count_nonzero_4d():
+    v = vector.Array(
+        [
+            [
+                {"x": 1.0, "y": 2.0, "z": 3.0, "t": 4.0},
+                {"x": 4.0, "y": 5.0, "z": 6.0, "t": 2.0},
+                {"x": 0.0, "y": 0.0, "z": 0.0, "t": 3.0},
+            ],
+            [
+                {"x": 1.0, "y": 2.0, "z": 3.0, "t": 8.0},
+                {"x": 4.0, "y": 5.0, "z": 6.0, "t": 0.0},
+                {"x": 1.0, "y": 1.0, "z": 1.0, "t": 0.0},
+            ],
+        ]
+    )
+    assert ak.count_nonzero(v, axis=1).tolist() == [3, 3]
+    assert ak.count_nonzero(v, axis=1, keepdims=True).tolist() == [[3], [3]]
+    assert ak.count_nonzero(v, axis=0).tolist() == [2, 2, 2]
+    assert ak.count_nonzero(v, axis=0, keepdims=True).tolist() == [[2, 2, 2]]
+
+    v2 = vector.Array(
+        [
+            [
+                {"x": 1, "y": 2, "z": 3, "t": 1},
+                {"x": 4, "y": 5, "z": 6, "t": 2},
+                {"x": 0, "y": 0, "z": 0, "t": 2},
+            ],
+            [
+                {"x": 1, "y": 2, "z": 3, "t": 0},
+                {"x": 4, "y": 5, "z": 6, "t": 1},
+                {"x": 0, "y": 0, "z": 0, "t": 0},
+            ],
+        ]
+    )
+    assert ak.count_nonzero(v2, axis=1).tolist() == [3, 2]
+    assert ak.count_nonzero(v2, axis=1, keepdims=True).tolist() == [[3], [2]]
+    assert ak.count_nonzero(v2, axis=0).tolist() == [2, 2, 1]
+    assert ak.count_nonzero(v2, axis=0, keepdims=True).tolist() == [[2, 2, 1]]
+
+
+@pytest.mark.skipif(
+    awkward_without_record_reducers,
+    reason="record reducers not implemented before awkward v2",
+)
+def test_count_2d():
+    v = vector.Array(
+        [
+            [
+                {"x": 1, "y": 2},
+                {"x": 4, "y": 5},
+                {"x": 0, "y": 0},
+            ],
+            [
+                {"x": 1, "y": 2},
+                {"x": 4, "y": 5},
+                {"x": 1, "y": 1},
+            ],
+        ]
+    )
+    assert ak.count(v, axis=1).to_list() == [3, 3]
+    assert ak.count(v, axis=1, keepdims=True).to_list() == [[3], [3]]
+    assert ak.count(v, axis=0).to_list() == [2, 2, 2]
+    assert ak.count(v, axis=0, keepdims=True).to_list() == [[2, 2, 2]]
+    assert ak.count(v.mask[[False, True]], axis=1).tolist() == [
+        None,
+        3,
+    ]
+
+
+@pytest.mark.skipif(
+    awkward_without_record_reducers,
+    reason="record reducers not implemented before awkward v2",
+)
+def test_count_3d():
+    v = vector.Array(
+        [
+            [
+                {"x": 1, "y": 2, "z": 3},
+                {"x": 4, "y": 5, "z": 6},
+                {"x": 0, "y": 0, "z": 0},
+            ],
+            [
+                {"x": 1, "y": 2, "z": 3},
+                {"x": 4, "y": 5, "z": 6},
+                {"x": 1, "y": 1, "z": 1},
+            ],
+        ]
+    )
+    assert ak.count(v, axis=1).to_list() == [3, 3]
+    assert ak.count(v, axis=1, keepdims=True).to_list() == [[3], [3]]
+    assert ak.count(v, axis=0).to_list() == [2, 2, 2]
+    assert ak.count(v, axis=0, keepdims=True).to_list() == [[2, 2, 2]]
+    assert ak.count(v.mask[[False, True]], axis=1).tolist() == [
+        None,
+        3,
+    ]
+
+
+@pytest.mark.skipif(
+    awkward_without_record_reducers,
+    reason="record reducers not implemented before awkward v2",
+)
+def test_count_4d():
+    v = vector.Array(
+        [
+            [
+                {"x": 1, "y": 2, "z": 3, "t": 9},
+                {"x": 4, "y": 5, "z": 6, "t": 9},
+                {"x": 0, "y": 0, "z": 0, "t": 9},
+            ],
+            [
+                {"x": 1, "y": 2, "z": 3, "t": 9},
+                {"x": 4, "y": 5, "z": 6, "t": 9},
+                {"x": 1, "y": 1, "z": 1, "t": 9},
+            ],
+        ]
+    )
+    assert ak.count(v, axis=1).to_list() == [3, 3]
+    assert ak.count(v, axis=1, keepdims=True).to_list() == [[3], [3]]
+    assert ak.count(v, axis=0).to_list() == [2, 2, 2]
+    assert ak.count(v, axis=0, keepdims=True).to_list() == [[2, 2, 2]]
+    assert ak.count(v.mask[[False, True]], axis=1).tolist() == [
+        None,
+        3,
+    ]

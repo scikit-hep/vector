@@ -1978,16 +1978,85 @@ def _numba_lower(
     return context.compile_internal(builder, impl, sig, args)
 
 
-ak.behavior["__numba_typer__", "Vector2D"] = _numba_typer_Vector2D
-ak.behavior["__numba_typer__", "Vector3D"] = _numba_typer_Vector3D
-ak.behavior["__numba_typer__", "Vector4D"] = _numba_typer_Vector4D
-ak.behavior["__numba_typer__", "Momentum2D"] = _numba_typer_Momentum2D
-ak.behavior["__numba_typer__", "Momentum3D"] = _numba_typer_Momentum3D
-ak.behavior["__numba_typer__", "Momentum4D"] = _numba_typer_Momentum4D
+behavior["__numba_typer__", "Vector2D"] = _numba_typer_Vector2D
+behavior["__numba_typer__", "Vector3D"] = _numba_typer_Vector3D
+behavior["__numba_typer__", "Vector4D"] = _numba_typer_Vector4D
+behavior["__numba_typer__", "Momentum2D"] = _numba_typer_Momentum2D
+behavior["__numba_typer__", "Momentum3D"] = _numba_typer_Momentum3D
+behavior["__numba_typer__", "Momentum4D"] = _numba_typer_Momentum4D
 
-ak.behavior["__numba_lower__", "Vector2D"] = _numba_lower
-ak.behavior["__numba_lower__", "Vector3D"] = _numba_lower
-ak.behavior["__numba_lower__", "Vector4D"] = _numba_lower
-ak.behavior["__numba_lower__", "Momentum2D"] = _numba_lower
-ak.behavior["__numba_lower__", "Momentum3D"] = _numba_lower
-ak.behavior["__numba_lower__", "Momentum4D"] = _numba_lower
+behavior["__numba_lower__", "Vector2D"] = _numba_lower
+behavior["__numba_lower__", "Vector3D"] = _numba_lower
+behavior["__numba_lower__", "Vector4D"] = _numba_lower
+behavior["__numba_lower__", "Momentum2D"] = _numba_lower
+behavior["__numba_lower__", "Momentum3D"] = _numba_lower
+behavior["__numba_lower__", "Momentum4D"] = _numba_lower
+
+
+def _reduce_sum(
+    array: VectorArray2D
+    | VectorArray3D
+    | VectorArray4D
+    | MomentumArray2D
+    | MomentumArray3D
+    | MomentumArray4D,
+    mask_identity: bool,
+) -> VectorProtocol:
+    fields = {}
+    if isinstance(array, Lorentz):
+        fields["t"] = numpy.sum(array.t, axis=1)
+    if isinstance(array, Spatial):
+        fields["z"] = numpy.sum(array.z, axis=1)
+
+    assert isinstance(array, Planar)
+    fields["x"] = numpy.sum(array.x, axis=1)
+    fields["y"] = numpy.sum(array.y, axis=1)
+
+    layout = ak.to_layout(array)
+
+    return ak.zip(
+        fields,
+        behavior=array.behavior,
+        with_name=layout.purelist_parameter("__record__"),
+    )
+
+
+def _reduce_count(
+    array: VectorArray2D
+    | VectorArray3D
+    | VectorArray4D
+    | MomentumArray2D
+    | MomentumArray3D
+    | MomentumArray4D,
+    mask_identity: bool,
+) -> VectorProtocol:
+    first_field = array[array.fields[0]]
+    return ak.count(first_field, axis=1)
+
+
+def _reduce_count_nonzero(
+    array: VectorArray2D
+    | VectorArray3D
+    | VectorArray4D
+    | MomentumArray2D
+    | MomentumArray3D
+    | MomentumArray4D,
+    mask_identity: bool,
+) -> ScalarCollection:
+    is_nonzero = array.rho2 != 0
+    if isinstance(array, Spatial):
+        is_nonzero = numpy.logical_or(is_nonzero, array.z != 0)
+    if isinstance(array, Lorentz):
+        is_nonzero = numpy.logical_or(is_nonzero, array.t2 != 0)
+
+    return ak.count_nonzero(is_nonzero, axis=1)
+
+
+for reducer, impl in (
+    (ak.sum, _reduce_sum),
+    (ak.count, _reduce_count),
+    (ak.count_nonzero, _reduce_count_nonzero),
+):
+    for dim in range(2, 5):
+        behavior[reducer, f"Vector{dim}D"] = impl
+        behavior[reducer, f"Momentum{dim}D"] = impl
