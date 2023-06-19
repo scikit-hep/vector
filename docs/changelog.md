@@ -10,8 +10,12 @@
 
 #### Maintenance
 
+- chore: remove Python `3.7` support [#355][]
+- chore: use trusted publisher deployment [#354][]
 - chore: replace custom definition of np.isclose with numba's np.isclose [#348][]
 
+[#355]: https://github.com/scikit-hep/vector/pull/355
+[#354]: https://github.com/scikit-hep/vector/pull/354
 [#347]: https://github.com/scikit-hep/vector/pull/347
 [#348]: https://github.com/scikit-hep/vector/pull/348
 

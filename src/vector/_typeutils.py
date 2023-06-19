@@ -8,10 +8,7 @@ from __future__ import annotations
 import sys
 import typing
 
-if sys.version_info < (3, 8):
-    from typing_extensions import Protocol, TypedDict
-else:
-    from typing import Protocol, TypedDict
+from typing import Protocol, TypedDict
 
 
 __all__ = [
