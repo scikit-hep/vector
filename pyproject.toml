@@ -214,7 +214,7 @@ extend-ignore = [
   "PLR",   # Design related pylint codes
   "E501",  # Line too long
 ]
-target-version = "py37"
+target-version = "py38"
 typing-modules = ["vector._typeutils"]
 src = ["src"]
 unfixable = [
