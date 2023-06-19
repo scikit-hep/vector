@@ -5,11 +5,8 @@
 
 from __future__ import annotations
 
-import sys
 import typing
-
 from typing import Protocol, TypedDict
-
 
 __all__ = [
     "Protocol",

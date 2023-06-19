@@ -5,8 +5,8 @@
 
 from __future__ import annotations
 
-import sys
 import typing
+from importlib.metadata import PackageNotFoundError, version
 
 import packaging.version
 
@@ -56,8 +56,6 @@ from vector.backends.object import (
     obj,
 )
 from vector.version import version as __version__
-
-from importlib.metadata import version, PackageNotFoundError
 
 
 def _import_awkward() -> None:
