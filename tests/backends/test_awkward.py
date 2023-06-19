@@ -5,14 +5,12 @@
 
 from __future__ import annotations
 
-import sys
+import importlib.metadata
 
 import packaging.version
 import pytest
 
 import vector
-
-import importlib.metadata
 
 ak = pytest.importorskip("awkward")
 
