@@ -57,11 +57,11 @@ from vector.backends.object import (
 )
 from vector.version import version as __version__
 
-from importlib.metadata import version, PackageNotFoundError
+import importlib.metadata
 
 
 def _import_awkward() -> None:
-    awk_version = packaging.version.Version(version("awkward"))
+    awk_version = packaging.version.Version(importlib.metadata.version("awkward"))
     if awk_version < packaging.version.Version("1.2.0rc5"):
         # the only context users will see this message is if they're trying to use vector.awk
         # VectorAwkward is still set to None
@@ -72,9 +72,9 @@ def _import_awkward() -> None:
 _is_awkward_v2: bool | None
 try:
     _is_awkward_v2 = packaging.version.Version(
-        version("awkward")
+        importlib.metadata.version("awkward")
     ) >= packaging.version.Version("2.0.0rc1")
-except PackageNotFoundError:
+except importlib.metadata.PackageNotFoundError:
     _is_awkward_v2 = None
 try:
     import awkward

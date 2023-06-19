@@ -12,7 +12,7 @@ import pytest
 
 import vector
 
-from importlib.metadata import version
+import importlib.metadata
 
 ak = pytest.importorskip("awkward")
 
@@ -21,7 +21,7 @@ pytestmark = pytest.mark.awkward
 
 # Record reducers were added before awkward==2.2.3, but had some bugs.
 awkward_without_record_reducers = packaging.version.Version(
-    version("awkward")
+    importlib.metadata.version("awkward")
 ) < packaging.version.Version("2.2.3")
 
 
