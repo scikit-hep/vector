@@ -5,7 +5,7 @@
 
 from __future__ import annotations
 
-import sys
+import importlib.metadata
 import typing
 
 import packaging.version
@@ -57,14 +57,9 @@ from vector.backends.object import (
 )
 from vector.version import version as __version__
 
-if sys.version_info < (3, 8):
-    import importlib_metadata
-else:
-    import importlib.metadata as importlib_metadata
-
 
 def _import_awkward() -> None:
-    awk_version = packaging.version.Version(importlib_metadata.version("awkward"))
+    awk_version = packaging.version.Version(importlib.metadata.version("awkward"))
     if awk_version < packaging.version.Version("1.2.0rc5"):
         # the only context users will see this message is if they're trying to use vector.awk
         # VectorAwkward is still set to None
@@ -75,9 +70,9 @@ def _import_awkward() -> None:
 _is_awkward_v2: bool | None
 try:
     _is_awkward_v2 = packaging.version.Version(
-        importlib_metadata.version("awkward")
+        importlib.metadata.version("awkward")
     ) >= packaging.version.Version("2.0.0rc1")
-except importlib_metadata.PackageNotFoundError:
+except importlib.metadata.PackageNotFoundError:
     _is_awkward_v2 = None
 try:
     import awkward

@@ -15,7 +15,7 @@ keywords = [
 license = "BSD-3-Clause"
 maintainers = [ {name = "The Scikit-HEP admins", email = "scikit-hep-admins@googlegroups.com"} ]
 authors = [ {name = "Jim Pivarski, Henry Schreiner, Eduardo Rodrigues", email = "eduardo.rodrigues@cern.ch"} ]
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Developers",
@@ -24,7 +24,6 @@ classifiers = [
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.7",
   "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
@@ -39,10 +38,8 @@ dynamic = [
   "version",
 ]
 dependencies = [
-  'importlib-metadata>=0.22; python_version < "3.8"',
   "numpy>=1.13.3",
   "packaging>=19",
-  'typing-extensions; python_version < "3.8"',
 ]
 [project.optional-dependencies]
 awkward = [
@@ -50,7 +47,7 @@ awkward = [
 ]
 dev = [
   "awkward>=1.2",
-  'numba>=0.57; python_version >= "3.8"',
+  "numba>=0.57",
   "papermill>=2.4",
   "pytest>=6",
   "pytest-cov>=3",
@@ -110,7 +107,7 @@ extend-ignore = [
   "PLR",   # Design related pylint codes
   "E501",  # Line too long
 ]
-target-version = "py37"
+target-version = "py38"
 typing-modules = ["vector._typeutils"]
 src = ["src"]
 unfixable = [
@@ -175,7 +172,7 @@ disallow_untyped_defs = false
 disallow_untyped_calls = false
 
 [tool.pylint]
-master.py-version = "3.7"
+master.py-version = "3.8"
 reports.output-format = "colorized"
 similarities.ignore-imports = "yes"
 master.jobs = "0"
