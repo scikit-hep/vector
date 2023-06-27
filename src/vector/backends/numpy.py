@@ -752,7 +752,7 @@ class VectorNumpy(Vector, GetItem):
         self: SameVectorNumpyType,
         axis: int | None = None,
         dtype: numpy.dtype[typing.Any] | str | None = None,
-        out: ArrayLike = None,
+        out: ArrayLike | None = None,
         keepdims: bool | None = None,
         initial: typing.Any = None,
         where: typing.Any = None,
