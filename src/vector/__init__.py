@@ -151,7 +151,7 @@ def register_numba() -> None:
     is therefore executed as soon as Numba is imported.
     """
     import vector.backends._numba_object
-    import vector.backends.numba_numpy  # noqa: 401
+    import vector.backends.numba_numpy  # noqa: F401
 
 
 _awkward_registered = False
