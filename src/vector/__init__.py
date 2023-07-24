@@ -5,7 +5,6 @@
 
 from __future__ import annotations
 
-import importlib.metadata
 import typing
 
 import packaging.version
@@ -55,7 +54,7 @@ from vector.backends.object import (
     VectorObject4D,
     obj,
 )
-from vector.version import version as __version__
+from vector._version import __version__
 
 
 def _import_awkward() -> None:

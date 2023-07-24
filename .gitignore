@@ -133,7 +133,7 @@ dmypy.json
 /.idea/*
 
 # Version file
-/src/vector/version.py
+/src/vector/_version.py
 
 .pyre_configuration
 .watchmanconfig

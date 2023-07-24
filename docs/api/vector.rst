@@ -18,5 +18,4 @@ Submodules
 
    vector._methods
    vector._typeutils
-   vector.version
 

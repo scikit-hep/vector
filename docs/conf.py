@@ -6,7 +6,7 @@
 
 from __future__ import annotations
 
-from pkg_resources import get_distribution
+import importlib.metadata
 
 # -- Path setup --------------------------------------------------------------
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -26,7 +26,7 @@ copyright = (
 )
 author = "Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner"
 
-version = get_distribution("vector").version
+version = importlib.metadata.version("vector")
 
 # -- General configuration ---------------------------------------------------
 
