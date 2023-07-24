@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+#### Maintenance
+
+- chore: clean up VCS versioning [#363][]
+
+[#363]: https://github.com/scikit-hep/vector/pull/355
+
 ## Version 1.1
 
 ### Version 1.1.0
