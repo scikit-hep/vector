@@ -5,6 +5,7 @@
 
 from __future__ import annotations
 
+import importlib.metadata
 import typing
 
 import packaging.version
@@ -31,6 +32,7 @@ from vector._methods import (
     Vector4D,
     dim,
 )
+from vector._version import __version__
 from vector.backends.awkward_constructors import Array, zip
 from vector.backends.awkward_constructors import Array as awk
 from vector.backends.numpy import (
@@ -54,7 +56,6 @@ from vector.backends.object import (
     VectorObject4D,
     obj,
 )
-from vector._version import __version__
 
 
 def _import_awkward() -> None:
