@@ -84,7 +84,7 @@ init = "vector:register_numba"
 
 [tool.hatch]
 version.source = "vcs"
-build.hooks.vcs.version-file = "src/vector/version.py"
+build.hooks.vcs.version-file = "src/vector/_version.py"
 
 [tool.ruff]
 select = [
