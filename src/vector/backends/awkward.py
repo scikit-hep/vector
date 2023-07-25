@@ -655,7 +655,7 @@ class VectorAwkward:
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
         ):
-            first = [x for x in result if isinstance(x, ak.Array)][0]
+            first = next(x for x in result if isinstance(x, ak.Array))
             result = [
                 x if isinstance(x, ak.Array) else ak.broadcast_arrays(first, x)[1]
                 for x in result
@@ -699,7 +699,7 @@ class VectorAwkward:
             and issubclass(returns[0], Azimuthal)
             and returns[1] is None
         ):
-            first = [x for x in result if isinstance(x, ak.Array)][0]
+            first = next(x for x in result if isinstance(x, ak.Array))
             result = [
                 x if isinstance(x, ak.Array) else ak.broadcast_arrays(first, x)[1]
                 for x in result
@@ -746,7 +746,7 @@ class VectorAwkward:
             and isinstance(returns[1], type)
             and issubclass(returns[1], Longitudinal)
         ):
-            first = [x for x in result if isinstance(x, ak.Array)][0]
+            first = next(x for x in result if isinstance(x, ak.Array))
             result = [
                 x if isinstance(x, ak.Array) else ak.broadcast_arrays(first, x)[1]
                 for x in result
@@ -800,7 +800,7 @@ class VectorAwkward:
             and issubclass(returns[1], Longitudinal)
             and returns[2] is None
         ):
-            first = [x for x in result if isinstance(x, ak.Array)][0]
+            first = next(x for x in result if isinstance(x, ak.Array))
             result = [
                 x if isinstance(x, ak.Array) else ak.broadcast_arrays(first, x)[1]
                 for x in result
@@ -859,7 +859,7 @@ class VectorAwkward:
             and isinstance(returns[2], type)
             and issubclass(returns[2], Temporal)
         ):
-            first = [x for x in result if isinstance(x, ak.Array)][0]
+            first = next(x for x in result if isinstance(x, ak.Array))
             result = [
                 x if isinstance(x, ak.Array) else ak.broadcast_arrays(first, x)[1]
                 for x in result
