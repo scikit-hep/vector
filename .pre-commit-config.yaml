@@ -56,7 +56,7 @@ repos:
         types_or: [yaml, markdown, html, css, scss, javascript, json]
         exclude: assets/js/webapp\.js
 
-  - repo: https://github.com/asottile/blacken-docs
+  - repo: https://github.com/adamchainz/blacken-docs
     rev: 1.16.0
     hooks:
       - id: blacken-docs
