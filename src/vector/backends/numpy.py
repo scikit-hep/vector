@@ -364,7 +364,7 @@ def _is_type_safe(
     | MomentumNumpy4D
     | CoordinatesNumpy,
 ) -> bool:
-    for i in range(0, len(array.dtype)):  # type: ignore[arg-type]
+    for i in range(len(array.dtype)):  # type: ignore[arg-type]
         if not issubclass(
             array.dtype[i].type, (numpy.integer, numpy.floating)
         ) or issubclass(array.dtype[i].type, numpy.timedelta64):
