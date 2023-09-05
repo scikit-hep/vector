@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Check SDist
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: 3.x
@@ -41,7 +41,7 @@ jobs:
           - "3.11"
     name: Python ${{ matrix.python-version }} - Light
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v4
         with:
@@ -69,7 +69,7 @@ jobs:
           - "3.11"
     name: Python ${{ matrix.python-version }} - Awkward v1
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v4
         with:
@@ -100,7 +100,7 @@ jobs:
           - "3.11"
     name: Python ${{ matrix.python-version }} - Awkward v2
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v4
         with:
@@ -125,7 +125,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Disassemble check
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v4
         with:
@@ -150,7 +150,7 @@ jobs:
   # root:
   #   runs-on: ubuntu-latest
   #   steps:
-  #   - uses: actions/checkout@v3
+  #   - uses: actions/checkout@v4
 
   #   - name: Get Conda
   #     uses: conda-incubator/setup-miniconda@v2
