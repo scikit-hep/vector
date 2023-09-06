@@ -247,7 +247,7 @@ def test_sum_2d():
         [[(1, 0.1), (4, 0.2), (0, 0)], [(1, 0.3), (4, 0.4), (1, 0.1)]],
         dtype=[("rho", numpy.float64), ("phi", numpy.float64)],
     )
-    assert numpy.sum(v, axis=0, keepdims=True).allclose(
+    assert numpy.sum(v, axis=0, keepdims=False).allclose(
         vector.VectorNumpy2D(
             [
                 [
@@ -269,6 +269,20 @@ def test_sum_2d():
             dtype=[("x", numpy.float64), ("y", numpy.float64)],
         )
     )
+    assert numpy.sum(v, axis=0).allclose(
+        vector.VectorNumpy2D(
+            [
+                (1.950340654403632, 0.3953536233081677),
+                (7.604510287376507, 2.3523506924148467),
+                (0.9950041652780258, 0.09983341664682815),
+            ],
+            dtype=[("x", numpy.float64), ("y", numpy.float64)],
+        )
+    )
+    assert numpy.sum(v, axis=0, keepdims=False).shape == (3,)
+    assert numpy.sum(v, axis=0, keepdims=True).shape == (1, 3)
+    assert numpy.sum(v, axis=0).shape == (3,)
+
     assert numpy.sum(v, axis=1, keepdims=True).allclose(
         vector.VectorNumpy2D(
             [[(4.91527048, 0.89451074)], [(5.63458463, 1.95302699)]],
@@ -281,6 +295,15 @@ def test_sum_2d():
             dtype=[("x", numpy.float64), ("y", numpy.float64)],
         )
     )
+    assert numpy.sum(v, axis=1).allclose(
+        vector.VectorNumpy2D(
+            [(4.91527048, 0.89451074), (5.63458463, 1.95302699)],
+            dtype=[("x", numpy.float64), ("y", numpy.float64)],
+        )
+    )
+    assert numpy.sum(v, axis=1, keepdims=False).shape == (2,)
+    assert numpy.sum(v, axis=1, keepdims=True).shape == (2, 1)
+    assert numpy.sum(v, axis=1).shape == (2,)
 
 
 def test_sum_3d():
@@ -317,6 +340,20 @@ def test_sum_3d():
             dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
         )
     )
+    assert numpy.sum(v, axis=0).allclose(
+        vector.VectorNumpy3D(
+            [
+                (2.0, 4.0, 25.55454594),
+                (8.0, 10.0, 33.36521103),
+                (1.0, 1.0, -0.48314535),
+            ],
+            dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
+        )
+    )
+    assert numpy.sum(v, axis=0, keepdims=False).shape == (3,)
+    assert numpy.sum(v, axis=0, keepdims=True).shape == (1, 3)
+    assert numpy.sum(v, axis=0).shape == (3,)
+
     assert numpy.sum(v, axis=1, keepdims=True).allclose(
         vector.VectorNumpy3D(
             [[(5.0, 7.0, 53.87369799)], [(6.0, 8.0, 4.56291362)]],
@@ -329,6 +366,15 @@ def test_sum_3d():
             dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
         )
     )
+    assert numpy.sum(v, axis=1).allclose(
+        vector.VectorNumpy3D(
+            [(5.0, 7.0, 53.87369799), (6.0, 8.0, 4.56291362)],
+            dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
+        )
+    )
+    assert numpy.sum(v, axis=1, keepdims=False).shape == (2,)
+    assert numpy.sum(v, axis=1, keepdims=True).shape == (2, 1)
+    assert numpy.sum(v, axis=1).shape == (2,)
 
 
 def test_sum_4d():
@@ -352,6 +398,15 @@ def test_sum_4d():
         (8, 10, 12, 2),
         (1, 1, 1, 3),
     ]
+    assert numpy.sum(v, axis=0).tolist() == [
+        (2, 4, 6, 12),
+        (8, 10, 12, 2),
+        (1, 1, 1, 3),
+    ]
+    assert numpy.sum(v, axis=0, keepdims=False).shape == (3,)
+    assert numpy.sum(v, axis=0, keepdims=True).shape == (1, 3)
+    assert numpy.sum(v, axis=0).shape == (3,)
+
     assert numpy.sum(v, axis=1, keepdims=True).tolist() == [
         [(5, 7, 9, 9)],
         [(6, 8, 10, 8)],
@@ -360,6 +415,13 @@ def test_sum_4d():
         (5, 7, 9, 9),
         (6, 8, 10, 8),
     ]
+    assert numpy.sum(v, axis=1).tolist() == [
+        (5, 7, 9, 9),
+        (6, 8, 10, 8),
+    ]
+    assert numpy.sum(v, axis=1, keepdims=False).shape == (2,)
+    assert numpy.sum(v, axis=1, keepdims=True).shape == (2, 1)
+    assert numpy.sum(v, axis=1).shape == (2,)
 
 
 def test_count_nonzero_2d():

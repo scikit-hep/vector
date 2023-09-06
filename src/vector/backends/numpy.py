@@ -20,6 +20,7 @@ import collections.abc
 import typing
 
 import numpy
+from numpy._globals import _NoValue, _NoValueType
 
 import vector.backends.object
 from vector._methods import (
@@ -68,7 +69,7 @@ def _reduce_sum(
     axis: int | None = None,
     dtype: typing.Any = None,
     out: typing.Any = None,
-    keepdims: bool | None = None,
+    keepdims: bool | _NoValueType = _NoValue,
     initial: typing.Any = None,
     where: typing.Any = None,
 ) -> T:
@@ -753,7 +754,7 @@ class VectorNumpy(Vector, GetItem):
         axis: int | None = None,
         dtype: numpy.dtype[typing.Any] | str | None = None,
         out: ArrayLike | None = None,
-        keepdims: bool | None = None,
+        keepdims: bool | _NoValueType = _NoValue,
         initial: typing.Any = None,
         where: typing.Any = None,
     ) -> SameVectorNumpyType:
