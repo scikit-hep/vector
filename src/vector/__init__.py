@@ -32,7 +32,7 @@ from vector._methods import (
     Vector4D,
     dim,
 )
-from vector._version import version as __version__
+from vector._version import __version__ # type: ignore[import]
 from vector.backends.awkward_constructors import Array, zip
 from vector.backends.awkward_constructors import Array as awk
 from vector.backends.numpy import (
