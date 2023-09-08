@@ -93,7 +93,7 @@
 #### Bug fixes
 
 - `vector.arr` should construct `NumPy` vectors [#254][]
-- Development dependency missing-Priyadarshi [#280][]
+- Development dependency missing [#280][]
 
 #### Documentation
 
