@@ -1,14 +1,29 @@
 # Changelog
 
-## Unreleased
+## Version 1.1
+
+### Version 1.1.1
+
+#### Bug fixes
+
+- fix: `keepdims` in `numpy.sum` should not be `None` [#376][]
 
 #### Maintenance
 
+- chore: remove license string (not standard) [#371][]
+- chore: blackend-docs moved [#370][]
+- chore: use 2x faster black mirror [#367][]
 - chore: clean up VCS versioning [#363][]
+- chore: target-version no longer needed by Black or Ruff [#359][]
+- chore: ruff moved to astral-sh [#358][]
 
-[#363]: https://github.com/scikit-hep/vector/pull/355
-
-## Version 1.1
+[#376]: https://github.com/scikit-hep/vector/pull/376
+[#371]: https://github.com/scikit-hep/vector/pull/371
+[#370]: https://github.com/scikit-hep/vector/pull/370
+[#367]: https://github.com/scikit-hep/vector/pull/367
+[#363]: https://github.com/scikit-hep/vector/pull/363
+[#359]: https://github.com/scikit-hep/vector/pull/359
+[#358]: https://github.com/scikit-hep/vector/pull/358
 
 ### Version 1.1.0
 
@@ -38,7 +53,7 @@
 - feat: update `to_Vector3D` to pass new coordinate values [#278][]
 - feat: allow passing coordinates to to_Vector-D [#319][]
 
-#### Fixes
+#### Bug fixes
 
 - fix: better elif conditions for obj \_\_init\_\_ methods [#316][]
 
@@ -75,10 +90,10 @@
 - Add constructors for `VectorObject2D` and `MomentumObject2D`[#89][]
 - Add support for awkward v2 (and keep supporting v1) [#284][]
 
-#### Fixes
+#### Bug fixes
 
 - `vector.arr` should construct `NumPy` vectors [#254][]
-- Development dependency missing-Priyadarshi [#280][]
+- Development dependency missing [#280][]
 
 #### Documentation
 
@@ -143,7 +158,7 @@
 - Remove underscores [#192][]
 - feat: add git archive support [#244][]
 
-#### Fixes
+#### Bug fixes
 
 - fix bad values for high (abs) eta [#172][]
 - Add custom reprs to awkward coordinate classes [#212][]
