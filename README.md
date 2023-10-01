@@ -678,7 +678,7 @@ This library was primarily developed by Jim Pivarski, Henry Schreiner, and Eduar
 
 Support for this work was provided by the National Science Foundation cooperative agreement OAC-1836650 (IRIS-HEP) and OAC-1450377 (DIANA/HEP). Any opinions, findings, conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of the National Science Foundation.
 
-[actions-badge]: https://github.com/scikit-hep/vector/workflows/CI/badge.svg
+[actions-badge]: https://github.com/scikit-hep/vector/actions/workflows/ci.yml/badge.svg
 [actions-link]: https://github.com/scikit-hep/vector/actions
 [black-badge]: https://img.shields.io/badge/code%20style-black-000000.svg
 [black-link]: https://github.com/psf/black
