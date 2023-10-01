@@ -111,7 +111,7 @@ The API reference details the functionality of each ``class`` and ``function`` p
 
    api/modules.rst
 
-.. |Action status| image:: https://github.com/scikit-hep/vector/workflows/CI/badge.svg
+.. |Action status| image:: https://github.com/scikit-hep/vector/actions/workflows/ci.yml/badge.svg
    :target: https://github.com/scikit-hep/vector/actions
 .. |Documentation Status| image:: https://readthedocs.org/projects/vector/badge/?version=latest
    :target: https://vector.readthedocs.io/en/latest/?badge=latest
