@@ -401,7 +401,7 @@ class VectorObject(Vector):
         """
         Implements NumPy's ``ufunc``s for ``VectorObject`` and its subclasses. The current
         implementation includes ``numpy.absolute``, ``numpy.add``, ``numpy.subtract``,
-        ``numpy.multipy``, ``numpy.positive``, ``numpy.negative``, ``numpy.true_divide``,
+        ``numpy.multiply``, ``numpy.positive``, ``numpy.negative``, ``numpy.true_divide``,
         ``numpy.power``, ``numpy.square``, ``numpy.sqrt``, ``numpy.cbrt``, ``numpy.matmul``,
         ``numpy.equal``, and ``numpy.not_equal``.
         """
