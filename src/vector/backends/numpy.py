@@ -787,7 +787,7 @@ class VectorNumpy(Vector, GetItem):
     ) -> typing.Any:
         """
         Implements NumPy's ``ufunc``s for ``VectorNumpy``. The current implementation
-        includes ``numpy.absolute``, ``numpy.add``, ``numpy.subtract``, ``numpy.multipy``,
+        includes ``numpy.absolute``, ``numpy.add``, ``numpy.subtract``, ``numpy.multiply``,
         ``numpy.positive``, ``numpy.negative``, ``numpy.true_divide``, ``numpy.power``,
         ``numpy.square``, ``numpy.sqrt``, ``numpy.cbrt``, ``numpy.matmul``, ``numpy.equal``,
         and ``numpy.not_equal``.
