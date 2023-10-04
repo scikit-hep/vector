@@ -86,7 +86,6 @@ jobs:
       - name: Install awkward v1
         run: python -m pip install -U git+https://github.com/scikit-hep/awkward.git@ianna/numba-error-backport-to-v1 --no-cache --force-reinstall
 
-
       - name: Test package with awkward v1.x
         run: python -m pytest -ra --cov=vector --xdoctest --ignore tests/test_notebooks.py .
 
