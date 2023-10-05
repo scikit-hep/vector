@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+#### Maintenance
+
+- chore: support Python 3.12 [#388][]
+
+[#388]: https://github.com/scikit-hep/vector/pull/388
+
 ## Version 1.1
 
 ### Version 1.1.1
@@ -114,7 +122,7 @@
 - chore: minor cleanups [#266][]
 - chore: test on `awkward v1.10.0` and add cov to `noxfile` [#256][]
 - chore: use Python 3.11! [#282][]
-- chore: zenodo-badge-sync-mishra1 [#269][]
+- chore: zenodo badge sync [#269][]
 - ci: test notebooks on PRs [#272][]
 
 [#256]: https://github.com/scikit-hep/vector/pull/256
