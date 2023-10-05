@@ -1,14 +1,16 @@
 # Changelog
 
-## Unreleased
+## Version 1.1
+
+### Version 1.1.1.post1
 
 #### Maintenance
 
 - chore: support Python 3.12 [#388][]
+- Fix CI badge in README and docs [#386][]
 
 [#388]: https://github.com/scikit-hep/vector/pull/388
-
-## Version 1.1
+[#386]: https://github.com/scikit-hep/vector/pull/386
 
 ### Version 1.1.1
 
