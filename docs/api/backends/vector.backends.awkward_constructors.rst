@@ -1,5 +1,5 @@
 vector.backends.awkward_constructors module
-==================================
+===========================================
 
 .. automodule:: vector.backends.awkward_constructors
    :members:
