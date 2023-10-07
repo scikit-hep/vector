@@ -9,6 +9,8 @@ Defines behaviors for Awkward Array. New arrays created with the
 .. code-block:: python
 
     vector.Array(...)
+    vector.awk(...)
+    vector.zip(...)
 
 function will have these behaviors built in (and will pass them to any derived
 arrays).
