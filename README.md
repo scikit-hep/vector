@@ -54,6 +54,7 @@ The easiest way to create one or many vectors is with a helper function:
 - `vector.obj` to make a pure Python vector object,
 - `vector.arr` to make a NumPy array of vectors (or `array`, lowercase, like `np.array`),
 - `vector.awk` to make an Awkward Array of vectors (or `Array`, uppercase, like `ak.Array`).
+- `vector.zip` to make an Awkward Array of vectors (similar to `ak.zip`)
 
 ### Pure Python vectors
 
