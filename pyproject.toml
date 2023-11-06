@@ -122,55 +122,6 @@ isort.required-imports = ["from __future__ import annotations"]
 "src/vector/backends/_numba_object.py" = ["PGH003"]
 "tests/backends/test_operators.py" = ["SIM201", "SIM202"]
 
-[tool.pytest.ini_options]
-minversion = "6.0"
-xfail_strict = true
-addopts = [
-    "-ra",
-    "--strict-markers",
-    "--strict-config",
-]
-testpaths = [
-    "tests",
-]
-markers = [
-    "slow",
-    "numba",
-    "awkward",
-    "dis",
-]
-log_cli_level = "DEBUG"
-filterwarnings = [
-    "error",
-    "ignore::DeprecationWarning",
-    "ignore::UserWarning",
-]
-
-[tool.mypy]
-files = [
-  "src/vector",
-]
-python_version = "3.8"
-strict = true
-warn_return_any = false
-show_error_codes = true
-enable_error_code = [
-  "ignore-without-code",
-  "truthy-bool",
-  "redundant-expr",
-]
-warn_unreachable = false
-
-[[tool.mypy.overrides]]
-module = [
-  "vector._compute.*.*",
-  "numba.*",
-  "awkward.*",
-]
-ignore_missing_imports = true
-disallow_untyped_defs = false
-disallow_untyped_calls = false
-
 [tool.pylint]
 master.py-version = "3.8"
 reports.output-format = "colorized"
@@ -229,3 +180,52 @@ messages_control.disable = [
   "no-else-raise",
   "unidiomatic-typecheck",
 ]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+xfail_strict = true
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+]
+testpaths = [
+    "tests",
+]
+markers = [
+    "slow",
+    "numba",
+    "awkward",
+    "dis",
+]
+log_cli_level = "DEBUG"
+filterwarnings = [
+    "error",
+    "ignore::DeprecationWarning",
+    "ignore::UserWarning",
+]
+
+[tool.mypy]
+files = [
+  "src/vector",
+]
+python_version = "3.8"
+strict = true
+warn_return_any = false
+show_error_codes = true
+enable_error_code = [
+  "ignore-without-code",
+  "truthy-bool",
+  "redundant-expr",
+]
+warn_unreachable = false
+
+[[tool.mypy.overrides]]
+module = [
+  "vector._compute.*.*",
+  "numba.*",
+  "awkward.*",
+]
+ignore_missing_imports = true
+disallow_untyped_defs = false
+disallow_untyped_calls = false
