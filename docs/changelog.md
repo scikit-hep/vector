@@ -2,6 +2,14 @@
 
 ## Version 1.1
 
+### Unreleased
+
+#### Documentation
+
+- Update `README` and `intro.ipynb` to include the latest developments [#399][]
+
+[#399]: https://github.com/scikit-hep/vector/pull/399
+
 ### Version 1.1.1.post1
 
 #### Maintenance

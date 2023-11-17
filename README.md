@@ -58,6 +58,19 @@ The easiest way to create one or many vectors is with a helper function:
 
 ### Pure Python vectors
 
+You can directly use the `VectorObject` classes to construct object type vectors:
+
+```python
+vector.VectorObject2D(x=1.1, y=2.2)
+vector.MomentumObject3D(px=1.1, py=2.2, pz=3.3)
+vector.VectorObject4D(x=1.1, y=2.2, eta=3.3, tau=4.4)
+```
+
+and so on for every class.
+
+Or, you can use a single wrapper function to construct all possible combinations of
+object type vectors:
+
 ```python
 # Cartesian 2D vector
 vector.obj(x=3, y=4)
@@ -147,6 +160,34 @@ vector.VectorObject4D.from_xyetatau(1.1, 2.2, 3.3, 4.4)
 and so on, for all combinations of azimuthal, longitudinal, and temporal coordinates, geometric and momentum-flavored.
 
 ### NumPy arrays of vectors
+
+You can directly use the `VectorNumpy` classes to construct object type vectors:
+
+```python
+# NumPy-like arguments (literally passed through to NumPy)
+vector.VectorNumpy2D(
+    [(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)],
+    dtype=[("x", float), ("y", float)],
+)
+
+# Pandas-like arguments (dict from names to column arrays)
+vector.VectorNumpy2D({"x": [1.1, 1.2, 1.3, 1.4, 1.5], "y": [2.1, 2.2, 2.3, 2.4, 2.5]})
+
+# As with objects, the coordinate system and dimension is taken from the names of the fields.
+vector.VectorNumpy4D(
+    {
+        "x": [1.1, 1.2, 1.3, 1.4, 1.5],
+        "y": [2.1, 2.2, 2.3, 2.4, 2.5],
+        "z": [3.1, 3.2, 3.3, 3.4, 3.5],
+        "t": [4.1, 4.2, 4.3, 4.4, 4.5],
+    }
+)
+```
+
+and so on for every class.
+
+Or, you can use a single wrapper function to construct all possible combinations of
+NumPy type vectors:
 
 ```python
 # NumPy-like arguments (literally passed through to NumPy)
@@ -576,7 +617,12 @@ The (current) list of properties and methods is:
 - `scale(factor)`: can also use the `*` operator
 - `equal(vector)`: can also use the `==` operator, but consider `isclose` instead
 - `not_equal(vector)`: can also use the `!=` operator, but consider `isclose` instead
+- `sum()`: can also use the `numpy.sum` or `awkward.sum`, only for NumPy and Awkward vectors
+- `count_nonzero()`: can also use `numpy.count_nonzero` or `awkward.count_nonzero`, only for NumPy and Awkward vectors
+- `count()`: can also use `awkward.count`, only for Awkward vectors
 - `isclose(vector, rtol=1e-5, atol=1e-8, equal_nan=False)`: works like [np.isclose](https://numpy.org/doc/stable/reference/generated/numpy.isclose.html); arrays also have an [allclose](https://numpy.org/doc/stable/reference/generated/numpy.allclose.html) method
+- `to_Vector*D(coordinates)`: replace `*` with the reuquired vector dimension
+- `to_{coordinate-names}`: for example - `to_rhophietatau`
 
 ## Compiling your Python with Numba
 
@@ -631,14 +677,15 @@ compute_masses(array)
 
 ## Talks about vector
 
+- 9th October 2023 - [What’s new with Vector? First major release is out!](https://indi.to/35ym5) - [PyHEP 2023 (virtual)](https://indico.cern.ch/event/1252095/) [🎥](https://www.youtube.com/watch?v=JHEAb2R3xzE&list=PLKZ9c4ONm-VlAorAG8kR09ZqhMfHiH2LJ&index=10)
 - 13th September 2022 - [Constructing HEP vectors and analyzing HEP data using Vector](https://indi.to/bPmMc) - [PyHEP 2022 (virtual)](https://indico.cern.ch/event/1150631/) [🎥](https://www.youtube.com/watch?v=4iveMzrbe7s&list=PLKZ9c4ONm-VkohKG-skzEG_gklMaSgaO7&index=15)
 - 20th July 2022 - [Analysis Grand Challenge / HEP Scientific Python Ecosystem](https://indico.cern.ch/event/1151329/timetable/#3-analysis-grand-challenge-hep) - [DANCE/CoDaS@Snowmass 2022 computational and data science software training](https://indico.cern.ch/event/1151329/)
 - 25th April 2022 - [Foundation libraries (uproot, awkward, hist, mplhep)](https://indico.cern.ch/event/1126109/contributions/4780138/) - [IRIS-HEP AGC Tools 2022 Workshop](https://indico.cern.ch/event/1126109/) [🎥](https://www.youtube.com/watch?v=O9KvsDMKOmY)
 - 3rd November 2021 - [Data handling: uproot, awkward & vector](https://indico.cern.ch/event/1076231/contributions/4560398/) - [IRIS-HEP AGC Tools 2021 Workshop](https://indico.cern.ch/event/1076231/) [🎥](https://indico.cern.ch/event/1076231/contributions/4560398/attachments/2338579/4017718/agc_uproot_awk.mp4)
 
-### Status as of April 8, 2021
+### Status as of November 17, 2023
 
-Undoubtedly, there are rough edges, but most of the functionality is there and Vector is ready for user-testing. It can only be improved by your feedback!
+First major release of vector is out and the package has reached a stable position. The work is spearheaded by bug reports and feature requests created on GitHub. It can only be improved by your feedback!
 
 ## Contributors ✨
 
