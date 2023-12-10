@@ -733,7 +733,7 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type
 
 
 class VectorNumpy(Vector, GetItem):
-    """One dimensional vector class for the NumPy backend."""
+    """Mixin class for NumPy vectors."""
 
     lib = numpy
     dtype: numpy.dtype[typing.Any]
