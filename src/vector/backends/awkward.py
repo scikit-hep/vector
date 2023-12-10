@@ -615,7 +615,7 @@ class AwkwardProtocol(Protocol):
 
 
 class VectorAwkward:
-    """One dimensional vector class for the Awkward backend."""
+    """Mixin class for Awkward vectors."""
 
     lib: types.ModuleType = numpy
 
