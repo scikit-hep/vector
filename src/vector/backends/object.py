@@ -330,7 +330,7 @@ def _replace_data(obj: typing.Any, result: typing.Any) -> typing.Any:
 
 
 class VectorObject(Vector):
-    """Mixin class for the object backend."""
+    """Mixin class for Object vectors."""
 
     lib = numpy
 
