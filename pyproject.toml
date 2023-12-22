@@ -208,7 +208,6 @@ files = [
 python_version = "3.8"
 strict = true
 warn_return_any = false
-show_error_codes = true
 enable_error_code = [
   "ignore-without-code",
   "truthy-bool",
