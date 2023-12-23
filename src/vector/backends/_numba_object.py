@@ -1538,55 +1538,54 @@ def add_binary_method(vectortype, gn, methodname):
                         coord24(v2),
                     )
 
-        else:
-            if groupname == "planar":
-                instance_class = flavor_of(v1, v2).ProjectionClass2D
-                azcoords = _coord_object_type[returns[0]]
+        elif groupname == "planar":
+            instance_class = flavor_of(v1, v2).ProjectionClass2D
+            azcoords = _coord_object_type[returns[0]]
 
-                def overloader_impl(v1, v2):
-                    out1, out2 = function(
-                        numpy, coord11(v1), coord12(v1), coord21(v2), coord22(v2)
-                    )
-                    return instance_class(azcoords(out1, out2))
+            def overloader_impl(v1, v2):
+                out1, out2 = function(
+                    numpy, coord11(v1), coord12(v1), coord21(v2), coord22(v2)
+                )
+                return instance_class(azcoords(out1, out2))
 
-            elif groupname == "spatial":
-                instance_class = flavor_of(v1, v2).ProjectionClass3D
-                azcoords = _coord_object_type[returns[0]]
-                lcoords = _coord_object_type[returns[1]]
+        elif groupname == "spatial":
+            instance_class = flavor_of(v1, v2).ProjectionClass3D
+            azcoords = _coord_object_type[returns[0]]
+            lcoords = _coord_object_type[returns[1]]
 
-                def overloader_impl(v1, v2):
-                    out1, out2, out3 = function(
-                        numpy,
-                        coord11(v1),
-                        coord12(v1),
-                        coord13(v1),
-                        coord21(v2),
-                        coord22(v2),
-                        coord23(v2),
-                    )
-                    return instance_class(azcoords(out1, out2), lcoords(out3))
+            def overloader_impl(v1, v2):
+                out1, out2, out3 = function(
+                    numpy,
+                    coord11(v1),
+                    coord12(v1),
+                    coord13(v1),
+                    coord21(v2),
+                    coord22(v2),
+                    coord23(v2),
+                )
+                return instance_class(azcoords(out1, out2), lcoords(out3))
 
-            elif groupname == "lorentz":
-                instance_class = flavor_of(v1, v2).ProjectionClass4D
-                azcoords = _coord_object_type[returns[0]]
-                lcoords = _coord_object_type[returns[1]]
-                tcoords = _coord_object_type[returns[2]]
+        elif groupname == "lorentz":
+            instance_class = flavor_of(v1, v2).ProjectionClass4D
+            azcoords = _coord_object_type[returns[0]]
+            lcoords = _coord_object_type[returns[1]]
+            tcoords = _coord_object_type[returns[2]]
 
-                def overloader_impl(v1, v2):
-                    out1, out2, out3, out4 = function(
-                        numpy,
-                        coord11(v1),
-                        coord12(v1),
-                        coord13(v1),
-                        coord14(v1),
-                        coord21(v2),
-                        coord22(v2),
-                        coord23(v2),
-                        coord24(v2),
-                    )
-                    return instance_class(
-                        azcoords(out1, out2), lcoords(out3), tcoords(out4)
-                    )
+            def overloader_impl(v1, v2):
+                out1, out2, out3, out4 = function(
+                    numpy,
+                    coord11(v1),
+                    coord12(v1),
+                    coord13(v1),
+                    coord14(v1),
+                    coord21(v2),
+                    coord22(v2),
+                    coord23(v2),
+                    coord24(v2),
+                )
+                return instance_class(
+                    azcoords(out1, out2), lcoords(out3), tcoords(out4)
+                )
 
         return overloader_impl
 

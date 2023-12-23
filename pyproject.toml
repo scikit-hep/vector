@@ -87,9 +87,11 @@ version.source = "vcs"
 build.hooks.vcs.version-file = "src/vector/_version.py"
 
 [tool.ruff]
-select = [
-  "E", "F", "W", # flake8
-  "B", "B904",   # flake8-bugbear
+src = ["src"]
+
+[tool.ruff.lint]
+extend-select = [
+  "B",           # flake8-bugbear
   "I",           # isort
   "C4",          # flake8-comprehensions
   "ISC",         # flake8-implicit-str-concat
@@ -103,24 +105,18 @@ select = [
   "UP",          # pyupgrade
   "YTT",         # flake8-2020
 ]
-extend-ignore = [
-  "PLR",   # Design related pylint codes
-  "E501",  # Line too long
+ignore = [
+  "PLR09",       # Too many X
+  "PLR2004",     # Magic values
 ]
 typing-modules = ["vector._typeutils"]
-src = ["src"]
-unfixable = [
-  "T20",  # Removes print statements
-  "F841", # Removes unused variables
-]
-exclude = []
 isort.required-imports = ["from __future__ import annotations"]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "noxfile.py" = ["T20"]
 "tests/*" = ["T20"]
 "src/vector/backends/_numba_object.py" = ["PGH003"]
-"tests/backends/test_operators.py" = ["SIM201", "SIM202"]
+"tests/backends/test_operators.py" = ["SIM201", "SIM202", "PLR0124"]
 
 [tool.pylint]
 master.py-version = "3.8"
@@ -212,7 +208,6 @@ files = [
 python_version = "3.8"
 strict = true
 warn_return_any = false
-show_error_codes = true
 enable_error_code = [
   "ignore-without-code",
   "truthy-bool",
