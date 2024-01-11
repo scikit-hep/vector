@@ -576,7 +576,10 @@ class TemporalAwkwardTau(TemporalAwkward, TemporalTau):
         return (self.tau,)
 
 
-def _class_to_name(cls: type[VectorProtocol]) -> str:
+T = typing.TypeVar("T", bound=VectorProtocol)
+
+
+def _class_to_name(cls: type[T]) -> str:
     if issubclass(cls, Momentum):
         if issubclass(cls, Vector2D):
             return "Momentum2D"
