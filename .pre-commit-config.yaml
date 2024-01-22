@@ -24,13 +24,13 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.1.11"
+    rev: "v0.1.14"
     hooks:
       - id: ruff
         args: ["--fix", "--show-fixes"]
 
   - repo: https://github.com/tox-dev/pyproject-fmt
-    rev: "1.5.3"
+    rev: "1.7.0"
     hooks:
       - id: pyproject-fmt
 
