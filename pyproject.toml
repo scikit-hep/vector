@@ -87,7 +87,10 @@ version.source = "vcs"
 build.hooks.vcs.version-file = "src/vector/_version.py"
 
 [tool.ruff]
-select = [
+src = ["src"]
+
+[tool.ruff.lint]
+extend-select = [
   "E", "F", "W", # flake8
   "B", "B904",   # flake8-bugbear
   "I",           # isort
@@ -103,20 +106,18 @@ select = [
   "UP",          # pyupgrade
   "YTT",         # flake8-2020
 ]
-extend-ignore = [
+ignore = [
   "PLR",   # Design related pylint codes
   "E501",  # Line too long
 ]
 typing-modules = ["vector._typeutils"]
-src = ["src"]
 unfixable = [
   "T20",  # Removes print statements
   "F841", # Removes unused variables
 ]
-exclude = []
 isort.required-imports = ["from __future__ import annotations"]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "noxfile.py" = ["T20"]
 "tests/*" = ["T20"]
 "src/vector/backends/_numba_object.py" = ["PGH003"]
