@@ -44,9 +44,7 @@ def make_function(azimuthal1, longitudinal1, azimuthal2, longitudinal2):
             lib, coord11, coord12, coord13, coord21, coord22, coord23
         ) < (lib.absolute(tolerance) - 1) * mag1_function(
             lib, coord11, coord12, coord13
-        ) * mag2_function(
-            lib, coord21, coord22, coord23
-        )
+        ) * mag2_function(lib, coord21, coord22, coord23)
 
     dispatch_map[azimuthal1, longitudinal1, azimuthal2, longitudinal2] = (f, bool)
 

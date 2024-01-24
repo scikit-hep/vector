@@ -678,9 +678,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             else:
                 complaint = """unrecognized combination of coordinates, allowed combinations are:\n
                     x= y=
-                    rho= phi=""".replace(
-                    "                    ", "    "
-                )
+                    rho= phi=""".replace("                    ", "    ")
                 if type(self) == VectorObject2D:
                     raise TypeError(complaint)
                 else:
@@ -1063,9 +1061,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
                     x= y= eta=
                     rho= phi= z=
                     rho= phi= theta=
-                    rho= phi= eta=""".replace(
-                    "                    ", "    "
-                )
+                    rho= phi= eta=""".replace("                    ", "    ")
                 if type(self) == VectorObject3D:
                     raise TypeError(complaint)
                 else:
@@ -1762,9 +1758,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
                     rho= phi= theta= t=
                     rho= phi= theta= tau=
                     rho= phi= eta= t=
-                    rho= phi= eta= tau=""".replace(
-                    "                    ", "    "
-                )
+                    rho= phi= eta= tau=""".replace("                    ", "    ")
                 if type(self) == VectorObject4D:
                     raise TypeError(complaint)
                 else:

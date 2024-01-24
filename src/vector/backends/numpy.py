@@ -222,7 +222,11 @@ def _getitem(
                 *(out[x] for x in _coordinate_class_to_names[_ttype(array)])  # type: ignore[arg-type]
             )
         if temporal is not None:
-            return array.ObjectClass(azimuthal=azimuthal, longitudinal=longitudinal, temporal=temporal)  # type: ignore[arg-type, return-value]
+            return array.ObjectClass(
+                azimuthal=azimuthal,
+                longitudinal=longitudinal,  # type: ignore[arg-type, return-value]
+                temporal=temporal,  # type: ignore[arg-type]
+            )
         elif longitudinal is not None:
             return array.ObjectClass(azimuthal=azimuthal, longitudinal=longitudinal)  # type: ignore[arg-type, return-value]
         elif azimuthal is not None:
@@ -285,7 +289,7 @@ def _has(
 
 
 def _toarrays(
-    result: tuple[ScalarCollection, ...] | ScalarCollection
+    result: tuple[ScalarCollection, ...] | ScalarCollection,
 ) -> tuple[FloatArray, ...]:
     """
     Converts a tuple of values to a tuple of ``numpy.array``s.
@@ -760,7 +764,15 @@ class VectorNumpy(Vector, GetItem):
         return typing.cast(
             SameVectorNumpyType,
             # pylint: disable-next=unexpected-keyword-arg
-            numpy.sum(self, axis=axis, dtype=dtype, out=out, keepdims=keepdims, initial=initial, where=where),  # type: ignore[call-overload]
+            numpy.sum(
+                self,
+                axis=axis,
+                dtype=dtype,
+                out=out,
+                keepdims=keepdims,
+                initial=initial,
+                where=where,
+            ),  # type: ignore[call-overload]
         )
 
     def __eq__(self, other: typing.Any) -> typing.Any:
