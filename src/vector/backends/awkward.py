@@ -580,17 +580,16 @@ def _class_to_name(cls: type[VectorProtocol]) -> str:
     if issubclass(cls, Momentum):
         if issubclass(cls, Vector2D):
             return "Momentum2D"
-        elif issubclass(cls, Vector3D):
+        if issubclass(cls, Vector3D):
             return "Momentum3D"
-        elif issubclass(cls, Vector4D):
+        if issubclass(cls, Vector4D):
             return "Momentum4D"
-    else:
-        if issubclass(cls, Vector2D):
-            return "Vector2D"
-        elif issubclass(cls, Vector3D):
-            return "Vector3D"
-        elif issubclass(cls, Vector4D):
-            return "Vector4D"
+    if issubclass(cls, Vector2D):
+        return "Vector2D"
+    if issubclass(cls, Vector3D):
+        return "Vector3D"
+    if issubclass(cls, Vector4D):
+        return "Vector4D"
 
     raise AssertionError(repr(cls))
 
