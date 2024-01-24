@@ -602,3 +602,101 @@ def test_count_4d():
         None,
         3,
     ]
+
+
+def test_demotion():
+    v1 = vector.zip(
+        {
+            "x": [10.0, 20.0, 30.0],
+            "y": [-10.0, 20.0, 30.0],
+        },
+    )
+    v2 = vector.zip(
+        {
+            "x": [10.0, 20.0, 30.0],
+            "y": [-10.0, 20.0, 30.0],
+            "z": [5.0, 1.0, 1.0],
+        },
+    )
+    v3 = vector.zip(
+        {
+            "x": [10.0, 20.0, 30.0],
+            "y": [-10.0, 20.0, 30.0],
+            "z": [5.0, 1.0, 1.0],
+            "t": [16.0, 31.0, 46.0],
+        },
+    )
+
+    v1_v2 = vector.zip(
+        {
+            "x": [20.0, 40.0, 60.0],
+            "y": [-20.0, 40.0, 60.0],
+        },
+    )
+    v2_v3 = vector.zip(
+        {
+            "x": [20.0, 40.0, 60.0],
+            "y": [-20.0, 40.0, 60.0],
+            "z": [10.0, 2.0, 2.0],
+        },
+    )
+    v1_v3 = vector.zip(
+        {
+            "x": [20.0, 40.0, 60.0],
+            "y": [-20.0, 40.0, 60.0],
+        },
+    )
+
+    # order should not matter
+    assert all(v1 + v2 == v1_v2)
+    assert all(v2 + v1 == v1_v2)
+    assert all(v1 + v3 == v1_v3)
+    assert all(v3 + v1 == v1_v3)
+    assert all(v2 + v3 == v2_v3)
+    assert all(v3 + v2 == v2_v3)
+
+    v1 = vector.zip(
+        {
+            "px": [10.0, 20.0, 30.0],
+            "py": [-10.0, 20.0, 30.0],
+        },
+    )
+    v2 = vector.zip(
+        {
+            "px": [10.0, 20.0, 30.0],
+            "py": [-10.0, 20.0, 30.0],
+            "pz": [5.0, 1.0, 1.0],
+        },
+    )
+    v3 = vector.zip(
+        {
+            "px": [10.0, 20.0, 30.0],
+            "py": [-10.0, 20.0, 30.0],
+            "pz": [5.0, 1.0, 1.0],
+            "t": [16.0, 31.0, 46.0],
+        },
+    )
+
+    # order should not matter
+    assert all(v1 + v2 == v1_v2)
+    assert all(v2 + v1 == v1_v2)
+    assert all(v1 + v3 == v1_v3)
+    assert all(v3 + v1 == v1_v3)
+    assert all(v2 + v3 == v2_v3)
+    assert all(v3 + v2 == v2_v3)
+
+    v2 = vector.zip(
+        {
+            "x": [10.0, 20.0, 30.0],
+            "y": [-10.0, 20.0, 30.0],
+            "z": [5.0, 1.0, 1.0],
+        },
+    )
+
+    # momentum + generic = generic
+    assert all(v1 + v2 == v1_v2)
+    assert all(v2 + v1 == v1_v2)
+    assert all(v1 + v3 == v1_v3)
+    assert all(v3 + v1 == v1_v3)
+    assert all(v2 + v3 == v2_v3)
+    assert all(v3 + v2 == v2_v3)

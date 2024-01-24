@@ -257,3 +257,41 @@ def test_array_casting():
 
     with pytest.raises(TypeError):
         vector.obj(x=1, y=False)
+
+
+def test_demotion():
+    v1 = vector.obj(x=0.1, y=0.2)
+    v2 = vector.obj(x=1, y=2, z=3)
+    v3 = vector.obj(x=10, y=20, z=30, t=40)
+
+    # order should not matter
+    assert v1 + v2 == vector.obj(x=1.1, y=2.2)
+    assert v2 + v1 == vector.obj(x=1.1, y=2.2)
+    assert v1 + v3 == vector.obj(x=10.1, y=20.2)
+    assert v3 + v1 == vector.obj(x=10.1, y=20.2)
+    assert v2 + v3 == vector.obj(x=11, y=22, z=33)
+    assert v3 + v2 == vector.obj(x=11, y=22, z=33)
+
+    v1 = vector.obj(px=0.1, py=0.2)
+    v2 = vector.obj(px=1, py=2, pz=3)
+    v3 = vector.obj(px=10, py=20, pz=30, t=40)
+
+    # order should not matter
+    assert v1 + v2 == vector.obj(px=1.1, py=2.2)
+    assert v2 + v1 == vector.obj(px=1.1, py=2.2)
+    assert v1 + v3 == vector.obj(px=10.1, py=20.2)
+    assert v3 + v1 == vector.obj(px=10.1, py=20.2)
+    assert v2 + v3 == vector.obj(px=11, py=22, pz=33)
+    assert v3 + v2 == vector.obj(px=11, py=22, pz=33)
+
+    v1 = vector.obj(px=0.1, py=0.2)
+    v2 = vector.obj(x=1, y=2, z=3)
+    v3 = vector.obj(px=10, py=20, pz=30, t=40)
+
+    # momentum + generic = generic
+    assert v1 + v2 == vector.obj(x=1.1, y=2.2)
+    assert v2 + v1 == vector.obj(x=1.1, y=2.2)
+    assert v1 + v3 == vector.obj(px=10.1, py=20.2)
+    assert v3 + v1 == vector.obj(px=10.1, py=20.2)
+    assert v2 + v3 == vector.obj(x=11, y=22, z=33)
+    assert v3 + v2 == vector.obj(x=11, y=22, z=33)

@@ -486,3 +486,121 @@ def test_count_nonzero_4d():
     assert numpy.count_nonzero(v2, axis=1, keepdims=True).tolist() == [[3], [2]]
     assert numpy.count_nonzero(v2, axis=0).tolist() == [2, 2, 1]
     assert numpy.count_nonzero(v2, axis=0, keepdims=True).tolist() == [[2, 2, 1]]
+
+
+def test_demotion():
+    v1 = vector.array(
+        {
+            "x": [10.0, 20.0, 30.0],
+            "y": [-10.0, 20.0, 30.0],
+        },
+    )
+    v2 = vector.array(
+        {
+            "x": [10.0, 20.0, 30.0],
+            "y": [-10.0, 20.0, 30.0],
+            "z": [5.0, 1.0, 1.0],
+        },
+    )
+    v3 = vector.array(
+        {
+            "x": [10.0, 20.0, 30.0],
+            "y": [-10.0, 20.0, 30.0],
+            "z": [5.0, 1.0, 1.0],
+            "t": [16.0, 31.0, 46.0],
+        },
+    )
+
+    v1_v2 = vector.array(
+        {
+            "x": [20.0, 40.0, 60.0],
+            "y": [-20.0, 40.0, 60.0],
+        },
+    )
+    v2_v3 = vector.array(
+        {
+            "x": [20.0, 40.0, 60.0],
+            "y": [-20.0, 40.0, 60.0],
+            "z": [10.0, 2.0, 2.0],
+        },
+    )
+    v1_v3 = vector.array(
+        {
+            "x": [20.0, 40.0, 60.0],
+            "y": [-20.0, 40.0, 60.0],
+        },
+    )
+
+    # order should not matter
+    assert all(v1 + v2 == v1_v2)
+    assert all(v2 + v1 == v1_v2)
+    assert all(v1 + v3 == v1_v3)
+    assert all(v3 + v1 == v1_v3)
+    assert all(v2 + v3 == v2_v3)
+    assert all(v3 + v2 == v2_v3)
+
+    v1 = vector.array(
+        {
+            "px": [10.0, 20.0, 30.0],
+            "py": [-10.0, 20.0, 30.0],
+        },
+    )
+    v2 = vector.array(
+        {
+            "px": [10.0, 20.0, 30.0],
+            "py": [-10.0, 20.0, 30.0],
+            "pz": [5.0, 1.0, 1.0],
+        },
+    )
+    v3 = vector.array(
+        {
+            "px": [10.0, 20.0, 30.0],
+            "py": [-10.0, 20.0, 30.0],
+            "pz": [5.0, 1.0, 1.0],
+            "t": [16.0, 31.0, 46.0],
+        },
+    )
+
+    p_v1_v2 = vector.array(
+        {
+            "px": [20.0, 40.0, 60.0],
+            "py": [-20.0, 40.0, 60.0],
+        },
+    )
+    p_v2_v3 = vector.array(
+        {
+            "px": [20.0, 40.0, 60.0],
+            "py": [-20.0, 40.0, 60.0],
+            "pz": [10.0, 2.0, 2.0],
+        },
+    )
+    p_v1_v3 = vector.array(
+        {
+            "px": [20.0, 40.0, 60.0],
+            "py": [-20.0, 40.0, 60.0],
+        },
+    )
+
+    # order should not matter
+    assert all(v1 + v2 == p_v1_v2)
+    assert all(v2 + v1 == p_v1_v2)
+    assert all(v1 + v3 == p_v1_v3)
+    assert all(v3 + v1 == p_v1_v3)
+    assert all(v2 + v3 == p_v2_v3)
+    assert all(v3 + v2 == p_v2_v3)
+
+    v2 = vector.zip(
+        {
+            "x": [10.0, 20.0, 30.0],
+            "y": [-10.0, 20.0, 30.0],
+            "z": [5.0, 1.0, 1.0],
+        },
+    )
+
+    # momentum + generic = generic
+    assert all(v1 + v2 == v1_v2)
+    assert all(v2 + v1 == v1_v2)
+    assert all(v1 + v3 == v1_v3)
+    assert all(v3 + v1 == v1_v3)
+    assert all(v2 + v3 == v2_v3)
+    assert all(v3 + v2 == v2_v3)

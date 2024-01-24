@@ -3927,9 +3927,7 @@ def dim(v: VectorProtocol) -> int:
         raise TypeError(f"{v!r} is not a vector.Vector")
 
 
-def _compute_module_of(
-    one: VectorProtocol, two: VectorProtocol, nontemporal: bool = False
-) -> Module:
+def _compute_module_of(one: VectorProtocol, two: VectorProtocol) -> Module:
     """
     Determines which compute module to use for functions of two vectors
     (the one with minimum dimension).
@@ -3941,34 +3939,20 @@ def _compute_module_of(
     if not isinstance(two, Vector):
         raise TypeError(f"{two!r} is not a Vector")
 
-    if isinstance(one, Vector2D):
+    if isinstance(one, Vector2D) or isinstance(two, Vector2D):
         import vector._compute.planar
 
         return vector._compute.planar
 
-    elif isinstance(one, Vector3D):
-        if isinstance(two, Vector2D):
-            import vector._compute.planar
+    elif isinstance(one, Vector3D) or isinstance(two, Vector3D):
+        import vector._compute.spatial
 
-            return vector._compute.planar
-        else:
-            import vector._compute.spatial
+        return vector._compute.spatial
 
-            return vector._compute.spatial
+    elif isinstance(one, Vector4D) or isinstance(two, Vector4D):
+        import vector._compute.lorentz
 
-    elif isinstance(one, Vector4D):
-        if isinstance(two, Vector2D):
-            import vector._compute.planar
-
-            return vector._compute.planar
-        elif isinstance(two, Vector3D) or nontemporal:
-            import vector._compute.spatial
-
-            return vector._compute.spatial
-        else:
-            import vector._compute.lorentz
-
-            return vector._compute.lorentz
+        return vector._compute.lorentz
 
     raise AssertionError(repr(one))
 
@@ -4120,6 +4104,14 @@ def _get_handler_index(obj: VectorProtocol) -> int:
     )
 
 
+def _check_instance(
+    any_or_all: typing.Callable[[typing.Iterable[bool]], bool],
+    objects: tuple[VectorProtocol, ...],
+    clas: type[Vector] | type[vector.VectorAwkward],
+) -> bool:
+    return any_or_all(isinstance(v, clas) for v in objects)
+
+
 def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
     """
     Determines which vector should wrap the output of a dispatched function.
@@ -4137,6 +4129,62 @@ def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
             handler = obj
 
     assert handler is not None
+
+    # if there is a 2D vector in objects
+    if _check_instance(any, objects, Vector2D):
+        # if all the objects are not from the same backend
+        # choose the 2D object of the backend with highest priority if it exists
+        # or demote the first encountered object of the backend with highest priority to 2D
+        if (
+            not _check_instance(all, objects, vector.VectorObject)
+            and not _check_instance(all, objects, vector.VectorNumpy)
+            and not _check_instance(all, objects, vector.VectorAwkward)
+        ):
+            new_type = type(handler.to_Vector2D())
+            flag = 0
+            # if there is a 2D object of the backend with highest priority
+            # make it the new handler
+            for obj in objects:
+                if type(obj) == new_type:
+                    handler = obj
+                    flag = 1
+            # else, demote the dimension of the object of the backend with highest priority
+            if flag == 0:
+                handler = handler.to_Vector2D()
+        # if all objects are from the same backend
+        # use the 2D one as the handler
+        else:
+            for obj in objects:
+                if isinstance(obj, Vector2D):
+                    handler = obj
+    # if there is no 2D vector but a 3D vector in objects
+    elif _check_instance(any, objects, Vector3D):
+        # if all the objects are not from the same backend
+        # choose the 3D object of the backend with highest priority if it exists
+        # or demote the first encountered object of the backend with highest priority to 3D
+        if (
+            not _check_instance(all, objects, vector.VectorObject)
+            and not _check_instance(all, objects, vector.VectorNumpy)
+            and not _check_instance(all, objects, vector.VectorAwkward)
+        ):
+            new_type = type(handler.to_Vector3D())
+            flag = 0
+            # if there is a 3D object of the backend with highest priority
+            # make it the new handler
+            for obj in objects:
+                if type(obj) == new_type:
+                    handler = obj
+                    flag = 1
+            # else, demote the dimension of the object of the backend with highest priority
+            if flag == 0:
+                handler = handler.to_Vector3D()
+        # if all objects are from the same backend
+        # use the 3D one as the handler
+        else:
+            for obj in objects:
+                if isinstance(obj, Vector3D):
+                    handler = obj
+
     return handler
 
 
