@@ -5,8 +5,12 @@
 
 from __future__ import annotations
 
+import pytest
+
 import vector
 from vector import VectorObject2D, VectorObject3D, VectorObject4D
+
+awkward = pytest.importorskip("awkward")
 
 
 def test_handler_of():

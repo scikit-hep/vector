@@ -4130,60 +4130,53 @@ def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
 
     assert handler is not None
 
-    # if there is a 2D vector in objects
-    if _check_instance(any, objects, Vector2D):
-        # if all the objects are not from the same backend
-        # choose the 2D object of the backend with highest priority if it exists
-        # or demote the first encountered object of the backend with highest priority to 2D
-        if (
-            not _check_instance(all, objects, vector.VectorObject)
-            and not _check_instance(all, objects, vector.VectorNumpy)
-            and not _check_instance(all, objects, vector.VectorAwkward)
-        ):
-            new_type = type(handler.to_Vector2D())
-            flag = 0
-            # if there is a 2D object of the backend with highest priority
-            # make it the new handler
-            for obj in objects:
-                if type(obj) == new_type:
-                    handler = obj
-                    flag = 1
-            # else, demote the dimension of the object of the backend with highest priority
-            if flag == 0:
-                handler = handler.to_Vector2D()
-        # if all objects are from the same backend
-        # use the 2D one as the handler
-        else:
-            for obj in objects:
-                if isinstance(obj, Vector2D):
-                    handler = obj
-    # if there is no 2D vector but a 3D vector in objects
-    elif _check_instance(any, objects, Vector3D):
-        # if all the objects are not from the same backend
-        # choose the 3D object of the backend with highest priority if it exists
-        # or demote the first encountered object of the backend with highest priority to 3D
-        if (
-            not _check_instance(all, objects, vector.VectorObject)
-            and not _check_instance(all, objects, vector.VectorNumpy)
-            and not _check_instance(all, objects, vector.VectorAwkward)
-        ):
-            new_type = type(handler.to_Vector3D())
-            flag = 0
-            # if there is a 3D object of the backend with highest priority
-            # make it the new handler
-            for obj in objects:
-                if type(obj) == new_type:
-                    handler = obj
-                    flag = 1
-            # else, demote the dimension of the object of the backend with highest priority
-            if flag == 0:
-                handler = handler.to_Vector3D()
-        # if all objects are from the same backend
-        # use the 3D one as the handler
-        else:
-            for obj in objects:
-                if isinstance(obj, Vector3D):
-                    handler = obj
+    if _check_instance(all, objects, Vector):
+        # if there is a 2D vector in objects
+        if _check_instance(any, objects, Vector2D):
+            # if all the objects are not from the same backend
+            # choose the 2D object of the backend with highest priority if it exists
+            # or demote the first encountered object of the backend with highest priority to 2D
+            if len({_handler_priority.index(obj.__module__) for obj in objects}) != 1:
+                new_type = type(handler.to_Vector2D())
+                flag = 0
+                # if there is a 2D object of the backend with highest priority
+                # make it the new handler
+                for obj in objects:
+                    if type(obj) == new_type:
+                        handler = obj
+                        flag = 1
+                # else, demote the dimension of the object of the backend with highest priority
+                if flag == 0:
+                    handler = handler.to_Vector2D()
+            # if all objects are from the same backend
+            # use the 2D one as the handler
+            else:
+                for obj in objects:
+                    if isinstance(obj, Vector2D):
+                        handler = obj
+        # if there is no 2D vector but a 3D vector in objects
+        elif _check_instance(any, objects, Vector3D):
+            # if all the objects are not from the same backend
+            # choose the 3D object of the backend with highest priority if it exists
+            # or demote the first encountered object of the backend with highest priority to 3D
+            if len({_handler_priority.index(obj.__module__) for obj in objects}) != 1:
+                new_type = type(handler.to_Vector3D())
+                flag = 0
+                # if there is a 3D object of the backend with highest priority
+                # make it the new handler
+                for obj in objects:
+                    if type(obj) == new_type:
+                        handler = obj
+                        flag = 1
+                # else, demote the dimension of the object of the backend with highest priority
+                if flag == 0:
+                    handler = handler.to_Vector3D()
+            # if all objects are from the same backend
+            # use the 3D one as the handler
+            else:
+                for obj in objects:
+                    if isinstance(obj, Vector3D):
+                        handler = obj
 
     return handler
 

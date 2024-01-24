@@ -589,7 +589,7 @@ def test_demotion():
     assert all(v2 + v3 == p_v2_v3)
     assert all(v3 + v2 == p_v2_v3)
 
-    v2 = vector.zip(
+    v2 = vector.array(
         {
             "x": [10.0, 20.0, 30.0],
             "y": [-10.0, 20.0, 30.0],
