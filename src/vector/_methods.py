@@ -4141,7 +4141,15 @@ def _demote_handler_vector(
     # if all the objects are not from the same backend
     # choose the {X}D object of the backend with highest priority (if it exists)
     # or demote the first encountered object of the backend with highest priority to {X}D
-    if len({_handler_priority.index(obj.__module__) for obj in objects}) != 1:
+    backends = [
+        next(
+            x.__module__
+            for x in type(obj).__mro__
+            if "vector.backends." in x.__module__
+        )
+        for obj in objects
+    ]
+    if len({_handler_priority.index(backend) for backend in backends}) != 1:
         new_type = type(new_vector)
         flag = 0
         # if there is a {X}D object of the backend with highest priority
@@ -4150,6 +4158,7 @@ def _demote_handler_vector(
             if type(obj) == new_type:
                 handler = obj
                 flag = 1
+                break
         # else, demote the dimension of the object of the backend with highest priority
         if flag == 0:
             handler = new_vector
