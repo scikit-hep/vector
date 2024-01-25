@@ -3927,7 +3927,9 @@ def dim(v: VectorProtocol) -> int:
         raise TypeError(f"{v!r} is not a vector.Vector")
 
 
-def _compute_module_of(one: VectorProtocol, two: VectorProtocol) -> Module:
+def _compute_module_of(
+    one: VectorProtocol, two: VectorProtocol, nontemporal: bool = False
+) -> Module:
     """
     Determines which compute module to use for functions of two vectors
     (the one with minimum dimension).
@@ -3939,20 +3941,34 @@ def _compute_module_of(one: VectorProtocol, two: VectorProtocol) -> Module:
     if not isinstance(two, Vector):
         raise TypeError(f"{two!r} is not a Vector")
 
-    if isinstance(one, Vector2D) or isinstance(two, Vector2D):
+    if isinstance(one, Vector2D):
         import vector._compute.planar
 
         return vector._compute.planar
 
-    elif isinstance(one, Vector3D) or isinstance(two, Vector3D):
-        import vector._compute.spatial
+    elif isinstance(one, Vector3D):
+        if isinstance(two, Vector2D):
+            import vector._compute.planar
 
-        return vector._compute.spatial
+            return vector._compute.planar
+        else:
+            import vector._compute.spatial
 
-    elif isinstance(one, Vector4D) or isinstance(two, Vector4D):
-        import vector._compute.lorentz
+            return vector._compute.spatial
 
-        return vector._compute.lorentz
+    elif isinstance(one, Vector4D):
+        if isinstance(two, Vector2D):
+            import vector._compute.planar
+
+            return vector._compute.planar
+        elif isinstance(two, Vector3D) or nontemporal:
+            import vector._compute.spatial
+
+            return vector._compute.spatial
+        else:
+            import vector._compute.lorentz
+
+            return vector._compute.lorentz
 
     raise AssertionError(repr(one))
 
