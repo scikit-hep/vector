@@ -86,7 +86,7 @@ jobs:
       - name: Install awkward v1
         run: python -m pip install -U "awkward<2"
 
-      - name: Run doctests on Python ${{ matrix.python-version }} with awkward v1.x
+      - name: Run doctests on Python 3.11 with awkward v1.x
         if: matrix.python-version == '3.11'
         run: python -m pytest -ra --doctest-plus src/vector/
 
@@ -122,7 +122,7 @@ jobs:
       - name: Install awkward v2
         run: python -m pip install -U --pre "awkward>=2.0.0rc1"
 
-      - name: Run doctests on Python ${{ matrix.python-version }} with awkward v2.x
+      - name: Run doctests on Python 3.11 with awkward v2.x
         if: matrix.python-version == 3.11
         run: python -m pytest -ra --doctest-plus src/vector/
 
