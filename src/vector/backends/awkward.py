@@ -122,8 +122,7 @@ class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
             >>> az
             AzimuthalAwkwardXY(<Array [[1, 2], None] type='2 * option[var * int64]'>, <Array [None, [1]] type='2 * option[var * int64]'>)
             >>> az.elements
-            (<Array [[1, 2], None] type='2 * option[var * int64]'>, <Array [None, [1]] type='2 * option[var
-            * int64]'>)
+            (<Array [[1, 2], None] type='2 * option[var * int64]'>, <Array [None, [1]] type='2 * option[var * int64]'>)
         """
         fields = ak.fields(array)
         if "x" in fields and "y" in fields:
@@ -151,8 +150,7 @@ class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
             >>> az
             AzimuthalAwkwardXY(<Array [[1, 2], None] type='2 * option[var * int64]'>, <Array [None, [1]] type='2 * option[var * int64]'>)
             >>> az.elements
-            (<Array [[1, 2], None] type='2 * option[var * int64]'>, <Array [None, [1]] type='2 * option[var
-            * int64]'>)
+            (<Array [[1, 2], None] type='2 * option[var * int64]'>, <Array [None, [1]] type='2 * option[var * int64]'>)
         """
         fields = ak.fields(array)
         if "x" in fields and "y" in fields:

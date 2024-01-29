@@ -51,7 +51,7 @@ dev = [
   "papermill>=2.4",
   "pytest>=6",
   "pytest-cov>=3",
-  "xdoctest>=1",
+  "pytest-doctestplus",
 ]
 docs = [
   "awkward>=1.2",
@@ -67,7 +67,7 @@ test = [
   "papermill>=2.4",
   "pytest>=6",
   "pytest-cov>=3",
-  "xdoctest>=1",
+  "pytest-doctestplus",
 ]
 test-extras = [
   "spark-parser",

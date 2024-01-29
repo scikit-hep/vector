@@ -94,7 +94,7 @@ If you would like to skip the failing checks and push the code for further discu
 
 ## Testing vector
 
-`vector` is tested using `pytest` and `xdoctest`. `pytest` is responsible for testing the code, whose configuration is available in [pyproject.toml](https://github.com/scikit-hep/vector/blob/main/pyproject.toml).`xdoctest` is responsible for testing the examples available in every docstring, which prevents them from going stale. Additionally, `vector` also uses `pytest-cov` to calculate the coverage of these unit tests.
+`vector` is tested using `pytest` and `pytest-doctestplus`. `pytest` is responsible for testing the code, whose configuration is available in [pyproject.toml](https://github.com/scikit-hep/vector/blob/main/pyproject.toml).`pytest-doctestplus` is responsible for testing the examples available in every docstring, which prevents them from going stale. Additionally, `vector` also uses `pytest-cov` to calculate the coverage of these unit tests.
 
 ### Running tests locally
 
@@ -119,13 +119,13 @@ python -m pytest --cov=vector tests/
 The doctests can be executed using the `test` dependencies of `vector` in the following way -
 
 ```bash
-xdoctest ./src/vector/
+python -m pytest --doctest-plus src/vector/
 ```
 
 or, one can run the doctests along with the unit tests in the following way -
 
 ```bash
-python -m pytest --xdoctest .
+python -m pytest --doctest-plus .
 ```
 
 A much more detailed guide on testing with `pytest` for `Scikit-HEP` packages is available [here](https://scikit-hep.org/developer/pytest).
