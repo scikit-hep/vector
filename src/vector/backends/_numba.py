@@ -14,6 +14,8 @@ import vector._compute.lorentz
 import vector._compute.planar
 import vector._compute.spatial
 
+__doctest_requires__ = {("*"): ["numba"]}
+
 names_and_modules = [
     ("planar", vector._compute.planar),
     ("spatial", vector._compute.spatial),

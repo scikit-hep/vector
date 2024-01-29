@@ -50,6 +50,8 @@ from vector.backends.object import (
     _coord_object_type,
 )
 
+__doctest_requires__ = {("*"): ["numba"]}
+
 
 @numba.extending.overload(numpy.nan_to_num)  # FIXME: This needs to go into Numba!
 def nan_to_num(x, copy=True, nan=0.0, posinf=None, neginf=None):
