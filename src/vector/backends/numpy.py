@@ -426,7 +426,7 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # typ
         >>> import vector
         >>> vector.backends.numpy.AzimuthalNumpyXY([(1, 1), (2.1, 3.1)], dtype=[("x", float), ("y", float)])
         AzimuthalNumpyXY([(1. , 1. ), (2.1, 3.1)],
-                        dtype=[('x', '<f8'), ('y', '<f8')])
+                         dtype=[('x', '<f8'), ('y', '<f8')])
     """
 
     ObjectClass = vector.backends.object.AzimuthalObjectXY
@@ -477,7 +477,7 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray)
         >>> import vector
         >>> vector.backends.numpy.AzimuthalNumpyRhoPhi([(1, 1), (2.1, 3.1)], dtype=[("rho", float), ("phi", float)])
         AzimuthalNumpyRhoPhi([(1. , 1. ), (2.1, 3.1)],
-                            dtype=[('rho', '<f8'), ('phi', '<f8')])
+                             dtype=[('rho', '<f8'), ('phi', '<f8')])
     """
 
     ObjectClass = vector.backends.object.AzimuthalObjectRhoPhi
@@ -1036,7 +1036,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
         ...               dtype=[('x', float), ('y', float)])
         >>> vec
         VectorNumpy2D([(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)],
-                    dtype=[('x', '<f8'), ('y', '<f8')])
+                      dtype=[('x', '<f8'), ('y', '<f8')])
     """
 
     ObjectClass = vector.backends.object.VectorObject2D
@@ -1088,7 +1088,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
             ... ], dtype=[("x", float), ("y", float)])
             >>> vec.azimuthal
             AzimuthalNumpyXY([(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4),
-                            (1.5, 2.5)], dtype=[('x', '<f8'), ('y', '<f8')])
+                              (1.5, 2.5)], dtype=[('x', '<f8'), ('y', '<f8')])
         """
         return self.view(self._azimuthal_type)  # type: ignore[return-value]
 
@@ -1259,7 +1259,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
         ...               dtype=[('x', float), ('y', float), ('z', float)])
         >>> vec
         VectorNumpy3D([(1.1, 2.1, 3.1), (1.2, 2.2, 3.2), (1.3, 2.3, 3.3), (1.4, 2.4, 3.4),
-                    (1.5, 2.5, 3.5)], dtype=[('x', '<f8'), ('y', '<f8'), ('z', '<f8')])
+                       (1.5, 2.5, 3.5)], dtype=[('x', '<f8'), ('y', '<f8'), ('z', '<f8')])
     """
 
     ObjectClass = vector.backends.object.VectorObject3D
@@ -1465,7 +1465,7 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
         ...               dtype=[('px', float), ('py', float), ('pz', float)])
         >>> vec
         MomentumNumpy3D([(1.1, 2.1, 3.1), (1.2, 2.2, 3.2), (1.3, 2.3, 3.3), (1.4, 2.4, 3.4),
-                        (1.5, 2.5, 3.5)], dtype=[('x', '<f8'), ('y', '<f8'), ('z', '<f8')])
+                         (1.5, 2.5, 3.5)], dtype=[('x', '<f8'), ('y', '<f8'), ('z', '<f8')])
     """
 
     ObjectClass = vector.backends.object.MomentumObject3D
@@ -1524,8 +1524,8 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
         ...               dtype=[('x', float), ('y', float), ('z', float), ('t', float)])
         >>> vec
         VectorNumpy4D([(1.1, 2.1, 3.1, 4.1), (1.2, 2.2, 3.2, 4.2), (1.3, 2.3, 3.3, 4.3),
-                    (1.4, 2.4, 3.4, 4.4), (1.5, 2.5, 3.5, 4.5)],
-                    dtype=[('x', '<f8'), ('y', '<f8'), ('z', '<f8'), ('t', '<f8')])
+                       (1.4, 2.4, 3.4, 4.4), (1.5, 2.5, 3.5, 4.5)],
+                      dtype=[('x', '<f8'), ('y', '<f8'), ('z', '<f8'), ('t', '<f8')])
     """
 
     ObjectClass = vector.backends.object.VectorObject4D
@@ -1783,7 +1783,7 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore[misc]
         ...               dtype=[('px', float), ('py', float), ('pz', float), ('t', float)])
         >>> vec
         MomentumNumpy4D([(1.1, 2.1, 3.1, 4.1), (1.2, 2.2, 3.2, 4.2), (1.3, 2.3, 3.3, 4.3),
-                        (1.4, 2.4, 3.4, 4.4), (1.5, 2.5, 3.5, 4.5)],
+                         (1.4, 2.4, 3.4, 4.4), (1.5, 2.5, 3.5, 4.5)],
                         dtype=[('x', '<f8'), ('y', '<f8'), ('z', '<f8'), ('t', '<f8')])
     """
 

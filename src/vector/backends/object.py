@@ -878,6 +878,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         ...     longitudinal=vector.backends.object.LongitudinalObjectTheta(3)
         ... )
         >>> vec.x, vec.y, vec.theta
+        (1, 2, 3)
 
 
     The following class methods can also be used to

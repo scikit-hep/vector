@@ -45,7 +45,7 @@ def coverage(session: nox.Session) -> None:
 def doctests(session: nox.Session) -> None:
     """Run the doctests."""
     session.install("-e", ".[awkward,test,test-extras]")
-    session.run("xdoctest", "./src/vector/", *session.posargs)
+    session.run("pytest", "--doctest-plus", "src/vector/", *session.posargs)
 
 
 @nox.session(python=ALL_PYTHONS, reuse_venv=True)
