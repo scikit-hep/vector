@@ -47,6 +47,7 @@ awkward = [
 ]
 dev = [
   "awkward>=1.2",
+  "nox",
   'numba>=0.57; python_version < "3.12"',
   "papermill>=2.4",
   "pytest>=6",
@@ -64,6 +65,7 @@ docs = [
   "sphinx_copybutton",
 ]
 test = [
+  "nox",
   "papermill>=2.4",
   "pytest>=6",
   "pytest-cov>=3",
