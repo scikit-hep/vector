@@ -5,16 +5,16 @@
 
 from __future__ import annotations
 
+import sys
 import types
 import typing
 
-import numba
+if sys.version_info < (3, 12):
+    import numba
 
 import vector._compute.lorentz
 import vector._compute.planar
 import vector._compute.spatial
-
-__doctest_requires__ = {("*"): ["numba"]}
 
 names_and_modules = [
     ("planar", vector._compute.planar),

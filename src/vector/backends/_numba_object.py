@@ -13,8 +13,11 @@ Every function should be made usable in Numba.
 from __future__ import annotations
 
 import operator
+import sys
 
-import numba
+if sys.version_info < (3, 12):
+    import numba
+
 import numpy
 
 import vector
@@ -49,8 +52,6 @@ from vector.backends.object import (
     VectorObject4D,
     _coord_object_type,
 )
-
-__doctest_requires__ = {("*"): ["numba"]}
 
 
 @numba.extending.overload(numpy.nan_to_num)  # FIXME: This needs to go into Numba!
