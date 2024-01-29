@@ -5,12 +5,10 @@
 
 from __future__ import annotations
 
-import sys
 import types
 import typing
 
-if sys.version_info < (3, 12):
-    import numba
+import numba
 
 import vector._compute.lorentz
 import vector._compute.planar

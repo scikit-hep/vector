@@ -13,11 +13,8 @@ Every function should be made usable in Numba.
 from __future__ import annotations
 
 import operator
-import sys
 
-if sys.version_info < (3, 12):
-    import numba
-
+import numba
 import numpy
 
 import vector
