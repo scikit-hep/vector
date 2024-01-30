@@ -20,7 +20,7 @@
 #### Maintenance
 
 - chore: repo review updates [#408][]
-- black -> ruff format by @Saransh-cpp [#414][]
+- black -> ruff format [#414][]
 - chore: migrate to pytest-doctestplus [#416][]
 
 [#390]: https://github.com/scikit-hep/vector/pull/390
