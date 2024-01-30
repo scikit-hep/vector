@@ -293,6 +293,8 @@ ak.Array(
 
 All of the keyword arguments and rules that apply to `vector.obj` construction apply to `vector.awk` field names.
 
+Finally, the `VectorAwkward` mixins can be subclassed to create custom vector classes. The awkward behavior classes and projections must be named as `*Array`. For example, `coffea` uses the following names - `TwoVectorArray`, `ThreeVectorArray`, `PolarTwoVectorArray`, `SphericalThreeVectorArray`, ...
+
 ## Vector properties
 
 Any geometrical coordinate can be computed from vectors in any coordinate system; they'll be provided or computed as needed.
