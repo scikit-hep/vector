@@ -15,7 +15,7 @@
 
 - Update `README` and `intro.ipynb` to include the latest developments [#399][]
 - docs: add docs for vector.zip [#390][]
-- Fix Vector* mixin's docstring [#404][]
+- Fix Vector\* mixin's docstring [#404][]
 
 #### Maintenance
 
