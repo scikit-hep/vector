@@ -1,14 +1,37 @@
 # Changelog
 
-## Version 1.1
+## Version 1.2
 
-### Unreleased
+### Version 1.2.0
+
+#### Bug fixes
+
+- fix: result of an infix operation should be demoted to the lowest possible dimension [#413][]
+- fix: all infix operations should not depend on the order of arguments [#413][]
+- fix: return the correct awkward record when performing an infix operation [#413][]
+- fix: respect user defined awkward mixin subclasses and projection classes [#413][]
 
 #### Documentation
 
 - Update `README` and `intro.ipynb` to include the latest developments [#399][]
+- docs: add docs for vector.zip [#390][]
+- Fix Vector* mixin's docstring [#404][]
 
+#### Maintenance
+
+- chore: repo review updates [#408][]
+- black -> ruff format by @Saransh-cpp [#414][]
+- chore: migrate to pytest-doctestplus [#416][]
+
+[#390]: https://github.com/scikit-hep/vector/pull/390
+[#404]: https://github.com/scikit-hep/vector/pull/404
 [#399]: https://github.com/scikit-hep/vector/pull/399
+[#408]: https://github.com/scikit-hep/vector/pull/408
+[#414]: https://github.com/scikit-hep/vector/pull/414
+[#416]: https://github.com/scikit-hep/vector/pull/416
+[#413]: https://github.com/scikit-hep/vector/pull/413
+
+## Version 1.1
 
 ### Version 1.1.1.post1
 
