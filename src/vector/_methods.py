@@ -4120,6 +4120,58 @@ def _get_handler_index(obj: VectorProtocol) -> int:
     )
 
 
+def _check_instance(
+    any_or_all: typing.Callable[[typing.Iterable[bool]], bool],
+    objects: tuple[VectorProtocol, ...],
+    clas: type[VectorProtocol],
+) -> bool:
+    return any_or_all(isinstance(v, clas) for v in objects)
+
+
+def _demote_handler_vector(
+    handler: VectorProtocol,
+    objects: tuple[VectorProtocol, ...],
+    vector_class: type[VectorProtocol],
+    new_vector: VectorProtocol,
+) -> VectorProtocol:
+    """
+    Demotes the handler vector to the lowest possible dimension while respecting
+    the priority of backends.
+    """
+    # if all the objects are not from the same backend
+    # choose the {X}D object of the backend with highest priority (if it exists)
+    # or demote the first encountered object of the backend with highest priority to {X}D
+    backends = [
+        next(
+            x.__module__
+            for x in type(obj).__mro__
+            if "vector.backends." in x.__module__
+        )
+        for obj in objects
+    ]
+    if len({_handler_priority.index(backend) for backend in backends}) != 1:
+        new_type = type(new_vector)
+        flag = 0
+        # if there is a {X}D object of the backend with highest priority
+        # make it the new handler
+        for obj in objects:
+            if type(obj) == new_type:
+                handler = obj
+                flag = 1
+                break
+        # else, demote the dimension of the object of the backend with highest priority
+        if flag == 0:
+            handler = new_vector
+    # if all objects are from the same backend
+    # use the {X}D one as the handler
+    else:
+        for obj in objects:
+            if isinstance(obj, vector_class):
+                handler = obj
+
+    return handler
+
+
 def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
     """
     Determines which vector should wrap the output of a dispatched function.
@@ -4137,6 +4189,19 @@ def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
             handler = obj
 
     assert handler is not None
+
+    if _check_instance(all, objects, Vector):
+        # if there is a 2D vector in objects
+        if _check_instance(any, objects, Vector2D):
+            handler = _demote_handler_vector(
+                handler, objects, Vector2D, handler.to_Vector2D()
+            )
+        # if there is no 2D vector but a 3D vector in objects
+        elif _check_instance(any, objects, Vector3D):
+            handler = _demote_handler_vector(
+                handler, objects, Vector3D, handler.to_Vector3D()
+            )
+
     return handler
 
 

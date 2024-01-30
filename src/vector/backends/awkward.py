@@ -575,19 +575,21 @@ class TemporalAwkwardTau(TemporalAwkward, TemporalTau):
 
 
 def _class_to_name(cls: type[VectorProtocol]) -> str:
+    # respect the type of classes inheriting VectorAwkward classes
+    is_vector = "vector.backends" in cls.__module__
     if issubclass(cls, Momentum):
         if issubclass(cls, Vector2D):
-            return "Momentum2D"
+            return "Momentum2D" if is_vector else cls.__name__[:-5]
         if issubclass(cls, Vector3D):
-            return "Momentum3D"
+            return "Momentum3D" if is_vector else cls.__name__[:-5]
         if issubclass(cls, Vector4D):
-            return "Momentum4D"
+            return "Momentum4D" if is_vector else cls.__name__[:-5]
     if issubclass(cls, Vector2D):
-        return "Vector2D"
+        return "Vector2D" if is_vector else cls.__name__[:-5]
     if issubclass(cls, Vector3D):
-        return "Vector3D"
+        return "Vector3D" if is_vector else cls.__name__[:-5]
     if issubclass(cls, Vector4D):
-        return "Vector4D"
+        return "Vector4D" if is_vector else cls.__name__[:-5]
 
     raise AssertionError(repr(cls))
 
