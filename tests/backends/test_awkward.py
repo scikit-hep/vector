@@ -70,6 +70,36 @@ def test_dimension_conversion():
     assert ak.all(vec.to_Vector4D(t=1).y == vec.y)
     assert ak.all(vec.to_Vector4D(t=1).z == vec.z)
 
+    # check if momentum coords work
+    vec = vector.Array(
+        [
+            [{"px": 1, "py": 1.1}, {"px": 2, "py": 2.1}],
+            [],
+        ]
+    )
+    assert ak.all(vec.to_Vector3D(pz=1).pz == 1)
+
+    assert ak.all(vec.to_Vector4D(pz=1, m=1).pz == 1)
+    assert ak.all(vec.to_Vector4D(pz=1, m=1).m == 1)
+    assert ak.all(vec.to_Vector4D(pz=1, mass=1).mass == 1)
+    assert ak.all(vec.to_Vector4D(pz=1, M=1).M == 1)
+    assert ak.all(vec.to_Vector4D(pz=1, e=1).e == 1)
+    assert ak.all(vec.to_Vector4D(pz=1, energy=1).energy == 1)
+    assert ak.all(vec.to_Vector4D(pz=1, E=1).E == 1)
+
+    vec = vector.Array(
+        [
+            [{"px": 1, "py": 1.1, "pz": 1.2}, {"px": 2, "py": 2.1, "pz": 2.2}],
+            [],
+        ]
+    )
+    assert ak.all(vec.to_Vector4D(m=1).m == 1)
+    assert ak.all(vec.to_Vector4D(mass=1).mass == 1)
+    assert ak.all(vec.to_Vector4D(M=1).M == 1)
+    assert ak.all(vec.to_Vector4D(e=1).e == 1)
+    assert ak.all(vec.to_Vector4D(energy=1).energy == 1)
+    assert ak.all(vec.to_Vector4D(E=1).E == 1)
+
 
 def test_type_checks():
     with pytest.raises(TypeError):
