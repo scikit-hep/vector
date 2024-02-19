@@ -206,9 +206,23 @@ class VectorProtocol:
         """
         raise AssertionError
 
+    def to_pxpy(self) -> VectorProtocolPlanar:
+        """
+        Converts to $px$-$py$ coordinates, possibly eliminating dimensions with a
+        projection.
+        """
+        raise AssertionError
+
     def to_rhophi(self) -> VectorProtocolPlanar:
         r"""
         Converts to $\rho$-$\phi$ coordinates, possibly eliminating dimensions with a
+        projection.
+        """
+        raise AssertionError
+
+    def to_ptphi(self) -> VectorProtocolPlanar:
+        r"""
+        Converts to $pt$-$\phi$ coordinates, possibly eliminating dimensions with a
         projection.
         """
         raise AssertionError
@@ -234,6 +248,27 @@ class VectorProtocol:
         """
         raise AssertionError
 
+    def to_pxpypz(self) -> VectorProtocolSpatial:
+        """
+        Converts to $px$-$py$-$pz$ coordinates, possibly eliminating or imputing
+        dimensions with a projection.
+        """
+        raise AssertionError
+
+    def to_pxpytheta(self) -> VectorProtocolSpatial:
+        r"""
+        Converts to $px$-$py$-$\theta$ coordinates, possibly eliminating or imputing
+        dimensions with a projection.
+        """
+        raise AssertionError
+
+    def to_pxpyeta(self) -> VectorProtocolSpatial:
+        r"""
+        Converts to $px$-$py$-$\eta$ coordinates, possibly eliminating or imputing
+        dimensions with a projection.
+        """
+        raise AssertionError
+
     def to_rhophiz(self) -> VectorProtocolSpatial:
         r"""
         Converts to $\rho$-$\phi$-$z$ coordinates, possibly eliminating or imputing
@@ -251,6 +286,27 @@ class VectorProtocol:
     def to_rhophieta(self) -> VectorProtocolSpatial:
         r"""
         Converts to $\rho$-$\phi$-$\eta$ coordinates, possibly eliminating or
+        imputing dimensions with a projection.
+        """
+        raise AssertionError
+
+    def to_ptphipz(self) -> VectorProtocolSpatial:
+        r"""
+        Converts to $pt$-$\phi$-$pz$ coordinates, possibly eliminating or imputing
+        dimensions with a projection.
+        """
+        raise AssertionError
+
+    def to_ptphitheta(self) -> VectorProtocolSpatial:
+        r"""
+        Converts to $pt$-$\phi$-$\theta$ coordinates, possibly eliminating or
+        imputing dimensions with a projection.
+        """
+        raise AssertionError
+
+    def to_ptphieta(self) -> VectorProtocolSpatial:
+        r"""
+        Converts to $pt$-$\phi$-$\eta$ coordinates, possibly eliminating or
         imputing dimensions with a projection.
         """
         raise AssertionError
@@ -297,6 +353,48 @@ class VectorProtocol:
         """
         raise AssertionError
 
+    def to_pxpypzenergy(self) -> VectorProtocolLorentz:
+        r"""
+        Converts to $px$-$py$-$pz$-$energy$ coordinates, possibly imputing dimensions
+        with a projection.
+        """
+        raise AssertionError
+
+    def to_pxpythetaenergy(self) -> VectorProtocolLorentz:
+        r"""
+        Converts to $px$-$py$-$\theta$-$energy$ coordinates, possibly imputing
+        dimensions with a projection.
+        """
+        raise AssertionError
+
+    def to_pxpyetaenergy(self) -> VectorProtocolLorentz:
+        r"""
+        Converts to $px$-$py$-$\eta$-$energy$ coordinates, possibly imputing dimensions
+        with a projection.
+        """
+        raise AssertionError
+
+    def to_pxpypzmass(self) -> VectorProtocolLorentz:
+        r"""
+        Converts to $px$-$py$-$pz$-$mass$ coordinates, possibly imputing dimensions
+        with a projection.
+        """
+        raise AssertionError
+
+    def to_pxpythetamass(self) -> VectorProtocolLorentz:
+        r"""
+        Converts to $px$-$py$-$\theta$-$energy$ coordinates, possibly imputing dimensions
+        with a projection.
+        """
+        raise AssertionError
+
+    def to_pxpyetamass(self) -> VectorProtocolLorentz:
+        r"""
+        Converts to $px$-$py$-$\eta$-$mass$ coordinates, possibly imputing dimensions
+        with a projection.
+        """
+        raise AssertionError
+
     def to_rhophizt(self) -> VectorProtocolLorentz:
         r"""
         Converts to $\rho$-$\phi$-$z$-$t$ coordinates, possibly imputing dimensions
@@ -336,6 +434,48 @@ class VectorProtocol:
         r"""
         Converts to $\rho$-$\phi$-$\eta$-$\tau$ coordinates, possibly imputing
         dimensions with a projection.
+        """
+        raise AssertionError
+
+    def to_ptphipzenergy(self) -> VectorProtocolLorentz:
+        r"""
+        Converts to $pt$-$\phi$-$pz$-$energy$ coordinates, possibly imputing dimensions
+        with a projection.
+        """
+        raise AssertionError
+
+    def to_ptphithetaenergy(self) -> VectorProtocolLorentz:
+        r"""
+        Converts to $pt$-$\phi$-$\theta$-$energy$ coordinates, possibly imputing
+        dimensions with a projection.
+        """
+        raise AssertionError
+
+    def to_ptphietaenergy(self) -> VectorProtocolLorentz:
+        r"""
+        Converts to $pt$-$\phi$-$\eta$-$energy$ coordinates, possibly imputing dimensions
+        with a projection.
+        """
+        raise AssertionError
+
+    def to_ptphipzmass(self) -> VectorProtocolLorentz:
+        r"""
+        Converts to $pt$-$\phi$-$pz$-$mass$ coordinates, possibly imputing dimensions
+        with a projection.
+        """
+        raise AssertionError
+
+    def to_ptphithetamass(self) -> VectorProtocolLorentz:
+        r"""
+        Converts to $pt$-$\phi$-$\theta$-$mass$ coordinates, possibly imputing dimensions
+        with a projection.
+        """
+        raise AssertionError
+
+    def to_ptphietamass(self) -> VectorProtocolLorentz:
+        r"""
+        Converts to $pt$-$\phi$-$\theta$-$mass$ coordinates, possibly imputing dimensions
+        with a projection.
         """
         raise AssertionError
 
@@ -2656,6 +2796,9 @@ class Vector(VectorProtocol):
             1,
         )
 
+    def to_pxpy(self) -> VectorProtocolPlanar:
+        return self.to_xy()
+
     def to_rhophi(self) -> VectorProtocolPlanar:
         from vector._compute import planar
 
@@ -2665,6 +2808,9 @@ class Vector(VectorProtocol):
             [AzimuthalRhoPhi, None],
             1,
         )
+
+    def to_ptphi(self) -> VectorProtocolPlanar:
+        return self.to_rhophi()
 
     def to_xyz(self) -> VectorProtocolSpatial:
         from vector._compute import planar, spatial
@@ -2708,6 +2854,15 @@ class Vector(VectorProtocol):
             1,
         )
 
+    def to_pxpypz(self) -> VectorProtocolSpatial:
+        return self.to_xyz()
+
+    def to_pxpytheta(self) -> VectorProtocolSpatial:
+        return self.to_xytheta()
+
+    def to_pxpyeta(self) -> VectorProtocolSpatial:
+        return self.to_xyeta()
+
     def to_rhophiz(self) -> VectorProtocolSpatial:
         from vector._compute import planar, spatial
 
@@ -2749,6 +2904,15 @@ class Vector(VectorProtocol):
             [AzimuthalRhoPhi, LongitudinalEta, None],
             1,
         )
+
+    def to_ptphipz(self) -> VectorProtocolSpatial:
+        return self.to_rhophiz()
+
+    def to_ptphitheta(self) -> VectorProtocolSpatial:
+        return self.to_rhophitheta()
+
+    def to_ptphieta(self) -> VectorProtocolSpatial:
+        return self.to_rhophieta()
 
     def to_xyzt(self) -> VectorProtocolLorentz:
         from vector._compute import lorentz, planar, spatial
@@ -2852,6 +3016,24 @@ class Vector(VectorProtocol):
             1,
         )
 
+    def to_pxpypzenergy(self) -> VectorProtocolLorentz:
+        return self.to_xyzt()
+
+    def to_pxpythetaenergy(self) -> VectorProtocolLorentz:
+        return self.to_xythetat()
+
+    def to_pxpyetaenergy(self) -> VectorProtocolLorentz:
+        return self.to_xyetat()
+
+    def to_pxpypzmass(self) -> VectorProtocolLorentz:
+        return self.to_xyztau()
+
+    def to_pxpythetamass(self) -> VectorProtocolLorentz:
+        return self.to_xythetatau()
+
+    def to_pxpyetamass(self) -> VectorProtocolLorentz:
+        return self.to_xyetatau()
+
     def to_rhophizt(self) -> VectorProtocolLorentz:
         from vector._compute import lorentz, planar, spatial
 
@@ -2953,6 +3135,24 @@ class Vector(VectorProtocol):
             [AzimuthalRhoPhi, LongitudinalEta, TemporalTau],
             1,
         )
+
+    def to_ptphipzenergy(self) -> VectorProtocolLorentz:
+        return self.to_rhophizt()
+
+    def to_ptphithetaenergy(self) -> VectorProtocolLorentz:
+        return self.to_rhophithetat()
+
+    def to_ptphietaenergy(self) -> VectorProtocolLorentz:
+        return self.to_rhophietat()
+
+    def to_ptphipzmass(self) -> VectorProtocolLorentz:
+        return self.to_rhophiztau()
+
+    def to_ptphithetamass(self) -> VectorProtocolLorentz:
+        return self.to_rhophithetatau()
+
+    def to_ptphietamass(self) -> VectorProtocolLorentz:
+        return self.to_rhophietatau()
 
 
 class Vector2D(Vector, VectorProtocolPlanar):
