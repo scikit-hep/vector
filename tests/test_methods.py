@@ -5,6 +5,8 @@
 
 from __future__ import annotations
 
+import pytest
+
 import vector
 from vector import (
     MomentumNumpy2D,
@@ -27,33 +29,37 @@ def test_handler_of():
 
     object_a = VectorObject3D.from_xyz(0.0, 0.0, 0.0)
     object_b = VectorObject4D.from_xyzt(1.0, 1.0, 1.0, 1.0)
-    protocol = vector._methods._handler_of(object_a, object_b)
-    assert protocol == object_a
+    with pytest.raises(TypeError):
+        protocol = vector._methods._handler_of(object_a, object_b)
+    protocol = vector._methods._handler_of(object_a.like(object_b), object_b)
+    assert protocol == object_a.like(object_b)
 
     object_a = VectorObject4D.from_xyzt(0.0, 0.0, 0.0, 0.0)
     object_b = VectorObject3D.from_xyz(1.0, 1.0, 1.0)
-    protocol = vector._methods._handler_of(object_a, object_b)
-    assert protocol == object_b
+    with pytest.raises(TypeError):
+        protocol = vector._methods._handler_of(object_a, object_b)
+    protocol = vector._methods._handler_of(object_b.like(object_a), object_a)
+    assert protocol == object_b.like(object_a)
 
     object_a = VectorObject2D.from_xy(0.0, 0.0)
     object_b = VectorObject4D.from_xyzt(1.0, 1.0, 1.0, 1.0)
-    protocol = vector._methods._handler_of(object_a, object_b)
-    assert protocol == object_a
+    with pytest.raises(TypeError):
+        protocol = vector._methods._handler_of(object_a, object_b)
 
     object_a = VectorObject4D.from_xyzt(0.0, 0.0, 0.0, 0.0)
     object_b = VectorObject2D.from_xy(1.0, 1.0)
-    protocol = vector._methods._handler_of(object_a, object_b)
-    assert protocol == object_b
+    with pytest.raises(TypeError):
+        protocol = vector._methods._handler_of(object_a, object_b)
 
     object_a = VectorObject2D.from_xy(0.0, 0.0)
     object_b = VectorObject3D.from_xyz(1.0, 1.0, 1.0)
-    protocol = vector._methods._handler_of(object_a, object_b)
-    assert protocol == object_a
+    with pytest.raises(TypeError):
+        protocol = vector._methods._handler_of(object_a, object_b)
 
     object_a = VectorObject3D.from_xyz(0.0, 0.0, 0.0)
     object_b = VectorObject2D.from_xy(1.0, 1.0)
-    protocol = vector._methods._handler_of(object_a, object_b)
-    assert protocol == object_b
+    with pytest.raises(TypeError):
+        protocol = vector._methods._handler_of(object_a, object_b)
 
 
 def test_momentum_coordinate_transforms():

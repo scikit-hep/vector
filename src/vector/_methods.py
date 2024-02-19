@@ -184,7 +184,9 @@ class VectorProtocol:
         Projects this vector/these vectors onto azimuthal and longitudinal
         coordinates only.
 
-        If 2D, a $z$ component of $0$ is imputed.
+        If 2D, a default $z$ component of $0$ is imputed.
+
+        The longitudinal coordinate can be passed as a named argument.
         """
         raise AssertionError
 
@@ -193,9 +195,12 @@ class VectorProtocol:
         Projects this vector/these vectors onto azimuthal, longitudinal,
         and temporal coordinates.
 
-        If 2D or 3D, a $t$ component of $0$ is imputed.
+        If 3D, a default $t$ component of $0$ is imputed.
 
-        If 2D, a $z$ component of $0$ is imputed.
+        If 2D, a $z$ component of $0$ is imputed along with a default
+        $t$ component of $0$.
+
+        The longitudinal and temporal coordinates can be passed as named arguments.
         """
         raise AssertionError
 
@@ -560,6 +565,31 @@ class VectorProtocol:
         .. code-block:: python
 
             close_enough = abs(self - other) <= atol + rtol * abs(other)
+        """
+        raise AssertionError
+
+    def like(self, other: VectorProtocol) -> VectorProtocol:
+        """
+        Projects the vector into the geometric coordinates of the `other`
+        vector.
+
+        Value(s) of $0$ is/are imputed while transforming vector from a lower
+        geometric dimension to a higher geometric dimension.
+
+        .. code-block:: python
+
+            vec_4d + vec_3d.like(vec_4d)
+
+        For more flexibility (passing new coordinate values), see
+        :meth:`vector._methods.Vector2D.to_Vector3D`,
+        :meth:`vector._methods.Vector2D.to_Vector4D`, and
+        :meth:`vector._methods.Vector3D.to_Vector4D`, which can be used as:
+
+        .. code-block:: python
+
+            vec_2d.to_Vector3D(z=3.0)
+            vec_2d.to_Vector4D(z=3.0, t=4.0)
+            vec_3d.to_Vector4D(t=4.0)
         """
         raise AssertionError
 
@@ -3154,6 +3184,14 @@ class Vector(VectorProtocol):
     def to_ptphietamass(self) -> VectorProtocolLorentz:
         return self.to_rhophietatau()
 
+    def like(self, other: VectorProtocol) -> VectorProtocol:
+        if isinstance(other, Vector2D):
+            return self.to_Vector2D()
+        elif isinstance(other, Vector3D):
+            return self.to_Vector3D()
+        else:
+            return self.to_Vector4D()
+
 
 class Vector2D(Vector, VectorProtocolPlanar):
     def to_Vector2D(self) -> VectorProtocolPlanar:
@@ -3163,6 +3201,7 @@ class Vector2D(Vector, VectorProtocolPlanar):
         self,
         *,
         z: float | None = None,
+        pz: float | None = None,
         theta: float | None = None,
         eta: float | None = None,
     ) -> VectorProtocolSpatial:
@@ -3170,8 +3209,7 @@ class Vector2D(Vector, VectorProtocolPlanar):
         Converts a 2D vector to 3D vector.
 
         The scalar longitudinal coordinate is broadcasted for NumPy and Awkward
-        vectors. Only a single longitudinal coordinate should be provided. Generic
-        coordinate counterparts should be provided for the momentum coordinates.
+        vectors. Only a single longitudinal coordinate should be provided.
 
         Examples:
             >>> import vector
@@ -3179,18 +3217,18 @@ class Vector2D(Vector, VectorProtocolPlanar):
             >>> vec.to_Vector3D(z=1)
             VectorObject3D(x=1, y=2, z=1)
             >>> vec = vector.MomentumObject2D(px=1, py=2)
-            >>> vec.to_Vector3D(z=4)
+            >>> vec.to_Vector3D(pz=4)
             MomentumObject3D(px=1, py=2, pz=4)
         """
         if sum(x is not None for x in (z, theta, eta)) > 1:
             raise TypeError(
-                "At most one longitudinal coordinate (`z`, `theta`, or `eta`) may be assigned (non-None)"
+                "At most one longitudinal coordinate (`z`/`pz`, `theta`, or `eta`) may be assigned (non-None)"
             )
 
         l_value = 0.0
         l_type: type[Longitudinal] = LongitudinalZ
-        if z is not None:
-            l_value = z
+        if any(coord is not None for coord in [z, pz]):
+            l_value = next(coord for coord in [z, pz] if coord is not None)
         elif eta is not None:
             l_value = eta
             l_type = LongitudinalEta
@@ -3209,18 +3247,24 @@ class Vector2D(Vector, VectorProtocolPlanar):
         self,
         *,
         z: float | None = None,
+        pz: float | None = None,
         theta: float | None = None,
         eta: float | None = None,
         t: float | None = None,
+        e: float | None = None,
+        E: float | None = None,
+        energy: float | None = None,
         tau: float | None = None,
+        m: float | None = None,
+        M: float | None = None,
+        mass: float | None = None,
     ) -> VectorProtocolLorentz:
         """
         Converts a 2D vector to 4D vector.
 
         The scalar longitudinal and temporal coordinates are broadcasted for NumPy and
         Awkward vectors. Only a single longitudinal and temporal coordinate should be
-        provided. Generic coordinate counterparts should be provided for the momentum
-        coordinates.
+        provided.
 
         Examples:
             >>> import vector
@@ -3228,30 +3272,30 @@ class Vector2D(Vector, VectorProtocolPlanar):
             >>> vec.to_Vector4D(z=3, t=4)
             VectorObject4D(x=1, y=2, z=3, t=4)
             >>> vec = vector.MomentumObject2D(px=1, py=2)
-            >>> vec.to_Vector4D(z=4, t=4)
+            >>> vec.to_Vector4D(pz=4, energy=4)
             MomentumObject4D(px=1, py=2, pz=4, E=4)
         """
         if sum(x is not None for x in (z, theta, eta)) > 1:
             raise TypeError(
-                "At most one longitudinal coordinate (`z`, `theta`, or `eta`) may be assigned (non-None)"
+                "At most one longitudinal coordinate (`z`/`pz`, `theta`, or `eta`) may be assigned (non-None)"
             )
         elif sum(x is not None for x in (t, tau)) > 1:
             raise TypeError(
-                "At most one longitudinal coordinate (`t`, `tau`) may be assigned (non-None)"
+                "At most one longitudinal coordinate (`t`/`e`/`E`/`energy`, `tau`/`m`/`M`/`mass`) may be assigned (non-None)"
             )
 
         t_value = 0.0
         t_type: type[Temporal] = TemporalT
-        if t is not None:
-            t_value = t
-        elif tau is not None:
-            t_value = tau
+        if any(coord is not None for coord in [tau, m, M, mass]):
             t_type = TemporalTau
+            t_value = next(coord for coord in [tau, m, M, mass] if coord is not None)
+        elif any(coord is not None for coord in [t, e, E, energy]):
+            t_value = next(coord for coord in [t, e, E, energy] if coord is not None)
 
         l_value = 0.0
         l_type: type[Longitudinal] = LongitudinalZ
-        if z is not None:
-            l_value = z
+        if any(coord is not None for coord in [z, pz]):
+            l_value = next(coord for coord in [z, pz] if coord is not None)
         elif eta is not None:
             l_value = eta
             l_type = LongitudinalEta
@@ -3283,14 +3327,19 @@ class Vector3D(Vector, VectorProtocolSpatial):
         self,
         *,
         t: float | None = None,
+        e: float | None = None,
+        E: float | None = None,
+        energy: float | None = None,
         tau: float | None = None,
+        m: float | None = None,
+        M: float | None = None,
+        mass: float | None = None,
     ) -> VectorProtocolLorentz:
         """
         Converts a 3D vector to 4D vector.
 
         The scalar temporal coordinate are broadcasted for NumPy and Awkward vectors.
-        Only a single temporal coordinate should be provided. Generic coordinate
-        counterparts should be provided for the momentum coordinates.
+        Only a single temporal coordinate should be provided.
 
         Examples:
             >>> import vector
@@ -3298,21 +3347,21 @@ class Vector3D(Vector, VectorProtocolSpatial):
             >>> vec.to_Vector4D(t=4)
             VectorObject4D(x=1, y=2, z=3, t=4)
             >>> vec = vector.MomentumObject3D(px=1, py=2, pz=3)
-            >>> vec.to_Vector4D(tau=4)
+            >>> vec.to_Vector4D(M=4)
             MomentumObject4D(px=1, py=2, pz=3, mass=4)
         """
         if sum(x is not None for x in (t, tau)) > 1:
             raise TypeError(
-                "At most one longitudinal coordinate (`t`, `tau`) may be assigned (non-None)"
+                "At most one longitudinal coordinate (`t`/`e`/`E`/`energy`, `tau`/`m`/`M`/`mass`) may be assigned (non-None)"
             )
 
         t_value = 0.0
         t_type: type[Temporal] = TemporalT
-        if t is not None:
-            t_value = t
-        elif tau is not None:
-            t_value = tau
+        if any(coord is not None for coord in [tau, m, M, mass]):
             t_type = TemporalTau
+            t_value = next(coord for coord in [tau, m, M, mass] if coord is not None)
+        elif any(coord is not None for coord in [t, e, E, energy]):
+            t_value = next(coord for coord in [t, e, E, energy] if coord is not None)
 
         return self._wrap_result(
             type(self),
@@ -4390,17 +4439,32 @@ def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
 
     assert handler is not None
 
-    if _check_instance(all, objects, Vector):
-        # if there is a 2D vector in objects
-        if _check_instance(any, objects, Vector2D):
-            handler = _demote_handler_vector(
-                handler, objects, Vector2D, handler.to_Vector2D()
-            )
-        # if there is no 2D vector but a 3D vector in objects
-        elif _check_instance(any, objects, Vector3D):
-            handler = _demote_handler_vector(
-                handler, objects, Vector3D, handler.to_Vector3D()
-            )
+    if _check_instance(all, objects, Vector) and (
+        (
+            _check_instance(any, objects, Vector2D)
+            and _check_instance(any, objects, Vector3D)
+        )
+        or (
+            _check_instance(any, objects, Vector2D)
+            and _check_instance(any, objects, Vector4D)
+        )
+        or (
+            _check_instance(any, objects, Vector3D)
+            and _check_instance(any, objects, Vector4D)
+        )
+    ):
+        raise TypeError(
+            """cannot perform the operation on vectors of different dimensionality; use
+
+                a.like(b) + b
+
+            or
+
+               a + b.like(a)
+
+            to project or embed one of the vectors to match the other's dimensionality
+            """
+        )
 
     return handler
 

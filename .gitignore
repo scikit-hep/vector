@@ -142,3 +142,6 @@ dmypy.json
 /node_modules
 /package.json
 /yarn.lock
+
+# MacOS
+.DS_Store

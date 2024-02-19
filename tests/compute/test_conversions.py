@@ -491,3 +491,430 @@ def test_MomentumNumpy4D():
                 assert tv.y[0] == pytest.approx(2)
                 assert tv.z[0] == pytest.approx(3)
                 assert tv.t[0] == pytest.approx(4)
+
+
+def test_conversion_with_coords_object():
+    # 2D -> 3D
+    vec = vector.VectorObject2D(x=1, y=2)
+    assert vec.to_Vector3D(z=1).z == 1
+    assert vec.to_Vector3D(eta=1).eta == 1
+    assert vec.to_Vector3D(theta=1).theta == 1
+
+    assert vec.to_Vector3D(z=1).x == vec.x
+    assert vec.to_Vector3D(z=1).y == vec.y
+
+    # 2D -> 4D
+    assert vec.to_Vector4D(z=1, t=1).z == 1
+    assert vec.to_Vector4D(z=1, t=1).t == 1
+    assert vec.to_Vector4D(eta=1, t=1).eta == 1
+    assert vec.to_Vector4D(eta=1, t=1).t == 1
+    assert vec.to_Vector4D(theta=1, t=1).theta == 1
+    assert vec.to_Vector4D(theta=1, t=1).t == 1
+    assert vec.to_Vector4D(z=1, tau=1).z == 1
+    assert vec.to_Vector4D(z=1, tau=1).tau == 1
+    assert vec.to_Vector4D(eta=1, tau=1).eta == 1
+    assert vec.to_Vector4D(eta=1, tau=1).tau == 1
+    assert vec.to_Vector4D(theta=1, tau=1).theta == 1
+    assert vec.to_Vector4D(theta=1, tau=1).tau == 1
+
+    assert vec.to_Vector4D(z=1, t=1).x == vec.x
+    assert vec.to_Vector4D(z=1, t=1).y == vec.y
+
+    # 3D -> 4D
+    vec = vector.VectorObject3D(x=1, y=2, z=3)
+    assert vec.to_Vector4D(t=1).t == 1
+    assert vec.to_Vector4D(tau=1).tau == 1
+
+    assert vec.to_Vector4D(t=1).x == vec.x
+    assert vec.to_Vector4D(t=1).y == vec.y
+    assert vec.to_Vector4D(t=1).z == vec.z
+
+    # check if momentum coords work
+    vec = vector.MomentumObject2D(px=1, py=2)
+    assert vec.to_Vector3D(pz=1).pz == 1
+
+    assert vec.to_Vector4D(pz=1, m=1).pz == 1
+    assert vec.to_Vector4D(pz=1, m=1).m == 1
+    assert vec.to_Vector4D(pz=1, mass=1).mass == 1
+    assert vec.to_Vector4D(pz=1, M=1).M == 1
+    assert vec.to_Vector4D(pz=1, e=1).e == 1
+    assert vec.to_Vector4D(pz=1, energy=1).energy == 1
+    assert vec.to_Vector4D(pz=1, E=1).E == 1
+
+    vec = vector.MomentumObject3D(px=1, py=2, pz=3)
+    assert vec.to_Vector4D(m=1).m == 1
+    assert vec.to_Vector4D(mass=1).mass == 1
+    assert vec.to_Vector4D(M=1).M == 1
+    assert vec.to_Vector4D(e=1).e == 1
+    assert vec.to_Vector4D(energy=1).energy == 1
+    assert vec.to_Vector4D(E=1).E == 1
+
+
+def test_conversion_with_coords_numpy():
+    # 2D -> 3D
+    vec = vector.VectorNumpy2D(
+        [(1.0, 1.0), (2.0, 2.0)],
+        dtype=[("x", float), ("y", float)],
+    )
+    assert all(vec.to_Vector3D(z=1).z == 1)
+    assert all(vec.to_Vector3D(eta=1).eta == 1)
+    assert all(vec.to_Vector3D(theta=1).theta == 1)
+
+    assert all(vec.to_Vector3D(z=1).x == vec.x)
+    assert all(vec.to_Vector3D(z=1).y == vec.y)
+
+    # 2D -> 4D
+    assert all(vec.to_Vector4D(z=1, t=1).t == 1)
+    assert all(vec.to_Vector4D(z=1, t=1).z == 1)
+    assert all(vec.to_Vector4D(eta=1, t=1).eta == 1)
+    assert all(vec.to_Vector4D(eta=1, t=1).t == 1)
+    assert all(vec.to_Vector4D(theta=1, t=1).theta == 1)
+    assert all(vec.to_Vector4D(theta=1, t=1).t == 1)
+    assert all(vec.to_Vector4D(z=1, tau=1).z == 1)
+    assert all(vec.to_Vector4D(z=1, tau=1).tau == 1)
+    assert all(vec.to_Vector4D(eta=1, tau=1).eta == 1)
+    assert all(vec.to_Vector4D(eta=1, tau=1).tau == 1)
+    assert all(vec.to_Vector4D(theta=1, tau=1).theta == 1)
+    assert all(vec.to_Vector4D(theta=1, tau=1).tau == 1)
+
+    assert all(vec.to_Vector4D(z=1, t=1).x == vec.x)
+    assert all(vec.to_Vector4D(z=1, t=1).y == vec.y)
+
+    # 3D -> 4D
+    vec = vector.VectorNumpy3D(
+        [(1.0, 1.0, 1.0), (2.0, 2.0, 2.0)],
+        dtype=[("x", float), ("y", float), ("z", float)],
+    )
+    assert all(vec.to_Vector4D(t=1).t == 1)
+    assert all(vec.to_Vector4D(tau=1).tau == 1)
+
+    assert all(vec.to_Vector4D(t=1).x == vec.x)
+    assert all(vec.to_Vector4D(t=1).y == vec.y)
+    assert all(vec.to_Vector4D(t=1).z == vec.z)
+
+    # check if momentum coords work
+    vec = vector.MomentumNumpy2D(
+        [(1.0, 1.0), (2.0, 2.0)],
+        dtype=[("px", float), ("py", float)],
+    )
+    assert all(vec.to_Vector3D(pz=1).pz == 1)
+
+    assert all(vec.to_Vector4D(pz=1, m=1).pz == 1)
+    assert all(vec.to_Vector4D(pz=1, m=1).m == 1)
+    assert all(vec.to_Vector4D(pz=1, mass=1).mass == 1)
+    assert all(vec.to_Vector4D(pz=1, M=1).M == 1)
+    assert all(vec.to_Vector4D(pz=1, e=1).e == 1)
+    assert all(vec.to_Vector4D(pz=1, energy=1).energy == 1)
+    assert all(vec.to_Vector4D(pz=1, E=1).E == 1)
+
+    vec = vector.MomentumNumpy3D(
+        [(1.0, 1.0, 1.0), (2.0, 2.0, 2.0)],
+        dtype=[("px", float), ("py", float), ("pz", float)],
+    )
+    assert all(vec.to_Vector4D(m=1).m == 1)
+    assert all(vec.to_Vector4D(mass=1).mass == 1)
+    assert all(vec.to_Vector4D(M=1).M == 1)
+    assert all(vec.to_Vector4D(e=1).e == 1)
+    assert all(vec.to_Vector4D(energy=1).energy == 1)
+    assert all(vec.to_Vector4D(E=1).E == 1)
+
+
+def test_like_object():
+    v1 = vector.obj(x=0.1, y=0.2)
+    v2 = vector.obj(x=1, y=2, z=3)
+    v3 = vector.obj(x=10, y=20, z=30, t=40)
+
+    with pytest.raises(TypeError):
+        v1 + v2
+    with pytest.raises(TypeError):
+        v2 + v3
+    with pytest.raises(TypeError):
+        v1 + v3
+
+    # 2D + 3D.like(2D) = 2D
+    assert v1 + v2.like(v1) == vector.obj(x=1.1, y=2.2)
+    assert v2.like(v1) + v1 == vector.obj(x=1.1, y=2.2)
+    # 2D + 4D.like(2D) = 2D
+    assert v1 + v3.like(v1) == vector.obj(x=10.1, y=20.2)
+    assert v3.like(v1) + v1 == vector.obj(x=10.1, y=20.2)
+    # 3D + 2D.like(3D) = 3D
+    assert v2 + v1.like(v2) == vector.obj(x=1.1, y=2.2, z=3)
+    assert v1.like(v2) + v2 == vector.obj(x=1.1, y=2.2, z=3)
+    # 3D + 4D.like(3D) = 3D
+    assert v2 + v3.like(v2) == vector.obj(x=11, y=22, z=33)
+    assert v3.like(v2) + v2 == vector.obj(x=11, y=22, z=33)
+    # 4D + 2D.like(4D) = 4D
+    assert v3 + v1.like(v3) == vector.obj(x=10.1, y=20.2, z=30.0, t=40.0)
+    assert v1.like(v3) + v3 == vector.obj(x=10.1, y=20.2, z=30.0, t=40.0)
+    # 4D + 3D.like(4D) = 4D
+    assert v3 + v2.like(v3) == vector.obj(x=11, y=22, z=33, t=40)
+    assert v2.like(v3) + v3 == vector.obj(x=11, y=22, z=33, t=40)
+
+    v1 = vector.obj(px=0.1, py=0.2)
+    v2 = vector.obj(px=1, py=2, pz=3)
+    v3 = vector.obj(px=10, py=20, pz=30, t=40)
+
+    with pytest.raises(TypeError):
+        v1 + v2
+    with pytest.raises(TypeError):
+        v2 + v3
+    with pytest.raises(TypeError):
+        v1 + v3
+
+    # order should not matter
+    # 2D + 3D.like(2D) = 2D
+    assert v1 + v2.like(v1) == vector.obj(px=1.1, py=2.2)
+    assert v2.like(v1) + v1 == vector.obj(px=1.1, py=2.2)
+    # 2D + 4D.like(2D) = 2D
+    assert v1 + v3.like(v1) == vector.obj(px=10.1, py=20.2)
+    assert v3.like(v1) + v1 == vector.obj(px=10.1, py=20.2)
+    # 3D + 2D.like(3D) = 3D
+    assert v2 + v1.like(v2) == vector.obj(px=1.1, py=2.2, pz=3)
+    assert v1.like(v2) + v2 == vector.obj(px=1.1, py=2.2, pz=3)
+    # 3D + 4D.like(3D) = 3D
+    assert v2 + v3.like(v2) == vector.obj(px=11, py=22, pz=33)
+    assert v3.like(v2) + v2 == vector.obj(px=11, py=22, pz=33)
+    # 4D + 2D.like(4D) = 4D
+    assert v3 + v1.like(v3) == vector.obj(px=10.1, py=20.2, pz=30.0, E=40.0)
+    assert v1.like(v3) + v3 == vector.obj(px=10.1, py=20.2, pz=30.0, E=40.0)
+    # 4D + 3D.like(4D) = 4D
+    assert v3 + v2.like(v3) == vector.obj(px=11, py=22, pz=33, E=40)
+    assert v2.like(v3) + v3 == vector.obj(px=11, py=22, pz=33, E=40)
+
+    v1 = vector.obj(px=0.1, py=0.2)
+    v2 = vector.obj(x=1, y=2, z=3)
+    v3 = vector.obj(px=10, py=20, pz=30, t=40)
+
+    with pytest.raises(TypeError):
+        v1 + v2
+    with pytest.raises(TypeError):
+        v2 + v3
+    with pytest.raises(TypeError):
+        v1 + v3
+
+    # momentum + generic = generic
+    # 2D + 3D.like(2D) = 2D
+    assert v1 + v2.like(v1) == vector.obj(x=1.1, y=2.2)
+    assert v2.like(v1) + v1 == vector.obj(x=1.1, y=2.2)
+    # 2D + 4D.like(2D) = 2D
+    assert v1 + v3.like(v1) == vector.obj(x=10.1, y=20.2)
+    assert v3.like(v1) + v1 == vector.obj(x=10.1, y=20.2)
+    # 3D + 2D.like(3D) = 3D
+    assert v2 + v1.like(v2) == vector.obj(x=1.1, y=2.2, z=3)
+    assert v1.like(v2) + v2 == vector.obj(x=1.1, y=2.2, z=3)
+    # 3D + 4D.like(3D) = 3D
+    assert v2 + v3.like(v2) == vector.obj(x=11, y=22, z=33)
+    assert v3.like(v2) + v2 == vector.obj(x=11, y=22, z=33)
+    # 4D + 2D.like(4D) = 4D
+    assert v3 + v1.like(v3) == vector.obj(x=10.1, y=20.2, z=30.0, t=40.0)
+    assert v1.like(v3) + v3 == vector.obj(x=10.1, y=20.2, z=30.0, t=40.0)
+    # 4D + 3D.like(4D) = 4D
+    assert v3 + v2.like(v3) == vector.obj(x=11, y=22, z=33, t=40)
+    assert v2.like(v3) + v3 == vector.obj(x=11, y=22, z=33, t=40)
+
+
+def test_like_numpy():
+    v1 = vector.array(
+        {
+            "x": [10.0, 20.0, 30.0],
+            "y": [-10.0, 20.0, 30.0],
+        },
+    )
+    v2 = vector.array(
+        {
+            "x": [10.0, 20.0, 30.0],
+            "y": [-10.0, 20.0, 30.0],
+            "z": [5.0, 1.0, 1.0],
+        },
+    )
+    v3 = vector.array(
+        {
+            "x": [10.0, 20.0, 30.0],
+            "y": [-10.0, 20.0, 30.0],
+            "z": [5.0, 1.0, 1.0],
+            "t": [16.0, 31.0, 46.0],
+        },
+    )
+
+    v1_v2 = vector.array(
+        {
+            "x": [20.0, 40.0, 60.0],
+            "y": [-20.0, 40.0, 60.0],
+        },
+    )
+    v2_v1 = vector.array(
+        {
+            "x": [20.0, 40.0, 60.0],
+            "y": [-20.0, 40.0, 60.0],
+            "z": [5.0, 1.0, 1.0],
+        },
+    )
+    v2_v3 = vector.array(
+        {
+            "x": [20.0, 40.0, 60.0],
+            "y": [-20.0, 40.0, 60.0],
+            "z": [10.0, 2.0, 2.0],
+        },
+    )
+    v3_v2 = vector.array(
+        {
+            "x": [20.0, 40.0, 60.0],
+            "y": [-20.0, 40.0, 60.0],
+            "z": [10.0, 2.0, 2.0],
+            "t": [16.0, 31.0, 46.0],
+        },
+    )
+    v1_v3 = vector.array(
+        {
+            "x": [20.0, 40.0, 60.0],
+            "y": [-20.0, 40.0, 60.0],
+            "z": [5.0, 1.0, 1.0],
+            "t": [16.0, 31.0, 46.0],
+        },
+    )
+
+    with pytest.raises(TypeError):
+        v1 + v2
+    with pytest.raises(TypeError):
+        v2 + v3
+    with pytest.raises(TypeError):
+        v1 + v3
+
+    # 2D + 3D.like(2D) = 2D
+    assert all(v1 + v2.like(v1) == v1_v2)
+    assert all(v2.like(v1) + v1 == v1_v2)
+    # 2D + 4D.like(2D) = 2D
+    assert all(v1 + v3.like(v1) == v1_v2)
+    assert all(v3.like(v1) + v1 == v1_v2)
+    # 3D + 2D.like(3D) = 3D
+    assert all(v2 + v1.like(v2) == v2_v1)
+    assert all(v1.like(v2) + v2 == v2_v1)
+    # 3D + 4D.like(3D) = 3D
+    assert all(v2 + v3.like(v2) == v2_v3)
+    assert all(v3.like(v2) + v2 == v2_v3)
+    # 4D + 2D.like(4D) = 4D
+    assert all(v3 + v1.like(v3) == v1_v3)
+    assert all(v1.like(v3) + v3 == v1_v3)
+    # 4D + 3D.like(4D) = 4D
+    assert all(v3 + v2.like(v3) == v3_v2)
+    assert all(v2.like(v3) + v3 == v3_v2)
+
+    v1 = vector.array(
+        {
+            "px": [10.0, 20.0, 30.0],
+            "py": [-10.0, 20.0, 30.0],
+        },
+    )
+    v2 = vector.array(
+        {
+            "px": [10.0, 20.0, 30.0],
+            "py": [-10.0, 20.0, 30.0],
+            "pz": [5.0, 1.0, 1.0],
+        },
+    )
+    v3 = vector.array(
+        {
+            "px": [10.0, 20.0, 30.0],
+            "py": [-10.0, 20.0, 30.0],
+            "pz": [5.0, 1.0, 1.0],
+            "t": [16.0, 31.0, 46.0],
+        },
+    )
+
+    pv1_v2 = vector.array(
+        {
+            "px": [20.0, 40.0, 60.0],
+            "py": [-20.0, 40.0, 60.0],
+        },
+    )
+    pv2_v1 = vector.array(
+        {
+            "px": [20.0, 40.0, 60.0],
+            "py": [-20.0, 40.0, 60.0],
+            "pz": [5.0, 1.0, 1.0],
+        },
+    )
+    pv2_v3 = vector.array(
+        {
+            "px": [20.0, 40.0, 60.0],
+            "py": [-20.0, 40.0, 60.0],
+            "pz": [10.0, 2.0, 2.0],
+        },
+    )
+    pv3_v2 = vector.array(
+        {
+            "px": [20.0, 40.0, 60.0],
+            "py": [-20.0, 40.0, 60.0],
+            "pz": [10.0, 2.0, 2.0],
+            "t": [16.0, 31.0, 46.0],
+        },
+    )
+    pv1_v3 = vector.array(
+        {
+            "px": [20.0, 40.0, 60.0],
+            "py": [-20.0, 40.0, 60.0],
+            "pz": [5.0, 1.0, 1.0],
+            "t": [16.0, 31.0, 46.0],
+        },
+    )
+
+    with pytest.raises(TypeError):
+        v1 + v2
+    with pytest.raises(TypeError):
+        v2 + v3
+    with pytest.raises(TypeError):
+        v1 + v3
+
+    # 2D + 3D.like(2D) = 2D
+    assert all(v1 + v2.like(v1) == pv1_v2)
+    assert all(v2.like(v1) + v1 == pv1_v2)
+    # 2D + 4D.like(2D) = 2D
+    assert all(v1 + v3.like(v1) == pv1_v2)
+    assert all(v3.like(v1) + v1 == pv1_v2)
+    # 3D + 2D.like(3D) = 3D
+    assert all(v2 + v1.like(v2) == pv2_v1)
+    assert all(v1.like(v2) + v2 == pv2_v1)
+    # 3D + 4D.like(3D) = 3D
+    assert all(v2 + v3.like(v2) == pv2_v3)
+    assert all(v3.like(v2) + v2 == pv2_v3)
+    # 4D + 2D.like(4D) = 4D
+    assert all(v3 + v1.like(v3) == pv1_v3)
+    assert all(v1.like(v3) + v3 == pv1_v3)
+    # 4D + 3D.like(4D) = 4D
+    assert all(v3 + v2.like(v3) == pv3_v2)
+    assert all(v2.like(v3) + v3 == pv3_v2)
+
+    v2 = vector.array(
+        {
+            "x": [10.0, 20.0, 30.0],
+            "y": [-10.0, 20.0, 30.0],
+            "z": [5.0, 1.0, 1.0],
+        },
+    )
+
+    with pytest.raises(TypeError):
+        v1 + v2
+    with pytest.raises(TypeError):
+        v2 + v3
+    with pytest.raises(TypeError):
+        v1 + v3
+
+    # momentum + generic = generic
+    # 2D + 3D.like(2D) = 2D
+    assert all(v1 + v2.like(v1) == pv1_v2)
+    assert all(v2.like(v1) + v1 == pv1_v2)
+    # 2D + 4D.like(2D) = 2D
+    assert all(v1 + v3.like(v1) == pv1_v2)
+    assert all(v3.like(v1) + v1 == pv1_v2)
+    # 3D + 2D.like(3D) = 3D
+    assert all(v2 + v1.like(v2) == pv2_v1)
+    assert all(v1.like(v2) + v2 == pv2_v1)
+    # 3D + 4D.like(3D) = 3D
+    assert all(v2 + v3.like(v2) == pv2_v3)
+    assert all(v3.like(v2) + v2 == pv2_v3)
+    # 4D + 2D.like(4D) = 4D
+    assert all(v3 + v1.like(v3) == pv1_v3)
+    assert all(v1.like(v3) + v3 == pv1_v3)
+    # 4D + 3D.like(4D) = 4D
+    assert all(v3 + v2.like(v3) == pv3_v2)
+    assert all(v2.like(v3) + v3 == pv3_v2)
