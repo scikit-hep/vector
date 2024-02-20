@@ -12,11 +12,6 @@ import pytest
 
 import vector
 from vector import VectorObject2D, VectorObject3D, VectorObject4D
-from vector.backends.awkward import (
-    MomentumAwkward2D,
-    MomentumAwkward3D,
-    MomentumAwkward4D,
-)
 
 ak = pytest.importorskip("awkward")
 
@@ -856,18 +851,24 @@ def test_momentum_coordinate_transforms():
         for t2 in "pz", "eta", "theta":
             for t3 in "mass", "energy":
                 transformed_object = getattr(awkward_vec, "to_" + t1)()
-                assert isinstance(transformed_object, MomentumAwkward2D)
+                assert isinstance(
+                    transformed_object, vector.backends.awkward.MomentumAwkward2D
+                )
                 assert hasattr(transformed_object, t1[:2])
                 assert hasattr(transformed_object, t1[2:])
 
                 transformed_object = getattr(awkward_vec, "to_" + t1 + t2)()
-                assert isinstance(transformed_object, MomentumAwkward3D)
+                assert isinstance(
+                    transformed_object, vector.backends.awkward.MomentumAwkward3D
+                )
                 assert hasattr(transformed_object, t1[:2])
                 assert hasattr(transformed_object, t1[2:])
                 assert hasattr(transformed_object, t2)
 
                 transformed_object = getattr(awkward_vec, "to_" + t1 + t2 + t3)()
-                assert isinstance(transformed_object, MomentumAwkward4D)
+                assert isinstance(
+                    transformed_object, vector.backends.awkward.MomentumAwkward4D
+                )
                 assert hasattr(transformed_object, t1[:2])
                 assert hasattr(transformed_object, t1[2:])
                 assert hasattr(transformed_object, t2)
