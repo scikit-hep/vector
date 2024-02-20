@@ -11,6 +11,12 @@ import packaging.version
 import pytest
 
 import vector
+from vector import VectorObject2D, VectorObject3D, VectorObject4D
+from vector.backends.awkward import (
+    MomentumAwkward2D,
+    MomentumAwkward3D,
+    MomentumAwkward4D,
+)
 
 ak = pytest.importorskip("awkward")
 
@@ -700,3 +706,169 @@ def test_demotion():
     assert all(v3 + v1 == v1_v3)
     assert all(v2 + v3 == v2_v3)
     assert all(v3 + v2 == v2_v3)
+
+
+def test_handler_of():
+    awkward_a = vector.zip(
+        {
+            "x": [10.0, 20.0, 30.0],
+            "y": [-10.0, 20.0, 30.0],
+            "z": [5.0, 10.0, 15.0],
+            "t": [16.0, 31.0, 46.0],
+        },
+    )
+    object_b = VectorObject2D.from_xy(1.0, 1.0)
+    protocol = vector._methods._handler_of(awkward_a, object_b)
+    # chooses awkward backend and converts the vector to 2D
+    assert all(protocol == awkward_a.to_Vector2D())
+
+    awkward_a = vector.zip(
+        {
+            "x": [10.0, 20.0, 30.0],
+            "y": [-10.0, 20.0, 30.0],
+        },
+    )
+    object_b = VectorObject4D.from_xyzt(1.0, 1.0, 1.0, 1.0)
+    protocol = vector._methods._handler_of(object_b, awkward_a)
+    # chooses awkward backend and the vector is already of the
+    # lower dimension
+    assert all(protocol == awkward_a)
+
+    awkward_a = vector.zip(
+        {
+            "x": [10.0, 20.0, 30.0],
+            "y": [-10.0, 20.0, 30.0],
+        },
+    )
+    awkward_b = vector.zip(
+        {
+            "x": [1.0, 2.0, 3.0],
+            "y": [-1.0, 2.0, 3.0],
+            "z": [5.0, 10.0, 15.0],
+            "t": [16.0, 31.0, 46.0],
+        },
+    )
+    object_b = VectorObject4D.from_xyzt(1.0, 1.0, 1.0, 1.0)
+    protocol = vector._methods._handler_of(object_b, awkward_a, awkward_b)
+    # chooses awkward backend and the 2D awkward vector
+    # (first encountered awkward vector)
+    assert all(protocol == awkward_a)
+
+    awkward_a = vector.zip(
+        {
+            "x": [10.0, 20.0, 30.0],
+            "y": [-10.0, 20.0, 30.0],
+            "z": [-10.0, 20.0, 30.0],
+        },
+    )
+    awkward_b = vector.zip(
+        {
+            "x": [1.0, 2.0, 3.0],
+            "y": [-1.0, 2.0, 3.0],
+            "z": [5.0, 10.0, 15.0],
+            "t": [16.0, 31.0, 46.0],
+        },
+    )
+    object_b = VectorObject2D.from_xy(1.0, 1.0)
+    protocol = vector._methods._handler_of(awkward_b, object_b, awkward_a)
+    # chooses awkward backend and converts awkward_b to 2D
+    # (first encountered awkward vector)
+    assert all(protocol == awkward_b.to_Vector2D())
+
+    awkward_a = vector.zip(
+        {
+            "x": [10.0, 20.0, 30.0],
+            "y": [-10.0, 20.0, 30.0],
+            "z": [5.0, 1.0, 1.0],
+        },
+    )
+    awkward_b = vector.zip(
+        {
+            "x": [1.0, 2.0, 3.0],
+            "y": [-1.0, 2.0, 3.0],
+            "z": [5.0, 10.0, 15.0],
+            "t": [16.0, 31.0, 46.0],
+        },
+    )
+    object_b = VectorObject2D.from_xy(1.0, 1.0)
+    protocol = vector._methods._handler_of(object_b, awkward_a, awkward_b)
+    # chooses awkward backend and converts the vector to 2D
+    # (the first awkward vector encountered is used as the base)
+    assert all(protocol == awkward_a.to_Vector2D())
+
+    numpy_a = vector.array(
+        {
+            "x": [1.1, 1.2, 1.3, 1.4, 1.5],
+            "y": [2.1, 2.2, 2.3, 2.4, 2.5],
+            "z": [3.1, 3.2, 3.3, 3.4, 3.5],
+        }
+    )
+    awkward_b = vector.zip(
+        {
+            "x": [1.0, 2.0, 3.0],
+            "y": [-1.0, 2.0, 3.0],
+            "z": [5.0, 10.0, 15.0],
+            "t": [16.0, 31.0, 46.0],
+        },
+    )
+    object_b = VectorObject2D.from_xy(1.0, 1.0)
+    protocol = vector._methods._handler_of(object_b, numpy_a, awkward_b)
+    # chooses awkward backend and converts the vector to 2D
+    assert all(protocol == awkward_b.to_Vector2D())
+
+    awkward_a = vector.zip(
+        {
+            "x": [10.0, 20.0, 30.0],
+            "y": [-10.0, 20.0, 30.0],
+            "z": [5.0, 1.0, 1.0],
+        },
+    )
+    numpy_a = vector.array(
+        {
+            "x": [1.1, 1.2, 1.3, 1.4, 1.5],
+            "y": [2.1, 2.2, 2.3, 2.4, 2.5],
+        }
+    )
+    awkward_b = vector.zip(
+        {
+            "x": [1.0, 2.0, 3.0],
+            "y": [-1.0, 2.0, 3.0],
+            "z": [5.0, 10.0, 15.0],
+            "t": [16.0, 31.0, 46.0],
+        },
+    )
+    object_b = VectorObject3D.from_xyz(1.0, 1.0, 1.0)
+    protocol = vector._methods._handler_of(object_b, awkward_a, awkward_b, numpy_a)
+    # chooses awkward backend and converts the vector to 2D
+    # (the first awkward vector encountered is used as the base)
+    assert all(protocol == awkward_a.to_Vector2D())
+
+
+def test_momentum_coordinate_transforms():
+    awkward_vec = vector.zip(
+        {
+            "px": [1.0, 2.0, 3.0],
+            "py": [-1.0, 2.0, 3.0],
+        },
+    )
+
+    for t1 in "pxpy", "ptphi":
+        for t2 in "pz", "eta", "theta":
+            for t3 in "mass", "energy":
+                transformed_object = getattr(awkward_vec, "to_" + t1)()
+                assert isinstance(transformed_object, MomentumAwkward2D)
+                assert hasattr(transformed_object, t1[:2])
+                assert hasattr(transformed_object, t1[2:])
+
+                transformed_object = getattr(awkward_vec, "to_" + t1 + t2)()
+                assert isinstance(transformed_object, MomentumAwkward3D)
+                assert hasattr(transformed_object, t1[:2])
+                assert hasattr(transformed_object, t1[2:])
+                assert hasattr(transformed_object, t2)
+
+                transformed_object = getattr(awkward_vec, "to_" + t1 + t2 + t3)()
+                assert isinstance(transformed_object, MomentumAwkward4D)
+                assert hasattr(transformed_object, t1[:2])
+                assert hasattr(transformed_object, t1[2:])
+                assert hasattr(transformed_object, t2)
+                assert hasattr(transformed_object, t3)
