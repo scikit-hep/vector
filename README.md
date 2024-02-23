@@ -537,7 +537,11 @@ For a few operations - `+`, `-`, `==`, `!=`, ... - the dimension of the vectors 
 v1 = vector.obj(x=1, y=2, z=3)
 v2 = vector.obj(x=1, y=2)
 
-v1 - v2.like(v1), v1.like(v2) - v2, v1 - v2.to_xyz(), v1.to_xy() - v2, v1 - v2.to_Vector3D(z=3), v1.to_Vector2D() - v2
+v1 - v2.like(v1), v1.like(
+    v2
+) - v2, v1 - v2.to_xyz(), v1.to_xy() - v2, v1 - v2.to_Vector3D(
+    z=3
+), v1.to_Vector2D() - v2
 ```
 
 The opposite—using low-dimensional vectors in operations defined for higher numbers of dimensions—is sometimes defined. In these cases, a zero longitudinal or temporal component has to be imputed.
