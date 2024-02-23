@@ -11,7 +11,7 @@ import packaging.version
 import pytest
 
 import vector
-from vector import VectorObject2D, VectorObject4D
+from vector import VectorObject2D
 
 ak = pytest.importorskip("awkward")
 
@@ -701,6 +701,30 @@ def test_like():
         v2 + v3
     with pytest.raises(TypeError):
         v1 + v3
+    with pytest.raises(TypeError):
+        v1 - v2
+    with pytest.raises(TypeError):
+        v2 - v3
+    with pytest.raises(TypeError):
+        v1 - v3
+    with pytest.raises(TypeError):
+        v1.equal(v2)
+    with pytest.raises(TypeError):
+        v2.equal(v3)
+    with pytest.raises(TypeError):
+        v1.equal(v3)
+    with pytest.raises(TypeError):
+        v1.not_equal(v2)
+    with pytest.raises(TypeError):
+        v2.not_equal(v3)
+    with pytest.raises(TypeError):
+        v1.not_equal(v3)
+    with pytest.raises(TypeError):
+        v1.dot(v2)
+    with pytest.raises(TypeError):
+        v2.dot(v3)
+    with pytest.raises(TypeError):
+        v1.dot(v3)
 
     # 2D + 3D.like(2D) = 2D
     assert ak.all(v1 + v2.like(v1) == v1_v2)
@@ -742,13 +766,6 @@ def test_like():
             "t": [16.0, 31.0, 46.0],
         },
     )
-
-    with pytest.raises(TypeError):
-        v1 + v2
-    with pytest.raises(TypeError):
-        v2 + v3
-    with pytest.raises(TypeError):
-        v1 + v3
 
     # 2D + 3D.like(2D) = 2D
     assert ak.all(v1 + v2.like(v1) == v1_v2)
@@ -799,58 +816,6 @@ def test_like():
 
 
 def test_handler_of():
-    awkward_vec = vector.zip(
-        {
-            "x": [10.0, 20.0, 30.0],
-            "y": [-10.0, 20.0, 30.0],
-            "z": [5.0, 10.0, 15.0],
-            "t": [16.0, 31.0, 46.0],
-        },
-    )
-    object_vec = VectorObject2D.from_xy(1.0, 1.0)
-    with pytest.raises(TypeError):
-        protocol = vector._methods._handler_of(awkward_vec, object_vec)
-    protocol = vector._methods._handler_of(awkward_vec, object_vec.like(awkward_vec))
-    # chooses awkward backend
-    assert all(protocol == awkward_vec)
-
-    awkward_vec = vector.zip(
-        {
-            "x": [10.0, 20.0, 30.0],
-            "y": [-10.0, 20.0, 30.0],
-        },
-    )
-    object_vec = VectorObject4D.from_xyzt(1.0, 1.0, 1.0, 1.0)
-    with pytest.raises(TypeError):
-        protocol = vector._methods._handler_of(awkward_vec, object_vec)
-    protocol = vector._methods._handler_of(object_vec, awkward_vec.like(object_vec))
-    # chooses awkward backend
-    assert all(protocol == awkward_vec.like(object_vec))
-
-    awkward_vec = vector.zip(
-        {
-            "x": [10.0, 20.0, 30.0],
-            "y": [-10.0, 20.0, 30.0],
-        },
-    )
-    awkward_vec2 = vector.zip(
-        {
-            "x": [1.0, 2.0, 3.0],
-            "y": [-1.0, 2.0, 3.0],
-            "z": [5.0, 10.0, 15.0],
-            "t": [16.0, 31.0, 46.0],
-        },
-    )
-    object_vec = VectorObject4D.from_xyzt(1.0, 1.0, 1.0, 1.0)
-    with pytest.raises(TypeError):
-        protocol = vector._methods._handler_of(object_vec, awkward_vec, awkward_vec2)
-    protocol = vector._methods._handler_of(
-        object_vec, awkward_vec.like(awkward_vec2), awkward_vec2
-    )
-    # chooses awkward backend and the
-    # first encountered awkward vector
-    assert all(protocol == awkward_vec.like(awkward_vec2))
-
     numpy_vec = vector.array(
         {
             "x": [1.1, 1.2, 1.3, 1.4, 1.5],
@@ -867,13 +832,9 @@ def test_handler_of():
         },
     )
     object_vec = VectorObject2D.from_xy(1.0, 1.0)
-    with pytest.raises(TypeError):
-        protocol = vector._methods._handler_of(object_vec, awkward_vec, numpy_vec)
-    protocol = vector._methods._handler_of(
-        object_vec, numpy_vec.like(object_vec), awkward_vec2.like(object_vec)
-    )
+    protocol = vector._methods._handler_of(object_vec, numpy_vec, awkward_vec2)
     # chooses awkward backend
-    assert all(protocol == awkward_vec2.to_Vector2D())
+    assert all(protocol == awkward_vec2)
 
 
 def test_momentum_coordinate_transforms():

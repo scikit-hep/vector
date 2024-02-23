@@ -624,13 +624,6 @@ def test_like_object():
     v2 = vector.obj(x=1, y=2, z=3)
     v3 = vector.obj(x=10, y=20, z=30, t=40)
 
-    with pytest.raises(TypeError):
-        v1 + v2
-    with pytest.raises(TypeError):
-        v2 + v3
-    with pytest.raises(TypeError):
-        v1 + v3
-
     # 2D + 3D.like(2D) = 2D
     assert v1 + v2.like(v1) == vector.obj(x=1.1, y=2.2)
     assert v2.like(v1) + v1 == vector.obj(x=1.1, y=2.2)
@@ -653,13 +646,6 @@ def test_like_object():
     v1 = vector.obj(px=0.1, py=0.2)
     v2 = vector.obj(px=1, py=2, pz=3)
     v3 = vector.obj(px=10, py=20, pz=30, t=40)
-
-    with pytest.raises(TypeError):
-        v1 + v2
-    with pytest.raises(TypeError):
-        v2 + v3
-    with pytest.raises(TypeError):
-        v1 + v3
 
     # order should not matter
     # 2D + 3D.like(2D) = 2D
@@ -684,13 +670,6 @@ def test_like_object():
     v1 = vector.obj(px=0.1, py=0.2)
     v2 = vector.obj(x=1, y=2, z=3)
     v3 = vector.obj(px=10, py=20, pz=30, t=40)
-
-    with pytest.raises(TypeError):
-        v1 + v2
-    with pytest.raises(TypeError):
-        v2 + v3
-    with pytest.raises(TypeError):
-        v1 + v3
 
     # momentum + generic = generic
     # 2D + 3D.like(2D) = 2D
@@ -773,13 +752,6 @@ def test_like_numpy():
         },
     )
 
-    with pytest.raises(TypeError):
-        v1 + v2
-    with pytest.raises(TypeError):
-        v2 + v3
-    with pytest.raises(TypeError):
-        v1 + v3
-
     # 2D + 3D.like(2D) = 2D
     assert all(v1 + v2.like(v1) == v1_v2)
     assert all(v2.like(v1) + v1 == v1_v2)
@@ -858,13 +830,6 @@ def test_like_numpy():
         },
     )
 
-    with pytest.raises(TypeError):
-        v1 + v2
-    with pytest.raises(TypeError):
-        v2 + v3
-    with pytest.raises(TypeError):
-        v1 + v3
-
     # 2D + 3D.like(2D) = 2D
     assert all(v1 + v2.like(v1) == pv1_v2)
     assert all(v2.like(v1) + v1 == pv1_v2)
@@ -891,13 +856,6 @@ def test_like_numpy():
             "z": [5.0, 1.0, 1.0],
         },
     )
-
-    with pytest.raises(TypeError):
-        v1 + v2
-    with pytest.raises(TypeError):
-        v2 + v3
-    with pytest.raises(TypeError):
-        v1 + v3
 
     # momentum + generic = generic
     # 2D + 3D.like(2D) = 2D

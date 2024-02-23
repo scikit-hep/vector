@@ -3474,14 +3474,17 @@ class Planar(VectorProtocolPlanar):
         return unit.dispatch(self)
 
     def dot(self, other: VectorProtocol) -> ScalarCollection:
+        _is_same_dimension(self, other)
         module = _compute_module_of(self, other)
         return module.dot.dispatch(self, other)
 
     def add(self, other: VectorProtocol) -> VectorProtocol:
+        _is_same_dimension(self, other)
         module = _compute_module_of(self, other)
         return module.add.dispatch(self, other)
 
     def subtract(self, other: VectorProtocol) -> VectorProtocol:
+        _is_same_dimension(self, other)
         module = _compute_module_of(self, other)
         return module.subtract.dispatch(self, other)
 
@@ -3504,15 +3507,13 @@ class Planar(VectorProtocolPlanar):
     def equal(self, other: VectorProtocol) -> BoolCollection:
         from vector._compute.planar import equal
 
-        if dim(self) != dim(other):
-            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
+        _is_same_dimension(self, other)
         return equal.dispatch(self, other)
 
     def not_equal(self, other: VectorProtocol) -> BoolCollection:
         from vector._compute.planar import not_equal
 
-        if dim(self) != dim(other):
-            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
+        _is_same_dimension(self, other)
         return not_equal.dispatch(self, other)
 
     def isclose(
@@ -3524,8 +3525,7 @@ class Planar(VectorProtocolPlanar):
     ) -> BoolCollection:
         from vector._compute.planar import isclose
 
-        if dim(self) != dim(other):
-            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
+        _is_same_dimension(self, other)
         return isclose.dispatch(rtol, atol, equal_nan, self, other)
 
 
@@ -3689,14 +3689,17 @@ class Spatial(Planar, VectorProtocolSpatial):
         return unit.dispatch(self)
 
     def dot(self, other: VectorProtocol) -> ScalarCollection:
+        _is_same_dimension(self, other)
         module = _compute_module_of(self, other)
         return module.dot.dispatch(self, other)
 
     def add(self, other: VectorProtocol) -> VectorProtocol:
+        _is_same_dimension(self, other)
         module = _compute_module_of(self, other)
         return module.add.dispatch(self, other)
 
     def subtract(self, other: VectorProtocol) -> VectorProtocol:
+        _is_same_dimension(self, other)
         module = _compute_module_of(self, other)
         return module.subtract.dispatch(self, other)
 
@@ -3730,15 +3733,13 @@ class Spatial(Planar, VectorProtocolSpatial):
     def equal(self, other: VectorProtocol) -> BoolCollection:
         from vector._compute.spatial import equal
 
-        if dim(self) != dim(other):
-            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
+        _is_same_dimension(self, other)
         return equal.dispatch(self, other)
 
     def not_equal(self, other: VectorProtocol) -> BoolCollection:
         from vector._compute.spatial import not_equal
 
-        if dim(self) != dim(other):
-            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
+        _is_same_dimension(self, other)
         return not_equal.dispatch(self, other)
 
     def isclose(
@@ -3750,8 +3751,7 @@ class Spatial(Planar, VectorProtocolSpatial):
     ) -> BoolCollection:
         from vector._compute.spatial import isclose
 
-        if dim(self) != dim(other):
-            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
+        _is_same_dimension(self, other)
         return isclose.dispatch(rtol, atol, equal_nan, self, other)
 
 
@@ -3933,14 +3933,17 @@ class Lorentz(Spatial, VectorProtocolLorentz):
         return unit.dispatch(self)
 
     def dot(self, other: VectorProtocol) -> ScalarCollection:
+        _is_same_dimension(self, other)
         module = _compute_module_of(self, other)
         return module.dot.dispatch(self, other)
 
     def add(self, other: VectorProtocol) -> VectorProtocol:
+        _is_same_dimension(self, other)
         module = _compute_module_of(self, other)
         return module.add.dispatch(self, other)
 
     def subtract(self, other: VectorProtocol) -> VectorProtocol:
+        _is_same_dimension(self, other)
         module = _compute_module_of(self, other)
         return module.subtract.dispatch(self, other)
 
@@ -3985,15 +3988,13 @@ class Lorentz(Spatial, VectorProtocolLorentz):
     def equal(self, other: VectorProtocol) -> BoolCollection:
         from vector._compute.lorentz import equal
 
-        if dim(self) != dim(other):
-            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
+        _is_same_dimension(self, other)
         return equal.dispatch(self, other)
 
     def not_equal(self, other: VectorProtocol) -> BoolCollection:
         from vector._compute.lorentz import not_equal
 
-        if dim(self) != dim(other):
-            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
+        _is_same_dimension(self, other)
         return not_equal.dispatch(self, other)
 
     def isclose(
@@ -4005,8 +4006,7 @@ class Lorentz(Spatial, VectorProtocolLorentz):
     ) -> BoolCollection:
         from vector._compute.lorentz import isclose
 
-        if dim(self) != dim(other):
-            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
+        _is_same_dimension(self, other)
         return isclose.dispatch(rtol, atol, equal_nan, self, other)
 
 
@@ -4174,6 +4174,23 @@ def dim(v: VectorProtocol) -> int:
         return 4
     else:
         raise TypeError(f"{v!r} is not a vector.Vector")
+
+
+def _is_same_dimension(v1: VectorProtocol, v2: VectorProtocol) -> None:
+    """Raises an error if the vectors are not of the same dimension."""
+    if dim(v1) != dim(v2):
+        raise TypeError(
+            f"""{v1!r} and {v2!r} do not have the same dimension; use
+
+                a.like(b) + b
+
+            or
+
+                a + b.like(a)
+
+            to project or embed one of the vectors to match the other's dimensionality
+            """
+        )
 
 
 def _compute_module_of(
@@ -4438,34 +4455,6 @@ def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
             handler = obj
 
     assert handler is not None
-
-    if _check_instance(all, objects, Vector) and (
-        (
-            _check_instance(any, objects, Vector2D)
-            and _check_instance(any, objects, Vector3D)
-        )
-        or (
-            _check_instance(any, objects, Vector2D)
-            and _check_instance(any, objects, Vector4D)
-        )
-        or (
-            _check_instance(any, objects, Vector3D)
-            and _check_instance(any, objects, Vector4D)
-        )
-    ):
-        raise TypeError(
-            """cannot perform the operation on vectors of different dimensionality; use
-
-                a.like(b) + b
-
-            or
-
-               a + b.like(a)
-
-            to project or embed one of the vectors to match the other's dimensionality
-            """
-        )
-
     return handler
 
 
