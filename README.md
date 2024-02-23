@@ -531,10 +531,18 @@ vector.obj(pt=1, phi=1.3, eta=2, mass=5).deltaR(
 )
 ```
 
-The opposite—using low-dimensional vectors in operations defined for higher numbers of dimensions—is sometimes defined. In these cases, a zero longitudinal or temporal component has to be imputed.
+For a few operations - `+`, `-`, `==`, `!=`, ... - the dimension of the vectors should be equal. This can be achieved by using the `like` method, `to_{coordinate_name}` methods, `to_Vector*D` methods. The `to_Vector*D` methods provide more flexibility to the users, that is, new coordinate values can be passed into the methods as named arguments.
 
 ```python
-vector.obj(x=1, y=2, z=3) - vector.obj(x=1, y=2)
+v1 = vector.obj(x=1, y=2, z=3)
+v2 = vector.obj(x=1, y=2)
+
+v1 - v2.like(v1), v1.like(v2) - v2, v1 - v2.to_xyz(), v1.to_xy() - v2, v1 - v2.to_Vector3D(z=3), v1.to_Vector2D() - v2
+```
+
+The opposite—using low-dimensional vectors in operations defined for higher numbers of dimensions—is sometimes defined. In these cases, a zero longitudinal or temporal component has to be imputed.
+
+```
 vector.obj(x=1, y=2, z=0).is_parallel(vector.obj(x=1, y=2))
 ```
 
@@ -625,6 +633,7 @@ The (current) list of properties and methods is:
 - `isclose(vector, rtol=1e-5, atol=1e-8, equal_nan=False)`: works like [np.isclose](https://numpy.org/doc/stable/reference/generated/numpy.isclose.html); arrays also have an [allclose](https://numpy.org/doc/stable/reference/generated/numpy.allclose.html) method
 - `to_Vector*D(coordinates)`: replace `*` with the reuquired vector dimension
 - `to_{coordinate-names}`: for example - `to_rhophietatau`
+- `like(other)`: projects the vector into the dimensions of `other`, for example - `two_d_vector.like(three_d_vector)`
 
 ## Compiling your Python with Numba
 
