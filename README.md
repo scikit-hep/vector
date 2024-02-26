@@ -544,12 +544,6 @@ v1 - v2.like(v1), v1.like(
 ), v1.to_Vector2D() - v2
 ```
 
-The opposite—using low-dimensional vectors in operations defined for higher numbers of dimensions—is sometimes defined. In these cases, a zero longitudinal or temporal component has to be imputed.
-
-```
-vector.obj(x=1, y=2, z=0).is_parallel(vector.obj(x=1, y=2))
-```
-
 And finally, in some cases, the function excludes a higher-dimensional component, even if the input vectors had them.
 
 It would be confusing if the 3D cross-product returned a fourth component.
