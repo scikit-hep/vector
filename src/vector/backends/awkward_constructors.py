@@ -307,12 +307,17 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     integers or floating-point numbers.
     """
     import awkward
-    import dask_awkward  # type: ignore[import-not-found]
 
     import vector
     import vector.backends.awkward
 
-    if not isinstance(args[0], (awkward.Array, dask_awkward.Array)):
+    ak_array_types = (awkward.Array,)
+
+    if vector._is_awkward_v2:
+        import dask_awkward  # type: ignore[import-not-found]
+        ak_array_types += (dask_awkward.Array,)
+
+    if not isinstance(args[0], ak_array_types):
         akarray = awkward.Array(*args, **kwargs)
     else:
         akarray = args[0]
