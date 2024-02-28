@@ -307,11 +307,15 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     integers or floating-point numbers.
     """
     import awkward
+    import dask_awkward  # type: ignore[import-not-found]
 
     import vector
     import vector.backends.awkward
 
-    akarray = awkward.Array(*args, **kwargs)
+    if not isinstance(args[0], (awkward.Array, dask_awkward.Array)):
+        akarray = awkward.Array(*args, **kwargs)
+    else:
+        akarray = args[0]
     array_type = akarray.type
 
     if not _is_type_safe(array_type):
@@ -320,24 +324,15 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
 
     is_momentum, dimension, names, arrays = _check_names(akarray, fields)
 
-    needs_behavior = not vector._awkward_registered
-    for x in arrays:
-        if needs_behavior:
-            if x.behavior is None:
-                x.behavior = vector.backends.awkward.behavior
-            else:
-                x.behavior = dict(x.behavior)
-                x.behavior.update(vector.backends.awkward.behavior)
-        else:
-            x.behavior = None
-        needs_behavior = False
-
     assert 2 <= dimension <= 4, f"Dimension must be between 2-4, not {dimension}"
 
-    return awkward.zip(
-        dict(__builtins__["zip"](names, arrays)),  # type: ignore[index]
-        depth_limit=akarray.layout.purelist_depth,
-        with_name=_recname(is_momentum, dimension),
+    return awkward.with_name(
+        awkward.zip(
+            dict(__builtins__["zip"](names, arrays)),  # type: ignore[index]
+            depth_limit=akarray.layout.purelist_depth,
+        ),
+        _recname(is_momentum, dimension),
+        behavior=vector.backends.awkward.behavior,
     )
 
 
