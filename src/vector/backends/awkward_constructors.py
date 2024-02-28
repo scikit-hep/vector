@@ -315,6 +315,7 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
 
     if vector._is_awkward_v2:
         import dask_awkward  # type: ignore[import-not-found]
+
         ak_array_types += (dask_awkward.Array,)
 
     if not isinstance(args[0], ak_array_types):
