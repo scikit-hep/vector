@@ -14,7 +14,9 @@ ak = pytest.importorskip("awkward")
 
 
 def test_constructor():
-    x = dak.from_awkward(ak.Array([{"x": 1, "y": 2}, {"x": 1.1, "y": 2.2}]), npartitions=1)
+    x = dak.from_awkward(
+        ak.Array([{"x": 1, "y": 2}, {"x": 1.1, "y": 2.2}]), npartitions=1
+    )
     vec = vector.Array(x)
 
     assert isinstance(vec, dak.Array)
