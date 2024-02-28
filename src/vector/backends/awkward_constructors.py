@@ -311,7 +311,7 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     import vector
     import vector.backends.awkward
 
-    ak_array_types = (awkward.Array,)
+    ak_array_types: tuple[typing.Any, ...] = (awkward.Array,)
 
     if vector._is_awkward_v2:
         import dask_awkward  # type: ignore[import-not-found]
