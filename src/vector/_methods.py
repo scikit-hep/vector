@@ -3194,8 +3194,8 @@ class Vector2D(Vector, VectorProtocolPlanar):
 
         l_value = 0.0
         l_type: type[Longitudinal] = LongitudinalZ
-        if any(coord is not None for coord in [z, pz]):
-            l_value = next(coord for coord in [z, pz] if coord is not None)
+        if any(coord is not None for coord in (z, pz)):
+            l_value = next(coord for coord in (z, pz) if coord is not None)
         elif eta is not None:
             l_value = eta
             l_type = LongitudinalEta
@@ -3261,8 +3261,8 @@ class Vector2D(Vector, VectorProtocolPlanar):
 
         l_value = 0.0
         l_type: type[Longitudinal] = LongitudinalZ
-        if any(coord is not None for coord in [z, pz]):
-            l_value = next(coord for coord in [z, pz] if coord is not None)
+        if any(coord is not None for coord in (z, pz)):
+            l_value = next(coord for coord in (z, pz) if coord is not None)
         elif eta is not None:
             l_value = eta
             l_type = LongitudinalEta
