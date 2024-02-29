@@ -352,7 +352,10 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
         ),
         _recname(is_momentum, dimension),
         behavior=vector.backends.awkward.behavior
-        if (not vector._is_awkward_v2 or (vector._is_awkward_v2 and isinstance(args[0], dask_awkward.Array)))
+        if (
+            not vector._is_awkward_v2
+            or (vector._is_awkward_v2 and isinstance(args[0], dask_awkward.Array))
+        )
         else None,
     )
 
