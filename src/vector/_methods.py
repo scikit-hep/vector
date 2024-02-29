@@ -3187,7 +3187,7 @@ class Vector2D(Vector, VectorProtocolPlanar):
             >>> vec.to_Vector3D(pz=4)
             MomentumObject3D(px=1, py=2, pz=4)
         """
-        if sum(x is not None for x in (z, theta, eta)) > 1:
+        if sum(x is not None for x in (z, pz, theta, eta)) > 1:
             raise TypeError(
                 "At most one longitudinal coordinate (`z`/`pz`, `theta`, or `eta`) may be assigned (non-None)"
             )
@@ -3242,22 +3242,22 @@ class Vector2D(Vector, VectorProtocolPlanar):
             >>> vec.to_Vector4D(pz=4, energy=4)
             MomentumObject4D(px=1, py=2, pz=4, E=4)
         """
-        if sum(x is not None for x in (z, theta, eta)) > 1:
+        if sum(x is not None for x in (z, pz, theta, eta)) > 1:
             raise TypeError(
                 "At most one longitudinal coordinate (`z`/`pz`, `theta`, or `eta`) may be assigned (non-None)"
             )
-        elif sum(x is not None for x in (t, tau)) > 1:
+        elif sum(x is not None for x in (t, tau, m, M, mass, e, E, energy)) > 1:
             raise TypeError(
                 "At most one longitudinal coordinate (`t`/`e`/`E`/`energy`, `tau`/`m`/`M`/`mass`) may be assigned (non-None)"
             )
 
         t_value = 0.0
         t_type: type[Temporal] = TemporalT
-        if any(coord is not None for coord in [tau, m, M, mass]):
+        if any(coord is not None for coord in (tau, m, M, mass)):
             t_type = TemporalTau
-            t_value = next(coord for coord in [tau, m, M, mass] if coord is not None)
-        elif any(coord is not None for coord in [t, e, E, energy]):
-            t_value = next(coord for coord in [t, e, E, energy] if coord is not None)
+            t_value = next(coord for coord in (tau, m, M, mass) if coord is not None)
+        elif any(coord is not None for coord in (t, e, E, energy)):
+            t_value = next(coord for coord in (t, e, E, energy) if coord is not None)
 
         l_value = 0.0
         l_type: type[Longitudinal] = LongitudinalZ
@@ -3317,18 +3317,18 @@ class Vector3D(Vector, VectorProtocolSpatial):
             >>> vec.to_Vector4D(M=4)
             MomentumObject4D(px=1, py=2, pz=3, mass=4)
         """
-        if sum(x is not None for x in (t, tau)) > 1:
+        if sum(x is not None for x in (t, tau, m, M, mass, e, E, energy)) > 1:
             raise TypeError(
                 "At most one longitudinal coordinate (`t`/`e`/`E`/`energy`, `tau`/`m`/`M`/`mass`) may be assigned (non-None)"
             )
 
         t_value = 0.0
         t_type: type[Temporal] = TemporalT
-        if any(coord is not None for coord in [tau, m, M, mass]):
+        if any(coord is not None for coord in (tau, m, M, mass)):
             t_type = TemporalTau
-            t_value = next(coord for coord in [tau, m, M, mass] if coord is not None)
-        elif any(coord is not None for coord in [t, e, E, energy]):
-            t_value = next(coord for coord in [t, e, E, energy] if coord is not None)
+            t_value = next(coord for coord in (tau, m, M, mass) if coord is not None)
+        elif any(coord is not None for coord in (t, e, E, energy)):
+            t_value = next(coord for coord in (t, e, E, energy) if coord is not None)
 
         return self._wrap_result(
             type(self),
