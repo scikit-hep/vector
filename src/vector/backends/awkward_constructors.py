@@ -330,6 +330,19 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
 
     is_momentum, dimension, names, arrays = _check_names(akarray, fields)
 
+    if vector._is_awkward_v2 and not isinstance(args[0], dask_awkward.Array):
+        needs_behavior = not vector._awkward_registered
+        for x in arrays:
+            if needs_behavior:
+                if x.behavior is None:
+                    x.behavior = vector.backends.awkward.behavior
+                else:
+                    x.behavior = dict(x.behavior)
+                    x.behavior.update(vector.backends.awkward.behavior)
+            else:
+                x.behavior = None
+            needs_behavior = False
+
     assert 2 <= dimension <= 4, f"Dimension must be between 2-4, not {dimension}"
 
     return awkward.with_name(
@@ -338,7 +351,9 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
             depth_limit=akarray.layout.purelist_depth,
         ),
         _recname(is_momentum, dimension),
-        behavior=vector.backends.awkward.behavior,
+        behavior=vector.backends.awkward.behavior
+        if (vector._is_awkward_v2 and isinstance(args[0], dask_awkward.Array))
+        else None,
     )
 
 
