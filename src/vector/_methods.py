@@ -184,7 +184,9 @@ class VectorProtocol:
         Projects this vector/these vectors onto azimuthal and longitudinal
         coordinates only.
 
-        If 2D, a $z$ component of $0$ is imputed.
+        If 2D, a default $z$ component of $0$ is imputed.
+
+        The longitudinal coordinate can be passed as a named argument.
         """
         raise AssertionError
 
@@ -193,9 +195,12 @@ class VectorProtocol:
         Projects this vector/these vectors onto azimuthal, longitudinal,
         and temporal coordinates.
 
-        If 2D or 3D, a $t$ component of $0$ is imputed.
+        If 3D, a default $t$ component of $0$ is imputed.
 
-        If 2D, a $z$ component of $0$ is imputed.
+        If 2D, a $z$ component of $0$ is imputed along with a default
+        $t$ component of $0$.
+
+        The longitudinal and temporal coordinates can be passed as named arguments.
         """
         raise AssertionError
 
@@ -3163,6 +3168,7 @@ class Vector2D(Vector, VectorProtocolPlanar):
         self,
         *,
         z: float | None = None,
+        pz: float | None = None,
         theta: float | None = None,
         eta: float | None = None,
     ) -> VectorProtocolSpatial:
@@ -3170,8 +3176,7 @@ class Vector2D(Vector, VectorProtocolPlanar):
         Converts a 2D vector to 3D vector.
 
         The scalar longitudinal coordinate is broadcasted for NumPy and Awkward
-        vectors. Only a single longitudinal coordinate should be provided. Generic
-        coordinate counterparts should be provided for the momentum coordinates.
+        vectors. Only a single longitudinal coordinate should be provided.
 
         Examples:
             >>> import vector
@@ -3179,18 +3184,18 @@ class Vector2D(Vector, VectorProtocolPlanar):
             >>> vec.to_Vector3D(z=1)
             VectorObject3D(x=1, y=2, z=1)
             >>> vec = vector.MomentumObject2D(px=1, py=2)
-            >>> vec.to_Vector3D(z=4)
+            >>> vec.to_Vector3D(pz=4)
             MomentumObject3D(px=1, py=2, pz=4)
         """
-        if sum(x is not None for x in (z, theta, eta)) > 1:
+        if sum(x is not None for x in (z, pz, theta, eta)) > 1:
             raise TypeError(
-                "At most one longitudinal coordinate (`z`, `theta`, or `eta`) may be assigned (non-None)"
+                "At most one longitudinal coordinate (`z`/`pz`, `theta`, or `eta`) may be assigned (non-None)"
             )
 
         l_value = 0.0
         l_type: type[Longitudinal] = LongitudinalZ
-        if z is not None:
-            l_value = z
+        if any(coord is not None for coord in (z, pz)):
+            l_value = next(coord for coord in (z, pz) if coord is not None)
         elif eta is not None:
             l_value = eta
             l_type = LongitudinalEta
@@ -3209,18 +3214,24 @@ class Vector2D(Vector, VectorProtocolPlanar):
         self,
         *,
         z: float | None = None,
+        pz: float | None = None,
         theta: float | None = None,
         eta: float | None = None,
         t: float | None = None,
+        e: float | None = None,
+        E: float | None = None,
+        energy: float | None = None,
         tau: float | None = None,
+        m: float | None = None,
+        M: float | None = None,
+        mass: float | None = None,
     ) -> VectorProtocolLorentz:
         """
         Converts a 2D vector to 4D vector.
 
         The scalar longitudinal and temporal coordinates are broadcasted for NumPy and
         Awkward vectors. Only a single longitudinal and temporal coordinate should be
-        provided. Generic coordinate counterparts should be provided for the momentum
-        coordinates.
+        provided.
 
         Examples:
             >>> import vector
@@ -3228,30 +3239,30 @@ class Vector2D(Vector, VectorProtocolPlanar):
             >>> vec.to_Vector4D(z=3, t=4)
             VectorObject4D(x=1, y=2, z=3, t=4)
             >>> vec = vector.MomentumObject2D(px=1, py=2)
-            >>> vec.to_Vector4D(z=4, t=4)
+            >>> vec.to_Vector4D(pz=4, energy=4)
             MomentumObject4D(px=1, py=2, pz=4, E=4)
         """
-        if sum(x is not None for x in (z, theta, eta)) > 1:
+        if sum(x is not None for x in (z, pz, theta, eta)) > 1:
             raise TypeError(
-                "At most one longitudinal coordinate (`z`, `theta`, or `eta`) may be assigned (non-None)"
+                "At most one longitudinal coordinate (`z`/`pz`, `theta`, or `eta`) may be assigned (non-None)"
             )
-        elif sum(x is not None for x in (t, tau)) > 1:
+        elif sum(x is not None for x in (t, tau, m, M, mass, e, E, energy)) > 1:
             raise TypeError(
-                "At most one longitudinal coordinate (`t`, `tau`) may be assigned (non-None)"
+                "At most one longitudinal coordinate (`t`/`e`/`E`/`energy`, `tau`/`m`/`M`/`mass`) may be assigned (non-None)"
             )
 
         t_value = 0.0
         t_type: type[Temporal] = TemporalT
-        if t is not None:
-            t_value = t
-        elif tau is not None:
-            t_value = tau
+        if any(coord is not None for coord in (tau, m, M, mass)):
             t_type = TemporalTau
+            t_value = next(coord for coord in (tau, m, M, mass) if coord is not None)
+        elif any(coord is not None for coord in (t, e, E, energy)):
+            t_value = next(coord for coord in (t, e, E, energy) if coord is not None)
 
         l_value = 0.0
         l_type: type[Longitudinal] = LongitudinalZ
-        if z is not None:
-            l_value = z
+        if any(coord is not None for coord in (z, pz)):
+            l_value = next(coord for coord in (z, pz) if coord is not None)
         elif eta is not None:
             l_value = eta
             l_type = LongitudinalEta
@@ -3283,14 +3294,19 @@ class Vector3D(Vector, VectorProtocolSpatial):
         self,
         *,
         t: float | None = None,
+        e: float | None = None,
+        E: float | None = None,
+        energy: float | None = None,
         tau: float | None = None,
+        m: float | None = None,
+        M: float | None = None,
+        mass: float | None = None,
     ) -> VectorProtocolLorentz:
         """
         Converts a 3D vector to 4D vector.
 
         The scalar temporal coordinate are broadcasted for NumPy and Awkward vectors.
-        Only a single temporal coordinate should be provided. Generic coordinate
-        counterparts should be provided for the momentum coordinates.
+        Only a single temporal coordinate should be provided.
 
         Examples:
             >>> import vector
@@ -3298,21 +3314,21 @@ class Vector3D(Vector, VectorProtocolSpatial):
             >>> vec.to_Vector4D(t=4)
             VectorObject4D(x=1, y=2, z=3, t=4)
             >>> vec = vector.MomentumObject3D(px=1, py=2, pz=3)
-            >>> vec.to_Vector4D(tau=4)
+            >>> vec.to_Vector4D(M=4)
             MomentumObject4D(px=1, py=2, pz=3, mass=4)
         """
-        if sum(x is not None for x in (t, tau)) > 1:
+        if sum(x is not None for x in (t, tau, m, M, mass, e, E, energy)) > 1:
             raise TypeError(
-                "At most one longitudinal coordinate (`t`, `tau`) may be assigned (non-None)"
+                "At most one longitudinal coordinate (`t`/`e`/`E`/`energy`, `tau`/`m`/`M`/`mass`) may be assigned (non-None)"
             )
 
         t_value = 0.0
         t_type: type[Temporal] = TemporalT
-        if t is not None:
-            t_value = t
-        elif tau is not None:
-            t_value = tau
+        if any(coord is not None for coord in (tau, m, M, mass)):
             t_type = TemporalTau
+            t_value = next(coord for coord in (tau, m, M, mass) if coord is not None)
+        elif any(coord is not None for coord in (t, e, E, energy)):
+            t_value = next(coord for coord in (t, e, E, energy) if coord is not None)
 
         return self._wrap_result(
             type(self),

@@ -491,3 +491,129 @@ def test_MomentumNumpy4D():
                 assert tv.y[0] == pytest.approx(2)
                 assert tv.z[0] == pytest.approx(3)
                 assert tv.t[0] == pytest.approx(4)
+
+
+def test_conversion_with_coords_object():
+    # 2D -> 3D
+    vec = vector.VectorObject2D(x=1, y=2)
+    assert vec.to_Vector3D(z=1).z == 1
+    assert vec.to_Vector3D(eta=1).eta == 1
+    assert vec.to_Vector3D(theta=1).theta == 1
+
+    assert vec.to_Vector3D(z=1).x == vec.x
+    assert vec.to_Vector3D(z=1).y == vec.y
+
+    # 2D -> 4D
+    assert vec.to_Vector4D(z=1, t=1).z == 1
+    assert vec.to_Vector4D(z=1, t=1).t == 1
+    assert vec.to_Vector4D(eta=1, t=1).eta == 1
+    assert vec.to_Vector4D(eta=1, t=1).t == 1
+    assert vec.to_Vector4D(theta=1, t=1).theta == 1
+    assert vec.to_Vector4D(theta=1, t=1).t == 1
+    assert vec.to_Vector4D(z=1, tau=1).z == 1
+    assert vec.to_Vector4D(z=1, tau=1).tau == 1
+    assert vec.to_Vector4D(eta=1, tau=1).eta == 1
+    assert vec.to_Vector4D(eta=1, tau=1).tau == 1
+    assert vec.to_Vector4D(theta=1, tau=1).theta == 1
+    assert vec.to_Vector4D(theta=1, tau=1).tau == 1
+
+    assert vec.to_Vector4D(z=1, t=1).x == vec.x
+    assert vec.to_Vector4D(z=1, t=1).y == vec.y
+
+    # 3D -> 4D
+    vec = vector.VectorObject3D(x=1, y=2, z=3)
+    assert vec.to_Vector4D(t=1).t == 1
+    assert vec.to_Vector4D(tau=1).tau == 1
+
+    assert vec.to_Vector4D(t=1).x == vec.x
+    assert vec.to_Vector4D(t=1).y == vec.y
+    assert vec.to_Vector4D(t=1).z == vec.z
+
+    # check if momentum coords work
+    vec = vector.MomentumObject2D(px=1, py=2)
+    assert vec.to_Vector3D(pz=1).pz == 1
+
+    assert vec.to_Vector4D(pz=1, m=1).pz == 1
+    assert vec.to_Vector4D(pz=1, m=1).m == 1
+    assert vec.to_Vector4D(pz=1, mass=1).mass == 1
+    assert vec.to_Vector4D(pz=1, M=1).M == 1
+    assert vec.to_Vector4D(pz=1, e=1).e == 1
+    assert vec.to_Vector4D(pz=1, energy=1).energy == 1
+    assert vec.to_Vector4D(pz=1, E=1).E == 1
+
+    vec = vector.MomentumObject3D(px=1, py=2, pz=3)
+    assert vec.to_Vector4D(m=1).m == 1
+    assert vec.to_Vector4D(mass=1).mass == 1
+    assert vec.to_Vector4D(M=1).M == 1
+    assert vec.to_Vector4D(e=1).e == 1
+    assert vec.to_Vector4D(energy=1).energy == 1
+    assert vec.to_Vector4D(E=1).E == 1
+
+
+def test_conversion_with_coords_numpy():
+    # 2D -> 3D
+    vec = vector.VectorNumpy2D(
+        [(1.0, 1.0), (2.0, 2.0)],
+        dtype=[("x", float), ("y", float)],
+    )
+    assert all(vec.to_Vector3D(z=1).z == 1)
+    assert all(vec.to_Vector3D(eta=1).eta == 1)
+    assert all(vec.to_Vector3D(theta=1).theta == 1)
+
+    assert all(vec.to_Vector3D(z=1).x == vec.x)
+    assert all(vec.to_Vector3D(z=1).y == vec.y)
+
+    # 2D -> 4D
+    assert all(vec.to_Vector4D(z=1, t=1).t == 1)
+    assert all(vec.to_Vector4D(z=1, t=1).z == 1)
+    assert all(vec.to_Vector4D(eta=1, t=1).eta == 1)
+    assert all(vec.to_Vector4D(eta=1, t=1).t == 1)
+    assert all(vec.to_Vector4D(theta=1, t=1).theta == 1)
+    assert all(vec.to_Vector4D(theta=1, t=1).t == 1)
+    assert all(vec.to_Vector4D(z=1, tau=1).z == 1)
+    assert all(vec.to_Vector4D(z=1, tau=1).tau == 1)
+    assert all(vec.to_Vector4D(eta=1, tau=1).eta == 1)
+    assert all(vec.to_Vector4D(eta=1, tau=1).tau == 1)
+    assert all(vec.to_Vector4D(theta=1, tau=1).theta == 1)
+    assert all(vec.to_Vector4D(theta=1, tau=1).tau == 1)
+
+    assert all(vec.to_Vector4D(z=1, t=1).x == vec.x)
+    assert all(vec.to_Vector4D(z=1, t=1).y == vec.y)
+
+    # 3D -> 4D
+    vec = vector.VectorNumpy3D(
+        [(1.0, 1.0, 1.0), (2.0, 2.0, 2.0)],
+        dtype=[("x", float), ("y", float), ("z", float)],
+    )
+    assert all(vec.to_Vector4D(t=1).t == 1)
+    assert all(vec.to_Vector4D(tau=1).tau == 1)
+
+    assert all(vec.to_Vector4D(t=1).x == vec.x)
+    assert all(vec.to_Vector4D(t=1).y == vec.y)
+    assert all(vec.to_Vector4D(t=1).z == vec.z)
+
+    # check if momentum coords work
+    vec = vector.MomentumNumpy2D(
+        [(1.0, 1.0), (2.0, 2.0)],
+        dtype=[("px", float), ("py", float)],
+    )
+    assert all(vec.to_Vector3D(pz=1).pz == 1)
+
+    assert all(vec.to_Vector4D(pz=1, m=1).pz == 1)
+    assert all(vec.to_Vector4D(pz=1, m=1).m == 1)
+    assert all(vec.to_Vector4D(pz=1, mass=1).mass == 1)
+    assert all(vec.to_Vector4D(pz=1, M=1).M == 1)
+    assert all(vec.to_Vector4D(pz=1, e=1).e == 1)
+    assert all(vec.to_Vector4D(pz=1, energy=1).energy == 1)
+    assert all(vec.to_Vector4D(pz=1, E=1).E == 1)
+
+    vec = vector.MomentumNumpy3D(
+        [(1.0, 1.0, 1.0), (2.0, 2.0, 2.0)],
+        dtype=[("px", float), ("py", float), ("pz", float)],
+    )
+    assert all(vec.to_Vector4D(m=1).m == 1)
+    assert all(vec.to_Vector4D(mass=1).mass == 1)
+    assert all(vec.to_Vector4D(M=1).M == 1)
+    assert all(vec.to_Vector4D(e=1).e == 1)
+    assert all(vec.to_Vector4D(energy=1).energy == 1)
+    assert all(vec.to_Vector4D(E=1).E == 1)
