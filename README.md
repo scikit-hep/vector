@@ -537,11 +537,12 @@ For a few operations - `+`, `-`, `==`, `!=`, ... - the dimension of the vectors 
 v1 = vector.obj(x=1, y=2, z=3)
 v2 = vector.obj(x=1, y=2)
 
-v1 - v2.like(v1), v1.like(
-    v2
-) - v2, v1 - v2.to_xyz(), v1.to_xy() - v2, v1 - v2.to_Vector3D(
-    z=3
-), v1.to_Vector2D() - v2
+v1 - v2.like(v1)  # transforms v2 to v1's coordinate system (imputes z=0)
+v1.like(v2) - v2  # transforms v1 to v2's coordinate system (removes z)
+v1 - v2.to_xyz()  # transforms v2 to xyz coordinates (imputes z=0)
+v1.to_xy() - v2  # transforms v1 to xy coordinates (removes z)
+v1 - v2.to_Vector3D(z=3)  # transforms v2 to 3D (imputes z=3)
+v1.to_Vector2D() - v2  # transforms v1 to 2D (removes z)
 ```
 
 And finally, in some cases, the function excludes a higher-dimensional component, even if the input vectors had them.
