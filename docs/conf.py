@@ -22,7 +22,7 @@ import importlib.metadata
 
 project = "Vector"
 copyright = (
-    "2019-2023, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner"
+    "2019-2024, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner"
 )
 author = "Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner"
 

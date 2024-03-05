@@ -1,5 +1,23 @@
 # Changelog
 
+## Version 1.3
+
+### Version 1.3.0
+
+- feat: coordinate transformation functions with momentum names [#424][]
+- feat: allow momentum coords in to_Vector\*D methods + cleanup [#423][]
+- feat: add a lite nox session + add numba as optional dependency [#431][]
+- feat: `like` method for projecting vector into the coordinate space of another vector + better type errors and hints [#426][]
+- feat: add support for dask-awkward arrays in vector constructors [#429][]
+- feat: short names for to_VectorND methods [#432][]
+
+[#424]: https://github.com/scikit-hep/vector/pull/424
+[#423]: https://github.com/scikit-hep/vector/pull/423
+[#431]: https://github.com/scikit-hep/vector/pull/431
+[#426]: https://github.com/scikit-hep/vector/pull/426
+[#429]: https://github.com/scikit-hep/vector/pull/429
+[#432]: https://github.com/scikit-hep/vector/pull/432
+
 ## Version 1.2
 
 ### Version 1.2.0
