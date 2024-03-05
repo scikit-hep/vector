@@ -64,6 +64,9 @@ docs = [
   "sphinx_book_theme>=0.0.42",
   "sphinx_copybutton",
 ]
+numba = [
+  'numba>=0.57; python_version < "3.12"',
+]
 test = [
   "nox",
   "papermill>=2.4",
