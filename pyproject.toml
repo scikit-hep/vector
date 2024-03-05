@@ -47,6 +47,7 @@ awkward = [
 ]
 dev = [
   "awkward>=1.2",
+  "dask_awkward",
   "nox",
   'numba>=0.57; python_version < "3.12"',
   "papermill>=2.4",
@@ -68,6 +69,7 @@ numba = [
   'numba>=0.57; python_version < "3.12"',
 ]
 test = [
+  "dask_awkward",
   "nox",
   "papermill>=2.4",
   "pytest>=6",
