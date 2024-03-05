@@ -630,7 +630,7 @@ The (current) list of properties and methods is:
 - `count_nonzero()`: can also use `numpy.count_nonzero` or `awkward.count_nonzero`, only for NumPy and Awkward vectors
 - `count()`: can also use `awkward.count`, only for Awkward vectors
 - `isclose(vector, rtol=1e-5, atol=1e-8, equal_nan=False)`: works like [np.isclose](https://numpy.org/doc/stable/reference/generated/numpy.isclose.html); arrays also have an [allclose](https://numpy.org/doc/stable/reference/generated/numpy.allclose.html) method
-- `to_Vector*D(coordinates)`: replace `*` with the reuquired vector dimension
+- `to_VectorND(coordinates)`/`to_ND(coordinates)`: replace `N` with the required vector dimension
 - `to_{coordinate-names}`: for example - `to_rhophietatau`
 - `like(other)`: projects the vector into the dimensions of `other`, for example - `two_d_vector.like(three_d_vector)`
 
