@@ -1091,7 +1091,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """Same as multiplying by -1."""
         raise AssertionError
 
-    def boost_p4(self: SameVectorType, p4: MomentumProtocolLorentz) -> SameVectorType:
+    def boost_p4(self: SameVectorType, p4: VectorProtocolLorentz) -> SameVectorType:
         """
         Boosts the vector or array of vectors in a direction and magnitude given
         by the 4D vector or array of vectors ``p4``.
@@ -1118,7 +1118,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         raise AssertionError
 
     def boost_beta3(
-        self: SameVectorType, beta3: MomentumProtocolSpatial
+        self: SameVectorType, beta3: VectorProtocolSpatial
     ) -> SameVectorType:
         """
         Boosts the vector or array of vectors in a direction and magnitude given
@@ -1137,7 +1137,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         raise AssertionError
 
     def boost(
-        self: SameVectorType, booster: MomentumProtocolSpatial | MomentumProtocolLorentz
+        self: SameVectorType, booster: VectorProtocolSpatial | VectorProtocolLorentz
     ) -> SameVectorType:
         """
         Boosts the vector or array of vectors using the 3D or 4D ``booster``.
@@ -1161,7 +1161,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         raise AssertionError
 
     def boostCM_of_p4(
-        self: SameVectorType, p4: MomentumProtocolLorentz
+        self: SameVectorType, p4: VectorProtocolLorentz
     ) -> SameVectorType:
         """
         Boosts the vector or array of vectors to the center-of-mass (CM) frame of
@@ -1179,7 +1179,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         raise AssertionError
 
     def boostCM_of_beta3(
-        self: SameVectorType, beta3: MomentumProtocolSpatial
+        self: SameVectorType, beta3: VectorProtocolSpatial
     ) -> SameVectorType:
         """
         Boosts the vector or array of vectors to the center-of-mass (CM) frame of
@@ -1191,7 +1191,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         raise AssertionError
 
     def boostCM_of(
-        self: SameVectorType, booster: MomentumProtocolSpatial | MomentumProtocolLorentz
+        self: SameVectorType, booster: VectorProtocolSpatial | VectorProtocolLorentz
     ) -> SameVectorType:
         """
         Boosts the vector or array of vectors to the center-of-mass (CM) frame of
@@ -3832,30 +3832,30 @@ class Lorentz(Spatial, VectorProtocolLorentz):
             raise TypeError(f"{other!r} is not a 4D vector")
         return deltaRapidityPhi2.dispatch(self, other)
 
-    def boost_p4(self: SameVectorType, p4: MomentumProtocolLorentz) -> SameVectorType:
+    def boost_p4(self: SameVectorType, p4: VectorProtocolLorentz) -> SameVectorType:
         from vector._compute.lorentz import boost_p4
 
-        if dim(p4) != 4 or not isinstance(p4, LorentzMomentum):
-            raise TypeError(f"{p4!r} is not a 4D momentum vector")
+        if dim(p4) != 4:
+            raise TypeError(f"{p4!r} is not a 4D vector")
         return boost_p4.dispatch(self, p4)
 
     def boost_beta3(
-        self: SameVectorType, beta3: MomentumProtocolSpatial
+        self: SameVectorType, beta3: VectorProtocolSpatial
     ) -> SameVectorType:
         from vector._compute.lorentz import boost_beta3
 
-        if dim(beta3) != 3 or not isinstance(beta3, SpatialMomentum):
-            raise TypeError(f"{beta3!r} is not a 3D momentum vector")
+        if dim(beta3) != 3:
+            raise TypeError(f"{beta3!r} is not a 3D vector")
         return boost_beta3.dispatch(self, beta3)
 
     def boost(
-        self: SameVectorType, booster: MomentumProtocolSpatial | MomentumProtocolLorentz
+        self: SameVectorType, booster: VectorProtocolSpatial | VectorProtocolLorentz
     ) -> SameVectorType:
         from vector._compute.lorentz import boost_beta3, boost_p4
 
-        if isinstance(booster, SpatialMomentum):
+        if isinstance(booster, Vector3D):
             return boost_beta3.dispatch(self, booster)
-        elif isinstance(booster, LorentzMomentum):
+        elif isinstance(booster, Vector4D):
             return boost_p4.dispatch(self, booster)
         else:
             raise TypeError(
@@ -3864,31 +3864,31 @@ class Lorentz(Spatial, VectorProtocolLorentz):
             )
 
     def boostCM_of_p4(
-        self: SameVectorType, p4: MomentumProtocolLorentz
+        self: SameVectorType, p4: VectorProtocolLorentz
     ) -> SameVectorType:
         from vector._compute.lorentz import boost_p4
 
-        if dim(p4) != 4 or not isinstance(p4, LorentzMomentum):
+        if dim(p4) != 4:
             raise TypeError(f"{p4!r} is not a 4D momentum vector")
         return boost_p4.dispatch(self, p4.neg3D)
 
     def boostCM_of_beta3(
-        self: SameVectorType, beta3: MomentumProtocolSpatial
+        self: SameVectorType, beta3: VectorProtocolSpatial
     ) -> SameVectorType:
         from vector._compute.lorentz import boost_beta3
 
-        if dim(beta3) != 3 or not isinstance(beta3, SpatialMomentum):
+        if dim(beta3) != 3:
             raise TypeError(f"{beta3!r} is not a 3D momentum vector")
         return boost_beta3.dispatch(self, beta3.neg3D)
 
     def boostCM_of(
-        self: SameVectorType, booster: MomentumProtocolSpatial | MomentumProtocolLorentz
+        self: SameVectorType, booster: VectorProtocolSpatial | VectorProtocolLorentz
     ) -> SameVectorType:
         from vector._compute.lorentz import boost_beta3, boost_p4
 
-        if isinstance(booster, SpatialMomentum):
+        if isinstance(booster, Vector3D):
             return boost_beta3.dispatch(self, booster.neg3D)
-        elif isinstance(booster, LorentzMomentum):
+        elif isinstance(booster, Vector4D):
             return boost_p4.dispatch(self, booster.neg3D)
         else:
             raise TypeError(
