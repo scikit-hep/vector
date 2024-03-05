@@ -43,10 +43,10 @@ dependencies = [
 ]
 [project.optional-dependencies]
 awkward = [
-  "awkward>=2.0",
+  "awkward>=2",
 ]
 dev = [
-  "awkward>=2.0",
+  "awkward>=2",
   "dask_awkward",
   "nox",
   'numba>=0.57; python_version < "3.12"',
@@ -57,7 +57,7 @@ dev = [
   "sympy",
 ]
 docs = [
-  "awkward>=2.0",
+  "awkward>=2",
   "ipykernel",
   "myst-parser>0.13",
   "nbsphinx",
