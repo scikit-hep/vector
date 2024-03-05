@@ -204,6 +204,43 @@ class VectorProtocol:
         """
         raise AssertionError
 
+    def to_2D(self) -> VectorProtocolPlanar:
+        """
+        Projects this vector/these vectors onto azimuthal coordinates only.
+
+        Alias for :meth:`vector._methods.VectorProtocol.to_Vector2D`.
+        """
+        raise AssertionError
+
+    def to_3D(self) -> VectorProtocolSpatial:
+        """
+        Projects this vector/these vectors onto azimuthal and longitudinal
+        coordinates only.
+
+        If 2D, a default $z$ component of $0$ is imputed.
+
+        The longitudinal coordinate can be passed as a named argument.
+
+        Alias for :meth:`vector._methods.VectorProtocol.to_Vector3D`.
+        """
+        raise AssertionError
+
+    def to_4D(self) -> VectorProtocolLorentz:
+        """
+        Projects this vector/these vectors onto azimuthal, longitudinal,
+        and temporal coordinates.
+
+        If 3D, a default $t$ component of $0$ is imputed.
+
+        If 2D, a $z$ component of $0$ is imputed along with a default
+        $t$ component of $0$.
+
+        The longitudinal and temporal coordinates can be passed as named arguments.
+
+        Alias for :meth:`vector._methods.VectorProtocol.to_Vector4D`.
+        """
+        raise AssertionError
+
     def to_xy(self) -> VectorProtocolPlanar:
         """
         Converts to $x$-$y$ coordinates, possibly eliminating dimensions with a
@@ -3322,6 +3359,24 @@ class Vector2D(Vector, VectorProtocolPlanar):
             1,
         )
 
+    def to_2D(self) -> VectorProtocolPlanar:
+        """
+        Alias for :meth:`vector._methods.Vector2D.to_Vector2D`.
+        """
+        return self.to_Vector2D()
+
+    def to_3D(self, **kwargs: float | None) -> VectorProtocolSpatial:
+        """
+        Alias for :meth:`vector._methods.Vector2D.to_Vector3D`.
+        """
+        return self.to_Vector3D(**kwargs)
+
+    def to_4D(self, **kwargs: float | None) -> VectorProtocolLorentz:
+        """
+        Alias for :meth:`vector._methods.Vector2D.to_Vector4D`.
+        """
+        return self.to_Vector4D(**kwargs)
+
 
 class Vector3D(Vector, VectorProtocolSpatial):
     def to_Vector2D(self) -> VectorProtocolPlanar:
@@ -3382,6 +3437,24 @@ class Vector3D(Vector, VectorProtocolSpatial):
             1,
         )
 
+    def to_2D(self) -> VectorProtocolPlanar:
+        """
+        Alias for :meth:`vector._methods.Vector3D.to_Vector2D`.
+        """
+        return self.to_Vector2D()
+
+    def to_3D(self) -> VectorProtocolSpatial:
+        """
+        Alias for :meth:`vector._methods.Vector3D.to_Vector3D`.
+        """
+        return self.to_Vector3D()
+
+    def to_4D(self, **kwargs: float | None) -> VectorProtocolLorentz:
+        """
+        Alias for :meth:`vector._methods.Vector3D.to_Vector4D`.
+        """
+        return self.to_Vector4D(**kwargs)
+
 
 class Vector4D(Vector, VectorProtocolLorentz):
     def to_Vector2D(self) -> VectorProtocolPlanar:
@@ -3402,6 +3475,24 @@ class Vector4D(Vector, VectorProtocolLorentz):
 
     def to_Vector4D(self) -> VectorProtocolLorentz:
         return self
+
+    def to_2D(self) -> VectorProtocolPlanar:
+        """
+        Alias for :meth:`vector._methods.Vector4D.to_Vector2D`.
+        """
+        return self.to_Vector2D()
+
+    def to_3D(self) -> VectorProtocolSpatial:
+        """
+        Alias for :meth:`vector._methods.Vector4D.to_Vector3D`.
+        """
+        return self.to_Vector3D()
+
+    def to_4D(self) -> VectorProtocolLorentz:
+        """
+        Alias for :meth:`vector._methods.Vector4D.to_Vector4D`.
+        """
+        return self.to_Vector4D()
 
 
 class Planar(VectorProtocolPlanar):
