@@ -32,9 +32,10 @@ def test_dimension_conversion():
             [],
         ]
     )
-    assert ak.all(vec.to_Vector3D(z=1).z == 1)
-    assert ak.all(vec.to_Vector3D(eta=1).eta == 1)
-    assert ak.all(vec.to_Vector3D(theta=1).theta == 1)
+    # test alias
+    assert ak.all(vec.to_3D(z=1).z == 1)
+    assert ak.all(vec.to_3D(eta=1).eta == 1)
+    assert ak.all(vec.to_3D(theta=1).theta == 1)
 
     assert ak.all(vec.to_Vector3D(z=1).x == vec.x)
     assert ak.all(vec.to_Vector3D(z=1).y == vec.y)
@@ -53,8 +54,9 @@ def test_dimension_conversion():
     assert ak.all(vec.to_Vector4D(theta=1, tau=1).theta == 1)
     assert ak.all(vec.to_Vector4D(theta=1, tau=1).tau == 1)
 
-    assert ak.all(vec.to_Vector4D(z=1, t=1).x == vec.x)
-    assert ak.all(vec.to_Vector4D(z=1, t=1).y == vec.y)
+    # test alias
+    assert ak.all(vec.to_4D(z=1, t=1).x == vec.x)
+    assert ak.all(vec.to_4D(z=1, t=1).y == vec.y)
 
     # 3D -> 4D
     vec = vector.Array(
