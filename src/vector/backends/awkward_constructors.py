@@ -328,7 +328,7 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     is_momentum, dimension, names, arrays = _check_names(akarray, fields)
 
     # don't execute for dask_awkward arrays
-    if isinstance(args[0], (awkward.Array, list)):
+    if isinstance(args[0], (awkward.Array, list, numpy.ndarray)):
         needs_behavior = not vector._awkward_registered
         for x in arrays:
             if needs_behavior:
