@@ -60,20 +60,12 @@ from vector.backends.object import (
 
 def _import_awkward() -> None:
     awk_version = packaging.version.Version(importlib.metadata.version("awkward"))
-    if awk_version < packaging.version.Version("1.2.0rc5"):
+    if awk_version < packaging.version.Version("2.0.0"):
         # the only context users will see this message is if they're trying to use vector.awk
         # VectorAwkward is still set to None
-        msg = f"awkward {awk_version} is too old; please upgrade to 1.2.0 or later"
+        msg = f"awkward {awk_version} is too old; please upgrade to 2.0.0 or later"
         raise ImportError(msg)
 
-
-_is_awkward_v2: bool | None
-try:
-    _is_awkward_v2 = packaging.version.Version(
-        importlib.metadata.version("awkward")
-    ) >= packaging.version.Version("2.0.0rc1")
-except importlib.metadata.PackageNotFoundError:
-    _is_awkward_v2 = None
 
 try:
     import awkward

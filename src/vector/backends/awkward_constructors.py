@@ -218,37 +218,20 @@ def _is_type_safe(array_type: typing.Any) -> bool:
             awkward.types.OptionType,
         ),
     ):
-        # .content is Awkward v2
-        array_type = (
-            array_type.content if hasattr(array_type, "content") else array_type.type
-        )
+        array_type = array_type.content
 
     if not isinstance(array_type, awkward.types.RecordType):
         return False
 
-    # .contents is Awkward v2
-    contents = (
-        array_type.contents if hasattr(array_type, "contents") else array_type.fields()
-    )
+    contents = array_type.contents
     for field_type in contents:
         if isinstance(field_type, awkward.types.OptionType):
             field_type = (  # noqa: PLW2901
                 field_type.content
-                if hasattr(array_type, "content")
-                else field_type.type
             )
-        if not isinstance(
-            field_type,
-            awkward.types.NumpyType
-            if hasattr(awkward.types, "NumpyType")
-            else awkward.types.PrimitiveType,
-        ):
+        if not isinstance(field_type, awkward.types.NumpyType):
             return False
-        dt = (
-            field_type.primitive
-            if hasattr(field_type, "primitive")
-            else field_type.dtype
-        )
+        dt = field_type.primitive
         if (
             not dt.startswith("int")
             and not dt.startswith("uint")
