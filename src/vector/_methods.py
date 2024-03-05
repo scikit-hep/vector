@@ -1091,7 +1091,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """Same as multiplying by -1."""
         raise AssertionError
 
-    def boost_p4(self: SameVectorType, p4: VectorProtocolLorentz) -> SameVectorType:
+    def boost_p4(self: SameVectorType, p4: MomentumProtocolLorentz) -> SameVectorType:
         """
         Boosts the vector or array of vectors in a direction and magnitude given
         by the 4D vector or array of vectors ``p4``.
@@ -1118,7 +1118,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         raise AssertionError
 
     def boost_beta3(
-        self: SameVectorType, beta3: VectorProtocolSpatial
+        self: SameVectorType, beta3: MomentumProtocolSpatial
     ) -> SameVectorType:
         """
         Boosts the vector or array of vectors in a direction and magnitude given
@@ -1136,7 +1136,9 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """
         raise AssertionError
 
-    def boost(self: SameVectorType, booster: VectorProtocol) -> SameVectorType:
+    def boost(
+        self: SameVectorType, booster: MomentumProtocolSpatial | MomentumProtocolLorentz
+    ) -> SameVectorType:
         """
         Boosts the vector or array of vectors using the 3D or 4D ``booster``.
 
@@ -1159,7 +1161,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         raise AssertionError
 
     def boostCM_of_p4(
-        self: SameVectorType, p4: VectorProtocolLorentz
+        self: SameVectorType, p4: MomentumProtocolLorentz
     ) -> SameVectorType:
         """
         Boosts the vector or array of vectors to the center-of-mass (CM) frame of
@@ -1177,7 +1179,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         raise AssertionError
 
     def boostCM_of_beta3(
-        self: SameVectorType, beta3: VectorProtocolSpatial
+        self: SameVectorType, beta3: MomentumProtocolSpatial
     ) -> SameVectorType:
         """
         Boosts the vector or array of vectors to the center-of-mass (CM) frame of
@@ -1188,7 +1190,9 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """
         raise AssertionError
 
-    def boostCM_of(self: SameVectorType, booster: VectorProtocol) -> SameVectorType:
+    def boostCM_of(
+        self: SameVectorType, booster: MomentumProtocolSpatial | MomentumProtocolLorentz
+    ) -> SameVectorType:
         """
         Boosts the vector or array of vectors to the center-of-mass (CM) frame of
         the 3D or 4D ``booster``.
@@ -3451,7 +3455,7 @@ class Planar(VectorProtocolPlanar):
     ) -> BoolCollection:
         from vector._compute.planar import is_parallel
 
-        _maybe_dimension_error(self, other, self.is_parallel.__name__)
+        _maybe_same_dimension_error(self, other, self.is_parallel.__name__)
         return is_parallel.dispatch(tolerance, self, other)
 
     def is_antiparallel(
@@ -3459,7 +3463,7 @@ class Planar(VectorProtocolPlanar):
     ) -> BoolCollection:
         from vector._compute.planar import is_antiparallel
 
-        _maybe_dimension_error(self, other, self.is_antiparallel.__name__)
+        _maybe_same_dimension_error(self, other, self.is_antiparallel.__name__)
         return is_antiparallel.dispatch(tolerance, self, other)
 
     def is_perpendicular(
@@ -3467,7 +3471,7 @@ class Planar(VectorProtocolPlanar):
     ) -> BoolCollection:
         from vector._compute.planar import is_perpendicular
 
-        _maybe_dimension_error(self, other, self.is_perpendicular.__name__)
+        _maybe_same_dimension_error(self, other, self.is_perpendicular.__name__)
         return is_perpendicular.dispatch(tolerance, self, other)
 
     def unit(self: SameVectorType) -> SameVectorType:
@@ -3476,17 +3480,17 @@ class Planar(VectorProtocolPlanar):
         return unit.dispatch(self)
 
     def dot(self, other: VectorProtocol) -> ScalarCollection:
-        _maybe_dimension_error(self, other, self.dot.__name__)
+        _maybe_same_dimension_error(self, other, self.dot.__name__)
         module = _compute_module_of(self, other)
         return module.dot.dispatch(self, other)
 
     def add(self, other: VectorProtocol) -> VectorProtocol:
-        _maybe_dimension_error(self, other, self.add.__name__)
+        _maybe_same_dimension_error(self, other, self.add.__name__)
         module = _compute_module_of(self, other)
         return module.add.dispatch(self, other)
 
     def subtract(self, other: VectorProtocol) -> VectorProtocol:
-        _maybe_dimension_error(self, other, self.subtract.__name__)
+        _maybe_same_dimension_error(self, other, self.subtract.__name__)
         module = _compute_module_of(self, other)
         return module.subtract.dispatch(self, other)
 
@@ -3509,13 +3513,13 @@ class Planar(VectorProtocolPlanar):
     def equal(self, other: VectorProtocol) -> BoolCollection:
         from vector._compute.planar import equal
 
-        _maybe_dimension_error(self, other, self.equal.__name__)
+        _maybe_same_dimension_error(self, other, self.equal.__name__)
         return equal.dispatch(self, other)
 
     def not_equal(self, other: VectorProtocol) -> BoolCollection:
         from vector._compute.planar import not_equal
 
-        _maybe_dimension_error(self, other, self.not_equal.__name__)
+        _maybe_same_dimension_error(self, other, self.not_equal.__name__)
         return not_equal.dispatch(self, other)
 
     def isclose(
@@ -3527,7 +3531,7 @@ class Planar(VectorProtocolPlanar):
     ) -> BoolCollection:
         from vector._compute.planar import isclose
 
-        _maybe_dimension_error(self, other, self.isclose.__name__)
+        _maybe_same_dimension_error(self, other, self.isclose.__name__)
         return isclose.dispatch(rtol, atol, equal_nan, self, other)
 
 
@@ -3577,6 +3581,8 @@ class Spatial(Planar, VectorProtocolSpatial):
     def cross(self, other: VectorProtocolSpatial) -> VectorProtocolSpatial:
         from vector._compute.spatial import cross
 
+        if dim(self) != 3 or dim(other) != 3:
+            raise TypeError("cross is only defined for 3D vectors")
         return cross.dispatch(self, other)
 
     def deltaangle(
@@ -3584,6 +3590,8 @@ class Spatial(Planar, VectorProtocolSpatial):
     ) -> ScalarCollection:
         from vector._compute.spatial import deltaangle
 
+        if dim(other) != 3 and dim(other) != 4:
+            raise TypeError(f"{other!r} is not a 3D or a 4D vector")
         return deltaangle.dispatch(self, other)
 
     def deltaeta(
@@ -3591,6 +3599,8 @@ class Spatial(Planar, VectorProtocolSpatial):
     ) -> ScalarCollection:
         from vector._compute.spatial import deltaeta
 
+        if dim(other) != 3 and dim(other) != 4:
+            raise TypeError(f"{other!r} is not a 3D or a 4D vector")
         return deltaeta.dispatch(self, other)
 
     def deltaR(
@@ -3598,6 +3608,8 @@ class Spatial(Planar, VectorProtocolSpatial):
     ) -> ScalarCollection:
         from vector._compute.spatial import deltaR
 
+        if dim(other) != 3 and dim(other) != 4:
+            raise TypeError(f"{other!r} is not a 3D or a 4D vector")
         return deltaR.dispatch(self, other)
 
     def deltaR2(
@@ -3605,6 +3617,8 @@ class Spatial(Planar, VectorProtocolSpatial):
     ) -> ScalarCollection:
         from vector._compute.spatial import deltaR2
 
+        if dim(other) != 3 and dim(other) != 4:
+            raise TypeError(f"{other!r} is not a 3D or a 4D vector")
         return deltaR2.dispatch(self, other)
 
     def rotateX(self: SameVectorType, angle: ScalarCollection) -> SameVectorType:
@@ -3622,6 +3636,8 @@ class Spatial(Planar, VectorProtocolSpatial):
     ) -> SameVectorType:
         from vector._compute.spatial import rotate_axis
 
+        if dim(axis) != 3:
+            raise TypeError(f"{axis!r} is not a 3D vector")
         return rotate_axis.dispatch(angle, axis, self)
 
     def rotate_euler(
@@ -3668,7 +3684,7 @@ class Spatial(Planar, VectorProtocolSpatial):
     ) -> BoolCollection:
         from vector._compute.spatial import is_parallel
 
-        _maybe_dimension_error(self, other, self.is_parallel.__name__)
+        _maybe_same_dimension_error(self, other, self.is_parallel.__name__)
         return is_parallel.dispatch(tolerance, self, other)
 
     def is_antiparallel(
@@ -3676,7 +3692,7 @@ class Spatial(Planar, VectorProtocolSpatial):
     ) -> BoolCollection:
         from vector._compute.spatial import is_antiparallel
 
-        _maybe_dimension_error(self, other, self.is_antiparallel.__name__)
+        _maybe_same_dimension_error(self, other, self.is_antiparallel.__name__)
         return is_antiparallel.dispatch(tolerance, self, other)
 
     def is_perpendicular(
@@ -3684,7 +3700,7 @@ class Spatial(Planar, VectorProtocolSpatial):
     ) -> BoolCollection:
         from vector._compute.spatial import is_perpendicular
 
-        _maybe_dimension_error(self, other, self.is_perpendicular.__name__)
+        _maybe_same_dimension_error(self, other, self.is_perpendicular.__name__)
         return is_perpendicular.dispatch(tolerance, self, other)
 
     def unit(self: SameVectorType) -> SameVectorType:
@@ -3693,17 +3709,17 @@ class Spatial(Planar, VectorProtocolSpatial):
         return unit.dispatch(self)
 
     def dot(self, other: VectorProtocol) -> ScalarCollection:
-        _maybe_dimension_error(self, other, self.dot.__name__)
+        _maybe_same_dimension_error(self, other, self.dot.__name__)
         module = _compute_module_of(self, other)
         return module.dot.dispatch(self, other)
 
     def add(self, other: VectorProtocol) -> VectorProtocol:
-        _maybe_dimension_error(self, other, self.add.__name__)
+        _maybe_same_dimension_error(self, other, self.add.__name__)
         module = _compute_module_of(self, other)
         return module.add.dispatch(self, other)
 
     def subtract(self, other: VectorProtocol) -> VectorProtocol:
-        _maybe_dimension_error(self, other, self.subtract.__name__)
+        _maybe_same_dimension_error(self, other, self.subtract.__name__)
         module = _compute_module_of(self, other)
         return module.subtract.dispatch(self, other)
 
@@ -3737,13 +3753,13 @@ class Spatial(Planar, VectorProtocolSpatial):
     def equal(self, other: VectorProtocol) -> BoolCollection:
         from vector._compute.spatial import equal
 
-        _maybe_dimension_error(self, other, self.equal.__name__)
+        _maybe_same_dimension_error(self, other, self.equal.__name__)
         return equal.dispatch(self, other)
 
     def not_equal(self, other: VectorProtocol) -> BoolCollection:
         from vector._compute.spatial import not_equal
 
-        _maybe_dimension_error(self, other, self.not_equal.__name__)
+        _maybe_same_dimension_error(self, other, self.not_equal.__name__)
         return not_equal.dispatch(self, other)
 
     def isclose(
@@ -3755,7 +3771,7 @@ class Spatial(Planar, VectorProtocolSpatial):
     ) -> BoolCollection:
         from vector._compute.spatial import isclose
 
-        _maybe_dimension_error(self, other, self.isclose.__name__)
+        _maybe_same_dimension_error(self, other, self.isclose.__name__)
         return isclose.dispatch(rtol, atol, equal_nan, self, other)
 
 
@@ -3805,31 +3821,41 @@ class Lorentz(Spatial, VectorProtocolLorentz):
     def deltaRapidityPhi(self, other: VectorProtocolLorentz) -> ScalarCollection:
         from vector._compute.lorentz import deltaRapidityPhi
 
+        if not dim(other) == 4:
+            raise TypeError(f"{other!r} is not a 4D vector")
         return deltaRapidityPhi.dispatch(self, other)
 
     def deltaRapidityPhi2(self, other: VectorProtocolLorentz) -> ScalarCollection:
         from vector._compute.lorentz import deltaRapidityPhi2
 
+        if not dim(other) == 4:
+            raise TypeError(f"{other!r} is not a 4D vector")
         return deltaRapidityPhi2.dispatch(self, other)
 
-    def boost_p4(self: SameVectorType, p4: VectorProtocolLorentz) -> SameVectorType:
+    def boost_p4(self: SameVectorType, p4: MomentumProtocolLorentz) -> SameVectorType:
         from vector._compute.lorentz import boost_p4
 
+        if dim(p4) != 4 or not isinstance(p4, LorentzMomentum):
+            raise TypeError(f"{p4!r} is not a 4D momentum vector")
         return boost_p4.dispatch(self, p4)
 
     def boost_beta3(
-        self: SameVectorType, beta3: VectorProtocolSpatial
+        self: SameVectorType, beta3: MomentumProtocolSpatial
     ) -> SameVectorType:
         from vector._compute.lorentz import boost_beta3
 
+        if dim(beta3) != 3 or not isinstance(beta3, SpatialMomentum):
+            raise TypeError(f"{beta3!r} is not a 3D momentum vector")
         return boost_beta3.dispatch(self, beta3)
 
-    def boost(self: SameVectorType, booster: VectorProtocol) -> SameVectorType:
+    def boost(
+        self: SameVectorType, booster: MomentumProtocolSpatial | MomentumProtocolLorentz
+    ) -> SameVectorType:
         from vector._compute.lorentz import boost_beta3, boost_p4
 
-        if isinstance(booster, Vector3D):
+        if isinstance(booster, SpatialMomentum):
             return boost_beta3.dispatch(self, booster)
-        elif isinstance(booster, Vector4D):
+        elif isinstance(booster, LorentzMomentum):
             return boost_p4.dispatch(self, booster)
         else:
             raise TypeError(
@@ -3838,25 +3864,31 @@ class Lorentz(Spatial, VectorProtocolLorentz):
             )
 
     def boostCM_of_p4(
-        self: SameVectorType, p4: VectorProtocolLorentz
+        self: SameVectorType, p4: MomentumProtocolLorentz
     ) -> SameVectorType:
         from vector._compute.lorentz import boost_p4
 
+        if dim(p4) != 4 or not isinstance(p4, LorentzMomentum):
+            raise TypeError(f"{p4!r} is not a 4D momentum vector")
         return boost_p4.dispatch(self, p4.neg3D)
 
     def boostCM_of_beta3(
-        self: SameVectorType, beta3: VectorProtocolSpatial
+        self: SameVectorType, beta3: MomentumProtocolSpatial
     ) -> SameVectorType:
         from vector._compute.lorentz import boost_beta3
 
+        if dim(beta3) != 3 or not isinstance(beta3, SpatialMomentum):
+            raise TypeError(f"{beta3!r} is not a 3D momentum vector")
         return boost_beta3.dispatch(self, beta3.neg3D)
 
-    def boostCM_of(self: SameVectorType, booster: VectorProtocol) -> SameVectorType:
+    def boostCM_of(
+        self: SameVectorType, booster: MomentumProtocolSpatial | MomentumProtocolLorentz
+    ) -> SameVectorType:
         from vector._compute.lorentz import boost_beta3, boost_p4
 
-        if isinstance(booster, Vector3D):
+        if isinstance(booster, SpatialMomentum):
             return boost_beta3.dispatch(self, booster.neg3D)
-        elif isinstance(booster, Vector4D):
+        elif isinstance(booster, LorentzMomentum):
             return boost_p4.dispatch(self, booster.neg3D)
         else:
             raise TypeError(
@@ -3937,17 +3969,17 @@ class Lorentz(Spatial, VectorProtocolLorentz):
         return unit.dispatch(self)
 
     def dot(self, other: VectorProtocol) -> ScalarCollection:
-        _maybe_dimension_error(self, other, self.dot.__name__)
+        _maybe_same_dimension_error(self, other, self.dot.__name__)
         module = _compute_module_of(self, other)
         return module.dot.dispatch(self, other)
 
     def add(self, other: VectorProtocol) -> VectorProtocol:
-        _maybe_dimension_error(self, other, self.add.__name__)
+        _maybe_same_dimension_error(self, other, self.add.__name__)
         module = _compute_module_of(self, other)
         return module.add.dispatch(self, other)
 
     def subtract(self, other: VectorProtocol) -> VectorProtocol:
-        _maybe_dimension_error(self, other, self.subtract.__name__)
+        _maybe_same_dimension_error(self, other, self.subtract.__name__)
         module = _compute_module_of(self, other)
         return module.subtract.dispatch(self, other)
 
@@ -3992,13 +4024,13 @@ class Lorentz(Spatial, VectorProtocolLorentz):
     def equal(self, other: VectorProtocol) -> BoolCollection:
         from vector._compute.lorentz import equal
 
-        _maybe_dimension_error(self, other, self.equal.__name__)
+        _maybe_same_dimension_error(self, other, self.equal.__name__)
         return equal.dispatch(self, other)
 
     def not_equal(self, other: VectorProtocol) -> BoolCollection:
         from vector._compute.lorentz import not_equal
 
-        _maybe_dimension_error(self, other, self.not_equal.__name__)
+        _maybe_same_dimension_error(self, other, self.not_equal.__name__)
         return not_equal.dispatch(self, other)
 
     def isclose(
@@ -4010,7 +4042,7 @@ class Lorentz(Spatial, VectorProtocolLorentz):
     ) -> BoolCollection:
         from vector._compute.lorentz import isclose
 
-        _maybe_dimension_error(self, other, self.isclose.__name__)
+        _maybe_same_dimension_error(self, other, self.isclose.__name__)
         return isclose.dispatch(rtol, atol, equal_nan, self, other)
 
 
@@ -4180,7 +4212,7 @@ def dim(v: VectorProtocol) -> int:
         raise TypeError(f"{v!r} is not a vector.Vector")
 
 
-def _maybe_dimension_error(
+def _maybe_same_dimension_error(
     v1: VectorProtocol, v2: VectorProtocol, operation: str
 ) -> None:
     """Raises an error if the vectors are not of the same dimension."""

@@ -87,7 +87,9 @@ def test_lorentz_object():
         longitudinal=vector.backends.object.LongitudinalObjectZ(0.6),
         temporal=vector.backends.object.TemporalObjectT(99),
     )
-    out = vec.rotate_axis(axis, 0.25)
+    with pytest.raises(TypeError):
+        out = vec.rotate_axis(axis, 0.25)
+    out = vec.rotate_axis(axis.to_Vector3D(), 0.25)
     assert isinstance(out, vector.backends.object.VectorObject4D)
     assert isinstance(out.azimuthal, vector.backends.object.AzimuthalObjectXY)
     assert isinstance(out.longitudinal, vector.backends.object.LongitudinalObjectZ)
@@ -97,18 +99,12 @@ def test_lorentz_object():
     assert out.z == pytest.approx(0.5828282027463345)
 
     for t1 in (
-        "xyzt",
-        "xythetat",
-        "xyetat",
-        "rhophizt",
-        "rhophithetat",
-        "rhophietat",
-        "xyztau",
-        "xythetatau",
-        "xyetatau",
-        "rhophiztau",
-        "rhophithetatau",
-        "rhophietatau",
+        "xyz",
+        "xytheta",
+        "xyeta",
+        "rhophiz",
+        "rhophitheta",
+        "rhophieta",
     ):
         for t2 in (
             "xyzt",
@@ -159,7 +155,9 @@ def test_lorentz_numpy():
             ("t", numpy.float64),
         ],
     )
-    out = vec.rotate_axis(axis, 0.25)
+    with pytest.raises(TypeError):
+        out = vec.rotate_axis(axis, 0.25)
+    out = vec.rotate_axis(axis.to_Vector3D(), 0.25)
     assert isinstance(out, vector.backends.numpy.VectorNumpy4D)
     assert out.dtype.names == ("x", "y", "z", "t")
     assert out[0].x == pytest.approx(0.37483425404335763)
@@ -167,18 +165,12 @@ def test_lorentz_numpy():
     assert out[0].z == pytest.approx(0.5828282027463345)
 
     for t1 in (
-        "xyzt",
-        "xythetat",
-        "xyetat",
-        "rhophizt",
-        "rhophithetat",
-        "rhophietat",
-        "xyztau",
-        "xythetatau",
-        "xyetatau",
-        "rhophiztau",
-        "rhophithetatau",
-        "rhophietatau",
+        "xyz",
+        "xytheta",
+        "xyeta",
+        "rhophiz",
+        "rhophitheta",
+        "rhophieta",
     ):
         for t2 in (
             "xyzt",
