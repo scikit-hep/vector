@@ -568,6 +568,31 @@ class VectorProtocol:
         """
         raise AssertionError
 
+    def like(self, other: VectorProtocol) -> VectorProtocol:
+        """
+        Projects the vector into the geometric coordinates of the `other`
+        vector.
+
+        Value(s) of $0$ is/are imputed while transforming vector from a lower
+        geometric dimension to a higher geometric dimension.
+
+        .. code-block:: python
+
+            vec_4d + vec_3d.like(vec_4d)
+
+        For more flexibility (passing new coordinate values), see
+        :meth:`vector._methods.Vector2D.to_Vector3D`,
+        :meth:`vector._methods.Vector2D.to_Vector4D`, and
+        :meth:`vector._methods.Vector3D.to_Vector4D`, which can be used as:
+
+        .. code-block:: python
+
+            vec_2d.to_Vector3D(z=3.0)
+            vec_2d.to_Vector4D(z=3.0, t=4.0)
+            vec_3d.to_Vector4D(t=4.0)
+        """
+        raise AssertionError
+
 
 class VectorProtocolPlanar(VectorProtocol):
     @property
@@ -763,7 +788,7 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
         """
         raise AssertionError
 
-    def cross(self, other: VectorProtocol) -> VectorProtocolSpatial:
+    def cross(self, other: VectorProtocolSpatial) -> VectorProtocolSpatial:
         """
         The 3D cross-product of ``self`` with ``other``.
 
@@ -771,18 +796,24 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
         """
         raise AssertionError
 
-    def deltaangle(self, other: VectorProtocol) -> ScalarCollection:
+    def deltaangle(
+        self, other: VectorProtocolSpatial | VectorProtocolLorentz
+    ) -> ScalarCollection:
         r"""
         Angle in 3D space between ``self`` and ``other``, which is always
         positive, between $0$ and $\pi$.
         """
         raise AssertionError
 
-    def deltaeta(self, other: VectorProtocol) -> ScalarCollection:
+    def deltaeta(
+        self, other: VectorProtocolSpatial | VectorProtocolLorentz
+    ) -> ScalarCollection:
         r"""Signed difference in $\eta$ of ``self`` minus ``other``."""
         raise AssertionError
 
-    def deltaR(self, other: VectorProtocol) -> ScalarCollection:
+    def deltaR(
+        self, other: VectorProtocolSpatial | VectorProtocolLorentz
+    ) -> ScalarCollection:
         r"""
         Sum in quadrature of :meth:`vector._methods.VectorProtocolPlanar.deltaphi`
         and :meth:`vector._methods.VectorProtocolSpatial.deltaeta`:
@@ -791,7 +822,9 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
         """
         raise AssertionError
 
-    def deltaR2(self, other: VectorProtocol) -> ScalarCollection:
+    def deltaR2(
+        self, other: VectorProtocolSpatial | VectorProtocolLorentz
+    ) -> ScalarCollection:
         r"""
         Square of the sum in quadrature of
         :meth:`vector._methods.VectorProtocolPlanar.deltaphi` and
@@ -822,7 +855,7 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
         raise AssertionError
 
     def rotate_axis(
-        self: SameVectorType, axis: VectorProtocol, angle: ScalarCollection
+        self: SameVectorType, axis: VectorProtocolSpatial, angle: ScalarCollection
     ) -> SameVectorType:
         """
         Rotates the vector(s) by a given ``angle`` (in radians) around the
@@ -1029,7 +1062,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """
         raise AssertionError
 
-    def deltaRapidityPhi(self, other: VectorProtocol) -> ScalarCollection:
+    def deltaRapidityPhi(self, other: VectorProtocolLorentz) -> ScalarCollection:
         r"""
         Sum in quadrature of :meth:`vector._methods.VectorProtocolPlanar.deltaphi`
         and the difference in :attr:`vector._methods.VectorProtocolLorentz.rapidity`
@@ -1039,7 +1072,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """
         raise AssertionError
 
-    def deltaRapidityPhi2(self, other: VectorProtocol) -> ScalarCollection:
+    def deltaRapidityPhi2(self, other: VectorProtocolLorentz) -> ScalarCollection:
         r"""
         Square of the sum in quadrature of
         :meth:`vector._methods.VectorProtocolPlanar.deltaphi` and the difference in
@@ -1103,7 +1136,9 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """
         raise AssertionError
 
-    def boost(self: SameVectorType, booster: VectorProtocol) -> SameVectorType:
+    def boost(
+        self: SameVectorType, booster: VectorProtocolSpatial | VectorProtocolLorentz
+    ) -> SameVectorType:
         """
         Boosts the vector or array of vectors using the 3D or 4D ``booster``.
 
@@ -1155,7 +1190,9 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """
         raise AssertionError
 
-    def boostCM_of(self: SameVectorType, booster: VectorProtocol) -> SameVectorType:
+    def boostCM_of(
+        self: SameVectorType, booster: VectorProtocolSpatial | VectorProtocolLorentz
+    ) -> SameVectorType:
         """
         Boosts the vector or array of vectors to the center-of-mass (CM) frame of
         the 3D or 4D ``booster``.
@@ -3159,6 +3196,14 @@ class Vector(VectorProtocol):
     def to_ptphietamass(self) -> VectorProtocolLorentz:
         return self.to_rhophietatau()
 
+    def like(self, other: VectorProtocol) -> VectorProtocol:
+        if isinstance(other, Vector2D):
+            return self.to_Vector2D()
+        elif isinstance(other, Vector3D):
+            return self.to_Vector3D()
+        else:
+            return self.to_Vector4D()
+
 
 class Vector2D(Vector, VectorProtocolPlanar):
     def to_Vector2D(self) -> VectorProtocolPlanar:
@@ -3410,30 +3455,24 @@ class Planar(VectorProtocolPlanar):
     ) -> BoolCollection:
         from vector._compute.planar import is_parallel
 
-        if not isinstance(other, Vector2D):
-            return self.to_Vector3D().is_parallel(other, tolerance=tolerance)
-        else:
-            return is_parallel.dispatch(tolerance, self, other)
+        _maybe_same_dimension_error(self, other, self.is_parallel.__name__)
+        return is_parallel.dispatch(tolerance, self, other)
 
     def is_antiparallel(
         self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
     ) -> BoolCollection:
         from vector._compute.planar import is_antiparallel
 
-        if not isinstance(other, Vector2D):
-            return self.to_Vector3D().is_antiparallel(other, tolerance=tolerance)
-        else:
-            return is_antiparallel.dispatch(tolerance, self, other)
+        _maybe_same_dimension_error(self, other, self.is_antiparallel.__name__)
+        return is_antiparallel.dispatch(tolerance, self, other)
 
     def is_perpendicular(
         self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
     ) -> BoolCollection:
         from vector._compute.planar import is_perpendicular
 
-        if not isinstance(other, Vector2D):
-            return self.to_Vector3D().is_perpendicular(other, tolerance=tolerance)
-        else:
-            return is_perpendicular.dispatch(tolerance, self, other)
+        _maybe_same_dimension_error(self, other, self.is_perpendicular.__name__)
+        return is_perpendicular.dispatch(tolerance, self, other)
 
     def unit(self: SameVectorType) -> SameVectorType:
         from vector._compute.planar import unit
@@ -3441,14 +3480,17 @@ class Planar(VectorProtocolPlanar):
         return unit.dispatch(self)
 
     def dot(self, other: VectorProtocol) -> ScalarCollection:
+        _maybe_same_dimension_error(self, other, self.dot.__name__)
         module = _compute_module_of(self, other)
         return module.dot.dispatch(self, other)
 
     def add(self, other: VectorProtocol) -> VectorProtocol:
+        _maybe_same_dimension_error(self, other, self.add.__name__)
         module = _compute_module_of(self, other)
         return module.add.dispatch(self, other)
 
     def subtract(self, other: VectorProtocol) -> VectorProtocol:
+        _maybe_same_dimension_error(self, other, self.subtract.__name__)
         module = _compute_module_of(self, other)
         return module.subtract.dispatch(self, other)
 
@@ -3471,15 +3513,13 @@ class Planar(VectorProtocolPlanar):
     def equal(self, other: VectorProtocol) -> BoolCollection:
         from vector._compute.planar import equal
 
-        if dim(self) != dim(other):
-            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
+        _maybe_same_dimension_error(self, other, self.equal.__name__)
         return equal.dispatch(self, other)
 
     def not_equal(self, other: VectorProtocol) -> BoolCollection:
         from vector._compute.planar import not_equal
 
-        if dim(self) != dim(other):
-            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
+        _maybe_same_dimension_error(self, other, self.not_equal.__name__)
         return not_equal.dispatch(self, other)
 
     def isclose(
@@ -3491,8 +3531,7 @@ class Planar(VectorProtocolPlanar):
     ) -> BoolCollection:
         from vector._compute.planar import isclose
 
-        if dim(self) != dim(other):
-            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
+        _maybe_same_dimension_error(self, other, self.isclose.__name__)
         return isclose.dispatch(rtol, atol, equal_nan, self, other)
 
 
@@ -3539,29 +3578,47 @@ class Spatial(Planar, VectorProtocolSpatial):
 
         return mag2.dispatch(self)
 
-    def cross(self, other: VectorProtocol) -> VectorProtocolSpatial:
+    def cross(self, other: VectorProtocolSpatial) -> VectorProtocolSpatial:
         from vector._compute.spatial import cross
 
+        if dim(self) != 3 or dim(other) != 3:
+            raise TypeError("cross is only defined for 3D vectors")
         return cross.dispatch(self, other)
 
-    def deltaangle(self, other: VectorProtocol) -> ScalarCollection:
+    def deltaangle(
+        self, other: VectorProtocolSpatial | VectorProtocolLorentz
+    ) -> ScalarCollection:
         from vector._compute.spatial import deltaangle
 
+        if dim(other) != 3 and dim(other) != 4:
+            raise TypeError(f"{other!r} is not a 3D or a 4D vector")
         return deltaangle.dispatch(self, other)
 
-    def deltaeta(self, other: VectorProtocol) -> ScalarCollection:
+    def deltaeta(
+        self, other: VectorProtocolSpatial | VectorProtocolLorentz
+    ) -> ScalarCollection:
         from vector._compute.spatial import deltaeta
 
+        if dim(other) != 3 and dim(other) != 4:
+            raise TypeError(f"{other!r} is not a 3D or a 4D vector")
         return deltaeta.dispatch(self, other)
 
-    def deltaR(self, other: VectorProtocol) -> ScalarCollection:
+    def deltaR(
+        self, other: VectorProtocolSpatial | VectorProtocolLorentz
+    ) -> ScalarCollection:
         from vector._compute.spatial import deltaR
 
+        if dim(other) != 3 and dim(other) != 4:
+            raise TypeError(f"{other!r} is not a 3D or a 4D vector")
         return deltaR.dispatch(self, other)
 
-    def deltaR2(self, other: VectorProtocol) -> ScalarCollection:
+    def deltaR2(
+        self, other: VectorProtocolSpatial | VectorProtocolLorentz
+    ) -> ScalarCollection:
         from vector._compute.spatial import deltaR2
 
+        if dim(other) != 3 and dim(other) != 4:
+            raise TypeError(f"{other!r} is not a 3D or a 4D vector")
         return deltaR2.dispatch(self, other)
 
     def rotateX(self: SameVectorType, angle: ScalarCollection) -> SameVectorType:
@@ -3575,10 +3632,12 @@ class Spatial(Planar, VectorProtocolSpatial):
         return rotateY.dispatch(angle, self)
 
     def rotate_axis(
-        self: SameVectorType, axis: VectorProtocol, angle: ScalarCollection
+        self: SameVectorType, axis: VectorProtocolSpatial, angle: ScalarCollection
     ) -> SameVectorType:
         from vector._compute.spatial import rotate_axis
 
+        if dim(axis) != 3:
+            raise TypeError(f"{axis!r} is not a 3D vector")
         return rotate_axis.dispatch(angle, axis, self)
 
     def rotate_euler(
@@ -3625,30 +3684,24 @@ class Spatial(Planar, VectorProtocolSpatial):
     ) -> BoolCollection:
         from vector._compute.spatial import is_parallel
 
-        if isinstance(other, Vector2D):
-            return is_parallel.dispatch(tolerance, self, other.to_Vector3D())
-        else:
-            return is_parallel.dispatch(tolerance, self, other)
+        _maybe_same_dimension_error(self, other, self.is_parallel.__name__)
+        return is_parallel.dispatch(tolerance, self, other)
 
     def is_antiparallel(
         self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
     ) -> BoolCollection:
         from vector._compute.spatial import is_antiparallel
 
-        if isinstance(other, Vector2D):
-            return is_antiparallel.dispatch(tolerance, self, other.to_Vector3D())
-        else:
-            return is_antiparallel.dispatch(tolerance, self, other)
+        _maybe_same_dimension_error(self, other, self.is_antiparallel.__name__)
+        return is_antiparallel.dispatch(tolerance, self, other)
 
     def is_perpendicular(
         self, other: VectorProtocol, tolerance: ScalarCollection = 1e-5
     ) -> BoolCollection:
         from vector._compute.spatial import is_perpendicular
 
-        if isinstance(other, Vector2D):
-            return is_perpendicular.dispatch(tolerance, self, other.to_Vector3D())
-        else:
-            return is_perpendicular.dispatch(tolerance, self, other)
+        _maybe_same_dimension_error(self, other, self.is_perpendicular.__name__)
+        return is_perpendicular.dispatch(tolerance, self, other)
 
     def unit(self: SameVectorType) -> SameVectorType:
         from vector._compute.spatial import unit
@@ -3656,14 +3709,17 @@ class Spatial(Planar, VectorProtocolSpatial):
         return unit.dispatch(self)
 
     def dot(self, other: VectorProtocol) -> ScalarCollection:
+        _maybe_same_dimension_error(self, other, self.dot.__name__)
         module = _compute_module_of(self, other)
         return module.dot.dispatch(self, other)
 
     def add(self, other: VectorProtocol) -> VectorProtocol:
+        _maybe_same_dimension_error(self, other, self.add.__name__)
         module = _compute_module_of(self, other)
         return module.add.dispatch(self, other)
 
     def subtract(self, other: VectorProtocol) -> VectorProtocol:
+        _maybe_same_dimension_error(self, other, self.subtract.__name__)
         module = _compute_module_of(self, other)
         return module.subtract.dispatch(self, other)
 
@@ -3697,15 +3753,13 @@ class Spatial(Planar, VectorProtocolSpatial):
     def equal(self, other: VectorProtocol) -> BoolCollection:
         from vector._compute.spatial import equal
 
-        if dim(self) != dim(other):
-            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
+        _maybe_same_dimension_error(self, other, self.equal.__name__)
         return equal.dispatch(self, other)
 
     def not_equal(self, other: VectorProtocol) -> BoolCollection:
         from vector._compute.spatial import not_equal
 
-        if dim(self) != dim(other):
-            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
+        _maybe_same_dimension_error(self, other, self.not_equal.__name__)
         return not_equal.dispatch(self, other)
 
     def isclose(
@@ -3717,8 +3771,7 @@ class Spatial(Planar, VectorProtocolSpatial):
     ) -> BoolCollection:
         from vector._compute.spatial import isclose
 
-        if dim(self) != dim(other):
-            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
+        _maybe_same_dimension_error(self, other, self.isclose.__name__)
         return isclose.dispatch(rtol, atol, equal_nan, self, other)
 
 
@@ -3765,19 +3818,25 @@ class Lorentz(Spatial, VectorProtocolLorentz):
 
         return rapidity.dispatch(self)
 
-    def deltaRapidityPhi(self, other: VectorProtocol) -> ScalarCollection:
+    def deltaRapidityPhi(self, other: VectorProtocolLorentz) -> ScalarCollection:
         from vector._compute.lorentz import deltaRapidityPhi
 
+        if not dim(other) == 4:
+            raise TypeError(f"{other!r} is not a 4D vector")
         return deltaRapidityPhi.dispatch(self, other)
 
-    def deltaRapidityPhi2(self, other: VectorProtocol) -> ScalarCollection:
+    def deltaRapidityPhi2(self, other: VectorProtocolLorentz) -> ScalarCollection:
         from vector._compute.lorentz import deltaRapidityPhi2
 
+        if not dim(other) == 4:
+            raise TypeError(f"{other!r} is not a 4D vector")
         return deltaRapidityPhi2.dispatch(self, other)
 
     def boost_p4(self: SameVectorType, p4: VectorProtocolLorentz) -> SameVectorType:
         from vector._compute.lorentz import boost_p4
 
+        if dim(p4) != 4:
+            raise TypeError(f"{p4!r} is not a 4D vector")
         return boost_p4.dispatch(self, p4)
 
     def boost_beta3(
@@ -3785,9 +3844,13 @@ class Lorentz(Spatial, VectorProtocolLorentz):
     ) -> SameVectorType:
         from vector._compute.lorentz import boost_beta3
 
+        if dim(beta3) != 3:
+            raise TypeError(f"{beta3!r} is not a 3D vector")
         return boost_beta3.dispatch(self, beta3)
 
-    def boost(self: SameVectorType, booster: VectorProtocol) -> SameVectorType:
+    def boost(
+        self: SameVectorType, booster: VectorProtocolSpatial | VectorProtocolLorentz
+    ) -> SameVectorType:
         from vector._compute.lorentz import boost_beta3, boost_p4
 
         if isinstance(booster, Vector3D):
@@ -3805,6 +3868,8 @@ class Lorentz(Spatial, VectorProtocolLorentz):
     ) -> SameVectorType:
         from vector._compute.lorentz import boost_p4
 
+        if dim(p4) != 4:
+            raise TypeError(f"{p4!r} is not a 4D momentum vector")
         return boost_p4.dispatch(self, p4.neg3D)
 
     def boostCM_of_beta3(
@@ -3812,9 +3877,13 @@ class Lorentz(Spatial, VectorProtocolLorentz):
     ) -> SameVectorType:
         from vector._compute.lorentz import boost_beta3
 
+        if dim(beta3) != 3:
+            raise TypeError(f"{beta3!r} is not a 3D momentum vector")
         return boost_beta3.dispatch(self, beta3.neg3D)
 
-    def boostCM_of(self: SameVectorType, booster: VectorProtocol) -> SameVectorType:
+    def boostCM_of(
+        self: SameVectorType, booster: VectorProtocolSpatial | VectorProtocolLorentz
+    ) -> SameVectorType:
         from vector._compute.lorentz import boost_beta3, boost_p4
 
         if isinstance(booster, Vector3D):
@@ -3900,14 +3969,17 @@ class Lorentz(Spatial, VectorProtocolLorentz):
         return unit.dispatch(self)
 
     def dot(self, other: VectorProtocol) -> ScalarCollection:
+        _maybe_same_dimension_error(self, other, self.dot.__name__)
         module = _compute_module_of(self, other)
         return module.dot.dispatch(self, other)
 
     def add(self, other: VectorProtocol) -> VectorProtocol:
+        _maybe_same_dimension_error(self, other, self.add.__name__)
         module = _compute_module_of(self, other)
         return module.add.dispatch(self, other)
 
     def subtract(self, other: VectorProtocol) -> VectorProtocol:
+        _maybe_same_dimension_error(self, other, self.subtract.__name__)
         module = _compute_module_of(self, other)
         return module.subtract.dispatch(self, other)
 
@@ -3952,15 +4024,13 @@ class Lorentz(Spatial, VectorProtocolLorentz):
     def equal(self, other: VectorProtocol) -> BoolCollection:
         from vector._compute.lorentz import equal
 
-        if dim(self) != dim(other):
-            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
+        _maybe_same_dimension_error(self, other, self.equal.__name__)
         return equal.dispatch(self, other)
 
     def not_equal(self, other: VectorProtocol) -> BoolCollection:
         from vector._compute.lorentz import not_equal
 
-        if dim(self) != dim(other):
-            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
+        _maybe_same_dimension_error(self, other, self.not_equal.__name__)
         return not_equal.dispatch(self, other)
 
     def isclose(
@@ -3972,8 +4042,7 @@ class Lorentz(Spatial, VectorProtocolLorentz):
     ) -> BoolCollection:
         from vector._compute.lorentz import isclose
 
-        if dim(self) != dim(other):
-            raise TypeError(f"{self!r} and {other!r} do not have the same dimension")
+        _maybe_same_dimension_error(self, other, self.isclose.__name__)
         return isclose.dispatch(rtol, atol, equal_nan, self, other)
 
 
@@ -4141,6 +4210,26 @@ def dim(v: VectorProtocol) -> int:
         return 4
     else:
         raise TypeError(f"{v!r} is not a vector.Vector")
+
+
+def _maybe_same_dimension_error(
+    v1: VectorProtocol, v2: VectorProtocol, operation: str
+) -> None:
+    """Raises an error if the vectors are not of the same dimension."""
+    if dim(v1) != dim(v2):
+        raise TypeError(
+            f"""{v1!r} and {v2!r} do not have the same dimension; use
+
+                a.like(b).{operation}(b)
+
+            or
+
+                a.{operation}(b.like(a))
+
+            or the binary operation equivalent to project or embed one of the vectors
+            to match the other's dimensionality
+            """
+        )
 
 
 def _compute_module_of(
@@ -4405,19 +4494,6 @@ def _handler_of(*objects: VectorProtocol) -> VectorProtocol:
             handler = obj
 
     assert handler is not None
-
-    if _check_instance(all, objects, Vector):
-        # if there is a 2D vector in objects
-        if _check_instance(any, objects, Vector2D):
-            handler = _demote_handler_vector(
-                handler, objects, Vector2D, handler.to_Vector2D()
-            )
-        # if there is no 2D vector but a 3D vector in objects
-        elif _check_instance(any, objects, Vector3D):
-            handler = _demote_handler_vector(
-                handler, objects, Vector3D, handler.to_Vector3D()
-            )
-
     return handler
 
 

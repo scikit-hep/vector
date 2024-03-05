@@ -17,7 +17,7 @@ def test():
         longitudinal=vector.backends.object.LongitudinalObjectZ(3),
         temporal=vector.backends.object.TemporalObjectT(4),
     )
-    p4 = vector.backends.object.VectorObject4D(
+    p4 = vector.backends.object.MomentumObject4D(
         azimuthal=vector.backends.object.AzimuthalObjectXY(5, 6),
         longitudinal=vector.backends.object.LongitudinalObjectZ(7),
         temporal=vector.backends.object.TemporalObjectT(15),

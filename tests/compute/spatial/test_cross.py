@@ -79,6 +79,9 @@ def test_lorentz_object():
         longitudinal=vector.backends.object.LongitudinalObjectZ(0.6),
         temporal=vector.backends.object.TemporalObjectT(99),
     )
+    with pytest.raises(TypeError):
+        out = v1.cross(v2)
+    v1, v2 = v1.to_Vector3D(), v2.to_Vector3D()
     out = v1.cross(v2)
     assert isinstance(out, vector.backends.object.VectorObject3D)
     assert isinstance(out.azimuthal, vector.backends.object.AzimuthalObjectXY)
@@ -86,32 +89,20 @@ def test_lorentz_object():
     assert (out.x, out.y, out.z) == pytest.approx((-0.03, 0.06, -0.03))
 
     for t1 in (
-        "xyzt",
-        "xythetat",
-        "xyetat",
-        "rhophizt",
-        "rhophithetat",
-        "rhophietat",
-        "xyztau",
-        "xythetatau",
-        "xyetatau",
-        "rhophiztau",
-        "rhophithetatau",
-        "rhophietatau",
+        "xyz",
+        "xytheta",
+        "xyeta",
+        "rhophiz",
+        "rhophitheta",
+        "rhophieta",
     ):
         for t2 in (
-            "xyzt",
-            "xythetat",
-            "xyetat",
-            "rhophizt",
-            "rhophithetat",
-            "rhophietat",
-            "xyztau",
-            "xythetatau",
-            "xyetatau",
-            "rhophiztau",
-            "rhophithetatau",
-            "rhophietatau",
+            "xyz",
+            "xytheta",
+            "xyeta",
+            "rhophiz",
+            "rhophitheta",
+            "rhophieta",
         ):
             transformed1, transformed2 = (
                 getattr(v1, "to_" + t1)(),
@@ -127,7 +118,7 @@ def test_lorentz_object():
 
 
 def test_lorentz_numpy():
-    v1 = vector.backends.numpy.VectorNumpy4D(
+    v1 = vector.backends.numpy.VectorNumpy3D(
         [(0.1, 0.2, 0.3, 99)],
         dtype=[
             ("x", numpy.float64),
@@ -145,38 +136,29 @@ def test_lorentz_numpy():
             ("t", numpy.float64),
         ],
     )
+    with pytest.raises(TypeError):
+        out = v1.cross(v2)
+    v1, v2 = v1.to_Vector3D(), v2.to_Vector3D()
     out = v1.cross(v2)
     assert isinstance(out, vector.backends.numpy.VectorNumpy3D)
     assert out.dtype.names == ("x", "y", "z")
     assert out.tolist() == pytest.approx([(-0.03, 0.06, -0.030000000000000013)])
 
     for t1 in (
-        "xyzt",
-        "xythetat",
-        "xyetat",
-        "rhophizt",
-        "rhophithetat",
-        "rhophietat",
-        "xyztau",
-        "xythetatau",
-        "xyetatau",
-        "rhophiztau",
-        "rhophithetatau",
-        "rhophietatau",
+        "xyz",
+        "xytheta",
+        "xyeta",
+        "rhophiz",
+        "rhophitheta",
+        "rhophieta",
     ):
         for t2 in (
-            "xyzt",
-            "xythetat",
-            "xyetat",
-            "rhophizt",
-            "rhophithetat",
-            "rhophietat",
-            "xyztau",
-            "xythetatau",
-            "xyetatau",
-            "rhophiztau",
-            "rhophithetatau",
-            "rhophietatau",
+            "xyz",
+            "xytheta",
+            "xyeta",
+            "rhophiz",
+            "rhophitheta",
+            "rhophieta",
         ):
             transformed1, transformed2 = (
                 getattr(v1, "to_" + t1)(),

@@ -11,7 +11,7 @@ import packaging.version
 import pytest
 
 import vector
-from vector import VectorObject2D, VectorObject3D, VectorObject4D
+from vector import VectorObject2D
 
 ak = pytest.importorskip("awkward")
 
@@ -635,7 +635,7 @@ def test_count_4d():
     ]
 
 
-def test_demotion():
+def test_like():
     v1 = vector.zip(
         {
             "x": [10.0, 20.0, 30.0],
@@ -664,6 +664,13 @@ def test_demotion():
             "y": [-20.0, 40.0, 60.0],
         },
     )
+    v2_v1 = vector.zip(
+        {
+            "x": [20.0, 40.0, 60.0],
+            "y": [-20.0, 40.0, 60.0],
+            "z": [5.0, 1.0, 1.0],
+        },
+    )
     v2_v3 = vector.zip(
         {
             "x": [20.0, 40.0, 60.0],
@@ -671,20 +678,72 @@ def test_demotion():
             "z": [10.0, 2.0, 2.0],
         },
     )
+    v3_v2 = vector.zip(
+        {
+            "x": [20.0, 40.0, 60.0],
+            "y": [-20.0, 40.0, 60.0],
+            "z": [10.0, 2.0, 2.0],
+            "t": [16.0, 31.0, 46.0],
+        },
+    )
     v1_v3 = vector.zip(
         {
             "x": [20.0, 40.0, 60.0],
             "y": [-20.0, 40.0, 60.0],
+            "z": [5.0, 1.0, 1.0],
+            "t": [16.0, 31.0, 46.0],
         },
     )
 
-    # order should not matter
-    assert all(v1 + v2 == v1_v2)
-    assert all(v2 + v1 == v1_v2)
-    assert all(v1 + v3 == v1_v3)
-    assert all(v3 + v1 == v1_v3)
-    assert all(v2 + v3 == v2_v3)
-    assert all(v3 + v2 == v2_v3)
+    with pytest.raises(TypeError):
+        v1 + v2
+    with pytest.raises(TypeError):
+        v2 + v3
+    with pytest.raises(TypeError):
+        v1 + v3
+    with pytest.raises(TypeError):
+        v1 - v2
+    with pytest.raises(TypeError):
+        v2 - v3
+    with pytest.raises(TypeError):
+        v1 - v3
+    with pytest.raises(TypeError):
+        v1.equal(v2)
+    with pytest.raises(TypeError):
+        v2.equal(v3)
+    with pytest.raises(TypeError):
+        v1.equal(v3)
+    with pytest.raises(TypeError):
+        v1.not_equal(v2)
+    with pytest.raises(TypeError):
+        v2.not_equal(v3)
+    with pytest.raises(TypeError):
+        v1.not_equal(v3)
+    with pytest.raises(TypeError):
+        v1.dot(v2)
+    with pytest.raises(TypeError):
+        v2.dot(v3)
+    with pytest.raises(TypeError):
+        v1.dot(v3)
+
+    # 2D + 3D.like(2D) = 2D
+    assert ak.all(v1 + v2.like(v1) == v1_v2)
+    assert ak.all(v2.like(v1) + v1 == v1_v2)
+    # 2D + 4D.like(2D) = 2D
+    assert ak.all(v1 + v3.like(v1) == v1_v2)
+    assert ak.all(v3.like(v1) + v1 == v1_v2)
+    # 3D + 2D.like(3D) = 3D
+    assert ak.all(v2 + v1.like(v2) == v2_v1)
+    assert ak.all(v1.like(v2) + v2 == v2_v1)
+    # 3D + 4D.like(3D) = 3D
+    assert ak.all(v2 + v3.like(v2) == v2_v3)
+    assert ak.all(v3.like(v2) + v2 == v2_v3)
+    # 4D + 2D.like(4D) = 4D
+    assert ak.all(v3 + v1.like(v3) == v1_v3)
+    assert ak.all(v1.like(v3) + v3 == v1_v3)
+    # 4D + 3D.like(4D) = 4D
+    assert ak.all(v3 + v2.like(v3) == v3_v2)
+    assert ak.all(v2.like(v3) + v3 == v3_v2)
 
     v1 = vector.zip(
         {
@@ -708,13 +767,24 @@ def test_demotion():
         },
     )
 
-    # order should not matter
-    assert all(v1 + v2 == v1_v2)
-    assert all(v2 + v1 == v1_v2)
-    assert all(v1 + v3 == v1_v3)
-    assert all(v3 + v1 == v1_v3)
-    assert all(v2 + v3 == v2_v3)
-    assert all(v3 + v2 == v2_v3)
+    # 2D + 3D.like(2D) = 2D
+    assert ak.all(v1 + v2.like(v1) == v1_v2)
+    assert ak.all(v2.like(v1) + v1 == v1_v2)
+    # 2D + 4D.like(2D) = 2D
+    assert ak.all(v1 + v3.like(v1) == v1_v2)
+    assert ak.all(v3.like(v1) + v1 == v1_v2)
+    # 3D + 2D.like(3D) = 3D
+    assert ak.all(v2 + v1.like(v2) == v2_v1)
+    assert ak.all(v1.like(v2) + v2 == v2_v1)
+    # 3D + 4D.like(3D) = 3D
+    assert ak.all(v2 + v3.like(v2) == v2_v3)
+    assert ak.all(v3.like(v2) + v2 == v2_v3)
+    # 4D + 2D.like(4D) = 4D
+    assert ak.all(v3 + v1.like(v3) == v1_v3)
+    assert ak.all(v1.like(v3) + v3 == v1_v3)
+    # 4D + 3D.like(4D) = 4D
+    assert ak.all(v3 + v2.like(v3) == v3_v2)
+    assert ak.all(v2.like(v3) + v3 == v3_v2)
 
     v2 = vector.zip(
         {
@@ -725,110 +795,35 @@ def test_demotion():
     )
 
     # momentum + generic = generic
-    assert all(v1 + v2 == v1_v2)
-    assert all(v2 + v1 == v1_v2)
-    assert all(v1 + v3 == v1_v3)
-    assert all(v3 + v1 == v1_v3)
-    assert all(v2 + v3 == v2_v3)
-    assert all(v3 + v2 == v2_v3)
+    # 2D + 3D.like(2D) = 2D
+    assert ak.all(v1 + v2.like(v1) == v1_v2)
+    assert ak.all(v2.like(v1) + v1 == v1_v2)
+    # 2D + 4D.like(2D) = 2D
+    assert ak.all(v1 + v3.like(v1) == v1_v2)
+    assert ak.all(v3.like(v1) + v1 == v1_v2)
+    # 3D + 2D.like(3D) = 3D
+    assert ak.all(v2 + v1.like(v2) == v2_v1)
+    assert ak.all(v1.like(v2) + v2 == v2_v1)
+    # 3D + 4D.like(3D) = 3D
+    assert ak.all(v2 + v3.like(v2) == v2_v3)
+    assert ak.all(v3.like(v2) + v2 == v2_v3)
+    # 4D + 2D.like(4D) = 4D
+    assert ak.all(v3 + v1.like(v3) == v1_v3)
+    assert ak.all(v1.like(v3) + v3 == v1_v3)
+    # 4D + 3D.like(4D) = 4D
+    assert ak.all(v3 + v2.like(v3) == v3_v2)
+    assert ak.all(v2.like(v3) + v3 == v3_v2)
 
 
 def test_handler_of():
-    awkward_a = vector.zip(
-        {
-            "x": [10.0, 20.0, 30.0],
-            "y": [-10.0, 20.0, 30.0],
-            "z": [5.0, 10.0, 15.0],
-            "t": [16.0, 31.0, 46.0],
-        },
-    )
-    object_b = VectorObject2D.from_xy(1.0, 1.0)
-    protocol = vector._methods._handler_of(awkward_a, object_b)
-    # chooses awkward backend and converts the vector to 2D
-    assert all(protocol == awkward_a.to_Vector2D())
-
-    awkward_a = vector.zip(
-        {
-            "x": [10.0, 20.0, 30.0],
-            "y": [-10.0, 20.0, 30.0],
-        },
-    )
-    object_b = VectorObject4D.from_xyzt(1.0, 1.0, 1.0, 1.0)
-    protocol = vector._methods._handler_of(object_b, awkward_a)
-    # chooses awkward backend and the vector is already of the
-    # lower dimension
-    assert all(protocol == awkward_a)
-
-    awkward_a = vector.zip(
-        {
-            "x": [10.0, 20.0, 30.0],
-            "y": [-10.0, 20.0, 30.0],
-        },
-    )
-    awkward_b = vector.zip(
-        {
-            "x": [1.0, 2.0, 3.0],
-            "y": [-1.0, 2.0, 3.0],
-            "z": [5.0, 10.0, 15.0],
-            "t": [16.0, 31.0, 46.0],
-        },
-    )
-    object_b = VectorObject4D.from_xyzt(1.0, 1.0, 1.0, 1.0)
-    protocol = vector._methods._handler_of(object_b, awkward_a, awkward_b)
-    # chooses awkward backend and the 2D awkward vector
-    # (first encountered awkward vector)
-    assert all(protocol == awkward_a)
-
-    awkward_a = vector.zip(
-        {
-            "x": [10.0, 20.0, 30.0],
-            "y": [-10.0, 20.0, 30.0],
-            "z": [-10.0, 20.0, 30.0],
-        },
-    )
-    awkward_b = vector.zip(
-        {
-            "x": [1.0, 2.0, 3.0],
-            "y": [-1.0, 2.0, 3.0],
-            "z": [5.0, 10.0, 15.0],
-            "t": [16.0, 31.0, 46.0],
-        },
-    )
-    object_b = VectorObject2D.from_xy(1.0, 1.0)
-    protocol = vector._methods._handler_of(awkward_b, object_b, awkward_a)
-    # chooses awkward backend and converts awkward_b to 2D
-    # (first encountered awkward vector)
-    assert all(protocol == awkward_b.to_Vector2D())
-
-    awkward_a = vector.zip(
-        {
-            "x": [10.0, 20.0, 30.0],
-            "y": [-10.0, 20.0, 30.0],
-            "z": [5.0, 1.0, 1.0],
-        },
-    )
-    awkward_b = vector.zip(
-        {
-            "x": [1.0, 2.0, 3.0],
-            "y": [-1.0, 2.0, 3.0],
-            "z": [5.0, 10.0, 15.0],
-            "t": [16.0, 31.0, 46.0],
-        },
-    )
-    object_b = VectorObject2D.from_xy(1.0, 1.0)
-    protocol = vector._methods._handler_of(object_b, awkward_a, awkward_b)
-    # chooses awkward backend and converts the vector to 2D
-    # (the first awkward vector encountered is used as the base)
-    assert all(protocol == awkward_a.to_Vector2D())
-
-    numpy_a = vector.array(
+    numpy_vec = vector.array(
         {
             "x": [1.1, 1.2, 1.3, 1.4, 1.5],
             "y": [2.1, 2.2, 2.3, 2.4, 2.5],
             "z": [3.1, 3.2, 3.3, 3.4, 3.5],
         }
     )
-    awkward_b = vector.zip(
+    awkward_vec2 = vector.zip(
         {
             "x": [1.0, 2.0, 3.0],
             "y": [-1.0, 2.0, 3.0],
@@ -836,37 +831,10 @@ def test_handler_of():
             "t": [16.0, 31.0, 46.0],
         },
     )
-    object_b = VectorObject2D.from_xy(1.0, 1.0)
-    protocol = vector._methods._handler_of(object_b, numpy_a, awkward_b)
-    # chooses awkward backend and converts the vector to 2D
-    assert all(protocol == awkward_b.to_Vector2D())
-
-    awkward_a = vector.zip(
-        {
-            "x": [10.0, 20.0, 30.0],
-            "y": [-10.0, 20.0, 30.0],
-            "z": [5.0, 1.0, 1.0],
-        },
-    )
-    numpy_a = vector.array(
-        {
-            "x": [1.1, 1.2, 1.3, 1.4, 1.5],
-            "y": [2.1, 2.2, 2.3, 2.4, 2.5],
-        }
-    )
-    awkward_b = vector.zip(
-        {
-            "x": [1.0, 2.0, 3.0],
-            "y": [-1.0, 2.0, 3.0],
-            "z": [5.0, 10.0, 15.0],
-            "t": [16.0, 31.0, 46.0],
-        },
-    )
-    object_b = VectorObject3D.from_xyz(1.0, 1.0, 1.0)
-    protocol = vector._methods._handler_of(object_b, awkward_a, awkward_b, numpy_a)
-    # chooses awkward backend and converts the vector to 2D
-    # (the first awkward vector encountered is used as the base)
-    assert all(protocol == awkward_a.to_Vector2D())
+    object_vec = VectorObject2D.from_xy(1.0, 1.0)
+    protocol = vector._methods._handler_of(object_vec, numpy_vec, awkward_vec2)
+    # chooses awkward backend
+    assert all(protocol == awkward_vec2)
 
 
 def test_momentum_coordinate_transforms():

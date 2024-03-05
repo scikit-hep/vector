@@ -17,7 +17,7 @@ def test():
         longitudinal=vector.backends.object.LongitudinalObjectZ(3),
         temporal=vector.backends.object.TemporalObjectT(4),
     )
-    beta = vector.backends.object.VectorObject3D(
+    beta = vector.backends.object.MomentumObject3D(
         azimuthal=vector.backends.object.AzimuthalObjectXY(5 / 15, 6 / 15),
         longitudinal=vector.backends.object.LongitudinalObjectZ(7 / 15),
     )
