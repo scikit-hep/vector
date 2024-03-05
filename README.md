@@ -545,12 +545,12 @@ v1 - v2.to_Vector3D(z=3)  # transforms v2 to 3D (imputes z=3)
 v1.to_Vector2D() - v2  # transforms v1 to 2D (removes z)
 ```
 
-And finally, in some cases, the function excludes a higher-dimensional component, even if the input vectors had them.
+Similarly, for a few vector methods, the dimension of the input vectors are type checked strictly.
 
-It would be confusing if the 3D cross-product returned a fourth component.
+For instance, a cross-product is only defined for 3D and 7D vectors; hence, running the method on a 4D vector will error out.
 
 ```python
-vector.obj(x=0.1, y=0.2, z=0.3, t=10).cross(vector.obj(x=0.4, y=0.5, z=0.6, t=20))
+vector.obj(x=0.1, y=0.2, z=0.3).cross(vector.obj(x=0.4, y=0.5, z=0.6))
 ```
 
 The (current) list of properties and methods is:
