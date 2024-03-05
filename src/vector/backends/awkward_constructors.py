@@ -7,6 +7,8 @@ from __future__ import annotations
 
 import typing
 
+import numpy
+
 
 def _recname(is_momentum: bool, dimension: int) -> str:
     name = "Momentum" if is_momentum else "Vector"
@@ -311,8 +313,12 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     import vector
     import vector.backends.awkward
 
-    # handle awkward arrays and dask_awkward arrays
-    akarray = awkward.Array(*args, **kwargs) if isinstance(args[0], list) else args[0]
+    # don't pass dask_awkward arrays in ak.Array
+    akarray = (
+        awkward.Array(*args, **kwargs)
+        if isinstance(args[0], (list, numpy.ndarray))
+        else args[0]
+    )
     array_type = akarray.type
 
     if not _is_type_safe(array_type):
