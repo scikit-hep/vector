@@ -124,7 +124,7 @@ jobs:
 
   pass:
     needs:
-      [pre-commit, check-light, check-awkward-v1, check-awkward-v2, discheck]
+      [pre-commit, check-light, check-full, discheck]
     runs-on: ubuntu-latest
     steps:
       - run: echo "All jobs passed"
