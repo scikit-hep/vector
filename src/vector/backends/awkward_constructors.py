@@ -311,17 +311,8 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     import vector
     import vector.backends.awkward
 
-    ak_array_types: tuple[typing.Any, ...] = (awkward.Array,)
-
-    if vector._is_awkward_v2:
-        import dask_awkward  # type: ignore[import-not-found]
-
-        ak_array_types += (dask_awkward.Array,)
-
-    if not isinstance(args[0], ak_array_types):
-        akarray = awkward.Array(*args, **kwargs)
-    else:
-        akarray = args[0]
+    # handle awkward arrays and dask_awkward arrays
+    akarray = awkward.Array(*args, **kwargs) if isinstance(args[0], list) else args[0]
     array_type = akarray.type
 
     if not _is_type_safe(array_type):
@@ -330,7 +321,8 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
 
     is_momentum, dimension, names, arrays = _check_names(akarray, fields)
 
-    if vector._is_awkward_v2 and not isinstance(args[0], dask_awkward.Array):
+    # don't execute for dask_awkward arrays
+    if isinstance(args[0], (awkward.Array, list)):
         needs_behavior = not vector._awkward_registered
         for x in arrays:
             if needs_behavior:
