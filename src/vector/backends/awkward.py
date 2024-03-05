@@ -1638,33 +1638,17 @@ MomentumRecord4D.MomentumClass = MomentumRecord4D
 
 # implementation of behaviors in Numba ########################################
 
-if vector._is_awkward_v2:
 
-    def _lookup_field(record_type: typing.Any, name: str) -> int:
-        return record_type.fields.index(name)
-
-else:
-
-    def _lookup_field(record_type: typing.Any, name: str) -> int:
-        return record_type.recordlookup.index(name)
+def _lookup_field(record_type: typing.Any, name: str) -> int:
+    return record_type.fields.index(name)
 
 
 def _arraytype_of(awkwardtype: typing.Any, component: str) -> typing.Any:
     import numba
 
-    if isinstance(
-        awkwardtype,
-        ak._connect.numba.layout.NumpyArrayType
-        if hasattr(ak._connect, "numba")  # Awkward v2
-        else ak._connect._numba.layout.NumpyArrayType,
-    ):
+    if isinstance(awkwardtype, ak._connect.numba.layout.NumpyArrayType):
         return awkwardtype.arraytype
-    elif isinstance(
-        awkwardtype,
-        ak._connect.numba.layout.IndexedArrayType
-        if hasattr(ak._connect, "numba")  # Awkward v2
-        else ak._connect._numba.layout.IndexedArrayType,
-    ):
+    elif isinstance(awkwardtype, ak._connect.numba.layout.IndexedArrayType):
         return _arraytype_of(awkwardtype.contenttype, component)
     raise numba.TypingError(
         f"vector components like {component!r} must be NumpyArrayType, not {awkwardtype}"
@@ -1947,11 +1931,7 @@ def _numba_lower(
 
     vectorcls = sig.return_type.instance_class
 
-    fields = (
-        sig.args[0].arrayviewtype.type.fields
-        if vector._is_awkward_v2
-        else sig.args[0].arrayviewtype.type.recordlookup
-    )
+    fields = sig.args[0].arrayviewtype.type.fields
 
     if issubclass(vectorcls, (VectorObject2D, VectorObject3D, VectorObject4D)):
         if issubclass(sig.return_type.azimuthaltype.instance_class, AzimuthalXY):
