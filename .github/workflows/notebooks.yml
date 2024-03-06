@@ -11,6 +11,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  # The "FORCE_COLOR" variable, when set to 1,
+  # tells Nox to colorize itself.
+  FORCE_COLOR: "1"
+
 jobs:
   test:
     runs-on: ubuntu-latest
