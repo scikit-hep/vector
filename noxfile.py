@@ -56,8 +56,8 @@ def doctests(session: nox.Session) -> None:
 @nox.session(reuse_venv=True)
 def notebooks(session: nox.Session) -> None:
     """Run the notebook tests"""
-    session.install("-e", ".[awkward,numba,test,test-extras]", "numba")
-    session.install("jupyter", "papermill")
+    session.install("-e", ".[awkward,numba,test]")
+    session.install("jupyter")
     session.run("pytest", "tests/test_notebooks.py", *session.posargs)
 
 
