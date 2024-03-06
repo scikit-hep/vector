@@ -51,11 +51,8 @@ jobs:
       - name: Requirements check
         run: python -m pip list
 
-      - name: Install package
-        run: python -m pip install -e .[test]
-
       - name: Test light package
-        run: python -m pytest -ra --ignore tests/test_notebooks.py
+        run: pipx run nox -s lite
 
   check-full:
     needs: [check-light]
@@ -80,15 +77,12 @@ jobs:
       - name: Requirements check
         run: python -m pip list
 
-      - name: Install package
-        run: python -m pip install -e .[dev]
-
       - name: Run doctests on Python 3.11
         if: matrix.python-version == 3.11
-        run: python -m pytest -ra --doctest-plus src/vector/
+        run: pipx run nox -s doctests
 
-      - name: Test package
-        run: python -m pytest -ra --cov=vector --ignore tests/test_notebooks.py .
+      - name: Test package and generate coverage report
+        run: pipx run nox -s coverage
 
       - name: Install numpy v2
         if: matrix.python-version != 3.8
