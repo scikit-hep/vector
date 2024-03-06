@@ -69,7 +69,6 @@ numba = [
   'numba>=0.57; python_version < "3.12"',
 ]
 test = [
-  "dask_awkward",
   "nox",
   "papermill>=2.4",
   "pytest>=6",
@@ -77,6 +76,7 @@ test = [
   "pytest-doctestplus",
 ]
 test-extras = [
+  "dask_awkward",
   "spark-parser",
   "uncompyle6",
 ]
