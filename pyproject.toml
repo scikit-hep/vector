@@ -82,7 +82,7 @@ test = [
 test-extras = [
   "dask_awkward",
   "spark-parser",
-  "uncompyle6",
+  'uncompyle6; python_version == "3.8"',
 ]
 [project.urls]
 "Bug Tracker" = "https://github.com/scikit-hep/vector/issues"
