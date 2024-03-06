@@ -57,7 +57,7 @@ jobs:
         run: python -m pip list
 
       - name: Test light package
-        run: pipx run nox -s lite-${{ matrix.python.key || matrix.python }} --verbose
+        run: pipx run nox -s lite-${{ matrix.python-version.key || matrix.python-version }} --verbose
 
   check-full:
     needs: [check-light]
@@ -84,10 +84,10 @@ jobs:
 
       - name: Run doctests on Python 3.11
         if: matrix.python-version == 3.11
-        run: pipx run nox -s doctests-${{ matrix.python.key || matrix.python }} --verbose
+        run: pipx run nox -s doctests-${{ matrix.python-version.key || matrix.python-version }} --verbose
 
       - name: Test package and generate coverage report
-        run: pipx run nox -s coverage-${{ matrix.python.key || matrix.python }} --verbose
+        run: pipx run nox -s coverage-${{ matrix.python-version.key || matrix.python-version }} --verbose
 
       - name: Install numpy v2
         if: matrix.python-version != 3.8
