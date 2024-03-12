@@ -10,6 +10,7 @@
 
 where ``obj` has ``obj["xx"]``, ``obj["xy"]``, etc.
 """
+
 from __future__ import annotations
 
 import typing

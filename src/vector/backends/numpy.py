@@ -381,12 +381,10 @@ class GetItem:
     _IS_MOMENTUM: typing.ClassVar[bool]
 
     @typing.overload
-    def __getitem__(self, where: str) -> FloatArray:
-        ...
+    def __getitem__(self, where: str) -> FloatArray: ...
 
     @typing.overload
-    def __getitem__(self, where: typing.Any) -> float | FloatArray:
-        ...
+    def __getitem__(self, where: typing.Any) -> float | FloatArray: ...
 
     def __getitem__(self, where: typing.Any) -> float | FloatArray:
         return _getitem(self, where, self.__class__._IS_MOMENTUM)  # type: ignore[arg-type]
@@ -1266,9 +1264,11 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
     _IS_MOMENTUM = False
 
     _azimuthal_type: type[AzimuthalNumpyXY] | type[AzimuthalNumpyRhoPhi]
-    _longitudinal_type: type[LongitudinalNumpyZ] | type[LongitudinalNumpyTheta] | type[
-        LongitudinalNumpyEta
-    ]
+    _longitudinal_type: (
+        type[LongitudinalNumpyZ]
+        | type[LongitudinalNumpyTheta]
+        | type[LongitudinalNumpyEta]
+    )
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> VectorNumpy3D:
         """Returns the object of ``VectorNumpy3D``. Behaves as ``__init__`` in this case."""
@@ -1532,9 +1532,11 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
     _IS_MOMENTUM = False
 
     _azimuthal_type: type[AzimuthalNumpyXY] | type[AzimuthalNumpyRhoPhi]
-    _longitudinal_type: type[LongitudinalNumpyZ] | type[LongitudinalNumpyTheta] | type[
-        LongitudinalNumpyEta
-    ]
+    _longitudinal_type: (
+        type[LongitudinalNumpyZ]
+        | type[LongitudinalNumpyTheta]
+        | type[LongitudinalNumpyEta]
+    )
     _temporal_type: type[TemporalNumpyT] | type[TemporalNumpyTau]
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> VectorNumpy4D:

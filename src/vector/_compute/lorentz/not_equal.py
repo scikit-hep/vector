@@ -8,6 +8,7 @@
 
     Lorentz.not_equal(self, other)
 """
+
 from __future__ import annotations
 
 import typing

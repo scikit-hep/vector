@@ -8,6 +8,7 @@
 
     Spatial.is_perpendicular(self, other, tolerance=...)
 """
+
 from __future__ import annotations
 
 import typing

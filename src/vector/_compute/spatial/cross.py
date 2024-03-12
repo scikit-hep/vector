@@ -11,6 +11,7 @@
 Note that this returns a 3D vector even for 4D inputs. The ``None`` at the end
 of the return signature indicates termination.
 """
+
 from __future__ import annotations
 
 import typing

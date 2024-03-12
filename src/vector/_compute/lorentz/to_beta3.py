@@ -8,6 +8,7 @@
 
     Lorentz.to_beta3(self)
 """
+
 from __future__ import annotations
 
 import typing
