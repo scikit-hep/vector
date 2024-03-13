@@ -325,7 +325,7 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
         raise TypeError("a coordinate must be of the type int or float")
     fields = awkward.fields(akarray)
 
-    is_momentum, dimension, names, arrays = _check_names(akarray, fields)
+    is_momentum, dimension, names, arrays = _check_names(akarray, fields.copy())
 
     # don't execute for dask_awkward arrays
     if isinstance(args[0], (awkward.Array, list, numpy.ndarray)):
