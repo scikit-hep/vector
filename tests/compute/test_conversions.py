@@ -862,6 +862,40 @@ def test_like_numpy():
     assert all(v3 + v2.like(v3) == pv3_v2)
     assert all(v2.like(v3) + v3 == pv3_v2)
 
+
+def test_momentum_preservation():
+    v1 = vector.obj(px=0.1, py=0.2)
+    v2 = vector.obj(x=1, y=2, z=3)
+    v3 = vector.obj(px=10, py=20, pz=30, t=40)
+
+    # momentum + generic = momentum
+    # 2D + 3D.like(2D) = 2D
+    assert isinstance(v1 + v2.like(v1), vector.MomentumObject2D)
+    assert isinstance(v2.like(v1) + v1, vector.MomentumObject2D)
+    # 2D + 4D.like(2D) = 2D
+    assert isinstance(v1 + v3.like(v1), vector.MomentumObject2D)
+    assert isinstance(v3.like(v1) + v1, vector.MomentumObject2D)
+    # 3D + 2D.like(3D) = 3D
+    assert isinstance(v2 + v1.like(v2), vector.MomentumObject3D)
+    assert isinstance(v1.like(v2) + v2, vector.MomentumObject3D)
+    # 3D + 4D.like(3D) = 3D
+    assert isinstance(v2 + v3.like(v2), vector.MomentumObject3D)
+    assert isinstance(v3.like(v2) + v2, vector.MomentumObject3D)
+    # 4D + 2D.like(4D) = 4D
+    assert isinstance(v3 + v1.like(v3), vector.MomentumObject4D)
+    assert isinstance(v1.like(v3) + v3, vector.MomentumObject4D)
+    # 4D + 3D.like(4D) = 4D
+    assert isinstance(v3 + v2.like(v3), vector.MomentumObject4D)
+    assert isinstance(v2.like(v3) + v3, vector.MomentumObject4D)
+
+
+def test_flavor_of_numpy():
+    v1 = vector.array(
+        {
+            "px": [10.0, 20.0, 30.0],
+            "py": [-10.0, 20.0, 30.0],
+        },
+    )
     v2 = vector.array(
         {
             "x": [10.0, 20.0, 30.0],
@@ -869,23 +903,31 @@ def test_like_numpy():
             "z": [5.0, 1.0, 1.0],
         },
     )
+    v3 = vector.array(
+        {
+            "px": [10.0, 20.0, 30.0],
+            "py": [-10.0, 20.0, 30.0],
+            "pz": [5.0, 1.0, 1.0],
+            "t": [16.0, 31.0, 46.0],
+        },
+    )
 
-    # momentum + generic = generic
+    # momentum + generic = momentum
     # 2D + 3D.like(2D) = 2D
-    assert all(v1 + v2.like(v1) == pv1_v2)
-    assert all(v2.like(v1) + v1 == pv1_v2)
+    assert isinstance(v1 + v2.like(v1), vector.MomentumNumpy2D)
+    assert isinstance(v2.like(v1) + v1, vector.MomentumNumpy2D)
     # 2D + 4D.like(2D) = 2D
-    assert all(v1 + v3.like(v1) == pv1_v2)
-    assert all(v3.like(v1) + v1 == pv1_v2)
+    assert isinstance(v1 + v3.like(v1), vector.MomentumNumpy2D)
+    assert isinstance(v3.like(v1) + v1, vector.MomentumNumpy2D)
     # 3D + 2D.like(3D) = 3D
-    assert all(v2 + v1.like(v2) == pv2_v1)
-    assert all(v1.like(v2) + v2 == pv2_v1)
+    assert isinstance(v2 + v1.like(v2), vector.backends.numpy.MomentumNumpy3D)
+    assert isinstance(v1.like(v2) + v2, vector.backends.numpy.MomentumNumpy3D)
     # 3D + 4D.like(3D) = 3D
-    assert all(v2 + v3.like(v2) == pv2_v3)
-    assert all(v3.like(v2) + v2 == pv2_v3)
+    assert isinstance(v2 + v3.like(v2), vector.backends.numpy.MomentumNumpy3D)
+    assert isinstance(v3.like(v2) + v2, vector.backends.numpy.MomentumNumpy3D)
     # 4D + 2D.like(4D) = 4D
-    assert all(v3 + v1.like(v3) == pv1_v3)
-    assert all(v1.like(v3) + v3 == pv1_v3)
+    assert isinstance(v3 + v1.like(v3), vector.backends.numpy.MomentumNumpy4D)
+    assert isinstance(v1.like(v3) + v3, vector.backends.numpy.MomentumNumpy4D)
     # 4D + 3D.like(4D) = 4D
-    assert all(v3 + v2.like(v3) == pv3_v2)
-    assert all(v2.like(v3) + v3 == pv3_v2)
+    assert isinstance(v3 + v2.like(v3), vector.backends.numpy.MomentumNumpy4D)
+    assert isinstance(v2.like(v3) + v3, vector.backends.numpy.MomentumNumpy4D)

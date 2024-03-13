@@ -3204,28 +3204,34 @@ VectorObject2D.ProjectionClass2D = VectorObject2D
 VectorObject2D.ProjectionClass3D = VectorObject3D
 VectorObject2D.ProjectionClass4D = VectorObject4D
 VectorObject2D.GenericClass = VectorObject2D
+VectorObject2D.MomentumClass = MomentumObject2D
 
 MomentumObject2D.ProjectionClass2D = MomentumObject2D
 MomentumObject2D.ProjectionClass3D = MomentumObject3D
 MomentumObject2D.ProjectionClass4D = MomentumObject4D
 MomentumObject2D.GenericClass = VectorObject2D
+MomentumObject2D.MomentumClass = MomentumObject2D
 
 VectorObject3D.ProjectionClass2D = VectorObject2D
 VectorObject3D.ProjectionClass3D = VectorObject3D
 VectorObject3D.ProjectionClass4D = VectorObject4D
 VectorObject3D.GenericClass = VectorObject3D
+VectorObject3D.MomentumClass = MomentumObject3D
 
 MomentumObject3D.ProjectionClass2D = MomentumObject2D
 MomentumObject3D.ProjectionClass3D = MomentumObject3D
 MomentumObject3D.ProjectionClass4D = MomentumObject4D
 MomentumObject3D.GenericClass = VectorObject3D
+MomentumObject3D.MomentumClass = MomentumObject3D
 
 VectorObject4D.ProjectionClass2D = VectorObject2D
 VectorObject4D.ProjectionClass3D = VectorObject3D
 VectorObject4D.ProjectionClass4D = VectorObject4D
 VectorObject4D.GenericClass = VectorObject4D
+VectorObject4D.MomentumClass = MomentumObject4D
 
 MomentumObject4D.ProjectionClass2D = MomentumObject2D
 MomentumObject4D.ProjectionClass3D = MomentumObject3D
 MomentumObject4D.ProjectionClass4D = MomentumObject4D
 MomentumObject4D.GenericClass = VectorObject4D
+MomentumObject4D.MomentumClass = MomentumObject4D

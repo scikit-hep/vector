@@ -1527,61 +1527,73 @@ VectorArray2D.ProjectionClass2D = VectorArray2D
 VectorArray2D.ProjectionClass3D = VectorArray3D
 VectorArray2D.ProjectionClass4D = VectorArray4D
 VectorArray2D.GenericClass = VectorArray2D
+VectorArray2D.MomentumClass = MomentumArray2D
 
 VectorRecord2D.ProjectionClass2D = VectorRecord2D
 VectorRecord2D.ProjectionClass3D = VectorRecord3D
 VectorRecord2D.ProjectionClass4D = VectorRecord4D
 VectorRecord2D.GenericClass = VectorRecord2D
+VectorRecord2D.MomentumClass = MomentumRecord2D
 
 MomentumArray2D.ProjectionClass2D = MomentumArray2D
 MomentumArray2D.ProjectionClass3D = MomentumArray3D
 MomentumArray2D.ProjectionClass4D = MomentumArray4D
 MomentumArray2D.GenericClass = VectorArray2D
+MomentumArray2D.MomentumClass = MomentumArray2D
 
 MomentumRecord2D.ProjectionClass2D = MomentumRecord2D
 MomentumRecord2D.ProjectionClass3D = MomentumRecord3D
 MomentumRecord2D.ProjectionClass4D = MomentumRecord4D
 MomentumRecord2D.GenericClass = VectorRecord2D
+MomentumRecord2D.MomentumClass = MomentumRecord2D
 
 VectorArray3D.ProjectionClass2D = VectorArray2D
 VectorArray3D.ProjectionClass3D = VectorArray3D
 VectorArray3D.ProjectionClass4D = VectorArray4D
 VectorArray3D.GenericClass = VectorArray3D
+VectorArray3D.MomentumClass = MomentumArray3D
 
 VectorRecord3D.ProjectionClass2D = VectorRecord2D
 VectorRecord3D.ProjectionClass3D = VectorRecord3D
 VectorRecord3D.ProjectionClass4D = VectorRecord4D
 VectorRecord3D.GenericClass = VectorRecord3D
+VectorRecord3D.MomentumClass = MomentumRecord3D
 
 MomentumArray3D.ProjectionClass2D = MomentumArray2D
 MomentumArray3D.ProjectionClass3D = MomentumArray3D
 MomentumArray3D.ProjectionClass4D = MomentumArray4D
 MomentumArray3D.GenericClass = VectorArray3D
+MomentumArray3D.MomentumClass = MomentumArray3D
 
 MomentumRecord3D.ProjectionClass2D = MomentumRecord2D
 MomentumRecord3D.ProjectionClass3D = MomentumRecord3D
 MomentumRecord3D.ProjectionClass4D = MomentumRecord4D
 MomentumRecord3D.GenericClass = VectorRecord3D
+MomentumRecord3D.MomentumClass = MomentumRecord3D
 
 VectorArray4D.ProjectionClass2D = VectorArray2D
 VectorArray4D.ProjectionClass3D = VectorArray3D
 VectorArray4D.ProjectionClass4D = VectorArray4D
 VectorArray4D.GenericClass = VectorArray4D
+VectorArray4D.MomentumClass = MomentumArray4D
 
 VectorRecord4D.ProjectionClass2D = VectorRecord2D
 VectorRecord4D.ProjectionClass3D = VectorRecord3D
 VectorRecord4D.ProjectionClass4D = VectorRecord4D
 VectorRecord4D.GenericClass = VectorRecord4D
+VectorRecord4D.MomentumClass = MomentumRecord4D
 
 MomentumArray4D.ProjectionClass2D = MomentumArray2D
 MomentumArray4D.ProjectionClass3D = MomentumArray3D
 MomentumArray4D.ProjectionClass4D = MomentumArray4D
 MomentumArray4D.GenericClass = VectorArray4D
+MomentumArray4D.MomentumClass = MomentumArray4D
 
 MomentumRecord4D.ProjectionClass2D = MomentumRecord2D
 MomentumRecord4D.ProjectionClass3D = MomentumRecord3D
 MomentumRecord4D.ProjectionClass4D = MomentumRecord4D
 MomentumRecord4D.GenericClass = VectorRecord4D
+MomentumRecord4D.MomentumClass = MomentumRecord4D
 
 
 # implementation of behaviors in Numba ########################################
