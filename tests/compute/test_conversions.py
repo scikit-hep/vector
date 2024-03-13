@@ -920,14 +920,14 @@ def test_flavor_of_numpy():
     assert isinstance(v1 + v3.like(v1), vector.MomentumNumpy2D)
     assert isinstance(v3.like(v1) + v1, vector.MomentumNumpy2D)
     # 3D + 2D.like(3D) = 3D
-    assert isinstance(v2 + v1.like(v2), vector.backends.numpy.MomentumNumpy3D)
-    assert isinstance(v1.like(v2) + v2, vector.backends.numpy.MomentumNumpy3D)
+    assert isinstance(v2 + v1.like(v2), vector.MomentumNumpy3D)
+    assert isinstance(v1.like(v2) + v2, vector.MomentumNumpy3D)
     # 3D + 4D.like(3D) = 3D
-    assert isinstance(v2 + v3.like(v2), vector.backends.numpy.MomentumNumpy3D)
-    assert isinstance(v3.like(v2) + v2, vector.backends.numpy.MomentumNumpy3D)
+    assert isinstance(v2 + v3.like(v2), vector.MomentumNumpy3D)
+    assert isinstance(v3.like(v2) + v2, vector.MomentumNumpy3D)
     # 4D + 2D.like(4D) = 4D
-    assert isinstance(v3 + v1.like(v3), vector.backends.numpy.MomentumNumpy4D)
-    assert isinstance(v1.like(v3) + v3, vector.backends.numpy.MomentumNumpy4D)
+    assert isinstance(v3 + v1.like(v3), vector.MomentumNumpy4D)
+    assert isinstance(v1.like(v3) + v3, vector.MomentumNumpy4D)
     # 4D + 3D.like(4D) = 4D
-    assert isinstance(v3 + v2.like(v3), vector.backends.numpy.MomentumNumpy4D)
-    assert isinstance(v2.like(v3) + v3, vector.backends.numpy.MomentumNumpy4D)
+    assert isinstance(v3 + v2.like(v3), vector.MomentumNumpy4D)
+    assert isinstance(v2.like(v3) + v3, vector.MomentumNumpy4D)
