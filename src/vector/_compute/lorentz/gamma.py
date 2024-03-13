@@ -9,6 +9,7 @@
     @property
     Lorentz.gamma(self)
 """
+
 from __future__ import annotations
 
 import typing

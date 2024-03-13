@@ -9,6 +9,7 @@
     @property
     Spatial.eta(self)
 """
+
 from __future__ import annotations
 
 import typing

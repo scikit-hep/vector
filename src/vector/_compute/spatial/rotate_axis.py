@@ -8,6 +8,7 @@
 
     Spatial.rotate_axis(self, axis, angle)
 """
+
 from __future__ import annotations
 
 import typing

@@ -14,6 +14,7 @@ or
 
     Lorentz.boost(self, p4=...)
 """
+
 from __future__ import annotations
 
 import typing

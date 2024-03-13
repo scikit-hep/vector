@@ -8,6 +8,7 @@
 
     Lorentz.is_lightlike(self, tolerance=...)
 """
+
 from __future__ import annotations
 
 import typing

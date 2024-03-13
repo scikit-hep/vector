@@ -9,6 +9,7 @@
     @property
     Lorentz.Mt(self)
 """
+
 from __future__ import annotations
 
 import typing

@@ -609,8 +609,7 @@ def _no_record(x: ak.Array) -> ak.Array | None:
 
 # Type for mixing in Awkward later
 class AwkwardProtocol(Protocol):
-    def __getitem__(self, where: typing.Any) -> float | ak.Array | ak.Record | None:
-        ...
+    def __getitem__(self, where: typing.Any) -> float | ak.Array | ak.Record | None: ...
 
 
 class VectorAwkward:
@@ -1691,9 +1690,11 @@ def _aztype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
 def _ltype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
     import numba
 
-    cls: type[LongitudinalObjectZ] | type[LongitudinalObjectTheta] | type[
-        LongitudinalObjectEta
-    ]
+    cls: (
+        type[LongitudinalObjectZ]
+        | type[LongitudinalObjectTheta]
+        | type[LongitudinalObjectEta]
+    )
 
     z_index = None
     theta_index = None
