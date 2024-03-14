@@ -35,7 +35,7 @@ def lite(session: nox.Session) -> None:
 @nox.session(reuse_venv=True)
 def tests(session: nox.Session) -> None:
     """Run the unit and regular tests."""
-    session.install("-e", ".[awkward,numba,test,test-extras]")
+    session.install("-e", ".[awkward,numba,test]")
     session.run("pytest", "--ignore", "tests/test_notebooks.py", *session.posargs)
 
 

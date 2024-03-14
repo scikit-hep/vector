@@ -673,7 +673,25 @@ class VectorAwkward:
             fields = ak.fields(self)
             if num_vecargs == 1:
                 for name in fields:
-                    if name not in ("x", "y", "rho", "phi"):
+                    if name not in (
+                        "x",
+                        "y",
+                        "rho",
+                        "pt",
+                        "phi",
+                        "z",
+                        "pz",
+                        "theta",
+                        "eta",
+                        "t",
+                        "tau",
+                        "m",
+                        "M",
+                        "mass",
+                        "e",
+                        "E",
+                        "energy",
+                    ):
                         names.append(name)
                         arrays.append(self[name])
 
@@ -720,12 +738,20 @@ class VectorAwkward:
                         "x",
                         "y",
                         "rho",
+                        "pt",
                         "phi",
                         "z",
+                        "pz",
                         "theta",
                         "eta",
                         "t",
                         "tau",
+                        "m",
+                        "M",
+                        "mass",
+                        "e",
+                        "E",
+                        "energy",
                     ):
                         names.append(name)
                         arrays.append(self[name])
@@ -774,7 +800,25 @@ class VectorAwkward:
             fields = ak.fields(self)
             if num_vecargs == 1:
                 for name in fields:
-                    if name not in ("x", "y", "rho", "phi", "z", "theta", "eta"):
+                    if name not in (
+                        "x",
+                        "y",
+                        "rho",
+                        "pt",
+                        "phi",
+                        "z",
+                        "pz",
+                        "theta",
+                        "eta",
+                        "t",
+                        "tau",
+                        "m",
+                        "M",
+                        "mass",
+                        "e",
+                        "E",
+                        "energy",
+                    ):
                         names.append(name)
                         arrays.append(self[name])
 
@@ -831,12 +875,20 @@ class VectorAwkward:
                         "x",
                         "y",
                         "rho",
+                        "pt",
                         "phi",
                         "z",
+                        "pz",
                         "theta",
                         "eta",
                         "t",
                         "tau",
+                        "m",
+                        "M",
+                        "mass",
+                        "e",
+                        "E",
+                        "energy",
                     ):
                         names.append(name)
                         arrays.append(self[name])
@@ -897,12 +949,20 @@ class VectorAwkward:
                         "x",
                         "y",
                         "rho",
+                        "pt",
                         "phi",
                         "z",
+                        "pz",
                         "theta",
                         "eta",
                         "t",
                         "tau",
+                        "m",
+                        "M",
+                        "mass",
+                        "e",
+                        "E",
+                        "energy",
                     ):
                         names.append(name)
                         arrays.append(self[name])
