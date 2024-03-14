@@ -12,6 +12,11 @@ import pytest
 
 import vector
 from vector import VectorObject2D
+from vector.backends.awkward import (
+    MomentumAwkward2D,
+    MomentumAwkward3D,
+    MomentumAwkward4D,
+)
 
 ak = pytest.importorskip("awkward")
 
@@ -788,34 +793,6 @@ def test_like():
     assert ak.all(v3 + v2.like(v3) == v3_v2)
     assert ak.all(v2.like(v3) + v3 == v3_v2)
 
-    v2 = vector.zip(
-        {
-            "x": [10.0, 20.0, 30.0],
-            "y": [-10.0, 20.0, 30.0],
-            "z": [5.0, 1.0, 1.0],
-        },
-    )
-
-    # momentum + generic = generic
-    # 2D + 3D.like(2D) = 2D
-    assert ak.all(v1 + v2.like(v1) == v1_v2)
-    assert ak.all(v2.like(v1) + v1 == v1_v2)
-    # 2D + 4D.like(2D) = 2D
-    assert ak.all(v1 + v3.like(v1) == v1_v2)
-    assert ak.all(v3.like(v1) + v1 == v1_v2)
-    # 3D + 2D.like(3D) = 3D
-    assert ak.all(v2 + v1.like(v2) == v2_v1)
-    assert ak.all(v1.like(v2) + v2 == v2_v1)
-    # 3D + 4D.like(3D) = 3D
-    assert ak.all(v2 + v3.like(v2) == v2_v3)
-    assert ak.all(v3.like(v2) + v2 == v2_v3)
-    # 4D + 2D.like(4D) = 4D
-    assert ak.all(v3 + v1.like(v3) == v1_v3)
-    assert ak.all(v1.like(v3) + v3 == v1_v3)
-    # 4D + 3D.like(4D) = 4D
-    assert ak.all(v3 + v2.like(v3) == v3_v2)
-    assert ak.all(v2.like(v3) + v3 == v3_v2)
-
 
 def test_handler_of():
     numpy_vec = vector.array(
@@ -873,3 +850,48 @@ def test_momentum_coordinate_transforms():
                 assert hasattr(transformed_object, t1[2:])
                 assert hasattr(transformed_object, t2)
                 assert hasattr(transformed_object, t3)
+
+
+def test_momentum_preservation():
+    v1 = vector.zip(
+        {
+            "px": [10.0, 20.0, 30.0],
+            "py": [-10.0, 20.0, 30.0],
+        },
+    )
+    v2 = vector.zip(
+        {
+            "x": [10.0, 20.0, 30.0],
+            "y": [-10.0, 20.0, 30.0],
+            "z": [5.0, 1.0, 1.0],
+        },
+    )
+
+    v3 = vector.zip(
+        {
+            "px": [10.0, 20.0, 30.0],
+            "py": [-10.0, 20.0, 30.0],
+            "pz": [5.0, 1.0, 1.0],
+            "t": [16.0, 31.0, 46.0],
+        },
+    )
+
+    # momentum + generic = momentum
+    # 2D + 3D.like(2D) = 2D
+    assert isinstance(v1 + v2.like(v1), MomentumAwkward2D)
+    assert isinstance(v2.like(v1) + v1, MomentumAwkward2D)
+    # 2D + 4D.like(2D) = 2D
+    assert isinstance(v1 + v3.like(v1), MomentumAwkward2D)
+    assert isinstance(v3.like(v1) + v1, MomentumAwkward2D)
+    # 3D + 2D.like(3D) = 3D
+    assert isinstance(v2 + v1.like(v2), MomentumAwkward3D)
+    assert isinstance(v1.like(v2) + v2, MomentumAwkward3D)
+    # 3D + 4D.like(3D) = 3D
+    assert isinstance(v2 + v3.like(v2), MomentumAwkward3D)
+    assert isinstance(v3.like(v2) + v2, MomentumAwkward3D)
+    # 4D + 2D.like(4D) = 4D
+    assert isinstance(v3 + v1.like(v3), MomentumAwkward4D)
+    assert isinstance(v1.like(v3) + v3, MomentumAwkward4D)
+    # 4D + 3D.like(4D) = 4D
+    assert isinstance(v3 + v2.like(v3), MomentumAwkward4D)
+    assert isinstance(v2.like(v3) + v3, MomentumAwkward4D)
