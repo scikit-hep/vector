@@ -1,5 +1,15 @@
 # Changelog
 
+## Version 1.4
+
+### Version 1.4.0
+
+#### Breaking
+
+- drop support for awkward v1 [#434][]
+
+[#434]: https://github.com/scikit-hep/vector/pull/434
+
 ## Version 1.3
 
 ### Version 1.3.1

@@ -43,10 +43,10 @@ dependencies = [
 ]
 [project.optional-dependencies]
 awkward = [
-  "awkward>=1.2",
+  "awkward>=2",
 ]
 dev = [
-  "awkward>=1.2",
+  "awkward>=2",
   "dask_awkward",
   "nox",
   'numba>=0.57; python_version < "3.12"',
@@ -56,7 +56,7 @@ dev = [
   "pytest-doctestplus",
 ]
 docs = [
-  "awkward>=1.2",
+  "awkward>=2",
   "ipykernel",
   "myst-parser>0.13",
   "nbsphinx",
@@ -69,7 +69,6 @@ numba = [
   'numba>=0.57; python_version < "3.12"',
 ]
 test = [
-  "dask_awkward",
   "nox",
   "papermill>=2.4",
   "pytest>=6",
@@ -77,8 +76,9 @@ test = [
   "pytest-doctestplus",
 ]
 test-extras = [
+  "dask_awkward",
   "spark-parser",
-  "uncompyle6",
+  'uncompyle6; python_version == "3.8"',
 ]
 [project.urls]
 "Bug Tracker" = "https://github.com/scikit-hep/vector/issues"
