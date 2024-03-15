@@ -6,7 +6,9 @@
 from __future__ import annotations
 
 import importlib.metadata
+import numbers
 
+import numpy as np
 import packaging.version
 import pytest
 
@@ -895,3 +897,39 @@ def test_momentum_preservation():
     # 4D + 3D.like(4D) = 4D
     assert isinstance(v3 + v2.like(v3), MomentumAwkward4D)
     assert isinstance(v2.like(v3) + v3, MomentumAwkward4D)
+
+
+def test_subclass_fields():
+    @ak.mixin_class(vector.backends.awkward.behavior)
+    class TwoVector(MomentumAwkward2D):
+        pass
+
+    @ak.mixin_class(vector.backends.awkward.behavior)
+    class ThreeVector(MomentumAwkward3D):
+        pass
+
+    @ak.mixin_class(vector.backends.awkward.behavior)
+    class LorentzVector(MomentumAwkward4D):
+        @ak.mixin_class_method(np.divide, {numbers.Number})
+        def divide(self, factor):
+            return self.scale(1 / factor)
+
+    LorentzVectorArray.ProjectionClass2D = TwoVectorArray  # noqa: F821
+    LorentzVectorArray.ProjectionClass3D = ThreeVectorArray  # noqa: F821
+    LorentzVectorArray.ProjectionClass4D = LorentzVectorArray  # noqa: F821
+    LorentzVectorArray.MomentumClass = LorentzVectorArray  # noqa: F821
+
+    vec = ak.zip(
+        {
+            "pt": [[1, 2], [], [3], [4]],
+            "eta": [[1.2, 1.4], [], [1.6], [3.4]],
+            "phi": [[0.3, 0.4], [], [0.5], [0.6]],
+            "energy": [[50, 51], [], [52], [60]],
+        },
+        with_name="LorentzVector",
+        behavior=vector.backends.awkward.behavior,
+    )
+
+    assert vec.like(vector.obj(x=1, y=2)).fields == ["rho", "phi"]
+    assert vec.like(vector.obj(x=1, y=2, z=3)).fields == ["rho", "phi", "eta"]
+    assert (vec / 2).fields == ["rho", "phi", "eta", "t"]
