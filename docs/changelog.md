@@ -2,7 +2,24 @@
 
 ## Version 1.3
 
+### Version 1.3.1
+
+#### Features
+
+- feat: make momentum-ness infectious [#437][]
+
+#### Bug fixes
+
+- fix: support dask-awkward 2024.3.0 [#436][]
+- fix: momentum coords should not be repeated with generic coords in subclasses [#438][]
+
+[#436]: https://github.com/scikit-hep/vector/pull/436
+[#438]: https://github.com/scikit-hep/vector/pull/438
+[#437]: https://github.com/scikit-hep/vector/pull/437
+
 ### Version 1.3.0
+
+#### Features
 
 - feat: coordinate transformation functions with momentum names [#424][]
 - feat: allow momentum coords in to_Vector\*D methods + cleanup [#423][]
