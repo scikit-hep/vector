@@ -54,6 +54,7 @@ dev = [
   "pytest>=6",
   "pytest-cov>=3",
   "pytest-doctestplus",
+  "sympy",
 ]
 docs = [
   "awkward>=1.2",
@@ -67,6 +68,9 @@ docs = [
 ]
 numba = [
   'numba>=0.57; python_version < "3.12"',
+]
+sympy = [
+  "sympy",
 ]
 test = [
   "dask_awkward",

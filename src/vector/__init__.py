@@ -56,6 +56,15 @@ from vector.backends.object import (
     VectorObject4D,
     obj,
 )
+from vector.backends.sympy import (
+    MomentumSympy2D,
+    MomentumSympy3D,
+    MomentumSympy4D,
+    VectorSympy,
+    VectorSympy2D,
+    VectorSympy3D,
+    VectorSympy4D,
+)
 
 
 def _import_awkward() -> None:
@@ -104,6 +113,9 @@ __all__: tuple[str, ...] = (
     "MomentumObject2D",
     "MomentumObject3D",
     "MomentumObject4D",
+    "MomentumSympy2D",
+    "MomentumSympy3D",
+    "MomentumSympy4D",
     "Planar",
     "Spatial",
     "Temporal",
@@ -122,6 +134,10 @@ __all__: tuple[str, ...] = (
     "VectorObject2D",
     "VectorObject3D",
     "VectorObject4D",
+    "VectorSympy",
+    "VectorSympy2D",
+    "VectorSympy3D",
+    "VectorSympy4D",
     "__version__",
     "arr",
     "array",
