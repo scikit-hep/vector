@@ -4424,6 +4424,7 @@ def _from_signature(
 _handler_priority = [
     "vector.backends.object",
     "vector.backends.numpy",
+    "vector.backends.sympy",
     "vector.backends.awkward",
 ]
 
