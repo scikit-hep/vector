@@ -8,6 +8,7 @@ from __future__ import annotations
 import os
 import pickle
 
+import numpy as np
 import pytest
 
 import vector
@@ -47,3 +48,16 @@ def test_issue_161():
     with open(file_path, "rb") as f:
         a = ak.from_buffers(*pickle.load(f))
     repro(generator_like_jet_constituents=a.constituents)
+
+
+def test_issue_443():
+    ak = pytest.importorskip("awkward")
+    vector.register_awkward()
+
+    assert vector.array({"E": [1], "px": [1], "py": [1], "pz": [1]}) ** 2 == np.array(
+        [-2.0]
+    )
+    assert ak.zip(
+        {"E": [1], "px": [1], "py": [1], "pz": [1]}, with_name="Momentum4D"
+    ) ** 2 == ak.Array([-2])
+    assert vector.obj(E=1, px=1, py=1, pz=1) ** 2 == -2

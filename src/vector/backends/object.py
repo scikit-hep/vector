@@ -387,7 +387,7 @@ class VectorObject(Vector):
         return _replace_data(self, numpy.true_divide(self, other))  # type: ignore[call-overload]
 
     def __pow__(self, other: float) -> float:
-        return numpy.power(self, other)  # type: ignore[call-overload]
+        return numpy.square(self) if other == 2 else numpy.power(self, other)  # type: ignore[call-overload]
 
     def __matmul__(self, other: VectorProtocol) -> float:
         return numpy.matmul(self, other)  # type: ignore[call-overload]
