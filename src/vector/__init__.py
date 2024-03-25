@@ -56,15 +56,6 @@ from vector.backends.object import (
     VectorObject4D,
     obj,
 )
-from vector.backends.sympy import (
-    MomentumSympy2D,
-    MomentumSympy3D,
-    MomentumSympy4D,
-    VectorSympy,
-    VectorSympy2D,
-    VectorSympy3D,
-    VectorSympy4D,
-)
 
 
 def _import_awkward() -> None:
@@ -83,6 +74,7 @@ try:
     ) >= packaging.version.Version("2.0.0rc1")
 except importlib.metadata.PackageNotFoundError:
     _is_awkward_v2 = None
+
 try:
     import awkward
 
@@ -93,6 +85,23 @@ except ImportError:
         VectorAwkward = None
 else:
     from vector.backends.awkward import VectorAwkward
+
+try:
+    import sympy
+except ImportError:
+    sympy = None  # type: ignore[assignment]
+    if not typing.TYPE_CHECKING:
+        VectorSympy = None
+else:
+    from vector.backends.sympy import (
+        MomentumSympy2D,
+        MomentumSympy3D,
+        MomentumSympy4D,
+        VectorSympy,
+        VectorSympy2D,
+        VectorSympy3D,
+        VectorSympy4D,
+    )
 
 
 __all__: tuple[str, ...] = (
