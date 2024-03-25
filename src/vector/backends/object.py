@@ -210,8 +210,6 @@ class LongitudinalObjectEta(LongitudinalObject, LongitudinalEta, TupleEta):
     Use the ``elements`` property to retrieve the coordinates.
     """
 
-    eta: float
-
     @property
     def elements(self) -> tuple[float]:
         """
@@ -239,8 +237,6 @@ class TemporalObjectT(TemporalObject, TemporalT, TupleT):
     Class for the ``t`` (temporal) coordinate of Object backend.
     Use the ``elements`` property to retrieve the coordinates.
     """
-
-    t: float
 
     @property
     def elements(self) -> tuple[float]:
