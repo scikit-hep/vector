@@ -82,7 +82,7 @@ class AzimuthalSympyXY(AzimuthalSympy, AzimuthalXY):
         self.x = x
         self.y = y
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"AzimuthalSympyXY(x={self.x!r}, y={self.y!r})"
 
     @property
@@ -101,7 +101,7 @@ class AzimuthalSympyXY(AzimuthalSympy, AzimuthalXY):
         return (self.x, self.y)
 
 
-class AzimuthalSympyRhoPhi(AzimuthalSympy, AzimuthalRhoPhi):  # type: ignore[misc]
+class AzimuthalSympyRhoPhi(AzimuthalSympy, AzimuthalRhoPhi):
     """
     Class for the ``rho`` and ``phi`` (azimuthal) coordinates of SymPy backend.
     Creates a structured SymPy array and returns it as an AzimuthalSympyXY object.
@@ -119,7 +119,7 @@ class AzimuthalSympyRhoPhi(AzimuthalSympy, AzimuthalRhoPhi):  # type: ignore[mis
         self.rho = rho
         self.phi = phi
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"AzimuthalSympyRhoPhi(rho={self.rho!r}, phi={self.phi!r})"
 
     @property
@@ -138,7 +138,7 @@ class AzimuthalSympyRhoPhi(AzimuthalSympy, AzimuthalRhoPhi):  # type: ignore[mis
         return (self.rho, self.phi)
 
 
-class LongitudinalSympyZ(LongitudinalSympy, LongitudinalZ):  # type: ignore[misc]
+class LongitudinalSympyZ(LongitudinalSympy, LongitudinalZ):
     """
     Class for the ``z`` (longitudinal) coordinate of SymPy backend.
     Creates a structured SymPy array and returns it as a LongitudinalSympyZ object.
@@ -155,7 +155,7 @@ class LongitudinalSympyZ(LongitudinalSympy, LongitudinalZ):  # type: ignore[misc
     def __init__(self, z: sympy.Symbol):
         self.z = z
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"LongitudinalSympyZ(z={self.z!r})"
 
     @property
@@ -174,7 +174,7 @@ class LongitudinalSympyZ(LongitudinalSympy, LongitudinalZ):  # type: ignore[misc
         return (self.z,)
 
 
-class LongitudinalSympyTheta(LongitudinalSympy, LongitudinalTheta):  # type: ignore[misc]
+class LongitudinalSympyTheta(LongitudinalSympy, LongitudinalTheta):
     """
     Class for the ``theta`` (longitudinal) coordinate of SymPy backend.
     Creates a structured SymPy array and returns it as a LongitudinalSympyTheta object.
@@ -191,7 +191,7 @@ class LongitudinalSympyTheta(LongitudinalSympy, LongitudinalTheta):  # type: ign
     def __init__(self, theta: sympy.Symbol):
         self.theta = theta
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"LongitudinalSympyTheta(theta={self.theta!r})"
 
     @property
@@ -210,7 +210,7 @@ class LongitudinalSympyTheta(LongitudinalSympy, LongitudinalTheta):  # type: ign
         return (self.theta,)
 
 
-class LongitudinalSympyEta(LongitudinalSympy, LongitudinalEta):  # type: ignore[misc]
+class LongitudinalSympyEta(LongitudinalSympy, LongitudinalEta):
     """
     Class for the ``eta`` (longitudinal) coordinate of SymPy backend.
     Creates a structured SymPy array and returns it as a LongitudinalSympyEta object.
@@ -224,10 +224,10 @@ class LongitudinalSympyEta(LongitudinalSympy, LongitudinalEta):  # type: ignore[
     ObjectClass = vector.backends.object.LongitudinalObjectEta
     _IS_MOMENTUM = False
 
-    def __init__(self, eta: sympy.Symbol, **kwargs):
+    def __init__(self, eta: sympy.Symbol):
         self.eta = eta
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"LongitudinalSympyEta(eta={self.eta!r})"
 
     @property
@@ -246,7 +246,7 @@ class LongitudinalSympyEta(LongitudinalSympy, LongitudinalEta):  # type: ignore[
         return (self.eta,)
 
 
-class TemporalSympyT(TemporalSympy, TemporalT):  # type: ignore[misc]
+class TemporalSympyT(TemporalSympy, TemporalT):
     """
     Class for the ``t`` (temporal) coordinate of SymPy backend.
     Creates a structured SymPy array and returns it as a TemporalSympyT object.
@@ -260,10 +260,10 @@ class TemporalSympyT(TemporalSympy, TemporalT):  # type: ignore[misc]
     ObjectClass = vector.backends.object.TemporalObjectT
     _IS_MOMENTUM = False
 
-    def __init__(self, t: sympy.Array, **kwargs):
+    def __init__(self, t: sympy.Symbol):
         self.t = t
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"TemporalSympyT(t={self.t!r})"
 
     @property
@@ -282,7 +282,7 @@ class TemporalSympyT(TemporalSympy, TemporalT):  # type: ignore[misc]
         return (self.t,)
 
 
-class TemporalSympyTau(TemporalSympy, TemporalTau):  # type: ignore[misc]
+class TemporalSympyTau(TemporalSympy, TemporalTau):
     """
     Class for the ``tau`` (temporal) coordinate of SymPy backend.
     Creates a structured SymPy array and returns it as a TemporalSympyTau object.
@@ -296,10 +296,10 @@ class TemporalSympyTau(TemporalSympy, TemporalTau):  # type: ignore[misc]
     ObjectClass = vector.backends.object.TemporalObjectTau
     _IS_MOMENTUM = False
 
-    def __init__(self, tau: sympy.Symbol, **kwargs):
+    def __init__(self, tau: sympy.Symbol):
         self.tau = tau
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"TemporalSympyTau(tau={self.tau!r})"
 
     @property
@@ -329,7 +329,7 @@ _coord_sympy_type = {
 }
 
 
-def _is_type_safe(coordinates):
+def _is_type_safe(coordinates: dict[str, typing.Any]) -> None:
     if not all(isinstance(coord, sympy.Symbol) for coord in coordinates.values()):
         raise TypeError("coordinates must be a sympy symbol")
 
@@ -631,7 +631,7 @@ class VectorSympy(Vector):
             return NotImplemented
 
 
-class VectorSympy2D(VectorSympy, Planar, Vector2D):  # type: ignore[misc]
+class VectorSympy2D(VectorSympy, Planar, Vector2D):
     """
     Two dimensional vector class for the SymPy backend.
 
@@ -696,35 +696,35 @@ class VectorSympy2D(VectorSympy, Planar, Vector2D):  # type: ignore[misc]
         )
 
     @property
-    def x(self) -> float:
+    def x(self) -> sympy.Symbol:
         return super().x
 
     @x.setter
-    def x(self, x: float) -> None:
+    def x(self, x: sympy.Symbol) -> None:
         self.azimuthal = AzimuthalSympyXY(x, self.y)
 
     @property
-    def y(self) -> float:
+    def y(self) -> sympy.Symbol:
         return super().y
 
     @y.setter
-    def y(self, y: float) -> None:
+    def y(self, y: sympy.Symbol) -> None:
         self.azimuthal = AzimuthalSympyXY(self.x, y)
 
     @property
-    def rho(self) -> float:
+    def rho(self) -> sympy.Symbol:
         return super().rho
 
     @rho.setter
-    def rho(self, rho: float) -> None:
+    def rho(self, rho: sympy.Symbol) -> None:
         self.azimuthal = AzimuthalSympyRhoPhi(rho, self.phi)
 
     @property
-    def phi(self) -> float:
+    def phi(self) -> sympy.Symbol:
         return super().phi
 
     @phi.setter
-    def phi(self, phi: float) -> None:
+    def phi(self, phi: sympy.Symbol) -> None:
         self.azimuthal = AzimuthalSympyRhoPhi(self.rho, phi)
 
     def _wrap_result(
@@ -829,27 +829,27 @@ class MomentumSympy2D(PlanarMomentum, VectorSympy2D):
         )
 
     @property
-    def px(self) -> float:
+    def px(self) -> sympy.Symbol:
         return super().px
 
     @px.setter
-    def px(self, px: float) -> None:
+    def px(self, px: sympy.Symbol) -> None:
         self.azimuthal = AzimuthalSympyXY(px, self.py)
 
     @property
-    def py(self) -> float:
+    def py(self) -> sympy.Symbol:
         return super().py
 
     @py.setter
-    def py(self, py: float) -> None:
+    def py(self, py: sympy.Symbol) -> None:
         self.azimuthal = AzimuthalSympyXY(self.px, py)
 
     @property
-    def pt(self) -> float:
+    def pt(self) -> sympy.Symbol:
         return super().pt
 
     @pt.setter
-    def pt(self, pt: float) -> None:
+    def pt(self, pt: sympy.Symbol) -> None:
         self.azimuthal = AzimuthalSympyRhoPhi(pt, self.phi)
 
 
@@ -1025,59 +1025,59 @@ class VectorSympy3D(VectorSympy, Spatial, Vector3D):
             raise AssertionError(repr(returns))
 
     @property
-    def x(self) -> float:
+    def x(self) -> sympy.Symbol:
         return super().x
 
     @x.setter
-    def x(self, x: float) -> None:
+    def x(self, x: sympy.Symbol) -> None:
         self.azimuthal = AzimuthalSympyXY(x, self.y)
 
     @property
-    def y(self) -> float:
+    def y(self) -> sympy.Symbol:
         return super().y
 
     @y.setter
-    def y(self, y: float) -> None:
+    def y(self, y: sympy.Symbol) -> None:
         self.azimuthal = AzimuthalSympyXY(self.x, y)
 
     @property
-    def rho(self) -> float:
+    def rho(self) -> sympy.Symbol:
         return super().rho
 
     @rho.setter
-    def rho(self, rho: float) -> None:
+    def rho(self, rho: sympy.Symbol) -> None:
         self.azimuthal = AzimuthalSympyRhoPhi(rho, self.phi)
 
     @property
-    def phi(self) -> float:
+    def phi(self) -> sympy.Symbol:
         return super().phi
 
     @phi.setter
-    def phi(self, phi: float) -> None:
+    def phi(self, phi: sympy.Symbol) -> None:
         self.azimuthal = AzimuthalSympyRhoPhi(self.rho, phi)
 
     @property
-    def z(self) -> float:
+    def z(self) -> sympy.Symbol:
         return super().z
 
     @z.setter
-    def z(self, z: float) -> None:
+    def z(self, z: sympy.Symbol) -> None:
         self.longitudinal = LongitudinalSympyZ(z)
 
     @property
-    def theta(self) -> float:
+    def theta(self) -> sympy.Symbol:
         return super().theta
 
     @theta.setter
-    def theta(self, theta: float) -> None:
+    def theta(self, theta: sympy.Symbol) -> None:
         self.longitudinal = LongitudinalSympyTheta(theta)
 
     @property
-    def eta(self) -> float:
+    def eta(self) -> sympy.Symbol:
         return super().eta
 
     @eta.setter
-    def eta(self, eta: float) -> None:
+    def eta(self, eta: sympy.Symbol) -> None:
         self.longitudinal = LongitudinalSympyEta(eta)
 
 
@@ -1131,35 +1131,35 @@ class MomentumSympy3D(SpatialMomentum, VectorSympy3D):
         )
 
     @property
-    def px(self) -> float:
+    def px(self) -> sympy.Symbol:
         return super().px
 
     @px.setter
-    def px(self, px: float) -> None:
+    def px(self, px: sympy.Symbol) -> None:
         self.azimuthal = AzimuthalSympyXY(px, self.py)
 
     @property
-    def py(self) -> float:
+    def py(self) -> sympy.Symbol:
         return super().py
 
     @py.setter
-    def py(self, py: float) -> None:
+    def py(self, py: sympy.Symbol) -> None:
         self.azimuthal = AzimuthalSympyXY(self.px, py)
 
     @property
-    def pt(self) -> float:
+    def pt(self) -> sympy.Symbol:
         return super().pt
 
     @pt.setter
-    def pt(self, pt: float) -> None:
+    def pt(self, pt: sympy.Symbol) -> None:
         self.azimuthal = AzimuthalSympyRhoPhi(pt, self.phi)
 
     @property
-    def pz(self) -> float:
+    def pz(self) -> sympy.Symbol:
         return super().pz
 
     @pz.setter
-    def pz(self, pz: float) -> None:
+    def pz(self, pz: sympy.Symbol) -> None:
         self.longitudinal = LongitudinalSympyZ(pz)
 
 
@@ -1401,75 +1401,75 @@ class VectorSympy4D(VectorSympy, Lorentz, Vector4D):
             raise AssertionError(repr(returns))
 
     @property
-    def x(self) -> float:
+    def x(self) -> sympy.Symbol:
         return super().x
 
     @x.setter
-    def x(self, x: float) -> None:
+    def x(self, x: sympy.Symbol) -> None:
         self.azimuthal = AzimuthalSympyXY(x, self.y)
 
     @property
-    def y(self) -> float:
+    def y(self) -> sympy.Symbol:
         return super().y
 
     @y.setter
-    def y(self, y: float) -> None:
+    def y(self, y: sympy.Symbol) -> None:
         self.azimuthal = AzimuthalSympyXY(self.x, y)
 
     @property
-    def rho(self) -> float:
+    def rho(self) -> sympy.Symbol:
         return super().rho
 
     @rho.setter
-    def rho(self, rho: float) -> None:
+    def rho(self, rho: sympy.Symbol) -> None:
         self.azimuthal = AzimuthalSympyRhoPhi(rho, self.phi)
 
     @property
-    def phi(self) -> float:
+    def phi(self) -> sympy.Symbol:
         return super().phi
 
     @phi.setter
-    def phi(self, phi: float) -> None:
+    def phi(self, phi: sympy.Symbol) -> None:
         self.azimuthal = AzimuthalSympyRhoPhi(self.rho, phi)
 
     @property
-    def z(self) -> float:
+    def z(self) -> sympy.Symbol:
         return super().z
 
     @z.setter
-    def z(self, z: float) -> None:
+    def z(self, z: sympy.Symbol) -> None:
         self.longitudinal = LongitudinalSympyZ(z)
 
     @property
-    def theta(self) -> float:
+    def theta(self) -> sympy.Symbol:
         return super().theta
 
     @theta.setter
-    def theta(self, theta: float) -> None:
+    def theta(self, theta: sympy.Symbol) -> None:
         self.longitudinal = LongitudinalSympyTheta(theta)
 
     @property
-    def eta(self) -> float:
+    def eta(self) -> sympy.Symbol:
         return super().eta
 
     @eta.setter
-    def eta(self, eta: float) -> None:
+    def eta(self, eta: sympy.Symbol) -> None:
         self.longitudinal = LongitudinalSympyEta(eta)
 
     @property
-    def t(self) -> float:
+    def t(self) -> sympy.Symbol:
         return super().t
 
     @t.setter
-    def t(self, t: float) -> None:
+    def t(self, t: sympy.Symbol) -> None:
         self.temporal = TemporalSympyT(t)
 
     @property
-    def tau(self) -> float:
+    def tau(self) -> sympy.Symbol:
         return super().tau
 
     @tau.setter
-    def tau(self, tau: float) -> None:
+    def tau(self, tau: sympy.Symbol) -> None:
         self.temporal = TemporalSympyTau(tau)
 
 
@@ -1532,83 +1532,83 @@ class MomentumSympy4D(LorentzMomentum, VectorSympy4D):
         )
 
     @property
-    def px(self) -> float:
+    def px(self) -> sympy.Symbol:
         return super().px
 
     @px.setter
-    def px(self, px: float) -> None:
+    def px(self, px: sympy.Symbol) -> None:
         self.azimuthal = AzimuthalSympyXY(px, self.py)
 
     @property
-    def py(self) -> float:
+    def py(self) -> sympy.Symbol:
         return super().py
 
     @py.setter
-    def py(self, py: float) -> None:
+    def py(self, py: sympy.Symbol) -> None:
         self.azimuthal = AzimuthalSympyXY(self.px, py)
 
     @property
-    def pt(self) -> float:
+    def pt(self) -> sympy.Symbol:
         return super().pt
 
     @pt.setter
-    def pt(self, pt: float) -> None:
+    def pt(self, pt: sympy.Symbol) -> None:
         self.azimuthal = AzimuthalSympyRhoPhi(pt, self.phi)
 
     @property
-    def pz(self) -> float:
+    def pz(self) -> sympy.Symbol:
         return super().pz
 
     @pz.setter
-    def pz(self, pz: float) -> None:
+    def pz(self, pz: sympy.Symbol) -> None:
         self.longitudinal = LongitudinalSympyZ(pz)
 
     @property
-    def E(self) -> float:
+    def E(self) -> sympy.Symbol:
         return super().E
 
     @E.setter
-    def E(self, E: float) -> None:
+    def E(self, E: sympy.Symbol) -> None:
         self.temporal = TemporalSympyT(E)
 
     @property
-    def e(self) -> float:
+    def e(self) -> sympy.Symbol:
         return super().e
 
     @e.setter
-    def e(self, e: float) -> None:
+    def e(self, e: sympy.Symbol) -> None:
         self.temporal = TemporalSympyT(e)
 
     @property
-    def energy(self) -> float:
+    def energy(self) -> sympy.Symbol:
         return super().energy
 
     @energy.setter
-    def energy(self, energy: float) -> None:
+    def energy(self, energy: sympy.Symbol) -> None:
         self.temporal = TemporalSympyT(energy)
 
     @property
-    def M(self) -> float:
+    def M(self) -> sympy.Symbol:
         return super().M
 
     @M.setter
-    def M(self, M: float) -> None:
+    def M(self, M: sympy.Symbol) -> None:
         self.temporal = TemporalSympyTau(M)
 
     @property
-    def m(self) -> float:
+    def m(self) -> sympy.Symbol:
         return super().m
 
     @m.setter
-    def m(self, m: float) -> None:
+    def m(self, m: sympy.Symbol) -> None:
         self.temporal = TemporalSympyTau(m)
 
     @property
-    def mass(self) -> float:
+    def mass(self) -> sympy.Symbol:
         return super().mass
 
     @mass.setter
-    def mass(self, mass: float) -> None:
+    def mass(self, mass: sympy.Symbol) -> None:
         self.temporal = TemporalSympyTau(mass)
 
 
