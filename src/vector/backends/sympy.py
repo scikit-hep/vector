@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import numbers
 import typing
 
 import numpy
@@ -19,6 +18,7 @@ from vector._methods import (
     LorentzMomentum,
     Planar,
     PlanarMomentum,
+    SameVectorType,
     Spatial,
     SpatialMomentum,
     Temporal,
@@ -28,14 +28,16 @@ from vector._methods import (
     Vector2D,
     Vector3D,
     Vector4D,
+    VectorProtocol,
     _aztype,
     _coordinate_class_to_names,
+    _handler_of,
     _ltype,
     _repr_generic_to_momentum,
     _repr_momentum_to_generic,
     _ttype,
 )
-from vector._typeutils import FloatArray, ScalarCollection
+from vector._typeutils import FloatArray
 
 
 class CoordinatesSympy:
@@ -62,78 +64,66 @@ class TemporalSympy(CoordinatesSympy, Temporal):
     ObjectClass: type[vector.backends.object.TemporalObject]
 
 
-class AzimuthalSympyXY(sympy.Array, AzimuthalSympy, AzimuthalXY):
+class AzimuthalSympyXY(AzimuthalSympy, AzimuthalXY):
     """
     Class for the ``rho`` and ``phi`` (azimuthal) coordinates of SymPy backend.
     Creates a structured SymPy array and returns it as an AzimuthalSympyXY object.
 
     Examples:
-        >>> import vector
-        >>> vector.backends.sympy.AzimuthalSympyXY([1, 2], [3, 4])
-        AzimuthalSympyXY(x=[1, 2], y=[3, 4])
+        >>> import vector; import sympy
+        >>> vector.backends.sympy.AzimuthalSympyXY(sympy.Symbol("x"), sympy.Symbol("y"))
+        AzimuthalSympyXY(x=x, y=y)
     """
 
     ObjectClass = vector.backends.object.AzimuthalObjectXY
     _IS_MOMENTUM = False
 
-    def __new__(cls, x: sympy.Array, y: sympy.Array, **kwargs: typing.Any):
-        obj = super().__new__(cls, [[_x, _y] for _x, _y in zip(x, y)], **kwargs)
-        obj.x = sympy.Array(x)
-        obj.y = sympy.Array(y)
-        return obj
-
-    def __init__(self, x: sympy.Array, y: sympy.Array, **kwargs):
-        super().__init__()
+    def __init__(self, x: sympy.Symbol, y: sympy.Symbol):
+        self.x = x
+        self.y = y
 
     def __repr__(self):
-        return f"AzimuthalSympyXY(x={self.x}, y={self.y})"
+        return f"AzimuthalSympyXY(x={self.x!r}, y={self.y!r})"
 
     @property
-    def elements(self) -> tuple[sympy.Array, sympy.Array]:
+    def elements(self) -> tuple[sympy.Symbol, sympy.Symbol]:
         """
         Azimuthal coordinates (``x`` and ``y``) as a tuple.
 
         Each coordinate is a SymPy array of values and not a vector.
 
         Examples:
-            >>> import vector
-            >>> vec = vector.backends.sympy.AzimuthalSympyXY([1, 2], [3, 4])
+            >>> import vector; import sympy
+            >>> vec = vector.backends.sympy.AzimuthalSympyXY(sympy.Symbol("x"), sympy.Symbol("y"))
             >>> vec.elements
-            ([1, 2], [3, 4])
+            (x, y)
         """
         return (self.x, self.y)
 
 
-class AzimuthalSympyRhoPhi(sympy.Array, AzimuthalSympy, AzimuthalRhoPhi):  # type: ignore[misc]
+class AzimuthalSympyRhoPhi(AzimuthalSympy, AzimuthalRhoPhi):  # type: ignore[misc]
     """
     Class for the ``rho`` and ``phi`` (azimuthal) coordinates of SymPy backend.
     Creates a structured SymPy array and returns it as an AzimuthalSympyXY object.
 
     Examples:
-        >>> import vector
-        >>> vector.backends.sympy.AzimuthalSympyRhoPhi([1, 2], [3, 4])
-        AzimuthalSympyRhoPhi(rho=[1, 2], phi=[3, 4])
+        >>> import vector; import sympy
+        >>> vector.backends.sympy.AzimuthalSympyRhoPhi(sympy.Symbol("rho"), sympy.Symbol("phi"))
+        AzimuthalSympyRhoPhi(rho=rho, phi=phi)
     """
 
     ObjectClass = vector.backends.object.AzimuthalObjectRhoPhi
     _IS_MOMENTUM = False
 
-    def __new__(cls, rho: sympy.Array, phi: sympy.Array, **kwargs: typing.Any):
-        obj = super().__new__(
-            cls, [[_rho, _phi] for _rho, _phi in zip(rho, phi)], **kwargs
-        )
-        obj.rho = sympy.Array(rho)
-        obj.phi = sympy.Array(phi)
-        return obj
-
-    def __init__(self, rho: sympy.Array, phi: sympy.Array, **kwargs):
-        super().__init__()
+    def __init__(self, rho: sympy.Symbol, phi: sympy.Symbol):
+        self.rho = rho
+        self.phi = phi
 
     def __repr__(self):
-        return f"AzimuthalSympyRhoPhi(rho={self.rho}, phi={self.phi})"
+        return f"AzimuthalSympyRhoPhi(rho={self.rho!r}, phi={self.phi!r})"
 
     @property
-    def elements(self) -> tuple[sympy.Array, sympy.Array]:
+    def elements(self) -> tuple[sympy.Symbol, sympy.Symbol]:
         """
         Azimuthal coordinates (``rho`` and ``phi``) as a tuple.
 
@@ -141,122 +131,107 @@ class AzimuthalSympyRhoPhi(sympy.Array, AzimuthalSympy, AzimuthalRhoPhi):  # typ
 
         Examples:
             >>> import vector
-            >>> vec = vector.backends.sympy.AzimuthalSympyRhoPhi([1, 2], [3, 4])
+            >>> vec = vector.backends.sympy.AzimuthalSympyRhoPhi(sympy.Symbol("rho"), sympy.Symbol("phi"))
             >>> vec.elements
-            ([1, 2], [3, 4])
+            (rho, phi)
         """
         return (self.rho, self.phi)
 
 
-class LongitudinalSympyZ(sympy.Array, LongitudinalSympy, LongitudinalZ):  # type: ignore[misc]
+class LongitudinalSympyZ(LongitudinalSympy, LongitudinalZ):  # type: ignore[misc]
     """
     Class for the ``z`` (longitudinal) coordinate of SymPy backend.
     Creates a structured SymPy array and returns it as a LongitudinalSympyZ object.
 
     Examples:
-        >>> import vector
-        >>> vector.backends.sympy.LongitudinalSympyZ([1, 2])
-        LongitudinalSympyZ(z=[1, 2])
+        >>> import vector; import sympy
+        >>> vector.backends.sympy.LongitudinalSympyZ(sympy.Symbol("z"))
+        LongitudinalSympyZ(z=z)
     """
 
     ObjectClass = vector.backends.object.LongitudinalObjectZ
     _IS_MOMENTUM = False
 
-    def __new__(cls, z: sympy.Array, **kwargs: typing.Any):
-        obj = super().__new__(cls, z, **kwargs)
-        obj.z = sympy.Array(z)
-        return obj
-
-    def __init__(self, z: sympy.Array, **kwargs):
-        super().__init__()
+    def __init__(self, z: sympy.Symbol):
+        self.z = z
 
     def __repr__(self):
-        return f"LongitudinalSympyZ(z={self.z})"
+        return f"LongitudinalSympyZ(z={self.z!r})"
 
     @property
-    def elements(self) -> tuple[sympy.Array]:
+    def elements(self) -> tuple[sympy.Symbol]:
         """
         Longitudinal coordinates (``z``) as a tuple.
 
         Each coordinate is a SymPy array of values and not a vector.
 
         Examples:
-            >>> import vector
-            >>> vec = vector.backends.sympy.LongitudinalSympyZ([1, 2])
+            >>> import vector; import sympy
+            >>> vec = vector.backends.sympy.LongitudinalSympyZ(sympy.Symbol("z"))
             >>> vec.elements
-            ([1, 2],)
+            (z,)
         """
         return (self.z,)
 
 
-class LongitudinalSympyTheta(sympy.Array, LongitudinalSympy, LongitudinalTheta):  # type: ignore[misc]
+class LongitudinalSympyTheta(LongitudinalSympy, LongitudinalTheta):  # type: ignore[misc]
     """
     Class for the ``theta`` (longitudinal) coordinate of SymPy backend.
     Creates a structured SymPy array and returns it as a LongitudinalSympyTheta object.
 
     Examples:
-        >>> import vector
-        >>> vector.backends.sympy.LongitudinalSympyTheta([1, 2])
-        LongitudinalSympyTheta(theta=[1, 2])
+        >>> import vector; import sympy
+        >>> vector.backends.sympy.LongitudinalSympyTheta(sympy.Symbol("theta"))
+        LongitudinalSympyTheta(theta=theta)
     """
 
     ObjectClass = vector.backends.object.LongitudinalObjectTheta
     _IS_MOMENTUM = False
 
-    def __new__(cls, theta: sympy.Array, **kwargs: typing.Any):
-        obj = super().__new__(cls, [theta], **kwargs)
-        obj.theta = sympy.Array(theta)
-        return obj
-
-    def __init__(self, theta: sympy.Array, **kwargs):
-        super().__init__()
+    def __init__(self, theta: sympy.Symbol):
+        self.theta = theta
 
     def __repr__(self):
-        return f"LongitudinalSympyTheta(theta={self.theta})"
+        return f"LongitudinalSympyTheta(theta={self.theta!r})"
 
     @property
-    def elements(self) -> tuple[sympy.Array]:
+    def elements(self) -> tuple[sympy.Symbol]:
         """
         Longitudinal coordinates (``theta``) as a tuple.
 
         Each coordinate is a SymPy array of values and not a vector.
 
         Examples:
-            >>> import vector
-            >>> vec = vector.backends.sympy.LongitudinalSympyTheta([1, 2])
+            >>> import vector; import sympy
+            >>> vec = vector.backends.sympy.LongitudinalSympyTheta(sympy.Symbol("theta"))
             >>> vec.elements
-            ([1, 2],)
+            (theta,)
         """
         return (self.theta,)
 
 
-class LongitudinalSympyEta(sympy.Array, LongitudinalSympy, LongitudinalEta):  # type: ignore[misc]
+class LongitudinalSympyEta(LongitudinalSympy, LongitudinalEta):  # type: ignore[misc]
     """
     Class for the ``eta`` (longitudinal) coordinate of SymPy backend.
     Creates a structured SymPy array and returns it as a LongitudinalSympyEta object.
 
     Examples:
-        >>> import vector
-        >>> vector.backends.sympy.LongitudinalSympyEta([1, 2])
-        LongitudinalSympyEta(eta=[1, 2])
+        >>> import vector; import sympy
+        >>> vector.backends.sympy.LongitudinalSympyEta(sympy.Symbol("eta"))
+        LongitudinalSympyEta(eta=eta)
     """
 
     ObjectClass = vector.backends.object.LongitudinalObjectEta
     _IS_MOMENTUM = False
 
-    def __new__(cls, eta: sympy.Array, **kwargs: typing.Any):
-        obj = super().__new__(cls, [eta], **kwargs)
-        obj.eta = sympy.Array(eta)
-        return obj
-
-    def __init__(self, eta: sympy.Array, **kwargs):
-        super().__init__()
+    def __init__(self, eta: sympy.Symbol, **kwargs):
+        self.eta = eta
 
     def __repr__(self):
-        return f"LongitudinalSympyEta(eta={self.eta})"
+        return f"LongitudinalSympyEta(eta={self.eta!r})"
 
     @property
-    def elements(self) -> tuple[sympy.Array]:
+    def elements(self) -> tuple[sympy.Symbol]:
         """
         Longitudinal coordinates (``eta``) as a tuple.
 
@@ -264,40 +239,35 @@ class LongitudinalSympyEta(sympy.Array, LongitudinalSympy, LongitudinalEta):  # 
 
         Examples:
             >>> import vector
-            >>> vec = vector.backends.sympy.LongitudinalSympyTheta([1, 2])
+            >>> vec = vector.backends.sympy.LongitudinalSympyEta(sympy.Symbol("eta"))
             >>> vec.elements
-            ([1, 2],)
+            (eta,)
         """
         return (self.eta,)
 
 
-class TemporalSympyT(sympy.Array, TemporalSympy, TemporalT):  # type: ignore[misc]
+class TemporalSympyT(TemporalSympy, TemporalT):  # type: ignore[misc]
     """
     Class for the ``t`` (temporal) coordinate of SymPy backend.
     Creates a structured SymPy array and returns it as a TemporalSympyT object.
 
     Examples:
         >>> import vector
-        >>> vector.backends.sympy.TemporalSympyT([1, 2])
-        TemporalSympyT(t=[1, 2])
+        >>> vector.backends.sympy.TemporalSympyT(sympy.Symbol("t"))
+        TemporalSympyT(t=t)
     """
 
     ObjectClass = vector.backends.object.TemporalObjectT
     _IS_MOMENTUM = False
 
-    def __new__(cls, t: sympy.Array, **kwargs: typing.Any):
-        obj = super().__new__(cls, [t], **kwargs)
-        obj.t = sympy.Array(t)
-        return obj
-
     def __init__(self, t: sympy.Array, **kwargs):
-        super().__init__()
+        self.t = t
 
     def __repr__(self):
-        return f"TemporalSympyT(t={self.t})"
+        return f"TemporalSympyT(t={self.t!r})"
 
     @property
-    def elements(self) -> tuple[sympy.Array]:
+    def elements(self) -> tuple[sympy.Symbol]:
         """
         Temporal coordinates (``t``) as a tuple.
 
@@ -305,40 +275,35 @@ class TemporalSympyT(sympy.Array, TemporalSympy, TemporalT):  # type: ignore[mis
 
         Examples:
             >>> import vector
-            >>> vec = vector.backends.sympy.TemporalSympyT([1, 2])
+            >>> vec = vector.backends.sympy.TemporalSympyT(sympy.Symbol("t"))
             >>> vec.elements
-            ([1, 2],)
+            (t,)
         """
         return (self.t,)
 
 
-class TemporalSympyTau(sympy.Array, TemporalSympy, TemporalTau):  # type: ignore[misc]
+class TemporalSympyTau(TemporalSympy, TemporalTau):  # type: ignore[misc]
     """
     Class for the ``tau`` (temporal) coordinate of SymPy backend.
     Creates a structured SymPy array and returns it as a TemporalSympyTau object.
 
     Examples:
         >>> import vector
-        >>> vector.backends.sympy.TemporalSympyTau([1, 2])
-        TemporalSympyTau(tau=[1, 2])
+        >>> vector.backends.sympy.TemporalSympyTau(sympy.Symbol("tau"))
+        TemporalSympyTau(tau=tau)
     """
 
     ObjectClass = vector.backends.object.TemporalObjectTau
     _IS_MOMENTUM = False
 
-    def __new__(cls, tau: sympy.Array, **kwargs: typing.Any):
-        obj = super().__new__(cls, [tau], **kwargs)
-        obj.tau = sympy.Array(tau)
-        return obj
-
-    def __init__(self, tau: sympy.Array, **kwargs):
-        super().__init__()
+    def __init__(self, tau: sympy.Symbol, **kwargs):
+        self.tau = tau
 
     def __repr__(self):
-        return f"TemporalSympyTau(tau={self.tau})"
+        return f"TemporalSympyTau(tau={self.tau!r})"
 
     @property
-    def elements(self) -> tuple[sympy.Array]:
+    def elements(self) -> tuple[sympy.Symbol]:
         """
         Temporal coordinates (``tau``) as a tuple.
 
@@ -346,9 +311,9 @@ class TemporalSympyTau(sympy.Array, TemporalSympy, TemporalTau):  # type: ignore
 
         Examples:
             >>> import vector
-            >>> vec = vector.backends.sympy.TemporalSympyTau([1, 2])
+            >>> vec = vector.backends.sympy.TemporalSympyTau(sympy.Symbol("tau"))
             >>> vec.elements
-            ([1, 2],)
+            (tau,)
         """
         return (self.tau,)
 
@@ -365,43 +330,41 @@ _coord_sympy_type = {
 
 
 def _is_type_safe(coordinates):
-    if not all(isinstance(coord, list) for coord in coordinates.values()):
-        raise TypeError("coordinates must be a list")
-    len_init = len(coordinates[next(iter(coordinates))])
-    if not all(len(x) == len_init for x in coordinates.values()):
-        raise TypeError("each list should be of the same length")
-    for _, value in coordinates.items():
-        if not all(issubclass(type(v), numbers.Real) for v in value) or any(
-            isinstance(v, bool) for v in value
-        ):
-            raise TypeError("coordinates must be int or float")
+    if not all(isinstance(coord, sympy.Symbol) for coord in coordinates.values()):
+        raise TypeError("coordinates must be a sympy symbol")
 
 
-def _toarrays(
-    result: tuple[ScalarCollection, ...] | ScalarCollection,
-) -> tuple[list[int | float], ...]:
-    """
-    Converts a tuple of values to a tuple of
-    ``sympy.tensor.array.ImmutableDenseNDimArray``s.
+def _replace_data(obj: typing.Any, result: typing.Any) -> typing.Any:
+    if not isinstance(result, VectorSympy):
+        raise TypeError(f"can only assign a single vector to {type(obj).__name__}")
 
-    Args:
-        result (tuple): A tuple of values to be converted.
+    if isinstance(result, (VectorSympy2D, VectorSympy3D, VectorSympy4D)):
+        if isinstance(obj.azimuthal, AzimuthalSympyXY):
+            obj.azimuthal = AzimuthalSympyXY(result.x, result.y)
+        elif isinstance(obj.azimuthal, AzimuthalSympyRhoPhi):
+            obj.azimuthal = AzimuthalSympyRhoPhi(result.rho, result.phi)
+        else:
+            raise AssertionError(type(obj))
 
-    Returns:
-        tuple: A tuple of ``sympy.tensor.array.ImmutableDenseNDimArray``.
-    """
-    istuple = True
-    if not isinstance(result, tuple):
-        istuple = False
-        result = (result,)
-    result = tuple(
-        x if isinstance(x, sympy.Array) else sympy.Array([x] * (len(result[0])))
-        for x in result
-    )
-    if istuple:
-        return result
-    else:
-        return result[0]
+    if isinstance(result, (VectorSympy3D, VectorSympy4D)):
+        if isinstance(obj.longitudinal, LongitudinalSympyZ):
+            obj.longitudinal = LongitudinalSympyZ(result.z)
+        elif isinstance(obj.longitudinal, LongitudinalSympyTheta):
+            obj.longitudinal = LongitudinalSympyTheta(result.theta)
+        elif isinstance(obj.longitudinal, LongitudinalSympyEta):
+            obj.longitudinal = LongitudinalSympyEta(result.eta)
+        else:
+            raise AssertionError(type(obj))
+
+    if isinstance(result, VectorSympy4D):
+        if isinstance(obj.temporal, TemporalSympyT):
+            obj.temporal = TemporalSympyT(result.t)
+        elif isinstance(obj.temporal, TemporalSympyTau):
+            obj.temporal = TemporalSympyTau(result.tau)
+        else:
+            raise AssertionError(type(obj))
+
+    return obj
 
 
 class VectorSympy(Vector):
@@ -409,72 +372,313 @@ class VectorSympy(Vector):
 
     lib = sympy
 
+    def __eq__(self, other: typing.Any) -> typing.Any:
+        return numpy.equal(self, other)  # type: ignore[call-overload]
 
-class VectorSympy2D(sympy.Array, VectorSympy, Planar, Vector2D):  # type: ignore[misc]
+    def __ne__(self, other: typing.Any) -> typing.Any:
+        return numpy.not_equal(self, other)  # type: ignore[call-overload]
+
+    def __abs__(self) -> float:
+        return numpy.absolute(self)
+
+    def __add__(self, other: VectorProtocol) -> VectorProtocol:
+        return numpy.add(self, other)  # type: ignore[call-overload]
+
+    def __radd__(self, other: VectorProtocol) -> VectorProtocol:
+        return numpy.add(other, self)  # type: ignore[call-overload]
+
+    def __iadd__(self: SameVectorType, other: VectorProtocol) -> SameVectorType:
+        return _replace_data(self, numpy.add(self, other))  # type: ignore[call-overload]
+
+    def __sub__(self, other: VectorProtocol) -> VectorProtocol:
+        return numpy.subtract(self, other)  # type: ignore[call-overload]
+
+    def __rsub__(self, other: VectorProtocol) -> VectorProtocol:
+        return numpy.subtract(other, self)  # type: ignore[call-overload]
+
+    def __isub__(self: SameVectorType, other: VectorProtocol) -> SameVectorType:
+        return _replace_data(self, numpy.subtract(self, other))  # type: ignore[call-overload]
+
+    def __mul__(self, other: float) -> VectorProtocol:
+        return numpy.multiply(self, other)  # type: ignore[call-overload]
+
+    def __rmul__(self, other: float) -> VectorProtocol:
+        return numpy.multiply(other, self)  # type: ignore[call-overload]
+
+    def __imul__(self: SameVectorType, other: float) -> SameVectorType:
+        return _replace_data(self, numpy.multiply(self, other))  # type: ignore[call-overload]
+
+    def __neg__(self: SameVectorType) -> SameVectorType:
+        return numpy.negative(self)  # type: ignore[call-overload]
+
+    def __pos__(self: SameVectorType) -> SameVectorType:
+        return numpy.positive(self)  # type: ignore[call-overload]
+
+    def __truediv__(self, other: float) -> VectorProtocol:
+        return numpy.true_divide(self, other)  # type: ignore[call-overload]
+
+    def __rtruediv__(self, other: float) -> VectorProtocol:
+        return numpy.true_divide(other, self)  # type: ignore[call-overload]
+
+    def __itruediv__(self: SameVectorType, other: float) -> VectorProtocol:
+        return _replace_data(self, numpy.true_divide(self, other))  # type: ignore[call-overload]
+
+    def __pow__(self, other: float) -> float:
+        return numpy.power(self, other)  # type: ignore[call-overload]
+
+    def __matmul__(self, other: VectorProtocol) -> float:
+        return numpy.matmul(self, other)  # type: ignore[call-overload]
+
+    def __array_ufunc__(
+        self,
+        ufunc: typing.Any,
+        method: typing.Any,
+        *inputs: typing.Any,
+        **kwargs: typing.Any,
+    ) -> typing.Any:
+        """
+        Implements NumPy's ``ufunc``s for ``VectorObject`` and its subclasses. The current
+        implementation includes ``numpy.absolute``, ``numpy.add``, ``numpy.subtract``,
+        ``numpy.multiply``, ``numpy.positive``, ``numpy.negative``, ``numpy.true_divide``,
+        ``numpy.power``, ``numpy.square``, ``numpy.sqrt``, ``numpy.cbrt``, ``numpy.matmul``,
+        ``numpy.equal``, and ``numpy.not_equal``.
+        """
+        if not isinstance(_handler_of(*inputs), VectorSympy):
+            # Let a higher-precedence backend handle it.
+            return NotImplemented
+
+        outputs = kwargs.get("out", ())
+        if any(not isinstance(x, VectorSympy) for x in outputs):
+            raise TypeError(
+                "ufunc operating on VectorObjects can only use the 'out' keyword "
+                "with another VectorObject"
+            )
+
+        if (
+            ufunc is numpy.absolute
+            and len(inputs) == 1
+            and isinstance(inputs[0], Vector)
+        ):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.absolute' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            if isinstance(inputs[0], Vector2D):
+                return inputs[0].rho
+            elif isinstance(inputs[0], Vector3D):
+                return inputs[0].mag
+            elif isinstance(inputs[0], Vector4D):
+                return inputs[0].tau
+
+        elif (
+            ufunc is numpy.add
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and isinstance(inputs[1], Vector)
+        ):
+            result = inputs[0].add(inputs[1])
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif (
+            ufunc is numpy.subtract
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and isinstance(inputs[1], Vector)
+        ):
+            result = inputs[0].subtract(inputs[1])
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif (
+            ufunc is numpy.multiply
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and not isinstance(inputs[1], Vector)
+        ):
+            result = inputs[0].scale(inputs[1])
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif (
+            ufunc is numpy.multiply
+            and len(inputs) == 2
+            and not isinstance(inputs[0], Vector)
+            and isinstance(inputs[1], Vector)
+        ):
+            result = inputs[1].scale(inputs[0])
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif (
+            ufunc is numpy.negative
+            and len(inputs) == 1
+            and isinstance(inputs[0], Vector)
+        ):
+            result = inputs[0].scale(-1)
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif (
+            ufunc is numpy.positive
+            and len(inputs) == 1
+            and isinstance(inputs[0], Vector)
+        ):
+            return inputs[0]
+
+        elif (
+            ufunc is numpy.true_divide
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and not isinstance(inputs[1], Vector)
+        ):
+            result = inputs[0].scale(1 / inputs[1])
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif (
+            ufunc is numpy.power
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and not isinstance(inputs[1], Vector)
+        ):
+            result = numpy.absolute(inputs[0]) ** inputs[1]
+            for output in outputs:
+                _replace_data(output, result)
+            return result
+
+        elif (
+            ufunc is numpy.square and len(inputs) == 1 and isinstance(inputs[0], Vector)
+        ):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.square' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            if isinstance(inputs[0], Vector2D):
+                return inputs[0].rho2
+            elif isinstance(inputs[0], Vector3D):
+                return inputs[0].mag2
+            elif isinstance(inputs[0], Vector4D):
+                return inputs[0].tau2
+
+        elif ufunc is numpy.sqrt and len(inputs) == 1 and isinstance(inputs[0], Vector):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.sqrt' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            if isinstance(inputs[0], Vector2D):
+                return inputs[0].rho2 ** 0.25
+            elif isinstance(inputs[0], Vector3D):
+                return inputs[0].mag2 ** 0.25
+            elif isinstance(inputs[0], Vector4D):
+                return inputs[0].tau2 ** 0.25
+
+        elif ufunc is numpy.cbrt and len(inputs) == 1 and isinstance(inputs[0], Vector):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.cbrt' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            if isinstance(inputs[0], Vector2D):
+                return inputs[0].rho2 ** 0.16666666666666666
+            elif isinstance(inputs[0], Vector3D):
+                return inputs[0].mag2 ** 0.16666666666666666
+            elif isinstance(inputs[0], Vector4D):
+                return inputs[0].tau2 ** 0.16666666666666666
+
+        elif (
+            ufunc is numpy.matmul
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and isinstance(inputs[1], Vector)
+        ):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.matmul' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            return inputs[0].dot(inputs[1])
+
+        elif (
+            ufunc is numpy.equal
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and isinstance(inputs[1], Vector)
+        ):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.equal' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            return inputs[0].equal(inputs[1])
+
+        elif (
+            ufunc is numpy.not_equal
+            and len(inputs) == 2
+            and isinstance(inputs[0], Vector)
+            and isinstance(inputs[1], Vector)
+        ):
+            if len(outputs) != 0:
+                raise TypeError(
+                    "output of 'numpy.equal' is scalar, cannot fill a VectorObject with 'out'"
+                )
+            return inputs[0].not_equal(inputs[1])
+
+        else:
+            return NotImplemented
+
+
+class VectorSympy2D(VectorSympy, Planar, Vector2D):  # type: ignore[misc]
     """
     Two dimensional vector class for the SymPy backend.
 
     Examples:
-        >>> import vector
-        >>> vec = vector.VectorSympy2D(x=[1, 2], y=[3, 4])
+        >>> import vector; import sympy
+        >>> vec = vector.VectorSympy2D(x=sympy.Symbol("x"), y=sympy.Symbol("y"))
         >>> vec.x, vec.y
-        ([1, 2], [3, 4])
-        >>> vec = vector.VectorSympy2D(rho=[1, 2], phi=[3, 4])
+        (x, y)
+        >>> vec = vector.VectorSympy2D(rho=sympy.Symbol("rho"), phi=sympy.Symbol("phi"))
         >>> vec.rho, vec.phi
-        ([1, 2], [3, 4])
-        >>> vec = vector.VectorObject2D(azimuthal=vector.backends.sympy.AzimuthalSympyXY([1, 2], [3, 4]))
+        (rho, phi)
+        >>> vec = vector.VectorObject2D(azimuthal=vector.backends.sympy.AzimuthalSympyXY(sympy.Symbol("x"), sympy.Symbol("y")))
         >>> vec.x, vec.y
-        ([1, 2], [3, 4])
+        (x, y)
 
     For two dimensional momentum SymPy vectors, see
     :class:`vector.backends.sympy.MomentumObject2D`.
     """
 
     ObjectClass = vector.backends.object.VectorObject2D
-    _IS_MOMENTUM = False
 
     __slots__ = ("azimuthal",)
     azimuthal: AzimuthalSympy
 
-    def __new__(
-        cls, azimuthal: AzimuthalSympy | None = None, **kwargs: typing.Any
-    ) -> sympy.Array:
+    def __init__(self, azimuthal: AzimuthalSympy | None = None, **kwargs: sympy.Symbol):
         for k, v in kwargs.copy().items():
             kwargs.pop(k)
             kwargs[_repr_momentum_to_generic.get(k, k)] = v
 
         if not kwargs and azimuthal is not None:
-            obj = super().__new__(
-                cls,
-                [[x, y] for x, y in zip(azimuthal.elements[0], azimuthal.elements[1])],
-            )
-            obj.azimuthal = azimuthal
+            self.azimuthal = azimuthal
         elif kwargs and azimuthal is None:
             _is_type_safe(kwargs)
             if set(kwargs) == {"x", "y"}:
-                obj = super().__new__(
-                    cls, [[x, y] for x, y in zip(kwargs["x"], kwargs["y"])]
-                )
-                obj.azimuthal = AzimuthalSympyXY(kwargs["x"], kwargs["y"])
+                self.azimuthal = AzimuthalSympyXY(kwargs["x"], kwargs["y"])
             elif set(kwargs) == {"rho", "phi"}:
-                obj = super().__new__(
-                    cls, [[rho, phi] for rho, phi in zip(kwargs["rho"], kwargs["phi"])]
-                )
-                obj.azimuthal = AzimuthalSympyRhoPhi(kwargs["rho"], kwargs["phi"])
+                self.azimuthal = AzimuthalSympyRhoPhi(kwargs["rho"], kwargs["phi"])
             else:
                 complaint = """unrecognized combination of coordinates, allowed combinations are:\n
                     x= y=
                     rho= phi=""".replace("                    ", "    ")
-                if not cls._IS_MOMENTUM:
+                if type(self) == VectorSympy2D:
                     raise TypeError(complaint)
                 else:
                     raise TypeError(f"{complaint}\n\nor their momentum equivalents")
         else:
             raise TypeError("must give Azimuthal if not giving keyword arguments")
-        return obj
-
-    def __init__(self, azimuthal: AzimuthalSympy | None = None, **kwargs):
-        super().__init__()
 
     def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
@@ -549,7 +753,6 @@ class VectorSympy2D(sympy.Array, VectorSympy, Planar, Vector2D):  # type: ignore
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
         ):
-            result = _toarrays(result)
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             return cls.ProjectionClass2D(azimuthal=azcoords)
 
@@ -561,7 +764,6 @@ class VectorSympy2D(sympy.Array, VectorSympy, Planar, Vector2D):  # type: ignore
             and isinstance(returns[1], type)
             and issubclass(returns[1], Longitudinal)
         ):
-            result = _toarrays(result)
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             lcoords = _coord_sympy_type[returns[1]](result[2])
             return cls.ProjectionClass3D(azimuthal=azcoords, longitudinal=lcoords)
@@ -575,7 +777,6 @@ class VectorSympy2D(sympy.Array, VectorSympy, Planar, Vector2D):  # type: ignore
             and isinstance(returns[2], type)
             and issubclass(returns[2], Temporal)
         ):
-            result = _toarrays(result)
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             lcoords = _coord_sympy_type[returns[1]](result[2])
             tcoords = _coord_sympy_type[returns[2]](result[3])
@@ -592,23 +793,22 @@ class MomentumSympy2D(PlanarMomentum, VectorSympy2D):
     Two dimensional momentum vector class for the SymPy backend.
 
     Examples:
-        >>> import vector
-        >>> vec = vector.MomentumSympy2D(px=[1, 2], py=[3, 4])
+        >>> import vector; import sympy
+        >>> vec = vector.MomentumSympy2D(px=sympy.Symbol("px"), py=sympy.Symbol("py"))
         >>> vec.px, vec.py
-        ([1, 2], [3, 4])
-        >>> vec = vector.MomentumSympy2D(pt=[1, 2], phi=[3, 4])
+        (px, py)
+        >>> vec = vector.MomentumSympy2D(pt=sympy.Symbol("pt"), phi=sympy.Symbol("phi"))
         >>> vec.pt, vec.phi
-        ([1, 2], [3, 4])
-        >>> vec = vector.MomentumSympy2D(azimuthal=vector.backends.sympy.AzimuthalSympyXY([1, 2], [3, 4]))
+        (pt, phi)
+        >>> vec = vector.MomentumSympy2D(azimuthal=vector.backends.sympy.AzimuthalSympyXY(sympy.Symbol("px"), sympy.Symbol("py")))
         >>> vec.px, vec.py
-        ([1, 2], [3, 4])
+        (px, py)
 
     For two dimensional SymPy vectors, see
     :class:`vector.backends.object.VectorSympy2D`.
     """
 
     ObjectClass = vector.backends.object.MomentumObject2D
-    _IS_MOMENTUM = True
 
     def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
@@ -653,131 +853,69 @@ class MomentumSympy2D(PlanarMomentum, VectorSympy2D):
         self.azimuthal = AzimuthalSympyRhoPhi(pt, self.phi)
 
 
-class VectorSympy3D(sympy.Array, VectorSympy, Spatial, Vector3D):
+class VectorSympy3D(VectorSympy, Spatial, Vector3D):
     """
     Three dimensional vector class for the SymPy backend.
 
     Examples:
-        >>> import vector
-        >>> vec = vector.VectorSympy3D(x=[1, 2], y=[3, 4], z=[5, 6])
+        >>> import vector; import sympy
+        >>> vec = vector.VectorSympy3D(x=sympy.Symbol("x"), y=sympy.Symbol("y"), z=sympy.Symbol("z"))
         >>> vec.x, vec.y, vec.z
-        ([1, 2], [3, 4], [5, 6])
-        >>> vec = vector.VectorSympy3D(rho=[1, 2], phi=[3, 4], eta=[5, 6])
+        (x, y, z)
+        >>> vec = vector.VectorSympy3D(rho=sympy.Symbol("rho"), phi=sympy.Symbol("phi"), eta=sympy.Symbol("eta"))
         >>> vec.rho, vec.phi, vec.eta
-        ([1, 2], [3, 4], [5, 6])
+        (rho, phi, eta)
         >>> vec = vector.VectorSympy3D(
-        ...     azimuthal=vector.backends.sympy.AzimuthalSympyXY([1, 2], [3, 4]),
-        ...     longitudinal=vector.backends.sympy.LongitudinalSympyTheta([5, 6])
+        ...     azimuthal=vector.backends.sympy.AzimuthalSympyXY(sympy.Symbol("x"), sympy.Symbol("y")),
+        ...     longitudinal=vector.backends.sympy.LongitudinalSympyTheta(sympy.Symbol("theta"))
         ... )
         >>> vec.x, vec.y, vec.theta
-        ([1, 2], [3, 4], [5, 6])
+        (x, y, theta)
 
     For three dimensional momentum SymPy vectors, see
     :class:`vector.backends.object.MomentumSympy3D`.
     """
 
     ObjectClass = vector.backends.object.VectorObject3D
-    _IS_MOMENTUM = False
 
     __slots__ = ("azimuthal", "longitudinal")
 
     azimuthal: AzimuthalSympy
     longitudinal: LongitudinalSympy
 
-    def __new__(
-        cls,
+    def __init__(
+        self,
         azimuthal: AzimuthalSympy | None = None,
         longitudinal: LongitudinalSympy | None = None,
-        **kwargs: float,
-    ) -> None:
+        **kwargs: sympy.Symbol,
+    ):
         for k, v in kwargs.copy().items():
             kwargs.pop(k)
             kwargs[_repr_momentum_to_generic.get(k, k)] = v
 
         if not kwargs and azimuthal is not None and longitudinal is not None:
-            obj = super().__new__(
-                cls,
-                [
-                    [x, y, z]
-                    for x, y, z in zip(
-                        azimuthal.elements[0],
-                        azimuthal.elements[1],
-                        longitudinal.elements[0],
-                    )
-                ],
-            )
-            obj.azimuthal = azimuthal
-            obj.longitudinal = longitudinal
+            self.azimuthal = azimuthal
+            self.longitudinal = longitudinal
         elif kwargs and azimuthal is None and longitudinal is None:
             _is_type_safe(kwargs)
             if set(kwargs) == {"x", "y", "z"}:
-                obj = super().__new__(
-                    cls,
-                    [
-                        [x, y, z]
-                        for x, y, z in zip(kwargs["x"], kwargs["y"], kwargs["z"])
-                    ],
-                )
-                obj.azimuthal = AzimuthalSympyXY(kwargs["x"], kwargs["y"])
-                obj.longitudinal = LongitudinalSympyZ(kwargs["z"])
+                self.azimuthal = AzimuthalSympyXY(kwargs["x"], kwargs["y"])
+                self.longitudinal = LongitudinalSympyZ(kwargs["z"])
             elif set(kwargs) == {"x", "y", "eta"}:
-                obj = super().__new__(
-                    cls,
-                    [
-                        [x, y, eta]
-                        for x, y, eta in zip(kwargs["x"], kwargs["y"], kwargs["eta"])
-                    ],
-                )
-                obj.azimuthal = AzimuthalSympyXY(kwargs["x"], kwargs["y"])
-                obj.longitudinal = LongitudinalSympyEta(kwargs["eta"])
+                self.azimuthal = AzimuthalSympyXY(kwargs["x"], kwargs["y"])
+                self.longitudinal = LongitudinalSympyEta(kwargs["eta"])
             elif set(kwargs) == {"x", "y", "theta"}:
-                obj = super().__new__(
-                    cls,
-                    [
-                        [x, y, theta]
-                        for x, y, theta in zip(
-                            kwargs["x"], kwargs["y"], kwargs["theta"]
-                        )
-                    ],
-                )
-                obj.azimuthal = AzimuthalSympyXY(kwargs["x"], kwargs["y"])
-                obj.longitudinal = LongitudinalSympyTheta(kwargs["theta"])
+                self.azimuthal = AzimuthalSympyXY(kwargs["x"], kwargs["y"])
+                self.longitudinal = LongitudinalSympyTheta(kwargs["theta"])
             elif set(kwargs) == {"rho", "phi", "z"}:
-                obj = super().__new__(
-                    cls,
-                    [
-                        [rho, phi, z]
-                        for rho, phi, z in zip(
-                            kwargs["rho"], kwargs["phi"], kwargs["z"]
-                        )
-                    ],
-                )
-                obj.azimuthal = AzimuthalSympyRhoPhi(kwargs["rho"], kwargs["phi"])
-                obj.longitudinal = LongitudinalSympyZ(kwargs["z"])
+                self.azimuthal = AzimuthalSympyRhoPhi(kwargs["rho"], kwargs["phi"])
+                self.longitudinal = LongitudinalSympyZ(kwargs["z"])
             elif set(kwargs) == {"rho", "phi", "eta"}:
-                obj = super().__new__(
-                    cls,
-                    [
-                        [rho, phi, eta]
-                        for rho, phi, eta in zip(
-                            kwargs["rho"], kwargs["phi"], kwargs["eta"]
-                        )
-                    ],
-                )
-                obj.azimuthal = AzimuthalSympyRhoPhi(kwargs["rho"], kwargs["phi"])
-                obj.longitudinal = LongitudinalSympyEta(kwargs["eta"])
+                self.azimuthal = AzimuthalSympyRhoPhi(kwargs["rho"], kwargs["phi"])
+                self.longitudinal = LongitudinalSympyEta(kwargs["eta"])
             elif set(kwargs) == {"rho", "phi", "theta"}:
-                obj = super().__new__(
-                    cls,
-                    [
-                        [rho, phi, theta]
-                        for rho, phi, theta in zip(
-                            kwargs["rho"], kwargs["phi"], kwargs["theta"]
-                        )
-                    ],
-                )
-                obj.azimuthal = AzimuthalSympyRhoPhi(kwargs["rho"], kwargs["phi"])
-                obj.longitudinal = LongitudinalSympyTheta(kwargs["theta"])
+                self.azimuthal = AzimuthalSympyRhoPhi(kwargs["rho"], kwargs["phi"])
+                self.longitudinal = LongitudinalSympyTheta(kwargs["theta"])
             else:
                 complaint = """unrecognized combination of coordinates, allowed combinations are:\n
                     x= y= z=
@@ -786,7 +924,7 @@ class VectorSympy3D(sympy.Array, VectorSympy, Spatial, Vector3D):
                     rho= phi= z=
                     rho= phi= theta=
                     rho= phi= eta=""".replace("                    ", "    ")
-                if not cls._IS_MOMENTUM:
+                if type(self) == VectorSympy3D:
                     raise TypeError(complaint)
                 else:
                     raise TypeError(f"{complaint}\n\nor their momentum equivalents")
@@ -794,15 +932,6 @@ class VectorSympy3D(sympy.Array, VectorSympy, Spatial, Vector3D):
             raise TypeError(
                 "must give Azimuthal and Longitudinal if not giving keyword arguments"
             )
-        return obj
-
-    def __init__(
-        self,
-        azimuthal: AzimuthalSympy | None = None,
-        longitudinal: LongitudinalSympy | None = None,
-        **kwargs: float,
-    ):
-        super().__init__()
 
     def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
@@ -850,7 +979,6 @@ class VectorSympy3D(sympy.Array, VectorSympy, Spatial, Vector3D):
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
         ):
-            result = _toarrays(result)
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             return cls.ProjectionClass3D(
                 azimuthal=azcoords, longitudinal=self.longitudinal
@@ -862,7 +990,6 @@ class VectorSympy3D(sympy.Array, VectorSympy, Spatial, Vector3D):
             and issubclass(returns[0], Azimuthal)
             and returns[1] is None
         ):
-            result = _toarrays(result)
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             return cls.ProjectionClass2D(azimuthal=azcoords)
 
@@ -874,7 +1001,6 @@ class VectorSympy3D(sympy.Array, VectorSympy, Spatial, Vector3D):
             and isinstance(returns[1], type)
             and issubclass(returns[1], Longitudinal)
         ):
-            result = _toarrays(result)
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             lcoords = _coord_sympy_type[returns[1]](result[2])
             return cls.ProjectionClass3D(azimuthal=azcoords, longitudinal=lcoords)
@@ -888,7 +1014,6 @@ class VectorSympy3D(sympy.Array, VectorSympy, Spatial, Vector3D):
             and isinstance(returns[2], type)
             and issubclass(returns[2], Temporal)
         ):
-            result = _toarrays(result)
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             lcoords = _coord_sympy_type[returns[1]](result[2])
             tcoords = _coord_sympy_type[returns[2]](result[3])
@@ -961,26 +1086,25 @@ class MomentumSympy3D(SpatialMomentum, VectorSympy3D):
     Three dimensional momentum vector class for the SymPy backend.
 
     Examples:
-        >>> import vector
-        >>> vec = vector.MomentumSympy3D(px=[1, 2], py=[3, 4], pz=[5, 6])
+        >>> import vector; import sympy
+        >>> vec = vector.MomentumSympy3D(px=sympy.Symbol("px"), py=sympy.Symbol("py"), pz=sympy.Symbol("pz"))
         >>> vec.px, vec.py, vec.pz
-        ([1, 2], [3, 4], [5, 6])
-        >>> vec = vector.MomentumSympy3D(pt=[1, 2], phi=[3, 4], pz=[5, 6])
+        (px, py, pz)
+        >>> vec = vector.MomentumSympy3D(pt=sympy.Symbol("pt"), phi=sympy.Symbol("phi"), pz=sympy.Symbol("pz"))
         >>> vec.pt, vec.phi, vec.pz
-        ([1, 2], [3, 4], [5, 6])
+        (pt, phi, pz)
         >>> vec = vector.MomentumSympy3D(
-        ...     azimuthal=vector.backends.sympy.AzimuthalSympyXY([1, 2], [3, 4]),
-        ...     longitudinal=vector.backends.sympy.LongitudinalSympyTheta([5, 6])
+        ...     azimuthal=vector.backends.sympy.AzimuthalSympyXY(sympy.Symbol("x"), sympy.Symbol("y")),
+        ...     longitudinal=vector.backends.sympy.LongitudinalSympyTheta(sympy.Symbol("theta"))
         ... )
         >>> vec.x, vec.y, vec.theta
-        ([1, 2], [3, 4], [5, 6])
+        (x, y, theta)
 
     For three dimensional SymPy vectors, see
     :class:`vector.backends.sympy.VectorSympy3D`.
     """
 
     ObjectClass = vector.backends.object.MomentumObject3D
-    _IS_MOMENTUM = True
 
     def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
@@ -1039,32 +1163,31 @@ class MomentumSympy3D(SpatialMomentum, VectorSympy3D):
         self.longitudinal = LongitudinalSympyZ(pz)
 
 
-class VectorSympy4D(sympy.Array, VectorSympy, Lorentz, Vector4D):
+class VectorSympy4D(VectorSympy, Lorentz, Vector4D):
     """
     Four dimensional vector class for the SymPy backend.
 
     Examples:
-        >>> import vector
-        >>> vec = vector.VectorSympy4D(x=[1, 2], y=[3, 4], z=[5, 6], t=[7, 8])
+        >>> import vector; import sympy
+        >>> vec = vector.VectorSympy4D(x=sympy.Symbol("x"), y=sympy.Symbol("y"), z=sympy.Symbol("z"), t=sympy.Symbol("t"))
         >>> vec.x, vec.y, vec.z, vec.t
-        ([1, 2], [3, 4], [5, 6], [7, 8])
-        >>> vec = vector.VectorSympy4D(rho=[1, 2], phi=[3, 4], eta=[5, 6], tau=[7, 8])
+        (x, y, z, t)
+        >>> vec = vector.VectorSympy4D(rho=sympy.Symbol("rho"), phi=sympy.Symbol("phi"), eta=sympy.Symbol("eta"), tau=sympy.Symbol("tau"))
         >>> vec.rho, vec.phi, vec.eta, vec.tau
-        ([1, 2], [3, 4], [5, 6], [7, 8])
+        (rho, phi, eta, tau)
         >>> vec = vector.VectorSympy4D(
-        ...     azimuthal=vector.backends.sympy.AzimuthalSympyXY([1, 2], [3, 4]),
-        ...     longitudinal=vector.backends.sympy.LongitudinalSympyTheta([5, 6]),
-        ...     temporal=vector.backends.sympy.TemporalSympyTau([7, 8])
+        ...     azimuthal=vector.backends.sympy.AzimuthalSympyXY(sympy.Symbol("x"), sympy.Symbol("y")),
+        ...     longitudinal=vector.backends.sympy.LongitudinalSympyTheta(sympy.Symbol("theta")),
+        ...     temporal=vector.backends.sympy.TemporalSympyTau(sympy.Symbol("tau"))
         ... )
         >>> vec.x, vec.y, vec.theta, vec.tau
-        ([1, 2], [3, 4], [5, 6], [7, 8])
+        (x, y, theta, tau)
 
     For four dimensional momentum SymPy vectors, see
     :class:`vector.backends.sympy.MomentumSympy4D`.
     """
 
     ObjectClass = vector.backends.object.VectorObject4D
-    _IS_MOMENTUM = False
 
     __slots__ = ("azimuthal", "longitudinal", "temporal")
 
@@ -1072,13 +1195,13 @@ class VectorSympy4D(sympy.Array, VectorSympy, Lorentz, Vector4D):
     longitudinal: LongitudinalSympy
     temporal: TemporalSympy
 
-    def __new__(
-        cls,
+    def __init__(
+        self,
         azimuthal: AzimuthalSympy | None = None,
         longitudinal: LongitudinalSympy | None = None,
         temporal: TemporalSympy | None = None,
-        **kwargs: float,
-    ) -> None:
+        **kwargs: sympy.Symbol,
+    ):
         for k, v in kwargs.copy().items():
             kwargs.pop(k)
             kwargs[_repr_momentum_to_generic.get(k, k)] = v
@@ -1089,179 +1212,59 @@ class VectorSympy4D(sympy.Array, VectorSympy, Lorentz, Vector4D):
             and longitudinal is not None
             and temporal is not None
         ):
-            obj = super().__new__(
-                cls,
-                [
-                    [x, y, z, t]
-                    for x, y, z, t in zip(
-                        azimuthal.elements[0],
-                        azimuthal.elements[1],
-                        longitudinal.elements[0],
-                        temporal.elements[0],
-                    )
-                ],
-            )
-            obj.azimuthal = azimuthal
-            obj.longitudinal = longitudinal
-            obj.temporal = temporal
+            self.azimuthal = azimuthal
+            self.longitudinal = longitudinal
+            self.temporal = temporal
         elif kwargs and azimuthal is None and longitudinal is None and temporal is None:
             _is_type_safe(kwargs)
             if set(kwargs) == {"x", "y", "z", "t"}:
-                obj = super().__new__(
-                    cls,
-                    [
-                        [x, y, z, t]
-                        for x, y, z, t in zip(
-                            kwargs["x"], kwargs["y"], kwargs["z"], kwargs["t"]
-                        )
-                    ],
-                )
-                obj.azimuthal = AzimuthalSympyXY(kwargs["x"], kwargs["y"])
-                obj.longitudinal = LongitudinalSympyZ(kwargs["z"])
-                obj.temporal = TemporalSympyT(kwargs["t"])
+                self.azimuthal = AzimuthalSympyXY(kwargs["x"], kwargs["y"])
+                self.longitudinal = LongitudinalSympyZ(kwargs["z"])
+                self.temporal = TemporalSympyT(kwargs["t"])
             elif set(kwargs) == {"x", "y", "eta", "t"}:
-                obj = super().__new__(
-                    cls,
-                    [
-                        [x, y, eta, t]
-                        for x, y, eta, t in zip(
-                            kwargs["x"], kwargs["y"], kwargs["eta"], kwargs["t"]
-                        )
-                    ],
-                )
-                obj.azimuthal = AzimuthalSympyXY(kwargs["x"], kwargs["y"])
-                obj.longitudinal = LongitudinalSympyEta(kwargs["eta"])
-                obj.temporal = TemporalSympyT(kwargs["t"])
+                self.azimuthal = AzimuthalSympyXY(kwargs["x"], kwargs["y"])
+                self.longitudinal = LongitudinalSympyEta(kwargs["eta"])
+                self.temporal = TemporalSympyT(kwargs["t"])
             elif set(kwargs) == {"x", "y", "theta", "t"}:
-                obj = super().__new__(
-                    cls,
-                    [
-                        [x, y, theta, t]
-                        for x, y, theta, t in zip(
-                            kwargs["x"], kwargs["y"], kwargs["theta"], kwargs["t"]
-                        )
-                    ],
-                )
-                obj.azimuthal = AzimuthalSympyXY(kwargs["x"], kwargs["y"])
-                obj.longitudinal = LongitudinalSympyTheta(kwargs["theta"])
-                obj.temporal = TemporalSympyT(kwargs["t"])
+                self.azimuthal = AzimuthalSympyXY(kwargs["x"], kwargs["y"])
+                self.longitudinal = LongitudinalSympyTheta(kwargs["theta"])
+                self.temporal = TemporalSympyT(kwargs["t"])
             elif set(kwargs) == {"rho", "phi", "z", "t"}:
-                obj = super().__new__(
-                    cls,
-                    [
-                        [rho, phi, z, t]
-                        for rho, phi, z, t in zip(
-                            kwargs["rho"], kwargs["phi"], kwargs["z"], kwargs["t"]
-                        )
-                    ],
-                )
-                obj.azimuthal = AzimuthalSympyRhoPhi(kwargs["rho"], kwargs["phi"])
-                obj.longitudinal = LongitudinalSympyZ(kwargs["z"])
-                obj.temporal = TemporalSympyT(kwargs["t"])
+                self.azimuthal = AzimuthalSympyRhoPhi(kwargs["rho"], kwargs["phi"])
+                self.longitudinal = LongitudinalSympyZ(kwargs["z"])
+                self.temporal = TemporalSympyT(kwargs["t"])
             elif set(kwargs) == {"rho", "phi", "eta", "t"}:
-                obj = super().__new__(
-                    cls,
-                    [
-                        [rho, phi, eta, t]
-                        for rho, phi, eta, t in zip(
-                            kwargs["rho"], kwargs["phi"], kwargs["eta"], kwargs["t"]
-                        )
-                    ],
-                )
-                obj.azimuthal = AzimuthalSympyRhoPhi(kwargs["rho"], kwargs["phi"])
-                obj.longitudinal = LongitudinalSympyEta(kwargs["eta"])
-                obj.temporal = TemporalSympyT(kwargs["t"])
+                self.azimuthal = AzimuthalSympyRhoPhi(kwargs["rho"], kwargs["phi"])
+                self.longitudinal = LongitudinalSympyEta(kwargs["eta"])
+                self.temporal = TemporalSympyT(kwargs["t"])
             elif set(kwargs) == {"rho", "phi", "theta", "t"}:
-                obj = super().__new__(
-                    cls,
-                    [
-                        [rho, phi, theta, t]
-                        for rho, phi, theta, t in zip(
-                            kwargs["rho"], kwargs["phi"], kwargs["theta"], kwargs["t"]
-                        )
-                    ],
-                )
-                obj.azimuthal = AzimuthalSympyRhoPhi(kwargs["rho"], kwargs["phi"])
-                obj.longitudinal = LongitudinalSympyTheta(kwargs["theta"])
-                obj.temporal = TemporalSympyT(kwargs["t"])
+                self.azimuthal = AzimuthalSympyRhoPhi(kwargs["rho"], kwargs["phi"])
+                self.longitudinal = LongitudinalSympyTheta(kwargs["theta"])
+                self.temporal = TemporalSympyT(kwargs["t"])
             elif set(kwargs) == {"x", "y", "z", "tau"}:
-                obj = super().__new__(
-                    cls,
-                    [
-                        [x, y, z, tau]
-                        for x, y, z, tau in zip(
-                            kwargs["x"], kwargs["y"], kwargs["z"], kwargs["tau"]
-                        )
-                    ],
-                )
-                obj.azimuthal = AzimuthalSympyXY(kwargs["x"], kwargs["y"])
-                obj.longitudinal = LongitudinalSympyZ(kwargs["z"])
-                obj.temporal = TemporalSympyTau(kwargs["tau"])
+                self.azimuthal = AzimuthalSympyXY(kwargs["x"], kwargs["y"])
+                self.longitudinal = LongitudinalSympyZ(kwargs["z"])
+                self.temporal = TemporalSympyTau(kwargs["tau"])
             elif set(kwargs) == {"x", "y", "eta", "tau"}:
-                obj = super().__new__(
-                    cls,
-                    [
-                        [x, y, eta, tau]
-                        for x, y, eta, tau in zip(
-                            kwargs["x"], kwargs["y"], kwargs["eta"], kwargs["tau"]
-                        )
-                    ],
-                )
-                obj.azimuthal = AzimuthalSympyXY(kwargs["x"], kwargs["y"])
-                obj.longitudinal = LongitudinalSympyEta(kwargs["eta"])
-                obj.temporal = TemporalSympyTau(kwargs["tau"])
+                self.azimuthal = AzimuthalSympyXY(kwargs["x"], kwargs["y"])
+                self.longitudinal = LongitudinalSympyEta(kwargs["eta"])
+                self.temporal = TemporalSympyTau(kwargs["tau"])
             elif set(kwargs) == {"x", "y", "theta", "tau"}:
-                obj = super().__new__(
-                    cls,
-                    [
-                        [x, y, theta, tau]
-                        for x, y, theta, tau in zip(
-                            kwargs["x"], kwargs["y"], kwargs["theta"], kwargs["tau"]
-                        )
-                    ],
-                )
-                obj.azimuthal = AzimuthalSympyXY(kwargs["x"], kwargs["y"])
-                obj.longitudinal = LongitudinalSympyTheta(kwargs["theta"])
-                obj.temporal = TemporalSympyTau(kwargs["tau"])
+                self.azimuthal = AzimuthalSympyXY(kwargs["x"], kwargs["y"])
+                self.longitudinal = LongitudinalSympyTheta(kwargs["theta"])
+                self.temporal = TemporalSympyTau(kwargs["tau"])
             elif set(kwargs) == {"rho", "phi", "z", "tau"}:
-                obj = super().__new__(
-                    cls,
-                    [
-                        [rho, phi, z, tau]
-                        for rho, phi, z, tau in zip(
-                            kwargs["rho"], kwargs["phi"], kwargs["z"], kwargs["tau"]
-                        )
-                    ],
-                )
-                obj.azimuthal = AzimuthalSympyRhoPhi(kwargs["rho"], kwargs["phi"])
-                obj.longitudinal = LongitudinalSympyZ(kwargs["z"])
-                obj.temporal = TemporalSympyTau(kwargs["tau"])
+                self.azimuthal = AzimuthalSympyRhoPhi(kwargs["rho"], kwargs["phi"])
+                self.longitudinal = LongitudinalSympyZ(kwargs["z"])
+                self.temporal = TemporalSympyTau(kwargs["tau"])
             elif set(kwargs) == {"rho", "phi", "eta", "tau"}:
-                obj = super().__new__(
-                    cls,
-                    [
-                        [rho, phi, eta, tau]
-                        for rho, phi, eta, tau in zip(
-                            kwargs["rho"], kwargs["phi"], kwargs["eta"], kwargs["tau"]
-                        )
-                    ],
-                )
-                obj.azimuthal = AzimuthalSympyRhoPhi(kwargs["rho"], kwargs["phi"])
-                obj.longitudinal = LongitudinalSympyEta(kwargs["eta"])
-                obj.temporal = TemporalSympyTau(kwargs["tau"])
+                self.azimuthal = AzimuthalSympyRhoPhi(kwargs["rho"], kwargs["phi"])
+                self.longitudinal = LongitudinalSympyEta(kwargs["eta"])
+                self.temporal = TemporalSympyTau(kwargs["tau"])
             elif set(kwargs) == {"rho", "phi", "theta", "tau"}:
-                obj = super().__new__(
-                    cls,
-                    [
-                        [rho, phi, theta, tau]
-                        for rho, phi, theta, tau in zip(
-                            kwargs["rho"], kwargs["phi"], kwargs["theta"], kwargs["tau"]
-                        )
-                    ],
-                )
-                obj.azimuthal = AzimuthalSympyRhoPhi(kwargs["rho"], kwargs["phi"])
-                obj.longitudinal = LongitudinalSympyTheta(kwargs["theta"])
-                obj.temporal = TemporalSympyTau(kwargs["tau"])
+                self.azimuthal = AzimuthalSympyRhoPhi(kwargs["rho"], kwargs["phi"])
+                self.longitudinal = LongitudinalSympyTheta(kwargs["theta"])
+                self.temporal = TemporalSympyTau(kwargs["tau"])
             else:
                 complaint = """unrecognized combination of coordinates, allowed combinations are:\n
                     x= y= z= tau=
@@ -1276,7 +1279,7 @@ class VectorSympy4D(sympy.Array, VectorSympy, Lorentz, Vector4D):
                     rho= phi= theta= tau=
                     rho= phi= eta= t=
                     rho= phi= eta= tau=""".replace("                    ", "    ")
-                if not cls._IS_MOMENTUM:
+                if type(self) == VectorSympy4D:
                     raise TypeError(complaint)
                 else:
                     raise TypeError(f"{complaint}\n\nor their momentum equivalents")
@@ -1284,16 +1287,6 @@ class VectorSympy4D(sympy.Array, VectorSympy, Lorentz, Vector4D):
             raise TypeError(
                 "must give Azimuthal, Longitudinal, and Temporal if not giving keyword arguments"
             )
-        return obj
-
-    def __init__(
-        self,
-        azimuthal: AzimuthalSympy | None = None,
-        longitudinal: LongitudinalSympy | None = None,
-        temporal: TemporalSympy | None = None,
-        **kwargs: float,
-    ):
-        super().__init__()
 
     def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
@@ -1347,7 +1340,6 @@ class VectorSympy4D(sympy.Array, VectorSympy, Lorentz, Vector4D):
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
         ):
-            result = _toarrays(result)
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             return cls.ProjectionClass4D(
                 azimuthal=azcoords,
@@ -1361,7 +1353,6 @@ class VectorSympy4D(sympy.Array, VectorSympy, Lorentz, Vector4D):
             and issubclass(returns[0], Azimuthal)
             and returns[1] is None
         ):
-            result = _toarrays(result)
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             return cls.ProjectionClass2D(azimuthal=azcoords)
 
@@ -1372,7 +1363,6 @@ class VectorSympy4D(sympy.Array, VectorSympy, Lorentz, Vector4D):
             and isinstance(returns[1], type)
             and issubclass(returns[1], Longitudinal)
         ):
-            result = _toarrays(result)
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             lcoords = _coord_sympy_type[returns[1]](result[2])
             return cls.ProjectionClass4D(
@@ -1387,7 +1377,6 @@ class VectorSympy4D(sympy.Array, VectorSympy, Lorentz, Vector4D):
             and issubclass(returns[1], Longitudinal)
             and returns[2] is None
         ):
-            result = _toarrays(result)
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             lcoords = _coord_sympy_type[returns[1]](result[2])
             return cls.ProjectionClass3D(azimuthal=azcoords, longitudinal=lcoords)
@@ -1401,7 +1390,6 @@ class VectorSympy4D(sympy.Array, VectorSympy, Lorentz, Vector4D):
             and isinstance(returns[2], type)
             and issubclass(returns[2], Temporal)
         ):
-            result = _toarrays(result)
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             lcoords = _coord_sympy_type[returns[1]](result[2])
             tcoords = _coord_sympy_type[returns[2]](result[3])
@@ -1490,20 +1478,20 @@ class MomentumSympy4D(LorentzMomentum, VectorSympy4D):
     Four dimensional momentum vector class for the SymPy backend.
 
     Examples:
-        >>> import vector
-        >>> vec = vector.MomentumSympy4D(px=[1, 2], py=[3, 4], pz=[5, 6], t=[7, 8])
+        >>> import vector; import sympy
+        >>> vec = vector.MomentumSympy4D(px=sympy.Symbol("px"), py=sympy.Symbol("py"), pz=sympy.Symbol("pz"), t=sympy.Symbol("t"))
         >>> vec.px, vec.py, vec.pz, vec.t
-        ([1, 2], [3, 4], [5, 6], [7, 8])
-        >>> vec = vector.MomentumSympy4D(pt=[1, 2], phi=[3, 4], pz=[5, 6], M=[7, 8])
+        (px, py, pz, t)
+        >>> vec = vector.MomentumSympy4D(pt=sympy.Symbol("pt"), phi=sympy.Symbol("phi"), pz=sympy.Symbol("pz"), M=sympy.Symbol("M"))
         >>> vec.pt, vec.phi, vec.pz, vec.M
-        ([1, 2], [3, 4], [5, 6], [7, 8])
+        (pt, phi, pz, M)
         >>> vec = vector.MomentumSympy4D(
-        ...     azimuthal=vector.backends.sympy.AzimuthalSympyXY([1, 2], [3, 4]),
-        ...     longitudinal=vector.backends.sympy.LongitudinalSympyTheta([5, 6]),
-        ...     temporal=vector.backends.sympy.TemporalSympyTau([7, 8])
+        ...     azimuthal=vector.backends.sympy.AzimuthalSympyXY(sympy.Symbol("x"), sympy.Symbol("y")),
+        ...     longitudinal=vector.backends.sympy.LongitudinalSympyTheta(sympy.Symbol("theta")),
+        ...     temporal=vector.backends.sympy.TemporalSympyTau(sympy.Symbol("tau"))
         ... )
         >>> vec.x, vec.y, vec.theta, vec.tau
-        ([1, 2], [3, 4], [5, 6], [7, 8])
+        (x, y, theta, tau)
 
     For four dimensional SymPy vectors, see
     :class:`vector.backends.sympy.VectorSympy4D`.
