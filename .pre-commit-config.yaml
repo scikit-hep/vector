@@ -39,6 +39,7 @@ repos:
         additional_dependencies:
           - numpy
           - packaging
+          - sympy
 
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.6

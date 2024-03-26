@@ -17,6 +17,7 @@ import numpy
 
 from vector._compute.planar import x, y
 from vector._compute.spatial import z
+from vector._lib import Lib
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
@@ -157,7 +158,7 @@ def dispatch(angle: typing.Any, v1: typing.Any, v2: typing.Any) -> typing.Any:
         return _handler_of(v2)._wrap_result(  # note: _handler_of(v2)
             _flavor_of(v2),  # note: _flavor_of(v2)
             function(
-                _lib_of(v1, v2),
+                Lib(_lib_of(v1, v2)),
                 angle,
                 *v1.azimuthal.elements,
                 *v1.longitudinal.elements,

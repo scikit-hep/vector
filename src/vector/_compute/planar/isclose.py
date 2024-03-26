@@ -16,6 +16,7 @@ import typing
 import numpy
 
 from vector._compute.planar import x, y
+from vector._lib import Lib
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
@@ -97,7 +98,7 @@ def dispatch(
         return _handler_of(v1, v2)._wrap_result(
             _flavor_of(v1, v2),
             function(
-                _lib_of(v1, v2),
+                Lib(_lib_of(v1, v2)),
                 rtol,
                 atol,
                 equal_nan,

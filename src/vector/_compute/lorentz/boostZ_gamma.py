@@ -17,6 +17,7 @@ import numpy
 
 from vector._compute.lorentz import t
 from vector._compute.spatial import z
+from vector._lib import Lib
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
@@ -219,7 +220,7 @@ def dispatch(gamma: typing.Any, v: typing.Any) -> typing.Any:
         return v._wrap_result(
             _flavor_of(v),
             function(
-                v.lib,
+                Lib(v.lib),
                 gamma,
                 *v.azimuthal.elements,
                 *v.longitudinal.elements,

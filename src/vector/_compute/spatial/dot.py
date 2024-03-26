@@ -17,6 +17,7 @@ import numpy
 
 from vector._compute.planar import x, y
 from vector._compute.spatial import theta, z
+from vector._lib import Lib
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
@@ -566,7 +567,7 @@ def dispatch(v1: typing.Any, v2: typing.Any) -> typing.Any:
         return _handler_of(v1, v2)._wrap_result(
             _flavor_of(v1, v2),
             function(
-                _lib_of(v1, v2),
+                Lib(_lib_of(v1, v2)),
                 *v1.azimuthal.elements,
                 *v1.longitudinal.elements,
                 *v2.azimuthal.elements,

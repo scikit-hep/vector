@@ -17,6 +17,7 @@ import typing
 import numpy
 
 from vector._compute.lorentz import Et2, t
+from vector._lib import Lib
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
@@ -115,7 +116,7 @@ def dispatch(v: typing.Any) -> typing.Any:
         return v._wrap_result(
             _flavor_of(v),
             function(
-                v.lib,
+                Lib(v.lib),
                 *v.azimuthal.elements,
                 *v.longitudinal.elements,
                 *v.temporal.elements,

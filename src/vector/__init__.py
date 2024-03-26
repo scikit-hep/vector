@@ -74,6 +74,7 @@ try:
     ) >= packaging.version.Version("2.0.0rc1")
 except importlib.metadata.PackageNotFoundError:
     _is_awkward_v2 = None
+
 try:
     import awkward
 
@@ -84,6 +85,23 @@ except ImportError:
         VectorAwkward = None
 else:
     from vector.backends.awkward import VectorAwkward
+
+try:
+    import sympy
+except ImportError:
+    sympy = None  # type: ignore[assignment]
+    if not typing.TYPE_CHECKING:
+        VectorSympy = None
+else:
+    from vector.backends.sympy import (
+        MomentumSympy2D,
+        MomentumSympy3D,
+        MomentumSympy4D,
+        VectorSympy,
+        VectorSympy2D,
+        VectorSympy3D,
+        VectorSympy4D,
+    )
 
 
 __all__: tuple[str, ...] = (
@@ -104,6 +122,9 @@ __all__: tuple[str, ...] = (
     "MomentumObject2D",
     "MomentumObject3D",
     "MomentumObject4D",
+    "MomentumSympy2D",
+    "MomentumSympy3D",
+    "MomentumSympy4D",
     "Planar",
     "Spatial",
     "Temporal",
@@ -122,6 +143,10 @@ __all__: tuple[str, ...] = (
     "VectorObject2D",
     "VectorObject3D",
     "VectorObject4D",
+    "VectorSympy",
+    "VectorSympy2D",
+    "VectorSympy3D",
+    "VectorSympy4D",
     "__version__",
     "arr",
     "array",
