@@ -1,13 +1,12 @@
 from __future__ import annotations
 
+import types
 import typing
 
 from vector._typeutils import FloatArray
 
 if typing.TYPE_CHECKING:
     import sympy
-
-import types
 
 
 class Lib:
