@@ -16,6 +16,7 @@ import typing
 import numpy
 
 from vector._compute.spatial import dot, mag
+from vector._lib import Lib
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
@@ -72,7 +73,7 @@ def dispatch(tolerance: typing.Any, v1: typing.Any, v2: typing.Any) -> typing.An
         return _handler_of(v1, v2)._wrap_result(
             _flavor_of(v1, v2),
             function(
-                _lib_of(v1, v2),
+                Lib(_lib_of(v1, v2)),
                 tolerance,
                 *v1.azimuthal.elements,
                 *v1.longitudinal.elements,
