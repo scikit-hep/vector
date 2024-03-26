@@ -112,11 +112,16 @@ class Lib:
         else:
             return self.lib.isclose(val1, val2, *args)
 
-    # fix these
     def copysign(
         self, val1: FloatArray | sympy.Symbol, val2: FloatArray | sympy.Symbol
     ) -> FloatArray | sympy.Symbol:
-        return self.lib.copysign(val1, val2)
+        if self.lib.__name__ == "sympy":
+            return val1
+        else:
+            return self.lib.copysign(val1, val2)
 
     def sign(self, val: FloatArray | sympy.Symbol) -> FloatArray | sympy.Symbol:
-        return self.lib.sign(val)
+        if self.lib.__name__ == "sympy":
+            return val
+        else:
+            return self.lib.sign(val)
