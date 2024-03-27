@@ -340,7 +340,7 @@ class VectorProtocol:
         Converts to $\rho$-$\phi$-$\theta$ coordinates, possibly eliminating or
         imputing dimensions with a projection.
 
-        The thetaz$ coordinate can be passed as a named argument.
+        The $theta$ coordinate can be passed as a named argument.
         """
         raise AssertionError
 
@@ -2856,8 +2856,8 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_ptphipz(self, *, z: float | FloatArray = 0.0) -> VectorProtocolSpatial:
-        return self.to_rhophiz(z=z)
+    def to_ptphipz(self, *, pz: float | FloatArray = 0.0) -> VectorProtocolSpatial:
+        return self.to_rhophiz(z=pz)
 
     def to_ptphitheta(
         self, *, theta: float | FloatArray = 0.0
