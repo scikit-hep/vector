@@ -11,6 +11,7 @@ from contextlib import suppress
 import vector
 from vector._typeutils import (
     BoolCollection,
+    FloatArray,
     ScalarCollection,
     TransformProtocol2D,
     TransformProtocol3D,
@@ -275,6 +276,8 @@ class VectorProtocol:
         """
         Converts to $x$-$y$-$z$ coordinates, possibly eliminating or imputing
         dimensions with a projection.
+
+        The $z$ coordinate can be passed as a named argument.
         """
         raise AssertionError
 
@@ -282,6 +285,8 @@ class VectorProtocol:
         r"""
         Converts to $x$-$y$-$\theta$ coordinates, possibly eliminating or imputing
         dimensions with a projection.
+
+        The $theta$ coordinate can be passed as a named argument.
         """
         raise AssertionError
 
@@ -289,6 +294,8 @@ class VectorProtocol:
         r"""
         Converts to $x$-$y$-$\eta$ coordinates, possibly eliminating or imputing
         dimensions with a projection.
+
+        The $eta$ coordinate can be passed as a named argument.
         """
         raise AssertionError
 
@@ -296,6 +303,8 @@ class VectorProtocol:
         """
         Converts to $px$-$py$-$pz$ coordinates, possibly eliminating or imputing
         dimensions with a projection.
+
+        The $pz$ coordinate can be passed as a named argument.
         """
         raise AssertionError
 
@@ -303,6 +312,8 @@ class VectorProtocol:
         r"""
         Converts to $px$-$py$-$\theta$ coordinates, possibly eliminating or imputing
         dimensions with a projection.
+
+        The $theta$ coordinate can be passed as a named argument.
         """
         raise AssertionError
 
@@ -310,6 +321,8 @@ class VectorProtocol:
         r"""
         Converts to $px$-$py$-$\eta$ coordinates, possibly eliminating or imputing
         dimensions with a projection.
+
+        The $eta$ coordinate can be passed as a named argument.
         """
         raise AssertionError
 
@@ -317,6 +330,8 @@ class VectorProtocol:
         r"""
         Converts to $\rho$-$\phi$-$z$ coordinates, possibly eliminating or imputing
         dimensions with a projection.
+
+        The $z$ coordinate can be passed as a named argument.
         """
         raise AssertionError
 
@@ -324,6 +339,8 @@ class VectorProtocol:
         r"""
         Converts to $\rho$-$\phi$-$\theta$ coordinates, possibly eliminating or
         imputing dimensions with a projection.
+
+        The $theta$ coordinate can be passed as a named argument.
         """
         raise AssertionError
 
@@ -331,6 +348,8 @@ class VectorProtocol:
         r"""
         Converts to $\rho$-$\phi$-$\eta$ coordinates, possibly eliminating or
         imputing dimensions with a projection.
+
+        The $eta$ coordinate can be passed as a named argument.
         """
         raise AssertionError
 
@@ -338,6 +357,8 @@ class VectorProtocol:
         r"""
         Converts to $pt$-$\phi$-$pz$ coordinates, possibly eliminating or imputing
         dimensions with a projection.
+
+        The $pz$ coordinate can be passed as a named argument.
         """
         raise AssertionError
 
@@ -345,6 +366,8 @@ class VectorProtocol:
         r"""
         Converts to $pt$-$\phi$-$\theta$ coordinates, possibly eliminating or
         imputing dimensions with a projection.
+
+        The $theta$ coordinate can be passed as a named argument.
         """
         raise AssertionError
 
@@ -352,6 +375,8 @@ class VectorProtocol:
         r"""
         Converts to $pt$-$\phi$-$\eta$ coordinates, possibly eliminating or
         imputing dimensions with a projection.
+
+        The $eta$ coordinate can be passed as a named argument.
         """
         raise AssertionError
 
@@ -359,6 +384,8 @@ class VectorProtocol:
         """
         Converts to $x$-$y$-$z$-$t$ coordinates, possibly imputing dimensions with
         a projection.
+
+        The $z$ and $t$ coordinates can be passed as a named argument.
         """
         raise AssertionError
 
@@ -366,6 +393,8 @@ class VectorProtocol:
         r"""
         Converts to $x$-$y$-$z$-$\tau$ coordinates, possibly imputing dimensions
         with a projection.
+
+        The $z$ and $tau$ coordinates can be passed as a named argument.
         """
         raise AssertionError
 
@@ -373,6 +402,8 @@ class VectorProtocol:
         r"""
         Converts to $x$-$y$-$\theta$-$t$ coordinates, possibly imputing dimensions
         with a projection.
+
+        The $theta$ and $t$ coordinates can be passed as a named argument.
         """
         raise AssertionError
 
@@ -380,6 +411,8 @@ class VectorProtocol:
         r"""
         Converts to $x$-$y$-$\theta$-$\tau$ coordinates, possibly imputing
         dimensions with a projection.
+
+        The $theta$ and $tau$ coordinates can be passed as a named argument.
         """
         raise AssertionError
 
@@ -387,6 +420,8 @@ class VectorProtocol:
         r"""
         Converts to $x$-$y$-$\eta$-$t$ coordinates, possibly imputing dimensions
         with a projection.
+
+        The $eta$ and $t$ coordinates can be passed as a named argument.
         """
         raise AssertionError
 
@@ -394,6 +429,8 @@ class VectorProtocol:
         r"""
         Converts to $x$-$y$-$\eta$-$\tau$ coordinates, possibly imputing dimensions
         with a projection.
+
+        The $eta$ and $tau$ coordinates can be passed as a named argument.
         """
         raise AssertionError
 
@@ -401,6 +438,8 @@ class VectorProtocol:
         r"""
         Converts to $px$-$py$-$pz$-$energy$ coordinates, possibly imputing dimensions
         with a projection.
+
+        The $pz$ and $energy$ coordinates can be passed as a named argument.
         """
         raise AssertionError
 
@@ -408,6 +447,8 @@ class VectorProtocol:
         r"""
         Converts to $px$-$py$-$\theta$-$energy$ coordinates, possibly imputing
         dimensions with a projection.
+
+        The $theta$ and $energy$ coordinates can be passed as a named argument.
         """
         raise AssertionError
 
@@ -415,6 +456,8 @@ class VectorProtocol:
         r"""
         Converts to $px$-$py$-$\eta$-$energy$ coordinates, possibly imputing dimensions
         with a projection.
+
+        The $eta$ and $energy$ coordinates can be passed as a named argument.
         """
         raise AssertionError
 
@@ -422,6 +465,8 @@ class VectorProtocol:
         r"""
         Converts to $px$-$py$-$pz$-$mass$ coordinates, possibly imputing dimensions
         with a projection.
+
+        The $pz$ and $mass$ coordinates can be passed as a named argument.
         """
         raise AssertionError
 
@@ -429,6 +474,8 @@ class VectorProtocol:
         r"""
         Converts to $px$-$py$-$\theta$-$energy$ coordinates, possibly imputing dimensions
         with a projection.
+
+        The $theta$ and $mass$ coordinates can be passed as a named argument.
         """
         raise AssertionError
 
@@ -436,6 +483,8 @@ class VectorProtocol:
         r"""
         Converts to $px$-$py$-$\eta$-$mass$ coordinates, possibly imputing dimensions
         with a projection.
+
+        The $eta$ and $mass$ coordinates can be passed as a named argument.
         """
         raise AssertionError
 
@@ -443,6 +492,8 @@ class VectorProtocol:
         r"""
         Converts to $\rho$-$\phi$-$z$-$t$ coordinates, possibly imputing dimensions
         with a projection.
+
+        The $z$ and $t$ coordinates can be passed as a named argument.
         """
         raise AssertionError
 
@@ -450,6 +501,8 @@ class VectorProtocol:
         r"""
         Converts to $\rho$-$\phi$-$z$-$\tau$ coordinates, possibly imputing
         dimensions with a projection.
+
+        The $z$ and $tau$ coordinates can be passed as a named argument.
         """
         raise AssertionError
 
@@ -457,6 +510,8 @@ class VectorProtocol:
         r"""
         Converts to $\rho$-$\phi$-$\theta$-$t$ coordinates, possibly imputing
         dimensions with a projection.
+
+        The $theta$ and $t$ coordinates can be passed as a named argument.
         """
         raise AssertionError
 
@@ -464,6 +519,8 @@ class VectorProtocol:
         r"""
         Converts to $\rho$-$\phi$-$\theta$-$\tau$ coordinates, possibly imputing
         dimensions with a projection.
+
+        The $theta$ and $tau$ coordinates can be passed as a named argument.
         """
         raise AssertionError
 
@@ -471,6 +528,8 @@ class VectorProtocol:
         r"""
         Converts to $\rho$-$\phi$-$\eta$-$t$ coordinates, possibly imputing
         dimensions with a projection.
+
+        The $eta$ and $t$ coordinates can be passed as a named argument.
         """
         raise AssertionError
 
@@ -478,6 +537,8 @@ class VectorProtocol:
         r"""
         Converts to $\rho$-$\phi$-$\eta$-$\tau$ coordinates, possibly imputing
         dimensions with a projection.
+
+        The $eta$ and $tau$ coordinates can be passed as a named argument.
         """
         raise AssertionError
 
@@ -485,6 +546,8 @@ class VectorProtocol:
         r"""
         Converts to $pt$-$\phi$-$pz$-$energy$ coordinates, possibly imputing dimensions
         with a projection.
+
+        The $pz$ and $energy$ coordinates can be passed as a named argument.
         """
         raise AssertionError
 
@@ -492,6 +555,8 @@ class VectorProtocol:
         r"""
         Converts to $pt$-$\phi$-$\theta$-$energy$ coordinates, possibly imputing
         dimensions with a projection.
+
+        The $theta$ and $energy$ coordinates can be passed as a named argument.
         """
         raise AssertionError
 
@@ -499,6 +564,8 @@ class VectorProtocol:
         r"""
         Converts to $pt$-$\phi$-$\eta$-$energy$ coordinates, possibly imputing dimensions
         with a projection.
+
+        The $eta$ and $energy$ coordinates can be passed as a named argument.
         """
         raise AssertionError
 
@@ -506,6 +573,8 @@ class VectorProtocol:
         r"""
         Converts to $pt$-$\phi$-$pz$-$mass$ coordinates, possibly imputing dimensions
         with a projection.
+
+        The $pz$ and $mass$ coordinates can be passed as a named argument.
         """
         raise AssertionError
 
@@ -513,6 +582,8 @@ class VectorProtocol:
         r"""
         Converts to $pt$-$\phi$-$\theta$-$mass$ coordinates, possibly imputing dimensions
         with a projection.
+
+        The $theta$ and $mass$ coordinates can be passed as a named argument.
         """
         raise AssertionError
 
@@ -520,6 +591,8 @@ class VectorProtocol:
         r"""
         Converts to $pt$-$\phi$-$\theta$-$mass$ coordinates, possibly imputing dimensions
         with a projection.
+
+        The $eta$ and $mass$ coordinates can be passed as a named argument.
         """
         raise AssertionError
 
@@ -2688,10 +2761,10 @@ class Vector(VectorProtocol):
     def to_ptphi(self) -> VectorProtocolPlanar:
         return self.to_rhophi()
 
-    def to_xyz(self) -> VectorProtocolSpatial:
+    def to_xyz(self, *, z: float | FloatArray = 0.0) -> VectorProtocolSpatial:
         from vector._compute import planar, spatial
 
-        lcoord = 0
+        lcoord = z
         if isinstance(self, (Vector3D, Vector4D)):
             lcoord = spatial.z.dispatch(self)
 
@@ -2702,10 +2775,10 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_xytheta(self) -> VectorProtocolSpatial:
+    def to_xytheta(self, *, theta: float | FloatArray = 0.0) -> VectorProtocolSpatial:
         from vector._compute import planar, spatial
 
-        lcoord = 0
+        lcoord = theta
         if isinstance(self, (Vector3D, Vector4D)):
             lcoord = spatial.theta.dispatch(self)
 
@@ -2716,10 +2789,10 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_xyeta(self) -> VectorProtocolSpatial:
+    def to_xyeta(self, *, eta: float | FloatArray = 0.0) -> VectorProtocolSpatial:
         from vector._compute import planar, spatial
 
-        lcoord = 0
+        lcoord = eta
         if isinstance(self, (Vector3D, Vector4D)):
             lcoord = spatial.eta.dispatch(self)
 
@@ -2730,19 +2803,19 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_pxpypz(self) -> VectorProtocolSpatial:
-        return self.to_xyz()
+    def to_pxpypz(self, *, pz: float | FloatArray = 0.0) -> VectorProtocolSpatial:
+        return self.to_xyz(z=pz)
 
-    def to_pxpytheta(self) -> VectorProtocolSpatial:
-        return self.to_xytheta()
+    def to_pxpytheta(self, *, theta: float | FloatArray = 0.0) -> VectorProtocolSpatial:
+        return self.to_xytheta(theta=theta)
 
-    def to_pxpyeta(self) -> VectorProtocolSpatial:
-        return self.to_xyeta()
+    def to_pxpyeta(self, *, eta: float | FloatArray = 0.0) -> VectorProtocolSpatial:
+        return self.to_xyeta(eta=eta)
 
-    def to_rhophiz(self) -> VectorProtocolSpatial:
+    def to_rhophiz(self, *, z: float | FloatArray = 0.0) -> VectorProtocolSpatial:
         from vector._compute import planar, spatial
 
-        lcoord = 0
+        lcoord = z
         if isinstance(self, (Vector3D, Vector4D)):
             lcoord = spatial.z.dispatch(self)
 
@@ -2753,10 +2826,12 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_rhophitheta(self) -> VectorProtocolSpatial:
+    def to_rhophitheta(
+        self, *, theta: float | FloatArray = 0.0
+    ) -> VectorProtocolSpatial:
         from vector._compute import planar, spatial
 
-        lcoord = 0
+        lcoord = theta
         if isinstance(self, (Vector3D, Vector4D)):
             lcoord = spatial.theta.dispatch(self)
 
@@ -2767,10 +2842,10 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_rhophieta(self) -> VectorProtocolSpatial:
+    def to_rhophieta(self, *, eta: float | FloatArray = 0.0) -> VectorProtocolSpatial:
         from vector._compute import planar, spatial
 
-        lcoord = 0
+        lcoord = eta
         if isinstance(self, (Vector3D, Vector4D)):
             lcoord = spatial.eta.dispatch(self)
 
@@ -2781,22 +2856,26 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_ptphipz(self) -> VectorProtocolSpatial:
-        return self.to_rhophiz()
+    def to_ptphipz(self, *, pz: float | FloatArray = 0.0) -> VectorProtocolSpatial:
+        return self.to_rhophiz(z=pz)
 
-    def to_ptphitheta(self) -> VectorProtocolSpatial:
-        return self.to_rhophitheta()
+    def to_ptphitheta(
+        self, *, theta: float | FloatArray = 0.0
+    ) -> VectorProtocolSpatial:
+        return self.to_rhophitheta(theta=theta)
 
-    def to_ptphieta(self) -> VectorProtocolSpatial:
-        return self.to_rhophieta()
+    def to_ptphieta(self, *, eta: float | FloatArray = 0.0) -> VectorProtocolSpatial:
+        return self.to_rhophieta(eta=eta)
 
-    def to_xyzt(self) -> VectorProtocolLorentz:
+    def to_xyzt(
+        self, *, z: float | FloatArray = 0.0, t: float | FloatArray = 0.0
+    ) -> VectorProtocolLorentz:
         from vector._compute import lorentz, planar, spatial
 
-        lcoord = 0
+        lcoord = z
         if isinstance(self, (Vector3D, Vector4D)):
             lcoord = spatial.z.dispatch(self)
-        tcoord = 0
+        tcoord = t
         if isinstance(self, Vector4D):
             tcoord = lorentz.t.dispatch(self)
 
@@ -2807,13 +2886,15 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_xyztau(self) -> VectorProtocolLorentz:
+    def to_xyztau(
+        self, *, z: float | FloatArray = 0.0, tau: float | FloatArray = 0.0
+    ) -> VectorProtocolLorentz:
         from vector._compute import lorentz, planar, spatial
 
-        lcoord = 0
+        lcoord = z
         if isinstance(self, (Vector3D, Vector4D)):
             lcoord = spatial.z.dispatch(self)
-        tcoord = 0
+        tcoord = tau
         if isinstance(self, Vector4D):
             tcoord = lorentz.tau.dispatch(self)
 
@@ -2824,13 +2905,15 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_xythetat(self) -> VectorProtocolLorentz:
+    def to_xythetat(
+        self, *, theta: float | FloatArray = 0.0, t: float | FloatArray = 0.0
+    ) -> VectorProtocolLorentz:
         from vector._compute import lorentz, planar, spatial
 
-        lcoord = 0
+        lcoord = theta
         if isinstance(self, (Vector3D, Vector4D)):
             lcoord = spatial.theta.dispatch(self)
-        tcoord = 0
+        tcoord = t
         if isinstance(self, Vector4D):
             tcoord = lorentz.t.dispatch(self)
 
@@ -2841,13 +2924,15 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_xythetatau(self) -> VectorProtocolLorentz:
+    def to_xythetatau(
+        self, *, theta: float | FloatArray = 0.0, tau: float | FloatArray = 0.0
+    ) -> VectorProtocolLorentz:
         from vector._compute import lorentz, planar, spatial
 
-        lcoord = 0
+        lcoord = theta
         if isinstance(self, (Vector3D, Vector4D)):
             lcoord = spatial.theta.dispatch(self)
-        tcoord = 0
+        tcoord = tau
         if isinstance(self, Vector4D):
             tcoord = lorentz.tau.dispatch(self)
 
@@ -2858,13 +2943,15 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_xyetat(self) -> VectorProtocolLorentz:
+    def to_xyetat(
+        self, *, eta: float | FloatArray = 0.0, t: float | FloatArray = 0.0
+    ) -> VectorProtocolLorentz:
         from vector._compute import lorentz, planar, spatial
 
-        lcoord = 0
+        lcoord = eta
         if isinstance(self, (Vector3D, Vector4D)):
             lcoord = spatial.eta.dispatch(self)
-        tcoord = 0
+        tcoord = t
         if isinstance(self, Vector4D):
             tcoord = lorentz.t.dispatch(self)
 
@@ -2875,13 +2962,15 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_xyetatau(self) -> VectorProtocolLorentz:
+    def to_xyetatau(
+        self, *, eta: float | FloatArray = 0.0, tau: float | FloatArray = 0.0
+    ) -> VectorProtocolLorentz:
         from vector._compute import lorentz, planar, spatial
 
-        lcoord = 0
+        lcoord = eta
         if isinstance(self, (Vector3D, Vector4D)):
             lcoord = spatial.eta.dispatch(self)
-        tcoord = 0
+        tcoord = tau
         if isinstance(self, Vector4D):
             tcoord = lorentz.tau.dispatch(self)
 
@@ -2892,31 +2981,45 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_pxpypzenergy(self) -> VectorProtocolLorentz:
-        return self.to_xyzt()
+    def to_pxpypzenergy(
+        self, *, pz: float | FloatArray = 0.0, energy: float | FloatArray = 0.0
+    ) -> VectorProtocolLorentz:
+        return self.to_xyzt(z=pz, t=energy)
 
-    def to_pxpythetaenergy(self) -> VectorProtocolLorentz:
-        return self.to_xythetat()
+    def to_pxpythetaenergy(
+        self, *, theta: float | FloatArray = 0.0, energy: float | FloatArray = 0.0
+    ) -> VectorProtocolLorentz:
+        return self.to_xythetat(theta=theta, t=energy)
 
-    def to_pxpyetaenergy(self) -> VectorProtocolLorentz:
-        return self.to_xyetat()
+    def to_pxpyetaenergy(
+        self, *, eta: float | FloatArray = 0.0, energy: float | FloatArray = 0.0
+    ) -> VectorProtocolLorentz:
+        return self.to_xyetat(eta=eta, t=energy)
 
-    def to_pxpypzmass(self) -> VectorProtocolLorentz:
-        return self.to_xyztau()
+    def to_pxpypzmass(
+        self, *, pz: float | FloatArray = 0.0, mass: float | FloatArray = 0.0
+    ) -> VectorProtocolLorentz:
+        return self.to_xyztau(z=pz, tau=mass)
 
-    def to_pxpythetamass(self) -> VectorProtocolLorentz:
-        return self.to_xythetatau()
+    def to_pxpythetamass(
+        self, *, theta: float | FloatArray = 0.0, mass: float | FloatArray = 0.0
+    ) -> VectorProtocolLorentz:
+        return self.to_xythetatau(theta=theta, tau=mass)
 
-    def to_pxpyetamass(self) -> VectorProtocolLorentz:
-        return self.to_xyetatau()
+    def to_pxpyetamass(
+        self, *, eta: float | FloatArray = 0.0, mass: float | FloatArray = 0.0
+    ) -> VectorProtocolLorentz:
+        return self.to_xyetatau(eta=eta, tau=mass)
 
-    def to_rhophizt(self) -> VectorProtocolLorentz:
+    def to_rhophizt(
+        self, *, z: float | FloatArray = 0.0, t: float | FloatArray = 0.0
+    ) -> VectorProtocolLorentz:
         from vector._compute import lorentz, planar, spatial
 
-        lcoord = 0
+        lcoord = z
         if isinstance(self, (Vector3D, Vector4D)):
             lcoord = spatial.z.dispatch(self)
-        tcoord = 0
+        tcoord = t
         if isinstance(self, Vector4D):
             tcoord = lorentz.t.dispatch(self)
 
@@ -2927,13 +3030,15 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_rhophiztau(self) -> VectorProtocolLorentz:
+    def to_rhophiztau(
+        self, *, z: float | FloatArray = 0.0, tau: float | FloatArray = 0.0
+    ) -> VectorProtocolLorentz:
         from vector._compute import lorentz, planar, spatial
 
-        lcoord = 0
+        lcoord = z
         if isinstance(self, (Vector3D, Vector4D)):
             lcoord = spatial.z.dispatch(self)
-        tcoord = 0
+        tcoord = tau
         if isinstance(self, Vector4D):
             tcoord = lorentz.tau.dispatch(self)
 
@@ -2944,13 +3049,15 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_rhophithetat(self) -> VectorProtocolLorentz:
+    def to_rhophithetat(
+        self, *, theta: float | FloatArray = 0.0, t: float | FloatArray = 0.0
+    ) -> VectorProtocolLorentz:
         from vector._compute import lorentz, planar, spatial
 
-        lcoord = 0
+        lcoord = theta
         if isinstance(self, (Vector3D, Vector4D)):
             lcoord = spatial.theta.dispatch(self)
-        tcoord = 0
+        tcoord = t
         if isinstance(self, Vector4D):
             tcoord = lorentz.t.dispatch(self)
 
@@ -2961,13 +3068,15 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_rhophithetatau(self) -> VectorProtocolLorentz:
+    def to_rhophithetatau(
+        self, *, theta: float | FloatArray = 0.0, tau: float | FloatArray = 0.0
+    ) -> VectorProtocolLorentz:
         from vector._compute import lorentz, planar, spatial
 
-        lcoord = 0
+        lcoord = theta
         if isinstance(self, (Vector3D, Vector4D)):
             lcoord = spatial.theta.dispatch(self)
-        tcoord = 0
+        tcoord = tau
         if isinstance(self, Vector4D):
             tcoord = lorentz.tau.dispatch(self)
 
@@ -2978,13 +3087,15 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_rhophietat(self) -> VectorProtocolLorentz:
+    def to_rhophietat(
+        self, *, eta: float | FloatArray = 0.0, t: float | FloatArray = 0.0
+    ) -> VectorProtocolLorentz:
         from vector._compute import lorentz, planar, spatial
 
-        lcoord = 0
+        lcoord = eta
         if isinstance(self, (Vector3D, Vector4D)):
             lcoord = spatial.eta.dispatch(self)
-        tcoord = 0
+        tcoord = t
         if isinstance(self, Vector4D):
             tcoord = lorentz.t.dispatch(self)
 
@@ -2995,13 +3106,15 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_rhophietatau(self) -> VectorProtocolLorentz:
+    def to_rhophietatau(
+        self, *, eta: float | FloatArray = 0.0, tau: float | FloatArray = 0.0
+    ) -> VectorProtocolLorentz:
         from vector._compute import lorentz, planar, spatial
 
-        lcoord = 0
+        lcoord = eta
         if isinstance(self, (Vector3D, Vector4D)):
             lcoord = spatial.eta.dispatch(self)
-        tcoord = 0
+        tcoord = tau
         if isinstance(self, Vector4D):
             tcoord = lorentz.tau.dispatch(self)
 
@@ -3012,23 +3125,35 @@ class Vector(VectorProtocol):
             1,
         )
 
-    def to_ptphipzenergy(self) -> VectorProtocolLorentz:
-        return self.to_rhophizt()
+    def to_ptphipzenergy(
+        self, *, pz: float | FloatArray = 0.0, energy: float | FloatArray = 0.0
+    ) -> VectorProtocolLorentz:
+        return self.to_rhophizt(z=pz, t=energy)
 
-    def to_ptphithetaenergy(self) -> VectorProtocolLorentz:
-        return self.to_rhophithetat()
+    def to_ptphithetaenergy(
+        self, *, theta: float | FloatArray = 0.0, energy: float | FloatArray = 0.0
+    ) -> VectorProtocolLorentz:
+        return self.to_rhophithetat(theta=theta, t=energy)
 
-    def to_ptphietaenergy(self) -> VectorProtocolLorentz:
-        return self.to_rhophietat()
+    def to_ptphietaenergy(
+        self, *, eta: float | FloatArray = 0.0, energy: float | FloatArray = 0.0
+    ) -> VectorProtocolLorentz:
+        return self.to_rhophietat(eta=eta, t=energy)
 
-    def to_ptphipzmass(self) -> VectorProtocolLorentz:
-        return self.to_rhophiztau()
+    def to_ptphipzmass(
+        self, *, pz: float | FloatArray = 0.0, mass: float | FloatArray = 0.0
+    ) -> VectorProtocolLorentz:
+        return self.to_rhophiztau(z=pz, tau=mass)
 
-    def to_ptphithetamass(self) -> VectorProtocolLorentz:
-        return self.to_rhophithetatau()
+    def to_ptphithetamass(
+        self, *, theta: float | FloatArray = 0.0, mass: float | FloatArray = 0.0
+    ) -> VectorProtocolLorentz:
+        return self.to_rhophithetatau(theta=theta, tau=mass)
 
-    def to_ptphietamass(self) -> VectorProtocolLorentz:
-        return self.to_rhophietatau()
+    def to_ptphietamass(
+        self, *, eta: float | FloatArray = 0.0, mass: float | FloatArray = 0.0
+    ) -> VectorProtocolLorentz:
+        return self.to_rhophietatau(eta=eta, tau=mass)
 
     def like(self, other: VectorProtocol) -> VectorProtocol:
         if isinstance(other, Vector2D):
@@ -3046,10 +3171,10 @@ class Vector2D(Vector, VectorProtocolPlanar):
     def to_Vector3D(
         self,
         *,
-        z: float | None = None,
-        pz: float | None = None,
-        theta: float | None = None,
-        eta: float | None = None,
+        z: float | FloatArray | None = None,
+        pz: float | FloatArray | None = None,
+        theta: float | FloatArray | None = None,
+        eta: float | FloatArray | None = None,
     ) -> VectorProtocolSpatial:
         """
         Converts a 2D vector to 3D vector.
@@ -3071,7 +3196,7 @@ class Vector2D(Vector, VectorProtocolPlanar):
                 "At most one longitudinal coordinate (`z`/`pz`, `theta`, or `eta`) may be assigned (non-None)"
             )
 
-        l_value = 0.0
+        l_value: float | FloatArray = 0.0
         l_type: type[Longitudinal] = LongitudinalZ
         if any(coord is not None for coord in (z, pz)):
             l_value = next(coord for coord in (z, pz) if coord is not None)
@@ -3092,18 +3217,18 @@ class Vector2D(Vector, VectorProtocolPlanar):
     def to_Vector4D(
         self,
         *,
-        z: float | None = None,
-        pz: float | None = None,
-        theta: float | None = None,
-        eta: float | None = None,
-        t: float | None = None,
-        e: float | None = None,
-        E: float | None = None,
-        energy: float | None = None,
-        tau: float | None = None,
-        m: float | None = None,
-        M: float | None = None,
-        mass: float | None = None,
+        z: float | FloatArray | None = None,
+        pz: float | FloatArray | None = None,
+        theta: float | FloatArray | None = None,
+        eta: float | FloatArray | None = None,
+        t: float | FloatArray | None = None,
+        e: float | FloatArray | None = None,
+        E: float | FloatArray | None = None,
+        energy: float | FloatArray | None = None,
+        tau: float | FloatArray | None = None,
+        m: float | FloatArray | None = None,
+        M: float | FloatArray | None = None,
+        mass: float | FloatArray | None = None,
     ) -> VectorProtocolLorentz:
         """
         Converts a 2D vector to 4D vector.
@@ -3130,7 +3255,7 @@ class Vector2D(Vector, VectorProtocolPlanar):
                 "At most one longitudinal coordinate (`t`/`e`/`E`/`energy`, `tau`/`m`/`M`/`mass`) may be assigned (non-None)"
             )
 
-        t_value = 0.0
+        t_value: float | FloatArray = 0.0
         t_type: type[Temporal] = TemporalT
         if any(coord is not None for coord in (tau, m, M, mass)):
             t_type = TemporalTau
@@ -3138,7 +3263,7 @@ class Vector2D(Vector, VectorProtocolPlanar):
         elif any(coord is not None for coord in (t, e, E, energy)):
             t_value = next(coord for coord in (t, e, E, energy) if coord is not None)
 
-        l_value = 0.0
+        l_value: float | FloatArray = 0.0
         l_type: type[Longitudinal] = LongitudinalZ
         if any(coord is not None for coord in (z, pz)):
             l_value = next(coord for coord in (z, pz) if coord is not None)
@@ -3190,14 +3315,14 @@ class Vector3D(Vector, VectorProtocolSpatial):
     def to_Vector4D(
         self,
         *,
-        t: float | None = None,
-        e: float | None = None,
-        E: float | None = None,
-        energy: float | None = None,
-        tau: float | None = None,
-        m: float | None = None,
-        M: float | None = None,
-        mass: float | None = None,
+        t: float | FloatArray | None = None,
+        e: float | FloatArray | None = None,
+        E: float | FloatArray | None = None,
+        energy: float | FloatArray | None = None,
+        tau: float | FloatArray | None = None,
+        m: float | FloatArray | None = None,
+        M: float | FloatArray | None = None,
+        mass: float | FloatArray | None = None,
     ) -> VectorProtocolLorentz:
         """
         Converts a 3D vector to 4D vector.
@@ -3219,7 +3344,7 @@ class Vector3D(Vector, VectorProtocolSpatial):
                 "At most one longitudinal coordinate (`t`/`e`/`E`/`energy`, `tau`/`m`/`M`/`mass`) may be assigned (non-None)"
             )
 
-        t_value = 0.0
+        t_value: float | FloatArray = 0.0
         t_type: type[Temporal] = TemporalT
         if any(coord is not None for coord in (tau, m, M, mass)):
             t_type = TemporalTau
