@@ -204,6 +204,7 @@ markers = [
     "numba",
     "awkward",
     "dis",
+    "sympy",
 ]
 log_cli_level = "DEBUG"
 filterwarnings = [

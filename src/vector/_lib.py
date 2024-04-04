@@ -50,7 +50,10 @@ class Lib:
     def maximum(
         self, val1: FloatArray | sympy.Symbol, val2: FloatArray | sympy.Symbol
     ) -> FloatArray | sympy.Symbol:
-        return self.lib.maximum(val1, val2)
+        if self.lib.__name__ == "sympy" and val2 == 0:
+            return val1
+        else:
+            return self.lib.maximum(val1, val2)
 
     def arctan2(
         self, val1: FloatArray | sympy.Symbol, val2: FloatArray | sympy.Symbol

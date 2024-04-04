@@ -37,7 +37,7 @@ from vector._methods import (
     _repr_momentum_to_generic,
     _ttype,
 )
-from vector._typeutils import FloatArray, ScalarCollection
+from vector._typeutils import FloatArray
 
 
 class CoordinatesSympy:
@@ -330,8 +330,8 @@ _coord_sympy_type = {
 
 
 def _is_type_safe(coordinates: dict[str, typing.Any]) -> None:
-    if not all(isinstance(coord, sympy.Symbol) for coord in coordinates.values()):
-        raise TypeError("coordinates must be a sympy symbol")
+    if not all(isinstance(coord, sympy.Expr) for coord in coordinates.values()):
+        raise TypeError("coordinates must be a sympy expression")
 
 
 def _replace_data(obj: typing.Any, result: typing.Any) -> typing.Any:
@@ -365,32 +365,6 @@ def _replace_data(obj: typing.Any, result: typing.Any) -> typing.Any:
             raise AssertionError(type(obj))
 
     return obj
-
-
-def _tosymbols(
-    result: tuple[ScalarCollection, ...] | ScalarCollection,
-) -> tuple[sympy.Symbol, ...]:
-    """
-    Converts a tuple of values to a tuple of ``sympy.Symbol``s.
-
-    Args:
-        result (tuple): A tuple of values to be converted.
-
-    Returns:
-        tuple: A tuple of ``sympy.Symbol``.
-    """
-    istuple = True
-    if not isinstance(result, tuple):
-        istuple = False
-        result = (result,)
-    result = tuple(
-        x if isinstance(x, sympy.Symbol) else sympy.Symbol(str(x))  # type: ignore[no-untyped-call]
-        for x in result
-    )
-    if istuple:
-        return result
-    else:
-        return result[0]
 
 
 class VectorSympy(Vector):
@@ -779,7 +753,6 @@ class VectorSympy2D(VectorSympy, Planar, Vector2D):
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
         ):
-            result = _tosymbols(result)
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             return cls.ProjectionClass2D(azimuthal=azcoords)
 
@@ -791,7 +764,6 @@ class VectorSympy2D(VectorSympy, Planar, Vector2D):
             and isinstance(returns[1], type)
             and issubclass(returns[1], Longitudinal)
         ):
-            result = _tosymbols(result)
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             lcoords = _coord_sympy_type[returns[1]](result[2])
             return cls.ProjectionClass3D(azimuthal=azcoords, longitudinal=lcoords)
@@ -805,7 +777,6 @@ class VectorSympy2D(VectorSympy, Planar, Vector2D):
             and isinstance(returns[2], type)
             and issubclass(returns[2], Temporal)
         ):
-            result = _tosymbols(result)
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             lcoords = _coord_sympy_type[returns[1]](result[2])
             tcoords = _coord_sympy_type[returns[2]](result[3])
@@ -1008,7 +979,6 @@ class VectorSympy3D(VectorSympy, Spatial, Vector3D):
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
         ):
-            result = _tosymbols(result)
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             return cls.ProjectionClass3D(
                 azimuthal=azcoords, longitudinal=self.longitudinal
@@ -1020,7 +990,6 @@ class VectorSympy3D(VectorSympy, Spatial, Vector3D):
             and issubclass(returns[0], Azimuthal)
             and returns[1] is None
         ):
-            result = _tosymbols(result)
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             return cls.ProjectionClass2D(azimuthal=azcoords)
 
@@ -1032,7 +1001,6 @@ class VectorSympy3D(VectorSympy, Spatial, Vector3D):
             and isinstance(returns[1], type)
             and issubclass(returns[1], Longitudinal)
         ):
-            result = _tosymbols(result)
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             lcoords = _coord_sympy_type[returns[1]](result[2])
             return cls.ProjectionClass3D(azimuthal=azcoords, longitudinal=lcoords)
@@ -1046,7 +1014,6 @@ class VectorSympy3D(VectorSympy, Spatial, Vector3D):
             and isinstance(returns[2], type)
             and issubclass(returns[2], Temporal)
         ):
-            result = _tosymbols(result)
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             lcoords = _coord_sympy_type[returns[1]](result[2])
             tcoords = _coord_sympy_type[returns[2]](result[3])
@@ -1373,7 +1340,6 @@ class VectorSympy4D(VectorSympy, Lorentz, Vector4D):
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
         ):
-            result = _tosymbols(result)
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             return cls.ProjectionClass4D(
                 azimuthal=azcoords,
@@ -1387,7 +1353,6 @@ class VectorSympy4D(VectorSympy, Lorentz, Vector4D):
             and issubclass(returns[0], Azimuthal)
             and returns[1] is None
         ):
-            result = _tosymbols(result)
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             return cls.ProjectionClass2D(azimuthal=azcoords)
 
@@ -1398,7 +1363,6 @@ class VectorSympy4D(VectorSympy, Lorentz, Vector4D):
             and isinstance(returns[1], type)
             and issubclass(returns[1], Longitudinal)
         ):
-            result = _tosymbols(result)
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             lcoords = _coord_sympy_type[returns[1]](result[2])
             return cls.ProjectionClass4D(
@@ -1413,7 +1377,6 @@ class VectorSympy4D(VectorSympy, Lorentz, Vector4D):
             and issubclass(returns[1], Longitudinal)
             and returns[2] is None
         ):
-            result = _tosymbols(result)
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             lcoords = _coord_sympy_type[returns[1]](result[2])
             return cls.ProjectionClass3D(azimuthal=azcoords, longitudinal=lcoords)
@@ -1427,7 +1390,6 @@ class VectorSympy4D(VectorSympy, Lorentz, Vector4D):
             and isinstance(returns[2], type)
             and issubclass(returns[2], Temporal)
         ):
-            result = _tosymbols(result)
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             lcoords = _coord_sympy_type[returns[1]](result[2])
             tcoords = _coord_sympy_type[returns[2]](result[3])

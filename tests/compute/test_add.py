@@ -74,8 +74,6 @@ def test_spatial_object():
 
     for t1 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
         for t2 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
-            print(t1, t2)
-
             transformed1, transformed2 = (
                 getattr(v1, "to_" + t1)(),
                 getattr(v2, "to_" + t2)(),
