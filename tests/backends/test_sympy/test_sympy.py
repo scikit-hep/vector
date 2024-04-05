@@ -686,3 +686,39 @@ def test_momentum_preservation():
     # 4D + 3D.like(4D) = 4D
     assert isinstance(v3 + v2.like(v3), vector.MomentumSympy4D)
     assert isinstance(v2.like(v3) + v3, vector.MomentumSympy4D)
+
+
+def test_type_checks():
+    with pytest.raises(TypeError):
+        vector.VectorSympy2D(x=1, y=2)
+
+    with pytest.raises(TypeError):
+        vector.VectorSympy3D(x=1, y=2, z=3)
+
+    with pytest.raises(TypeError):
+        vector.VectorSympy4D(x=1, y=2, z=3, t=4)
+
+
+def test_momentum_coordinate_transforms():
+    vec = vector.MomentumSympy2D(px=px, py=py)
+
+    for t1 in "pxpy", "ptphi":
+        for t2 in "pz", "eta", "theta":
+            for t3 in "mass", "energy":
+                transformed_object = getattr(vec, "to_" + t1)()
+                assert isinstance(transformed_object, vector.MomentumSympy2D)
+                assert hasattr(transformed_object, t1[:2])
+                assert hasattr(transformed_object, t1[2:])
+
+                transformed_object = getattr(vec, "to_" + t1 + t2)()
+                assert isinstance(transformed_object, vector.MomentumSympy3D)
+                assert hasattr(transformed_object, t1[:2])
+                assert hasattr(transformed_object, t1[2:])
+                assert hasattr(transformed_object, t2)
+
+                transformed_object = getattr(vec, "to_" + t1 + t2 + t3)()
+                assert isinstance(transformed_object, vector.MomentumSympy4D)
+                assert hasattr(transformed_object, t1[:2])
+                assert hasattr(transformed_object, t1[2:])
+                assert hasattr(transformed_object, t2)
+                assert hasattr(transformed_object, t3)
