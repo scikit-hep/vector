@@ -275,164 +275,274 @@ def test_momentum_conversion_2D():
                 assert getattr(tv, temporal) == 0.0
 
 
-# def test_VectorObject3D():
-#     v = vector.obj(x=1, y=2, z=3)
-#     tv = v.to_Vector2D()
-#     assert isinstance(tv, vector.backends.object.VectorObject2D)
-#     assert tv.x == pytest.approx(1)
-#     assert tv.y == pytest.approx(2)
-#     tv = v.to_Vector3D()
-#     assert isinstance(tv, vector.backends.object.VectorObject3D)
-#     assert tv.x == pytest.approx(1)
-#     assert tv.y == pytest.approx(2)
-#     assert tv.z == pytest.approx(3)
-#     tv = v.to_Vector4D()
-#     assert isinstance(tv, vector.backends.object.VectorObject4D)
-#     assert tv.x == pytest.approx(1)
-#     assert tv.y == pytest.approx(2)
-#     assert tv.z == pytest.approx(3)
-#     assert tv.t == pytest.approx(0)
+def test_conversion_3D():
+    v = vector.VectorSympy3D(x=x, y=y, z=z)
+    tv = v.to_Vector2D()
+    assert isinstance(tv, vector.VectorSympy2D)
+    assert tv.x == x
+    assert tv.y == y
+    tv = v.to_Vector3D()
+    assert isinstance(tv, vector.VectorSympy3D)
+    assert tv.x == x
+    assert tv.y == y
+    assert tv.z == z
+    tv = v.to_Vector4D()
+    assert isinstance(tv, vector.VectorSympy4D)
+    assert tv.x == x
+    assert tv.y == y
+    assert tv.z == z
+    assert tv.t == 0.0
 
-#     for azimuthal in "xy", "rhophi":
-#         tv = getattr(v, "to_" + azimuthal)()
-#         assert isinstance(tv, vector.backends.object.VectorObject2D)
-#         assert tv.x == pytest.approx(1)
-#         assert tv.y == pytest.approx(2)
+    for azimuthal in "xy", "rhophi":
+        tv = getattr(v, "to_" + azimuthal)()
+        assert isinstance(tv, vector.VectorSympy2D)
+        if azimuthal == "xy":
+            assert tv.x == x
+            assert tv.y == y
+        elif azimuthal == "rhophi":
+            assert tv.rho == sympy.sqrt(x**2 + y**2)
+            assert tv.phi == sympy.atan2(y, x)
 
-#         for longitudinal in "z", "theta", "eta":
-#             tv = getattr(v, "to_" + azimuthal + longitudinal)()
-#             assert isinstance(tv, vector.backends.object.VectorObject3D)
-#             assert tv.x == pytest.approx(1)
-#             assert tv.y == pytest.approx(2)
-#             assert tv.z == pytest.approx(3)
+        for longitudinal in "z", "theta", "eta":
+            tv = getattr(v, "to_" + azimuthal + longitudinal)()
+            assert isinstance(tv, vector.VectorSympy3D)
+            if azimuthal == "xy":
+                assert tv.x == x
+                assert tv.y == y
+            elif azimuthal == "rhophi":
+                assert tv.rho == sympy.sqrt(x**2 + y**2)
+                assert tv.phi == sympy.atan2(y, x)
 
-#             for temporal in "t", "tau":
-#                 tv = getattr(v, "to_" + azimuthal + longitudinal + temporal)()
-#                 assert isinstance(tv, vector.backends.object.VectorObject4D)
-#                 assert tv.x == pytest.approx(1)
-#                 assert tv.y == pytest.approx(2)
-#                 assert tv.z == pytest.approx(3)
-#                 assert getattr(tv, temporal) == pytest.approx(0)
+            if longitudinal == "z":
+                assert tv.z == z
+            elif longitudinal == "eta":
+                assert tv.eta == sympy.asinh(z / sympy.sqrt(x**2 + y**2))
+            elif longitudinal == "theta":
+                assert tv.theta == sympy.acos(z / sympy.sqrt(x**2 + y**2 + z**2))
 
+            for temporal in "t", "tau":
+                tv = getattr(v, "to_" + azimuthal + longitudinal + temporal)()
+                assert isinstance(tv, vector.VectorSympy4D)
+                if azimuthal == "xy":
+                    assert tv.x == x
+                    assert tv.y == y
+                elif azimuthal == "rhophi":
+                    assert tv.rho == sympy.sqrt(x**2 + y**2)
+                    assert tv.phi == sympy.atan2(y, x)
 
-# def test_MomentumObject3D():
-#     v = vector.obj(px=1, py=2, pz=3)
-#     tv = v.to_Vector2D()
-#     assert isinstance(tv, vector.MomentumSympy2D)
-#     assert tv.x == pytest.approx(1)
-#     assert tv.y == pytest.approx(2)
-#     tv = v.to_Vector3D()
-#     assert isinstance(tv, vector.MomentumSympy3D)
-#     assert tv.x == pytest.approx(1)
-#     assert tv.y == pytest.approx(2)
-#     assert tv.z == pytest.approx(3)
-#     tv = v.to_Vector4D()
-#     assert isinstance(tv, vector.MomentumSympy4D)
-#     assert tv.x == pytest.approx(1)
-#     assert tv.y == pytest.approx(2)
-#     assert tv.z == pytest.approx(3)
-#     assert tv.t == pytest.approx(0)
-
-#     for azimuthal in "xy", "rhophi":
-#         tv = getattr(v, "to_" + azimuthal)()
-#         assert isinstance(tv, vector.MomentumSympy2D)
-#         assert tv.x == pytest.approx(1)
-#         assert tv.y == pytest.approx(2)
-
-#         for longitudinal in "z", "theta", "eta":
-#             tv = getattr(v, "to_" + azimuthal + longitudinal)()
-#             assert isinstance(tv, vector.MomentumSympy3D)
-#             assert tv.x == pytest.approx(1)
-#             assert tv.y == pytest.approx(2)
-#             assert tv.z == pytest.approx(3)
-
-#             for temporal in "t", "tau":
-#                 tv = getattr(v, "to_" + azimuthal + longitudinal + temporal)()
-#                 assert isinstance(tv, vector.MomentumSympy4D)
-#                 assert tv.x == pytest.approx(1)
-#                 assert tv.y == pytest.approx(2)
-#                 assert tv.z == pytest.approx(3)
-#                 assert getattr(tv, temporal) == pytest.approx(0)
+                if longitudinal == "z":
+                    assert tv.z == z
+                elif longitudinal == "eta":
+                    assert tv.eta == sympy.asinh(z / sympy.sqrt(x**2 + y**2))
+                elif longitudinal == "theta":
+                    assert tv.theta == sympy.acos(z / sympy.sqrt(x**2 + y**2 + z**2))
+                assert getattr(tv, temporal) == pytest.approx(0)
 
 
-# def test_VectorObject4D():
-#     v = vector.obj(x=1, y=2, z=3, t=4)
-#     tv = v.to_Vector2D()
-#     assert isinstance(tv, vector.backends.object.VectorObject2D)
-#     assert tv.x == pytest.approx(1)
-#     assert tv.y == pytest.approx(2)
-#     tv = v.to_Vector3D()
-#     assert isinstance(tv, vector.backends.object.VectorObject3D)
-#     assert tv.x == pytest.approx(1)
-#     assert tv.y == pytest.approx(2)
-#     assert tv.z == pytest.approx(3)
-#     tv = v.to_Vector4D()
-#     assert isinstance(tv, vector.backends.object.VectorObject4D)
-#     assert tv.x == pytest.approx(1)
-#     assert tv.y == pytest.approx(2)
-#     assert tv.z == pytest.approx(3)
-#     assert tv.t == pytest.approx(4)
+def test_momentum_conversion_3D():
+    v = vector.MomentumSympy3D(px=px, py=py, pz=pz)
+    tv = v.to_Vector2D()
+    assert isinstance(tv, vector.MomentumSympy2D)
+    assert tv.x == px
+    assert tv.y == py
+    tv = v.to_Vector3D()
+    assert isinstance(tv, vector.MomentumSympy3D)
+    assert tv.x == px
+    assert tv.y == py
+    assert tv.z == pz
+    tv = v.to_Vector4D()
+    assert isinstance(tv, vector.MomentumSympy4D)
+    assert tv.x == px
+    assert tv.y == py
+    assert tv.z == pz
+    assert tv.t == 0.0
 
-#     for azimuthal in "xy", "rhophi":
-#         tv = getattr(v, "to_" + azimuthal)()
-#         assert isinstance(tv, vector.backends.object.VectorObject2D)
-#         assert tv.x == pytest.approx(1)
-#         assert tv.y == pytest.approx(2)
+    for azimuthal in "xy", "rhophi":
+        tv = getattr(v, "to_" + azimuthal)()
+        assert isinstance(tv, vector.MomentumSympy2D)
+        if azimuthal == "xy":
+            assert tv.x == px
+            assert tv.y == py
+        elif azimuthal == "rhophi":
+            assert tv.rho == sympy.sqrt(px**2 + py**2)
+            assert tv.phi == sympy.atan2(py, px)
 
-#         for longitudinal in "z", "theta", "eta":
-#             tv = getattr(v, "to_" + azimuthal + longitudinal)()
-#             assert isinstance(tv, vector.backends.object.VectorObject3D)
-#             assert tv.x == pytest.approx(1)
-#             assert tv.y == pytest.approx(2)
-#             assert tv.z == pytest.approx(3)
+        for longitudinal in "z", "theta", "eta":
+            tv = getattr(v, "to_" + azimuthal + longitudinal)()
+            assert isinstance(tv, vector.MomentumSympy3D)
+            if azimuthal == "xy":
+                assert tv.x == px
+                assert tv.y == py
+            elif azimuthal == "rhophi":
+                assert tv.rho == sympy.sqrt(px**2 + py**2)
+                assert tv.phi == sympy.atan2(py, px)
 
-#             for temporal in "t", "tau":
-#                 tv = getattr(v, "to_" + azimuthal + longitudinal + temporal)()
-#                 assert isinstance(tv, vector.backends.object.VectorObject4D)
-#                 assert tv.x == pytest.approx(1)
-#                 assert tv.y == pytest.approx(2)
-#                 assert tv.z == pytest.approx(3)
-#                 assert tv.t == pytest.approx(4)
+            if longitudinal == "z":
+                assert tv.z == pz
+            elif longitudinal == "eta":
+                assert tv.eta == sympy.asinh(pz / sympy.sqrt(px**2 + py**2))
+            elif longitudinal == "theta":
+                assert tv.theta == sympy.acos(pz / sympy.sqrt(px**2 + py**2 + pz**2))
+
+            for temporal in "t", "tau":
+                tv = getattr(v, "to_" + azimuthal + longitudinal + temporal)()
+                assert isinstance(tv, vector.MomentumSympy4D)
+                if azimuthal == "xy":
+                    assert tv.x == px
+                    assert tv.y == py
+                elif azimuthal == "rhophi":
+                    assert tv.rho == sympy.sqrt(px**2 + py**2)
+                    assert tv.phi == sympy.atan2(py, px)
+
+                if longitudinal == "z":
+                    assert tv.z == pz
+                elif longitudinal == "eta":
+                    assert tv.eta == sympy.asinh(pz / sympy.sqrt(px**2 + py**2))
+                elif longitudinal == "theta":
+                    assert tv.theta == sympy.acos(
+                        pz / sympy.sqrt(px**2 + py**2 + pz**2)
+                    )
+                assert getattr(tv, temporal) == pytest.approx(0)
 
 
-# def test_MomentumObject4D():
-#     v = vector.obj(px=1, py=2, pz=3, E=4)
-#     tv = v.to_Vector2D()
-#     assert isinstance(tv, vector.MomentumSympy2D)
-#     assert tv.x == pytest.approx(1)
-#     assert tv.y == pytest.approx(2)
-#     tv = v.to_Vector3D()
-#     assert isinstance(tv, vector.MomentumSympy3D)
-#     assert tv.x == pytest.approx(1)
-#     assert tv.y == pytest.approx(2)
-#     assert tv.z == pytest.approx(3)
-#     tv = v.to_Vector4D()
-#     assert isinstance(tv, vector.MomentumSympy4D)
-#     assert tv.x == pytest.approx(1)
-#     assert tv.y == pytest.approx(2)
-#     assert tv.z == pytest.approx(3)
-#     assert tv.t == pytest.approx(4)
+def test_conversion_4D():
+    v = vector.VectorSympy4D(x=x, y=y, z=z, t=t)
+    tv = v.to_Vector2D()
+    assert isinstance(tv, vector.VectorSympy2D)
+    assert tv.x == x
+    assert tv.y == y
+    tv = v.to_Vector3D()
+    assert isinstance(tv, vector.VectorSympy3D)
+    assert tv.x == x
+    assert tv.y == y
+    assert tv.z == z
+    tv = v.to_Vector4D()
+    assert isinstance(tv, vector.VectorSympy4D)
+    assert tv.x == x
+    assert tv.y == y
+    assert tv.z == z
+    assert tv.t == t
 
-#     for azimuthal in "xy", "rhophi":
-#         tv = getattr(v, "to_" + azimuthal)()
-#         assert isinstance(tv, vector.MomentumSympy2D)
-#         assert tv.x == pytest.approx(1)
-#         assert tv.y == pytest.approx(2)
+    for azimuthal in "xy", "rhophi":
+        tv = getattr(v, "to_" + azimuthal)()
+        assert isinstance(tv, vector.VectorSympy2D)
+        if azimuthal == "xy":
+            assert tv.x == x
+            assert tv.y == y
+        elif azimuthal == "rhophi":
+            assert tv.rho == sympy.sqrt(x**2 + y**2)
+            assert tv.phi == sympy.atan2(y, x)
 
-#         for longitudinal in "z", "theta", "eta":
-#             tv = getattr(v, "to_" + azimuthal + longitudinal)()
-#             assert isinstance(tv, vector.MomentumSympy3D)
-#             assert tv.x == pytest.approx(1)
-#             assert tv.y == pytest.approx(2)
-#             assert tv.z == pytest.approx(3)
+        for longitudinal in "z", "theta", "eta":
+            tv = getattr(v, "to_" + azimuthal + longitudinal)()
+            assert isinstance(tv, vector.VectorSympy3D)
+            if azimuthal == "xy":
+                assert tv.x == x
+                assert tv.y == y
+            elif azimuthal == "rhophi":
+                assert tv.rho == sympy.sqrt(x**2 + y**2)
+                assert tv.phi == sympy.atan2(y, x)
 
-#             for temporal in "t", "tau":
-#                 tv = getattr(v, "to_" + azimuthal + longitudinal + temporal)()
-#                 assert isinstance(tv, vector.MomentumSympy4D)
-#                 assert tv.x == pytest.approx(1)
-#                 assert tv.y == pytest.approx(2)
-#                 assert tv.z == pytest.approx(3)
-#                 assert tv.t == pytest.approx(4)
+            if longitudinal == "z":
+                assert tv.z == z
+            elif longitudinal == "eta":
+                assert tv.eta == sympy.asinh(z / sympy.sqrt(x**2 + y**2))
+            elif longitudinal == "theta":
+                assert tv.theta == sympy.acos(z / sympy.sqrt(x**2 + y**2 + z**2))
+
+            for temporal in "t", "tau":
+                tv = getattr(v, "to_" + azimuthal + longitudinal + temporal)()
+                assert isinstance(tv, vector.VectorSympy4D)
+                if azimuthal == "xy":
+                    assert tv.x == x
+                    assert tv.y == y
+                elif azimuthal == "rhophi":
+                    assert tv.rho == sympy.sqrt(x**2 + y**2)
+                    assert tv.phi == sympy.atan2(y, x)
+
+                if longitudinal == "z":
+                    assert tv.z == z
+                elif longitudinal == "eta":
+                    assert tv.eta == sympy.asinh(z / sympy.sqrt(x**2 + y**2))
+                elif longitudinal == "theta":
+                    assert tv.theta == sympy.acos(z / sympy.sqrt(x**2 + y**2 + z**2))
+
+                if temporal == "t":
+                    assert tv.t == t
+                elif temporal == "tau":
+                    assert tv.tau == sympy.sqrt(sympy.Abs(-(t**2) + x**2 + y**2 + z**2))
+
+
+def test_momentum_conversion_4D():
+    v = vector.MomentumSympy4D(px=px, py=py, pz=pz, E=E)
+    tv = v.to_Vector2D()
+    assert isinstance(tv, vector.MomentumSympy2D)
+    assert tv.x == px
+    assert tv.y == py
+    tv = v.to_Vector3D()
+    assert isinstance(tv, vector.MomentumSympy3D)
+    assert tv.x == px
+    assert tv.y == py
+    assert tv.z == pz
+    tv = v.to_Vector4D()
+    assert isinstance(tv, vector.MomentumSympy4D)
+    assert tv.x == px
+    assert tv.y == py
+    assert tv.z == pz
+    assert tv.t == E
+
+    for azimuthal in "xy", "rhophi":
+        tv = getattr(v, "to_" + azimuthal)()
+        assert isinstance(tv, vector.MomentumSympy2D)
+        if azimuthal == "xy":
+            assert tv.x == px
+            assert tv.y == py
+        elif azimuthal == "rhophi":
+            assert tv.rho == sympy.sqrt(px**2 + py**2)
+            assert tv.phi == sympy.atan2(py, px)
+
+        for longitudinal in "z", "theta", "eta":
+            tv = getattr(v, "to_" + azimuthal + longitudinal)()
+            assert isinstance(tv, vector.MomentumSympy3D)
+            if azimuthal == "xy":
+                assert tv.x == px
+                assert tv.y == py
+            elif azimuthal == "rhophi":
+                assert tv.rho == sympy.sqrt(px**2 + py**2)
+                assert tv.phi == sympy.atan2(py, px)
+
+            if longitudinal == "z":
+                assert tv.z == pz
+            elif longitudinal == "eta":
+                assert tv.eta == sympy.asinh(pz / sympy.sqrt(px**2 + py**2))
+            elif longitudinal == "theta":
+                assert tv.theta == sympy.acos(pz / sympy.sqrt(px**2 + py**2 + pz**2))
+
+            for temporal in "t", "tau":
+                tv = getattr(v, "to_" + azimuthal + longitudinal + temporal)()
+                assert isinstance(tv, vector.MomentumSympy4D)
+                if azimuthal == "xy":
+                    assert tv.x == px
+                    assert tv.y == py
+                elif azimuthal == "rhophi":
+                    assert tv.rho == sympy.sqrt(px**2 + py**2)
+                    assert tv.phi == sympy.atan2(py, px)
+
+                if longitudinal == "z":
+                    assert tv.z == pz
+                elif longitudinal == "eta":
+                    assert tv.eta == sympy.asinh(pz / sympy.sqrt(px**2 + py**2))
+                elif longitudinal == "theta":
+                    assert tv.theta == sympy.acos(
+                        pz / sympy.sqrt(px**2 + py**2 + pz**2)
+                    )
+
+                if temporal == "t":
+                    assert tv.t == E
+                elif temporal == "tau":
+                    assert tv.tau == sympy.sqrt(
+                        sympy.Abs(-(E**2) + px**2 + py**2 + pz**2)
+                    )
 
 
 def test_conversion_with_coords():
