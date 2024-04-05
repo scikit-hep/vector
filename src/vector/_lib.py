@@ -58,7 +58,7 @@ class SympyLib:
         return val
 
     @property
-    def inf(self) -> float | sympy.Expr:
+    def inf(self) ->  sympy.Expr:
         return sympy.oo
 
     # same named functions
@@ -88,3 +88,7 @@ class SympyLib:
 
     def tanh(self, val: sympy.Expr) -> sympy.Expr:
         return sympy.tanh(val)
+
+    @property
+    def pi(self) -> sympy.Expr:
+        return sympy.pi
