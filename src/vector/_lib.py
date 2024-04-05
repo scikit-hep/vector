@@ -58,7 +58,7 @@ class SympyLib:
         return val
 
     @property
-    def inf(self) ->  sympy.Expr:
+    def inf(self) -> sympy.Expr:
         return sympy.oo
 
     # same named functions
