@@ -16,7 +16,6 @@ import typing
 import numpy
 
 from vector._compute.lorentz import dot
-from vector._lib import Lib
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
@@ -70,7 +69,7 @@ def dispatch(tolerance: typing.Any, v: typing.Any) -> typing.Any:
         return v._wrap_result(
             _flavor_of(v),
             function(
-                Lib(v.lib),
+                v.lib,
                 tolerance,
                 *v.azimuthal.elements,
                 *v.longitudinal.elements,

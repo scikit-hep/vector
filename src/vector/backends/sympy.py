@@ -6,6 +6,7 @@ import numpy
 import sympy
 
 import vector
+from vector._lib import SympyLib
 from vector._methods import (
     Azimuthal,
     AzimuthalRhoPhi,
@@ -370,7 +371,7 @@ def _replace_data(obj: typing.Any, result: typing.Any) -> typing.Any:
 class VectorSympy(Vector):
     """Mixin class for Sympy vectors."""
 
-    lib = sympy
+    lib = SympyLib()
 
     def __eq__(self, other: typing.Any) -> typing.Any:
         return numpy.equal(self, other)  # type: ignore[call-overload]

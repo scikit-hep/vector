@@ -726,11 +726,10 @@ def test_momentum_coordinate_transforms():
 
 nx, ny, nz = sympy.symbols("nx ny nz")
 
-v1 = vector.VectorSympy2D(x=x, y=y)
-v2 = vector.VectorSympy2D(x=nx, y=ny)
-
 
 def test_eq():
+    v1 = vector.VectorSympy2D(x=x, y=y)
+    v2 = vector.VectorSympy2D(x=nx, y=ny)
     assert v1 == v1  # noqa: PLR0124
     assert not v1 == v2  # noqa: SIM201
     with pytest.raises(TypeError):
@@ -738,6 +737,8 @@ def test_eq():
 
 
 def test_ne():
+    v1 = vector.VectorSympy2D(x=x, y=y)
+    v2 = vector.VectorSympy2D(x=nx, y=ny)
     assert not v1 != v1  # noqa: PLR0124,SIM202
     assert v1 != v2
     with pytest.raises(TypeError):
@@ -745,12 +746,17 @@ def test_ne():
 
 
 def test_abs():
+    v1 = vector.VectorSympy2D(x=x, y=y)
     assert abs(v1) == sympy.sqrt(x**2 + y**2)
 
 
 def test_add():
+    v1 = vector.VectorSympy2D(x=x, y=y)
+    v2 = vector.VectorSympy2D(x=nx, y=ny)
     assert v1 + v2 == vector.VectorSympy2D(x=x + nx, y=y + ny)
     assert v1 + v2.to_Vector3D().like(v1) == vector.VectorSympy2D(x=x + nx, y=y + ny)
+    v1 += v2
+    assert v1 == vector.VectorSympy2D(x=x + nx, y=y + ny)
     with pytest.raises(TypeError):
         v1 + 5
     with pytest.raises(TypeError):
@@ -760,7 +766,11 @@ def test_add():
 
 
 def test_sub():
+    v1 = vector.VectorSympy2D(x=x, y=y)
+    v2 = vector.VectorSympy2D(x=nx, y=ny)
     assert v1 - v2 == vector.VectorSympy2D(x=x - nx, y=y - ny)
+    v1 -= v2
+    assert v1 == vector.VectorSympy2D(x=x - nx, y=y - ny)
     with pytest.raises(TypeError):
         v1 - 5
     with pytest.raises(TypeError):
@@ -770,22 +780,32 @@ def test_sub():
 
 
 def test_mul():
+    v1 = vector.VectorSympy2D(x=x, y=y)
+    v2 = vector.VectorSympy2D(x=nx, y=ny)
     assert v1 * 10 == vector.VectorSympy2D(x=x * 10, y=y * 10)
     assert 10 * v1 == vector.VectorSympy2D(x=10 * x, y=10 * y)
+    v1 *= 10
+    assert v1 == vector.VectorSympy2D(x=10 * x, y=10 * y)
     with pytest.raises(TypeError):
         v1 * v2
 
 
 def test_neg():
+    v1 = vector.VectorSympy2D(x=x, y=y)
     assert -v1 == vector.VectorSympy2D(x=-x, y=-y)
 
 
 def test_pos():
+    v1 = vector.VectorSympy2D(x=x, y=y)
     assert +v1 == vector.VectorSympy2D(x=x, y=y)
 
 
 def test_truediv():
+    v1 = vector.VectorSympy2D(x=x, y=y)
+    v2 = vector.VectorSympy2D(x=nx, y=ny)
     assert v1 / 10 == vector.VectorSympy2D(x=0.1 * x, y=0.1 * y)
+    v1 /= 10
+    assert v1 == vector.VectorSympy2D(x=0.1 * x, y=0.1 * y)
     with pytest.raises(TypeError):
         10 / v1
     with pytest.raises(TypeError):
@@ -793,6 +813,8 @@ def test_truediv():
 
 
 def test_pow():
+    v1 = vector.VectorSympy2D(x=x, y=y)
+    v2 = vector.VectorSympy2D(x=nx, y=ny)
     assert v1**2 == x**2 + y**2
     with pytest.raises(TypeError):
         2**v1
@@ -801,6 +823,8 @@ def test_pow():
 
 
 def test_matmul():
+    v1 = vector.VectorSympy2D(x=x, y=y)
+    v2 = vector.VectorSympy2D(x=nx, y=ny)
     assert v1 @ v2 == x * nx + y * ny
     assert v2 @ v1 == x * nx + y * ny
     with pytest.raises(TypeError):

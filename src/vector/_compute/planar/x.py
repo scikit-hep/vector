@@ -16,7 +16,6 @@ import typing
 
 import numpy
 
-from vector._lib import Lib
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
@@ -44,5 +43,5 @@ def dispatch(v: typing.Any) -> typing.Any:
     function, *returns = _from_signature(__name__, dispatch_map, (_aztype(v),))
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
-            _flavor_of(v), function(Lib(v.lib), *v.azimuthal.elements), returns, 1
+            _flavor_of(v), function(v.lib, *v.azimuthal.elements), returns, 1
         )

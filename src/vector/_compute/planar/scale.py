@@ -15,7 +15,6 @@ import typing
 
 import numpy
 
-from vector._lib import Lib
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
@@ -51,7 +50,7 @@ def dispatch(factor: typing.Any, v: typing.Any) -> typing.Any:
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
             _flavor_of(v),
-            function(Lib(v.lib), factor, *v.azimuthal.elements),
+            function(v.lib, factor, *v.azimuthal.elements),
             returns,
             1,
         )
