@@ -6,9 +6,10 @@
 from __future__ import annotations
 
 import pytest
-import sympy
 
 import vector
+
+sympy = pytest.importorskip("sympy")
 
 x, y = sympy.symbols("x y")
 rho, phi = sympy.symbols("rho phi")

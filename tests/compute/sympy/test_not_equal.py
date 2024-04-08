@@ -5,9 +5,11 @@
 
 from __future__ import annotations
 
-import sympy
+import pytest
 
 import vector
+
+sympy = pytest.importorskip("sympy")
 
 x, y, z, t = sympy.symbols("x y z t")
 
