@@ -44,7 +44,7 @@ from vector._typeutils import FloatArray
 class CoordinatesSympy:
     """Coordinates class for the SymPy backend."""
 
-    lib = sympy
+    lib = SympyLib()
 
 
 class AzimuthalSympy(CoordinatesSympy, Azimuthal):
