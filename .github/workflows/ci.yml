@@ -57,6 +57,12 @@ jobs:
       - name: Test light package
         run: python -m pytest -ra --ignore tests/test_notebooks.py
 
+      - name: Install numpy v2
+        run: python -m pip install "numpy>=2.0.0b1"
+
+      - name: Test light package with numpy v2.x
+        run: python -m pytest -ra --ignore tests/test_notebooks.py
+
   check-awkward-v1:
     needs: [check-light]
     runs-on: ubuntu-latest
@@ -127,6 +133,12 @@ jobs:
         run: python -m pytest -ra --doctest-plus src/vector/
 
       - name: Test package with awkward v2.x
+        run: python -m pytest -ra --cov=vector --ignore tests/test_notebooks.py .
+      
+      - name: Install numpy v2
+        run: python -m pip install "numpy>=2.0.0b1"
+
+      - name: Test package with numpy v2.x
         run: python -m pytest -ra --cov=vector --ignore tests/test_notebooks.py .
 
       - name: Upload coverage report
