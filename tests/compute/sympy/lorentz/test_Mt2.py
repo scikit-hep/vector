@@ -20,7 +20,7 @@ def test_xy_z_t():
         vector.backends.sympy.LongitudinalSympyZ(z),
         vector.backends.sympy.TemporalSympyT(t),
     )
-    assert vec.Et2 == t**2 * (x**2 + y**2) / (x**2 + y**2 + z**2)
+    assert vec.Mt2 == t**2 - z**2
 
 
 def test_xy_z_tau():
@@ -31,9 +31,7 @@ def test_xy_z_tau():
             sympy.sqrt(sympy.Abs(-(t**2) + x**2 + y**2 + z**2))
         ),
     )
-    assert vec.Et2.simplify() == (x**2 + y**2) * (
-        x**2 + y**2 + z**2 + sympy.Abs(-(t**2) + x**2 + y**2 + z**2)
-    ) / (x**2 + y**2 + z**2)
+    assert vec.Mt2.simplify() == x**2 + y**2 + sympy.Abs(-(t**2) + x**2 + y**2 + z**2)
 
 
 def test_xy_theta_t():
@@ -44,7 +42,7 @@ def test_xy_theta_t():
         ),
         vector.backends.sympy.TemporalSympyT(t),
     )
-    assert vec.Et2.simplify() == t**2 * (x**2 + y**2) / (x**2 + y**2 + z**2)
+    assert vec.Mt2.simplify() == t**2 - z**2
 
 
 def test_xy_theta_tau():
@@ -57,9 +55,7 @@ def test_xy_theta_tau():
             sympy.sqrt(sympy.Abs(-(t**2) + x**2 + y**2 + z**2))
         ),
     )
-    assert vec.Et2.simplify() == (x**2 + y**2) * (
-        x**2 + y**2 + z**2 + sympy.Abs(-(t**2) + x**2 + y**2 + z**2)
-    ) / (x**2 + y**2 + z**2)
+    assert vec.Mt2.simplify() == x**2 + y**2 + sympy.Abs(-(t**2) + x**2 + y**2 + z**2)
 
 
 def test_xy_eta_t():
@@ -70,7 +66,7 @@ def test_xy_eta_t():
         ),
         vector.backends.sympy.TemporalSympyT(t),
     )
-    assert vec.Et2.simplify() == t**2 / (z**2 / (x**2 + y**2) + 1)
+    assert vec.Mt2.simplify() == t**2 - z**2
 
 
 def test_xy_eta_tau():
@@ -83,9 +79,7 @@ def test_xy_eta_tau():
             sympy.sqrt(sympy.Abs(-(t**2) + x**2 + y**2 + z**2))
         ),
     )
-    assert vec.Et2.simplify() == x**2 + y**2 + sympy.Abs(
-        -(t**2) + x**2 + y**2 + z**2
-    ) / (z**2 / (x**2 + y**2) + 1)
+    assert vec.Mt2.simplify() == x**2 + y**2 + sympy.Abs(-(t**2) + x**2 + y**2 + z**2)
 
 
 def test_rhophi_z_t():
@@ -94,7 +88,7 @@ def test_rhophi_z_t():
         vector.backends.sympy.LongitudinalSympyZ(z),
         vector.backends.sympy.TemporalSympyT(t),
     )
-    assert vec.Et2.simplify() == rho**2 * t**2 / (rho**2 + z**2)
+    assert vec.Mt2.simplify() == t**2 - z**2
 
 
 def test_rhophi_z_tau():
@@ -105,9 +99,7 @@ def test_rhophi_z_tau():
             sympy.sqrt(sympy.Abs(rho**2 - t**2 + z**2))
         ),
     )
-    assert vec.Et2.simplify() == rho**2 * (
-        rho**2 + z**2 + sympy.Abs(rho**2 - t**2 + z**2)
-    ) / (rho**2 + z**2)
+    assert vec.Mt2.simplify() == rho**2 + sympy.Abs(rho**2 - t**2 + z**2)
 
 
 def test_rhophi_theta_t():
@@ -118,7 +110,7 @@ def test_rhophi_theta_t():
         ),
         vector.backends.sympy.TemporalSympyT(t),
     )
-    assert vec.Et2.simplify() == rho**2 * t**2 / (rho**2 + z**2)
+    assert vec.Mt2.simplify() == t**2 - z**2
 
 
 def test_rhophi_theta_tau():
@@ -131,9 +123,7 @@ def test_rhophi_theta_tau():
             sympy.sqrt(sympy.Abs(rho**2 - t**2 + z**2))
         ),
     )
-    assert vec.Et2.simplify() == rho**2 * (
-        rho**2 + z**2 + sympy.Abs(rho**2 - t**2 + z**2)
-    ) / (rho**2 + z**2)
+    assert vec.Mt2.simplify() == rho**2 + sympy.Abs(rho**2 - t**2 + z**2)
 
 
 def test_rhophi_eta_t():
@@ -142,7 +132,7 @@ def test_rhophi_eta_t():
         vector.backends.sympy.LongitudinalSympyEta(sympy.asinh(z / rho)),
         vector.backends.sympy.TemporalSympyT(t),
     )
-    assert vec.Et2.simplify() == t**2 / (1 + z**2 / rho**2)
+    assert vec.Mt2.simplify() == t**2 - z**2
 
 
 def test_rhophi_eta_tau():
@@ -153,6 +143,4 @@ def test_rhophi_eta_tau():
             sympy.sqrt(sympy.Abs(rho**2 - t**2 + z**2))
         ),
     )
-    assert vec.Et2.simplify() == rho**2 + sympy.Abs(rho**2 - t**2 + z**2) / (
-        1 + z**2 / rho**2
-    )
+    assert vec.Mt2.simplify() == rho**2 + sympy.Abs(rho**2 - t**2 + z**2)

@@ -11,7 +11,7 @@ import vector
 
 sympy = pytest.importorskip("sympy")
 
-x, y, rho, phi, theta = sympy.symbols("x y rho phi theta", real=True, positive=True)
+x, y, rho, phi, theta = sympy.symbols("x y rho phi theta", real=True)
 
 
 def test_xy_z():
