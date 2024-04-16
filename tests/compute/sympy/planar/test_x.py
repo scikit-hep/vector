@@ -11,12 +11,16 @@ import vector
 
 sympy = pytest.importorskip("sympy")
 
+pytestmark = pytest.mark.sympy
+
 x, y = sympy.symbols("x y")
+values = {x: 3, y: 4}
 
 
 def test_xy():
     vec = vector.VectorSympy2D(azimuthal=vector.backends.sympy.AzimuthalSympyXY(x, y))
     assert vec.x == x
+    assert vec.x.subs(values) == pytest.approx(3)
 
 
 def test_rhophi():
@@ -26,3 +30,4 @@ def test_rhophi():
         )
     )
     assert vec.x == x
+    assert vec.x.subs(values) == pytest.approx(3)
