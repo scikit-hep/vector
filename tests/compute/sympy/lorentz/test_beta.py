@@ -11,7 +11,10 @@ import vector
 
 sympy = pytest.importorskip("sympy")
 
+pytestmark = pytest.mark.sympy
+
 x, y, rho, phi, z, t = sympy.symbols("x y rho phi z t", real=True, positive=True)
+values = {x: 3, y: 4, rho: 5, phi: 0, z: 10, t: 20}
 
 
 def test_xy_z_t():
@@ -21,6 +24,7 @@ def test_xy_z_t():
         temporal=vector.backends.sympy.TemporalSympyT(t),
     )
     assert vec.beta == sympy.sqrt(x**2 + y**2 + z**2) / t
+    assert vec.beta.subs(values).evalf() == pytest.approx(0.5590169943749475)
 
 
 def test_xy_z_tau():
@@ -34,6 +38,7 @@ def test_xy_z_tau():
     assert vec.beta.simplify() == sympy.sqrt(x**2 + y**2 + z**2) / sympy.sqrt(
         x**2 + y**2 + z**2 + sympy.Abs(-(t**2) + x**2 + y**2 + z**2)
     )
+    assert vec.beta.subs(values).evalf() == pytest.approx(0.5590169943749475)
 
 
 def test_xy_theta_t():
@@ -45,6 +50,7 @@ def test_xy_theta_t():
         temporal=vector.backends.sympy.TemporalSympyT(t),
     )
     assert vec.beta.simplify() == sympy.sqrt(x**2 + y**2 + z**2) / t
+    assert vec.beta.subs(values).evalf() == pytest.approx(0.5590169943749475)
 
 
 def test_xy_theta_tau():
@@ -63,6 +69,7 @@ def test_xy_theta_tau():
         sympy.sqrt(x**2 + y**2)
         * sympy.sqrt(x**2 + y**2 + z**2 + sympy.Abs(-(t**2) + x**2 + y**2 + z**2))
     )
+    assert vec.beta.subs(values).evalf() == pytest.approx(0.5590169943749475)
 
 
 def test_xy_eta_t():
@@ -77,6 +84,7 @@ def test_xy_eta_t():
         vec.beta.simplify()
         == 1.0 * sympy.sqrt(x**2 + y**2) * sympy.sqrt(z**2 / (x**2 + y**2) + 1) / t
     )
+    assert vec.beta.subs(values).evalf() == pytest.approx(0.5590169943749475)
 
 
 def test_xy_eta_tau():
@@ -110,6 +118,7 @@ def test_xy_eta_tau():
         )
         == 0
     )
+    assert vec.beta.subs(values).evalf() == pytest.approx(0.5590169943749475)
 
 
 def test_rhophi_z_t():
@@ -119,6 +128,7 @@ def test_rhophi_z_t():
         temporal=vector.backends.sympy.TemporalSympyT(t),
     )
     assert vec.beta == sympy.sqrt(rho**2 + z**2) / t
+    assert vec.beta.subs(values).evalf() == pytest.approx(0.5590169943749475)
 
 
 def test_rhophi_z_tau():
@@ -132,6 +142,7 @@ def test_rhophi_z_tau():
     assert vec.beta.simplify() == sympy.sqrt(rho**2 + z**2) / sympy.sqrt(
         rho**2 + z**2 + sympy.Abs(rho**2 - t**2 + z**2)
     )
+    assert vec.beta.subs(values).evalf() == pytest.approx(0.5590169943749475)
 
 
 def test_rhophi_theta_t():
@@ -143,6 +154,7 @@ def test_rhophi_theta_t():
         temporal=vector.backends.sympy.TemporalSympyT(t),
     )
     assert vec.beta.simplify() == sympy.sqrt(rho**2 + z**2) / t
+    assert vec.beta.subs(values).evalf() == pytest.approx(0.5590169943749475)
 
 
 def test_rhophi_theta_tau():
@@ -158,6 +170,7 @@ def test_rhophi_theta_tau():
     assert vec.beta.simplify() == sympy.sqrt(rho**2 + z**2) / sympy.sqrt(
         rho**2 + z**2 + sympy.Abs(rho**2 - t**2 + z**2)
     )
+    assert vec.beta.subs(values).evalf() == pytest.approx(0.5590169943749475)
 
 
 def test_rhophi_eta_t():
@@ -167,6 +180,7 @@ def test_rhophi_eta_t():
         temporal=vector.backends.sympy.TemporalSympyT(t),
     )
     assert vec.beta.simplify() == 1.0 * rho * sympy.sqrt(1 + z**2 / rho**2) / t
+    assert vec.beta.subs(values).evalf() == pytest.approx(0.5590169943749475)
 
 
 def test_rhophi_eta_tau():
@@ -186,3 +200,4 @@ def test_rhophi_eta_tau():
         )
         * sympy.exp(-2 * sympy.asinh(z / rho))
     )
+    assert vec.beta.subs(values).evalf() == pytest.approx(0.5590169943749475)

@@ -25,7 +25,6 @@ def test_xy_z():
         longitudinal=vector.backends.sympy.LongitudinalSympyZ(z),
     )
     assert vec.mag == sympy.sqrt(x**2 + y**2 + z**2)
-    # explicitly tell sympy to evaluate the result
     assert vec.mag.subs(values).evalf() == pytest.approx(math.sqrt(125))
 
 
@@ -37,7 +36,6 @@ def test_xy_theta():
         ),
     )
     assert vec.mag.simplify() == sympy.sqrt(x**2 + y**2 + z**2)
-    # explicitly tell sympy to evaluate the result
     assert vec.mag.subs(values).evalf() == pytest.approx(math.sqrt(125))
 
 
@@ -51,7 +49,6 @@ def test_xy_eta():
     assert vec.mag.simplify() == 1.0 * sympy.sqrt(x**2 + y**2) * sympy.sqrt(
         z**2 / (x**2 + y**2) + 1
     )
-    # explicitly tell sympy to evaluate the result
     assert vec.mag.subs(values).evalf() == pytest.approx(math.sqrt(125))
 
 
@@ -61,7 +58,6 @@ def test_rhophi_z():
         longitudinal=vector.backends.sympy.LongitudinalSympyZ(z),
     )
     assert vec.mag == sympy.sqrt(rho**2 + z**2)
-    # explicitly tell sympy to evaluate the result
     assert vec.mag.subs(values).evalf() == pytest.approx(math.sqrt(125))
 
 
@@ -73,7 +69,6 @@ def test_rhophi_theta():
         ),
     )
     assert vec.mag.simplify() == sympy.sqrt(rho**2 + z**2)
-    # explicitly tell sympy to evaluate the result
     assert vec.mag.subs(values).evalf() == pytest.approx(math.sqrt(125))
 
 
@@ -83,5 +78,4 @@ def test_rhophi_eta():
         longitudinal=vector.backends.sympy.LongitudinalSympyEta(sympy.asinh(z / rho)),
     )
     assert vec.mag.simplify() == 1.0 * rho * sympy.sqrt(1 + z**2 / rho**2)
-    # explicitly tell sympy to evaluate the result
     assert vec.mag.subs(values).evalf() == pytest.approx(math.sqrt(125))

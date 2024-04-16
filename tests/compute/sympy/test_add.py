@@ -35,7 +35,6 @@ def test_planar_object():
                 getattr(v2, "to_" + t2)(),
             )
             out = transformed1.add(transformed2)
-            # explicitly tell sympy to evaluate the result
             assert out.x.subs(values).evalf() == pytest.approx(8)
             assert out.y.subs(values).evalf() == pytest.approx(16)
 
@@ -61,7 +60,6 @@ def test_spatial_object():
                 getattr(v2, "to_" + t2)(),
             )
             out = transformed1.add(transformed2)
-            # explicitly tell sympy to evaluate the result
             assert out.x.subs(values).evalf() == pytest.approx(8)
             assert out.y.subs(values).evalf() == pytest.approx(16)
             assert out.z.subs(values).evalf() == pytest.approx(6)
@@ -117,7 +115,6 @@ def test_lorentz_object():
                 getattr(v2, "to_" + t2)(),
             )
             out = transformed1.add(transformed2)
-            # explicitly tell sympy to evaluate the result
             assert out.x.subs(values).evalf() == pytest.approx(8)
             assert out.y.subs(values).evalf() == pytest.approx(16)
             assert out.z.subs(values).evalf() == pytest.approx(6)

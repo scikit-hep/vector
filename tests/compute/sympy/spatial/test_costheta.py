@@ -29,7 +29,6 @@ def test_xy_z():
     assert vec.costheta.simplify() == sympy.Abs(
         sympy.cos(theta) * sympy.tan(theta)
     ) / sympy.tan(theta)
-    # explicitly tell sympy to evaluate the result
     assert vec.costheta.subs(values).evalf() == pytest.approx(
         math.cos(0.4636476090008061)
     )
@@ -41,7 +40,6 @@ def test_xy_theta():
         longitudinal=vector.backends.sympy.LongitudinalSympyTheta(theta),
     )
     assert vec.costheta == sympy.cos(theta)
-    # explicitly tell sympy to evaluate the result
     assert vec.costheta.subs(values).evalf() == pytest.approx(
         math.cos(0.4636476090008061)
     )
@@ -57,7 +55,6 @@ def test_xy_eta():
     assert vec.costheta.simplify() == sympy.cos(
         2.0 * sympy.atan(sympy.tan(0.5 * theta))
     )
-    # explicitly tell sympy to evaluate the result
     assert vec.costheta.subs(values).evalf() == pytest.approx(
         math.cos(0.4636476090008061)
     )
@@ -71,7 +68,6 @@ def test_rhophi_z():
     assert vec.costheta.simplify() == sympy.Abs(
         sympy.cos(theta) * sympy.tan(theta)
     ) / sympy.tan(theta)
-    # explicitly tell sympy to evaluate the result
     assert vec.costheta.subs(values).evalf() == pytest.approx(
         math.cos(0.4636476090008061)
     )
@@ -83,7 +79,6 @@ def test_rhophi_theta():
         longitudinal=vector.backends.sympy.LongitudinalSympyTheta(theta),
     )
     assert vec.costheta == sympy.cos(theta)
-    # explicitly tell sympy to evaluate the result
     assert vec.costheta.subs(values).evalf() == pytest.approx(
         math.cos(0.4636476090008061)
     )
@@ -99,7 +94,6 @@ def test_rhophi_eta():
     assert vec.costheta.simplify() == sympy.cos(
         2.0 * sympy.atan(sympy.tan(0.5 * theta))
     )
-    # explicitly tell sympy to evaluate the result
     assert vec.costheta.subs(values).evalf() == pytest.approx(
         math.cos(0.4636476090008061)
     )

@@ -27,7 +27,6 @@ def test_xy_xy():
         == sympy.Mod(-sympy.atan2(ny, nx) + sympy.atan2(y, x) + sympy.pi, 2 * sympy.pi)
         - sympy.pi
     )
-    # explicitly tell sympy to evaluate the result
     assert v1.deltaphi(v2).subs(values).evalf() == pytest.approx(
         math.atan2(2, 1) - math.atan2(4, 3)
     )
@@ -42,7 +41,6 @@ def test_xy_rhophi():
         v1.deltaphi(v2)
         == sympy.Mod(-ny + sympy.atan2(y, x) + sympy.pi, 2 * sympy.pi) - sympy.pi
     )
-    # explicitly tell sympy to evaluate the result
     assert v1.deltaphi(v2).subs(values).evalf() == pytest.approx(math.atan2(2, 1) - 4)
 
 
@@ -55,7 +53,6 @@ def test_rhophi_xy():
         v1.deltaphi(v2)
         == sympy.Mod(y - sympy.atan2(ny, nx) + sympy.pi, 2 * sympy.pi) - sympy.pi
     )
-    # explicitly tell sympy to evaluate the result
     assert v1.deltaphi(v2).subs(values).evalf() == pytest.approx(2 - math.atan2(4, 3))
 
 
@@ -67,5 +64,4 @@ def test_rhophi_rhophi():
         azimuthal=vector.backends.sympy.AzimuthalSympyRhoPhi(nx, ny)
     )
     assert v1.deltaphi(v2) == sympy.Mod(-ny + y + sympy.pi, 2 * sympy.pi) - sympy.pi
-    # explicitly tell sympy to evaluate the result
     assert v1.deltaphi(v2).subs(values).evalf() == pytest.approx(2 - 4)
