@@ -11,6 +11,8 @@ import vector
 
 sympy = pytest.importorskip("sympy")
 
+pytestmark = pytest.mark.sympy
+
 x, y, z = sympy.symbols("x y z", real=True)
 values = {x: 0.4, y: 0.5, z: 0.6}
 

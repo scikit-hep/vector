@@ -11,7 +11,10 @@ import vector
 
 sympy = pytest.importorskip("sympy")
 
+pytestmark = pytest.mark.sympy
+
 x, y, rho, phi, theta = sympy.symbols("x y rho phi theta", real=True, positive=True)
+values = {x: 3, y: 4, rho: 5, phi: 0, theta: 0.4636476090008061}
 
 
 def test_xy_z():
@@ -24,6 +27,8 @@ def test_xy_z():
     assert vec.theta.simplify() == sympy.acos(
         sympy.Abs(sympy.cos(theta) * sympy.tan(theta)) / sympy.tan(theta)
     )
+    # explicitly tell sympy to evaluate the result
+    assert vec.theta.subs(values).evalf() == pytest.approx(0.4636476090008061)
 
 
 def test_xy_theta():
@@ -32,6 +37,8 @@ def test_xy_theta():
         longitudinal=vector.backends.sympy.LongitudinalSympyTheta(theta),
     )
     assert vec.theta == theta
+    # explicitly tell sympy to evaluate the result
+    assert vec.theta.subs(values).evalf() == pytest.approx(0.4636476090008061)
 
 
 def test_xy_eta():
@@ -42,6 +49,8 @@ def test_xy_eta():
         ),
     )
     assert vec.theta.simplify() == 2.0 * sympy.atan(sympy.tan(0.5 * theta))
+    # explicitly tell sympy to evaluate the result
+    assert vec.theta.subs(values).evalf() == pytest.approx(0.4636476090008061)
 
 
 def test_rhophi_z():
@@ -52,6 +61,8 @@ def test_rhophi_z():
     assert vec.theta.simplify() == sympy.acos(
         sympy.Abs(sympy.cos(theta) * sympy.tan(theta)) / sympy.tan(theta)
     )
+    # explicitly tell sympy to evaluate the result
+    assert vec.theta.subs(values).evalf() == pytest.approx(0.4636476090008061)
 
 
 def test_rhophi_theta():
@@ -60,6 +71,8 @@ def test_rhophi_theta():
         longitudinal=vector.backends.sympy.LongitudinalSympyTheta(theta),
     )
     assert vec.theta == theta
+    # explicitly tell sympy to evaluate the result
+    assert vec.theta.subs(values).evalf() == pytest.approx(0.4636476090008061)
 
 
 def test_rhophi_eta():
@@ -70,3 +83,5 @@ def test_rhophi_eta():
         ),
     )
     assert vec.theta.simplify() == 2.0 * sympy.atan(sympy.tan(0.5 * theta))
+    # explicitly tell sympy to evaluate the result
+    assert vec.theta.subs(values).evalf() == pytest.approx(0.4636476090008061)

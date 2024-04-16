@@ -11,7 +11,10 @@ import vector
 
 sympy = pytest.importorskip("sympy")
 
+pytestmark = pytest.mark.sympy
+
 x, y, rho, phi, z = sympy.symbols("x y rho phi z", real=True, positive=True)
+values = {x: 3, y: 4, rho: 5, phi: 0, z: 10}
 
 
 def test_xy_z():
@@ -20,6 +23,8 @@ def test_xy_z():
         longitudinal=vector.backends.sympy.LongitudinalSympyZ(z),
     )
     assert vec.z == z
+    # explicitly tell sympy to evaluate the result
+    assert vec.z.subs(values).evalf() == pytest.approx(10)
 
 
 def test_xy_theta():
@@ -30,6 +35,8 @@ def test_xy_theta():
         ),
     )
     assert vec.z.simplify() == z
+    # explicitly tell sympy to evaluate the result
+    assert vec.z.subs(values).evalf() == pytest.approx(10)
 
 
 def test_xy_eta():
@@ -40,6 +47,8 @@ def test_xy_eta():
         ),
     )
     assert vec.z.simplify() == z
+    # explicitly tell sympy to evaluate the result
+    assert vec.z.subs(values).evalf() == pytest.approx(10)
 
 
 def test_rhophi_z():
@@ -48,6 +57,8 @@ def test_rhophi_z():
         longitudinal=vector.backends.sympy.LongitudinalSympyZ(z),
     )
     assert vec.z == z
+    # explicitly tell sympy to evaluate the result
+    assert vec.z.subs(values).evalf() == pytest.approx(10)
 
 
 def test_rhophi_theta():
@@ -58,6 +69,8 @@ def test_rhophi_theta():
         ),
     )
     assert vec.z.simplify() == z
+    # explicitly tell sympy to evaluate the result
+    assert vec.z.subs(values).evalf() == pytest.approx(10)
 
 
 def test_rhophi_eta():
@@ -66,3 +79,5 @@ def test_rhophi_eta():
         longitudinal=vector.backends.sympy.LongitudinalSympyEta(sympy.asinh(z / rho)),
     )
     assert vec.z.simplify() == z
+    # explicitly tell sympy to evaluate the result
+    assert vec.z.subs(values).evalf() == pytest.approx(10)

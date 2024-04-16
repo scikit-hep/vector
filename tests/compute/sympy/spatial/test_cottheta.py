@@ -5,13 +5,18 @@
 
 from __future__ import annotations
 
+import math
+
 import pytest
 
 import vector
 
 sympy = pytest.importorskip("sympy")
 
+pytestmark = pytest.mark.sympy
+
 x, y, rho, phi, theta = sympy.symbols("x y rho phi theta", real=True)
+values = {x: 3, y: 4, rho: 5, phi: 0, theta: 0.4636476090008061}
 
 
 def test_xy_z():
@@ -22,6 +27,10 @@ def test_xy_z():
         ),
     )
     assert vec.cottheta == 1 / sympy.tan(theta)
+    # explicitly tell sympy to evaluate the result
+    assert vec.cottheta.subs(values).evalf() == pytest.approx(
+        1 / math.tan(0.4636476090008061)
+    )
 
 
 def test_xy_theta():
@@ -30,6 +39,10 @@ def test_xy_theta():
         longitudinal=vector.backends.sympy.LongitudinalSympyTheta(theta),
     )
     assert vec.cottheta == 1 / sympy.tan(theta)
+    # explicitly tell sympy to evaluate the result
+    assert vec.cottheta.subs(values).evalf() == pytest.approx(
+        1 / math.tan(0.4636476090008061)
+    )
 
 
 def test_xy_eta():
@@ -40,6 +53,10 @@ def test_xy_eta():
         ),
     )
     assert vec.cottheta == 1 / sympy.tan(2.0 * sympy.atan(sympy.tan(0.5 * theta)))
+    # explicitly tell sympy to evaluate the result
+    assert vec.cottheta.subs(values).evalf() == pytest.approx(
+        1 / math.tan(0.4636476090008061)
+    )
 
 
 def test_rhophi_z():
@@ -48,6 +65,10 @@ def test_rhophi_z():
         longitudinal=vector.backends.sympy.LongitudinalSympyZ(rho / sympy.tan(theta)),
     )
     assert vec.cottheta == 1 / sympy.tan(theta)
+    # explicitly tell sympy to evaluate the result
+    assert vec.cottheta.subs(values).evalf() == pytest.approx(
+        1 / math.tan(0.4636476090008061)
+    )
 
 
 def test_rhophi_theta():
@@ -56,6 +77,10 @@ def test_rhophi_theta():
         longitudinal=vector.backends.sympy.LongitudinalSympyTheta(theta),
     )
     assert vec.cottheta == 1 / sympy.tan(theta)
+    # explicitly tell sympy to evaluate the result
+    assert vec.cottheta.subs(values).evalf() == pytest.approx(
+        1 / math.tan(0.4636476090008061)
+    )
 
 
 def test_rhophi_eta():
@@ -66,3 +91,7 @@ def test_rhophi_eta():
         ),
     )
     assert vec.cottheta == 1 / sympy.tan(2.0 * sympy.atan(sympy.tan(0.5 * theta)))
+    # explicitly tell sympy to evaluate the result
+    assert vec.cottheta.subs(values).evalf() == pytest.approx(
+        1 / math.tan(0.4636476090008061)
+    )

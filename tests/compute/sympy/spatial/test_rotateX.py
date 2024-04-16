@@ -12,6 +12,8 @@ import vector._methods
 
 sympy = pytest.importorskip("sympy")
 
+pytestmark = pytest.mark.sympy
+
 x, y, z, time = sympy.symbols("x y z time", real=True)
 values = {x: 0.1, y: 0.2, z: 0.3}
 
