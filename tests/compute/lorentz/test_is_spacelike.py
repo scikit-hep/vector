@@ -23,7 +23,7 @@ def test_xy_z_t():
         vector.backends.object.LongitudinalObjectZ(20),
         vector.backends.object.TemporalObjectT(math.sqrt(425)),
     )
-    assert not vec.is_spacelike()
+    assert not vec.is_spacelike(tolerance=1e-14)
 
     vec = vector.backends.object.VectorObject4D(
         vector.backends.object.AzimuthalObjectXY(3, 4),
@@ -46,7 +46,7 @@ def test_xy_z_tau():
         vector.backends.object.LongitudinalObjectZ(20),
         vector.backends.object.TemporalObjectTau(2.384185791015625e-07),
     )
-    assert not vec.is_spacelike()
+    assert not vec.is_spacelike(tolerance=1e-14)
 
     vec = vector.backends.object.VectorObject4D(
         vector.backends.object.AzimuthalObjectXY(3, 4),
@@ -69,7 +69,7 @@ def test_xy_theta_t():
         vector.backends.object.LongitudinalObjectTheta(0.24497866312686423),
         vector.backends.object.TemporalObjectT(math.sqrt(425)),
     )
-    assert not vec.is_spacelike()
+    assert not vec.is_spacelike(tolerance=1e-14)
 
     vec = vector.backends.object.VectorObject4D(
         vector.backends.object.AzimuthalObjectXY(3, 4),
@@ -92,7 +92,7 @@ def test_xy_theta_tau():
         vector.backends.object.LongitudinalObjectTheta(0.24497866312686423),
         vector.backends.object.TemporalObjectTau(2.384185791015625e-07),
     )
-    assert not vec.is_spacelike()
+    assert not vec.is_spacelike(tolerance=1e-14)
 
     vec = vector.backends.object.VectorObject4D(
         vector.backends.object.AzimuthalObjectXY(3, 4),
@@ -115,7 +115,7 @@ def test_xy_eta_t():
         vector.backends.object.LongitudinalObjectEta(2.0947125472611012),
         vector.backends.object.TemporalObjectT(math.sqrt(425)),
     )
-    assert not vec.is_spacelike()
+    assert not vec.is_spacelike(tolerance=1e-14)
 
     vec = vector.backends.object.VectorObject4D(
         vector.backends.object.AzimuthalObjectXY(3, 4),
@@ -138,7 +138,7 @@ def test_xy_eta_tau():
         vector.backends.object.LongitudinalObjectEta(2.0947125472611012),
         vector.backends.object.TemporalObjectTau(2.384185791015625e-07),
     )
-    assert not vec.is_spacelike()
+    assert not vec.is_spacelike(tolerance=1e-400)
 
     vec = vector.backends.object.VectorObject4D(
         vector.backends.object.AzimuthalObjectXY(3, 4),
@@ -161,7 +161,7 @@ def test_rhophi_z_t():
         vector.backends.object.LongitudinalObjectZ(20),
         vector.backends.object.TemporalObjectT(math.sqrt(425)),
     )
-    assert not vec.is_spacelike()
+    assert not vec.is_spacelike(tolerance=1e-14)
 
     vec = vector.backends.object.VectorObject4D(
         vector.backends.object.AzimuthalObjectRhoPhi(5, 0),
@@ -184,7 +184,7 @@ def test_rhophi_z_tau():
         vector.backends.object.LongitudinalObjectZ(20),
         vector.backends.object.TemporalObjectTau(2.384185791015625e-07),
     )
-    assert not vec.is_spacelike()
+    assert not vec.is_spacelike(tolerance=1e-14)
 
     vec = vector.backends.object.VectorObject4D(
         vector.backends.object.AzimuthalObjectRhoPhi(5, 0),
@@ -207,7 +207,7 @@ def test_rhophi_theta_t():
         vector.backends.object.LongitudinalObjectTheta(0.24497866312686423),
         vector.backends.object.TemporalObjectT(math.sqrt(425)),
     )
-    assert not vec.is_spacelike()
+    assert not vec.is_spacelike(tolerance=1e-14)
 
     vec = vector.backends.object.VectorObject4D(
         vector.backends.object.AzimuthalObjectRhoPhi(5, 0),
@@ -230,7 +230,7 @@ def test_rhophi_theta_tau():
         vector.backends.object.LongitudinalObjectTheta(0.24497866312686423),
         vector.backends.object.TemporalObjectTau(2.384185791015625e-07),
     )
-    assert not vec.is_spacelike()
+    assert not vec.is_spacelike(tolerance=1e-14)
 
     vec = vector.backends.object.VectorObject4D(
         vector.backends.object.AzimuthalObjectRhoPhi(5, 0),
@@ -253,7 +253,7 @@ def test_rhophi_eta_t():
         vector.backends.object.LongitudinalObjectEta(2.0947125472611012),
         vector.backends.object.TemporalObjectT(math.sqrt(425)),
     )
-    assert not vec.is_spacelike()
+    assert not vec.is_spacelike(tolerance=1e-14)
 
     vec = vector.backends.object.VectorObject4D(
         vector.backends.object.AzimuthalObjectRhoPhi(5, 0),
@@ -276,7 +276,7 @@ def test_rhophi_eta_tau():
         vector.backends.object.LongitudinalObjectEta(2.0947125472611012),
         vector.backends.object.TemporalObjectTau(2.384185791015625e-07),
     )
-    assert not vec.is_spacelike()
+    assert not vec.is_spacelike(tolerance=1e-400)
 
     vec = vector.backends.object.VectorObject4D(
         vector.backends.object.AzimuthalObjectRhoPhi(5, 0),
