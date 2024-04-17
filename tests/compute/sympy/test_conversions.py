@@ -11,6 +11,8 @@ import vector
 
 sympy = pytest.importorskip("sympy")
 
+pytestmark = pytest.mark.sympy
+
 x, y = sympy.symbols("x y")
 rho, phi = sympy.symbols("rho phi")
 z, eta, theta = sympy.symbols("z eta theta")

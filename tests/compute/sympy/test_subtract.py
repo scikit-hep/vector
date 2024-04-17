@@ -13,13 +13,16 @@ sympy = pytest.importorskip("sympy")
 
 pytestmark = pytest.mark.sympy
 
-x, y, z, t = sympy.symbols("x y z t")
+x, y, z, t, nx, ny, nz, nt = sympy.symbols("x y z t nx ny nz nt", real=True)
+values = {x: 3, y: 4, z: 2, t: 40, nx: 5, ny: 12, nz: 4, nt: 20}
 
 
 def test_planar_sympy():
     v1 = vector.VectorSympy2D(azimuthal=vector.backends.sympy.AzimuthalSympyXY(x, y))
-    v2 = vector.VectorSympy2D(azimuthal=vector.backends.sympy.AzimuthalSympyXY(x, y))
-    assert not v1.not_equal(v2)
+    v2 = vector.VectorSympy2D(azimuthal=vector.backends.sympy.AzimuthalSympyXY(nx, ny))
+    out = v1.subtract(v2)
+    assert out.x == x - nx
+    assert out.y == y - ny
 
     for t1 in "xy", "rhophi":
         for t2 in "xy", "rhophi":
@@ -27,7 +30,9 @@ def test_planar_sympy():
                 getattr(v1, "to_" + t1)(),
                 getattr(v2, "to_" + t2)(),
             )
-            transformed1.not_equal(transformed2)
+            out = transformed1.subtract(transformed2)
+            assert out.x.subs(values).evalf() == pytest.approx(-2)
+            assert out.y.subs(values).evalf() == pytest.approx(-8)
 
 
 def test_spatial_sympy():
@@ -36,10 +41,13 @@ def test_spatial_sympy():
         longitudinal=vector.backends.sympy.LongitudinalSympyZ(z),
     )
     v2 = vector.VectorSympy3D(
-        azimuthal=vector.backends.sympy.AzimuthalSympyXY(x, y),
-        longitudinal=vector.backends.sympy.LongitudinalSympyZ(z),
+        azimuthal=vector.backends.sympy.AzimuthalSympyXY(nx, ny),
+        longitudinal=vector.backends.sympy.LongitudinalSympyZ(nz),
     )
-    assert not v1.not_equal(v2)
+    out = v1.subtract(v2)
+    assert out.x == x - nx
+    assert out.y == y - ny
+    assert out.z == z - nz
 
     for t1 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
         for t2 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
@@ -47,21 +55,28 @@ def test_spatial_sympy():
                 getattr(v1, "to_" + t1)(),
                 getattr(v2, "to_" + t2)(),
             )
-            transformed1.not_equal(transformed2)
+            out = transformed1.subtract(transformed2)
+            assert out.x.subs(values).evalf() == pytest.approx(-2)
+            assert out.y.subs(values).evalf() == pytest.approx(-8)
+            assert out.z.subs(values).evalf() == pytest.approx(-2)
 
 
 def test_lorentz_sympy():
-    v1 = vector.VectorSympy4D(
+    v1 = vector.backends.sympy.VectorSympy4D(
         azimuthal=vector.backends.sympy.AzimuthalSympyXY(x, y),
         longitudinal=vector.backends.sympy.LongitudinalSympyZ(z),
         temporal=vector.backends.sympy.TemporalSympyT(t),
     )
-    v2 = vector.VectorSympy4D(
-        azimuthal=vector.backends.sympy.AzimuthalSympyXY(x, y),
-        longitudinal=vector.backends.sympy.LongitudinalSympyZ(z),
-        temporal=vector.backends.sympy.TemporalSympyT(t),
+    v2 = vector.backends.sympy.VectorSympy4D(
+        azimuthal=vector.backends.sympy.AzimuthalSympyXY(nx, ny),
+        longitudinal=vector.backends.sympy.LongitudinalSympyZ(nz),
+        temporal=vector.backends.sympy.TemporalSympyT(nt),
     )
-    assert not v1.not_equal(v2)
+    out = v1.subtract(v2)
+    assert out.x == x - nx
+    assert out.y == y - ny
+    assert out.z == z - nz
+    assert out.t == t - nt
 
     for t1 in (
         "xyzt",
@@ -91,5 +106,13 @@ def test_lorentz_sympy():
             "rhophithetatau",
             "rhophietatau",
         ):
-            tr1, tr2 = getattr(v1, "to_" + t1)(), getattr(v2, "to_" + t2)()
-            tr1.not_equal(tr2)
+            transformed1, transformed2 = (
+                getattr(v1, "to_" + t1)(),
+                getattr(v2, "to_" + t2)(),
+            )
+            out = transformed1.subtract(transformed2)
+            assert out.x.subs(values).evalf() == pytest.approx(-2)
+            assert out.y.subs(values).evalf() == pytest.approx(-8)
+            assert out.z.subs(values).evalf() == pytest.approx(-2)
+            print(t1, t2, out.t)
+            assert out.t.subs(values).evalf() == pytest.approx(20)

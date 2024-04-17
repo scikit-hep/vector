@@ -13,13 +13,14 @@ sympy = pytest.importorskip("sympy")
 
 pytestmark = pytest.mark.sympy
 
-x, y, z, t = sympy.symbols("x y z t")
+x, y, z, t, nx, ny, nz, nt = sympy.symbols("x y z t nx ny nz nt", real=True)
+values = {x: 1, y: 2, z: 3, t: 10, nx: 5, ny: 6, nz: 7, nt: 20}
 
 
-def test_planar_sympy():
+def test_planar_object():
     v1 = vector.VectorSympy2D(azimuthal=vector.backends.sympy.AzimuthalSympyXY(x, y))
-    v2 = vector.VectorSympy2D(azimuthal=vector.backends.sympy.AzimuthalSympyXY(x, y))
-    assert not v1.not_equal(v2)
+    v2 = vector.VectorSympy2D(azimuthal=vector.backends.sympy.AzimuthalSympyXY(nx, ny))
+    assert v1.dot(v2) == nx * x + ny * y
 
     for t1 in "xy", "rhophi":
         for t2 in "xy", "rhophi":
@@ -27,19 +28,21 @@ def test_planar_sympy():
                 getattr(v1, "to_" + t1)(),
                 getattr(v2, "to_" + t2)(),
             )
-            transformed1.not_equal(transformed2)
+            assert transformed1.dot(transformed2).subs(values).evalf() == pytest.approx(
+                17
+            )
 
 
-def test_spatial_sympy():
+def test_spatial_object():
     v1 = vector.VectorSympy3D(
         azimuthal=vector.backends.sympy.AzimuthalSympyXY(x, y),
         longitudinal=vector.backends.sympy.LongitudinalSympyZ(z),
     )
     v2 = vector.VectorSympy3D(
-        azimuthal=vector.backends.sympy.AzimuthalSympyXY(x, y),
-        longitudinal=vector.backends.sympy.LongitudinalSympyZ(z),
+        azimuthal=vector.backends.sympy.AzimuthalSympyXY(nx, ny),
+        longitudinal=vector.backends.sympy.LongitudinalSympyZ(nz),
     )
-    assert not v1.not_equal(v2)
+    assert v1.dot(v2) == nx * x + ny * y + nz * z
 
     for t1 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
         for t2 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
@@ -47,21 +50,23 @@ def test_spatial_sympy():
                 getattr(v1, "to_" + t1)(),
                 getattr(v2, "to_" + t2)(),
             )
-            transformed1.not_equal(transformed2)
+            assert transformed1.dot(transformed2).subs(values).evalf() == pytest.approx(
+                38
+            )
 
 
-def test_lorentz_sympy():
+def test_lorentz_object():
     v1 = vector.VectorSympy4D(
         azimuthal=vector.backends.sympy.AzimuthalSympyXY(x, y),
         longitudinal=vector.backends.sympy.LongitudinalSympyZ(z),
         temporal=vector.backends.sympy.TemporalSympyT(t),
     )
     v2 = vector.VectorSympy4D(
-        azimuthal=vector.backends.sympy.AzimuthalSympyXY(x, y),
-        longitudinal=vector.backends.sympy.LongitudinalSympyZ(z),
-        temporal=vector.backends.sympy.TemporalSympyT(t),
+        azimuthal=vector.backends.sympy.AzimuthalSympyXY(nx, ny),
+        longitudinal=vector.backends.sympy.LongitudinalSympyZ(nz),
+        temporal=vector.backends.sympy.TemporalSympyT(nt),
     )
-    assert not v1.not_equal(v2)
+    assert v1.dot(v2) == nt * t - nx * x - ny * y - nz * z
 
     for t1 in (
         "xyzt",
@@ -92,4 +97,5 @@ def test_lorentz_sympy():
             "rhophietatau",
         ):
             tr1, tr2 = getattr(v1, "to_" + t1)(), getattr(v2, "to_" + t2)()
-            tr1.not_equal(tr2)
+            print(t1, t2, tr1.dot(tr2).subs(values))
+            assert tr1.dot(tr2).subs(values).evalf() == pytest.approx(162)
