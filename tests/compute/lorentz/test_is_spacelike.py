@@ -92,7 +92,7 @@ def test_xy_theta_tau():
         vector.backends.object.LongitudinalObjectTheta(0.24497866312686423),
         vector.backends.object.TemporalObjectTau(2.384185791015625e-07),
     )
-    assert not vec.is_spacelike(tolerance=1e-400)
+    assert not vec.is_spacelike(tolerance=1e-1000)
 
     vec = vector.backends.object.VectorObject4D(
         vector.backends.object.AzimuthalObjectXY(3, 4),
@@ -230,7 +230,7 @@ def test_rhophi_theta_tau():
         vector.backends.object.LongitudinalObjectTheta(0.24497866312686423),
         vector.backends.object.TemporalObjectTau(2.384185791015625e-07),
     )
-    assert not vec.is_spacelike(tolerance=1e-400)
+    assert not vec.is_spacelike(tolerance=1e-1000)
 
     vec = vector.backends.object.VectorObject4D(
         vector.backends.object.AzimuthalObjectRhoPhi(5, 0),
