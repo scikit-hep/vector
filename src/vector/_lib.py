@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import typing
 
+import numpy
 import sympy
 
 if typing.TYPE_CHECKING:
@@ -54,14 +55,14 @@ class SympyLib:
     def copysign(self, val1: sympy.Expr, val2: sympy.Expr) -> sympy.Expr:
         return val1
 
-    def sign(self, val: sympy.Expr) -> sympy.Expr:
-        return val
-
     @property
     def inf(self) -> sympy.Expr:
         return sympy.oo
 
     # same named functions
+    def sign(self, val: int | float) -> sympy.Expr:
+        return numpy.sign(val)
+
     def sqrt(self, val: sympy.Expr) -> sympy.Expr:
         return sympy.sqrt(val)  # type: ignore[no-untyped-call]
 
