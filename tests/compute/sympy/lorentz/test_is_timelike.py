@@ -44,7 +44,7 @@ def test_xy_z_t():
 
 def test_xy_z_tau():
     # the following test fails, but it represent the t**2 < mag**2 case
-    # so it be okay for it to fail
+    # so it should be okay for it to fail
     # vec = vector.VectorSympy4D(
     #     vector.backends.sympy.AzimuthalSympyXY(x, y),
     #     vector.backends.sympy.LongitudinalSympyZ(z),
@@ -102,7 +102,7 @@ def test_xy_theta_t():
 
 def test_xy_theta_tau():
     # the following test fails, but it represent the t**2 < mag**2 case
-    # so it be okay for it to fail
+    # so it should be okay for it to fail
     # vec = vector.VectorSympy4D(
     #     vector.backends.sympy.AzimuthalSympyXY(x, y),
     #     vector.backends.sympy.LongitudinalSympyTheta(sympy.acos(z / sympy.sqrt(x**2 + y**2 + z**2))),
@@ -164,7 +164,7 @@ def test_xy_eta_t():
 
 def test_xy_eta_tau():
     # the following test fails, but it represent the t**2 < mag**2 case
-    # so it be okay for it to fail
+    # so it should be okay for it to fail
     # vec = vector.VectorSympy4D(
     #     vector.backends.sympy.AzimuthalSympyXY(x, y),
     #     vector.backends.sympy.LongitudinalSympyEta(sympy.asinh(z / sympy.sqrt(x**2 + y**2))),
@@ -220,7 +220,7 @@ def test_rhophi_z_t():
 
 def test_rhophi_z_tau():
     # the following test fails, but it represent the t**2 < mag**2 case
-    # so it be okay for it to fail
+    # so it should be okay for it to fail
     # vec = vector.VectorSympy4D(
     #     vector.backends.sympy.AzimuthalSympyRhoPhi(rho, phi),
     #     vector.backends.sympy.LongitudinalSympyZ(z),
@@ -278,7 +278,7 @@ def test_rhophi_theta_t():
 
 def test_rhophi_theta_tau():
     # the following test fails, but it represent the t**2 < mag**2 case
-    # so it be okay for it to fail
+    # so it should be okay for it to fail
     # vec = vector.VectorSympy4D(
     #     vector.backends.sympy.AzimuthalSympyRhoPhi(rho, phi),
     #     vector.backends.sympy.LongitudinalSympyTheta(sympy.acos(z / sympy.sqrt(rho**2 + z**2))),
@@ -334,7 +334,7 @@ def test_rhophi_eta_t():
 
 def test_rhophi_eta_tau():
     # the following test fails, but it represent the t**2 < mag**2 case
-    # so it be okay for it to fail
+    # so it should be okay for it to fail
     # vec = vector.VectorSympy4D(
     #     vector.backends.sympy.AzimuthalSympyRhoPhi(rho, phi),
     #     vector.backends.sympy.LongitudinalSympyEta(sympy.asinh(z / rho)),
