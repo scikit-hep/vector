@@ -271,14 +271,14 @@ def test_lorentz_negtime_negfactor():
         "rhophietat",
     ):
         tvec = getattr(vec, "to_" + t1)()
-        out = tvec.scale(1.75)
+        out = tvec.scale(-1.75)
         assert type(out.azimuthal) == type(tvec.azimuthal)  # noqa: E721
         assert type(out.longitudinal) == type(tvec.longitudinal)  # noqa: E721
         assert type(out.temporal) == type(tvec.temporal)  # noqa: E721
-        assert out.x == pytest.approx(1 * 1.75)
-        assert out.y == pytest.approx(2 * 1.75)
-        assert out.z == pytest.approx(3 * 1.75)
-        assert out.t == pytest.approx(-1.5 * 1.75)
+        assert out.x == pytest.approx(1 * -1.75)
+        assert out.y == pytest.approx(2 * -1.75)
+        assert out.z == pytest.approx(3 * -1.75)
+        assert out.t == pytest.approx(-1.5 * -1.75)
 
     for t1 in (
         "xyztau",
