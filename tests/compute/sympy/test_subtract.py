@@ -114,5 +114,4 @@ def test_lorentz_sympy():
             assert out.x.subs(values).evalf() == pytest.approx(-2)
             assert out.y.subs(values).evalf() == pytest.approx(-8)
             assert out.z.subs(values).evalf() == pytest.approx(-2)
-            print(t1, t2, out.t)
             assert out.t.subs(values).evalf() == pytest.approx(20)

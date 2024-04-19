@@ -97,5 +97,4 @@ def test_lorentz_object():
             "rhophietatau",
         ):
             tr1, tr2 = getattr(v1, "to_" + t1)(), getattr(v2, "to_" + t2)()
-            print(t1, t2, tr1.dot(tr2).subs(values))
             assert tr1.dot(tr2).subs(values).evalf() == pytest.approx(162)

@@ -71,7 +71,6 @@ def test_spatial_posfactor():
         "rhophitheta",
         "rhophieta",
     ):
-        print(t1)
         tvec = getattr(vec, "to_" + t1)()
         out = tvec.scale(1.75)
         assert type(out.azimuthal) == type(tvec.azimuthal)  # noqa: E721
@@ -101,7 +100,6 @@ def test_spatial_negfactor():
         "rhophitheta",
         "rhophieta",
     ):
-        print(t1)
         tvec = getattr(vec, "to_" + t1)()
         out = tvec.scale(-1.75)
         assert type(out.azimuthal) == type(tvec.azimuthal)  # noqa: E721
@@ -140,7 +138,6 @@ def test_lorentz_postime_posfactor():
         "rhophithetatau",
         "rhophietatau",
     ):
-        print(t1)
         tvec = getattr(vec, "to_" + t1)()
         out = tvec.scale(1.75)
         assert type(out.azimuthal) == type(tvec.azimuthal)  # noqa: E721
@@ -175,7 +172,6 @@ def test_lorentz_postime_negfactor():
         "rhophithetat",
         "rhophietat",
     ):
-        print(t1)
         tvec = getattr(vec, "to_" + t1)()
         out = tvec.scale(-1.75)
         assert type(out.azimuthal) == type(tvec.azimuthal)  # noqa: E721
@@ -194,7 +190,6 @@ def test_lorentz_postime_negfactor():
         "rhophithetatau",
         "rhophietatau",
     ):
-        print(t1)
         tvec = getattr(vec, "to_" + t1)()
         out = tvec.scale(-1.75)
         assert type(out.azimuthal) == type(tvec.azimuthal)  # noqa: E721
@@ -229,7 +224,6 @@ def test_lorentz_negtime_posfactor():
         "rhophithetat",
         "rhophietat",
     ):
-        print(t1)
         tvec = getattr(vec, "to_" + t1)()
         out = tvec.scale(1.75)
         assert type(out.azimuthal) == type(tvec.azimuthal)  # noqa: E721
@@ -248,7 +242,6 @@ def test_lorentz_negtime_posfactor():
         "rhophithetatau",
         "rhophietatau",
     ):
-        print(t1)
         tvec = getattr(vec, "to_" + t1)()
         out = tvec.scale(1.75)
         assert type(out.azimuthal) == type(tvec.azimuthal)  # noqa: E721
@@ -283,7 +276,6 @@ def test_lorentz_negtime_negfactor():
         "rhophithetat",
         "rhophietat",
     ):
-        print(t1)
         tvec = getattr(vec, "to_" + t1)()
         out = tvec.scale(-1.75)
         assert type(out.azimuthal) == type(tvec.azimuthal)  # noqa: E721
@@ -302,7 +294,6 @@ def test_lorentz_negtime_negfactor():
         "rhophithetatau",
         "rhophietatau",
     ):
-        print(t1)
         tvec = getattr(vec, "to_" + t1)()
         out = tvec.scale(-1.75)
         assert type(out.azimuthal) == type(tvec.azimuthal)  # noqa: E721
