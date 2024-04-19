@@ -25,7 +25,6 @@ numpy_2 = packaging.version.Version(
 ) >= packaging.version.Version("2.0.0rc1")
 
 
-@pytest.mark.xfail(numpy_2, reason="mpmath does not support numpy 2.0 yet")
 def test_planar_posfactor():
     vec = vector.VectorSympy2D(
         azimuthal=vector.backends.sympy.AzimuthalSympyXY(x, y),
@@ -43,7 +42,6 @@ def test_planar_posfactor():
         assert out.y.subs(values).evalf() == pytest.approx(2 * 1.75)
 
 
-@pytest.mark.xfail(numpy_2, reason="mpmath does not support numpy 2.0 yet")
 def test_planar_negfactor():
     vec = vector.VectorSympy2D(
         azimuthal=vector.backends.sympy.AzimuthalSympyXY(x, y),
