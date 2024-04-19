@@ -22,7 +22,7 @@ values = {x: 1, y: 2, z: 3, t: 10}
 # mpmath does not support numpy 2.0 yet
 numpy_2 = packaging.version.Version(
     importlib.metadata.version("numpy")
-) >= packaging.version.Version("2.0.0")
+) >= packaging.version.Version("2.0.0rc1")
 
 
 @pytest.mark.xfail(numpy_2, reason="mpmath does not support numpy 2.0 yet")
