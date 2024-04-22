@@ -67,8 +67,7 @@ class TemporalSympy(CoordinatesSympy, Temporal):
 
 class AzimuthalSympyXY(AzimuthalSympy, AzimuthalXY):
     """
-    Class for the ``rho`` and ``phi`` (azimuthal) coordinates of SymPy backend.
-    Creates a structured SymPy array and returns it as an AzimuthalSympyXY object.
+    Class for the ``x`` and ``y`` (azimuthal) coordinates of SymPy backend.
 
     Examples:
         >>> import vector; import sympy
@@ -91,7 +90,7 @@ class AzimuthalSympyXY(AzimuthalSympy, AzimuthalXY):
         """
         Azimuthal coordinates (``x`` and ``y``) as a tuple.
 
-        Each coordinate is a SymPy array of values and not a vector.
+        Each coordinate is a SymPy expression and not a vector.
 
         Examples:
             >>> import vector; import sympy
@@ -105,7 +104,6 @@ class AzimuthalSympyXY(AzimuthalSympy, AzimuthalXY):
 class AzimuthalSympyRhoPhi(AzimuthalSympy, AzimuthalRhoPhi):
     """
     Class for the ``rho`` and ``phi`` (azimuthal) coordinates of SymPy backend.
-    Creates a structured SymPy array and returns it as an AzimuthalSympyXY object.
 
     Examples:
         >>> import vector; import sympy
@@ -128,7 +126,7 @@ class AzimuthalSympyRhoPhi(AzimuthalSympy, AzimuthalRhoPhi):
         """
         Azimuthal coordinates (``rho`` and ``phi``) as a tuple.
 
-        Each coordinate is a SymPy array of values and not a vector.
+        Each coordinate is a SymPy expression and not a vector.
 
         Examples:
             >>> import vector
@@ -142,7 +140,6 @@ class AzimuthalSympyRhoPhi(AzimuthalSympy, AzimuthalRhoPhi):
 class LongitudinalSympyZ(LongitudinalSympy, LongitudinalZ):
     """
     Class for the ``z`` (longitudinal) coordinate of SymPy backend.
-    Creates a structured SymPy array and returns it as a LongitudinalSympyZ object.
 
     Examples:
         >>> import vector; import sympy
@@ -164,7 +161,7 @@ class LongitudinalSympyZ(LongitudinalSympy, LongitudinalZ):
         """
         Longitudinal coordinates (``z``) as a tuple.
 
-        Each coordinate is a SymPy array of values and not a vector.
+        Each coordinate is a SymPy expression and not a vector.
 
         Examples:
             >>> import vector; import sympy
@@ -178,7 +175,6 @@ class LongitudinalSympyZ(LongitudinalSympy, LongitudinalZ):
 class LongitudinalSympyTheta(LongitudinalSympy, LongitudinalTheta):
     """
     Class for the ``theta`` (longitudinal) coordinate of SymPy backend.
-    Creates a structured SymPy array and returns it as a LongitudinalSympyTheta object.
 
     Examples:
         >>> import vector; import sympy
@@ -200,7 +196,7 @@ class LongitudinalSympyTheta(LongitudinalSympy, LongitudinalTheta):
         """
         Longitudinal coordinates (``theta``) as a tuple.
 
-        Each coordinate is a SymPy array of values and not a vector.
+        Each coordinate is a SymPy expression and not a vector.
 
         Examples:
             >>> import vector; import sympy
@@ -214,7 +210,6 @@ class LongitudinalSympyTheta(LongitudinalSympy, LongitudinalTheta):
 class LongitudinalSympyEta(LongitudinalSympy, LongitudinalEta):
     """
     Class for the ``eta`` (longitudinal) coordinate of SymPy backend.
-    Creates a structured SymPy array and returns it as a LongitudinalSympyEta object.
 
     Examples:
         >>> import vector; import sympy
@@ -236,7 +231,7 @@ class LongitudinalSympyEta(LongitudinalSympy, LongitudinalEta):
         """
         Longitudinal coordinates (``eta``) as a tuple.
 
-        Each coordinate is a SymPy array of values and not a vector.
+        Each coordinate is a SymPy expression and not a vector.
 
         Examples:
             >>> import vector
@@ -250,7 +245,6 @@ class LongitudinalSympyEta(LongitudinalSympy, LongitudinalEta):
 class TemporalSympyT(TemporalSympy, TemporalT):
     """
     Class for the ``t`` (temporal) coordinate of SymPy backend.
-    Creates a structured SymPy array and returns it as a TemporalSympyT object.
 
     Examples:
         >>> import vector
@@ -286,7 +280,6 @@ class TemporalSympyT(TemporalSympy, TemporalT):
 class TemporalSympyTau(TemporalSympy, TemporalTau):
     """
     Class for the ``tau`` (temporal) coordinate of SymPy backend.
-    Creates a structured SymPy array and returns it as a TemporalSympyTau object.
 
     Examples:
         >>> import vector
@@ -308,7 +301,7 @@ class TemporalSympyTau(TemporalSympy, TemporalTau):
         """
         Temporal coordinates (``tau``) as a tuple.
 
-        Each coordinate is a SymPy array of values and not a vector.
+        Each coordinate is a SymPy expression and not a vector.
 
         Examples:
             >>> import vector
@@ -438,7 +431,7 @@ class VectorSympy(Vector):
         **kwargs: typing.Any,
     ) -> typing.Any:
         """
-        Implements NumPy's ``ufunc``s for ``VectorObject`` and its subclasses. The current
+        Implements NumPy's ``ufunc``s for ``VectorSympy`` and its subclasses. The current
         implementation includes ``numpy.absolute``, ``numpy.add``, ``numpy.subtract``,
         ``numpy.multiply``, ``numpy.positive``, ``numpy.negative``, ``numpy.true_divide``,
         ``numpy.power``, ``numpy.square``, ``numpy.sqrt``, ``numpy.cbrt``, ``numpy.matmul``,
@@ -451,8 +444,8 @@ class VectorSympy(Vector):
         outputs = kwargs.get("out", ())
         if any(not isinstance(x, VectorSympy) for x in outputs):
             raise TypeError(
-                "ufunc operating on VectorObjects can only use the 'out' keyword "
-                "with another VectorObject"
+                "ufunc operating on VectorSympy can only use the 'out' keyword "
+                "with another VectorSympy"
             )
 
         if (
@@ -462,7 +455,7 @@ class VectorSympy(Vector):
         ):
             if len(outputs) != 0:
                 raise TypeError(
-                    "output of 'numpy.absolute' is scalar, cannot fill a VectorObject with 'out'"
+                    "output of 'numpy.absolute' is scalar, cannot fill a VectorSympy with 'out'"
                 )
             if isinstance(inputs[0], Vector2D):
                 return inputs[0].rho
@@ -559,7 +552,7 @@ class VectorSympy(Vector):
         ):
             if len(outputs) != 0:
                 raise TypeError(
-                    "output of 'numpy.square' is scalar, cannot fill a VectorObject with 'out'"
+                    "output of 'numpy.square' is scalar, cannot fill a VectorSympy with 'out'"
                 )
             if isinstance(inputs[0], Vector2D):
                 return inputs[0].rho2
@@ -571,7 +564,7 @@ class VectorSympy(Vector):
         elif ufunc is numpy.sqrt and len(inputs) == 1 and isinstance(inputs[0], Vector):
             if len(outputs) != 0:
                 raise TypeError(
-                    "output of 'numpy.sqrt' is scalar, cannot fill a VectorObject with 'out'"
+                    "output of 'numpy.sqrt' is scalar, cannot fill a VectorSympy with 'out'"
                 )
             if isinstance(inputs[0], Vector2D):
                 return inputs[0].rho2 ** 0.25
@@ -583,7 +576,7 @@ class VectorSympy(Vector):
         elif ufunc is numpy.cbrt and len(inputs) == 1 and isinstance(inputs[0], Vector):
             if len(outputs) != 0:
                 raise TypeError(
-                    "output of 'numpy.cbrt' is scalar, cannot fill a VectorObject with 'out'"
+                    "output of 'numpy.cbrt' is scalar, cannot fill a VectorSympy with 'out'"
                 )
             if isinstance(inputs[0], Vector2D):
                 return inputs[0].rho2 ** 0.16666666666666666
@@ -600,7 +593,7 @@ class VectorSympy(Vector):
         ):
             if len(outputs) != 0:
                 raise TypeError(
-                    "output of 'numpy.matmul' is scalar, cannot fill a VectorObject with 'out'"
+                    "output of 'numpy.matmul' is scalar, cannot fill a VectorSympy with 'out'"
                 )
             return inputs[0].dot(inputs[1])
 
@@ -612,7 +605,7 @@ class VectorSympy(Vector):
         ):
             if len(outputs) != 0:
                 raise TypeError(
-                    "output of 'numpy.equal' is scalar, cannot fill a VectorObject with 'out'"
+                    "output of 'numpy.equal' is scalar, cannot fill a VectorSympy with 'out'"
                 )
             return inputs[0].equal(inputs[1])
 
@@ -624,7 +617,7 @@ class VectorSympy(Vector):
         ):
             if len(outputs) != 0:
                 raise TypeError(
-                    "output of 'numpy.equal' is scalar, cannot fill a VectorObject with 'out'"
+                    "output of 'numpy.equal' is scalar, cannot fill a VectorSympy with 'out'"
                 )
             return inputs[0].not_equal(inputs[1])
 
@@ -649,7 +642,7 @@ class VectorSympy2D(VectorSympy, Planar, Vector2D):
         (x, y)
 
     For two dimensional momentum SymPy vectors, see
-    :class:`vector.backends.sympy.MomentumObject2D`.
+    :class:`vector.backends.sympy.MomentumSympy2D`.
     """
 
     ObjectClass = vector.backends.object.VectorObject2D
