@@ -38,7 +38,6 @@ from vector._methods import (
     _repr_momentum_to_generic,
     _ttype,
 )
-from vector._typeutils import FloatArray
 
 
 class CoordinatesSympy:
@@ -75,9 +74,6 @@ class AzimuthalSympyXY(AzimuthalSympy, AzimuthalXY):
         AzimuthalSympyXY(x=x, y=y)
     """
 
-    ObjectClass = vector.backends.object.AzimuthalObjectXY
-    _IS_MOMENTUM = False
-
     def __init__(self, x: sympy.Symbol, y: sympy.Symbol):
         self.x = x
         self.y = y
@@ -110,9 +106,6 @@ class AzimuthalSympyRhoPhi(AzimuthalSympy, AzimuthalRhoPhi):
         >>> vector.backends.sympy.AzimuthalSympyRhoPhi(sympy.Symbol("rho"), sympy.Symbol("phi"))
         AzimuthalSympyRhoPhi(rho=rho, phi=phi)
     """
-
-    ObjectClass = vector.backends.object.AzimuthalObjectRhoPhi
-    _IS_MOMENTUM = False
 
     def __init__(self, rho: sympy.Symbol, phi: sympy.Symbol):
         self.rho = rho
@@ -147,9 +140,6 @@ class LongitudinalSympyZ(LongitudinalSympy, LongitudinalZ):
         LongitudinalSympyZ(z=z)
     """
 
-    ObjectClass = vector.backends.object.LongitudinalObjectZ
-    _IS_MOMENTUM = False
-
     def __init__(self, z: sympy.Symbol):
         self.z = z
 
@@ -181,9 +171,6 @@ class LongitudinalSympyTheta(LongitudinalSympy, LongitudinalTheta):
         >>> vector.backends.sympy.LongitudinalSympyTheta(sympy.Symbol("theta"))
         LongitudinalSympyTheta(theta=theta)
     """
-
-    ObjectClass = vector.backends.object.LongitudinalObjectTheta
-    _IS_MOMENTUM = False
 
     def __init__(self, theta: sympy.Symbol):
         self.theta = theta
@@ -217,9 +204,6 @@ class LongitudinalSympyEta(LongitudinalSympy, LongitudinalEta):
         LongitudinalSympyEta(eta=eta)
     """
 
-    ObjectClass = vector.backends.object.LongitudinalObjectEta
-    _IS_MOMENTUM = False
-
     def __init__(self, eta: sympy.Symbol):
         self.eta = eta
 
@@ -252,9 +236,6 @@ class TemporalSympyT(TemporalSympy, TemporalT):
         TemporalSympyT(t=t)
     """
 
-    ObjectClass = vector.backends.object.TemporalObjectT
-    _IS_MOMENTUM = False
-
     def __init__(self, t: sympy.Symbol):
         self.t = t
 
@@ -286,9 +267,6 @@ class TemporalSympyTau(TemporalSympy, TemporalTau):
         >>> vector.backends.sympy.TemporalSympyTau(sympy.Symbol("tau"))
         TemporalSympyTau(tau=tau)
     """
-
-    ObjectClass = vector.backends.object.TemporalObjectTau
-    _IS_MOMENTUM = False
 
     def __init__(self, tau: sympy.Symbol):
         self.tau = tau
@@ -645,8 +623,6 @@ class VectorSympy2D(VectorSympy, Planar, Vector2D):
     :class:`vector.backends.sympy.MomentumSympy2D`.
     """
 
-    ObjectClass = vector.backends.object.VectorObject2D
-
     __slots__ = ("azimuthal",)
     azimuthal: AzimuthalSympy
 
@@ -678,16 +654,6 @@ class VectorSympy2D(VectorSympy, Planar, Vector2D):
         aznames = _coordinate_class_to_names[_aztype(self)]
         out = [f"{x}={getattr(self.azimuthal, x)}" for x in aznames]
         return "VectorSympy2D(" + ", ".join(out) + ")"
-
-    def __array__(self) -> FloatArray:
-        from vector.backends.numpy import VectorNumpy2D
-
-        return VectorNumpy2D(
-            self.azimuthal.elements,
-            dtype=[
-                (x, numpy.float64) for x in _coordinate_class_to_names[_aztype(self)]
-            ],
-        )
 
     @property
     def x(self) -> sympy.Symbol:
@@ -802,8 +768,6 @@ class MomentumSympy2D(PlanarMomentum, VectorSympy2D):
     :class:`vector.backends.object.VectorSympy2D`.
     """
 
-    ObjectClass = vector.backends.object.MomentumObject2D
-
     def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         out = []
@@ -811,16 +775,6 @@ class MomentumSympy2D(PlanarMomentum, VectorSympy2D):
             y = _repr_generic_to_momentum.get(x, x)
             out.append(f"{y}={getattr(self.azimuthal, x)}")
         return "MomentumSympy2D(" + ", ".join(out) + ")"
-
-    def __array__(self) -> FloatArray:
-        from vector.backends.numpy import MomentumNumpy2D
-
-        return MomentumNumpy2D(
-            self.azimuthal.elements,
-            dtype=[
-                (x, numpy.float64) for x in _coordinate_class_to_names[_aztype(self)]
-            ],
-        )
 
     @property
     def px(self) -> sympy.Symbol:
@@ -869,8 +823,6 @@ class VectorSympy3D(VectorSympy, Spatial, Vector3D):
     For three dimensional momentum SymPy vectors, see
     :class:`vector.backends.object.MomentumSympy3D`.
     """
-
-    ObjectClass = vector.backends.object.VectorObject3D
 
     __slots__ = ("azimuthal", "longitudinal")
 
@@ -934,18 +886,6 @@ class VectorSympy3D(VectorSympy, Spatial, Vector3D):
         for x in lnames:
             out.append(f"{x}={getattr(self.longitudinal, x)}")
         return "VectorSympy3D(" + ", ".join(out) + ")"
-
-    def __array__(self) -> FloatArray:
-        from vector.backends.numpy import VectorNumpy3D
-
-        return VectorNumpy3D(
-            self.azimuthal.elements + self.longitudinal.elements,
-            dtype=[
-                (x, numpy.float64)
-                for x in _coordinate_class_to_names[_aztype(self)]
-                + _coordinate_class_to_names[_ltype(self)]
-            ],
-        )
 
     def _wrap_result(
         self,
@@ -1098,8 +1038,6 @@ class MomentumSympy3D(SpatialMomentum, VectorSympy3D):
     :class:`vector.backends.sympy.VectorSympy3D`.
     """
 
-    ObjectClass = vector.backends.object.MomentumObject3D
-
     def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         lnames = _coordinate_class_to_names[_ltype(self)]
@@ -1111,18 +1049,6 @@ class MomentumSympy3D(SpatialMomentum, VectorSympy3D):
             y = _repr_generic_to_momentum.get(x, x)
             out.append(f"{y}={getattr(self.longitudinal, x)}")
         return "MomentumSympy3D(" + ", ".join(out) + ")"
-
-    def __array__(self) -> FloatArray:
-        from vector.backends.numpy import MomentumNumpy3D
-
-        return MomentumNumpy3D(
-            self.azimuthal.elements + self.longitudinal.elements,
-            dtype=[
-                (x, numpy.float64)
-                for x in _coordinate_class_to_names[_aztype(self)]
-                + _coordinate_class_to_names[_ltype(self)]
-            ],
-        )
 
     @property
     def px(self) -> sympy.Symbol:
@@ -1180,8 +1106,6 @@ class VectorSympy4D(VectorSympy, Lorentz, Vector4D):
     For four dimensional momentum SymPy vectors, see
     :class:`vector.backends.sympy.MomentumSympy4D`.
     """
-
-    ObjectClass = vector.backends.object.VectorObject4D
 
     __slots__ = ("azimuthal", "longitudinal", "temporal")
 
@@ -1292,21 +1216,6 @@ class VectorSympy4D(VectorSympy, Lorentz, Vector4D):
         for x in tnames:
             out.append(f"{x}={getattr(self.temporal, x)}")
         return "VectorSympy4D(" + ", ".join(out) + ")"
-
-    def __array__(self) -> FloatArray:
-        from vector.backends.numpy import VectorNumpy4D
-
-        return VectorNumpy4D(
-            self.azimuthal.elements
-            + self.longitudinal.elements
-            + self.temporal.elements,
-            dtype=[
-                (x, numpy.float64)
-                for x in _coordinate_class_to_names[_aztype(self)]
-                + _coordinate_class_to_names[_ltype(self)]
-                + _coordinate_class_to_names[_ttype(self)]
-            ],
-        )
 
     def _wrap_result(
         self,
@@ -1491,9 +1400,6 @@ class MomentumSympy4D(LorentzMomentum, VectorSympy4D):
     :class:`vector.backends.sympy.VectorSympy4D`.
     """
 
-    ObjectClass = vector.backends.object.MomentumObject4D
-    _IS_MOMENTUM = True
-
     def __repr__(self) -> str:
         aznames = _coordinate_class_to_names[_aztype(self)]
         lnames = _coordinate_class_to_names[_ltype(self)]
@@ -1509,21 +1415,6 @@ class MomentumSympy4D(LorentzMomentum, VectorSympy4D):
             y = _repr_generic_to_momentum.get(x, x)
             out.append(f"{y}={getattr(self.temporal, x)}")
         return "MomentumSympy4D(" + ", ".join(out) + ")"
-
-    def __array__(self) -> FloatArray:
-        from vector.backends.numpy import MomentumNumpy4D
-
-        return MomentumNumpy4D(
-            self.azimuthal.elements
-            + self.longitudinal.elements
-            + self.temporal.elements,
-            dtype=[
-                (x, numpy.float64)
-                for x in _coordinate_class_to_names[_aztype(self)]
-                + _coordinate_class_to_names[_ltype(self)]
-                + _coordinate_class_to_names[_ttype(self)]
-            ],
-        )
 
     @property
     def px(self) -> sympy.Symbol:
