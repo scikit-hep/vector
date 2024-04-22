@@ -266,7 +266,7 @@ class TemporalSympyT(TemporalSympy, TemporalT):
         """
         Temporal coordinates (``t``) as a tuple.
 
-        Each coordinate is a SymPy array of values and not a vector.
+        Each coordinate is a SymPy expression and not a vector.
 
         Examples:
             >>> import vector
