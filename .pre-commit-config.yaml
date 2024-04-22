@@ -45,6 +45,7 @@ repos:
     rev: v2.2.6
     hooks:
       - id: codespell
+        exclude: ^docs/usage/intro.ipynb$
 
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: "v4.0.0-alpha.8"
