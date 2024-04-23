@@ -1,5 +1,29 @@
 # Changelog
 
+## Version 1.4
+
+### Version 1.4.0
+
+#### Features
+
+- feat: allow coord values in to\_<coord_names> methods [#446][]
+- feat: a sympy backend [$442][]
+
+#### Bug fixes
+
+- fix: call the square implementation for power 2 on object vectors [#444][]
+- fix: use negfactor in negfactor scale test [#456][]
+
+#### Maintenance
+
+- chore: test on numpy 2.0 [#451][]
+
+[#446]: https://github.com/scikit-hep/vector/pull/446
+[#442]: https://github.com/scikit-hep/vector/pull/442
+[#444]: https://github.com/scikit-hep/vector/pull/444
+[#456]: https://github.com/scikit-hep/vector/pull/456
+[#451]: https://github.com/scikit-hep/vector/pull/451
+
 ## Version 1.3
 
 ### Version 1.3.1
