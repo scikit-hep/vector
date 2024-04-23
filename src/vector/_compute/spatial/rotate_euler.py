@@ -292,7 +292,12 @@ def dispatch(
         return v._wrap_result(
             _flavor_of(v),
             function(
-                v.lib, phi, theta, psi, *v.azimuthal.elements, *v.longitudinal.elements
+                v.lib,
+                phi,
+                theta,
+                psi,
+                *v.azimuthal.elements,
+                *v.longitudinal.elements,
             ),
             returns,
             1,

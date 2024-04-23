@@ -35,7 +35,7 @@ def lite(session: nox.Session) -> None:
 @nox.session(reuse_venv=True)
 def tests(session: nox.Session) -> None:
     """Run the unit and regular tests."""
-    session.install("-e", ".[awkward,numba,test,test-extras]")
+    session.install("-e", ".[awkward,numba,test,test-extras,sympy]")
     session.run("pytest", "--ignore", "tests/test_notebooks.py", *session.posargs)
 
 
@@ -49,7 +49,7 @@ def coverage(session: nox.Session) -> None:
 @nox.session(reuse_venv=True)
 def doctests(session: nox.Session) -> None:
     """Run the doctests."""
-    session.install("-e", ".[awkward,numba,test,test-extras]")
+    session.install("-e", ".[awkward,numba,test,test-extras,sympy]")
     session.run("pytest", "--doctest-plus", "src/vector/", *session.posargs)
 
 

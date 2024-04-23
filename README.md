@@ -26,10 +26,12 @@ Main features of Vector:
 - Uses names and conventions set by [ROOT](https://root.cern/)'s [TLorentzVector](https://root.cern.ch/doc/master/classTLorentzVector.html) and [Math::LorentzVector](https://root.cern.ch/doc/master/classROOT_1_1Math_1_1LorentzVector.html), as well as [scikit-hep/math](https://github.com/scikit-hep/scikit-hep/tree/master/skhep/math), [uproot-methods TLorentzVector](https://github.com/scikit-hep/uproot3-methods/blob/master/uproot3_methods/classes/TLorentzVector.py), [henryiii/hepvector](https://github.com/henryiii/hepvector), and [coffea.nanoevents.methods.vector](https://coffeateam.github.io/coffea/modules/coffea.nanoevents.methods.vector.html).
 - Implemented on a variety of backends:
   - pure Python objects
+  - [SymPy](https://www.sympy.org/en/index.html) vectors
   - NumPy arrays of vectors (as a [structured array](https://numpy.org/doc/stable/user/basics.rec.html) subclass)
   - [Awkward Arrays](https://awkward-array.org/) of vectors
   - potential for more: CuPy, TensorFlow, Torch, JAX...
-- NumPy/Awkward backends also implemented in [Numba](https://numba.pydata.org/) for JIT-compiled calculations on vectors.
+- Awkward backend also implemented in [Numba](https://numba.pydata.org/) for JIT-compiled calculations on vectors.
+- [JAX](https://awkward-array.org/doc/main/user-guide/how-to-specialize-differentiate-jax.html) and [Dask](https://dask-awkward.readthedocs.io/en/stable/) support through Awkward Arrays.
 - Distinction between geometrical vectors, which have a minimum of attribute and method names, and vectors representing momentum, which have synonyms like `pt` = `rho`, `energy` = `t`, `mass` = `tau`.
 
 ## Installation
@@ -58,7 +60,7 @@ The easiest way to create one or many vectors is with a helper function:
 
 ### Pure Python vectors
 
-You can directly use the `VectorObject` classes to construct object type vectors:
+You can directly use the `VectorObject` and `MomentumObject` classes to construct object type vectors:
 
 ```python
 vector.VectorObject2D(x=1.1, y=2.2)
@@ -158,6 +160,80 @@ vector.VectorObject4D.from_xyetatau(1.1, 2.2, 3.3, 4.4)
 ```
 
 and so on, for all combinations of azimuthal, longitudinal, and temporal coordinates, geometric and momentum-flavored.
+
+### SymPy vectors
+
+> **Note:** Operations on SymPy vectors are only 100% compatible with numeric vectors (Python, NumPy, and Awkward backends) if the vectors are positive time-like, that is, if `t**2 > x**2 + y**2 + z**2`. The space-like and negative time-like cases have different sign conventions.
+
+You can directly use the `VectorSympy` and `MomentumSympy` classes to construct object type vectors:
+
+```python
+import sympy
+
+x, y, z, t, px, py, pz, eta, tau = sympy.symbols(
+    "x y z t px py pz eta tau",
+    real=True,  # see sympy assumptions to add more restrictions on the symbols
+)
+vector.VectorSympy2D(x=x, y=y)
+vector.MomentumSympy3D(px=px, py=py, pz=pz)
+vector.VectorSympy4D(x=x, y=y, eta=eta, tau=tau)
+```
+
+and so on for every class.
+
+```python
+# Test instance type for any level of granularity.
+(
+    # is a vector or array of vectors
+    isinstance(vector.VectorSympy2D(x=x, y=y), vector.Vector),
+    # is 2D (not 3D or 4D)
+    isinstance(vector.VectorSympy2D(x=x, y=y), vector.Vector2D),
+    # is a sympy vector (not an array)
+    isinstance(vector.VectorSympy2D(x=x, y=y), vector.VectorSympy),
+    # has momentum synonyms
+    isinstance(vector.MomentumSympy2D(px=px, py=py), vector.Momentum),
+    # has transverse plane (2D, 3D, or 4D)
+    isinstance(vector.VectorSympy4D(x=x, y=y, z=z, t=t), vector.Planar),
+    # has all spatial coordinates (3D or 4D)
+    isinstance(vector.VectorSympy4D(x=x, y=y, z=z, t=t), vector.Spatial),
+    # has temporal coordinates (4D)
+    isinstance(vector.VectorSympy4D(x=x, y=y, z=z, t=t), vector.Lorentz),
+    # azimuthal coordinate type
+    isinstance(vector.VectorSympy4D(x=x, y=y, z=z, t=t).azimuthal, vector.AzimuthalXY),
+    # longitudinal coordinate type
+    isinstance(
+        vector.VectorSympy4D(x=x, y=y, z=z, t=t).longitudinal, vector.LongitudinalZ
+    ),
+    # temporal coordinate type
+    isinstance(vector.VectorSympy4D(x=x, y=y, z=z, t=t).temporal, vector.TemporalT),
+)
+```
+
+Since `VectorSympy2D`, `VectorSympy3D`, `VectorSympy4D`, and their momentum equivalents operate on SymPy expressions, all of the normal SymPy methods and functions work on the results, coordinates, and the vectors.
+
+```python
+sympy.init_session()  # latex printing
+
+v1 = vector.VectorSympy2D(x=x, y=y)
+sympy.Eq(v1.rho, sympy.sqrt(x**2 + y**2))
+
+v2 = vector.VectorSympy4D(x=x, y=y, z=z, t=t)
+v2.to_rhophithetatau().tau
+
+values = {x: 3, y: 2, z: 1, t: 10}  # t**2 > x**2 + y**2 + z**2
+v2.is_timelike()
+v2.is_timelike().subs(values)
+
+v2.to_rhophithetatau().tau.subs(values).evalf()
+
+v2.boost(v2.to_beta3())
+v2.boost(v2.to_beta3()).t
+v2.boost(v2.to_beta3()).t.simplify()
+v2.boost(v2.to_beta3()).t.subs(values)
+v2.boost(v2.to_beta3()).t.subs(values).evalf()
+```
+
+All of the keyword arguments and rules that apply to `vector.obj` construction apply to `vector.VectorSympyND` and `vector.MomentumObjectND` objects.
 
 ### NumPy arrays of vectors
 

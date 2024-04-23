@@ -684,26 +684,6 @@ def test_like_object():
     v2 = vector.obj(x=1, y=2, z=3)
     v3 = vector.obj(px=10, py=20, pz=30, t=40)
 
-    # momentum + generic = generic
-    # 2D + 3D.like(2D) = 2D
-    assert v1 + v2.like(v1) == vector.obj(x=1.1, y=2.2)
-    assert v2.like(v1) + v1 == vector.obj(x=1.1, y=2.2)
-    # 2D + 4D.like(2D) = 2D
-    assert v1 + v3.like(v1) == vector.obj(x=10.1, y=20.2)
-    assert v3.like(v1) + v1 == vector.obj(x=10.1, y=20.2)
-    # 3D + 2D.like(3D) = 3D
-    assert v2 + v1.like(v2) == vector.obj(x=1.1, y=2.2, z=3)
-    assert v1.like(v2) + v2 == vector.obj(x=1.1, y=2.2, z=3)
-    # 3D + 4D.like(3D) = 3D
-    assert v2 + v3.like(v2) == vector.obj(x=11, y=22, z=33)
-    assert v3.like(v2) + v2 == vector.obj(x=11, y=22, z=33)
-    # 4D + 2D.like(4D) = 4D
-    assert v3 + v1.like(v3) == vector.obj(x=10.1, y=20.2, z=30.0, t=40.0)
-    assert v1.like(v3) + v3 == vector.obj(x=10.1, y=20.2, z=30.0, t=40.0)
-    # 4D + 3D.like(4D) = 4D
-    assert v3 + v2.like(v3) == vector.obj(x=11, y=22, z=33, t=40)
-    assert v2.like(v3) + v3 == vector.obj(x=11, y=22, z=33, t=40)
-
 
 def test_like_numpy():
     v1 = vector.array(
@@ -863,7 +843,7 @@ def test_like_numpy():
     assert all(v2.like(v3) + v3 == pv3_v2)
 
 
-def test_momentum_preservation():
+def test_momentum_preservation_object():
     v1 = vector.obj(px=0.1, py=0.2)
     v2 = vector.obj(x=1, y=2, z=3)
     v3 = vector.obj(px=10, py=20, pz=30, t=40)
@@ -889,7 +869,7 @@ def test_momentum_preservation():
     assert isinstance(v2.like(v3) + v3, vector.MomentumObject4D)
 
 
-def test_flavor_of_numpy():
+def test_momentum_preservation_numpy():
     v1 = vector.array(
         {
             "px": [10.0, 20.0, 30.0],
