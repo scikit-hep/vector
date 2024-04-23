@@ -20,7 +20,7 @@ t, tau = sympy.symbols("t tau")
 px, py = sympy.symbols("px py")
 pt = sympy.symbols("pt")
 pz = sympy.symbols("pz")
-M, E = sympy.symbols("M E")
+M, m, mass, E, e, energy = sympy.symbols("M m mass E e energy")
 
 
 def test_construction():
@@ -33,6 +33,8 @@ def test_construction():
         if vec_cls == vector.VectorSympy4D:
             coords["t"] = t
         vec = vec_cls(**coords)
+        with pytest.raises(TypeError):
+            vec = vec_cls(bad=1, **coords)
         assert vec.x == x
         assert vec.y == y
         assert vec.phi == sympy.atan2(y, x)
@@ -47,6 +49,9 @@ def test_construction():
         if vec_cls == vector.VectorSympy4D:
             coords["t"] = t
         vec = vec_cls(**coords)
+        with pytest.raises(TypeError):
+            vec = vec_cls(bad=1, **coords)
+
         assert vec.x == rho * sympy.cos(phi)
         assert vec.y == rho * sympy.sin(phi)
         assert vec.phi == phi
@@ -61,6 +66,9 @@ def test_construction():
         if vec_cls == vector.VectorSympy4D:
             coords["t"] = t
         vec = vec_cls(**coords)
+        with pytest.raises(TypeError):
+            vec = vec_cls(bad=1, **coords)
+
         assert vec.z == z
         assert vec.eta == sympy.asinh(z / sympy.sqrt(x**2 + y**2))
         assert vec.theta == sympy.acos(z / sympy.sqrt(x**2 + y**2 + z**2))
@@ -72,6 +80,9 @@ def test_construction():
         if vec_cls == vector.VectorSympy4D:
             coords["t"] = t
         vec = vec_cls(**coords)
+        with pytest.raises(TypeError):
+            vec = vec_cls(bad=1, **coords)
+
         assert vec.z == sympy.sqrt(x**2 + y**2) * sympy.sinh(eta)
         assert vec.eta == eta
         assert vec.theta == 2.0 * sympy.atan(sympy.exp(-eta))
@@ -83,6 +94,9 @@ def test_construction():
         if vec_cls == vector.VectorSympy4D:
             coords["t"] = t
         vec = vec_cls(**coords)
+        with pytest.raises(TypeError):
+            vec = vec_cls(bad=1, **coords)
+
         assert vec.z == sympy.sqrt(x**2 + y**2) / sympy.tan(theta)
         assert vec.eta == -sympy.log(sympy.tan(0.5 * theta))
         assert vec.theta == theta
@@ -96,6 +110,9 @@ def test_construction():
     for vec_cls in (vector.VectorSympy4D,):
         coords = {"x": x, "y": y, "z": z, "t": t}
         vec = vec_cls(**coords)
+        with pytest.raises(TypeError):
+            vec = vec_cls(bad=1, **coords)
+
         assert vec.t == t
         assert vec.tau == sympy.sqrt(sympy.Abs(-(t**2) + x**2 + y**2 + z**2))
 
@@ -104,6 +121,9 @@ def test_construction():
 
         coords = {"x": x, "y": y, "z": z, "tau": tau}
         vec = vec_cls(**coords)
+        with pytest.raises(TypeError):
+            vec = vec_cls(bad=1, **coords)
+
         assert vec.t == sympy.sqrt(tau**2 + x**2 + y**2 + z**2)
         assert vec.tau == tau
 
@@ -123,6 +143,9 @@ def test_construction():
         if vec_cls == vector.MomentumSympy4D:
             coords["t"] = t
         vec = vec_cls(**coords)
+        with pytest.raises(TypeError):
+            vec = vec_cls(bad=1, **coords)
+
         assert vec.px == px
         assert vec.py == py
         assert vec.phi == sympy.atan2(py, px)
@@ -138,6 +161,9 @@ def test_construction():
         if vec_cls == vector.MomentumSympy4D:
             coords["t"] = t
         vec = vec_cls(**coords)
+        with pytest.raises(TypeError):
+            vec = vec_cls(bad=1, **coords)
+
         assert vec.px == pt * sympy.cos(phi)
         assert vec.py == pt * sympy.sin(phi)
         assert vec.phi == phi
@@ -153,6 +179,9 @@ def test_construction():
         if vec_cls == vector.MomentumSympy4D:
             coords["t"] = t
         vec = vec_cls(**coords)
+        with pytest.raises(TypeError):
+            vec = vec_cls(bad=1, **coords)
+
         assert vec.pz == pz
         assert vec.eta == sympy.asinh(pz / sympy.sqrt(px**2 + py**2))
         assert vec.theta == sympy.acos(pz / sympy.sqrt(px**2 + py**2 + pz**2))
@@ -164,6 +193,9 @@ def test_construction():
     for vec_cls in (vector.MomentumSympy4D,):
         coords = {"px": px, "py": py, "pz": pz, "E": E}
         vec = vec_cls(**coords)
+        with pytest.raises(TypeError):
+            vec = vec_cls(bad=1, **coords)
+
         assert vec.m == sympy.sqrt(sympy.Abs(px**2 + py**2 + pz**2 - E**2))
         assert sympy.sqrt(sympy.Abs(px**2 + py**2 + pz**2 - E**2)) == vec.M
         assert vec.mass == sympy.sqrt(sympy.Abs(px**2 + py**2 + pz**2 - E**2))
@@ -176,6 +208,9 @@ def test_construction():
 
         coords = {"px": px, "py": py, "pz": pz, "M": M}
         vec = vec_cls(**coords)
+        with pytest.raises(TypeError):
+            vec = vec_cls(bad=1, **coords)
+
         assert vec.m == M
         assert vec.M == M
         assert vec.mass == M
@@ -192,10 +227,19 @@ def test_type_checks():
         vector.VectorSympy2D(x=1, y=2)
 
     with pytest.raises(TypeError):
+        vector.VectorSympy2D()
+
+    with pytest.raises(TypeError):
         vector.VectorSympy3D(x=1, y=2, z=3)
 
     with pytest.raises(TypeError):
+        vector.VectorSympy3D()
+
+    with pytest.raises(TypeError):
         vector.VectorSympy4D(x=1, y=2, z=3, t=4)
+
+    with pytest.raises(TypeError):
+        vector.VectorSympy4D()
 
 
 nx, ny, nz = sympy.symbols("nx ny nz")
@@ -222,6 +266,12 @@ def test_ne():
 def test_abs():
     v1 = vector.VectorSympy2D(x=x, y=y)
     assert abs(v1) == sympy.sqrt(x**2 + y**2)
+
+    v2 = vector.VectorSympy3D(x=x, y=y, z=z)
+    assert abs(v2) == sympy.sqrt(x**2 + y**2 + z**2)
+
+    v3 = vector.VectorSympy4D(x=x, y=y, z=z, t=t)
+    assert abs(v3) == sympy.sqrt(sympy.Abs(-(t**2) + x**2 + y**2 + z**2))
 
 
 def test_add():
@@ -303,3 +353,132 @@ def test_matmul():
     assert v2 @ v1 == x * nx + y * ny
     with pytest.raises(TypeError):
         v1 @ 5
+
+
+def test_reprs():
+    assert (
+        vector.backends.sympy.AzimuthalSympyXY(x, y).__repr__()
+        == "AzimuthalSympyXY(x=x, y=y)"
+    )
+    assert (
+        vector.backends.sympy.AzimuthalSympyRhoPhi(rho, phi).__repr__()
+        == "AzimuthalSympyRhoPhi(rho=rho, phi=phi)"
+    )
+    assert (
+        vector.backends.sympy.LongitudinalSympyZ(z).__repr__()
+        == "LongitudinalSympyZ(z=z)"
+    )
+    assert (
+        vector.backends.sympy.LongitudinalSympyEta(eta).__repr__()
+        == "LongitudinalSympyEta(eta=eta)"
+    )
+    assert (
+        vector.backends.sympy.LongitudinalSympyTheta(theta).__repr__()
+        == "LongitudinalSympyTheta(theta=theta)"
+    )
+    assert vector.backends.sympy.TemporalSympyT(t).__repr__() == "TemporalSympyT(t=t)"
+    assert (
+        vector.backends.sympy.TemporalSympyTau(tau).__repr__()
+        == "TemporalSympyTau(tau=tau)"
+    )
+
+    assert vector.VectorSympy2D(x=x, y=y).__repr__() == "VectorSympy2D(x=x, y=y)"
+    assert (
+        vector.VectorSympy3D(x=x, y=y, z=z).__repr__() == "VectorSympy3D(x=x, y=y, z=z)"
+    )
+    assert (
+        vector.VectorSympy4D(x=x, y=y, z=z, t=t).__repr__()
+        == "VectorSympy4D(x=x, y=y, z=z, t=t)"
+    )
+    assert (
+        vector.MomentumSympy2D(px=px, py=py).__repr__()
+        == "MomentumSympy2D(px=px, py=py)"
+    )
+    assert (
+        vector.MomentumSympy3D(px=px, py=py, pz=pz).__repr__()
+        == "MomentumSympy3D(px=px, py=py, pz=pz)"
+    )
+    assert (
+        vector.MomentumSympy4D(px=px, py=py, pz=pz, M=M).__repr__()
+        == "MomentumSympy4D(px=px, py=py, pz=pz, mass=M)"
+    )
+
+
+def test_setters():
+    v = vector.VectorSympy2D(x=x, y=y)
+    v.x = 2 * x
+    assert v.x == 2 * x
+    v.y = 2 * y
+    assert v.y == 2 * y
+    v.rho = 2 * rho
+    assert v.rho == 2 * rho
+    v.phi = 2 * phi
+    assert v.phi == 2 * phi
+
+    v = vector.MomentumSympy2D(px=px, py=py)
+    v.px = 2 * px
+    assert v.px == 2 * px
+    v.py = 2 * py
+    assert v.py == 2 * py
+    v.pt = 2 * pt
+    assert v.pt == 2 * pt
+
+    v = vector.VectorSympy3D(x=x, y=y, z=z)
+    v.x = 2 * x
+    assert v.x == 2 * x
+    v.y = 2 * y
+    assert v.y == 2 * y
+    v.z = 2 * z
+    assert v.z == 2 * z
+    v.eta = 2 * eta
+    assert v.eta == 2 * eta
+    v.theta = 2 * theta
+    assert v.theta == 2 * theta
+
+    v = vector.MomentumSympy3D(px=px, py=py, pz=pz)
+    v.px = 2 * px
+    assert v.px == 2 * px
+    v.py = 2 * py
+    assert v.py == 2 * py
+    v.pt = 2 * pt
+    assert v.pt == 2 * pt
+    v.pz = 2 * pz
+    assert v.pz == 2 * pz
+
+    v = vector.VectorSympy4D(x=x, y=y, z=z, t=t)
+    v.x = 2 * x
+    assert v.x == 2 * x
+    v.y = 2 * y
+    assert v.y == 2 * y
+    v.z = 2 * z
+    assert v.z == 2 * z
+    v.eta = 2 * eta
+    assert v.eta == 2 * eta
+    v.theta = 2 * theta
+    assert v.theta == 2 * theta
+    v.t = 2 * t
+    assert v.t == 2 * t
+    v.tau = 2 * tau
+    assert v.tau == 2 * tau
+
+    v = vector.MomentumSympy4D(px=px, py=py, pz=pz, m=M)
+    v.px = 2 * px
+    assert v.px == 2 * px
+    v.py = 2 * py
+    assert v.py == 2 * py
+    v.pt = 2 * pt
+    assert v.pt == 2 * pt
+    v.pz = 2 * pz
+    assert v.pz == 2 * pz
+    v.m = 2 * m
+    assert v.m == 2 * m
+    v.mass = 2 * mass
+    assert v.mass == 2 * mass
+    v.M = 2 * M
+    assert v.M == 2 * M
+    v.e = 2 * e
+    assert v.e == 2 * e
+    v.energy = 2 * energy
+    assert v.energy == 2 * energy
+    v.E = 2 * E
+    assert v.E == 2 * E
