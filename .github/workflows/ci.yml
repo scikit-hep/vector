@@ -89,13 +89,9 @@ jobs:
       - name: Test package and generate coverage report
         run: pipx run nox -s coverage-${{ matrix.python-version.key || matrix.python-version }} --verbose
 
-      - name: Install numpy v2
-        if: matrix.python-version != 3.8
-        run: python -m pip install "numpy>=2.0.0b1"
-
       - name: Test package with numpy v2.x
         if: matrix.python-version != 3.8
-        run: python -m pytest -ra --cov=vector --ignore tests/test_notebooks.py .
+        run: pipx run nox -s tests_numpy_2-${{ matrix.python-version.key || matrix.python-version }} --verbose
 
       - name: Upload coverage report
         uses: codecov/codecov-action@v4.3.0
