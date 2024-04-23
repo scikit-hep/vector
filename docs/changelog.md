@@ -7,7 +7,7 @@
 #### Features
 
 - feat: allow coord values in to\_<coord_names> methods [#446][]
-- feat: a sympy backend [$442][]
+- feat: a sympy backend [#442][]
 
 #### Bug fixes
 
