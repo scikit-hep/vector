@@ -93,6 +93,7 @@ urls.Discussions = "https://github.com/scikit-hep/vector/discussions"
 urls.Documentation = "https://vector.readthedocs.io/"
 urls.Homepage = "https://github.com/scikit-hep/vector"
 entry-points.numba_extensions.init = "vector:register_numba"
+
 [tool.hatch]
 version.source = "vcs"
 build.hooks.vcs.version-file = "src/vector/_version.py"
