@@ -12,8 +12,12 @@ readme = { file = "README.md", content-type = "text/markdown" }
 keywords = [
   "vector",
 ]
-maintainers = [ {name = "The Scikit-HEP admins", email = "scikit-hep-admins@googlegroups.com"} ]
-authors = [ {name = "Jim Pivarski, Henry Schreiner, Eduardo Rodrigues", email = "eduardo.rodrigues@cern.ch"} ]
+maintainers = [
+  { name = "The Scikit-HEP admins", email = "scikit-hep-admins@googlegroups.com" },
+]
+authors = [
+  { name = "Jim Pivarski, Henry Schreiner, Eduardo Rodrigues", email = "eduardo.rodrigues@cern.ch" },
+]
 requires-python = ">=3.8"
 classifiers = [
   "Development Status :: 5 - Production/Stable",
@@ -41,93 +45,105 @@ dependencies = [
   "numpy>=1.13.3",
   "packaging>=19",
 ]
-[project.optional-dependencies]
-awkward = [
+optional-dependencies.awkward = [
   "awkward>=1.2",
 ]
-dev = [
+optional-dependencies.dev = [
   "awkward>=1.2",
-  "dask_awkward",
+  "dask-awkward",
   "nox",
-  'numba>=0.57; python_version < "3.12"',
+  "numba>=0.57; python_version<'3.12'",
   "papermill>=2.4",
   "pytest>=6",
   "pytest-cov>=3",
   "pytest-doctestplus",
   "sympy",
 ]
-docs = [
+optional-dependencies.docs = [
   "awkward>=1.2",
   "ipykernel",
   "myst-parser>0.13",
   "nbsphinx",
-  "Sphinx>=4",
+  "sphinx>=4",
+  "sphinx-book-theme>=0.0.42",
+  "sphinx-copybutton",
   "sphinx-math-dollar",
-  "sphinx_book_theme>=0.0.42",
-  "sphinx_copybutton",
 ]
-numba = [
-  'numba>=0.57; python_version < "3.12"',
+optional-dependencies.numba = [
+  "numba>=0.57; python_version<'3.12'",
 ]
-sympy = [
+optional-dependencies.sympy = [
   "sympy",
 ]
-test = [
-  "dask_awkward",
+optional-dependencies.test = [
+  "dask-awkward",
   "nox",
   "papermill>=2.4",
   "pytest>=6",
   "pytest-cov>=3",
   "pytest-doctestplus",
 ]
-test-extras = [
+optional-dependencies.test-extras = [
   "spark-parser",
   "uncompyle6",
 ]
-[project.urls]
-"Bug Tracker" = "https://github.com/scikit-hep/vector/issues"
-Changelog = "https://vector.readthedocs.io/en/latest/changelog.html"
-Discussions = "https://github.com/scikit-hep/vector/discussions"
-Documentation = "https://vector.readthedocs.io/"
-Homepage = "https://github.com/scikit-hep/vector"
-[project.entry-points.numba_extensions]
-init = "vector:register_numba"
-
+urls."Bug Tracker" = "https://github.com/scikit-hep/vector/issues"
+urls.Changelog = "https://vector.readthedocs.io/en/latest/changelog.html"
+urls.Discussions = "https://github.com/scikit-hep/vector/discussions"
+urls.Documentation = "https://vector.readthedocs.io/"
+urls.Homepage = "https://github.com/scikit-hep/vector"
+entry-points.numba_extensions.init = "vector:register_numba"
 [tool.hatch]
 version.source = "vcs"
 build.hooks.vcs.version-file = "src/vector/_version.py"
 
 [tool.ruff]
-src = ["src"]
+src = [
+  "src",
+]
 
 [tool.ruff.lint]
 extend-select = [
-  "B",           # flake8-bugbear
-  "I",           # isort
-  "C4",          # flake8-comprehensions
-  "ISC",         # flake8-implicit-str-concat
-  "PGH",         # pygrep-hooks
-  "PIE",         # flake8-pie
-  "PL",          # pylint
-  "PT",          # flake8-pytest-style
-  "RUF",         # Ruff-specific
-  "SIM",         # flake8-simplify
-  "T20",         # flake8-print
-  "UP",          # pyupgrade
-  "YTT",         # flake8-2020
+  "B",   # flake8-bugbear
+  "I",   # isort
+  "C4",  # flake8-comprehensions
+  "ISC", # flake8-implicit-str-concat
+  "PGH", # pygrep-hooks
+  "PIE", # flake8-pie
+  "PL",  # pylint
+  "PT",  # flake8-pytest-style
+  "RUF", # Ruff-specific
+  "SIM", # flake8-simplify
+  "T20", # flake8-print
+  "UP",  # pyupgrade
+  "YTT", # flake8-2020
 ]
 ignore = [
-  "PLR09",       # Too many X
-  "PLR2004",     # Magic values
+  "PLR09",   # Too many X
+  "PLR2004", # Magic values
 ]
-typing-modules = ["vector._typeutils"]
-isort.required-imports = ["from __future__ import annotations"]
+typing-modules = [
+  "vector._typeutils",
+]
+isort.required-imports = [
+  "from __future__ import annotations",
+]
 
 [tool.ruff.lint.per-file-ignores]
-"noxfile.py" = ["T20"]
-"tests/*" = ["T20"]
-"src/vector/backends/_numba_object.py" = ["PGH003"]
-"tests/backends/test_operators.py" = ["SIM201", "SIM202", "PLR0124"]
+"noxfile.py" = [
+  "T20",
+]
+"tests/*" = [
+  "T20",
+]
+"src/vector/backends/_numba_object.py" = [
+  "PGH003",
+]
+"tests/backends/test_operators.py" = [
+  "SIM201",
+  "SIM202",
+  "PLR0124",
+]
 
 [tool.pylint]
 master.py-version = "3.8"
@@ -192,25 +208,25 @@ messages_control.disable = [
 minversion = "6.0"
 xfail_strict = true
 addopts = [
-    "-ra",
-    "--strict-markers",
-    "--strict-config",
+  "-ra",
+  "--strict-markers",
+  "--strict-config",
 ]
 testpaths = [
-    "tests",
+  "tests",
 ]
 markers = [
-    "slow",
-    "numba",
-    "awkward",
-    "dis",
-    "sympy",
+  "slow",
+  "numba",
+  "awkward",
+  "dis",
+  "sympy",
 ]
 log_cli_level = "DEBUG"
 filterwarnings = [
-    "error",
-    "ignore::DeprecationWarning",
-    "ignore::UserWarning",
+  "error",
+  "ignore::DeprecationWarning",
+  "ignore::UserWarning",
 ]
 
 [tool.mypy]
