@@ -61,3 +61,10 @@ def test_issue_443():
         {"E": [1], "px": [1], "py": [1], "pz": [1]}, with_name="Momentum4D"
     ) ** 2 == ak.Array([-2])
     assert vector.obj(E=1, px=1, py=1, pz=1) ** 2 == -2
+
+
+def test_issue_463():
+    v = vector.obj(x=1, y=1, z=1)
+    for transform in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
+        trv = getattr(v, "to_" + transform)()
+        assert trv.deltaangle(trv) == 0.0

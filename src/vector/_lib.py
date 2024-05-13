@@ -14,11 +14,11 @@ class SympyLib:
     def nan_to_num(self, val: sympy.Expr, **kwargs: typing.Any) -> sympy.Expr:
         return val
 
-    def maximum(self, val1: sympy.Expr, val2: sympy.Expr) -> sympy.Expr:
-        if val2 == 0:
-            return val1
-        else:
-            return sympy.maximum(val1, val2)  # type: ignore[no-untyped-call]
+    def maximum(self, val1: sympy.Expr | int, val2: sympy.Expr | int) -> sympy.Expr:
+        return val1 if isinstance(val1, sympy.Expr) else val2  # type: ignore[return-value]
+
+    def minimum(self, val1: sympy.Expr | int, val2: sympy.Expr | int) -> sympy.Expr:
+        return val1 if isinstance(val1, sympy.Expr) else val2  # type: ignore[return-value]
 
     def arcsin(self, val: sympy.Expr) -> sympy.Expr:
         return sympy.asin(val)
