@@ -234,9 +234,19 @@ def _getitem(
         elif issubclass(array.ObjectClass, vector.backends.object.AzimuthalObject):
             return array.ObjectClass(*tuple(out)[:2])  # type: ignore[arg-type, return-value]
         elif issubclass(array.ObjectClass, vector.backends.object.LongitudinalObject):
-            return array.ObjectClass(tuple(out)[2])  # type: ignore[arg-type, return-value]
+            coords = (
+                out.view(numpy.ndarray)[0]
+                if len(out) == 1  # type: ignore[arg-type]
+                else out.view(numpy.ndarray)[2]
+            )
+            return array.ObjectClass(coords)  # type: ignore[return-value]
         else:
-            return array.ObjectClass(tuple(out)[3])  # type: ignore[arg-type, return-value]
+            coords = (
+                out.view(numpy.ndarray)[0]
+                if len(out) == 1  # type: ignore[arg-type]
+                else out.view(numpy.ndarray)[3]
+            )
+            return array.ObjectClass(coords)  # type: ignore[return-value]
 
 
 def _array_repr(
