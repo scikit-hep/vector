@@ -61,3 +61,56 @@ def test_issue_443():
         {"E": [1], "px": [1], "py": [1], "pz": [1]}, with_name="Momentum4D"
     ) ** 2 == ak.Array([-2])
     assert vector.obj(E=1, px=1, py=1, pz=1) ** 2 == -2
+
+
+def test_issue_194():
+    vec2d = vector.VectorNumpy2D(
+        {
+            "x": [1.1, 1.2, 1.3, 1.4, 1.5],
+            "y": [2.1, 2.2, 2.3, 2.4, 2.5],
+        }
+    )
+    az = vector.backends.numpy.AzimuthalNumpyXY(
+        [(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)],
+        dtype=[("x", float), ("y", float)],
+    )
+    assert vec2d.azimuthal == az
+
+    vec3d = vector.VectorNumpy3D(
+        {
+            "x": [1.1, 1.2, 1.3, 1.4, 1.5],
+            "y": [2.1, 2.2, 2.3, 2.4, 2.5],
+            "z": [3.1, 3.2, 3.3, 3.4, 3.5],
+        }
+    )
+    az = vector.backends.numpy.AzimuthalNumpyXY(
+        [(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)],
+        dtype=[("x", float), ("y", float)],
+    )
+    lg = vector.backends.numpy.LongitudinalNumpyZ(
+        [(3.1,), (3.2,), (3.3,), (3.4,), (3.5,)], dtype=[("z", float)]
+    )
+    assert vec3d.azimuthal == az
+    assert vec3d.longitudinal == lg
+
+    vec4d = vector.VectorNumpy4D(
+        {
+            "x": [1.1, 1.2, 1.3, 1.4, 1.5],
+            "y": [2.1, 2.2, 2.3, 2.4, 2.5],
+            "z": [3.1, 3.2, 3.3, 3.4, 3.5],
+            "t": [4.1, 4.2, 4.3, 4.4, 4.5],
+        }
+    )
+    az = vector.backends.numpy.AzimuthalNumpyXY(
+        [(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)],
+        dtype=[("x", float), ("y", float)],
+    )
+    lg = vector.backends.numpy.LongitudinalNumpyZ(
+        [(3.1,), (3.2,), (3.3,), (3.4,), (3.5,)], dtype=[("z", float)]
+    )
+    tm = vector.backends.numpy.TemporalNumpyT(
+        [(4.1,), (4.2,), (4.3,), (4.4,), (4.5,)], dtype=[("t", float)]
+    )
+    assert vec4d.azimuthal == az
+    assert vec4d.longitudinal == lg
+    assert vec4d.temporal == tm
