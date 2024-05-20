@@ -103,11 +103,10 @@ src = [
   "src",
 ]
 
-[tool.ruff.lint]
-extend-select = [
+lint.extend-select = [
   "B",   # flake8-bugbear
-  "I",   # isort
   "C4",  # flake8-comprehensions
+  "I",   # isort
   "ISC", # flake8-implicit-str-concat
   "PGH", # pygrep-hooks
   "PIE", # flake8-pie
@@ -119,31 +118,29 @@ extend-select = [
   "UP",  # pyupgrade
   "YTT", # flake8-2020
 ]
-ignore = [
-  "PLR09",   # Too many X
-  "PLR2004", # Magic values
-]
-typing-modules = [
-  "vector._typeutils",
-]
-isort.required-imports = [
-  "from __future__ import annotations",
-]
-
-[tool.ruff.lint.per-file-ignores]
-"noxfile.py" = [
+lint.per-file-ignores."noxfile.py" = [
   "T20",
 ]
-"tests/*" = [
-  "T20",
-]
-"src/vector/backends/_numba_object.py" = [
+lint.per-file-ignores."src/vector/backends/_numba_object.py" = [
   "PGH003",
 ]
-"tests/backends/test_operators.py" = [
+lint.per-file-ignores."tests/*" = [
+  "T20",
+]
+lint.per-file-ignores."tests/backends/test_operators.py" = [
+  "PLR0124",
   "SIM201",
   "SIM202",
-  "PLR0124",
+]
+lint.typing-modules = [
+  "vector._typeutils",
+]
+lint.isort = [
+  "from __future__ import annotations",
+]
+lint.ignore = [
+  "PLR09",   # Too many X
+  "PLR2004", # Magic values
 ]
 
 [tool.pylint]
