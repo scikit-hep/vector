@@ -763,7 +763,7 @@ compute_masses(array)
 
 ## Sub-classing Awkward mixins
 
-At the moment, it is possible to sub-class vector awkward mixins to extend the vector functionalities. Although the mechanism is in place, it is not very user-friendly and is being worked on.
+At the moment, it is possible to sub-class vector awkward mixins to extend the vector functionalities. Although the mechanism in place works well, it is still being improved.
 
 For instance, the `MomentumAwkward` classes can be extended in the following way:
 
