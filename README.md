@@ -761,6 +761,104 @@ def compute_masses(array):
 compute_masses(array)
 ```
 
+## Sub-classing Awkward mixins
+
+At the moment, it is possible to sub-class vector awkward mixins to extend the vector functionalities. Although the mechanism is in place, it is not very user-friendly and is being worked on.
+
+For instance, the `MomentumAwkward` classes can be extended in the following way:
+
+```py
+@ak.mixin_class(vector.backends.awkward.behavior)
+class TwoVector(vector.backends.awkward.MomentumAwkward2D):
+    pass
+
+
+@ak.mixin_class(vector.backends.awkward.behavior)
+class ThreeVector(vector.backends.awkward.MomentumAwkward3D):
+    pass
+
+
+# required for transforming vectors
+# the class names must always end with "Array"
+TwoVectorArray.ProjectionClass2D = TwoVectorArray  # noqa: F821
+TwoVectorArray.ProjectionClass3D = ThreeVectorArray  # noqa: F821
+TwoVectorArray.MomentumClass = TwoVectorArray  # noqa: F821
+
+ThreeVectorArray.ProjectionClass2D = TwoVectorArray  # noqa: F821
+ThreeVectorArray.ProjectionClass3D = ThreeVectorArray  # noqa: F821
+ThreeVectorArray.MomentumClass = ThreeVectorArray  # noqa: F821
+
+vec = ak.zip(
+    {
+        "pt": [[1, 2], [], [3], [4]],
+        "phi": [[1.2, 1.4], [], [1.6], [3.4]],
+    },
+    with_name="TwoVector",
+    behavior=vector.backends.awkward.behavior,
+)
+
+vec
+```
+
+The binary operators are not automatically registered by awkward, but vector methods can be used to perform operations on sub-classed vectors.
+
+```py
+vec.add(vec)
+```
+
+Similarly, other vector methods can be used by the new methods internally.
+
+```py
+@ak.mixin_class(vector.backends.awkward.behavior)
+class LorentzVector(vector.backends.awkward.MomentumAwkward4D):
+    @ak.mixin_class_method(np.divide, {numbers.Number})
+    def divide(self, factor):
+        return self.scale(1 / factor)
+
+
+# required for transforming vectors
+# the class names must always end with "Array"
+LorentzVectorArray.ProjectionClass2D = TwoVectorArray  # noqa: F821
+LorentzVectorArray.ProjectionClass3D = ThreeVectorArray  # noqa: F821
+LorentzVectorArray.ProjectionClass4D = LorentzVectorArray  # noqa: F821
+LorentzVectorArray.MomentumClass = LorentzVectorArray  # noqa: F821
+
+vec = ak.zip(
+    {
+        "pt": [[1, 2], [], [3], [4]],
+        "eta": [[1.2, 1.4], [], [1.6], [3.4]],
+        "phi": [[0.3, 0.4], [], [0.5], [0.6]],
+        "energy": [[50, 51], [], [52], [60]],
+    },
+    with_name="LorentzVector",
+    behavior=vector.backends.awkward.behavior,
+)
+
+vec / 2
+vec.like(vector.obj(x=1, y=2))
+vec.like(vector.obj(x=1, y=2, z=3))
+```
+
+It is also possible to manually add binary operations in vector's behavior dict to enable binary operations.
+
+```py
+_binary_dispatch_cls = {
+    "TwoVector": TwoVector,
+    "ThreeVector": ThreeVector,
+    "LorentzVector": LorentzVector,
+}
+_rank = [TwoVector, ThreeVector, LorentzVector]
+
+for lhs, lhs_to in _binary_dispatch_cls.items():
+    for rhs, rhs_to in _binary_dispatch_cls.items():
+        out_to = min(lhs_to, rhs_to, key=_rank.index)
+        vector.backends.awkward.behavior[(np.add, lhs, rhs)] = out_to.add
+        vector.backends.awkward.behavior[(np.subtract, lhs, rhs)] = out_to.subtract
+
+vec + vec
+vec.to_2D() + vec.to_2D()
+```
+
 ## Talks about vector
 
 - 9th October 2023 - [What’s new with Vector? First major release is out!](https://indi.to/35ym5) - [PyHEP 2023 (virtual)](https://indico.cern.ch/event/1252095/) [🎥](https://www.youtube.com/watch?v=JHEAb2R3xzE&list=PLKZ9c4ONm-VlAorAG8kR09ZqhMfHiH2LJ&index=10)
