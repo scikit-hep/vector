@@ -70,11 +70,22 @@ def test_issue_194():
             "y": [2.1, 2.2, 2.3, 2.4, 2.5],
         }
     )
-    az = vector.backends.numpy.AzimuthalNumpyXY(
+    az1 = vector.backends.numpy.AzimuthalNumpyXY(
         [(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)],
         dtype=[("x", float), ("y", float)],
     )
-    assert vec2d.azimuthal == az
+    az2 = vector.backends.numpy.AzimuthalNumpyXY(
+        [(1.1, 3.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)],
+        dtype=[("x", float), ("y", float)],
+    )
+    azp1 = vector.backends.numpy.AzimuthalNumpyRhoPhi(
+        [(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)],
+        dtype=[("rho", float), ("phi", float)],
+    )
+    assert vec2d.azimuthal == az1
+    assert vec2d.azimuthal != az2
+    assert vec2d.azimuthal != azp1
+    assert az1 != az2
 
     vec3d = vector.VectorNumpy3D(
         {
@@ -83,15 +94,20 @@ def test_issue_194():
             "z": [3.1, 3.2, 3.3, 3.4, 3.5],
         }
     )
-    az = vector.backends.numpy.AzimuthalNumpyXY(
-        [(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)],
-        dtype=[("x", float), ("y", float)],
-    )
-    lg = vector.backends.numpy.LongitudinalNumpyZ(
+    lg1 = vector.backends.numpy.LongitudinalNumpyZ(
         [(3.1,), (3.2,), (3.3,), (3.4,), (3.5,)], dtype=[("z", float)]
     )
-    assert vec3d.azimuthal == az
-    assert vec3d.longitudinal == lg
+    lg2 = vector.backends.numpy.LongitudinalNumpyZ(
+        [(4.1,), (3.2,), (3.3,), (3.4,), (3.5,)], dtype=[("z", float)]
+    )
+    lgeta = vector.backends.numpy.LongitudinalNumpyEta(
+        [(3.1,), (3.2,), (3.3,), (3.4,), (3.5,)], dtype=[("eta", float)]
+    )
+    assert vec3d.azimuthal == az1
+    assert vec3d.longitudinal == lg1
+    assert vec3d.longitudinal != lg2
+    assert vec3d.longitudinal != lgeta
+    assert lg1 != lg2
 
     vec4d = vector.VectorNumpy4D(
         {
@@ -101,16 +117,18 @@ def test_issue_194():
             "t": [4.1, 4.2, 4.3, 4.4, 4.5],
         }
     )
-    az = vector.backends.numpy.AzimuthalNumpyXY(
-        [(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)],
-        dtype=[("x", float), ("y", float)],
-    )
-    lg = vector.backends.numpy.LongitudinalNumpyZ(
-        [(3.1,), (3.2,), (3.3,), (3.4,), (3.5,)], dtype=[("z", float)]
-    )
-    tm = vector.backends.numpy.TemporalNumpyT(
+    tm1 = vector.backends.numpy.TemporalNumpyT(
         [(4.1,), (4.2,), (4.3,), (4.4,), (4.5,)], dtype=[("t", float)]
     )
-    assert vec4d.azimuthal == az
-    assert vec4d.longitudinal == lg
-    assert vec4d.temporal == tm
+    tm2 = vector.backends.numpy.TemporalNumpyT(
+        [(5.1,), (4.2,), (4.3,), (4.4,), (4.5,)], dtype=[("t", float)]
+    )
+    tmtau = vector.backends.numpy.TemporalNumpyTau(
+        [(4.1,), (4.2,), (4.3,), (4.4,), (4.5,)], dtype=[("tau", float)]
+    )
+    assert vec4d.azimuthal == az1
+    assert vec4d.longitudinal == lg1
+    assert vec4d.temporal == tm1
+    assert vec4d.temporal != tm2
+    assert vec4d.temporal != tmtau
+    assert tm1 != tm2
