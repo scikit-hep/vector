@@ -359,6 +359,7 @@ allowed_lib_functions = [
     "sign",
     "copysign",
     "maximum",
+    "minimum",
     "sqrt",
     "exp",
     "log",
