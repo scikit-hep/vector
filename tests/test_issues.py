@@ -132,3 +132,10 @@ def test_issue_194():
     assert vec4d.temporal != tm2
     assert vec4d.temporal != tmtau
     assert tm1 != tm2
+
+
+def test_issue_463():
+    v = vector.obj(x=1, y=1, z=1)
+    for transform in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
+        trv = getattr(v, "to_" + transform)()
+        assert trv.deltaangle(trv) == 0.0

@@ -34,32 +34,61 @@ from vector._methods import (
 def xy_z_xy_z(lib, x1, y1, z1, x2, y2, z2):
     v1m = mag.xy_z(lib, x1, y1, z1)
     v2m = mag.xy_z(lib, x2, y2, z2)
-    return lib.arccos(dot.xy_z_xy_z(lib, x1, y1, z1, x2, y2, z2) / v1m / v2m)
+    return lib.arccos(
+        lib.maximum(
+            -1, lib.minimum(1, dot.xy_z_xy_z(lib, x1, y1, z1, x2, y2, z2) / v1m / v2m)
+        )
+    )
 
 
 def xy_z_xy_theta(lib, x1, y1, z1, x2, y2, theta2):
     v1m = mag.xy_z(lib, x1, y1, z1)
     v2m = mag.xy_theta(lib, x2, y2, theta2)
-    return lib.arccos(dot.xy_z_xy_theta(lib, x1, y1, z1, x2, y2, theta2) / v1m / v2m)
+    return lib.arccos(
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1, dot.xy_z_xy_theta(lib, x1, y1, z1, x2, y2, theta2) / v1m / v2m
+            ),
+        )
+    )
 
 
 def xy_z_xy_eta(lib, x1, y1, z1, x2, y2, eta2):
     v1m = mag.xy_z(lib, x1, y1, z1)
     v2m = mag.xy_eta(lib, x2, y2, eta2)
-    return lib.arccos(dot.xy_z_xy_eta(lib, x1, y1, z1, x2, y2, eta2) / v1m / v2m)
+    return lib.arccos(
+        lib.maximum(
+            -1,
+            lib.minimum(1, dot.xy_z_xy_eta(lib, x1, y1, z1, x2, y2, eta2) / v1m / v2m),
+        )
+    )
 
 
 def xy_z_rhophi_z(lib, x1, y1, z1, rho2, phi2, z2):
     v1m = mag.xy_z(lib, x1, y1, z1)
     v2m = mag.rhophi_z(lib, rho2, phi2, z2)
-    return lib.arccos(dot.xy_z_rhophi_z(lib, x1, y1, z1, rho2, phi2, z2) / v1m / v2m)
+    return lib.arccos(
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1, dot.xy_z_rhophi_z(lib, x1, y1, z1, rho2, phi2, z2) / v1m / v2m
+            ),
+        )
+    )
 
 
 def xy_z_rhophi_theta(lib, x1, y1, z1, rho2, phi2, theta2):
     v1m = mag.xy_z(lib, x1, y1, z1)
     v2m = mag.rhophi_theta(lib, rho2, phi2, theta2)
     return lib.arccos(
-        dot.xy_z_rhophi_theta(lib, x1, y1, z1, rho2, phi2, theta2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1,
+                dot.xy_z_rhophi_theta(lib, x1, y1, z1, rho2, phi2, theta2) / v1m / v2m,
+            ),
+        )
     )
 
 
@@ -67,21 +96,39 @@ def xy_z_rhophi_eta(lib, x1, y1, z1, rho2, phi2, eta2):
     v1m = mag.xy_z(lib, x1, y1, z1)
     v2m = mag.rhophi_eta(lib, rho2, phi2, eta2)
     return lib.arccos(
-        dot.xy_z_rhophi_eta(lib, x1, y1, z1, rho2, phi2, eta2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1, dot.xy_z_rhophi_eta(lib, x1, y1, z1, rho2, phi2, eta2) / v1m / v2m
+            ),
+        )
     )
 
 
 def xy_theta_xy_z(lib, x1, y1, theta1, x2, y2, z2):
     v1m = mag.xy_theta(lib, x1, y1, theta1)
     v2m = mag.xy_z(lib, x2, y2, z2)
-    return lib.arccos(dot.xy_theta_xy_z(lib, x1, y1, theta1, x2, y2, z2) / v1m / v2m)
+    return lib.arccos(
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1, dot.xy_theta_xy_z(lib, x1, y1, theta1, x2, y2, z2) / v1m / v2m
+            ),
+        )
+    )
 
 
 def xy_theta_xy_theta(lib, x1, y1, theta1, x2, y2, theta2):
     v1m = mag.xy_theta(lib, x1, y1, theta1)
     v2m = mag.xy_theta(lib, x2, y2, theta2)
     return lib.arccos(
-        dot.xy_theta_xy_theta(lib, x1, y1, theta1, x2, y2, theta2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1,
+                dot.xy_theta_xy_theta(lib, x1, y1, theta1, x2, y2, theta2) / v1m / v2m,
+            ),
+        )
     )
 
 
@@ -89,7 +136,12 @@ def xy_theta_xy_eta(lib, x1, y1, theta1, x2, y2, eta2):
     v1m = mag.xy_theta(lib, x1, y1, theta1)
     v2m = mag.xy_eta(lib, x2, y2, eta2)
     return lib.arccos(
-        dot.xy_theta_xy_eta(lib, x1, y1, theta1, x2, y2, eta2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1, dot.xy_theta_xy_eta(lib, x1, y1, theta1, x2, y2, eta2) / v1m / v2m
+            ),
+        )
     )
 
 
@@ -97,7 +149,13 @@ def xy_theta_rhophi_z(lib, x1, y1, theta1, rho2, phi2, z2):
     v1m = mag.xy_theta(lib, x1, y1, theta1)
     v2m = mag.rhophi_z(lib, rho2, phi2, z2)
     return lib.arccos(
-        dot.xy_theta_rhophi_z(lib, x1, y1, theta1, rho2, phi2, z2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1,
+                dot.xy_theta_rhophi_z(lib, x1, y1, theta1, rho2, phi2, z2) / v1m / v2m,
+            ),
+        )
     )
 
 
@@ -105,7 +163,15 @@ def xy_theta_rhophi_theta(lib, x1, y1, theta1, rho2, phi2, theta2):
     v1m = mag.xy_theta(lib, x1, y1, theta1)
     v2m = mag.rhophi_theta(lib, rho2, phi2, theta2)
     return lib.arccos(
-        dot.xy_theta_rhophi_theta(lib, x1, y1, theta1, rho2, phi2, theta2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1,
+                dot.xy_theta_rhophi_theta(lib, x1, y1, theta1, rho2, phi2, theta2)
+                / v1m
+                / v2m,
+            ),
+        )
     )
 
 
@@ -113,35 +179,65 @@ def xy_theta_rhophi_eta(lib, x1, y1, theta1, rho2, phi2, eta2):
     v1m = mag.xy_theta(lib, x1, y1, theta1)
     v2m = mag.rhophi_eta(lib, rho2, phi2, eta2)
     return lib.arccos(
-        dot.xy_theta_rhophi_eta(lib, x1, y1, theta1, rho2, phi2, eta2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1,
+                dot.xy_theta_rhophi_eta(lib, x1, y1, theta1, rho2, phi2, eta2)
+                / v1m
+                / v2m,
+            ),
+        )
     )
 
 
 def xy_eta_xy_z(lib, x1, y1, eta1, x2, y2, z2):
     v1m = mag.xy_eta(lib, x1, y1, eta1)
     v2m = mag.xy_z(lib, x2, y2, z2)
-    return lib.arccos(dot.xy_eta_xy_z(lib, x1, y1, eta1, x2, y2, z2) / v1m / v2m)
+    return lib.arccos(
+        lib.maximum(
+            -1,
+            lib.minimum(1, dot.xy_eta_xy_z(lib, x1, y1, eta1, x2, y2, z2) / v1m / v2m),
+        )
+    )
 
 
 def xy_eta_xy_theta(lib, x1, y1, eta1, x2, y2, theta2):
     v1m = mag.xy_eta(lib, x1, y1, eta1)
     v2m = mag.xy_theta(lib, x2, y2, theta2)
     return lib.arccos(
-        dot.xy_eta_xy_theta(lib, x1, y1, eta1, x2, y2, theta2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1, dot.xy_eta_xy_theta(lib, x1, y1, eta1, x2, y2, theta2) / v1m / v2m
+            ),
+        )
     )
 
 
 def xy_eta_xy_eta(lib, x1, y1, eta1, x2, y2, eta2):
     v1m = mag.xy_eta(lib, x1, y1, eta1)
     v2m = mag.xy_eta(lib, x2, y2, eta2)
-    return lib.arccos(dot.xy_eta_xy_eta(lib, x1, y1, eta1, x2, y2, eta2) / v1m / v2m)
+    return lib.arccos(
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1, dot.xy_eta_xy_eta(lib, x1, y1, eta1, x2, y2, eta2) / v1m / v2m
+            ),
+        )
+    )
 
 
 def xy_eta_rhophi_z(lib, x1, y1, eta1, rho2, phi2, z2):
     v1m = mag.xy_eta(lib, x1, y1, eta1)
     v2m = mag.rhophi_z(lib, rho2, phi2, z2)
     return lib.arccos(
-        dot.xy_eta_rhophi_z(lib, x1, y1, eta1, rho2, phi2, z2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1, dot.xy_eta_rhophi_z(lib, x1, y1, eta1, rho2, phi2, z2) / v1m / v2m
+            ),
+        )
     )
 
 
@@ -149,7 +245,15 @@ def xy_eta_rhophi_theta(lib, x1, y1, eta1, rho2, phi2, theta2):
     v1m = mag.xy_eta(lib, x1, y1, eta1)
     v2m = mag.rhophi_theta(lib, rho2, phi2, theta2)
     return lib.arccos(
-        dot.xy_eta_rhophi_theta(lib, x1, y1, eta1, rho2, phi2, theta2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1,
+                dot.xy_eta_rhophi_theta(lib, x1, y1, eta1, rho2, phi2, theta2)
+                / v1m
+                / v2m,
+            ),
+        )
     )
 
 
@@ -157,21 +261,40 @@ def xy_eta_rhophi_eta(lib, x1, y1, eta1, rho2, phi2, eta2):
     v1m = mag.xy_eta(lib, x1, y1, eta1)
     v2m = mag.rhophi_eta(lib, rho2, phi2, eta2)
     return lib.arccos(
-        dot.xy_eta_rhophi_eta(lib, x1, y1, eta1, rho2, phi2, eta2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1,
+                dot.xy_eta_rhophi_eta(lib, x1, y1, eta1, rho2, phi2, eta2) / v1m / v2m,
+            ),
+        )
     )
 
 
 def rhophi_z_xy_z(lib, rho1, phi1, z1, x2, y2, z2):
     v1m = mag.rhophi_z(lib, rho1, phi1, z1)
     v2m = mag.xy_z(lib, x2, y2, z2)
-    return lib.arccos(dot.rhophi_z_xy_z(lib, rho1, phi1, z1, x2, y2, z2) / v1m / v2m)
+    return lib.arccos(
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1, dot.rhophi_z_xy_z(lib, rho1, phi1, z1, x2, y2, z2) / v1m / v2m
+            ),
+        )
+    )
 
 
 def rhophi_z_xy_theta(lib, rho1, phi1, z1, x2, y2, theta2):
     v1m = mag.rhophi_z(lib, rho1, phi1, z1)
     v2m = mag.xy_theta(lib, x2, y2, theta2)
     return lib.arccos(
-        dot.rhophi_z_xy_theta(lib, rho1, phi1, z1, x2, y2, theta2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1,
+                dot.rhophi_z_xy_theta(lib, rho1, phi1, z1, x2, y2, theta2) / v1m / v2m,
+            ),
+        )
     )
 
 
@@ -179,7 +302,12 @@ def rhophi_z_xy_eta(lib, rho1, phi1, z1, x2, y2, eta2):
     v1m = mag.rhophi_z(lib, rho1, phi1, z1)
     v2m = mag.xy_eta(lib, x2, y2, eta2)
     return lib.arccos(
-        dot.rhophi_z_xy_eta(lib, rho1, phi1, z1, x2, y2, eta2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1, dot.rhophi_z_xy_eta(lib, rho1, phi1, z1, x2, y2, eta2) / v1m / v2m
+            ),
+        )
     )
 
 
@@ -187,7 +315,13 @@ def rhophi_z_rhophi_z(lib, rho1, phi1, z1, rho2, phi2, z2):
     v1m = mag.rhophi_z(lib, rho1, phi1, z1)
     v2m = mag.rhophi_z(lib, rho2, phi2, z2)
     return lib.arccos(
-        dot.rhophi_z_rhophi_z(lib, rho1, phi1, z1, rho2, phi2, z2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1,
+                dot.rhophi_z_rhophi_z(lib, rho1, phi1, z1, rho2, phi2, z2) / v1m / v2m,
+            ),
+        )
     )
 
 
@@ -195,7 +329,15 @@ def rhophi_z_rhophi_theta(lib, rho1, phi1, z1, rho2, phi2, theta2):
     v1m = mag.rhophi_z(lib, rho1, phi1, z1)
     v2m = mag.rhophi_theta(lib, rho2, phi2, theta2)
     return lib.arccos(
-        dot.rhophi_z_rhophi_theta(lib, rho1, phi1, z1, rho2, phi2, theta2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1,
+                dot.rhophi_z_rhophi_theta(lib, rho1, phi1, z1, rho2, phi2, theta2)
+                / v1m
+                / v2m,
+            ),
+        )
     )
 
 
@@ -203,7 +345,15 @@ def rhophi_z_rhophi_eta(lib, rho1, phi1, z1, rho2, phi2, eta2):
     v1m = mag.rhophi_z(lib, rho1, phi1, z1)
     v2m = mag.rhophi_eta(lib, rho2, phi2, eta2)
     return lib.arccos(
-        dot.rhophi_z_rhophi_eta(lib, rho1, phi1, z1, rho2, phi2, eta2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1,
+                dot.rhophi_z_rhophi_eta(lib, rho1, phi1, z1, rho2, phi2, eta2)
+                / v1m
+                / v2m,
+            ),
+        )
     )
 
 
@@ -211,7 +361,13 @@ def rhophi_theta_xy_z(lib, rho1, phi1, theta1, x2, y2, z2):
     v1m = mag.rhophi_theta(lib, rho1, phi1, theta1)
     v2m = mag.xy_z(lib, x2, y2, z2)
     return lib.arccos(
-        dot.rhophi_theta_xy_z(lib, rho1, phi1, theta1, x2, y2, z2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1,
+                dot.rhophi_theta_xy_z(lib, rho1, phi1, theta1, x2, y2, z2) / v1m / v2m,
+            ),
+        )
     )
 
 
@@ -219,7 +375,15 @@ def rhophi_theta_xy_theta(lib, rho1, phi1, theta1, x2, y2, theta2):
     v1m = mag.rhophi_theta(lib, rho1, phi1, theta1)
     v2m = mag.xy_theta(lib, x2, y2, theta2)
     return lib.arccos(
-        dot.rhophi_theta_xy_theta(lib, rho1, phi1, theta1, x2, y2, theta2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1,
+                dot.rhophi_theta_xy_theta(lib, rho1, phi1, theta1, x2, y2, theta2)
+                / v1m
+                / v2m,
+            ),
+        )
     )
 
 
@@ -227,7 +391,15 @@ def rhophi_theta_xy_eta(lib, rho1, phi1, theta1, x2, y2, eta2):
     v1m = mag.rhophi_theta(lib, rho1, phi1, theta1)
     v2m = mag.xy_eta(lib, x2, y2, eta2)
     return lib.arccos(
-        dot.rhophi_theta_xy_eta(lib, rho1, phi1, theta1, x2, y2, eta2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1,
+                dot.rhophi_theta_xy_eta(lib, rho1, phi1, theta1, x2, y2, eta2)
+                / v1m
+                / v2m,
+            ),
+        )
     )
 
 
@@ -235,7 +407,15 @@ def rhophi_theta_rhophi_z(lib, rho1, phi1, theta1, rho2, phi2, z2):
     v1m = mag.rhophi_theta(lib, rho1, phi1, theta1)
     v2m = mag.rhophi_z(lib, rho2, phi2, z2)
     return lib.arccos(
-        dot.rhophi_theta_rhophi_z(lib, rho1, phi1, theta1, rho2, phi2, z2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1,
+                dot.rhophi_theta_rhophi_z(lib, rho1, phi1, theta1, rho2, phi2, z2)
+                / v1m
+                / v2m,
+            ),
+        )
     )
 
 
@@ -243,9 +423,17 @@ def rhophi_theta_rhophi_theta(lib, rho1, phi1, theta1, rho2, phi2, theta2):
     v1m = mag.rhophi_theta(lib, rho1, phi1, theta1)
     v2m = mag.rhophi_theta(lib, rho2, phi2, theta2)
     return lib.arccos(
-        dot.rhophi_theta_rhophi_theta(lib, rho1, phi1, theta1, rho2, phi2, theta2)
-        / v1m
-        / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1,
+                dot.rhophi_theta_rhophi_theta(
+                    lib, rho1, phi1, theta1, rho2, phi2, theta2
+                )
+                / v1m
+                / v2m,
+            ),
+        )
     )
 
 
@@ -253,9 +441,15 @@ def rhophi_theta_rhophi_eta(lib, rho1, phi1, theta1, rho2, phi2, eta2):
     v1m = mag.rhophi_theta(lib, rho1, phi1, theta1)
     v2m = mag.rhophi_eta(lib, rho2, phi2, eta2)
     return lib.arccos(
-        dot.rhophi_theta_rhophi_eta(lib, rho1, phi1, theta1, rho2, phi2, eta2)
-        / v1m
-        / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1,
+                dot.rhophi_theta_rhophi_eta(lib, rho1, phi1, theta1, rho2, phi2, eta2)
+                / v1m
+                / v2m,
+            ),
+        )
     )
 
 
@@ -263,7 +457,12 @@ def rhophi_eta_xy_z(lib, rho1, phi1, eta1, x2, y2, z2):
     v1m = mag.rhophi_eta(lib, rho1, phi1, eta1)
     v2m = mag.xy_z(lib, x2, y2, z2)
     return lib.arccos(
-        dot.rhophi_eta_xy_z(lib, rho1, phi1, eta1, x2, y2, z2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1, dot.rhophi_eta_xy_z(lib, rho1, phi1, eta1, x2, y2, z2) / v1m / v2m
+            ),
+        )
     )
 
 
@@ -271,7 +470,15 @@ def rhophi_eta_xy_theta(lib, rho1, phi1, eta1, x2, y2, theta2):
     v1m = mag.rhophi_eta(lib, rho1, phi1, eta1)
     v2m = mag.xy_theta(lib, x2, y2, theta2)
     return lib.arccos(
-        dot.rhophi_eta_xy_theta(lib, rho1, phi1, eta1, x2, y2, theta2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1,
+                dot.rhophi_eta_xy_theta(lib, rho1, phi1, eta1, x2, y2, theta2)
+                / v1m
+                / v2m,
+            ),
+        )
     )
 
 
@@ -279,7 +486,13 @@ def rhophi_eta_xy_eta(lib, rho1, phi1, eta1, x2, y2, eta2):
     v1m = mag.rhophi_eta(lib, rho1, phi1, eta1)
     v2m = mag.xy_eta(lib, x2, y2, eta2)
     return lib.arccos(
-        dot.rhophi_eta_xy_eta(lib, rho1, phi1, eta1, x2, y2, eta2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1,
+                dot.rhophi_eta_xy_eta(lib, rho1, phi1, eta1, x2, y2, eta2) / v1m / v2m,
+            ),
+        )
     )
 
 
@@ -287,7 +500,15 @@ def rhophi_eta_rhophi_z(lib, rho1, phi1, eta1, rho2, phi2, z2):
     v1m = mag.rhophi_eta(lib, rho1, phi1, eta1)
     v2m = mag.rhophi_z(lib, rho2, phi2, z2)
     return lib.arccos(
-        dot.rhophi_eta_rhophi_z(lib, rho1, phi1, eta1, rho2, phi2, z2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1,
+                dot.rhophi_eta_rhophi_z(lib, rho1, phi1, eta1, rho2, phi2, z2)
+                / v1m
+                / v2m,
+            ),
+        )
     )
 
 
@@ -295,9 +516,15 @@ def rhophi_eta_rhophi_theta(lib, rho1, phi1, eta1, rho2, phi2, theta2):
     v1m = mag.rhophi_eta(lib, rho1, phi1, eta1)
     v2m = mag.rhophi_theta(lib, rho2, phi2, theta2)
     return lib.arccos(
-        dot.rhophi_eta_rhophi_theta(lib, rho1, phi1, eta1, rho2, phi2, theta2)
-        / v1m
-        / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1,
+                dot.rhophi_eta_rhophi_theta(lib, rho1, phi1, eta1, rho2, phi2, theta2)
+                / v1m
+                / v2m,
+            ),
+        )
     )
 
 
@@ -305,7 +532,15 @@ def rhophi_eta_rhophi_eta(lib, rho1, phi1, eta1, rho2, phi2, eta2):
     v1m = mag.rhophi_eta(lib, rho1, phi1, eta1)
     v2m = mag.rhophi_eta(lib, rho2, phi2, eta2)
     return lib.arccos(
-        dot.rhophi_eta_rhophi_eta(lib, rho1, phi1, eta1, rho2, phi2, eta2) / v1m / v2m
+        lib.maximum(
+            -1,
+            lib.minimum(
+                1,
+                dot.rhophi_eta_rhophi_eta(lib, rho1, phi1, eta1, rho2, phi2, eta2)
+                / v1m
+                / v2m,
+            ),
+        )
     )
 
 
