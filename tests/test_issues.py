@@ -92,7 +92,7 @@ def test_issue_194():
     assert az1 != az2
     assert not az1 == azp1  # noqa: SIM201
     assert not azp1 == az1  # noqa: SIM201
-    assert azp1 != az1  # noqa: SIM201
+    assert azp1 != az1
     assert azp1 == azp1  # noqa: PLR0124
     assert azp1 != azp2
 
@@ -128,7 +128,7 @@ def test_issue_194():
     assert lg1 != lg2
     assert not lg1 == lgeta1  # noqa: SIM201
     assert not lgeta1 == lg1  # noqa: SIM201
-    assert lgeta1 != lg1  # noqa: SIM201
+    assert lgeta1 != lg1
     assert lgeta1 == lgeta1  # noqa: PLR0124
     assert lgeta1 != lgeta2
     assert lgtheta1 == lgtheta1  # noqa: PLR0124
@@ -162,7 +162,7 @@ def test_issue_194():
     assert tm1 != tm2
     assert not tm1 == tmtau1  # noqa: SIM201
     assert not tmtau1 == tm1  # noqa: SIM201
-    assert tmtau1 != tm1  # noqa: SIM201
+    assert tmtau1 != tm1
     assert tmtau1 == tmtau1  # noqa: PLR0124
     assert tmtau1 != tmtau2
 
