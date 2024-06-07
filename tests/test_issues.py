@@ -133,6 +133,8 @@ def test_issue_194():
     assert lgeta1 != lgeta2
     assert lgtheta1 == lgtheta1  # noqa: PLR0124
     assert lgtheta1 != lgtheta2
+    assert lgtheta1 != lgeta1
+    assert not lgtheta1 == lgeta1  # noqa: SIM201
 
     vec4d = vector.VectorNumpy4D(
         {
