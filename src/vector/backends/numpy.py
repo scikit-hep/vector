@@ -231,8 +231,22 @@ def _getitem(
             return array.ObjectClass(azimuthal=azimuthal, longitudinal=longitudinal)  # type: ignore[arg-type, return-value]
         elif azimuthal is not None:
             return array.ObjectClass(azimuthal=azimuthal)  # type: ignore[return-value]
+        elif issubclass(array.ObjectClass, vector.backends.object.AzimuthalObject):
+            return array.ObjectClass(*tuple(out)[:2])  # type: ignore[arg-type, return-value]
+        elif issubclass(array.ObjectClass, vector.backends.object.LongitudinalObject):
+            coords = (
+                out.view(numpy.ndarray)[0]
+                if len(out) == 1  # type: ignore[arg-type]
+                else out.view(numpy.ndarray)[2]
+            )
+            return array.ObjectClass(coords)  # type: ignore[return-value]
         else:
-            return array.ObjectClass(*out.view(numpy.ndarray))  # type: ignore[misc, return-value]
+            coords = (
+                out.view(numpy.ndarray)[0]
+                if len(out) == 1  # type: ignore[arg-type]
+                else out.view(numpy.ndarray)[3]
+            )
+            return array.ObjectClass(coords)  # type: ignore[return-value]
 
 
 def _array_repr(
@@ -429,8 +443,13 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # typ
 
     ObjectClass = vector.backends.object.AzimuthalObjectXY
     _IS_MOMENTUM = False
+    dtype: numpy.dtype[typing.Any] = numpy.dtype(
+        [("x", numpy.float64), ("y", numpy.float64)]
+    )
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> AzimuthalNumpyXY:
+        if "dtype" in kwargs:
+            AzimuthalNumpyXY.dtype = numpy.dtype(kwargs["dtype"])
         return numpy.array(*args, **kwargs).view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:
@@ -439,6 +458,16 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # typ
                 f"{type(self).__name__} must have a structured dtype containing "
                 'fields ("x", "y")'
             )
+
+    def __eq__(self, other: typing.Any) -> bool:
+        if self.dtype != other.dtype or not isinstance(other, AzimuthalNumpyXY):
+            return False
+        return all(coord1 == coord2 for coord1, coord2 in zip(self, other))
+
+    def __ne__(self, other: typing.Any) -> bool:
+        if self.dtype != other.dtype or not isinstance(other, AzimuthalNumpyXY):
+            return True
+        return any(coord1 != coord2 for coord1, coord2 in zip(self, other))
 
     @property
     def elements(self) -> tuple[FloatArray, FloatArray]:
@@ -480,8 +509,13 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray)
 
     ObjectClass = vector.backends.object.AzimuthalObjectRhoPhi
     _IS_MOMENTUM = False
+    dtype: numpy.dtype[typing.Any] = numpy.dtype(
+        [("rho", numpy.float64), ("phi", numpy.float64)]
+    )
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> AzimuthalNumpyRhoPhi:
+        if "dtype" in kwargs:
+            AzimuthalNumpyRhoPhi.dtype = numpy.dtype(kwargs["dtype"])
         return numpy.array(*args, **kwargs).view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:
@@ -490,6 +524,16 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray)
                 f"{type(self).__name__} must have a structured dtype containing "
                 'fields ("rho", "phi")'
             )
+
+    def __eq__(self, other: typing.Any) -> bool:
+        if self.dtype != other.dtype or not isinstance(other, AzimuthalNumpyRhoPhi):
+            return False
+        return all(coord1 == coord2 for coord1, coord2 in zip(self, other))
+
+    def __ne__(self, other: typing.Any) -> bool:
+        if self.dtype != other.dtype or not isinstance(other, AzimuthalNumpyRhoPhi):
+            return True
+        return any(coord1 != coord2 for coord1, coord2 in zip(self, other))
 
     @property
     def elements(self) -> tuple[FloatArray, FloatArray]:
@@ -530,8 +574,11 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):
 
     ObjectClass = vector.backends.object.LongitudinalObjectZ
     _IS_MOMENTUM = False
+    dtype: numpy.dtype[typing.Any] = numpy.dtype([("z", numpy.float64)])
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> LongitudinalNumpyZ:
+        if "dtype" in kwargs:
+            LongitudinalNumpyZ.dtype = numpy.dtype(kwargs["dtype"])
         return numpy.array(*args, **kwargs).view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:
@@ -540,6 +587,16 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):
                 f"{type(self).__name__} must have a structured dtype containing "
                 'field "z"'
             )
+
+    def __eq__(self, other: typing.Any) -> bool:
+        if self.dtype != other.dtype or not isinstance(other, LongitudinalNumpyZ):
+            return False
+        return all(coord1 == coord2 for coord1, coord2 in zip(self, other))
+
+    def __ne__(self, other: typing.Any) -> bool:
+        if self.dtype != other.dtype or not isinstance(other, LongitudinalNumpyZ):
+            return True
+        return any(coord1 != coord2 for coord1, coord2 in zip(self, other))
 
     @property
     def elements(self) -> tuple[FloatArray]:
@@ -575,8 +632,11 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, Floa
 
     ObjectClass = vector.backends.object.LongitudinalObjectTheta
     _IS_MOMENTUM = False
+    dtype: numpy.dtype[typing.Any] = numpy.dtype([("theta", numpy.float64)])
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> LongitudinalNumpyTheta:
+        if "dtype" in kwargs:
+            LongitudinalNumpyTheta.dtype = numpy.dtype(kwargs["dtype"])
         return numpy.array(*args, **kwargs).view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:
@@ -585,6 +645,16 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, Floa
                 f"{type(self).__name__} must have a structured dtype containing "
                 'field "theta"'
             )
+
+    def __eq__(self, other: typing.Any) -> bool:
+        if self.dtype != other.dtype or not isinstance(other, LongitudinalNumpyTheta):
+            return False
+        return all(coord1 == coord2 for coord1, coord2 in zip(self, other))
+
+    def __ne__(self, other: typing.Any) -> bool:
+        if self.dtype != other.dtype or not isinstance(other, LongitudinalNumpyTheta):
+            return True
+        return any(coord1 != coord2 for coord1, coord2 in zip(self, other))
 
     @property
     def elements(self) -> tuple[FloatArray]:
@@ -620,8 +690,11 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArr
 
     ObjectClass = vector.backends.object.LongitudinalObjectEta
     _IS_MOMENTUM = False
+    dtype: numpy.dtype[typing.Any] = numpy.dtype([("eta", numpy.float64)])
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> LongitudinalNumpyEta:
+        if "dtype" in kwargs:
+            LongitudinalNumpyEta.dtype = numpy.dtype(kwargs["dtype"])
         return numpy.array(*args, **kwargs).view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:
@@ -630,6 +703,16 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArr
                 f"{type(self).__name__} must have a structured dtype containing "
                 'field "eta"'
             )
+
+    def __eq__(self, other: typing.Any) -> bool:
+        if self.dtype != other.dtype or not isinstance(other, LongitudinalNumpyEta):
+            return False
+        return all(coord1 == coord2 for coord1, coord2 in zip(self, other))
+
+    def __ne__(self, other: typing.Any) -> bool:
+        if self.dtype != other.dtype or not isinstance(other, LongitudinalNumpyEta):
+            return True
+        return any(coord1 != coord2 for coord1, coord2 in zip(self, other))
 
     @property
     def elements(self) -> tuple[FloatArray]:
@@ -665,8 +748,11 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ig
 
     ObjectClass = vector.backends.object.TemporalObjectT
     _IS_MOMENTUM = False
+    dtype: numpy.dtype[typing.Any] = numpy.dtype([("t", numpy.float64)])
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> TemporalNumpyT:
+        if "dtype" in kwargs:
+            TemporalNumpyT.dtype = numpy.dtype(kwargs["dtype"])
         return numpy.array(*args, **kwargs).view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:
@@ -675,6 +761,16 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ig
                 f"{type(self).__name__} must have a structured dtype containing "
                 'field "t"'
             )
+
+    def __eq__(self, other: typing.Any) -> bool:
+        if self.dtype != other.dtype or not isinstance(other, TemporalNumpyT):
+            return False
+        return all(coord1 == coord2 for coord1, coord2 in zip(self, other))
+
+    def __ne__(self, other: typing.Any) -> bool:
+        if self.dtype != other.dtype or not isinstance(other, TemporalNumpyT):
+            return True
+        return any(coord1 != coord2 for coord1, coord2 in zip(self, other))
 
     @property
     def elements(self) -> tuple[FloatArray]:
@@ -702,8 +798,11 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type
 
     ObjectClass = vector.backends.object.TemporalObjectTau
     _IS_MOMENTUM = False
+    dtype: numpy.dtype[typing.Any] = numpy.dtype([("tau", numpy.float64)])
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> TemporalNumpyTau:
+        if "dtype" in kwargs:
+            TemporalNumpyTau.dtype = numpy.dtype(kwargs["dtype"])
         return numpy.array(*args, **kwargs).view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:
@@ -712,6 +811,16 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type
                 f"{type(self).__name__} must have a structured dtype containing "
                 'field "tau"'
             )
+
+    def __eq__(self, other: typing.Any) -> bool:
+        if self.dtype != other.dtype or not isinstance(other, TemporalNumpyTau):
+            return False
+        return all(coord1 == coord2 for coord1, coord2 in zip(self, other))
+
+    def __ne__(self, other: typing.Any) -> bool:
+        if self.dtype != other.dtype or not isinstance(other, TemporalNumpyTau):
+            return True
+        return any(coord1 != coord2 for coord1, coord2 in zip(self, other))
 
     @property
     def elements(self) -> tuple[FloatArray]:
