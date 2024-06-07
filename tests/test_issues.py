@@ -91,6 +91,8 @@ def test_issue_194():
     assert vec2d.azimuthal != azp1
     assert az1 != az2
     assert not az1 == azp1  # noqa: SIM201
+    assert not azp1 == az1  # noqa: SIM201
+    assert azp1 != az1  # noqa: SIM201
     assert azp1 == azp1  # noqa: PLR0124
     assert azp1 != azp2
 
@@ -113,14 +115,24 @@ def test_issue_194():
     lgeta2 = vector.backends.numpy.LongitudinalNumpyEta(
         [(4.1,), (3.2,), (3.3,), (3.4,), (3.5,)], dtype=[("eta", float)]
     )
+    lgtheta1 = vector.backends.numpy.LongitudinalNumpyTheta(
+        [(3.1,), (3.2,), (3.3,), (3.4,), (3.5,)], dtype=[("theta", float)]
+    )
+    lgtheta2 = vector.backends.numpy.LongitudinalNumpyTheta(
+        [(4.1,), (3.2,), (3.3,), (3.4,), (3.5,)], dtype=[("theta", float)]
+    )
     assert vec3d.azimuthal == az1
     assert vec3d.longitudinal == lg1
     assert vec3d.longitudinal != lg2
     assert vec3d.longitudinal != lgeta1
     assert lg1 != lg2
     assert not lg1 == lgeta1  # noqa: SIM201
+    assert not lgeta1 == lg1  # noqa: SIM201
+    assert lgeta1 != lg1  # noqa: SIM201
     assert lgeta1 == lgeta1  # noqa: PLR0124
     assert lgeta1 != lgeta2
+    assert lgtheta1 == lgtheta1  # noqa: PLR0124
+    assert lgtheta1 != lgtheta2
 
     vec4d = vector.VectorNumpy4D(
         {
@@ -149,6 +161,8 @@ def test_issue_194():
     assert vec4d.temporal != tmtau1
     assert tm1 != tm2
     assert not tm1 == tmtau1  # noqa: SIM201
+    assert not tmtau1 == tm1  # noqa: SIM201
+    assert tmtau1 != tm1  # noqa: SIM201
     assert tmtau1 == tmtau1  # noqa: PLR0124
     assert tmtau1 != tmtau2
 
