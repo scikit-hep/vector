@@ -443,7 +443,9 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # typ
 
     ObjectClass = vector.backends.object.AzimuthalObjectXY
     _IS_MOMENTUM = False
-    dtype: numpy.dtype[typing.Any] = numpy.dtype([("x", float), ("y", float)])
+    dtype: numpy.dtype[typing.Any] = numpy.dtype(
+        [("x", numpy.float64), ("y", numpy.float64)]
+    )
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> AzimuthalNumpyXY:
         if "dtype" in kwargs:
@@ -507,7 +509,9 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray)
 
     ObjectClass = vector.backends.object.AzimuthalObjectRhoPhi
     _IS_MOMENTUM = False
-    dtype: numpy.dtype[typing.Any] = numpy.dtype([("rho", float), ("phi", float)])
+    dtype: numpy.dtype[typing.Any] = numpy.dtype(
+        [("rho", numpy.float64), ("phi", numpy.float64)]
+    )
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> AzimuthalNumpyRhoPhi:
         if "dtype" in kwargs:
@@ -570,7 +574,7 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):
 
     ObjectClass = vector.backends.object.LongitudinalObjectZ
     _IS_MOMENTUM = False
-    dtype: numpy.dtype[typing.Any] = numpy.dtype([("z", float)])
+    dtype: numpy.dtype[typing.Any] = numpy.dtype([("z", numpy.float64)])
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> LongitudinalNumpyZ:
         if "dtype" in kwargs:
@@ -628,7 +632,7 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, Floa
 
     ObjectClass = vector.backends.object.LongitudinalObjectTheta
     _IS_MOMENTUM = False
-    dtype: numpy.dtype[typing.Any] = numpy.dtype([("theta", float)])
+    dtype: numpy.dtype[typing.Any] = numpy.dtype([("theta", numpy.float64)])
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> LongitudinalNumpyTheta:
         if "dtype" in kwargs:
@@ -686,7 +690,7 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArr
 
     ObjectClass = vector.backends.object.LongitudinalObjectEta
     _IS_MOMENTUM = False
-    dtype: numpy.dtype[typing.Any] = numpy.dtype([("eta", float)])
+    dtype: numpy.dtype[typing.Any] = numpy.dtype([("eta", numpy.float64)])
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> LongitudinalNumpyEta:
         if "dtype" in kwargs:
@@ -744,7 +748,7 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ig
 
     ObjectClass = vector.backends.object.TemporalObjectT
     _IS_MOMENTUM = False
-    dtype: numpy.dtype[typing.Any] = numpy.dtype([("t", float)])
+    dtype: numpy.dtype[typing.Any] = numpy.dtype([("t", numpy.float64)])
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> TemporalNumpyT:
         if "dtype" in kwargs:
@@ -794,7 +798,7 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type
 
     ObjectClass = vector.backends.object.TemporalObjectTau
     _IS_MOMENTUM = False
-    dtype: numpy.dtype[typing.Any] = numpy.dtype([("tau", float)])
+    dtype: numpy.dtype[typing.Any] = numpy.dtype([("tau", numpy.float64)])
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> TemporalNumpyTau:
         if "dtype" in kwargs:
