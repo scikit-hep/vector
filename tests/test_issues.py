@@ -90,8 +90,8 @@ def test_issue_194():
     assert vec2d.azimuthal != az2
     assert vec2d.azimuthal != azp1
     assert az1 != az2
-    assert not az1 == azp1
-    assert azp1 == azp1
+    assert not az1 == azp1  # noqa: SIM201
+    assert azp1 == azp1  # noqa: PLR0124
     assert azp1 != azp2
 
     vec3d = vector.VectorNumpy3D(
@@ -118,8 +118,8 @@ def test_issue_194():
     assert vec3d.longitudinal != lg2
     assert vec3d.longitudinal != lgeta1
     assert lg1 != lg2
-    assert not lg1 == lgeta1
-    assert lgeta1 == lgeta1
+    assert not lg1 == lgeta1  # noqa: SIM201
+    assert lgeta1 == lgeta1  # noqa: PLR0124
     assert lgeta1 != lgeta2
 
     vec4d = vector.VectorNumpy4D(
@@ -148,8 +148,8 @@ def test_issue_194():
     assert vec4d.temporal != tm2
     assert vec4d.temporal != tmtau1
     assert tm1 != tm2
-    assert not tm1 == tmtau1
-    assert tmtau1 == tmtau1
+    assert not tm1 == tmtau1  # noqa: SIM201
+    assert tmtau1 == tmtau1  # noqa: PLR0124
     assert tmtau1 != tmtau2
 
 
