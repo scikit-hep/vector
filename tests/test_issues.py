@@ -82,10 +82,17 @@ def test_issue_194():
         [(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)],
         dtype=[("rho", float), ("phi", float)],
     )
+    azp2 = vector.backends.numpy.AzimuthalNumpyRhoPhi(
+        [(2.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)],
+        dtype=[("rho", float), ("phi", float)],
+    )
     assert vec2d.azimuthal == az1
     assert vec2d.azimuthal != az2
     assert vec2d.azimuthal != azp1
     assert az1 != az2
+    assert not az1 == azp1
+    assert azp1 == azp1
+    assert azp1 != azp2
 
     vec3d = vector.VectorNumpy3D(
         {
@@ -100,14 +107,20 @@ def test_issue_194():
     lg2 = vector.backends.numpy.LongitudinalNumpyZ(
         [(4.1,), (3.2,), (3.3,), (3.4,), (3.5,)], dtype=[("z", float)]
     )
-    lgeta = vector.backends.numpy.LongitudinalNumpyEta(
+    lgeta1 = vector.backends.numpy.LongitudinalNumpyEta(
         [(3.1,), (3.2,), (3.3,), (3.4,), (3.5,)], dtype=[("eta", float)]
+    )
+    lgeta2 = vector.backends.numpy.LongitudinalNumpyEta(
+        [(4.1,), (3.2,), (3.3,), (3.4,), (3.5,)], dtype=[("eta", float)]
     )
     assert vec3d.azimuthal == az1
     assert vec3d.longitudinal == lg1
     assert vec3d.longitudinal != lg2
-    assert vec3d.longitudinal != lgeta
+    assert vec3d.longitudinal != lgeta1
     assert lg1 != lg2
+    assert not lg1 == lgeta1
+    assert lgeta1 == lgeta1
+    assert lgeta1 != lgeta2
 
     vec4d = vector.VectorNumpy4D(
         {
@@ -123,15 +136,21 @@ def test_issue_194():
     tm2 = vector.backends.numpy.TemporalNumpyT(
         [(5.1,), (4.2,), (4.3,), (4.4,), (4.5,)], dtype=[("t", float)]
     )
-    tmtau = vector.backends.numpy.TemporalNumpyTau(
+    tmtau1 = vector.backends.numpy.TemporalNumpyTau(
         [(4.1,), (4.2,), (4.3,), (4.4,), (4.5,)], dtype=[("tau", float)]
+    )
+    tmtau2 = vector.backends.numpy.TemporalNumpyTau(
+        [(5.1,), (4.2,), (4.3,), (4.4,), (4.5,)], dtype=[("tau", float)]
     )
     assert vec4d.azimuthal == az1
     assert vec4d.longitudinal == lg1
     assert vec4d.temporal == tm1
     assert vec4d.temporal != tm2
-    assert vec4d.temporal != tmtau
+    assert vec4d.temporal != tmtau1
     assert tm1 != tm2
+    assert not tm1 == tmtau1
+    assert tmtau1 == tmtau1
+    assert tmtau1 != tmtau2
 
 
 def test_issue_463():
