@@ -19,9 +19,6 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: "3.10"
 
     steps:
       - uses: actions/checkout@v4
@@ -29,7 +26,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.10"
 
       - name: List installed Python packages
         run: python -m pip list
