@@ -40,14 +40,6 @@ def tests(session: nox.Session) -> None:
     session.run("pytest", "--ignore", "tests/test_notebooks.py", *session.posargs)
 
 
-# temporary session
-@nox.session(reuse_venv=True, python=ALL_PYTHON)
-def tests_numpy_2(session: nox.Session) -> None:
-    """Run the unit and regular tests."""
-    session.install("-e", ".[awkward,test,test-extras,sympy]", "numpy>=2.0.0b1")
-    session.run("pytest", "--ignore", "tests/test_notebooks.py", *session.posargs)
-
-
 @nox.session(reuse_venv=True, python=ALL_PYTHON)
 def coverage(session: nox.Session) -> None:
     """Run tests and compute coverage."""
