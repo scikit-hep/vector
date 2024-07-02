@@ -12,6 +12,31 @@
 
 ## Version 1.4
 
+### Version 1.4.1
+
+#### Fixes
+
+- fix: sympy backend on numpy 2.0 (full numpy 2.0 support) [#473][]
+- fix: add lower and upper bounds for deltaangle [#465][]
+- fix: maximum for SymPy backend is the identity function now [#465][]
+- fix: get coordinate classes to work for numpy [#466][]
+
+#### Documentation
+
+- docs: add basic docs for sub-classing awkward mixins [#468][]
+
+#### Maintenance
+
+- chore: add missing compute function tests [#454]
+- ci: Add GitHub artifact attestations to package distribution [#470][]
+
+[#473]: https://github.com/scikit-hep/vector/pull/473
+[#465]: https://github.com/scikit-hep/vector/pull/465
+[#466]: https://github.com/scikit-hep/vector/pull/466
+[#468]: https://github.com/scikit-hep/vector/pull/468
+[#454]: https://github.com/scikit-hep/vector/pull/454
+[#470]: https://github.com/scikit-hep/vector/pull/470
+
 ### Version 1.4.0
 
 #### Features

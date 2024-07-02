@@ -5,9 +5,6 @@
 
 from __future__ import annotations
 
-import importlib.metadata
-
-import packaging.version
 import pytest
 
 import vector
@@ -18,11 +15,6 @@ pytestmark = pytest.mark.sympy
 
 x, y, z, t = sympy.symbols("x y z t", real=True)
 values = {x: 1, y: 2, z: 3, t: 10}
-
-# mpmath does not support numpy 2.0 yet
-numpy_2 = packaging.version.Version(
-    importlib.metadata.version("numpy")
-) >= packaging.version.Version("2.0.0rc1")
 
 
 def test_planar_posfactor():
@@ -59,7 +51,6 @@ def test_planar_negfactor():
         assert out.y.subs(values).evalf() == pytest.approx(2 * -1.75)
 
 
-@pytest.mark.xfail(numpy_2, reason="mpmath does not support numpy 2.0 yet")
 def test_spatial_posfactor():
     vec = vector.VectorSympy3D(
         azimuthal=vector.backends.sympy.AzimuthalSympyXY(x, y),
@@ -89,7 +80,6 @@ def test_spatial_posfactor():
         assert out.z.subs(values).evalf() == pytest.approx(3 * 1.75)
 
 
-@pytest.mark.xfail(numpy_2, reason="mpmath does not support numpy 2.0 yet")
 def test_spatial_negfactor():
     vec = vector.VectorSympy3D(
         azimuthal=vector.backends.sympy.AzimuthalSympyXY(x, y),
@@ -119,7 +109,6 @@ def test_spatial_negfactor():
         assert out.z.subs(values).evalf() == pytest.approx(3 * -1.75)
 
 
-@pytest.mark.xfail(numpy_2, reason="mpmath does not support numpy 2.0 yet")
 def test_lorentz_postime_posfactor():
     vec = vector.VectorSympy4D(
         azimuthal=vector.backends.sympy.AzimuthalSympyXY(x, y),
@@ -160,7 +149,6 @@ def test_lorentz_postime_posfactor():
         assert out.t.subs(values).evalf() == pytest.approx(10 * 1.75)
 
 
-@pytest.mark.xfail(numpy_2, reason="mpmath does not support numpy 2.0 yet")
 def test_lorentz_postime_negfactor():
     vec = vector.VectorSympy4D(
         azimuthal=vector.backends.sympy.AzimuthalSympyXY(x, y),
@@ -213,7 +201,6 @@ def test_lorentz_postime_negfactor():
         assert out.t.subs(values).evalf() == pytest.approx(10 * 1.75)
 
 
-@pytest.mark.xfail(numpy_2, reason="mpmath does not support numpy 2.0 yet")
 def test_lorentz_negtime_posfactor():
     vec = vector.VectorSympy4D(
         azimuthal=vector.backends.sympy.AzimuthalSympyXY(x, y),
@@ -266,7 +253,6 @@ def test_lorentz_negtime_posfactor():
         assert out.t.subs(values).evalf() == pytest.approx(10 * 1.75)
 
 
-@pytest.mark.xfail(numpy_2, reason="mpmath does not support numpy 2.0 yet")
 def test_lorentz_negtime_negfactor():
     vec = vector.VectorSympy4D(
         azimuthal=vector.backends.sympy.AzimuthalSympyXY(x, y),
