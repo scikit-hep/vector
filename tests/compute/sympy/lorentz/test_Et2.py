@@ -91,7 +91,7 @@ def test_xy_eta_tau():
             sympy.sqrt(sympy.Abs(-(t**2) + x**2 + y**2 + z**2))
         ),
     )
-    assert vec.Et2.simplify() == x**2 + y**2 + sympy.Abs(
+    assert vec.Et2.simplify() == 1.0 * x**2 + 1.0 * y**2 + sympy.Abs(
         -(t**2) + x**2 + y**2 + z**2
     ) / (z**2 / (x**2 + y**2) + 1)
     assert vec.Et2.subs(values).evalf() == pytest.approx(80)
@@ -167,7 +167,7 @@ def test_rhophi_eta_tau():
             sympy.sqrt(sympy.Abs(rho**2 - t**2 + z**2))
         ),
     )
-    assert vec.Et2.simplify() == rho**2 + sympy.Abs(rho**2 - t**2 + z**2) / (
+    assert vec.Et2.simplify() == 1.0 * rho**2 + sympy.Abs(rho**2 - t**2 + z**2) / (
         1 + z**2 / rho**2
     )
     assert vec.Et2.subs(values).evalf() == pytest.approx(80)

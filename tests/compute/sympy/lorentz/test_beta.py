@@ -97,23 +97,18 @@ def test_xy_eta_tau():
             sympy.sqrt(sympy.Abs(-(t**2) + x**2 + y**2 + z**2))
         ),
     )
-    # TODO: why won't sympy equate the expressions without double
-    # simplifying?
     assert (
         sympy.simplify(
             vec.beta.simplify()
-            - 1.0
+            - 0.5
             * sympy.sqrt(x**2 + y**2)
-            * sympy.sqrt(z**2 / (x**2 + y**2) + 1)
+            * (sympy.exp(2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2))) + 1)
             / sympy.sqrt(
-                (
-                    0.25
-                    * (x**2 + y**2)
-                    * (sympy.exp(2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2))) + 1) ** 2
-                    + sympy.exp(2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))
-                    * sympy.Abs(-(t**2) + x**2 + y**2 + z**2)
-                )
-                * sympy.exp(-2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))
+                0.25
+                * (x**2 + y**2)
+                * (sympy.exp(2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2))) + 1) ** 2
+                + sympy.exp(2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))
+                * sympy.Abs(-(t**2) + x**2 + y**2 + z**2)
             )
         )
         == 0
@@ -191,13 +186,10 @@ def test_rhophi_eta_tau():
             sympy.sqrt(sympy.Abs(rho**2 - t**2 + z**2))
         ),
     )
-    assert vec.beta.simplify() == 1.0 * rho * sympy.sqrt(
-        1 + z**2 / rho**2
+    assert vec.beta.simplify() == 0.5 * rho * (
+        sympy.exp(2 * sympy.asinh(z / rho)) + 1
     ) / sympy.sqrt(
-        (
-            0.25 * rho**2 * (sympy.exp(2 * sympy.asinh(z / rho)) + 1) ** 2
-            + sympy.exp(2 * sympy.asinh(z / rho)) * sympy.Abs(rho**2 - t**2 + z**2)
-        )
-        * sympy.exp(-2 * sympy.asinh(z / rho))
+        0.25 * rho**2 * (sympy.exp(2 * sympy.asinh(z / rho)) + 1) ** 2
+        + sympy.exp(2 * sympy.asinh(z / rho)) * sympy.Abs(rho**2 - t**2 + z**2)
     )
     assert vec.beta.subs(values).evalf() == pytest.approx(0.5590169943749475)

@@ -29,7 +29,9 @@ def test_planar_sympy():
         u = t.unit()
         assert type(u) is type(t)
         assert type(u.azimuthal) is type(t.azimuthal)
-        assert u.rho == 1 if isinstance(u.rho, int) else u.rho.subs(values).evalf() == 1
+        assert (
+            u.rho == 1 if isinstance(u.rho, int) else u.rho.subs(values).evalf() == 1.0
+        )
 
 
 def test_spatial_sympy():
@@ -49,7 +51,7 @@ def test_spatial_sympy():
         assert type(u) is type(t)
         assert type(u.azimuthal) is type(t.azimuthal)
         assert type(u.longitudinal) is type(t.longitudinal)
-        assert u.mag.subs(values).evalf() == 1
+        assert u.mag.subs(values).evalf() == 1.0
 
 
 def test_lorentz_sympy():
@@ -90,4 +92,6 @@ def test_lorentz_sympy():
         assert type(u.azimuthal) is type(t.azimuthal)
         assert type(u.longitudinal) is type(t.longitudinal)
         assert type(u.temporal) is type(t.temporal)
-        assert u.tau == 1 if isinstance(u.tau, int) else u.tau.subs(values).evalf() == 1
+        assert (
+            u.tau == 1 if isinstance(u.tau, int) else u.tau.subs(values).evalf() == 1.0
+        )
