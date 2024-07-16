@@ -676,7 +676,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
                 complaint = """unrecognized combination of coordinates, allowed combinations are:\n
                     x= y=
                     rho= phi=""".replace("                    ", "    ")
-                if type(self) == VectorObject2D:
+                if type(self) is VectorObject2D:
                     raise TypeError(complaint)
                 else:
                     raise TypeError(f"{complaint}\n\nor their momentum equivalents")
@@ -1060,7 +1060,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
                     rho= phi= z=
                     rho= phi= theta=
                     rho= phi= eta=""".replace("                    ", "    ")
-                if type(self) == VectorObject3D:
+                if type(self) is VectorObject3D:
                     raise TypeError(complaint)
                 else:
                     raise TypeError(f"{complaint}\n\nor their momentum equivalents")
@@ -1757,7 +1757,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
                     rho= phi= theta= tau=
                     rho= phi= eta= t=
                     rho= phi= eta= tau=""".replace("                    ", "    ")
-                if type(self) == VectorObject4D:
+                if type(self) is VectorObject4D:
                     raise TypeError(complaint)
                 else:
                     raise TypeError(f"{complaint}\n\nor their momentum equivalents")
