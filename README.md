@@ -8,7 +8,6 @@
 [![codecov percentage][codecov-badge]][codecov-link]
 [![GitHub Discussion][github-discussions-badge]][github-discussions-link]
 [![Gitter][gitter-badge]][gitter-link]
-[![Code style: black][black-badge]][black-link]
 
 [![PyPI platforms][pypi-platforms]][pypi-link]
 [![PyPI version][pypi-version]][pypi-link]
@@ -29,7 +28,7 @@ Main features of Vector:
   - [SymPy](https://www.sympy.org/en/index.html) vectors
   - NumPy arrays of vectors (as a [structured array](https://numpy.org/doc/stable/user/basics.rec.html) subclass)
   - [Awkward Arrays](https://awkward-array.org/) of vectors
-  - potential for more: CuPy, TensorFlow, Torch, JAX...
+  - potential for more: CuPy, TensorFlow, Torch...
 - Awkward backend also implemented in [Numba](https://numba.pydata.org/) for JIT-compiled calculations on vectors.
 - [JAX](https://awkward-array.org/doc/main/user-guide/how-to-specialize-differentiate-jax.html) and [Dask](https://dask-awkward.readthedocs.io/en/stable/) support through Awkward Arrays.
 - Distinction between geometrical vectors, which have a minimum of attribute and method names, and vectors representing momentum, which have synonyms like `pt` = `rho`, `energy` = `t`, `mass` = `tau`.
@@ -768,12 +767,15 @@ At the moment, it is possible to sub-class vector awkward mixins to extend the v
 For instance, the `MomentumAwkward` classes can be extended in the following way:
 
 ```py
-@ak.mixin_class(vector.backends.awkward.behavior)
+behavior = vector.backends.awkward.behavior
+
+
+@ak.mixin_class(behavior)
 class TwoVector(vector.backends.awkward.MomentumAwkward2D):
     pass
 
 
-@ak.mixin_class(vector.backends.awkward.behavior)
+@ak.mixin_class(behavior)
 class ThreeVector(vector.backends.awkward.MomentumAwkward3D):
     pass
 
@@ -794,7 +796,7 @@ vec = ak.zip(
         "phi": [[1.2, 1.4], [], [1.6], [3.4]],
     },
     with_name="TwoVector",
-    behavior=vector.backends.awkward.behavior,
+    behavior=behavior,
 )
 
 vec
@@ -809,7 +811,7 @@ vec.add(vec)
 Similarly, other vector methods can be used by the new methods internally.
 
 ```py
-@ak.mixin_class(vector.backends.awkward.behavior)
+@ak.mixin_class(behavior)
 class LorentzVector(vector.backends.awkward.MomentumAwkward4D):
     @ak.mixin_class_method(np.divide, {numbers.Number})
     def divide(self, factor):
@@ -831,7 +833,7 @@ vec = ak.zip(
         "energy": [[50, 51], [], [52], [60]],
     },
     with_name="LorentzVector",
-    behavior=vector.backends.awkward.behavior,
+    behavior=behavior,
 )
 
 vec / 2
@@ -852,8 +854,19 @@ _rank = [TwoVector, ThreeVector, LorentzVector]
 for lhs, lhs_to in _binary_dispatch_cls.items():
     for rhs, rhs_to in _binary_dispatch_cls.items():
         out_to = min(lhs_to, rhs_to, key=_rank.index)
-        vector.backends.awkward.behavior[(np.add, lhs, rhs)] = out_to.add
-        vector.backends.awkward.behavior[(np.subtract, lhs, rhs)] = out_to.subtract
+        behavior[(np.add, lhs, rhs)] = out_to.add
+        behavior[(np.subtract, lhs, rhs)] = out_to.subtract
+
+vec + vec
+vec.to_2D() + vec.to_2D()
+```
+
+Finally, instead of manually registering the superclass ufuncs, one can use the utility `copy_behaviors` function to copy behavior items for a new subclass -
+
+```py
+behavior.update(ak._util.copy_behaviors("Vector2D", "TwoVector", behavior))
+behavior.update(ak._util.copy_behaviors("Vector3D", "ThreeVector", behavior))
+behavior.update(ak._util.copy_behaviors("Momentum4D", "LorentzVector", behavior))
 
 vec + vec
 vec.to_2D() + vec.to_2D()
@@ -861,6 +874,7 @@ vec.to_2D() + vec.to_2D()
 
 ## Talks about vector
 
+- 3rd July 2024 - [A new SymPy backend for vector: uniting experimental and theoretical physicists](https://indi.to/pfTC6) - [PyHEP 2024 (virtual)](https://indico.cern.ch/event/1384010/)
 - 9th October 2023 - [What’s new with Vector? First major release is out!](https://indi.to/35ym5) - [PyHEP 2023 (virtual)](https://indico.cern.ch/event/1252095/) [🎥](https://www.youtube.com/watch?v=JHEAb2R3xzE&list=PLKZ9c4ONm-VlAorAG8kR09ZqhMfHiH2LJ&index=10)
 - 13th September 2022 - [Constructing HEP vectors and analyzing HEP data using Vector](https://indi.to/bPmMc) - [PyHEP 2022 (virtual)](https://indico.cern.ch/event/1150631/) [🎥](https://www.youtube.com/watch?v=4iveMzrbe7s&list=PLKZ9c4ONm-VkohKG-skzEG_gklMaSgaO7&index=15)
 - 20th July 2022 - [Analysis Grand Challenge / HEP Scientific Python Ecosystem](https://indico.cern.ch/event/1151329/timetable/#3-analysis-grand-challenge-hep) - [DANCE/CoDaS@Snowmass 2022 computational and data science software training](https://indico.cern.ch/event/1151329/)
@@ -912,8 +926,6 @@ Support for this work was provided by the National Science Foundation cooperativ
 
 [actions-badge]: https://github.com/scikit-hep/vector/actions/workflows/ci.yml/badge.svg
 [actions-link]: https://github.com/scikit-hep/vector/actions
-[black-badge]: https://img.shields.io/badge/code%20style-black-000000.svg
-[black-link]: https://github.com/psf/black
 [codecov-badge]: https://codecov.io/gh/scikit-hep/vector/branch/main/graph/badge.svg?token=YBv60ueORQ
 [codecov-link]: https://codecov.io/gh/scikit-hep/vector
 [conda-version]: https://img.shields.io/conda/vn/conda-forge/vector.svg
@@ -924,7 +936,7 @@ Support for this work was provided by the National Science Foundation cooperativ
 [gitter-link]: https://gitter.im/Scikit-HEP/vector?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 [license-badge]: https://img.shields.io/badge/License-BSD_3--Clause-blue.svg
 [license-link]: https://opensource.org/licenses/BSD-3-Clause
-[pre-commit-badge]: https://results.pre-commit.ci/badge/github/scikit-hep/vector/develop.svg
+[pre-commit-badge]: https://results.pre-commit.ci/badge/github/scikit-hep/vector/main.svg
 [pre-commit-link]: https://results.pre-commit.ci/repo/github/scikit-hep/vector
 [pypi-link]: https://pypi.org/project/vector/
 [pypi-platforms]: https://img.shields.io/pypi/pyversions/vector
