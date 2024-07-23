@@ -3,7 +3,7 @@ from __future__ import annotations
 import typing
 
 import numpy
-import sympy
+import sympy  # type: ignore[import-untyped]
 
 if typing.TYPE_CHECKING:
     import sympy
@@ -15,10 +15,10 @@ class SympyLib:
         return val
 
     def maximum(self, val1: sympy.Expr | int, val2: sympy.Expr | int) -> sympy.Expr:
-        return val1 if isinstance(val1, sympy.Expr) else val2  # type: ignore[return-value]
+        return val1 if isinstance(val1, sympy.Expr) else val2
 
     def minimum(self, val1: sympy.Expr | int, val2: sympy.Expr | int) -> sympy.Expr:
-        return val1 if isinstance(val1, sympy.Expr) else val2  # type: ignore[return-value]
+        return val1 if isinstance(val1, sympy.Expr) else val2
 
     def arcsin(self, val: sympy.Expr) -> sympy.Expr:
         return sympy.asin(val)
@@ -50,7 +50,7 @@ class SympyLib:
         val2: sympy.Expr,
         *args: float,
     ) -> sympy.Equality:
-        return sympy.Eq(val1, val2)  # type: ignore[no-untyped-call]
+        return sympy.Eq(val1, val2)
 
     def copysign(self, val1: sympy.Expr, val2: sympy.Expr) -> sympy.Expr:
         return val1
@@ -64,7 +64,7 @@ class SympyLib:
         return numpy.sign(val)
 
     def sqrt(self, val: sympy.Expr) -> sympy.Expr:
-        return sympy.sqrt(val)  # type: ignore[no-untyped-call]
+        return sympy.sqrt(val)
 
     def exp(self, val: sympy.Expr) -> sympy.Expr:
         return sympy.exp(val)

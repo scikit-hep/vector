@@ -87,9 +87,9 @@ else:
     from vector.backends.awkward import VectorAwkward
 
 try:
-    import sympy
+    import sympy  # type: ignore[import-untyped]
 except ImportError:
-    sympy = None  # type: ignore[assignment]
+    sympy = None
     if not typing.TYPE_CHECKING:
         VectorSympy = None
 else:

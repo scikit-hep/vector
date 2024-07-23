@@ -3,7 +3,7 @@ from __future__ import annotations
 import typing
 
 import numpy
-import sympy
+import sympy  # type: ignore[import-untyped]
 
 import vector
 from vector._lib import SympyLib
