@@ -32,7 +32,7 @@ from vector._methods import (
     Vector4D,
     dim,
 )
-from vector._version import __version__  # type: ignore[import-not-found]
+from vector._version import __version__
 from vector.backends.awkward_constructors import Array, zip
 from vector.backends.awkward_constructors import Array as awk
 from vector.backends.numpy import (
@@ -87,9 +87,9 @@ else:
     from vector.backends.awkward import VectorAwkward
 
 try:
-    import sympy
+    import sympy  # type: ignore[import-untyped]
 except ImportError:
-    sympy = None  # type: ignore[assignment]
+    sympy = None
     if not typing.TYPE_CHECKING:
         VectorSympy = None
 else:
