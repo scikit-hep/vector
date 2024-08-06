@@ -3,7 +3,7 @@ from __future__ import annotations
 import typing
 
 import numpy
-import sympy
+import sympy  # type: ignore[import-untyped]
 
 import vector
 from vector._lib import SympyLib
@@ -643,7 +643,7 @@ class VectorSympy2D(VectorSympy, Planar, Vector2D):
                 complaint = """unrecognized combination of coordinates, allowed combinations are:\n
                     x= y=
                     rho= phi=""".replace("                    ", "    ")
-                if type(self) == VectorSympy2D:
+                if type(self) is VectorSympy2D:
                     raise TypeError(complaint)
                 else:
                     raise TypeError(f"{complaint}\n\nor their momentum equivalents")
@@ -870,7 +870,7 @@ class VectorSympy3D(VectorSympy, Spatial, Vector3D):
                     rho= phi= z=
                     rho= phi= theta=
                     rho= phi= eta=""".replace("                    ", "    ")
-                if type(self) == VectorSympy3D:
+                if type(self) is VectorSympy3D:
                     raise TypeError(complaint)
                 else:
                     raise TypeError(f"{complaint}\n\nor their momentum equivalents")
@@ -1197,7 +1197,7 @@ class VectorSympy4D(VectorSympy, Lorentz, Vector4D):
                     rho= phi= theta= tau=
                     rho= phi= eta= t=
                     rho= phi= eta= tau=""".replace("                    ", "    ")
-                if type(self) == VectorSympy4D:
+                if type(self) is VectorSympy4D:
                     raise TypeError(complaint)
                 else:
                     raise TypeError(f"{complaint}\n\nor their momentum equivalents")
