@@ -46,10 +46,10 @@ dependencies = [
   "packaging>=19",
 ]
 optional-dependencies.awkward = [
-  "awkward>=1.2",
+  "awkward>=2",
 ]
 optional-dependencies.dev = [
-  "awkward>=1.2",
+  "awkward>=2",
   "dask-awkward",
   "nox",
   "numba>=0.57; python_version<'3.12'",
@@ -60,7 +60,7 @@ optional-dependencies.dev = [
   "sympy",
 ]
 optional-dependencies.docs = [
-  "awkward>=1.2",
+  "awkward>=2",
   "ipykernel",
   "myst-parser>0.13",
   "nbsphinx",
@@ -76,7 +76,6 @@ optional-dependencies.sympy = [
   "sympy",
 ]
 optional-dependencies.test = [
-  "dask-awkward",
   "nox",
   "papermill>=2.4",
   "pytest>=6",
@@ -84,8 +83,9 @@ optional-dependencies.test = [
   "pytest-doctestplus",
 ]
 optional-dependencies.test-extras = [
+  "dask_awkward",
   "spark-parser",
-  "uncompyle6",
+  'uncompyle6; python_version == "3.8"',
 ]
 urls."Bug Tracker" = "https://github.com/scikit-hep/vector/issues"
 urls.Changelog = "https://vector.readthedocs.io/en/latest/changelog.html"
