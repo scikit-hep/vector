@@ -7,7 +7,7 @@ import papermill as pm
 import pytest
 
 
-@pytest.fixture()
+@pytest.fixture
 def common_kwargs(tmpdir):
     outputnb = tmpdir.join("output.ipynb")
     return {
