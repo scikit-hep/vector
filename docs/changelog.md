@@ -12,6 +12,23 @@
 
 ## Version 1.4
 
+### Version 1.4.2
+
+#### Fixes
+
+- fix: depend on numpy<2.1 to support numba
+- fix: fix ci for awkward v1.x (numpy v2 is out)
+- fix: sympy tests (sympy v1.13)
+
+#### Documentation
+
+- docs: update intro notebook + readme
+
+[#476]: https://github.com/scikit-hep/vector/pull/476
+[#479]: https://github.com/scikit-hep/vector/pull/479
+[#485]: https://github.com/scikit-hep/vector/pull/485
+[#489]: https://github.com/scikit-hep/vector/pull/489
+
 ### Version 1.4.1
 
 #### Fixes
