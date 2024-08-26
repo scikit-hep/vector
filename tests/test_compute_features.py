@@ -99,7 +99,7 @@ else:
 
 
 @pytest.mark.skipif(is_unsupported, reason=unsupported_message)
-@pytest.mark.slow()
+@pytest.mark.slow
 @pytest.mark.parametrize("signature", functions.keys())
 def test(signature):
     analyze_function(functions[signature])

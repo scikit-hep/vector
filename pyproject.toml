@@ -42,7 +42,7 @@ dynamic = [
   "version",
 ]
 dependencies = [
-  "numpy>=1.13.3",
+  "numpy>=1.13.3,<2.1",
   "packaging>=19",
 ]
 optional-dependencies.awkward = [
@@ -135,6 +135,9 @@ isort.required-imports = [
   "T20",
 ]
 "tests/*" = [
+  "T20",
+]
+"docs/usage/intro.ipynb" = [
   "T20",
 ]
 "src/vector/backends/_numba_object.py" = [
