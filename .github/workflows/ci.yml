@@ -14,6 +14,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
 
+env:
+  # The "FORCE_COLOR" variable, when set to 1,
+  # tells Nox to colorize itself.
+  FORCE_COLOR: "1"
+
 jobs:
   pre-commit:
     runs-on: ubuntu-latest
@@ -28,7 +33,7 @@ jobs:
           echo "::add-matcher::$GITHUB_WORKSPACE/.github/matchers/pylint.json"
           pipx run nox -s pylint
 
-  check-light:
+  check-lite:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -39,7 +44,7 @@ jobs:
           - "3.10"
           - "3.11"
           - "3.12"
-    name: Python ${{ matrix.python-version }} - Light
+    name: Python ${{ matrix.python-version }} - Lite
     steps:
       - uses: actions/checkout@v4
 
@@ -50,22 +55,11 @@ jobs:
       - name: Requirements check
         run: python -m pip list
 
-      - name: Install package
-        run: python -m pip install -e .[test]
+      - name: Test lite package
+        run: pipx run nox -s lite-${{ matrix.python-version.key || matrix.python-version }} --verbose
 
-      - name: Test light package
-        run: python -m pytest -ra --ignore tests/test_notebooks.py
-
-      - name: Install numpy v2
-        if: matrix.python-version != 3.8
-        run: python -m pip install "numpy>=2.0.0b1"
-
-      - name: Test light package with numpy v2.x
-        if: matrix.python-version != 3.8
-        run: python -m pytest -ra --ignore tests/test_notebooks.py
-
-  check-awkward-v1:
-    needs: [check-light]
+  check-full:
+    needs: [check-lite]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -76,7 +70,7 @@ jobs:
           - "3.10"
           - "3.11"
           - "3.12"
-    name: Python ${{ matrix.python-version }} - Awkward v1
+    name: Python ${{ matrix.python-version }} - Full
     steps:
       - uses: actions/checkout@v4
 
@@ -87,54 +81,12 @@ jobs:
       - name: Requirements check
         run: python -m pip list
 
-      - name: Install package
-        run: python -m pip install -e .[dev]
-
-      - name: Install awkward v1 and numpy v1
-        run: python -m pip install -U "awkward<2" "numpy<2"
-
-      - name: Run doctests on Python 3.11 with awkward v1.x and numpy v1.x
-        if: matrix.python-version == '3.11'
-        run: python -m pytest -ra --doctest-plus src/vector/
-
-      - name: Test package with awkward v1.x
-        run: python -m pytest -ra --cov=vector --ignore tests/test_notebooks.py .
-
-  check-awkward-v2:
-    needs: [check-light]
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version:
-          - "3.8"
-          - "3.9"
-          - "3.10"
-          - "3.11"
-          - "3.12"
-    name: Python ${{ matrix.python-version }} - Awkward v2
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Requirements check
-        run: python -m pip list
-
-      - name: Install package
-        run: python -m pip install -e .[dev]
-
-      - name: Install awkward v2
-        run: python -m pip install -U awkward "numpy<2.1"
-
-      - name: Run doctests on Python 3.11 with awkward v2.x
+      - name: Run doctests on Python 3.11
         if: matrix.python-version == 3.11
-        run: python -m pytest -ra --doctest-plus src/vector/
+        run: pipx run nox -s doctests-${{ matrix.python-version.key || matrix.python-version }} --verbose
 
-      - name: Test package with awkward v2.x
-        run: python -m pytest -ra --cov=vector --ignore tests/test_notebooks.py .
+      - name: Test package and generate coverage report
+        run: pipx run nox -s coverage-${{ matrix.python-version.key || matrix.python-version }} --verbose
 
       - name: Upload coverage report
         uses: codecov/codecov-action@v4.5.0
@@ -161,8 +113,7 @@ jobs:
         run: python -m pytest -ra -m dis --ignore tests/test_notebooks.py
 
   pass:
-    needs:
-      [pre-commit, check-light, check-awkward-v1, check-awkward-v2, discheck]
+    needs: [pre-commit, check-lite, check-full, discheck]
     runs-on: ubuntu-latest
     steps:
       - run: echo "All jobs passed"

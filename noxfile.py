@@ -6,6 +6,7 @@ import nox
 
 nox.options.sessions = ["lint", "lite", "tests", "doctests"]
 
+ALL_PYTHON = ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
 DIR = Path(__file__).parent.resolve()
 
@@ -17,7 +18,7 @@ def lint(session: nox.Session) -> None:
     session.run("pre-commit", "run", "--all-files", *session.posargs)
 
 
-@nox.session
+@nox.session(reuse_venv=True)
 def pylint(session: nox.Session) -> None:
     """Run pylint."""
     session.install("pylint~=2.14.0")
@@ -25,14 +26,14 @@ def pylint(session: nox.Session) -> None:
     session.run("pylint", "src/vector/", *session.posargs)
 
 
-@nox.session
+@nox.session(reuse_venv=True, python=ALL_PYTHON)
 def lite(session: nox.Session) -> None:
     """Run the linter."""
     session.install("-e", ".[test]")
     session.run("pytest", "--ignore", "tests/test_notebooks.py", *session.posargs)
 
 
-@nox.session(reuse_venv=True)
+@nox.session(reuse_venv=True, python=ALL_PYTHON)
 def tests(session: nox.Session) -> None:
     """Run the unit and regular tests."""
     session.install("-e", ".[awkward,numba,test,test-extras,sympy]")
@@ -44,14 +45,14 @@ def tests(session: nox.Session) -> None:
     )
 
 
-@nox.session(reuse_venv=True)
+@nox.session(reuse_venv=True, python=ALL_PYTHON)
 def coverage(session: nox.Session) -> None:
     """Run tests and compute coverage."""
     session.posargs.append("--cov=vector")
     tests(session)
 
 
-@nox.session(reuse_venv=True)
+@nox.session(reuse_venv=True, python=ALL_PYTHON)
 def doctests(session: nox.Session) -> None:
     """Run the doctests."""
     session.install("-e", ".[awkward,numba,test,test-extras,sympy]")
@@ -61,8 +62,8 @@ def doctests(session: nox.Session) -> None:
 @nox.session(reuse_venv=True)
 def notebooks(session: nox.Session) -> None:
     """Run the notebook tests"""
-    session.install("-e", ".[awkward,numba,test,test-extras]", "numba")
-    session.install("jupyter", "papermill")
+    session.install("-e", ".[awkward,numba,test,sympy]")
+    session.install("jupyter")
     session.run("pytest", "tests/test_notebooks.py", *session.posargs)
 
 
@@ -81,7 +82,7 @@ def docs(session: nox.Session) -> None:
             print("Unsupported argument to docs")
 
 
-@nox.session
+@nox.session(reuse_venv=True)
 def build(session: nox.Session) -> None:
     """Build an SDist and wheel."""
     session.install("build")

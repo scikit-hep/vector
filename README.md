@@ -44,7 +44,7 @@ This overview is based on the [documentation here](https://vector.readthedocs.io
 ```python
 import vector
 import numpy as np
-import awkward as ak  # at least version 1.2.0
+import awkward as ak  # at least v2.0.0 (vector v1.4.* supports awkward v1 and v2 both)
 import numba as nb
 ```
 
