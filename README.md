@@ -920,9 +920,9 @@ development environment.
 
 ## Acknowledgements
 
-This library was primarily developed by Jim Pivarski, Henry Schreiner, and Eduardo Rodrigues.
+This library was primarily developed by Jim Pivarski, Henry Schreiner, Saransh Chopra, and Eduardo Rodrigues.
 
-Support for this work was provided by the National Science Foundation cooperative agreement OAC-1836650 (IRIS-HEP) and OAC-1450377 (DIANA/HEP). Any opinions, findings, conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of the National Science Foundation.
+Support for this work was provided by the National Science Foundation cooperative agreement OAC-1836650 and PHY-2323298 (IRIS-HEP) and OAC-1450377 (DIANA/HEP). Any opinions, findings, conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of the National Science Foundation.
 
 [actions-badge]: https://github.com/scikit-hep/vector/actions/workflows/ci.yml/badge.svg
 [actions-link]: https://github.com/scikit-hep/vector/actions

@@ -33,7 +33,7 @@ jobs:
           echo "::add-matcher::$GITHUB_WORKSPACE/.github/matchers/pylint.json"
           pipx run nox -s pylint
 
-  check-light:
+  check-lite:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -44,7 +44,7 @@ jobs:
           - "3.10"
           - "3.11"
           - "3.12"
-    name: Python ${{ matrix.python-version }} - Light
+    name: Python ${{ matrix.python-version }} - Lite
     steps:
       - uses: actions/checkout@v4
 
@@ -55,11 +55,11 @@ jobs:
       - name: Requirements check
         run: python -m pip list
 
-      - name: Test light package
+      - name: Test lite package
         run: pipx run nox -s lite-${{ matrix.python-version.key || matrix.python-version }} --verbose
 
   check-full:
-    needs: [check-light]
+    needs: [check-lite]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -113,7 +113,7 @@ jobs:
         run: python -m pytest -ra -m dis --ignore tests/test_notebooks.py
 
   pass:
-    needs: [pre-commit, check-light, check-full, discheck]
+    needs: [pre-commit, check-lite, check-full, discheck]
     runs-on: ubuntu-latest
     steps:
       - run: echo "All jobs passed"
