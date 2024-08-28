@@ -42,7 +42,7 @@ dynamic = [
   "version",
 ]
 dependencies = [
-  "numpy>=1.13.3,<2.1",
+  "numpy>=1.13.3",
   "packaging>=19",
 ]
 optional-dependencies.awkward = [

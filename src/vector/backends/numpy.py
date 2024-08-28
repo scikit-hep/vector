@@ -215,38 +215,38 @@ def _getitem(
             )
         if hasattr(array, "_longitudinal_type"):
             longitudinal = array._longitudinal_type.ObjectClass(
-                *(out[x] for x in _coordinate_class_to_names[_ltype(array)])  # type: ignore[arg-type]
+                *(out[x] for x in _coordinate_class_to_names[_ltype(array)])
             )
         if hasattr(array, "_temporal_type"):
             temporal = array._temporal_type.ObjectClass(
-                *(out[x] for x in _coordinate_class_to_names[_ttype(array)])  # type: ignore[arg-type]
+                *(out[x] for x in _coordinate_class_to_names[_ttype(array)])
             )
         if temporal is not None:
             return array.ObjectClass(
                 azimuthal=azimuthal,
-                longitudinal=longitudinal,  # type: ignore[arg-type, return-value]
+                longitudinal=longitudinal,  # type: ignore[arg-type]
                 temporal=temporal,  # type: ignore[arg-type]
             )
         elif longitudinal is not None:
-            return array.ObjectClass(azimuthal=azimuthal, longitudinal=longitudinal)  # type: ignore[arg-type, return-value]
+            return array.ObjectClass(azimuthal=azimuthal, longitudinal=longitudinal)  # type: ignore[arg-type]
         elif azimuthal is not None:
-            return array.ObjectClass(azimuthal=azimuthal)  # type: ignore[return-value]
+            return array.ObjectClass(azimuthal=azimuthal)
         elif issubclass(array.ObjectClass, vector.backends.object.AzimuthalObject):
-            return array.ObjectClass(*tuple(out)[:2])  # type: ignore[arg-type, return-value]
+            return array.ObjectClass(*tuple(out)[:2])  # type: ignore[arg-type]
         elif issubclass(array.ObjectClass, vector.backends.object.LongitudinalObject):
             coords = (
                 out.view(numpy.ndarray)[0]
                 if len(out) == 1  # type: ignore[arg-type]
                 else out.view(numpy.ndarray)[2]
             )
-            return array.ObjectClass(coords)  # type: ignore[return-value]
+            return array.ObjectClass(coords)
         else:
             coords = (
                 out.view(numpy.ndarray)[0]
                 if len(out) == 1  # type: ignore[arg-type]
                 else out.view(numpy.ndarray)[3]
             )
-            return array.ObjectClass(coords)  # type: ignore[return-value]
+            return array.ObjectClass(coords)
 
 
 def _array_repr(
@@ -879,14 +879,14 @@ class VectorNumpy(Vector, GetItem):
                 keepdims=keepdims,
                 initial=initial,
                 where=where,
-            ),  # type: ignore[call-overload]
+            ),
         )
 
     def __eq__(self, other: typing.Any) -> typing.Any:
-        return numpy.equal(self, other)  # type: ignore[call-overload]
+        return numpy.equal(self, other)
 
     def __ne__(self, other: typing.Any) -> typing.Any:
-        return numpy.not_equal(self, other)  # type: ignore[call-overload]
+        return numpy.not_equal(self, other)
 
     def __reduce__(self) -> str | tuple[typing.Any, ...]:
         pickled_state = super().__reduce__()
@@ -1197,7 +1197,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
             AzimuthalNumpyXY([(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4),
                               (1.5, 2.5)], dtype=[('x', '<f8'), ('y', '<f8')])
         """
-        return self.view(self._azimuthal_type)  # type: ignore[return-value]
+        return self.view(self._azimuthal_type)
 
     def _wrap_result(
         self,
@@ -1305,7 +1305,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
         return _setitem(self, where, what, False)
 
 
-class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore[misc]
+class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):
     """
     Two dimensional momentum vector class for the NumPy backend. This class can be directly
     used to construct two dimensional NumPy momentum vectors. For two dimensional
@@ -1427,13 +1427,13 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
     def azimuthal(self) -> AzimuthalNumpy:
         """Returns the azimuthal type class for the given ``VectorNumpy3D`` object."""
         # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
-        return self.view(self._azimuthal_type)  # type: ignore[return-value]
+        return self.view(self._azimuthal_type)
 
     @property
     def longitudinal(self) -> LongitudinalNumpy:
         """Returns the longitudinal type class for the given ``VectorNumpy3D`` object."""
         # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
-        return self.view(self._longitudinal_type)  # type: ignore[return-value]
+        return self.view(self._longitudinal_type)
 
     def _wrap_result(
         self,
@@ -1562,7 +1562,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
         return _setitem(self, where, what, False)
 
 
-class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
+class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):
     """
     Three dimensional momentum vector class for the NumPy backend. This class can be directly
     used to construct three dimensional NumPy momentum vectors. For three dimensional
@@ -1707,19 +1707,19 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
     def azimuthal(self) -> AzimuthalNumpy:
         """Returns the azimuthal type class for the given ``VectorNumpy4D`` object."""
         # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
-        return self.view(self._azimuthal_type)  # type: ignore[return-value]
+        return self.view(self._azimuthal_type)
 
     @property
     def longitudinal(self) -> LongitudinalNumpy:
         """Returns the longitudinal type class for the given ``Vectornumpy4D`` object."""
         # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
-        return self.view(self._longitudinal_type)  # type: ignore[return-value]
+        return self.view(self._longitudinal_type)
 
     @property
     def temporal(self) -> TemporalNumpy:
         """Returns the azimuthal type class for the given ``VectorNumpy4D`` object."""
         # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
-        return self.view(self._temporal_type)  # type: ignore[return-value]
+        return self.view(self._temporal_type)
 
     def _wrap_result(
         self,
@@ -1882,7 +1882,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
         return _setitem(self, where, what, False)
 
 
-class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore[misc]
+class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):
     """
     Four dimensional momentum vector class for the NumPy backend. This class can be directly
     used to construct four dimensional NumPy momentum vectors. For three dimensional

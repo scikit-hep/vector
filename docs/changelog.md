@@ -2,17 +2,25 @@
 
 ## Version 1.4
 
+### Version 1.4.3
+
+#### Fixes
+
+- fix: uncap numpy [#502][]
+
+[#502]: https://github.com/scikit-hep/vector/pull/502
+
 ### Version 1.4.2
 
 #### Fixes
 
-- fix: depend on numpy<2.1 to support numba
-- fix: fix ci for awkward v1.x (numpy v2 is out)
-- fix: sympy tests (sympy v1.13)
+- fix: depend on numpy<2.1 to support numba [#476][]
+- fix: fix ci for awkward v1.x (numpy v2 is out) [#479][]
+- fix: sympy tests (sympy v1.13) [#485][]
 
 #### Documentation
 
-- docs: update intro notebook + readme
+- docs: update intro notebook + readme [#489][]
 
 [#476]: https://github.com/scikit-hep/vector/pull/476
 [#479]: https://github.com/scikit-hep/vector/pull/479
