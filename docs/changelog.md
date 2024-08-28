@@ -2,6 +2,14 @@
 
 ## Version 1.5
 
+### Version 1.5.1
+
+#### Fixes
+
+- fix: uncap numpy [#502][]
+
+[#502]: https://github.com/scikit-hep/vector/pull/502
+
 ### Version 1.5.0
 
 #### Breaking
