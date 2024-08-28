@@ -332,61 +332,61 @@ class VectorObject(Vector):
     lib = numpy
 
     def __eq__(self, other: typing.Any) -> typing.Any:
-        return numpy.equal(self, other)  # type: ignore[call-overload]
+        return numpy.equal(self, other)
 
     def __ne__(self, other: typing.Any) -> typing.Any:
-        return numpy.not_equal(self, other)  # type: ignore[call-overload]
+        return numpy.not_equal(self, other)
 
     def __abs__(self) -> float:
         return numpy.absolute(self)
 
     def __add__(self, other: VectorProtocol) -> VectorProtocol:
-        return numpy.add(self, other)  # type: ignore[call-overload]
+        return numpy.add(self, other)
 
     def __radd__(self, other: VectorProtocol) -> VectorProtocol:
-        return numpy.add(other, self)  # type: ignore[call-overload]
+        return numpy.add(other, self)
 
     def __iadd__(self: SameVectorType, other: VectorProtocol) -> SameVectorType:
-        return _replace_data(self, numpy.add(self, other))  # type: ignore[call-overload]
+        return _replace_data(self, numpy.add(self, other))
 
     def __sub__(self, other: VectorProtocol) -> VectorProtocol:
-        return numpy.subtract(self, other)  # type: ignore[call-overload]
+        return numpy.subtract(self, other)
 
     def __rsub__(self, other: VectorProtocol) -> VectorProtocol:
-        return numpy.subtract(other, self)  # type: ignore[call-overload]
+        return numpy.subtract(other, self)
 
     def __isub__(self: SameVectorType, other: VectorProtocol) -> SameVectorType:
-        return _replace_data(self, numpy.subtract(self, other))  # type: ignore[call-overload]
+        return _replace_data(self, numpy.subtract(self, other))
 
     def __mul__(self, other: float) -> VectorProtocol:
-        return numpy.multiply(self, other)  # type: ignore[call-overload]
+        return numpy.multiply(self, other)
 
     def __rmul__(self, other: float) -> VectorProtocol:
-        return numpy.multiply(other, self)  # type: ignore[call-overload]
+        return numpy.multiply(other, self)
 
     def __imul__(self: SameVectorType, other: float) -> SameVectorType:
-        return _replace_data(self, numpy.multiply(self, other))  # type: ignore[call-overload]
+        return _replace_data(self, numpy.multiply(self, other))
 
     def __neg__(self: SameVectorType) -> SameVectorType:
-        return numpy.negative(self)  # type: ignore[call-overload]
+        return numpy.negative(self)
 
     def __pos__(self: SameVectorType) -> SameVectorType:
-        return numpy.positive(self)  # type: ignore[call-overload]
+        return numpy.positive(self)
 
     def __truediv__(self, other: float) -> VectorProtocol:
-        return numpy.true_divide(self, other)  # type: ignore[call-overload]
+        return numpy.true_divide(self, other)
 
     def __rtruediv__(self, other: float) -> VectorProtocol:
-        return numpy.true_divide(other, self)  # type: ignore[call-overload]
+        return numpy.true_divide(other, self)
 
     def __itruediv__(self: SameVectorType, other: float) -> VectorProtocol:
-        return _replace_data(self, numpy.true_divide(self, other))  # type: ignore[call-overload]
+        return _replace_data(self, numpy.true_divide(self, other))
 
     def __pow__(self, other: float) -> float:
-        return numpy.square(self) if other == 2 else numpy.power(self, other)  # type: ignore[call-overload]
+        return numpy.square(self) if other == 2 else numpy.power(self, other)
 
     def __matmul__(self, other: VectorProtocol) -> float:
-        return numpy.matmul(self, other)  # type: ignore[call-overload]
+        return numpy.matmul(self, other)
 
     def __array_ufunc__(
         self,

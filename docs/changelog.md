@@ -4,7 +4,7 @@
 
 ### Version 1.5.1
 
-#### Breaking
+#### Fixes
 
 - fix: uncap numpy [#502][]
 
