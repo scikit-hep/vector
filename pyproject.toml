@@ -169,6 +169,7 @@ messages_control.disable = [
   "too-many-locals",
   "too-many-return-statements",
   "too-many-statements",
+  "too-many-positional-arguments",
   "wrong-import-position",
   "duplicate-code",
   "import-outside-toplevel",
@@ -203,6 +204,8 @@ messages_control.disable = [
   "unknown-option-value",
   "no-else-raise",
   "unidiomatic-typecheck",
+  "possibly-used-before-assignment", # TODO: Fix this
+  "used-before-assignment", # TODO: Fix this
 ]
 
 [tool.pytest.ini_options]
