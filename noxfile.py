@@ -5,9 +5,10 @@ from pathlib import Path
 import nox
 
 nox.options.sessions = ["lint", "lite", "tests", "doctests"]
+nox.needs_version = ">=2024.4.15"
+nox.options.default_venv_backend = "uv|virtualenv"
 
-ALL_PYTHON = ["3.8", "3.9", "3.10", "3.11", "3.12"]
-
+ALL_PYTHON = ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
 DIR = Path(__file__).parent.resolve()
 
 
@@ -21,14 +22,14 @@ def lint(session: nox.Session) -> None:
 @nox.session(reuse_venv=True)
 def pylint(session: nox.Session) -> None:
     """Run pylint."""
-    session.install("pylint~=2.14.0")
+    session.install("pylint")
     session.install("-e", ".")
     session.run("pylint", "src/vector/", *session.posargs)
 
 
 @nox.session(reuse_venv=True, python=ALL_PYTHON)
 def lite(session: nox.Session) -> None:
-    """Run the linter."""
+    """Run lightweight tests."""
     session.install("-e", ".[test]")
     session.run("pytest", "--ignore", "tests/test_notebooks.py", *session.posargs)
 
@@ -45,7 +46,7 @@ def tests(session: nox.Session) -> None:
     )
 
 
-@nox.session(reuse_venv=True, python=ALL_PYTHON)
+@nox.session(reuse_venv=True, python=ALL_PYTHON, default=False)
 def coverage(session: nox.Session) -> None:
     """Run tests and compute coverage."""
     session.posargs.append("--cov=vector")
@@ -59,7 +60,7 @@ def doctests(session: nox.Session) -> None:
     session.run("pytest", "--doctest-plus", "src/vector/", *session.posargs)
 
 
-@nox.session(reuse_venv=True)
+@nox.session(reuse_venv=True, default=False)
 def notebooks(session: nox.Session) -> None:
     """Run the notebook tests"""
     session.install("-e", ".[awkward,numba,test,sympy]")
@@ -67,7 +68,7 @@ def notebooks(session: nox.Session) -> None:
     session.run("pytest", "tests/test_notebooks.py", *session.posargs)
 
 
-@nox.session(reuse_venv=True)
+@nox.session(reuse_venv=True, default=False)
 def docs(session: nox.Session) -> None:
     """Build the docs. Pass "serve" to serve."""
     session.install("-e", ".[docs]")
@@ -82,7 +83,7 @@ def docs(session: nox.Session) -> None:
             print("Unsupported argument to docs")
 
 
-@nox.session(reuse_venv=True)
+@nox.session(reuse_venv=True, default=False)
 def build(session: nox.Session) -> None:
     """Build an SDist and wheel."""
     session.install("build")

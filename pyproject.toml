@@ -32,6 +32,7 @@ classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Topic :: Scientific/Engineering",
   "Topic :: Scientific/Engineering :: Information Analysis",
   "Topic :: Scientific/Engineering :: Mathematics",
@@ -52,7 +53,7 @@ optional-dependencies.dev = [
   "awkward>=2",
   "dask-awkward",
   "nox",
-  "numba>=0.57; python_version<'3.12'",
+  "numba>=0.57; python_version<'3.13'",
   "papermill>=2.4",
   "pytest>=6",
   "pytest-cov>=3",
@@ -70,7 +71,7 @@ optional-dependencies.docs = [
   "sphinx-math-dollar",
 ]
 optional-dependencies.numba = [
-  "numba>=0.57; python_version<'3.12'",
+  "numba>=0.57; python_version<'3.13'",
 ]
 optional-dependencies.sympy = [
   "sympy",
@@ -98,11 +99,6 @@ entry-points.numba_extensions.init = "vector:register_numba"
 version.source = "vcs"
 build.hooks.vcs.version-file = "src/vector/_version.py"
 
-[tool.ruff]
-src = [
-  "src",
-]
-
 [tool.ruff.lint]
 extend-select = [
   "B",   # flake8-bugbear
@@ -122,6 +118,7 @@ extend-select = [
 ignore = [
   "PLR09",   # Too many X
   "PLR2004", # Magic values
+  "ISC001", # Conflicts with formatter
 ]
 typing-modules = [
   "vector._typeutils",
