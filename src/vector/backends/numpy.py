@@ -870,7 +870,6 @@ class VectorNumpy(Vector, GetItem):
     ) -> SameVectorNumpyType:
         return typing.cast(
             SameVectorNumpyType,
-            # pylint: disable-next=unexpected-keyword-arg
             numpy.sum(
                 self,
                 axis=axis,

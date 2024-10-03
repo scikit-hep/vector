@@ -149,7 +149,7 @@ class VectorProtocol:
     """
 
     @property
-    def lib(self) -> Module: ...  # pylint: disable=multiple-statements
+    def lib(self) -> Module: ...
 
     def _wrap_result(
         self,

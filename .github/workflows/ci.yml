@@ -28,10 +28,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: 3.x
+      - uses: astral-sh/setup-uv@v3
       - name: PyLint
-        run: |
-          echo "::add-matcher::$GITHUB_WORKSPACE/.github/matchers/pylint.json"
-          pipx run nox -s pylint
+        run: uvx nox -s pylint -- --output-format=github
 
   check-lite:
     runs-on: ubuntu-latest
@@ -44,6 +43,7 @@ jobs:
           - "3.10"
           - "3.11"
           - "3.12"
+          - "3.13"
     name: Python ${{ matrix.python-version }} - Lite
     steps:
       - uses: actions/checkout@v4
@@ -51,12 +51,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
 
-      - name: Requirements check
-        run: python -m pip list
+      - uses: astral-sh/setup-uv@v3
 
       - name: Test lite package
-        run: pipx run nox -s lite-${{ matrix.python-version.key || matrix.python-version }} --verbose
+        run: uvx nox -s lite-${{ matrix.python-version.key || matrix.python-version }} --verbose
 
   check-full:
     needs: [check-lite]
@@ -70,6 +70,7 @@ jobs:
           - "3.10"
           - "3.11"
           - "3.12"
+          - "3.13"
     name: Python ${{ matrix.python-version }} - Full
     steps:
       - uses: actions/checkout@v4
@@ -77,16 +78,19 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
 
-      - name: Requirements check
-        run: python -m pip list
+      - uses: astral-sh/setup-uv@v3
+
+      - name: Install nox
+        run: uv tool install nox
 
       - name: Run doctests on Python 3.11
         if: matrix.python-version == 3.11
-        run: pipx run nox -s doctests-${{ matrix.python-version.key || matrix.python-version }} --verbose
+        run: nox -s doctests-${{ matrix.python-version.key || matrix.python-version }} --verbose
 
       - name: Test package and generate coverage report
-        run: pipx run nox -s coverage-${{ matrix.python-version.key || matrix.python-version }} --verbose
+        run: nox -s coverage-${{ matrix.python-version.key || matrix.python-version }} --verbose
 
       - name: Upload coverage report
         uses: codecov/codecov-action@v4.5.0
@@ -103,11 +107,10 @@ jobs:
         with:
           python-version: 3.8.13
 
-      - name: Requirements check
-        run: python -m pip list
+      - uses: astral-sh/setup-uv@v3
 
       - name: Check compute features
-        run: python -m pip install .[test,test-extras]
+        run: uv pip install --system .[test,test-extras]
 
       - name: Test package
         run: python -m pytest -ra -m dis --ignore tests/test_notebooks.py
