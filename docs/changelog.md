@@ -2,6 +2,14 @@
 
 ## Version 1.5
 
+### Version 1.5.2
+
+#### Maintenance
+
+- ci: 3.13, attestations, and some modernization [#511][]
+
+[#511]: https://github.com/scikit-hep/vector/pull/511
+
 ### Version 1.5.1
 
 #### Fixes
