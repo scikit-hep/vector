@@ -56,7 +56,7 @@ jobs:
       - uses: astral-sh/setup-uv@v3
 
       - name: Test lite package
-        run: uvx nox -s lite-${{ matrix.python-version.key || matrix.python-version }} --verbose
+        run: uvx nox -s lite-${{ matrix.python-version }} --verbose
 
   check-full:
     needs: [check-lite]
@@ -87,10 +87,10 @@ jobs:
 
       - name: Run doctests on Python 3.11
         if: matrix.python-version == 3.11
-        run: nox -s doctests-${{ matrix.python-version.key || matrix.python-version }} --verbose
+        run: nox -s doctests-${{ matrix.python-version }} --verbose
 
       - name: Test package and generate coverage report
-        run: nox -s coverage-${{ matrix.python-version.key || matrix.python-version }} --verbose
+        run: nox -s coverage-${{ matrix.python-version }} --verbose
 
       - name: Upload coverage report
         uses: codecov/codecov-action@v4.6.0
