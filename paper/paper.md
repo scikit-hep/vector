@@ -1,5 +1,5 @@
 ---
-title: "Vector: mathematical manipulations of JIT-compilable ragged Lorentz vectors"
+title: "Vector: JIT-compilable mathematical manipulations of ragged Lorentz vectors"
 tags:
   - Python
   - vector algebra
