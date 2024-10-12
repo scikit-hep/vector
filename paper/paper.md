@@ -5,24 +5,26 @@ tags:
   - vector algebra
   - high energy physics
 authors:
+  - name: Saransh Chopra
+    orcid: 0000-0003-3046-7675
+    equal-contrib: true
+    affiliation: "1, 2"
   - name: Henry Schreiner
     orcid: 0000-0002-7833-783X
     equal-contrib: true
-    affiliation: 1
+    affiliation: 2
   - name: Jim Pivarski
     orcid: 0000-0002-6649-343X
     equal-contrib: true
     corresponding: true
-    affiliation: 1
-  - name: Saransh Chopra
-    orcid: 0000-0003-3046-7675
-    equal-contrib: true
-    affiliation: 1
+    affiliation: 2
 
 affiliations:
-  - name: Princeton University
+  - name: University College London
     index: 1
-date: 16 August 2024
+  - name: Princeton University
+    index: 2
+date: 12 October 2024
 bibliography: paper.bib
 ---
 
@@ -85,7 +87,7 @@ nature of the library, it is often used in non high energy physics use cases.
 # Acknowledgements
 
 The work on vector was supported by NSF cooperative agreements OAC-1836650
-(IRIS-HEP) and PHY-2323298 (IRIS-HEP). We would also like to thank the
+(IRIS-HEP) and PHY-2323298 (IRIS-HEP). We would additionally like to thank the
 contributors of vector and the Scikit-HEP community for their support.
 
 # Reference
