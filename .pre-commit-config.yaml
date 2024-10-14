@@ -50,7 +50,7 @@ repos:
         exclude: assets/js/webapp\.js
 
   - repo: https://github.com/adamchainz/blacken-docs
-    rev: 1.18.0
+    rev: 1.19.0
     hooks:
       - id: blacken-docs
         args: ["-E"]
