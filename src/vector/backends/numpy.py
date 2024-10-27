@@ -1438,8 +1438,9 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
             ...     (1.5, 2.5, 5.5)
             ...    ], dtype=[("x", float), ("y", float), ("z", float)]
             ... )
-            >>> print(vec.azimuthal)
-            [(1.1, 2.1) (1.2, 2.2) (1.3, 2.3) (1.4, 2.4) (1.5, 2.5)]
+            >>> vec.azimuthal
+            AzimuthalNumpyXY([(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4),
+                  (1.5, 2.5)], dtype=[('x', '<f8'), ('y', '<f8')])
         """
         return self.view(self._azimuthal_type)
 
@@ -1459,8 +1460,9 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
             ...     (1.5, 2.5, 5.5)
             ...    ], dtype=[("x", float), ("y", float), ("z", float)]
             ... )
-            >>> print(vec.longitudinal)
-            [(3.1,) (3.2,) (3.3,) (4.4,) (5.5,)]
+            >>> vec.longitudinal
+            LongitudinalNumpyZ([(3.1,), (3.2,), (3.3,), (4.4,), (5.5,)],
+                   dtype=[('z', '<f8')])
         """
         return self.view(self._longitudinal_type)
 
@@ -1739,7 +1741,6 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
 
         Example:
             >>> import vector
-            >>> # Create a 4D vector array with (x, y, z, t) components
             >>> vec_4d = vector.array(
             ... [
             ...     (1.1, 2.1, 3.1, 4.1),
@@ -1749,19 +1750,19 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
             ...     (1.5, 2.5, 3.5, 4.5)
             ... ], dtype=[("x", float), ("y", float), ("z", float), ("t", float)]
             ... )
-            >>> print(vec_4d.azimuthal)
-            [(1.1, 2.1) (1.2, 2.2) (1.3, 2.3) (1.4, 2.4) (1.5, 2.5)]
+            >>> vec_4d.azimuthal
+            AzimuthalNumpyXY([(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4),
+                  (1.5, 2.5)], dtype=[('x', '<f8'), ('y', '<f8')])
         """
         return self.view(self._azimuthal_type)
 
     @property
     def longitudinal(self) -> LongitudinalNumpy:
         """
-        Returns the longitudinal type class for the given ``Vectornumpy4D`` object.
+        Returns the longitudinal type class for the given ``VectorNumpy4D`` object.
 
         Example:
             >>> import vector
-            >>> # Create a 4D vector array with (x, y, z, t) components
             >>> vec_4d = vector.array(
             ... [
             ...     (1.1, 2.1, 3.1, 4.1),
@@ -1771,8 +1772,9 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
             ...     (1.5, 2.5, 3.5, 4.5)
             ... ], dtype=[("x", float), ("y", float), ("z", float), ("t", float)]
             ... )
-            >>> print(vec_4d.longitudinal)
-            [(3.1,) (3.2,) (3.3,) (3.4,) (3.5,)]
+            >>> vec_4d.longitudinal
+            LongitudinalNumpyZ([(3.1,), (3.2,), (3.3,), (3.4,), (3.5,)],
+                   dtype=[('z', '<f8')])
         """
         return self.view(self._longitudinal_type)
 
