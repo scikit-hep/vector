@@ -1741,7 +1741,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
 
         Example:
             >>> import vector
-            >>> vec_4d = vector.array(
+            >>> vec = vector.array(
             ... [
             ...     (1.1, 2.1, 3.1, 4.1),
             ...     (1.2, 2.2, 3.2, 4.2),
@@ -1750,7 +1750,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
             ...     (1.5, 2.5, 3.5, 4.5)
             ... ], dtype=[("x", float), ("y", float), ("z", float), ("t", float)]
             ... )
-            >>> vec_4d.azimuthal
+            >>> vec.azimuthal
             AzimuthalNumpyXY([(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4),
                   (1.5, 2.5)], dtype=[('x', '<f8'), ('y', '<f8')])
         """
@@ -1763,7 +1763,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
 
         Example:
             >>> import vector
-            >>> vec_4d = vector.array(
+            >>> vec = vector.array(
             ... [
             ...     (1.1, 2.1, 3.1, 4.1),
             ...     (1.2, 2.2, 3.2, 4.2),
@@ -1772,7 +1772,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
             ...     (1.5, 2.5, 3.5, 4.5)
             ... ], dtype=[("x", float), ("y", float), ("z", float), ("t", float)]
             ... )
-            >>> vec_4d.longitudinal
+            >>> vec.longitudinal
             LongitudinalNumpyZ([(3.1,), (3.2,), (3.3,), (3.4,), (3.5,)],
                    dtype=[('z', '<f8')])
         """
