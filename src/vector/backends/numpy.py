@@ -1424,14 +1424,46 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
 
     @property
     def azimuthal(self) -> AzimuthalNumpy:
-        """Returns the azimuthal type class for the given ``VectorNumpy3D`` object."""
-        # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
+        """
+        Returns the azimuthal type class for the given ``VectorNumpy3D`` object.
+
+        Example:
+            >>> import vector
+            >>> vec = vector.array(
+            ... [
+            ...     (1.1, 2.1, 3.1),
+            ...     (1.2, 2.2, 3.2),
+            ...     (1.3, 2.3, 3.3),
+            ...     (1.4, 2.4, 4.4),
+            ...     (1.5, 2.5, 5.5)
+            ...    ], dtype=[("x", float), ("y", float), ("z", float)]
+            ... )
+            >>> vec.azimuthal
+            AzimuthalNumpyXY([(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4),
+                  (1.5, 2.5)], dtype=[('x', '<f8'), ('y', '<f8')])
+        """
         return self.view(self._azimuthal_type)
 
     @property
     def longitudinal(self) -> LongitudinalNumpy:
-        """Returns the longitudinal type class for the given ``VectorNumpy3D`` object."""
-        # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
+        """
+        Returns the longitudinal type class for the given ``VectorNumpy3D`` object.
+
+        Example:
+            >>> import vector
+            >>> vec = vector.array(
+            ... [
+            ...     (1.1, 2.1, 3.1),
+            ...     (1.2, 2.2, 3.2),
+            ...     (1.3, 2.3, 3.3),
+            ...     (1.4, 2.4, 4.4),
+            ...     (1.5, 2.5, 5.5)
+            ...    ], dtype=[("x", float), ("y", float), ("z", float)]
+            ... )
+            >>> vec.longitudinal
+            LongitudinalNumpyZ([(3.1,), (3.2,), (3.3,), (4.4,), (5.5,)],
+                   dtype=[('z', '<f8')])
+        """
         return self.view(self._longitudinal_type)
 
     def _wrap_result(
@@ -1704,14 +1736,46 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
 
     @property
     def azimuthal(self) -> AzimuthalNumpy:
-        """Returns the azimuthal type class for the given ``VectorNumpy4D`` object."""
-        # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
+        """
+        Returns the azimuthal type class for the given ``VectorNumpy4D`` object.
+
+        Example:
+            >>> import vector
+            >>> vec = vector.array(
+            ... [
+            ...     (1.1, 2.1, 3.1, 4.1),
+            ...     (1.2, 2.2, 3.2, 4.2),
+            ...     (1.3, 2.3, 3.3, 4.3),
+            ...     (1.4, 2.4, 3.4, 4.4),
+            ...     (1.5, 2.5, 3.5, 4.5)
+            ... ], dtype=[("x", float), ("y", float), ("z", float), ("t", float)]
+            ... )
+            >>> vec.azimuthal
+            AzimuthalNumpyXY([(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4),
+                  (1.5, 2.5)], dtype=[('x', '<f8'), ('y', '<f8')])
+        """
         return self.view(self._azimuthal_type)
 
     @property
     def longitudinal(self) -> LongitudinalNumpy:
-        """Returns the longitudinal type class for the given ``Vectornumpy4D`` object."""
-        # TODO: Add an example here - see https://github.com/scikit-hep/vector/issues/194
+        """
+        Returns the longitudinal type class for the given ``VectorNumpy4D`` object.
+
+        Example:
+            >>> import vector
+            >>> vec = vector.array(
+            ... [
+            ...     (1.1, 2.1, 3.1, 4.1),
+            ...     (1.2, 2.2, 3.2, 4.2),
+            ...     (1.3, 2.3, 3.3, 4.3),
+            ...     (1.4, 2.4, 3.4, 4.4),
+            ...     (1.5, 2.5, 3.5, 4.5)
+            ... ], dtype=[("x", float), ("y", float), ("z", float), ("t", float)]
+            ... )
+            >>> vec.longitudinal
+            LongitudinalNumpyZ([(3.1,), (3.2,), (3.3,), (3.4,), (3.5,)],
+                   dtype=[('z', '<f8')])
+        """
         return self.view(self._longitudinal_type)
 
     @property
