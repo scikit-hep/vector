@@ -19,14 +19,14 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.7.0"
+    rev: "v0.7.1"
     hooks:
       - id: ruff
         args: ["--fix", "--show-fixes"]
       - id: ruff-format
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.12.1
+    rev: v1.13.0
     hooks:
       - id: mypy
         files: src
@@ -50,7 +50,7 @@ repos:
         exclude: assets/js/webapp\.js
 
   - repo: https://github.com/adamchainz/blacken-docs
-    rev: 1.19.0
+    rev: 1.19.1
     hooks:
       - id: blacken-docs
         args: ["-E"]
