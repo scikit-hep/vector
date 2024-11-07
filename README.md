@@ -874,7 +874,8 @@ vec.to_2D() + vec.to_2D()
 
 ## Talks about vector
 
-- 3rd July 2024 - [A new SymPy backend for vector: uniting experimental and theoretical physicists](https://indi.to/pfTC6) - [PyHEP 2024 (virtual)](https://indico.cern.ch/event/1384010/)
+- 21st October 2024 - [A new SymPy backend for vector: uniting experimental and theoretical physicists](https://indi.to/zTs5b) - [CHEP 2024](https://indico.cern.ch/event/1338689/)
+- 3rd July 2024 - [A new SymPy backend for vector: uniting experimental and theoretical physicists](https://indi.to/pfTC6) - [PyHEP 2024 (virtual)](https://indico.cern.ch/event/1384010/) [🎥](https://www.youtube.com/watch?v=aVPhP_APhqw)
 - 9th October 2023 - [What’s new with Vector? First major release is out!](https://indi.to/35ym5) - [PyHEP 2023 (virtual)](https://indico.cern.ch/event/1252095/) [🎥](https://www.youtube.com/watch?v=JHEAb2R3xzE&list=PLKZ9c4ONm-VlAorAG8kR09ZqhMfHiH2LJ&index=10)
 - 13th September 2022 - [Constructing HEP vectors and analyzing HEP data using Vector](https://indi.to/bPmMc) - [PyHEP 2022 (virtual)](https://indico.cern.ch/event/1150631/) [🎥](https://www.youtube.com/watch?v=4iveMzrbe7s&list=PLKZ9c4ONm-VkohKG-skzEG_gklMaSgaO7&index=15)
 - 20th July 2022 - [Analysis Grand Challenge / HEP Scientific Python Ecosystem](https://indico.cern.ch/event/1151329/timetable/#3-analysis-grand-challenge-hep) - [DANCE/CoDaS@Snowmass 2022 computational and data science software training](https://indico.cern.ch/event/1151329/)
