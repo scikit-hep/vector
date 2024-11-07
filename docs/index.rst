@@ -61,6 +61,19 @@ covers almost all the features offered by ``vector`` and any new additions to th
 Talks about vector
 ------------------
 
+-  21st October 2024 - `A new SymPy backend for vector: uniting
+   experimental and theoretical physicists
+   <https://indi.to/zTs5b>`__ - `CHEP 2024
+   <https://indico.cern.ch/event/1338689/>`__
+-  3rd July 2024 - `A new SymPy backend for vector: uniting
+   experimental and theoretical physicists
+   <https://indi.to/pfTC6>`__ - `PyHEP 2024 (virtual)
+   <https://indico.cern.ch/event/1384010/>`__
+   `🎥 <https://www.youtube.com/watch?v=aVPhP_APhqw>`__
+-  9th October 2023 - `What’s new with Vector? First major
+   release is out! <https://indi.to/35ym5>`__ - `PyHEP 2023
+   (virtual) <https://indico.cern.ch/event/1252095/>`__
+   `🎥 <https://www.youtube.com/watch?v=JHEAb2R3xzE&list=PLKZ9c4ONm-VlAorAG8kR09ZqhMfHiH2LJ&index=10>`__
 -  13th September 2022 - `Constructing HEP vectors and analyzing HEP
    data using Vector <https://indi.to/bPmMc>`__ - `PyHEP 2022
    (virtual) <https://indico.cern.ch/event/1150631/>`__
