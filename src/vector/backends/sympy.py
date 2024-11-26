@@ -716,9 +716,8 @@ class VectorSympy2D(VectorSympy, Planar, Vector2D):
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             return cls.ProjectionClass2D(azimuthal=azcoords)
 
-        elif (
-            len(returns) == 2
-            or (len(returns) == 3 and returns[2] is None)
+        elif len(returns) == 2 or (
+            (len(returns) == 3 and returns[2] is None)
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
             and isinstance(returns[1], type)
@@ -927,9 +926,8 @@ class VectorSympy3D(VectorSympy, Spatial, Vector3D):
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             return cls.ProjectionClass2D(azimuthal=azcoords)
 
-        elif (
-            len(returns) == 2
-            or (len(returns) == 3 and returns[2] is None)
+        elif len(returns) == 2 or (
+            (len(returns) == 3 and returns[2] is None)
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
             and isinstance(returns[1], type)

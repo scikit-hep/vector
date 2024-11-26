@@ -9,13 +9,13 @@ import typing
 from typing import Protocol, TypedDict
 
 __all__ = [
+    "BoolCollection",
+    "FloatArray",
     "Protocol",
     "ScalarCollection",
-    "BoolCollection",
     "TransformProtocol2D",
     "TransformProtocol3D",
     "TransformProtocol4D",
-    "FloatArray",
 ]
 
 

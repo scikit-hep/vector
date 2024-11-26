@@ -143,11 +143,11 @@ __all__: tuple[str, ...] = (
     "arr",
     "array",
     "awk",
-    "zip",
     "dim",
     "obj",
     "register_awkward",
     "register_numba",
+    "zip",
 )
 
 

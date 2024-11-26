@@ -384,7 +384,7 @@ class AzimuthalAwkwardRhoPhi(AzimuthalAwkward, AzimuthalRhoPhi):
         (<Array [[1, 2], None] type='2 * option[var * int64]'>, <Array [None, [1]] type='2 * option[var * int64]'>)
     """
 
-    __slots__ = ("rho", "phi")
+    __slots__ = ("phi", "rho")
 
     def __init__(self, rho: typing.Any, phi: typing.Any) -> None:
         self.rho = rho

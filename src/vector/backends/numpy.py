@@ -1220,9 +1220,8 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
         if returns in ([float], [bool]):
             return result
 
-        elif (
-            len(returns) == 1
-            or (len(returns) == 2 and returns[1] is None)
+        elif len(returns) == 1 or (
+            (len(returns) == 2 and returns[1] is None)
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
         ):
@@ -1525,9 +1524,8 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
                 out[name] = result[i]
             return out.view(cls.ProjectionClass2D)
 
-        elif (
-            len(returns) == 2
-            or (len(returns) == 3 and returns[2] is None)
+        elif len(returns) == 2 or (
+            (len(returns) == 3 and returns[2] is None)
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
             and isinstance(returns[1], type)
