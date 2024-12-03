@@ -94,5 +94,5 @@ def build(session: nox.Session) -> None:
 def disassemble(session: nox.Session) -> None:
     """Disassemble run."""
     session.install("-e", ".[test-extras]")
-    session.posargs.extend(["-ra", "-m", "dis"])
+    session.posargs.extend(["-m", "dis"])
     lite(session)
