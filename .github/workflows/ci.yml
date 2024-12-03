@@ -109,11 +109,8 @@ jobs:
 
       - uses: astral-sh/setup-uv@v4
 
-      - name: Check compute features
-        run: uv pip install --system .[test,test-extras]
-
-      - name: Test package
-        run: python -m pytest -ra -m dis --ignore tests/test_notebooks.py
+      - name: Test compute features
+        run: uvx nox -s disassemble
 
   pass:
     needs: [pre-commit, check-lite, check-full, discheck]
