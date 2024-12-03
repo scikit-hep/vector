@@ -4,7 +4,7 @@ from pathlib import Path
 
 import nox
 
-nox.options.sessions = ["lint", "lite", "tests", "doctests"]
+nox.options.sessions = ["lint", "lite", "tests", "doctests", "disassemble"]
 nox.needs_version = ">=2024.4.15"
 nox.options.default_venv_backend = "uv|virtualenv"
 
@@ -88,3 +88,11 @@ def build(session: nox.Session) -> None:
     """Build an SDist and wheel."""
     session.install("build")
     session.run("python", "-m", "build")
+
+
+@nox.session(reuse_venv=True, python="3.8", default=False)
+def disassemble(session: nox.Session) -> None:
+    """Disassemble run."""
+    session.install("-e", ".[test-extras]")
+    session.posargs.extend(["-m", "dis"])
+    lite(session)
