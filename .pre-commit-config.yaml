@@ -19,7 +19,7 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.8.1"
+    rev: "v0.8.2"
     hooks:
       - id: ruff
         args: ["--fix", "--show-fixes"]
@@ -43,7 +43,7 @@ repos:
         exclude: ^docs/usage/intro.ipynb$
 
   - repo: https://github.com/rbubley/mirrors-prettier
-    rev: "v3.4.1"
+    rev: "v3.4.2"
     hooks:
       - id: prettier
         types_or: [yaml, markdown, html, css, scss, javascript, json]
