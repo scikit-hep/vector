@@ -82,10 +82,16 @@ from vector.backends.object import (
 vector._import_awkward()
 
 ArrayOrRecord = typing.TypeVar("ArrayOrRecord", bound=typing.Union[ak.Array, ak.Record])
+Array = typing.TypeVar("Array")
 
 behavior: typing.Any = {}
 
-_touch = ak.typetracer.touch_data
+
+def _touch(array: Array) -> Array:
+    # make sure that touching is only done on Awkward arrays
+    if isinstance(array, (ak.Array, ak.Record)) and ak.backend(array) == "typetracer":
+        return ak.typetracer.touch_data(array)
+    return array
 
 
 # coordinates classes are a formality for Awkward #############################

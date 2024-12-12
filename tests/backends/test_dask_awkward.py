@@ -31,9 +31,9 @@ def test_necessary_columns():
 
     cols = next(iter(dak.report_necessary_columns(dak_vec).values()))
 
-    # this may seem weird at first: why would you need "phi" and "rho", if you asked for "pt"?
+    # this may seem weird at first: why would one need "phi" and "rho", if one asked for "pt"?
     # the reason is that vector will build internally a class with "phi" and "rho",
-    # see: https://github.com/scikit-hep/vector/blob/main/src/vector/backends/awkward.py#L166-L167
-    # So, even if you ask for "pt", you will need "phi" and "rho" as well in order to build the vector class in the first place.
+    # see: https://github.com/scikit-hep/vector/blob/608da2d55a74eed25635fd408d1075b568773c99/src/vector/backends/awkward.py#L166-L167
+    # So, even if one asks for "pt", "phi" and "rho" are as well in order to build the vector class in the first place.
     # (the same argument holds true for all other vector classes)
     assert cols == frozenset({"phi", "rho"})
