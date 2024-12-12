@@ -85,6 +85,8 @@ ArrayOrRecord = typing.TypeVar("ArrayOrRecord", bound=typing.Union[ak.Array, ak.
 
 behavior: typing.Any = {}
 
+_touch = ak.typetracer.touch_data
+
 
 # coordinates classes are a formality for Awkward #############################
 
@@ -126,9 +128,9 @@ class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
         """
         fields = ak.fields(array)
         if "x" in fields and "y" in fields:
-            return AzimuthalAwkwardXY(array["x"], array["y"])
+            return AzimuthalAwkwardXY(_touch(array["x"]), _touch(array["y"]))
         elif "rho" in fields and "phi" in fields:
-            return AzimuthalAwkwardRhoPhi(array["rho"], array["phi"])
+            return AzimuthalAwkwardRhoPhi(_touch(array["rho"]), _touch(array["phi"]))
         else:
             raise ValueError(
                 "array does not have azimuthal coordinates (x, y or rho, phi): "
@@ -154,17 +156,17 @@ class AzimuthalAwkward(CoordinatesAwkward, Azimuthal):
         """
         fields = ak.fields(array)
         if "x" in fields and "y" in fields:
-            return AzimuthalAwkwardXY(array["x"], array["y"])
+            return AzimuthalAwkwardXY(_touch(array["x"]), _touch(array["y"]))
         elif "x" in fields and "py" in fields:
-            return AzimuthalAwkwardXY(array["x"], array["py"])
+            return AzimuthalAwkwardXY(_touch(array["x"]), _touch(array["py"]))
         elif "px" in fields and "y" in fields:
-            return AzimuthalAwkwardXY(array["px"], array["y"])
+            return AzimuthalAwkwardXY(_touch(array["px"]), _touch(array["y"]))
         elif "px" in fields and "py" in fields:
-            return AzimuthalAwkwardXY(array["px"], array["py"])
+            return AzimuthalAwkwardXY(_touch(array["px"]), _touch(array["py"]))
         elif "rho" in fields and "phi" in fields:
-            return AzimuthalAwkwardRhoPhi(array["rho"], array["phi"])
+            return AzimuthalAwkwardRhoPhi(_touch(array["rho"]), _touch(array["phi"]))
         elif "pt" in fields and "phi" in fields:
-            return AzimuthalAwkwardRhoPhi(array["pt"], array["phi"])
+            return AzimuthalAwkwardRhoPhi(_touch(array["pt"]), _touch(array["phi"]))
         else:
             raise ValueError(
                 "array does not have azimuthal coordinates (x/px, y/py or rho/pt, phi): "
@@ -206,11 +208,11 @@ class LongitudinalAwkward(CoordinatesAwkward, Longitudinal):
         """
         fields = ak.fields(array)
         if "z" in fields:
-            return LongitudinalAwkwardZ(array["z"])
+            return LongitudinalAwkwardZ(_touch(array["z"]))
         elif "theta" in fields:
-            return LongitudinalAwkwardTheta(array["theta"])
+            return LongitudinalAwkwardTheta(_touch(array["theta"]))
         elif "eta" in fields:
-            return LongitudinalAwkwardEta(array["eta"])
+            return LongitudinalAwkwardEta(_touch(array["eta"]))
         else:
             raise ValueError(
                 "array does not have longitudinal coordinates (z or theta or eta): "
@@ -237,13 +239,13 @@ class LongitudinalAwkward(CoordinatesAwkward, Longitudinal):
         """
         fields = ak.fields(array)
         if "z" in fields:
-            return LongitudinalAwkwardZ(array["z"])
+            return LongitudinalAwkwardZ(_touch(array["z"]))
         elif "pz" in fields:
-            return LongitudinalAwkwardZ(array["pz"])
+            return LongitudinalAwkwardZ(_touch(array["pz"]))
         elif "theta" in fields:
-            return LongitudinalAwkwardTheta(array["theta"])
+            return LongitudinalAwkwardTheta(_touch(array["theta"]))
         elif "eta" in fields:
-            return LongitudinalAwkwardEta(array["eta"])
+            return LongitudinalAwkwardEta(_touch(array["eta"]))
         else:
             raise ValueError(
                 "array does not have longitudinal coordinates (z/pz or theta or eta): "
@@ -284,9 +286,9 @@ class TemporalAwkward(CoordinatesAwkward, Temporal):
         """
         fields = ak.fields(array)
         if "t" in fields:
-            return TemporalAwkwardT(array["t"])
+            return TemporalAwkwardT(_touch(array["t"]))
         elif "tau" in fields:
-            return TemporalAwkwardTau(array["tau"])
+            return TemporalAwkwardTau(_touch(array["tau"]))
         else:
             raise ValueError(
                 "array does not have temporal coordinates (t or tau): "
@@ -312,21 +314,21 @@ class TemporalAwkward(CoordinatesAwkward, Temporal):
         """
         fields = ak.fields(array)
         if "t" in fields:
-            return TemporalAwkwardT(array["t"])
+            return TemporalAwkwardT(_touch(array["t"]))
         elif "E" in fields:
-            return TemporalAwkwardT(array["E"])
+            return TemporalAwkwardT(_touch(array["E"]))
         elif "e" in fields:
-            return TemporalAwkwardT(array["e"])
+            return TemporalAwkwardT(_touch(array["e"]))
         elif "energy" in fields:
-            return TemporalAwkwardT(array["energy"])
+            return TemporalAwkwardT(_touch(array["energy"]))
         elif "tau" in fields:
-            return TemporalAwkwardTau(array["tau"])
+            return TemporalAwkwardTau(_touch(array["tau"]))
         elif "M" in fields:
-            return TemporalAwkwardTau(array["M"])
+            return TemporalAwkwardTau(_touch(array["M"]))
         elif "m" in fields:
-            return TemporalAwkwardTau(array["m"])
+            return TemporalAwkwardTau(_touch(array["m"]))
         elif "mass" in fields:
-            return TemporalAwkwardTau(array["mass"])
+            return TemporalAwkwardTau(_touch(array["mass"]))
         else:
             raise ValueError(
                 "array does not have temporal coordinates (t/E/e/energy or tau/M/m/mass): "
