@@ -16,9 +16,8 @@ tensors).
 
 from __future__ import annotations
 
-from packaging.version import parse as parse_version
-
 import torch
+from packaging.version import parse as parse_version
 
 if parse_version(torch.__version__) < parse_version("1.7.0"):
     # https://pytorch.org/docs/stable/notes/extending.html#subclassing-torch-tensor
