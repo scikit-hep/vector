@@ -1,5 +1,7 @@
 ![](_images/vector-logo.png)
 
+# Overview
+
 [![Actions Status][actions-badge]][actions-link]
 [![Documentation Status][rtd-badge]][rtd-link]
 [![pre-commit.ci status][pre-commit-badge]][pre-commit-link]
@@ -14,13 +16,59 @@
 [![LICENSE][license-badge]][license-link]
 [![Scikit-HEP][sk-badge]][sk-link]
 
-# Overview
+## Installation
 
-# Installation
+You can install Vector with [pip](https://pypi.org/project/vector/) and [conda](https://anaconda.org/conda-forge/vector).
 
-# Getting help
+```bash
+pip install vector
+```
 
-# Contributing to Vector
+## Purpose of this library
+
+Vector is a Python library for 2D and 3D spatial vectors, as well as 4D space-time vectors. It is especially intended for performing geometric calculations on _arrays of vectors_, rather than one vector at a time in a Python for loop. Vector is part of the [Scikit-HEP project](https://scikit-hep.org/), High Energy Physics (HEP) tools in Python.
+
+Vectors may be expressed in any of these coordinate systems:
+
+* the azimuthal plane may be Cartesian `x` `y` or polar `rho` ($\rho$) `phi` ($\phi$)
+* the longitudinal axis may be Cartesian `z`, polar `theta` ($\theta$), or pseudorapidity `eta` ($\eta$)
+* the temporal component for space-time vectors may be Cartesian `t` or proper time `tau` ($\tau$)
+
+in any combination. (That is, 4D vectors have 2×3×2 = 12 distinct coordinate systems.)
+
+![](_images/coordinate-systems.png)
+
+Vectors may be included in any of these data types:
+
+* `vector.obj` objects (pure Python)
+* [NumPy structured arrays](https://numpy.org/doc/stable/user/basics.rec.html) of vectors
+* [Awkward Arrays](https://awkward-array.org/) of vectors (possibly within variable-length lists or nested record structures)
+* [SymPy expressions](https://www.sympy.org/en/index.html) for symbolic (non-numeric) manipulations
+
+Each of these "backends" includes the same suite of functions.
+
+## Getting help
+
+* Source code on GitHub: [scikit-hep/vector](https://github.com/scikit-hep/vector)
+* Report bugs and request features on the [GitHub Issues page](https://github.com/scikit-hep/vector/issues)
+* Ask questions on the [GitHub Discussions page](https://github.com/scikit-hep/vector/discussions)
+* Real-time chat on Gitter: [Scikit-HEP/Vector](https://gitter.im/Scikit-HEP/vector)
+
+## Contributing to Vector
+
+If you want to contribute to Vector, [pull requests](https://github.com/scikit-hep/vector/pulls) are welcome!
+
+Please install the latest version of the `main` branch from source or a fork:
+
+```bash
+git clone https://github.com/scikit-hep/vector.git
+cd vector
+pip install -e .
+```
+
+Refer to [CONTRIBUTING.md](https://github.com/scikit-hep/vector/blob/main/.github/CONTRIBUTING.md) for more.
+
+## Documentation
 
 ```{toctree}
 src/talks.md
