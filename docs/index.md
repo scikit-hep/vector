@@ -88,6 +88,13 @@ Refer to [CONTRIBUTING.md](https://github.com/scikit-hep/vector/blob/main/.githu
 ## Documentation
 
 ```{toctree}
+src/common.md
+src/vector2d.md
+src/vector3d.md
+src/vector4d.md
+src/momentum2d.md
+src/momentum3d.md
+src/momentum4d.md
 src/talks.md
 ```
 
