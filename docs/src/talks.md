@@ -1,4 +1,4 @@
-# Talks about Vector
+# Presentations about Vector
 
 - [CHEP 2024](https://indico.cern.ch/event/1338689) (2024-10-21): [A new SymPy backend for vector: uniting experimental and theoretical physicists](https://indi.to/zTs5b)
 - [PyHEP 2024](https://indico.cern.ch/event/1384010) (2024-07-03): [🎥](https://www.youtube.com/watch?v=aVPhP_APhqw) [A new SymPy backend for vector: uniting experimental and theoretical physicists](https://indi.to/pfTC6)
