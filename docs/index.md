@@ -57,8 +57,8 @@ Each of these "backends" provides the same suite of properties and methods, thro
 
 Finally, vectors come in two flavors:
 
-* geometric: only one name for each property or method
-* momentum: same property or method can be accessed with several synonyms, such as `pt` ($p_T$, transverse momentum) for the azimuthal magnitude `rho` ($\rho$) and `energy` and `mass` for the Cartesian time `t` and proper time `tau` ($\tau$).
+- geometric: only one name for each property or method
+- momentum: same property or method can be accessed with several synonyms, such as `pt` ($p_T$, transverse momentum) for the azimuthal magnitude `rho` ($\rho$) and `energy` and `mass` for the Cartesian time `t` and proper time `tau` ($\tau$).
 
 ### Familiar conventions
 
