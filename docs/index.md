@@ -24,9 +24,13 @@ You can install Vector with [pip](https://pypi.org/project/vector/) and [conda](
 pip install vector
 ```
 
-## Purpose of this library
+## Introduction
 
-Vector is a Python library for 2D and 3D spatial vectors, as well as 4D space-time vectors. It is especially intended for performing geometric calculations on _arrays of vectors_, rather than one vector at a time in a Python for loop. Vector is part of the [Scikit-HEP project](https://scikit-hep.org/), High Energy Physics (HEP) tools in Python.
+Vector is a Python library for 2D and 3D spatial vectors, as well as 4D space-time vectors. It is especially intended for performing geometric calculations on _arrays of vectors_, rather than one vector at a time in a Python for loop.
+
+Vector is part of the [Scikit-HEP project](https://scikit-hep.org/), High Energy Physics (HEP) tools in Python.
+
+### Coordinate systems
 
 Vectors may be expressed in any of these coordinate systems:
 
@@ -38,6 +42,8 @@ in any combination. (That is, 4D vectors have 2×3×2 = 12 distinct coordinate s
 
 ![](_images/coordinate-systems.png)
 
+### Backends
+
 Vectors may be included in any of these data types:
 
 * `vector.obj` objects (pure Python)
@@ -45,7 +51,18 @@ Vectors may be included in any of these data types:
 * [Awkward Arrays](https://awkward-array.org/) of vectors (possibly within variable-length lists or nested record structures)
 * [SymPy expressions](https://www.sympy.org/en/index.html) for symbolic (non-numeric) manipulations
 
-Each of these "backends" includes the same suite of functions.
+Each of these "backends" provides the same suite of properties and methods, through a common "compute" library.
+
+### Geometric versus momentum
+
+Finally, vectors come in two flavors:
+
+* geometric: only one name for each property or method
+* momentum: same property or method can be accessed with several synonyms, such as `pt` ($p_T$, transverse momentum) for the azimuthal magnitude `rho` ($\rho$) and `energy` and `mass` for the Cartesian time `t` and proper time `tau` ($\tau$).
+
+### Familiar conventions
+
+Names and coordinate conventions were chosen to align with [ROOT](https://root.cern/)'s [TLorentzVector](https://root.cern.ch/doc/master/classTLorentzVector.html) and [Math::LorentzVector](https://root.cern.ch/doc/master/classROOT_1_1Math_1_1LorentzVector.html), as well as [scikit-hep/math](https://github.com/scikit-hep/scikit-hep/tree/master/skhep/math), [uproot-methods TLorentzVector](https://github.com/scikit-hep/uproot3-methods/blob/master/uproot3_methods/classes/TLorentzVector.py), [henryiii/hepvector](https://github.com/henryiii/hepvector), and [coffea.nanoevents.methods.vector](https://coffea-hep.readthedocs.io/en/latest/modules/coffea.nanoevents.methods.vector.html).
 
 ## Getting help
 
