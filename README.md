@@ -59,7 +59,7 @@ development environment.
 
 ## Acknowledgements
 
-This library was primarily developed by Saransh Chopra, Jim Pivarski, Henry Schreiner, and Eduardo Rodrigues.
+This library was primarily developed by Saransh Chopra, Henry Schreiner, Jim Pivarski, Eduardo Rodrigues, and Jonas Eschle.
 
 Support for this work was provided by the National Science Foundation cooperative agreement [OAC-1836650](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1836650) and [PHY-2323298](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2323298) (IRIS-HEP) and [OAC-1450377](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1450377) (DIANA/HEP). Any opinions, findings, conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of the National Science Foundation.
 
