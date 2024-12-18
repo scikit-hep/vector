@@ -23,7 +23,9 @@ from datetime import datetime
 
 project = "Vector"
 copyright = f"2019\u2012{datetime.now().year}"
-author = "Saransh Chopra, Henry Schreiner, Jim Pivarski, Eduardo Rodrigues, and Jonas Eschle"
+author = (
+    "Saransh Chopra, Henry Schreiner, Jim Pivarski, Eduardo Rodrigues, and Jonas Eschle"
+)
 
 version = importlib.metadata.version("vector")
 
