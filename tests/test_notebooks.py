@@ -17,6 +17,7 @@ def common_kwargs(tmpdir):
     }
 
 
+@pytest.mark.skip(reason="notebook was removed; will likely be recreated")
 def test_intro(common_kwargs):
     execution_dir = Path.cwd() / "docs" / "usage"
     pm.execute_notebook(execution_dir / "intro.ipynb", **common_kwargs)
