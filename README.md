@@ -90,32 +90,32 @@ Refer to [CONTRIBUTING.md](https://github.com/scikit-hep/vector/blob/main/.githu
 
 ### Tutorials
 
-* [Vector objects](https://vector.readthedocs.io/en/latest/src/object.html)
-* [NumPy arrays of vectors](https://vector.readthedocs.io/en/latest/src/numpy.html)
-* [Awkward Arrays of vectors](https://vector.readthedocs.io/en/latest/src/awkward.html)
-* [Compiling functions on vectors with Numba](https://vector.readthedocs.io/en/latest/src/numba.html)
-* [Vector expressions with SymPy](https://vector.readthedocs.io/en/latest/src/sympy.html)
+- [Vector objects](https://vector.readthedocs.io/en/latest/src/object.html)
+- [NumPy arrays of vectors](https://vector.readthedocs.io/en/latest/src/numpy.html)
+- [Awkward Arrays of vectors](https://vector.readthedocs.io/en/latest/src/awkward.html)
+- [Compiling functions on vectors with Numba](https://vector.readthedocs.io/en/latest/src/numba.html)
+- [Vector expressions with SymPy](https://vector.readthedocs.io/en/latest/src/sympy.html)
 
 ### Vector constructors
 
-* [Making vector objects](https://vector.readthedocs.io/en/latest/src/make_object.html)
-* [Making NumPy arrays of vectors](https://vector.readthedocs.io/en/latest/src/make_numpy.html)
-* [Making Awkward Arrays of vectors](https://vector.readthedocs.io/en/latest/src/make_awkward.html)
-* [Making SymPy vector expressions](https://vector.readthedocs.io/en/latest/src/make_sympy.html)
+- [Making vector objects](https://vector.readthedocs.io/en/latest/src/make_object.html)
+- [Making NumPy arrays of vectors](https://vector.readthedocs.io/en/latest/src/make_numpy.html)
+- [Making Awkward Arrays of vectors](https://vector.readthedocs.io/en/latest/src/make_awkward.html)
+- [Making SymPy vector expressions](https://vector.readthedocs.io/en/latest/src/make_sympy.html)
 
 ### Vector functions
 
-* [Interface for all vectors](https://vector.readthedocs.io/en/latest/src/common.html)
-* [Interface for 2D vectors](https://vector.readthedocs.io/en/latest/src/vector2d.html)
-* [Interface for 3D vectors](https://vector.readthedocs.io/en/latest/src/vector3d.html)
-* [Interface for 4D vectors](https://vector.readthedocs.io/en/latest/src/vector4d.html)
-* [Interface for 2D momentum](https://vector.readthedocs.io/en/latest/src/momentum2d.html)
-* [Interface for 3D momentum](https://vector.readthedocs.io/en/latest/src/momentum3d.html)
-* [Interface for 4D momentum](https://vector.readthedocs.io/en/latest/src/momentum4d.html)
+- [Interface for all vectors](https://vector.readthedocs.io/en/latest/src/common.html)
+- [Interface for 2D vectors](https://vector.readthedocs.io/en/latest/src/vector2d.html)
+- [Interface for 3D vectors](https://vector.readthedocs.io/en/latest/src/vector3d.html)
+- [Interface for 4D vectors](https://vector.readthedocs.io/en/latest/src/vector4d.html)
+- [Interface for 2D momentum](https://vector.readthedocs.io/en/latest/src/momentum2d.html)
+- [Interface for 3D momentum](https://vector.readthedocs.io/en/latest/src/momentum3d.html)
+- [Interface for 4D momentum](https://vector.readthedocs.io/en/latest/src/momentum4d.html)
 
 ### More ways to learn
 
-* [Presentations about Vector](https://vector.readthedocs.io/en/latest/src/talks.html)
+- [Presentations about Vector](https://vector.readthedocs.io/en/latest/src/talks.html)
 
 ## Contributors
 
