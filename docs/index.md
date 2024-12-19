@@ -88,18 +88,28 @@ Refer to [CONTRIBUTING.md](https://github.com/scikit-hep/vector/blob/main/.githu
 
 ## Documentation
 
-<!-- src/object.ipynb -->
-<!-- src/numpy.ipynb -->
-<!-- src/awkward.ipynb -->
-<!-- src/numba.ipynb -->
-<!-- src/sympy.ipynb -->
+```{toctree}
+:maxdepth: 1
+:caption: Tutorials
+src/object.ipynb
+src/numpy.ipynb
+src/awkward.ipynb
+src/numba.ipynb
+src/sympy.ipynb
+```
 
 ```{toctree}
 :maxdepth: 1
+:caption: Vector constructors
 src/make_object.md
 src/make_numpy.md
 src/make_awkward.md
 src/make_sympy.md
+```
+
+```{toctree}
+:maxdepth: 1
+:caption: Vector functions
 src/common.md
 src/vector2d.md
 src/vector3d.md
@@ -107,6 +117,11 @@ src/vector4d.md
 src/momentum2d.md
 src/momentum3d.md
 src/momentum4d.md
+```
+
+```{toctree}
+:maxdepth: 1
+:caption: More ways to learn
 src/talks.md
 ```
 
