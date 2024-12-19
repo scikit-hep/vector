@@ -135,8 +135,8 @@ isort.required-imports = [
 "tests/*" = [
   "T20",
 ]
-"docs/usage/intro.ipynb" = [
-  "T20",
+"docs/src/*.ipynb" = [
+  "T20", "I001", "I002"
 ]
 "src/vector/backends/_numba_object.py" = [
   "PGH003",
