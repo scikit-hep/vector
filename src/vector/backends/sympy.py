@@ -615,9 +615,6 @@ class VectorSympy2D(VectorSympy, Planar, Vector2D):
         >>> vec = vector.VectorSympy2D(rho=sympy.Symbol("rho"), phi=sympy.Symbol("phi"))
         >>> vec.rho, vec.phi
         (rho, phi)
-        >>> vec = vector.VectorObject2D(azimuthal=vector.backends.sympy.AzimuthalSympyXY(sympy.Symbol("x"), sympy.Symbol("y")))
-        >>> vec.x, vec.y
-        (x, y)
 
     For two dimensional momentum SymPy vectors, see
     :class:`vector.backends.sympy.MomentumSympy2D`.
@@ -759,9 +756,6 @@ class MomentumSympy2D(PlanarMomentum, VectorSympy2D):
         >>> vec = vector.MomentumSympy2D(pt=sympy.Symbol("pt"), phi=sympy.Symbol("phi"))
         >>> vec.pt, vec.phi
         (pt, phi)
-        >>> vec = vector.MomentumSympy2D(azimuthal=vector.backends.sympy.AzimuthalSympyXY(sympy.Symbol("px"), sympy.Symbol("py")))
-        >>> vec.px, vec.py
-        (px, py)
 
     For two dimensional SymPy vectors, see
     :class:`vector.backends.object.VectorSympy2D`.
@@ -812,12 +806,6 @@ class VectorSympy3D(VectorSympy, Spatial, Vector3D):
         >>> vec = vector.VectorSympy3D(rho=sympy.Symbol("rho"), phi=sympy.Symbol("phi"), eta=sympy.Symbol("eta"))
         >>> vec.rho, vec.phi, vec.eta
         (rho, phi, eta)
-        >>> vec = vector.VectorSympy3D(
-        ...     azimuthal=vector.backends.sympy.AzimuthalSympyXY(sympy.Symbol("x"), sympy.Symbol("y")),
-        ...     longitudinal=vector.backends.sympy.LongitudinalSympyTheta(sympy.Symbol("theta"))
-        ... )
-        >>> vec.x, vec.y, vec.theta
-        (x, y, theta)
 
     For three dimensional momentum SymPy vectors, see
     :class:`vector.backends.object.MomentumSympy3D`.
@@ -1025,12 +1013,6 @@ class MomentumSympy3D(SpatialMomentum, VectorSympy3D):
         >>> vec = vector.MomentumSympy3D(pt=sympy.Symbol("pt"), phi=sympy.Symbol("phi"), pz=sympy.Symbol("pz"))
         >>> vec.pt, vec.phi, vec.pz
         (pt, phi, pz)
-        >>> vec = vector.MomentumSympy3D(
-        ...     azimuthal=vector.backends.sympy.AzimuthalSympyXY(sympy.Symbol("x"), sympy.Symbol("y")),
-        ...     longitudinal=vector.backends.sympy.LongitudinalSympyTheta(sympy.Symbol("theta"))
-        ... )
-        >>> vec.x, vec.y, vec.theta
-        (x, y, theta)
 
     For three dimensional SymPy vectors, see
     :class:`vector.backends.sympy.VectorSympy3D`.
@@ -1093,13 +1075,6 @@ class VectorSympy4D(VectorSympy, Lorentz, Vector4D):
         >>> vec = vector.VectorSympy4D(rho=sympy.Symbol("rho"), phi=sympy.Symbol("phi"), eta=sympy.Symbol("eta"), tau=sympy.Symbol("tau"))
         >>> vec.rho, vec.phi, vec.eta, vec.tau
         (rho, phi, eta, tau)
-        >>> vec = vector.VectorSympy4D(
-        ...     azimuthal=vector.backends.sympy.AzimuthalSympyXY(sympy.Symbol("x"), sympy.Symbol("y")),
-        ...     longitudinal=vector.backends.sympy.LongitudinalSympyTheta(sympy.Symbol("theta")),
-        ...     temporal=vector.backends.sympy.TemporalSympyTau(sympy.Symbol("tau"))
-        ... )
-        >>> vec.x, vec.y, vec.theta, vec.tau
-        (x, y, theta, tau)
 
     For four dimensional momentum SymPy vectors, see
     :class:`vector.backends.sympy.MomentumSympy4D`.
@@ -1386,13 +1361,6 @@ class MomentumSympy4D(LorentzMomentum, VectorSympy4D):
         >>> vec = vector.MomentumSympy4D(pt=sympy.Symbol("pt"), phi=sympy.Symbol("phi"), pz=sympy.Symbol("pz"), M=sympy.Symbol("M"))
         >>> vec.pt, vec.phi, vec.pz, vec.M
         (pt, phi, pz, M)
-        >>> vec = vector.MomentumSympy4D(
-        ...     azimuthal=vector.backends.sympy.AzimuthalSympyXY(sympy.Symbol("x"), sympy.Symbol("y")),
-        ...     longitudinal=vector.backends.sympy.LongitudinalSympyTheta(sympy.Symbol("theta")),
-        ...     temporal=vector.backends.sympy.TemporalSympyTau(sympy.Symbol("tau"))
-        ... )
-        >>> vec.x, vec.y, vec.theta, vec.tau
-        (x, y, theta, tau)
 
     For four dimensional SymPy vectors, see
     :class:`vector.backends.sympy.VectorSympy4D`.

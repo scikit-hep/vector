@@ -3112,33 +3112,33 @@ def obj(**coordinates: float) -> VectorObject:
 
     to make the vector a momentum vector.
 
-    Alternatively, the :class:`vector.backends.object.VectorObject2D`,
-    :class:`vector.backends.object.VectorObject3D`, and
-    :class:`vector.backends.object.VectorObject4D` classes (with momentum
+    Alternatively, the :class:`vector.VectorObject2D`,
+    :class:`vector.VectorObject3D`, and
+    :class:`vector.VectorObject4D` classes (with momentum
     subclasses) have explicit constructors:
 
-    - :meth:`vector.backends.object.VectorObject2D.from_xy`
-    - :meth:`vector.backends.object.VectorObject2D.from_rhophi`
+    - :meth:`vector.VectorObject2D.from_xy`
+    - :meth:`vector.VectorObject2D.from_rhophi`
 
-    - :meth:`vector.backends.object.VectorObject3D.from_xyz`
-    - :meth:`vector.backends.object.VectorObject3D.from_xytheta`
-    - :meth:`vector.backends.object.VectorObject3D.from_xyeta`
-    - :meth:`vector.backends.object.VectorObject3D.from_rhophiz`
-    - :meth:`vector.backends.object.VectorObject3D.from_rhophitheta`
-    - :meth:`vector.backends.object.VectorObject3D.from_rhophieta`
+    - :meth:`vector.VectorObject3D.from_xyz`
+    - :meth:`vector.VectorObject3D.from_xytheta`
+    - :meth:`vector.VectorObject3D.from_xyeta`
+    - :meth:`vector.VectorObject3D.from_rhophiz`
+    - :meth:`vector.VectorObject3D.from_rhophitheta`
+    - :meth:`vector.VectorObject3D.from_rhophieta`
 
-    - :meth:`vector.backends.object.VectorObject4D.from_xyzt`
-    - :meth:`vector.backends.object.VectorObject4D.from_xyztau`
-    - :meth:`vector.backends.object.VectorObject4D.from_xythetat`
-    - :meth:`vector.backends.object.VectorObject4D.from_xythetatau`
-    - :meth:`vector.backends.object.VectorObject4D.from_xyetat`
-    - :meth:`vector.backends.object.VectorObject4D.from_xyetatau`
-    - :meth:`vector.backends.object.VectorObject4D.from_rhophizt`
-    - :meth:`vector.backends.object.VectorObject4D.from_rhophiztau`
-    - :meth:`vector.backends.object.VectorObject4D.from_rhophithetat`
-    - :meth:`vector.backends.object.VectorObject4D.from_rhophithetatau`
-    - :meth:`vector.backends.object.VectorObject4D.from_rhophietat`
-    - :meth:`vector.backends.object.VectorObject4D.from_rhophietatau`
+    - :meth:`vector.VectorObject4D.from_xyzt`
+    - :meth:`vector.VectorObject4D.from_xyztau`
+    - :meth:`vector.VectorObject4D.from_xythetat`
+    - :meth:`vector.VectorObject4D.from_xythetatau`
+    - :meth:`vector.VectorObject4D.from_xyetat`
+    - :meth:`vector.VectorObject4D.from_xyetatau`
+    - :meth:`vector.VectorObject4D.from_rhophizt`
+    - :meth:`vector.VectorObject4D.from_rhophiztau`
+    - :meth:`vector.VectorObject4D.from_rhophithetat`
+    - :meth:`vector.VectorObject4D.from_rhophithetatau`
+    - :meth:`vector.VectorObject4D.from_rhophietat`
+    - :meth:`vector.VectorObject4D.from_rhophietatau`
     """
     is_momentum = False
     generic_coordinates = {}

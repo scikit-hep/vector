@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import importlib.metadata
+from datetime import datetime
 
 # -- Path setup --------------------------------------------------------------
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -21,10 +22,10 @@ import importlib.metadata
 # -- Project information -----------------------------------------------------
 
 project = "Vector"
-copyright = (
-    "2019-2024, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner"
+copyright = f"2019\u2012{datetime.now().year}"
+author = (
+    "Saransh Chopra, Henry Schreiner, Jim Pivarski, Eduardo Rodrigues, and Jonas Eschle"
 )
-author = "Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner"
 
 version = importlib.metadata.version("vector")
 
@@ -42,6 +43,8 @@ extensions = [
     "sphinx_copybutton",
     "sphinx_math_dollar",
 ]
+
+source_suffix = [".rst", ".md"]
 
 mathjax3_config = {
     "tex2jax": {

@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="197.67166mm"
-   height="34.224781mm"
-   viewBox="0 0 197.67166 34.224781"
+   width="207.67166mm"
+   height="44.224781mm"
+   viewBox="0 0 207.67166 44.224781"
    version="1.1"
    id="svg8"
-   inkscape:version="1.0.2 (e86c8708, 2021-01-15)"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
    sodipodi:docname="LogoSrc.svg"
-   inkscape:export-filename="/Users/henryschreiner/git/scikit-hep/vector/docs/images/LogoSrc.png"
-   inkscape:export-xdpi="111.27746"
-   inkscape:export-ydpi="111.27746">
+   inkscape:export-filename="/home/jpivarski/irishep/vector/docs/_images/vector-logo.png"
+   inkscape:export-xdpi="86.150795"
+   inkscape:export-ydpi="86.150795"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
   <defs
      id="defs2" />
   <sodipodi:namedview
@@ -27,8 +27,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.2814864"
-     inkscape:cx="447.09439"
-     inkscape:cy="149.14009"
+     inkscape:cx="465.86526"
+     inkscape:cy="167.77392"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -36,25 +36,26 @@
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:snap-global="true"
-     inkscape:window-width="2035"
-     inkscape:window-height="1174"
-     inkscape:window-x="83"
-     inkscape:window-y="65"
-     inkscape:window-maximized="0"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0">
+     inkscape:window-width="2554"
+     inkscape:window-height="1365"
+     inkscape:window-x="1920"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     fit-margin-top="5"
+     fit-margin-left="5"
+     fit-margin-right="5"
+     fit-margin-bottom="5"
+     inkscape:pagecheckerboard="0">
     <sodipodi:guide
-       position="172.16319,0.79892708"
+       position="177.16319,5.7989236"
        orientation="-0.9842554,0.17675209"
        id="guide878" />
     <sodipodi:guide
-       position="185.96281,19.588987"
+       position="190.96281,24.588983"
        orientation="0,-1"
        id="guide883" />
     <sodipodi:guide
-       position="39.907641,10.235547"
+       position="44.907641,15.235544"
        orientation="-0.98489931,0.17312814"
        id="guide885" />
   </sodipodi:namedview>
@@ -66,7 +67,6 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -74,7 +74,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-7.011975,-108.12622)">
+     transform="translate(-2.011975,-103.12622)">
     <path
        id="path876"
        style="fill:#808080;fill-opacity:1;stroke-width:3.77953"
