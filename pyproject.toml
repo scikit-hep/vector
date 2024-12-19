@@ -52,6 +52,7 @@ optional-dependencies.awkward = [
 optional-dependencies.dev = [
   "awkward>=2",
   "dask-awkward",
+  "sympy",
   "nox",
   "numba>=0.57; python_version<'3.13'",
   "papermill>=2.4",
