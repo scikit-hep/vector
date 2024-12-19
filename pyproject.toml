@@ -62,6 +62,7 @@ optional-dependencies.dev = [
 ]
 optional-dependencies.docs = [
   "awkward>=2",
+  "sympy",
   "ipykernel",
   "myst-parser>0.13",
   "nbsphinx",

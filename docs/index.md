@@ -46,10 +46,11 @@ in any combination. (That is, 4D vectors have 2×3×2 = 12 distinct coordinate s
 
 Vectors may be included in any of these data types:
 
-- `vector.obj` objects (pure Python)
+- [vector.obj](src/make_object.md) objects (pure Python)
 - [NumPy structured arrays](https://numpy.org/doc/stable/user/basics.rec.html) of vectors
 - [Awkward Arrays](https://awkward-array.org/) of vectors (possibly within variable-length lists or nested record structures)
 - [SymPy expressions](https://www.sympy.org/en/index.html) for symbolic (non-numeric) manipulations
+- In [Numba-compiled functions](https://numba.pydata.org/), with [vector.obj](src/make_object.md) objects or Awkward Arrays
 
 Each of these "backends" provides the same suite of properties and methods, through a common "compute" library.
 
@@ -87,7 +88,18 @@ Refer to [CONTRIBUTING.md](https://github.com/scikit-hep/vector/blob/main/.githu
 
 ## Documentation
 
+<!-- src/object.ipynb -->
+<!-- src/numpy.ipynb -->
+<!-- src/awkward.ipynb -->
+<!-- src/numba.ipynb -->
+<!-- src/sympy.ipynb -->
+
 ```{toctree}
+:maxdepth: 1
+src/make_object.md
+src/make_numpy.md
+src/make_awkward.md
+src/make_sympy.md
 src/common.md
 src/vector2d.md
 src/vector3d.md
