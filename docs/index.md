@@ -1,4 +1,4 @@
-![](_images/vector-logo.png)
+![](_images/LogoSrc.svg)
 
 # Overview
 
@@ -40,7 +40,7 @@ Vectors may be expressed in any of these coordinate systems:
 
 in any combination. (That is, 4D vectors have 2×3×2 = 12 distinct coordinate systems.)
 
-![](_images/coordinate-systems.png)
+![](_images/coordinate-systems.svg)
 
 ### Backends
 
