@@ -6,7 +6,7 @@ To create a NumPy array of vectors,
 
 1. use the `vector.array` function (`vector.arr` is a synonym)
 2. use the `vector.VectorNumpy` class constructor
-3. or cast a structured NumPy array as the appropriate class.
+3. or cast a structured NumPy array as the appropriate class, which can avoid copying data.
 
 ## General constructor
 
