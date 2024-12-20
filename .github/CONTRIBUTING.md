@@ -51,13 +51,13 @@ The developer installation of `vector` comes with several options -
 These options can be used with `pip` with the editable (`-e`) mode of installation in the following way -
 
 ```bash
-pip install -e .[dev,test]
+pip install -e ".[dev, test]"
 ```
 
 For example, if you want to install the `docs` dependencies along with the dependencies included above, use -
 
 ```bash
-pip install -e .[dev,test,docs]
+pip install -e ".[dev, test, docs]"
 ```
 
 Furthermore, `vector` can also be installed using `conda`. This installation also requires using a virtual environment -
