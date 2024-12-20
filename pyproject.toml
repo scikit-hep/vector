@@ -52,6 +52,7 @@ optional-dependencies.awkward = [
 optional-dependencies.dev = [
   "awkward>=2",
   "dask-awkward",
+  "sympy",
   "nox",
   "numba>=0.57; python_version<'3.13'",
   "papermill>=2.4",
@@ -62,6 +63,7 @@ optional-dependencies.dev = [
 ]
 optional-dependencies.docs = [
   "awkward>=2",
+  "sympy",
   "ipykernel",
   "myst-parser>0.13",
   "nbsphinx",
@@ -134,8 +136,8 @@ isort.required-imports = [
 "tests/*" = [
   "T20",
 ]
-"docs/usage/intro.ipynb" = [
-  "T20",
+"docs/src/*.ipynb" = [
+  "T20", "I001", "I002"
 ]
 "src/vector/backends/_numba_object.py" = [
   "PGH003",

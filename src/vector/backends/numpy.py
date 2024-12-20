@@ -1143,6 +1143,14 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
         >>> vec
         VectorNumpy2D([(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)],
                       dtype=[('x', '<f8'), ('y', '<f8')])
+
+        >>> import numpy as np
+        >>> import vector
+        >>> arr = np.array([(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)],
+        ...               dtype=[('x', float), ('y', float)])
+        >>> arr.view(vector.VectorNumpy2D)
+        VectorNumpy2D([(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)],
+                      dtype=[('x', '<f8'), ('y', '<f8')])
     """
 
     ObjectClass = vector.backends.object.VectorObject2D
@@ -1316,6 +1324,14 @@ class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):
         >>> vec
         MomentumNumpy2D([(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)],
                         dtype=[('x', '<f8'), ('y', '<f8')])
+
+        >>> import numpy as np
+        >>> import vector
+        >>> arr = np.array([(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)],
+        ...               dtype=[('px', float), ('py', float)])
+        >>> arr.view(vector.MomentumNumpy2D)
+        MomentumNumpy2D([(1.1, 2.1), (1.2, 2.2), (1.3, 2.3), (1.4, 2.4), (1.5, 2.5)],
+                        dtype=[('x', '<f8'), ('y', '<f8')])
     """
 
     ObjectClass = vector.backends.object.MomentumObject2D
@@ -1363,6 +1379,14 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
         >>> vec = vector.VectorNumpy3D([(1.1, 2.1, 3.1), (1.2, 2.2, 3.2), (1.3, 2.3, 3.3), (1.4, 2.4, 3.4), (1.5, 2.5, 3.5)],
         ...               dtype=[('x', float), ('y', float), ('z', float)])
         >>> vec
+        VectorNumpy3D([(1.1, 2.1, 3.1), (1.2, 2.2, 3.2), (1.3, 2.3, 3.3), (1.4, 2.4, 3.4),
+                       (1.5, 2.5, 3.5)], dtype=[('x', '<f8'), ('y', '<f8'), ('z', '<f8')])
+
+        >>> import numpy as np
+        >>> import vector
+        >>> arr = np.array([(1.1, 2.1, 3.1), (1.2, 2.2, 3.2), (1.3, 2.3, 3.3), (1.4, 2.4, 3.4), (1.5, 2.5, 3.5)],
+        ...               dtype=[('x', float), ('y', float), ('z', float)])
+        >>> arr.view(vector.VectorNumpy3D)
         VectorNumpy3D([(1.1, 2.1, 3.1), (1.2, 2.2, 3.2), (1.3, 2.3, 3.3), (1.4, 2.4, 3.4),
                        (1.5, 2.5, 3.5)], dtype=[('x', '<f8'), ('y', '<f8'), ('z', '<f8')])
     """
@@ -1604,6 +1628,14 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):
         >>> vec
         MomentumNumpy3D([(1.1, 2.1, 3.1), (1.2, 2.2, 3.2), (1.3, 2.3, 3.3), (1.4, 2.4, 3.4),
                          (1.5, 2.5, 3.5)], dtype=[('x', '<f8'), ('y', '<f8'), ('z', '<f8')])
+
+        >>> import numpy as np
+        >>> import vector
+        >>> arr = np.array([(1.1, 2.1, 3.1), (1.2, 2.2, 3.2), (1.3, 2.3, 3.3), (1.4, 2.4, 3.4), (1.5, 2.5, 3.5)],
+        ...               dtype=[('px', float), ('py', float), ('pz', float)])
+        >>> arr.view(vector.MomentumNumpy3D)
+        MomentumNumpy3D([(1.1, 2.1, 3.1), (1.2, 2.2, 3.2), (1.3, 2.3, 3.3), (1.4, 2.4, 3.4),
+                         (1.5, 2.5, 3.5)], dtype=[('x', '<f8'), ('y', '<f8'), ('z', '<f8')])
     """
 
     ObjectClass = vector.backends.object.MomentumObject3D
@@ -1661,6 +1693,15 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
         >>> vec = vector.VectorNumpy4D([(1.1, 2.1, 3.1, 4.1), (1.2, 2.2, 3.2, 4.2), (1.3, 2.3, 3.3, 4.3), (1.4, 2.4, 3.4, 4.4), (1.5, 2.5, 3.5, 4.5)],
         ...               dtype=[('x', float), ('y', float), ('z', float), ('t', float)])
         >>> vec
+        VectorNumpy4D([(1.1, 2.1, 3.1, 4.1), (1.2, 2.2, 3.2, 4.2), (1.3, 2.3, 3.3, 4.3),
+                       (1.4, 2.4, 3.4, 4.4), (1.5, 2.5, 3.5, 4.5)],
+                      dtype=[('x', '<f8'), ('y', '<f8'), ('z', '<f8'), ('t', '<f8')])
+
+        >>> import numpy as np
+        >>> import vector
+        >>> arr = np.array([(1.1, 2.1, 3.1, 4.1), (1.2, 2.2, 3.2, 4.2), (1.3, 2.3, 3.3, 4.3), (1.4, 2.4, 3.4, 4.4), (1.5, 2.5, 3.5, 4.5)],
+        ...               dtype=[('x', float), ('y', float), ('z', float), ('t', float)])
+        >>> arr.view(vector.VectorNumpy4D)
         VectorNumpy4D([(1.1, 2.1, 3.1, 4.1), (1.2, 2.2, 3.2, 4.2), (1.3, 2.3, 3.3, 4.3),
                        (1.4, 2.4, 3.4, 4.4), (1.5, 2.5, 3.5, 4.5)],
                       dtype=[('x', '<f8'), ('y', '<f8'), ('z', '<f8'), ('t', '<f8')])
@@ -1969,6 +2010,15 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):
         >>> vec = vector.MomentumNumpy4D([(1.1, 2.1, 3.1, 4.1), (1.2, 2.2, 3.2, 4.2), (1.3, 2.3, 3.3, 4.3), (1.4, 2.4, 3.4, 4.4), (1.5, 2.5, 3.5, 4.5)],
         ...               dtype=[('px', float), ('py', float), ('pz', float), ('t', float)])
         >>> vec
+        MomentumNumpy4D([(1.1, 2.1, 3.1, 4.1), (1.2, 2.2, 3.2, 4.2), (1.3, 2.3, 3.3, 4.3),
+                         (1.4, 2.4, 3.4, 4.4), (1.5, 2.5, 3.5, 4.5)],
+                        dtype=[('x', '<f8'), ('y', '<f8'), ('z', '<f8'), ('t', '<f8')])
+
+        >>> import numpy as np
+        >>> import vector
+        >>> arr = np.array([(1.1, 2.1, 3.1, 4.1), (1.2, 2.2, 3.2, 4.2), (1.3, 2.3, 3.3, 4.3), (1.4, 2.4, 3.4, 4.4), (1.5, 2.5, 3.5, 4.5)],
+        ...               dtype=[('px', float), ('py', float), ('pz', float), ('t', float)])
+        >>> arr.view(vector.MomentumNumpy4D)
         MomentumNumpy4D([(1.1, 2.1, 3.1, 4.1), (1.2, 2.2, 3.2, 4.2), (1.3, 2.3, 3.3, 4.3),
                          (1.4, 2.4, 3.4, 4.4), (1.5, 2.5, 3.5, 4.5)],
                         dtype=[('x', '<f8'), ('y', '<f8'), ('z', '<f8'), ('t', '<f8')])
