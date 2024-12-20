@@ -1,6 +1,6 @@
 # Making Awkward Arrays of vectors
 
-An Awkward Array of vectors is an Awkward Array containing appropriately named records, appropriately named fields, and the Vector behaviors registered in the array. Here's a complete example for illustration:
+An Awkward Array of vectors is an Awkward Array containing appropriately named records, appropriately named fields, and the Vector [behaviors](https://awkward-array.org/doc/main/reference/ak.behavior.html) registered in the array. Here's a complete example for illustration:
 
 ```python
 >>> import awkward as ak
