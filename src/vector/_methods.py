@@ -2719,7 +2719,9 @@ class Vector(VectorProtocol):
     def __new__(cls, __azimuthal: Azimuthal) -> Vector: ...
 
     @typing.overload
-    def __new__(cls, __azimuthal: Azimuthal, __longitudinal: Longitudinal) -> Vector: ...
+    def __new__(
+        cls, __azimuthal: Azimuthal, __longitudinal: Longitudinal
+    ) -> Vector: ...
 
     @typing.overload
     def __new__(
