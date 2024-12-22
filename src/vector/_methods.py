@@ -2716,15 +2716,17 @@ class Vector(VectorProtocol):
     ) -> vector.MomentumObject4D: ...
 
     @typing.overload
-    def __new__(cls, __azumthal: Azimuthal) -> Vector: ...
+    def __new__(cls, __azimuthal: Azimuthal) -> Vector: ...
 
     @typing.overload
-    def __new__(cls, __azumthal: Azimuthal, __longitudinal: Longitudinal) -> Vector: ...
+    def __new__(
+        cls, __azimuthal: Azimuthal, __longitudinal: Longitudinal
+    ) -> Vector: ...
 
     @typing.overload
     def __new__(
         cls,
-        __azumthal: Azimuthal,
+        __azimuthal: Azimuthal,
         __longitudinal: Longitudinal,
         __temporal: Temporal,
     ) -> Vector: ...
