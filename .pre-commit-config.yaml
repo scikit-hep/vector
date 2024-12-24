@@ -53,7 +53,6 @@ repos:
     rev: 1.19.1
     hooks:
       - id: blacken-docs
-        args: ["-E"]
         additional_dependencies: [black~=24.0]
 
   - repo: https://github.com/pre-commit/pygrep-hooks

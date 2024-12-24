@@ -4,16 +4,14 @@ SymPy expressions are not numerical, they're purely algebraic. However, the same
 
 To construct a symbolic vector, first create symbols for its components and ensure that they are real-valued (not complex),
 
-```python
+```pycon
 >>> import sympy
->>> x, y, z, t, px, py, pz, eta, tau = sympy.symbols(
-...     "x y z t px py pz eta tau", real=True
-... )
+>>> x, y, z, t, px, py, pz, eta, tau = sympy.symbols("x y z t px py pz eta tau", real=True)
 ```
 
 then use one of Vector's SymPy constructors (geometric or momentum),
 
-```python
+```pycon
 >>> vector.VectorSympy2D(x=x, y=y)
 VectorSympy2D(x=x, y=y)
 >>>
