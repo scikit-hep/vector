@@ -4,9 +4,10 @@
 # or https://github.com/scikit-hep/vector for details.
 
 """
+Property method `mag2` for the squared magnitude of a spatial vector.
+
 .. code-block:: python
 
-    @property
     Spatial.mag2(self)
 """
 

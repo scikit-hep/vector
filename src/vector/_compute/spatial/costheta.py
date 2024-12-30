@@ -4,9 +4,10 @@
 # or https://github.com/scikit-hep/vector for details.
 
 """
+Property method `costheta` for the cosine theta coordinate of a spatial vector.
+
 .. code-block:: python
 
-    @property
     Spatial.costheta(self)
 """
 
