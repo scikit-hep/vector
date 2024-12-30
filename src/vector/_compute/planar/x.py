@@ -4,9 +4,10 @@
 # or https://github.com/scikit-hep/vector for details.
 
 """
+Property method `x` for the x coordinate of a planar vector or every vector in an array.
+
 .. code-block:: python
 
-    @property
     Planar.x(self)
 """
 

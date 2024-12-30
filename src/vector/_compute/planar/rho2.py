@@ -4,9 +4,10 @@
 # or https://github.com/scikit-hep/vector for details.
 
 """
+Property method `rho2` for the squared polar coordinate rho of a planar vector or every vector in an array.
+
 .. code-block:: python
 
-    @property
     Planar.rho2(self)
 """
 
