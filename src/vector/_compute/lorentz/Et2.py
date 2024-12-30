@@ -4,9 +4,10 @@
 # or https://github.com/scikit-hep/vector for details.
 
 """
+Property method `Et2` for the squared energy of a four-momentum vector or an array of vectors.
+
 .. code-block:: python
 
-    @property
     Lorentz.Et2(self)
 """
 

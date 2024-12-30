@@ -4,9 +4,10 @@
 # or https://github.com/scikit-hep/vector for details.
 
 """
+Property method `beta` for the speeds of a Lorentz vector or an array of vectors.
+
 .. code-block:: python
 
-    @property
     Lorentz.beta(self)
 """
 

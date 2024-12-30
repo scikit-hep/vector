@@ -4,9 +4,10 @@
 # or https://github.com/scikit-hep/vector for details.
 
 """
+Property method `Mt` for the transverse mass of a four-momentum vector or an array of vectors.
+
 .. code-block:: python
 
-    @property
     Lorentz.Mt(self)
 """
 

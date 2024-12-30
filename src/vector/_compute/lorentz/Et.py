@@ -4,9 +4,10 @@
 # or https://github.com/scikit-hep/vector for details.
 
 """
+Property method `Et` for the transverse energy of a four-momentum vector or an array of vectors.
+
 .. code-block:: python
 
-    @property
     Lorentz.Et(self)
 """
 

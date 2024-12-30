@@ -4,9 +4,11 @@
 # or https://github.com/scikit-hep/vector for details.
 
 """
+Property method `rapidity` for the rapidity relative to the longitudinal axis of a
+Lorentz vector or an array of vectors.
+
 .. code-block:: python
 
-    @property
     Lorentz.rapidity(self)
 """
 

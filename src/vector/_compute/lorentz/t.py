@@ -4,9 +4,10 @@
 # or https://github.com/scikit-hep/vector for details.
 
 """
+Property method `t` for the temporal component of a Lorentz vector.
+
 .. code-block:: python
 
-    @property
     Lorentz.t(self)
 """
 
