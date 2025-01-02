@@ -4,9 +4,10 @@
 # or https://github.com/scikit-hep/vector for details.
 
 """
+Property method `theta` for the polar angle of a spatial vector.
+
 .. code-block:: python
 
-    @property
     Spatial.theta(self)
 """
 

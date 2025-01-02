@@ -4,9 +4,10 @@
 # or https://github.com/scikit-hep/vector for details.
 
 """
+Property method `phi` for the polar coordinate phi of a planar vector or every vector in an array.
+
 .. code-block:: python
 
-    @property
     Planar.phi(self)
 """
 

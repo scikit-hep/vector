@@ -6,7 +6,7 @@
 """
 .. code-block:: python
 
-    Lorentz.boostX(self, gamma=)
+    Lorentz.boostX(self, gamma=...)
 """
 
 from __future__ import annotations

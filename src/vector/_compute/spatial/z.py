@@ -4,9 +4,10 @@
 # or https://github.com/scikit-hep/vector for details.
 
 """
+Property method `z` for the z component of a spatial vector.
+
 .. code-block:: python
 
-    @property
     Spatial.z(self)
 """
 
