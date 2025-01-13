@@ -43,5 +43,8 @@ def dispatch(v: typing.Any) -> typing.Any:
     function, *returns = _from_signature(__name__, dispatch_map, (_aztype(v),))
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
-            _flavor_of(v), function(v.lib, *v.azimuthal.elements), returns, 1
+            _flavor_of(v),
+            v._wrap_dispatched_function(function)(v.lib, *v.azimuthal.elements),
+            returns,
+            1,
         )
