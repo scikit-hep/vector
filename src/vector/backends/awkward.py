@@ -994,10 +994,14 @@ class awkward_transform:
         self.func = func
 
     def __call__(self, *args: typing.Any, **kwargs: typing.Any) -> typing.Callable:  # type: ignore[type-arg]
+        # '__awkward_transform_allowed__' is a flag that can be set to False to disable this wrapping, e.g. for no-ops
+        if not getattr(self.func, "__awkward_transform_allowed__", True):
+            return self.func(*args, **kwargs)
+
         # only pos args
         assert not kwargs
 
-        # prepare the function and its args; we;re currently assuming non-nested input args
+        # prepare the function and its args; we're currently assuming non-nested input args
         args2bind, awkward_arrays = [], []
         n_orig_akarrays = 0
         for arg in args:
@@ -1011,7 +1015,7 @@ class awkward_transform:
             else:
                 args2bind.append(arg)
 
-        # this means we're working with awkward-arrays
+        # this means we're working with awkward-arrays and we should group operations with ak.transform
         if n_orig_akarrays > 0:
 
             def transformer(
@@ -1034,7 +1038,7 @@ class awkward_transform:
                             f"but this routine received `{rule}`"
                         ) from None
 
-                    # apply the function to the numpy arrays, first we need to 'partial it out' all non-awkward array arguments
+                    # apply the function to the numpy arrays, first we need to 'partial out' all non-awkward array arguments
                     out_numpys = bind(self.func, *args2bind)(
                         *(map(operator.attrgetter("data"), layouts))
                     )
@@ -1043,7 +1047,8 @@ class awkward_transform:
                         out_numpys = (out_numpys,)
                     # propagate parameters
                     out_params = parameters_factory(
-                        (layout.parameters for layout in layouts), len(out_numpys)
+                        tuple(map(operator.attrgetter("parameters"), layouts)),
+                        len(out_numpys),
                     )
                     # wrap the numpy arrays in awkward arrays
                     out_arrays = tuple(

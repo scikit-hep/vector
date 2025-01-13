@@ -35,6 +35,9 @@ def xy_z(lib, x, y, z):
     return z
 
 
+xy_z.__awkward_transform_allowed__ = False  # type:ignore[attr-defined]
+
+
 def xy_theta(lib, x, y, theta):
     return lib.nan_to_num(
         rho.xy(lib, x, y) / lib.tan(theta), nan=0.0, posinf=inf, neginf=-inf
@@ -47,6 +50,9 @@ def xy_eta(lib, x, y, eta):
 
 def rhophi_z(lib, rho, phi, z):
     return z
+
+
+rhophi_z.__awkward_transform_allowed__ = False  # type:ignore[attr-defined]
 
 
 def rhophi_theta(lib, rho, phi, theta):

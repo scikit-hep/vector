@@ -34,6 +34,9 @@ def rhophi(lib, rho, phi):
     return rho
 
 
+rhophi.__awkward_transform_allowed__ = False  # type:ignore[attr-defined]
+
+
 dispatch_map = {
     (AzimuthalXY,): (xy, float),
     (AzimuthalRhoPhi,): (rhophi, float),

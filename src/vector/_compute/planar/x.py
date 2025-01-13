@@ -29,6 +29,9 @@ def xy(lib, x, y):
     return x
 
 
+xy.__awkward_transform_allowed__ = False  # type:ignore[attr-defined]
+
+
 def rhophi(lib, rho, phi):
     return rho * lib.cos(phi)
 

@@ -38,6 +38,9 @@ def xy_theta(lib, x, y, theta):
     return theta
 
 
+xy_theta.__awkward_transform_allowed__ = False  # type:ignore[attr-defined]
+
+
 def xy_eta(lib, x, y, eta):
     return 2.0 * lib.arctan(lib.exp(-eta))
 
@@ -48,6 +51,9 @@ def rhophi_z(lib, rho, phi, z):
 
 def rhophi_theta(lib, rho, phi, theta):
     return theta
+
+
+rhophi_theta.__awkward_transform_allowed__ = False  # type:ignore[attr-defined]
 
 
 def rhophi_eta(lib, rho, phi, eta):
