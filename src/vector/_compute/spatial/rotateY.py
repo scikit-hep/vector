@@ -92,7 +92,9 @@ def dispatch(angle: typing.Any, v: typing.Any) -> typing.Any:
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
             _flavor_of(v),
-            function(v.lib, angle, *v.azimuthal.elements, *v.longitudinal.elements),
+            v._wrap_dispatched_function(function)(
+                v.lib, angle, *v.azimuthal.elements, *v.longitudinal.elements
+            ),
             returns,
             1,
         )

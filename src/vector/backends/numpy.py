@@ -1307,6 +1307,9 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
         else:
             raise AssertionError(repr(returns))
 
+    def _wrap_dispatched_function(self, func: typing.Callable) -> typing.Callable:  # type: ignore[type-arg]
+        return func
+
     def __setitem__(self, where: typing.Any, what: typing.Any) -> None:
         return _setitem(self, where, what, False)
 
@@ -1610,6 +1613,9 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
 
         else:
             raise AssertionError(repr(returns))
+
+    def _wrap_dispatched_function(self, func: typing.Callable) -> typing.Callable:  # type: ignore[type-arg]
+        return func
 
     def __setitem__(self, where: typing.Any, what: typing.Any) -> None:
         return _setitem(self, where, what, False)
@@ -1994,6 +2000,9 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
 
         else:
             raise AssertionError(repr(returns))
+
+    def _wrap_dispatched_function(self, func: typing.Callable) -> typing.Callable:  # type: ignore[type-arg]
+        return func
 
     def __setitem__(self, where: typing.Any, what: typing.Any) -> None:
         return _setitem(self, where, what, False)

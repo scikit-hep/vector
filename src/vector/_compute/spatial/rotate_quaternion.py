@@ -119,7 +119,7 @@ def dispatch(
     with numpy.errstate(all="ignore"):
         return vec._wrap_result(
             _flavor_of(vec),
-            function(
+            vec._wrap_dispatched_function(function)(
                 vec.lib, u, i, j, k, *vec.azimuthal.elements, *vec.longitudinal.elements
             ),
             returns,

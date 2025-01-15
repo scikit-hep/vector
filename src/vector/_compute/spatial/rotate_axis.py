@@ -154,9 +154,10 @@ def dispatch(angle: typing.Any, v1: typing.Any, v2: typing.Any) -> typing.Any:
         ),
     )
     with numpy.errstate(all="ignore"):
-        return _handler_of(v2)._wrap_result(  # note: _handler_of(v2)
+        handler = _handler_of(v2)
+        return handler._wrap_result(  # note: _handler_of(v2)
             _flavor_of(v2),  # note: _flavor_of(v2)
-            function(
+            handler._wrap_dispatched_function(function)(
                 _lib_of(v1, v2),
                 angle,
                 *v1.azimuthal.elements,

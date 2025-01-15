@@ -743,6 +743,9 @@ class VectorSympy2D(VectorSympy, Planar, Vector2D):
         else:
             raise AssertionError(repr(returns))
 
+    def _wrap_dispatched_function(self, func: typing.Callable) -> typing.Callable:  # type: ignore[type-arg]
+        return func
+
 
 class MomentumSympy2D(PlanarMomentum, VectorSympy2D):
     """
@@ -943,6 +946,9 @@ class VectorSympy3D(VectorSympy, Spatial, Vector3D):
 
         else:
             raise AssertionError(repr(returns))
+
+    def _wrap_dispatched_function(self, func: typing.Callable) -> typing.Callable:  # type: ignore[type-arg]
+        return func
 
     @property
     def x(self) -> sympy.Symbol:
@@ -1275,6 +1281,9 @@ class VectorSympy4D(VectorSympy, Lorentz, Vector4D):
 
         else:
             raise AssertionError(repr(returns))
+
+    def _wrap_dispatched_function(self, func: typing.Callable) -> typing.Callable:  # type: ignore[type-arg]
+        return func
 
     @property
     def x(self) -> sympy.Symbol:
