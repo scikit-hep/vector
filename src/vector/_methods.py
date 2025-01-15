@@ -172,6 +172,9 @@ class VectorProtocol:
         """
         raise AssertionError
 
+    def _wrap_dispatched_function(self, func: typing.Callable) -> typing.Callable:  # type: ignore[type-arg]
+        raise AssertionError
+
     ProjectionClass2D: type[VectorProtocolPlanar]
     ProjectionClass3D: type[VectorProtocolSpatial]
     ProjectionClass4D: type[VectorProtocolLorentz]

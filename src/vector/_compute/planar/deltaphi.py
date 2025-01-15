@@ -64,9 +64,12 @@ def dispatch(v1: typing.Any, v2: typing.Any) -> typing.Any:
         ),
     )
     with numpy.errstate(all="ignore"):
-        return _handler_of(v1, v2)._wrap_result(
+        handler = _handler_of(v1, v2)
+        return handler._wrap_result(
             _flavor_of(v1, v2),
-            function(_lib_of(v1, v2), *v1.azimuthal.elements, *v2.azimuthal.elements),
+            handler._wrap_dispatched_function(function)(
+                _lib_of(v1, v2), *v1.azimuthal.elements, *v2.azimuthal.elements
+            ),
             returns,
             2,
         )
