@@ -52,7 +52,7 @@ Context = collections.namedtuple("Context", ["name", "closure"])
 functions = dict(
     [
         (
-            f'{y.__name__}({", ".join(repr(v) if isinstance(v, str) else v.__name__ for v in w)})',
+            f"{y.__name__}({', '.join(repr(v) if isinstance(v, str) else v.__name__ for v in w)})",
             z[0],
         )
         for x, y in inspect.getmembers(
@@ -63,7 +63,7 @@ functions = dict(
     ]
     + [
         (
-            f'{y.__name__}({", ".join(repr(v) if isinstance(v, str) else v.__name__ for v in w)})',
+            f"{y.__name__}({', '.join(repr(v) if isinstance(v, str) else v.__name__ for v in w)})",
             z[0],
         )
         for x, y in inspect.getmembers(
@@ -74,7 +74,7 @@ functions = dict(
     ]
     + [
         (
-            f'{y.__name__}({", ".join(repr(v) if isinstance(v, str) else v.__name__ for v in w)})',
+            f"{y.__name__}({', '.join(repr(v) if isinstance(v, str) else v.__name__ for v in w)})",
             z[0],
         )
         for x, y in inspect.getmembers(
@@ -158,9 +158,9 @@ def analyze_assignment(node, context):
     assert node.kind == "sstmt"
     assert len(node) == 1
 
-    assert (
-        node[0].kind == "assign"
-    ), "only assignments and a final 'return' are allowed (and not tuple-assignment)"
+    assert node[0].kind == "assign", (
+        "only assignments and a final 'return' are allowed (and not tuple-assignment)"
+    )
     assert len(node[0]) == 2
     assert node[0][1].kind == "store"
 
@@ -264,9 +264,9 @@ def analyze_expression(node, context):
         analyze_expression(expr(node[0][0]), context)
         analyze_expression(expr(node[0][1]), context)
         assert node[0][2].kind == "COMPARE_OP"
-        assert (
-            node[0][2].attr in allowed_comparisons
-        ), f"add {node[0][2].attr!r} to allowed_comparisons"
+        assert node[0][2].attr in allowed_comparisons, (
+            f"add {node[0][2].attr!r} to allowed_comparisons"
+        )
 
     elif node.kind == "call":
         assert len(node) >= 2
@@ -290,15 +290,15 @@ def analyze_expression(node, context):
 
 
 def analyze_unary_operator(node, context):
-    assert (
-        node.kind in allowed_unary_operators
-    ), f"add {node.kind!r} to allowed_unary_operators"
+    assert node.kind in allowed_unary_operators, (
+        f"add {node.kind!r} to allowed_unary_operators"
+    )
 
 
 def analyze_binary_operator(node, context):
-    assert (
-        node.kind in allowed_binary_operators
-    ), f"add {node.kind!r} to allowed_binary_operators"
+    assert node.kind in allowed_binary_operators, (
+        f"add {node.kind!r} to allowed_binary_operators"
+    )
 
 
 def analyze_callable(node, context):
@@ -309,9 +309,9 @@ def analyze_callable(node, context):
         assert node[1].kind == "LOAD_METHOD"
 
         if module.attr == "lib":
-            assert (
-                node[1].attr in allowed_lib_functions
-            ), f"add {node[1].attr!r} to allowed_lib_functions"
+            assert node[1].attr in allowed_lib_functions, (
+                f"add {node[1].attr!r} to allowed_lib_functions"
+            )
 
         else:
             module_name = ".".join(
