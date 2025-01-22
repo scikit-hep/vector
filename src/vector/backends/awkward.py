@@ -622,10 +622,38 @@ class AwkwardProtocol(Protocol):
     def __getitem__(self, where: typing.Any) -> float | ak.Array | ak.Record | None: ...
 
 
+class _lib(typing.NamedTuple):
+    """a wrapper that respects the numpy-like interface of awkward-array and the module interface of numpy"""
+
+    module: types.ModuleType
+    nplike: ak._nplikes.numpy_like.NumpyLike
+
+    def __eq__(self, other: typing.Any) -> bool:
+        if isinstance(other, _lib):
+            return self.module is other.module and self.nplike is other.nplike
+        else:
+            return self.module is other
+
+    def __ne__(self, other: typing.Any) -> bool:
+        return not self.__eq__(other)
+
+    def __getattr__(self, name: str) -> typing.Any:
+        if fun := getattr(self.nplike, name, False):
+            return fun
+        else:
+            return getattr(self.module, name)
+
+
 class VectorAwkward:
     """Mixin class for Awkward vectors."""
 
-    lib: types.ModuleType = numpy
+    @property
+    def lib(self):  # type:ignore[no-untyped-def]
+        if (
+            nplike := self.layout.backend.nplike  # type:ignore[attr-defined]
+        ) is ak._nplikes.typetracer.TypeTracer.instance():
+            return _lib(module=numpy, nplike=nplike)
+        return numpy
 
     def _wrap_result(
         self: AwkwardProtocol,
