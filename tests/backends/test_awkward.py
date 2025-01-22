@@ -28,9 +28,14 @@ awkward_without_record_reducers = packaging.version.Version(
 
 
 def _assert(bool1, bool2, backend):
-    # for 'typetracer' backend we pass through (no-op)
-    # for 'cpu' we want to make sure the bool evaluates to True
-    if backend == "cpu":
+    # this is a helper function that differentiates between backends:
+    # - 'typetracer' backend:
+    #   this method does nothing (no-op). typetracers can't be compared as they do not have numerical values.
+    #   this is useful, because the expression that goes into this function (bool1 & bool2) will still be computed,
+    #   i.e. this makes sure that the computation does (at least) not raise an error.
+    # - other backends:
+    #   convert awkward arrays to lists and compare their values with python's builtin list comparison
+    if backend != "typetracer":
         if isinstance(bool1, ak.Array):
             bool1 = bool1.tolist()
         if isinstance(bool2, ak.Array):
