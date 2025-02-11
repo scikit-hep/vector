@@ -4,9 +4,11 @@
 # or https://github.com/scikit-hep/vector for details.
 
 """
+Property method `gamma` for the time dilation/length contraction factor of a Lorentz vector
+or an array of vectors.
+
 .. code-block:: python
 
-    @property
     Lorentz.gamma(self)
 """
 

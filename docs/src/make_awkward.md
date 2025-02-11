@@ -2,16 +2,19 @@
 
 An Awkward Array of vectors is an Awkward Array containing appropriately named records, appropriately named fields, and the Vector [behaviors](https://awkward-array.org/doc/main/reference/ak.behavior.html) registered in the array. Here's a complete example for illustration:
 
-```python
+```pycon
 >>> import awkward as ak
 >>> import vector
 >>> vector.register_awkward()
 >>>
->>> vec = ak.Array([
-...     [{"x": 1.1, "y": 2.2}, {"x": 3.3, "y": 4.4}],
-...     [],
-...     [{"x": 5.5, "y": 6.6}],
-... ], with_name="Vector2D")
+>>> vec = ak.Array(
+...     [
+...         [{"x": 1.1, "y": 2.2}, {"x": 3.3, "y": 4.4}],
+...         [],
+...         [{"x": 5.5, "y": 6.6}],
+...     ],
+...     with_name="Vector2D",
+... )
 >>>
 >>> abs(vec)
 <Array [[2.46, 5.5], [], [8.59]] type='3 * var * float64'>
