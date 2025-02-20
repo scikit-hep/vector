@@ -40,7 +40,7 @@ repos:
     rev: v2.4.1
     hooks:
       - id: codespell
-        args: ["-LOnd,HEP"]
+        args: ["-LOnd,HEP,Leary"]
         exclude: ^docs/usage/intro.ipynb$
 
   - repo: https://github.com/rbubley/mirrors-prettier

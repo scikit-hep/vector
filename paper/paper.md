@@ -41,7 +41,8 @@ data, data with variable-sized rows (or a nested data structure with variable-si
 entries); thus, the library is expected to perform operations on an entire
 ragged structure in minimum passes. Furthermore, optimizing memory usage and
 processing time has become essential with the increasing computational demands
-at the LHC. Vector is a Python library for creating and manipulating 2D, 3D,
+at the the Large Hadron Collider (LHC), world’s largest particle accelerator.
+Vector is a Python library for creating and manipulating 2D, 3D,
 and Lorentz vectors, especially arrays of vectors, to solve common physics
 problems in a NumPy-like [@harris:2020] way. The library enables physicists to
 operate on high energy physics data in a high level language without
@@ -51,12 +52,12 @@ high energy physics experiments.
 
 # Statement of need
 
-Vector is one of the few Lorentz vector libraries providing a Pythonic interface
-but a compiled (through Awkward Array [@Pivarski:2018]) computational backend.
-Vector integrates seamlessly with the existing high energy physics
-ecosystem and the broader scientific Python ecosystem, including libraries like
-Dask [@rocklin:2015] and Numba [@lam:2015]. The library implements a variety of
-backends for several purposes. Although vector was written with high energy
+Vector is the only actively developed Lorentz vector library with
+a Pythonic interface but a compiled (through Awkward Array [@Pivarski:2018])
+computational backend. Vector integrates seamlessly with the existing high energy
+physics ecosystem and the broader scientific Python ecosystem, including libraries
+like Dask [@rocklin:2015] and Numba [@lam:2015]. The library implements a variety
+of backends for several purposes. Although vector was written with high energy
 physics in mind, it is a general-purpose library that can be used for any
 scientific or engineering application. The library houses a set of diverse
 backends, 3 numerical backends for experimental physicists and 1 symbolic
@@ -68,21 +69,22 @@ backend for theoretical physicists. These backends include:
 - an Awkward backend for computations on ragged collection-type data
 
 There also exists implementations of the Object and the Awkward backend in Numba
-for just-in-time compilable operations. Further, support for JAX and Dask is
-provided through the Awkward backend, which enables vector functionalities to
-support automatic differentiation and parallel computing.
+for just-in-time compilable operations. Further, support for JAX [@Bradbury:2018]
+and Dask is provided through the Awkward backend, which enables vector
+functionalities to support automatic differentiation and parallel computing.
 
 ## Impact
 
 Besides PyROOT's LorentzVectors and TLorentzVector [@root:2020], vector has
 become a popular choice for mathematical manipulations in Python based high energy
 physics analysis pipelines. Along with being utilized directly in
-analysis pipelines at LHC and other experiments [@Kling:2023; @Held:2024; @Qu:2022],
-the library is being used as a dependency in user-facing frameworks, such as,
-Coffea, MadMiner [@Brehmer:2020], FastJet [@aryan:2023], Spyral [@spyral-utils:2024],
-Weaver [@weaver-core:2024], and pylhe [@pylhe]. The library is also used in multiple
-teaching materials for graduate courses and workshops. Finally, given the generic
-nature of the library, it is often used in non high energy physics use cases.
+analysis pipelines at LHC [@Kling:2023; @Held:2024; @Qu:2022], the library is
+being used in other high energy physics experiments asn as a dependency in other
+user-facing frameworks, such as, Coffea, MadMiner [@Brehmer:2020], FastJet
+[@aryan:2023], Spyral [@spyral-utils:2024], Weaver [@weaver-core:2024], and pylhe
+[@pylhe]. The library is also used in multiple teaching materials for graduate
+courses and workshops. Finally, given the generic nature of the library, it is
+often used in non high energy physics use cases.
 
 # Acknowledgements
 
