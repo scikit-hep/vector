@@ -12,20 +12,22 @@ authors:
   - name: Henry Schreiner
     orcid: 0000-0002-7833-783X
     equal-contrib: true
-    affiliation: 1
+    affiliation: 2
   - name: Eduardo Rodrigues
     orcid: 0000-0002-6649-343X
-    affiliation: 2
+    affiliation: 3
   - name: Jonas Eschle
     orcid: 0000-0002-7312-3699
-    affiliation: 3
+    affiliation: 4
   - name: Jim Pivarski
     orcid: 0000-0003-2846-7625
     equal-contrib: true
     corresponding: true
-    affiliation: 1
+    affiliation: 2
 
 affiliations:
+  - name: Unniversity College London
+    index: 1
   - name: Princeton University
     index: 1
   - name: University of Liverpool
