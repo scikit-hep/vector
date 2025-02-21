@@ -8,7 +8,7 @@ authors:
   - name: Saransh Chopra
     orcid: 0000-0003-3046-7675
     equal-contrib: true
-    affiliation: 1
+    affiliation: "1, 2"
   - name: Henry Schreiner
     orcid: 0000-0002-7833-783X
     equal-contrib: true
@@ -29,11 +29,11 @@ affiliations:
   - name: Unniversity College London
     index: 1
   - name: Princeton University
-    index: 1
-  - name: University of Liverpool
     index: 2
-  - name: Syracuse University
+  - name: University of Liverpool
     index: 3
+  - name: Syracuse University
+    index: 4
 date: 12 October 2024
 bibliography: paper.bib
 ---
