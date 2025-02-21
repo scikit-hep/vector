@@ -26,7 +26,7 @@ authors:
     affiliation: 2
 
 affiliations:
-  - name: Unniversity College London
+  - name: University College London
     index: 1
   - name: Princeton University
     index: 2
