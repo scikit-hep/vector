@@ -13,8 +13,14 @@ authors:
     orcid: 0000-0002-7833-783X
     equal-contrib: true
     affiliation: 2
-  - name: Jim Pivarski
+  - name: Eduardo Rodrigues
     orcid: 0000-0002-6649-343X
+    affiliation: 3
+  - name: Jonas Eschle
+    orcid: 0000-0002-7312-3699
+    affiliation: 4
+  - name: Jim Pivarski
+    orcid: 0000-0003-2846-7625
     equal-contrib: true
     corresponding: true
     affiliation: 2
@@ -24,6 +30,10 @@ affiliations:
     index: 1
   - name: Princeton University
     index: 2
+  - name: University of Liverpool
+    index: 3
+  - name: Syracuse University
+    index: 4
 date: 12 October 2024
 bibliography: paper.bib
 ---
