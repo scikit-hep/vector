@@ -8,7 +8,7 @@ authors:
   - name: Saransh Chopra
     orcid: 0000-0003-3046-7675
     equal-contrib: true
-    affiliation: "1, 2"
+    affiliation: 1
   - name: Henry Schreiner
     orcid: 0000-0002-7833-783X
     equal-contrib: true
