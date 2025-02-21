@@ -12,28 +12,26 @@ authors:
   - name: Henry Schreiner
     orcid: 0000-0002-7833-783X
     equal-contrib: true
-    affiliation: 2
+    affiliation: 1
   - name: Eduardo Rodrigues
     orcid: 0000-0002-6649-343X
-    affiliation: 3
+    affiliation: 2
   - name: Jonas Eschle
     orcid: 0000-0002-7312-3699
-    affiliation: 4
+    affiliation: 3
   - name: Jim Pivarski
     orcid: 0000-0003-2846-7625
     equal-contrib: true
     corresponding: true
-    affiliation: 2
+    affiliation: 1
 
 affiliations:
-  - name: University College London
-    index: 1
   - name: Princeton University
-    index: 2
+    index: 1
   - name: University of Liverpool
-    index: 3
+    index: 2
   - name: Syracuse University
-    index: 4
+    index: 3
 date: 12 October 2024
 bibliography: paper.bib
 ---
