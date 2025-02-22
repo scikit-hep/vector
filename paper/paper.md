@@ -14,13 +14,13 @@ authors:
     equal-contrib: true
     affiliation: 2
   - name: Eduardo Rodrigues
-    orcid: 0000-0002-6649-343X
+    orcid: 0000-0003-2846-7625
     affiliation: 3
   - name: Jonas Eschle
     orcid: 0000-0002-7312-3699
     affiliation: 4
   - name: Jim Pivarski
-    orcid: 0000-0003-2846-7625
+    orcid: 0000-0002-6649-343X
     equal-contrib: true
     corresponding: true
     affiliation: 2
