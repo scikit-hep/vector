@@ -64,8 +64,8 @@ high energy physics experiments.
 
 Vector is one of the few Lorentz vector libraries that offer
 a Pythonic interface but a compiled computational backend, with the others
-being Coffea's vector module (depends on vector), PyROOT [@root:2020]'s
-LorentzVectors and TLorentzVector classes, and hepvector [@hepvector] (deprecated
+being Coffea's vector module (depends on vector), PyROOT's [@root:2020]
+LorentzVectors and TLorentzVector classes, and HEPvector [@hepvector] (deprecated
 in favor of vector). Although vector was written with high energy physics in mind,
 it is a general-purpose library that can be used for any scientific or engineering
 application. The library houses a set of diverse backends, three numerical backends
