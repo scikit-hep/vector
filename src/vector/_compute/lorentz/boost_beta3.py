@@ -1,9 +1,7 @@
-# Copyright (c) 2019-2021, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
+# Copyright (c) 2019-2024, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
 #
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
-
-import typing
 
 """
 .. code-block:: python
@@ -16,6 +14,10 @@ or
 
     Lorentz.boost(self, beta3=...)
 """
+
+from __future__ import annotations
+
+import typing
 
 import numpy
 
@@ -41,9 +43,9 @@ from vector._methods import (
 
 
 def cartesian_t(lib, x1, y1, z1, t1, betax, betay, betaz):
-    bp2 = betax ** 2 + betay ** 2 + betaz ** 2
+    bp2 = betax**2 + betay**2 + betaz**2
     gamma = 1 / lib.sqrt(1 - bp2)
-    bgam = gamma ** 2 / (1 + gamma)
+    bgam = gamma**2 / (1 + gamma)
     xx = 1 + bgam * betax * betax
     yy = 1 + bgam * betay * betay
     zz = 1 + bgam * betaz * betaz
@@ -74,9 +76,9 @@ def cartesian_t(lib, x1, y1, z1, t1, betax, betay, betaz):
 
 
 def cartesian_tau(lib, x1, y1, z1, tau1, betax, betay, betaz):
-    bp2 = betax ** 2 + betay ** 2 + betaz ** 2
+    bp2 = betax**2 + betay**2 + betaz**2
     gamma = 1 / lib.sqrt(1 - bp2)
-    bgam = gamma ** 2 / (1 + gamma)
+    bgam = gamma**2 / (1 + gamma)
     xx = 1 + bgam * betax * betax
     yy = 1 + bgam * betay * betay
     zz = 1 + bgam * betaz * betaz
@@ -208,14 +210,24 @@ dispatch_map = {
         TemporalT,
         AzimuthalXY,
         LongitudinalTheta,
-    ): (cartesian_t_xy_theta, AzimuthalXY, LongitudinalZ, TemporalT),
+    ): (
+        cartesian_t_xy_theta,
+        AzimuthalXY,
+        LongitudinalZ,
+        TemporalT,
+    ),
     (
         AzimuthalXY,
         LongitudinalZ,
         TemporalTau,
         AzimuthalXY,
         LongitudinalTheta,
-    ): (cartesian_tau_xy_theta, AzimuthalXY, LongitudinalZ, TemporalTau),
+    ): (
+        cartesian_tau_xy_theta,
+        AzimuthalXY,
+        LongitudinalZ,
+        TemporalTau,
+    ),
     (AzimuthalXY, LongitudinalZ, TemporalT, AzimuthalXY, LongitudinalEta): (
         cartesian_t_xy_eta,
         AzimuthalXY,
@@ -234,42 +246,72 @@ dispatch_map = {
         TemporalT,
         AzimuthalRhoPhi,
         LongitudinalZ,
-    ): (cartesian_t_rhophi_z, AzimuthalXY, LongitudinalZ, TemporalT),
+    ): (
+        cartesian_t_rhophi_z,
+        AzimuthalXY,
+        LongitudinalZ,
+        TemporalT,
+    ),
     (
         AzimuthalXY,
         LongitudinalZ,
         TemporalTau,
         AzimuthalRhoPhi,
         LongitudinalZ,
-    ): (cartesian_tau_rhophi_z, AzimuthalXY, LongitudinalZ, TemporalTau),
+    ): (
+        cartesian_tau_rhophi_z,
+        AzimuthalXY,
+        LongitudinalZ,
+        TemporalTau,
+    ),
     (
         AzimuthalXY,
         LongitudinalZ,
         TemporalT,
         AzimuthalRhoPhi,
         LongitudinalTheta,
-    ): (cartesian_t_rhophi_theta, AzimuthalXY, LongitudinalZ, TemporalT),
+    ): (
+        cartesian_t_rhophi_theta,
+        AzimuthalXY,
+        LongitudinalZ,
+        TemporalT,
+    ),
     (
         AzimuthalXY,
         LongitudinalZ,
         TemporalTau,
         AzimuthalRhoPhi,
         LongitudinalTheta,
-    ): (cartesian_tau_rhophi_theta, AzimuthalXY, LongitudinalZ, TemporalTau),
+    ): (
+        cartesian_tau_rhophi_theta,
+        AzimuthalXY,
+        LongitudinalZ,
+        TemporalTau,
+    ),
     (
         AzimuthalXY,
         LongitudinalZ,
         TemporalT,
         AzimuthalRhoPhi,
         LongitudinalEta,
-    ): (cartesian_t_rhophi_eta, AzimuthalXY, LongitudinalZ, TemporalT),
+    ): (
+        cartesian_t_rhophi_eta,
+        AzimuthalXY,
+        LongitudinalZ,
+        TemporalT,
+    ),
     (
         AzimuthalXY,
         LongitudinalZ,
         TemporalTau,
         AzimuthalRhoPhi,
         LongitudinalEta,
-    ): (cartesian_tau_rhophi_eta, AzimuthalXY, LongitudinalZ, TemporalTau),
+    ): (
+        cartesian_tau_rhophi_eta,
+        AzimuthalXY,
+        LongitudinalZ,
+        TemporalTau,
+    ),
 }
 
 
@@ -349,9 +391,10 @@ def dispatch(v1: typing.Any, v2: typing.Any) -> typing.Any:
         ),
     )
     with numpy.errstate(all="ignore"):
-        return _handler_of(v1, v2)._wrap_result(
+        handler = _handler_of(v1, v2)
+        return handler._wrap_result(
             _flavor_of(v1, v2),
-            function(
+            handler._wrap_dispatched_function(function)(
                 _lib_of(v1, v2),
                 *v1.azimuthal.elements,
                 *v1.longitudinal.elements,

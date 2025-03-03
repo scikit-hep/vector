@@ -1,15 +1,17 @@
-# Copyright (c) 2019-2021, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
+# Copyright (c) 2019-2024, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
 #
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
-
-import typing
 
 """
 .. code-block:: python
 
     Spatial.dot(self, other)
 """
+
+from __future__ import annotations
+
+import typing
 
 import numpy
 
@@ -406,11 +408,9 @@ def rhophi_eta_rhophi_theta(lib, rho1, phi1, eta1, rho2, phi2, theta2):
 def rhophi_eta_rhophi_eta(lib, rho1, phi1, eta1, rho2, phi2, eta2):
     expmeta1 = lib.exp(-eta1)
     expmeta2 = lib.exp(-eta2)
-    invtantheta1 = 0.5 * (1 - expmeta1 ** 2) / expmeta1
-    invtantheta2 = 0.5 * (1 - expmeta2 ** 2) / expmeta2
-    return lib.nan_to_num(
-        rho1 * rho2 * (lib.cos(phi1 - phi2) + invtantheta1 * invtantheta2), nan=0.0
-    )
+    invtantheta1 = 0.5 * (1 - expmeta1**2) / expmeta1
+    invtantheta2 = 0.5 * (1 - expmeta2**2) / expmeta2
+    return rho1 * rho2 * (lib.cos(phi1 - phi2) + invtantheta1 * invtantheta2)
 
 
 dispatch_map = {
@@ -564,9 +564,10 @@ def dispatch(v1: typing.Any, v2: typing.Any) -> typing.Any:
         ),
     )
     with numpy.errstate(all="ignore"):
-        return _handler_of(v1, v2)._wrap_result(
+        handler = _handler_of(v1, v2)
+        return handler._wrap_result(
             _flavor_of(v1, v2),
-            function(
+            handler._wrap_dispatched_function(function)(
                 _lib_of(v1, v2),
                 *v1.azimuthal.elements,
                 *v1.longitudinal.elements,

@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2021, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
+# Copyright (c) 2019-2024, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
 #
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
@@ -21,22 +21,24 @@ that set of allowed features can be expanded if it doesn't prevent the addition
 of new backends).
 """
 
-import vector._compute.planar.add  # noqa: F401
-import vector._compute.planar.deltaphi  # noqa: F401
-import vector._compute.planar.dot  # noqa: F401
-import vector._compute.planar.equal  # noqa: F401
-import vector._compute.planar.is_antiparallel  # noqa: F401
-import vector._compute.planar.is_parallel  # noqa: F401
-import vector._compute.planar.is_perpendicular  # noqa: F401
-import vector._compute.planar.isclose  # noqa: F401
-import vector._compute.planar.not_equal  # noqa: F401
-import vector._compute.planar.phi  # noqa: F401
-import vector._compute.planar.rho  # noqa: F401
-import vector._compute.planar.rho2  # noqa: F401
-import vector._compute.planar.rotateZ  # noqa: F401
-import vector._compute.planar.scale  # noqa: F401
-import vector._compute.planar.subtract  # noqa: F401
-import vector._compute.planar.transform2D  # noqa: F401
-import vector._compute.planar.unit  # noqa: F401
-import vector._compute.planar.x  # noqa: F401
+from __future__ import annotations
+
+import vector._compute.planar.add
+import vector._compute.planar.deltaphi
+import vector._compute.planar.dot
+import vector._compute.planar.equal
+import vector._compute.planar.is_antiparallel
+import vector._compute.planar.is_parallel
+import vector._compute.planar.is_perpendicular
+import vector._compute.planar.isclose
+import vector._compute.planar.not_equal
+import vector._compute.planar.phi
+import vector._compute.planar.rho
+import vector._compute.planar.rho2
+import vector._compute.planar.rotateZ
+import vector._compute.planar.scale
+import vector._compute.planar.subtract
+import vector._compute.planar.transform2D
+import vector._compute.planar.unit
+import vector._compute.planar.x
 import vector._compute.planar.y  # noqa: F401

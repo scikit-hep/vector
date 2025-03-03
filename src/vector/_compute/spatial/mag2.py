@@ -1,9 +1,7 @@
-# Copyright (c) 2019-2021, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
+# Copyright (c) 2019-2024, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
 #
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
-
-import typing
 
 """
 .. code-block:: python
@@ -11,6 +9,10 @@ import typing
     @property
     Spatial.mag2(self)
 """
+
+from __future__ import annotations
+
+import typing
 
 import numpy
 
@@ -28,31 +30,31 @@ from vector._methods import (
 
 
 def xy_z(lib, x, y, z):
-    return x ** 2 + y ** 2 + z ** 2
+    return x**2 + y**2 + z**2
 
 
 def xy_theta(lib, x, y, theta):
-    return (x ** 2 + y ** 2) / lib.sin(theta) ** 2
+    return (x**2 + y**2) / lib.sin(theta) ** 2
 
 
 def xy_eta(lib, x, y, eta):
     expmeta = lib.exp(-eta)
-    invsintheta = 0.5 * (1 + expmeta ** 2) / expmeta
-    return (x ** 2 + y ** 2) * invsintheta ** 2
+    invsintheta = 0.5 * (1 + expmeta**2) / expmeta
+    return (x**2 + y**2) * invsintheta**2
 
 
 def rhophi_z(lib, rho, phi, z):
-    return rho ** 2 + z ** 2
+    return rho**2 + z**2
 
 
 def rhophi_theta(lib, rho, phi, theta):
-    return rho ** 2 / lib.sin(theta) ** 2
+    return rho**2 / lib.sin(theta) ** 2
 
 
 def rhophi_eta(lib, rho, phi, eta):
     expmeta = lib.exp(-eta)
-    invsintheta = 0.5 * (1 + expmeta ** 2) / expmeta
-    return rho ** 2 * invsintheta ** 2
+    invsintheta = 0.5 * (1 + expmeta**2) / expmeta
+    return rho**2 * invsintheta**2
 
 
 dispatch_map = {
@@ -77,7 +79,9 @@ def dispatch(v: typing.Any) -> typing.Any:
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
             _flavor_of(v),
-            function(v.lib, *v.azimuthal.elements, *v.longitudinal.elements),
+            v._wrap_dispatched_function(function)(
+                v.lib, *v.azimuthal.elements, *v.longitudinal.elements
+            ),
             returns,
             1,
         )

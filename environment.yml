@@ -5,11 +5,12 @@ dependencies:
   - jupyterlab >=1.2
   - nb_conda_kernels
   - pip >=18
-  - pytest
+  - pytest >=6
+  - numba >=0.57
+  - numpy >=1.13.3
   - root >=6.18.04
-  - numba >=0.50
   - pip:
-    - "awkward1>=0.2.29"
-    - "uproot==3.*"
-    - "scikit-hep-testdata>=0.2.0"
-    - -e .
+      - "awkward>=2.0.0"
+      - "uproot>=5.0.0"
+      - "scikit-hep-testdata>=0.2.0"
+      - -e .

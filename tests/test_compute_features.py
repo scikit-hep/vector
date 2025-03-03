@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2021, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
+# Copyright (c) 2019-2024, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
 #
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
@@ -29,7 +29,10 @@ new features, to ask yourself if they can be supported by all current and hoped-
 backends, and whether a (formally) simpler implementation is possible.
 """
 
+from __future__ import annotations
+
 import collections
+import contextlib
 import inspect
 import sys
 
@@ -43,14 +46,13 @@ uncompyle6 = pytest.importorskip("uncompyle6")
 spark_parser = pytest.importorskip("spark_parser")
 pytestmark = pytest.mark.dis
 
-
 Context = collections.namedtuple("Context", ["name", "closure"])
 
 
 functions = dict(
     [
         (
-            f'{y.__name__}({", ".join(repr(v) if isinstance(v, str) else v.__name__ for v in w)})',
+            f"{y.__name__}({', '.join(repr(v) if isinstance(v, str) else v.__name__ for v in w)})",
             z[0],
         )
         for x, y in inspect.getmembers(
@@ -61,7 +63,7 @@ functions = dict(
     ]
     + [
         (
-            f'{y.__name__}({", ".join(repr(v) if isinstance(v, str) else v.__name__ for v in w)})',
+            f"{y.__name__}({', '.join(repr(v) if isinstance(v, str) else v.__name__ for v in w)})",
             z[0],
         )
         for x, y in inspect.getmembers(
@@ -72,7 +74,7 @@ functions = dict(
     ]
     + [
         (
-            f'{y.__name__}({", ".join(repr(v) if isinstance(v, str) else v.__name__ for v in w)})',
+            f"{y.__name__}({', '.join(repr(v) if isinstance(v, str) else v.__name__ for v in w)})",
             z[0],
         )
         for x, y in inspect.getmembers(
@@ -84,6 +86,19 @@ functions = dict(
 )
 
 
+python_version = f"{sys.version_info[0]}.{sys.version_info[1]}"
+is_pypy = "__pypy__" in sys.builtin_module_names
+try:
+    uncompyle6.scanner.get_scanner(python_version, is_pypy=is_pypy)
+except RuntimeError as err:
+    is_unsupported = True
+    unsupported_message = str(err)
+else:
+    is_unsupported = False
+    unsupported_message = ""
+
+
+@pytest.mark.skipif(is_unsupported, reason=unsupported_message)
 @pytest.mark.slow
 @pytest.mark.parametrize("signature", functions.keys())
 def test(signature):
@@ -103,10 +118,9 @@ def analyze_function(function):
         closure = dict(function.__globals__)
         if function.__closure__ is not None:
             for var, cell in zip(function.__code__.co_freevars, function.__closure__):
-                try:
+                # the cell has not been filled yet, so ignore it
+                with contextlib.suppress(ValueError):
                     closure[var] = cell.cell_contents
-                except ValueError:
-                    pass  # the cell has not been filled yet, so ignore it
 
         analyze_code(function.__code__, Context(function.__name__, closure))
         analyze_function.done.add(function)
@@ -117,8 +131,6 @@ analyze_function.done = set()
 
 def analyze_code(code, context):
     # this block is all uncompyle6
-    python_version = f"{sys.version_info[0]}.{sys.version_info[1]}"
-    is_pypy = "__pypy__" in sys.builtin_module_names
     parser = uncompyle6.parser.get_python_parser(
         python_version,
         debug_parser=dict(spark_parser.DEFAULT_DEBUG),
@@ -146,9 +158,9 @@ def analyze_assignment(node, context):
     assert node.kind == "sstmt"
     assert len(node) == 1
 
-    assert (
-        node[0].kind == "assign"
-    ), "only assignments and a final 'return' are allowed (and not tuple-assignment)"
+    assert node[0].kind == "assign", (
+        "only assignments and a final 'return' are allowed (and not tuple-assignment)"
+    )
     assert len(node[0]) == 2
     assert node[0][1].kind == "store"
 
@@ -203,7 +215,7 @@ def analyze_return(node, context):
 
     assert node[0].kind == "return", "compute function must end with a 'return'"
     assert len(node[0]) == 2
-    assert node[0][0].kind == "ret_expr"
+    assert node[0][0].kind in ("ret_expr", "return_expr")
     assert len(node[0][0]) == 1
     expr(node[0][0][0])
     assert node[0][1].kind == "RETURN_VALUE"
@@ -252,9 +264,9 @@ def analyze_expression(node, context):
         analyze_expression(expr(node[0][0]), context)
         analyze_expression(expr(node[0][1]), context)
         assert node[0][2].kind == "COMPARE_OP"
-        assert (
-            node[0][2].attr in allowed_comparisons
-        ), f"add {repr(node[0][2].attr)} to allowed_comparisons"
+        assert node[0][2].attr in allowed_comparisons, (
+            f"add {node[0][2].attr!r} to allowed_comparisons"
+        )
 
     elif node.kind == "call":
         assert len(node) >= 2
@@ -265,8 +277,9 @@ def analyze_expression(node, context):
         analyze_callable(expr(node[0]), context)
 
         for argument in node[1:-1]:
-            assert argument.kind == "pos_arg", "only positional arguments"
-            analyze_expression(expr(argument[0]), context)
+            expr_arg = argument[0] if argument.kind == "pos_arg" else argument
+            assert expr_arg.kind == "expr", "only positional arguments"
+            analyze_expression(expr(expr_arg), context)
 
     elif is_nan_to_num(node):
         analyze_expression(expr(node[1]), context)
@@ -277,15 +290,15 @@ def analyze_expression(node, context):
 
 
 def analyze_unary_operator(node, context):
-    assert (
-        node.kind in allowed_unary_operators
-    ), f"add {repr(node.kind)} to allowed_unary_operators"
+    assert node.kind in allowed_unary_operators, (
+        f"add {node.kind!r} to allowed_unary_operators"
+    )
 
 
 def analyze_binary_operator(node, context):
-    assert (
-        node.kind in allowed_binary_operators
-    ), f"add {repr(node.kind)} to allowed_binary_operators"
+    assert node.kind in allowed_binary_operators, (
+        f"add {node.kind!r} to allowed_binary_operators"
+    )
 
 
 def analyze_callable(node, context):
@@ -296,9 +309,9 @@ def analyze_callable(node, context):
         assert node[1].kind == "LOAD_METHOD"
 
         if module.attr == "lib":
-            assert (
-                node[1].attr in allowed_lib_functions
-            ), f"add {repr(node[1].attr)} to allowed_lib_functions"
+            assert node[1].attr in allowed_lib_functions, (
+                f"add {node[1].attr!r} to allowed_lib_functions"
+            )
 
         else:
             module_name = ".".join(
@@ -312,9 +325,7 @@ def analyze_callable(node, context):
 
     elif node.kind in {"LOAD_GLOBAL", "LOAD_DEREF"}:
         function = context.closure.get(node.attr)
-        assert (
-            function is not None
-        ), f"unrecognized function in scope: {repr(node.attr)}"
+        assert function is not None, f"unrecognized function in scope: {node.attr!r}"
         analyze_function(function)
 
     else:
@@ -348,6 +359,7 @@ allowed_lib_functions = [
     "sign",
     "copysign",
     "maximum",
+    "minimum",
     "sqrt",
     "exp",
     "log",
@@ -360,6 +372,9 @@ allowed_lib_functions = [
     "arctan2",
     "sinh",
     "cosh",
+    "tanh",
+    "arcsinh",
+    "arccosh",
     "arctanh",
     "isclose",
 ]

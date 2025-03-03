@@ -1,15 +1,17 @@
-# Copyright (c) 2019-2021, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
+# Copyright (c) 2019-2024, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
 #
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
-
-import typing
 
 """
 .. code-block:: python
 
     Spatial.rotate_euler(self, phi, theta, psi, order=...)
 """
+
+from __future__ import annotations
+
+import typing
 
 import numpy
 
@@ -289,8 +291,13 @@ def dispatch(
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
             _flavor_of(v),
-            function(
-                v.lib, phi, theta, psi, *v.azimuthal.elements, *v.longitudinal.elements
+            v._wrap_dispatched_function(function)(
+                v.lib,
+                phi,
+                theta,
+                psi,
+                *v.azimuthal.elements,
+                *v.longitudinal.elements,
             ),
             returns,
             1,

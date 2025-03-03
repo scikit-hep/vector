@@ -133,7 +133,7 @@ dmypy.json
 /.idea/*
 
 # Version file
-/src/vector/version.py
+/src/vector/_version.py
 
 .pyre_configuration
 .watchmanconfig
@@ -142,3 +142,6 @@ dmypy.json
 /node_modules
 /package.json
 /yarn.lock
+
+# MacOS
+.DS_Store

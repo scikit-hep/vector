@@ -1,37 +1,15 @@
-# Copyright (c) 2019-2021, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
+# Copyright (c) 2019-2024, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
 #
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-import sys
+from __future__ import annotations
+
+import importlib.metadata
 import typing
 
 import packaging.version
 
-from vector._backends.awkward_constructors import Array as Array
-from vector._backends.awkward_constructors import Array as arr
-from vector._backends.awkward_constructors import Array as awk
-from vector._backends.awkward_constructors import zip
-from vector._backends.numpy_ import (
-    MomentumNumpy2D,
-    MomentumNumpy3D,
-    MomentumNumpy4D,
-    VectorNumpy,
-    VectorNumpy2D,
-    VectorNumpy3D,
-    VectorNumpy4D,
-    array,
-)
-from vector._backends.object_ import (
-    MomentumObject2D,
-    MomentumObject3D,
-    MomentumObject4D,
-    VectorObject,
-    VectorObject2D,
-    VectorObject3D,
-    VectorObject4D,
-    obj,
-)
 from vector._methods import (
     Azimuthal,
     AzimuthalRhoPhi,
@@ -54,20 +32,38 @@ from vector._methods import (
     Vector4D,
     dim,
 )
-from vector.version import version as __version__
-
-if sys.version_info < (3, 8):
-    import importlib_metadata
-else:
-    import importlib.metadata as importlib_metadata
+from vector._version import version as __version__
+from vector.backends.awkward_constructors import Array, zip
+from vector.backends.awkward_constructors import Array as awk
+from vector.backends.numpy import (
+    MomentumNumpy2D,
+    MomentumNumpy3D,
+    MomentumNumpy4D,
+    VectorNumpy,
+    VectorNumpy2D,
+    VectorNumpy3D,
+    VectorNumpy4D,
+    array,
+)
+from vector.backends.numpy import array as arr
+from vector.backends.object import (
+    MomentumObject2D,
+    MomentumObject3D,
+    MomentumObject4D,
+    VectorObject,
+    VectorObject2D,
+    VectorObject3D,
+    VectorObject4D,
+    obj,
+)
 
 
 def _import_awkward() -> None:
-    awk_version = packaging.version.Version(importlib_metadata.version("awkward"))
-    if awk_version < packaging.version.Version("1.2.0rc5"):
+    awk_version = packaging.version.Version(importlib.metadata.version("awkward"))
+    if awk_version < packaging.version.Version("2.0.0"):
         # the only context users will see this message is if they're trying to use vector.awk
         # VectorAwkward is still set to None
-        msg = f"awkward {awk_version} is too old; please upgrade to 1.2.0 or later"
+        msg = f"awkward {awk_version} is too old; please upgrade to 2.0.0 or later"
         raise ImportError(msg)
 
 
@@ -80,10 +76,27 @@ except ImportError:
     if not typing.TYPE_CHECKING:
         VectorAwkward = None
 else:
-    from vector._backends.awkward_ import VectorAwkward
+    from vector.backends.awkward import VectorAwkward, awkward_transform
+
+try:
+    import sympy  # type: ignore[import-untyped]
+except ImportError:
+    sympy = None
+    if not typing.TYPE_CHECKING:
+        VectorSympy = None
+else:
+    from vector.backends.sympy import (
+        MomentumSympy2D,
+        MomentumSympy3D,
+        MomentumSympy4D,
+        VectorSympy,
+        VectorSympy2D,
+        VectorSympy3D,
+        VectorSympy4D,
+    )
 
 
-__all__: typing.Tuple[str, ...] = (
+__all__: tuple[str, ...] = (
     "Array",
     "Azimuthal",
     "AzimuthalRhoPhi",
@@ -101,6 +114,9 @@ __all__: typing.Tuple[str, ...] = (
     "MomentumObject2D",
     "MomentumObject3D",
     "MomentumObject4D",
+    "MomentumSympy2D",
+    "MomentumSympy3D",
+    "MomentumSympy4D",
     "Planar",
     "Spatial",
     "Temporal",
@@ -119,19 +135,24 @@ __all__: typing.Tuple[str, ...] = (
     "VectorObject2D",
     "VectorObject3D",
     "VectorObject4D",
+    "VectorSympy",
+    "VectorSympy2D",
+    "VectorSympy3D",
+    "VectorSympy4D",
     "__version__",
     "arr",
     "array",
     "awk",
-    "zip",
+    "awkward_transform",
     "dim",
     "obj",
     "register_awkward",
     "register_numba",
+    "zip",
 )
 
 
-def __dir__() -> typing.Tuple[str, ...]:
+def __dir__() -> tuple[str, ...]:
     return (
         tuple(s for s in __all__ if s != "VectorAwkward")
         if awkward is None
@@ -147,8 +168,8 @@ def register_numba() -> None:
     This usually isn't necessary, as it is passed to Numba's ``entry_point`` and
     is therefore executed as soon as Numba is imported.
     """
-    import vector._backends.numba_numpy  # noqa: 401
-    import vector._backends.numba_object  # noqa: 401
+    import vector.backends._numba_object
+    import vector.backends.numba_numpy  # noqa: F401
 
 
 _awkward_registered = False
@@ -163,13 +184,13 @@ def register_awkward() -> None:
     vector properties and methods.
 
     If you do not call this function, only arrays created with
-    :doc:`vector.Array` (or derived from such an array) have vector properties
+    :func:`vector.Array` (or derived from such an array) have vector properties
     and methods.
     """
     import awkward
 
-    import vector._backends.awkward_  # noqa: 401
+    import vector.backends.awkward
 
-    global _awkward_registered
-    awkward.behavior.update(vector._backends.awkward_.behavior)
+    global _awkward_registered  # noqa: PLW0603
+    awkward.behavior.update(vector.backends.awkward.behavior)
     _awkward_registered = True

@@ -1,12 +1,260 @@
 [build-system]
-
+build-backend = "hatchling.build"
 requires = [
-    "wheel",
-    "setuptools>=42.0",
-    "setuptools_scm[toml]>=3.4"
+  "hatch-vcs",
+  "hatchling",
 ]
 
-build-backend = "setuptools.build_meta"
+[project]
+name = "vector"
+description = "Vector classes and utilities"
+readme = { file = "README.md", content-type = "text/markdown" }
+keywords = [
+  "vector",
+]
+maintainers = [
+  { name = "The Scikit-HEP admins", email = "scikit-hep-admins@googlegroups.com" },
+]
+authors = [
+  { name = "Jim Pivarski, Henry Schreiner, Eduardo Rodrigues", email = "eduardo.rodrigues@cern.ch" },
+]
+requires-python = ">=3.8"
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: BSD License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering",
+  "Topic :: Scientific/Engineering :: Information Analysis",
+  "Topic :: Scientific/Engineering :: Mathematics",
+  "Topic :: Scientific/Engineering :: Physics",
+  "Typing :: Typed",
+]
+dynamic = [
+  "version",
+]
+dependencies = [
+  "numpy>=1.13.3",
+  "packaging>=19",
+]
+optional-dependencies.awkward = [
+  "awkward>=2",
+]
+optional-dependencies.dev = [
+  "awkward>=2",
+  "dask-awkward",
+  "sympy",
+  "nox",
+  "numba>=0.57; python_version<'3.13'",
+  "papermill>=2.4",
+  "pytest>=6",
+  "pytest-cov>=3",
+  "pytest-doctestplus",
+  "sympy",
+]
+optional-dependencies.docs = [
+  "awkward>=2",
+  "sympy",
+  "ipykernel",
+  "myst-parser>0.13",
+  "nbsphinx",
+  "sphinx>=4",
+  "sphinx-book-theme>=0.0.42",
+  "sphinx-copybutton",
+  "sphinx-math-dollar",
+]
+optional-dependencies.numba = [
+  "numba>=0.57; python_version<'3.13'",
+]
+optional-dependencies.sympy = [
+  "sympy",
+]
+optional-dependencies.test = [
+  "nox",
+  "papermill>=2.4",
+  "pytest>=6",
+  "pytest-cov>=3",
+  "pytest-doctestplus",
+]
+optional-dependencies.test-extras = [
+  "dask_awkward",
+  "spark-parser",
+  'uncompyle6; python_version == "3.8"',
+]
+urls."Bug Tracker" = "https://github.com/scikit-hep/vector/issues"
+urls.Changelog = "https://vector.readthedocs.io/en/latest/changelog.html"
+urls.Discussions = "https://github.com/scikit-hep/vector/discussions"
+urls.Documentation = "https://vector.readthedocs.io/"
+urls.Homepage = "https://github.com/scikit-hep/vector"
+entry-points.numba_extensions.init = "vector:register_numba"
 
-[tool.setuptools_scm]
-write_to = "src/vector/version.py"
+[tool.hatch]
+version.source = "vcs"
+build.hooks.vcs.version-file = "src/vector/_version.py"
+
+[tool.ruff.lint]
+extend-select = [
+  "B",   # flake8-bugbear
+  "I",   # isort
+  "C4",  # flake8-comprehensions
+  "ISC", # flake8-implicit-str-concat
+  "PGH", # pygrep-hooks
+  "PIE", # flake8-pie
+  "PL",  # pylint
+  "PT",  # flake8-pytest-style
+  "RUF", # Ruff-specific
+  "SIM", # flake8-simplify
+  "T20", # flake8-print
+  "UP",  # pyupgrade
+  "YTT", # flake8-2020
+]
+ignore = [
+  "PLR09",   # Too many X
+  "PLR2004", # Magic values
+  "ISC001", # Conflicts with formatter
+]
+typing-modules = [
+  "vector._typeutils",
+]
+isort.required-imports = [
+  "from __future__ import annotations",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"noxfile.py" = [
+  "T20",
+]
+"tests/*" = [
+  "T20",
+]
+"docs/src/*.ipynb" = [
+  "T20", "I001", "I002"
+]
+"src/vector/backends/_numba_object.py" = [
+  "PGH003",
+]
+"tests/backends/test_operators.py" = [
+  "SIM201",
+  "SIM202",
+  "PLR0124",
+]
+
+[tool.pylint]
+master.py-version = "3.8"
+reports.output-format = "colorized"
+similarities.ignore-imports = "yes"
+master.jobs = "0"
+messages_control.enable = [
+  "useless-suppression",
+]
+messages_control.disable = [
+  "fixme",
+  "invalid-name",
+  "line-too-long",
+  "missing-class-docstring",
+  "missing-function-docstring",
+  "missing-module-docstring",
+  "protected-access",
+  "too-few-public-methods",
+  "too-many-arguments",
+  "too-many-branches",
+  "too-many-lines",
+  "too-many-locals",
+  "too-many-return-statements",
+  "too-many-statements",
+  "too-many-positional-arguments",
+  "wrong-import-position",
+  "duplicate-code",
+  "import-outside-toplevel",
+  "import-error",
+  "disallowed-name",
+  "cyclic-import",
+  "no-self-use",
+  "unnecessary-lambda",
+  "unnecessary-pass",
+  "too-many-ancestors",
+  "redefined-outer-name",
+  "unused-argument",
+  "no-else-return",
+  "redefined-builtin",
+  "too-many-boolean-expressions",
+  "too-many-public-methods",
+  "inconsistent-return-statements",
+  "reimported",
+  "cast_python_value",
+  "unused-variable",
+  "unsubscriptable-object",
+  "abstract-method",
+  "no-member",
+  "consider-using-enumerate",
+  "global-statement",
+  "function-redefined",
+  "ungrouped-imports",
+  "unused-import",
+  "pointless-string-statement",
+  "useless-option-value",
+  "cast_python_value",
+  "unknown-option-value",
+  "no-else-raise",
+  "unidiomatic-typecheck",
+  "possibly-used-before-assignment", # TODO: Fix this
+  "used-before-assignment", # TODO: Fix this
+]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+xfail_strict = true
+addopts = [
+  "-ra",
+  "--strict-markers",
+  "--strict-config",
+]
+testpaths = [
+  "tests",
+]
+markers = [
+  "slow",
+  "numba",
+  "awkward",
+  "dis",
+  "sympy",
+]
+log_cli_level = "DEBUG"
+filterwarnings = [
+  "error",
+  "ignore::DeprecationWarning",
+  "ignore::UserWarning",
+]
+
+[tool.mypy]
+files = [
+  "src/vector",
+]
+python_version = "3.8"
+strict = true
+warn_return_any = false
+enable_error_code = [
+  "ignore-without-code",
+  "truthy-bool",
+  "redundant-expr",
+]
+warn_unreachable = false
+
+[[tool.mypy.overrides]]
+module = [
+  "vector._compute.*.*",
+  "numba.*",
+  "awkward.*",
+]
+ignore_missing_imports = true
+disallow_untyped_defs = false
+disallow_untyped_calls = false

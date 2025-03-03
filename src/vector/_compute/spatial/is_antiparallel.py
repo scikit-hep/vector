@@ -1,15 +1,17 @@
-# Copyright (c) 2019-2021, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
+# Copyright (c) 2019-2024, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
 #
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
-
-import typing
 
 """
 .. code-block:: python
 
     Spatial.is_antiparallel(self, other, tolerance=...)
 """
+
+from __future__ import annotations
+
+import typing
 
 import numpy
 
@@ -43,9 +45,7 @@ def make_function(azimuthal1, longitudinal1, azimuthal2, longitudinal2):
             lib, coord11, coord12, coord13, coord21, coord22, coord23
         ) < (lib.absolute(tolerance) - 1) * mag1_function(
             lib, coord11, coord12, coord13
-        ) * mag2_function(
-            lib, coord21, coord22, coord23
-        )
+        ) * mag2_function(lib, coord21, coord22, coord23)
 
     dispatch_map[azimuthal1, longitudinal1, azimuthal2, longitudinal2] = (f, bool)
 
@@ -69,9 +69,10 @@ def dispatch(tolerance: typing.Any, v1: typing.Any, v2: typing.Any) -> typing.An
         ),
     )
     with numpy.errstate(all="ignore"):
-        return _handler_of(v1, v2)._wrap_result(
+        handler = _handler_of(v1, v2)
+        return handler._wrap_result(
             _flavor_of(v1, v2),
-            function(
+            handler._wrap_dispatched_function(function)(
                 _lib_of(v1, v2),
                 tolerance,
                 *v1.azimuthal.elements,

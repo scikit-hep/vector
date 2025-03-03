@@ -1,15 +1,26 @@
-# Copyright (c) 2019-2021, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
+# Copyright (c) 2019-2024, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
 #
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
 
-import sys
-import typing
+from __future__ import annotations
 
-if sys.version_info < (3, 8):
-    from typing_extensions import TypedDict
-else:
-    from typing import TypedDict
+import typing
+from typing import Protocol, TypedDict
+
+__all__ = [
+    "BoolCollection",
+    "FloatArray",
+    "Protocol",
+    "ScalarCollection",
+    "TransformProtocol2D",
+    "TransformProtocol3D",
+    "TransformProtocol4D",
+]
+
+
+def __dir__() -> list[str]:
+    return __all__
 
 
 # Represents a number, a NumPy array, an Awkward Array, etc., of non-vectors.
@@ -55,3 +66,13 @@ class TransformProtocol4D(TypedDict):
     ty: ScalarCollection
     tz: ScalarCollection
     tt: ScalarCollection
+
+
+if typing.TYPE_CHECKING:
+    import numpy.typing
+
+    FloatArray = numpy.typing.NDArray[numpy.float64]
+else:
+    import numpy
+
+    FloatArray = numpy.ndarray

@@ -4,8 +4,12 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-# -- Path setup --------------------------------------------------------------
+from __future__ import annotations
 
+import importlib.metadata
+from datetime import datetime
+
+# -- Path setup --------------------------------------------------------------
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -14,17 +18,16 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
-from pkg_resources import get_distribution
 
 # -- Project information -----------------------------------------------------
 
 project = "Vector"
-copyright = (
-    "2019-2021, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner"
+copyright = f"2019\u2012{datetime.now().year}"
+author = (
+    "Saransh Chopra, Henry Schreiner, Jim Pivarski, Eduardo Rodrigues, and Jonas Eschle"
 )
-author = "Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner"
 
-version = get_distribution("vector").version
+version = importlib.metadata.version("vector")
 
 # -- General configuration ---------------------------------------------------
 
@@ -41,7 +44,9 @@ extensions = [
     "sphinx_math_dollar",
 ]
 
-mathjax_config = {
+source_suffix = [".rst", ".md"]
+
+mathjax3_config = {
     "tex2jax": {
         "inlineMath": [["\\(", "\\)"]],
         "displayMath": [["\\[", "\\]"]],

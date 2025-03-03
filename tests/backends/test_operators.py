@@ -1,7 +1,9 @@
-# Copyright (c) 2019-2021, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
+# Copyright (c) 2019-2024, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
 #
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
+
+from __future__ import annotations
 
 import numpy
 import pytest
@@ -24,6 +26,10 @@ def test_eq():
     assert not (v1 == a1).all()
     assert (a1 == v1).any()
     assert not (a1 == v1).all()
+    with pytest.raises(TypeError):
+        v1.equal(v2.to_Vector3D())
+    with pytest.raises(TypeError):
+        a1.equal(a2.to_Vector3D())
 
 
 def test_ne():
@@ -35,10 +41,14 @@ def test_ne():
     assert not (v1 != a1).all()
     assert (a1 != v1).any()
     assert not (a1 != v1).all()
+    with pytest.raises(TypeError):
+        v1.not_equal(v2.to_Vector3D())
+    with pytest.raises(TypeError):
+        a1.not_equal(a2.to_Vector3D())
 
 
 def test_abs():
-    assert abs(v1) == pytest.approx(numpy.sqrt(1 ** 2 + 5 ** 2))
+    assert abs(v1) == pytest.approx(numpy.sqrt(1**2 + 5**2))
     assert numpy.allclose(
         abs(a1),
         numpy.sqrt(numpy.array([1, 2, 3, 4]) ** 2 + numpy.array([5, 6, 7, 8]) ** 2),
@@ -47,8 +57,13 @@ def test_abs():
 
 def test_add():
     assert v1 + v2 == vector.obj(x=11, y=25)
+    assert v1 + v2.to_Vector3D().like(v1) == vector.obj(x=11, y=25)
     assert numpy.allclose(
         a1 + a2,
+        vector.array({"x": [11, 102, 1003, 10004], "y": [25, 206, 2007, 20008]}),
+    )
+    assert numpy.allclose(
+        a1 + a2.to_Vector3D().like(a1),
         vector.array({"x": [11, 102, 1003, 10004], "y": [25, 206, 2007, 20008]}),
     )
     assert numpy.allclose(
@@ -63,6 +78,10 @@ def test_add():
         v1 + 5
     with pytest.raises(TypeError):
         5 + v1
+    with pytest.raises(TypeError):
+        v1 + v2.to_Vector3D()
+    with pytest.raises(TypeError):
+        a1 + a2.to_Vector3D()
 
 
 def test_sub():
@@ -83,6 +102,10 @@ def test_sub():
         v1 - 5
     with pytest.raises(TypeError):
         5 - v1
+    with pytest.raises(TypeError):
+        v1 - v2.to_Vector3D()
+    with pytest.raises(TypeError):
+        a1 - a2.to_Vector3D()
 
 
 def test_mul():
@@ -128,21 +151,19 @@ def test_truediv():
 
 
 def test_pow():
-    assert v1 ** 2 == pytest.approx(1 ** 2 + 5 ** 2)
+    assert v1**2 == pytest.approx(1**2 + 5**2)
     with pytest.raises(TypeError):
-        2 ** v1
+        2**v1
     assert numpy.allclose(
-        a1 ** 2,
-        numpy.array(
-            [1 ** 2 + 5 ** 2, 2 ** 2 + 6 ** 2, 3 ** 2 + 7 ** 2, 4 ** 2 + 8 ** 2]
-        ),
+        a1**2,
+        numpy.array([1**2 + 5**2, 2**2 + 6**2, 3**2 + 7**2, 4**2 + 8**2]),
     )
     with pytest.raises(TypeError):
-        2 ** a1
+        2**a1
     with pytest.raises(TypeError):
-        v1 ** v2
+        v1**v2
     with pytest.raises(TypeError):
-        a1 ** a2
+        a1**a2
 
 
 def test_matmul():

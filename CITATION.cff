@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "Please cite the following works when using this software."
+type: software
+title: "vector"
+abstract: "Vector is a Python library for 2D, 3D, and Lorentz vectors, especially arrays of vectors, to solve common physics problems in a NumPy-like way."
+authors:
+- family-names: "Schreiner"
+  given-names: "Henry"
+  orcid: "https://orcid.org/0000-0002-7833-783X"
+  affiliation: "Princeton University"
+- family-names: "Pivarski"
+  given-names: "Jim"
+  orcid: "https://orcid.org/0000-0002-6649-343X"
+  affiliation: "Princeton University"
+- family-names: "Chopra"
+  given-names: "Saransh"
+  orcid: "https://orcid.org/0000-0003-3046-7675"
+  affiliation: "University of Delhi"
+doi: 10.5281/zenodo.5942082
+repository-code: "https://github.com/scikit-hep/vector"
+url: "https://vector.readthedocs.io/"
+keywords:
+  - python
+  - vectors
+  - scikit-hep
+license: "BSD-3-Clause"

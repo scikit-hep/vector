@@ -1,15 +1,17 @@
-# Copyright (c) 2019-2021, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
+# Copyright (c) 2019-2024, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
 #
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
-
-import typing
 
 """
 .. code-block:: python
 
     Lorentz.isclose(self, rtol=..., atol=..., equal_nan=...)
 """
+
+from __future__ import annotations
+
+import typing
 
 import numpy
 
@@ -219,9 +221,10 @@ def dispatch(
         ),
     )
     with numpy.errstate(all="ignore"):
-        return _handler_of(v1, v2)._wrap_result(
+        handler = _handler_of(v1, v2)
+        return handler._wrap_result(
             _flavor_of(v1, v2),
-            function(
+            handler._wrap_dispatched_function(function)(
                 _lib_of(v1, v2),
                 rtol,
                 atol,

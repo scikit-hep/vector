@@ -1,9 +1,7 @@
-# Copyright (c) 2019-2021, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
+# Copyright (c) 2019-2024, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
 #
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
-
-import typing
 
 """
 .. code-block:: python
@@ -12,6 +10,10 @@ import typing
 
 where ``obj` has ``obj["xx"]``, ``obj["xy"]``, etc.
 """
+
+from __future__ import annotations
+
+import typing
 
 import numpy
 
@@ -127,7 +129,7 @@ def dispatch(obj: typing.Any, v: typing.Any) -> typing.Any:
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
             _flavor_of(v),
-            function(
+            v._wrap_dispatched_function(function)(
                 v.lib,
                 obj["xx"],
                 obj["xy"],
@@ -139,7 +141,7 @@ def dispatch(obj: typing.Any, v: typing.Any) -> typing.Any:
                 obj["zy"],
                 obj["zz"],
                 *v.azimuthal.elements,
-                *v.longitudinal.elements
+                *v.longitudinal.elements,
             ),
             returns,
             1,

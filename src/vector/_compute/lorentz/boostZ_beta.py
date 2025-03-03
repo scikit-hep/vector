@@ -1,15 +1,17 @@
-# Copyright (c) 2019-2021, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
+# Copyright (c) 2019-2024, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
 #
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
-
-import typing
 
 """
 .. code-block:: python
 
     Lorentz.boostZ(self, beta=...)
 """
+
+from __future__ import annotations
+
+import typing
 
 import numpy
 
@@ -32,7 +34,7 @@ from vector._methods import (
 
 
 def xy_z_t(lib, beta, x, y, z, t):
-    gam = (1 - beta ** 2) ** -0.5
+    gam = (1 - beta**2) ** -0.5
     bgam = beta * gam
     zee = z
     tee = t
@@ -40,7 +42,7 @@ def xy_z_t(lib, beta, x, y, z, t):
 
 
 def xy_z_tau(lib, beta, x, y, z, tau):
-    gam = (1 - beta ** 2) ** -0.5
+    gam = (1 - beta**2) ** -0.5
     bgam = beta * gam
     zee = z
     tee = t.xy_z_tau(lib, x, y, z, tau)
@@ -48,7 +50,7 @@ def xy_z_tau(lib, beta, x, y, z, tau):
 
 
 def xy_theta_t(lib, beta, x, y, theta, t):
-    gam = (1 - beta ** 2) ** -0.5
+    gam = (1 - beta**2) ** -0.5
     bgam = beta * gam
     zee = z.xy_theta(lib, x, y, theta)
     tee = t
@@ -56,7 +58,7 @@ def xy_theta_t(lib, beta, x, y, theta, t):
 
 
 def xy_theta_tau(lib, beta, x, y, theta, tau):
-    gam = (1 - beta ** 2) ** -0.5
+    gam = (1 - beta**2) ** -0.5
     bgam = beta * gam
     zee = z.xy_theta(lib, x, y, theta)
     tee = t.xy_theta_tau(lib, x, y, theta, tau)
@@ -64,7 +66,7 @@ def xy_theta_tau(lib, beta, x, y, theta, tau):
 
 
 def xy_eta_t(lib, beta, x, y, eta, t):
-    gam = (1 - beta ** 2) ** -0.5
+    gam = (1 - beta**2) ** -0.5
     bgam = beta * gam
     zee = z.xy_eta(lib, x, y, eta)
     tee = t
@@ -72,7 +74,7 @@ def xy_eta_t(lib, beta, x, y, eta, t):
 
 
 def xy_eta_tau(lib, beta, x, y, eta, tau):
-    gam = (1 - beta ** 2) ** -0.5
+    gam = (1 - beta**2) ** -0.5
     bgam = beta * gam
     zee = z.xy_eta(lib, x, y, eta)
     tee = t.xy_eta_tau(lib, x, y, eta, tau)
@@ -80,7 +82,7 @@ def xy_eta_tau(lib, beta, x, y, eta, tau):
 
 
 def rhophi_z_t(lib, beta, rho, phi, z, t):
-    gam = (1 - beta ** 2) ** -0.5
+    gam = (1 - beta**2) ** -0.5
     bgam = beta * gam
     zee = z
     tee = t
@@ -88,7 +90,7 @@ def rhophi_z_t(lib, beta, rho, phi, z, t):
 
 
 def rhophi_z_tau(lib, beta, rho, phi, z, tau):
-    gam = (1 - beta ** 2) ** -0.5
+    gam = (1 - beta**2) ** -0.5
     bgam = beta * gam
     zee = z
     tee = t.rhophi_z_tau(lib, rho, phi, z, tau)
@@ -96,7 +98,7 @@ def rhophi_z_tau(lib, beta, rho, phi, z, tau):
 
 
 def rhophi_theta_t(lib, beta, rho, phi, theta, t):
-    gam = (1 - beta ** 2) ** -0.5
+    gam = (1 - beta**2) ** -0.5
     bgam = beta * gam
     zee = z.rhophi_theta(lib, rho, phi, theta)
     tee = t
@@ -104,7 +106,7 @@ def rhophi_theta_t(lib, beta, rho, phi, theta, t):
 
 
 def rhophi_theta_tau(lib, beta, rho, phi, theta, tau):
-    gam = (1 - beta ** 2) ** -0.5
+    gam = (1 - beta**2) ** -0.5
     bgam = beta * gam
     zee = z.rhophi_theta(lib, rho, phi, theta)
     tee = t.rhophi_theta_tau(lib, rho, phi, theta, tau)
@@ -112,7 +114,7 @@ def rhophi_theta_tau(lib, beta, rho, phi, theta, tau):
 
 
 def rhophi_eta_t(lib, beta, rho, phi, eta, t):
-    gam = (1 - beta ** 2) ** -0.5
+    gam = (1 - beta**2) ** -0.5
     bgam = beta * gam
     zee = z.rhophi_eta(lib, rho, phi, eta)
     tee = t
@@ -120,7 +122,7 @@ def rhophi_eta_t(lib, beta, rho, phi, eta, t):
 
 
 def rhophi_eta_tau(lib, beta, rho, phi, eta, tau):
-    gam = (1 - beta ** 2) ** -0.5
+    gam = (1 - beta**2) ** -0.5
     bgam = beta * gam
     zee = z.rhophi_eta(lib, rho, phi, eta)
     tee = t.rhophi_eta_tau(lib, rho, phi, eta, tau)
@@ -216,12 +218,12 @@ def dispatch(beta: typing.Any, v: typing.Any) -> typing.Any:
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
             _flavor_of(v),
-            function(
+            v._wrap_dispatched_function(function)(
                 v.lib,
                 beta,
                 *v.azimuthal.elements,
                 *v.longitudinal.elements,
-                *v.temporal.elements
+                *v.temporal.elements,
             ),
             returns,
             1,

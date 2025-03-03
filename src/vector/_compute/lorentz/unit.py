@@ -1,15 +1,18 @@
-# Copyright (c) 2019-2021, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
+# Copyright (c) 2019-2024, Jonas Eschle, Jim Pivarski, Eduardo Rodrigues, and Henry Schreiner.
 #
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
-
-import typing
 
 """
 .. code-block:: python
 
     Lorentz.unit(self)
 """
+
+from __future__ import annotations
+
+import typing
+from math import inf
 
 import numpy
 
@@ -34,19 +37,19 @@ def xy_z_t(lib, x, y, z, t):
     squared = tau2.xy_z_t(lib, x, y, z, t)
     norm = lib.sqrt(lib.absolute(squared))
     return (
-        lib.nan_to_num(x / norm, nan=0),
-        lib.nan_to_num(y / norm, nan=0),
-        lib.nan_to_num(z / norm, nan=0),
-        lib.nan_to_num(t / norm, nan=0),
+        lib.nan_to_num(x / norm, nan=0, posinf=inf, neginf=-inf),
+        lib.nan_to_num(y / norm, nan=0, posinf=inf, neginf=-inf),
+        lib.nan_to_num(z / norm, nan=0, posinf=inf, neginf=-inf),
+        lib.nan_to_num(t / norm, nan=0, posinf=inf, neginf=-inf),
     )
 
 
 def xy_z_tau(lib, x, y, z, tau):
     norm = lib.absolute(tau)
     return (
-        lib.nan_to_num(x / norm, nan=0),
-        lib.nan_to_num(y / norm, nan=0),
-        lib.nan_to_num(z / norm, nan=0),
+        lib.nan_to_num(x / norm, nan=0, posinf=inf, neginf=-inf),
+        lib.nan_to_num(y / norm, nan=0, posinf=inf, neginf=-inf),
+        lib.nan_to_num(z / norm, nan=0, posinf=inf, neginf=-inf),
         lib.copysign(1, tau),
     )
 
@@ -55,18 +58,18 @@ def xy_theta_t(lib, x, y, theta, t):
     squared = tau2.xy_theta_t(lib, x, y, theta, t)
     norm = lib.sqrt(lib.absolute(squared))
     return (
-        lib.nan_to_num(x / norm, nan=0),
-        lib.nan_to_num(y / norm, nan=0),
+        lib.nan_to_num(x / norm, nan=0, posinf=inf, neginf=-inf),
+        lib.nan_to_num(y / norm, nan=0, posinf=inf, neginf=-inf),
         theta,
-        lib.nan_to_num(t / norm, nan=0),
+        lib.nan_to_num(t / norm, nan=0, posinf=inf, neginf=-inf),
     )
 
 
 def xy_theta_tau(lib, x, y, theta, tau):
     norm = lib.absolute(tau)
     return (
-        lib.nan_to_num(x / norm, nan=0),
-        lib.nan_to_num(y / norm, nan=0),
+        lib.nan_to_num(x / norm, nan=0, posinf=inf, neginf=-inf),
+        lib.nan_to_num(y / norm, nan=0, posinf=inf, neginf=-inf),
         theta,
         lib.copysign(1, tau),
     )
@@ -76,18 +79,18 @@ def xy_eta_t(lib, x, y, eta, t):
     squared = tau2.xy_eta_t(lib, x, y, eta, t)
     norm = lib.sqrt(lib.absolute(squared))
     return (
-        lib.nan_to_num(x / norm, nan=0),
-        lib.nan_to_num(y / norm, nan=0),
+        lib.nan_to_num(x / norm, nan=0, posinf=inf, neginf=-inf),
+        lib.nan_to_num(y / norm, nan=0, posinf=inf, neginf=-inf),
         eta,
-        lib.nan_to_num(t / norm, nan=0),
+        lib.nan_to_num(t / norm, nan=0, posinf=inf, neginf=-inf),
     )
 
 
 def xy_eta_tau(lib, x, y, eta, tau):
     norm = lib.absolute(tau)
     return (
-        lib.nan_to_num(x / norm, nan=0),
-        lib.nan_to_num(y / norm, nan=0),
+        lib.nan_to_num(x / norm, nan=0, posinf=inf, neginf=-inf),
+        lib.nan_to_num(y / norm, nan=0, posinf=inf, neginf=-inf),
         eta,
         lib.copysign(1, tau),
     )
@@ -97,19 +100,19 @@ def rhophi_z_t(lib, rho, phi, z, t):
     squared = tau2.rhophi_z_t(lib, rho, phi, z, t)
     norm = lib.sqrt(lib.absolute(squared))
     return (
-        lib.nan_to_num(rho / norm, nan=0),
+        lib.nan_to_num(rho / norm, nan=0, posinf=inf, neginf=-inf),
         phi,
-        lib.nan_to_num(z / norm, nan=0),
-        lib.nan_to_num(t / norm, nan=0),
+        lib.nan_to_num(z / norm, nan=0, posinf=inf, neginf=-inf),
+        lib.nan_to_num(t / norm, nan=0, posinf=inf, neginf=-inf),
     )
 
 
 def rhophi_z_tau(lib, rho, phi, z, tau):
     norm = lib.absolute(tau)
     return (
-        lib.nan_to_num(rho / norm, nan=0),
+        lib.nan_to_num(rho / norm, nan=0, posinf=inf, neginf=-inf),
         phi,
-        lib.nan_to_num(z / norm, nan=0),
+        lib.nan_to_num(z / norm, nan=0, posinf=inf, neginf=-inf),
         lib.copysign(1, tau),
     )
 
@@ -118,32 +121,42 @@ def rhophi_theta_t(lib, rho, phi, theta, t):
     squared = tau2.rhophi_theta_t(lib, rho, phi, theta, t)
     norm = lib.sqrt(lib.absolute(squared))
     return (
-        lib.nan_to_num(rho / norm, nan=0),
+        lib.nan_to_num(rho / norm, nan=0, posinf=inf, neginf=-inf),
         phi,
         theta,
-        lib.nan_to_num(t / norm, nan=0),
+        lib.nan_to_num(t / norm, nan=0, posinf=inf, neginf=-inf),
     )
 
 
 def rhophi_theta_tau(lib, rho, phi, theta, tau):
     norm = lib.absolute(tau)
-    return (lib.nan_to_num(rho / norm, nan=0), phi, theta, lib.copysign(1, tau))
+    return (
+        lib.nan_to_num(rho / norm, nan=0, posinf=inf, neginf=-inf),
+        phi,
+        theta,
+        lib.copysign(1, tau),
+    )
 
 
 def rhophi_eta_t(lib, rho, phi, eta, t):
     squared = tau2.rhophi_eta_t(lib, rho, phi, eta, t)
     norm = lib.sqrt(lib.absolute(squared))
     return (
-        lib.nan_to_num(rho / norm, nan=0),
+        lib.nan_to_num(rho / norm, nan=0, posinf=inf, neginf=-inf),
         phi,
         eta,
-        lib.nan_to_num(t / norm, nan=0),
+        lib.nan_to_num(t / norm, nan=0, posinf=inf, neginf=-inf),
     )
 
 
 def rhophi_eta_tau(lib, rho, phi, eta, tau):
     norm = lib.absolute(tau)
-    return (lib.nan_to_num(rho / norm, nan=0), phi, eta, lib.copysign(1, tau))
+    return (
+        lib.nan_to_num(rho / norm, nan=0, posinf=inf, neginf=-inf),
+        phi,
+        eta,
+        lib.copysign(1, tau),
+    )
 
 
 dispatch_map = {
@@ -235,11 +248,11 @@ def dispatch(v: typing.Any) -> typing.Any:
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
             _flavor_of(v),
-            function(
+            v._wrap_dispatched_function(function)(
                 v.lib,
                 *v.azimuthal.elements,
                 *v.longitudinal.elements,
-                *v.temporal.elements
+                *v.temporal.elements,
             ),
             returns,
             1,

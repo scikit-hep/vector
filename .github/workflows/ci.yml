@@ -4,76 +4,124 @@ on:
   pull_request:
   push:
     branches:
-    - main
-    - develop
+      - main
+      - develop
+  workflow_dispatch:
+
+concurrency:
+  # Skip intermediate builds: always.
+  # Cancel intermediate builds: only if it is a pull request build.
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
+
+env:
+  # The "FORCE_COLOR" variable, when set to 1,
+  # tells Nox to colorize itself.
+  FORCE_COLOR: "1"
 
 jobs:
   pre-commit:
     runs-on: ubuntu-latest
     name: Check SDist
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
-    - uses: pre-commit/action@v2.0.3
-      with:
-        extra_args: --hook-stage manual check-manifest
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - uses: astral-sh/setup-uv@v5
+      - name: PyLint
+        run: uvx nox -s pylint -- --output-format=github
 
-  checks:
+  check-lite:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         python-version:
-        - 3.6
-        - 3.7
-        - 3.8
-        - 3.9
-    name: Check Python ${{ matrix.python-version }}
+          - "3.8"
+          - "3.9"
+          - "3.10"
+          - "3.11"
+          - "3.12"
+          - "3.13"
+    name: Python ${{ matrix.python-version }} - Lite
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-    - uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
 
-    - name: Requirements check
-      run: python -m pip list
+      - uses: astral-sh/setup-uv@v5
 
-    - name: Install package
-      run: python -m pip install -e .[test]
+      - name: Test lite package
+        run: uvx nox -s lite-${{ matrix.python-version }} --verbose
 
-    - name: Test light package
-      run: python -m pytest -ra
+  check-full:
+    needs: [check-lite]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.8"
+          - "3.9"
+          - "3.10"
+          - "3.11"
+          - "3.12"
+          - "3.13"
+    name: Python ${{ matrix.python-version }} - Full
+    steps:
+      - uses: actions/checkout@v4
 
-    - name: Install develop extras
-      run: python -m pip install -e .[dev]
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
 
-    - name: Test package
-      run: python -m pytest -ra
+      - uses: astral-sh/setup-uv@v5
+
+      - name: Install nox
+        run: uv tool install nox
+
+      - name: Run doctests on Python 3.11
+        if: matrix.python-version == 3.11
+        run: nox -s doctests-${{ matrix.python-version }} --verbose
+
+      - name: Test package and generate coverage report
+        run: nox -s coverage-${{ matrix.python-version }} --verbose
+
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v5.4.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   discheck:
     runs-on: ubuntu-latest
     name: Disassemble check
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-    - uses: actions/setup-python@v2
-      with:
-        python-version: 3.8.8
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.8.13
 
-    - name: Requirements check
-      run: python -m pip list
+      - uses: astral-sh/setup-uv@v5
 
-    - name: Check compute features
-      run: python -m pip install .[test,test_extras]
+      - name: Test compute features
+        run: uvx nox -s disassemble --verbose
 
-    - name: Test package
-      run: python -m pytest -ra -m dis
+  pass:
+    needs: [pre-commit, check-lite, check-full, discheck]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "All jobs passed"
 
   # root:
   #   runs-on: ubuntu-latest
   #   steps:
-  #   - uses: actions/checkout@v2
+  #   - uses: actions/checkout@v4
 
     - name: Get Conda
       uses: conda-incubator/setup-miniconda@v2
