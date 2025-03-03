@@ -2,6 +2,7 @@
 #
 # Distributed under the 3-clause BSD license, see accompanying file LICENSE
 # or https://github.com/scikit-hep/vector for details.
+from __future__ import annotations
 
 import numpy as np
 import pytest
