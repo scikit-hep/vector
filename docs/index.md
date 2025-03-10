@@ -65,7 +65,7 @@ Finally, vectors come in two flavors:
 
 Names and coordinate conventions were chosen to align with [ROOT](https://root.cern/)'s [TLorentzVector](https://root.cern.ch/doc/master/classTLorentzVector.html) and [Math::LorentzVector](https://root.cern.ch/doc/master/classROOT_1_1Math_1_1LorentzVector.html), as well as [scikit-hep/math](https://github.com/scikit-hep/scikit-hep/tree/master/skhep/math), [uproot-methods TLorentzVector](https://github.com/scikit-hep/uproot3-methods/blob/master/uproot3_methods/classes/TLorentzVector.py), [henryiii/hepvector](https://github.com/henryiii/hepvector), and [coffea.nanoevents.methods.vector](https://coffea-hep.readthedocs.io/en/latest/modules/coffea.nanoevents.methods.vector.html).
 
-Vector follows the `(-, -, -, +)` metric convention for Lorentz vectors. Further, the transformations and rotations (including boosts) are active, and the Euler angle conventions align with the formalisations in the [GenVector package](https://root.cern/topical/GenVector.pdf).
+Vector follows the `(-, -, -, +)` (`x, y, z, t`) metric convention for Lorentz vectors. Further, the transformations and rotations (including boosts) are active, and the Euler angle conventions align with the formalisations in the [GenVector package](https://root.cern/topical/GenVector.pdf).
 
 ## Getting help
 
