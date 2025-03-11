@@ -65,7 +65,21 @@ Finally, vectors come in two flavors:
 
 Names and coordinate conventions were chosen to align with [ROOT](https://root.cern/)'s [TLorentzVector](https://root.cern.ch/doc/master/classTLorentzVector.html) and [Math::LorentzVector](https://root.cern.ch/doc/master/classROOT_1_1Math_1_1LorentzVector.html), as well as [scikit-hep/math](https://github.com/scikit-hep/scikit-hep/tree/master/skhep/math), [uproot-methods TLorentzVector](https://github.com/scikit-hep/uproot3-methods/blob/master/uproot3_methods/classes/TLorentzVector.py), [henryiii/hepvector](https://github.com/henryiii/hepvector), and [coffea.nanoevents.methods.vector](https://coffea-hep.readthedocs.io/en/latest/modules/coffea.nanoevents.methods.vector.html).
 
-Vector follows the `(-, -, -, +)` (`x, y, z, t`) metric convention for Lorentz vectors. Further, the transformations and rotations (including boosts) are active, and the Euler angle conventions align with the formalisations in the [GenVector package](https://root.cern/topical/GenVector.pdf).
+Vector follows the $(-, -, -, +)$ (`x, y, z, t`) metric convention for Lorentz vectors. The $(-,-,-,+)$ metric convention for Lorentz vectors corresponds to the Minkowski metric:
+
+```{math}
+g_{\mu\nu} = \text{diag}(-1, -1, -1, +1)
+```
+
+For a Lorentz vector $p^\mu = (p_x, p_y, p_z, E)$, the squared norm (or invariant mass squared) is given by:
+
+```{math}
+p^\mu p_\mu = g_{\mu\nu} p^\mu p^\nu = E^2 - p_x^2 - p_y^2 - p_z^2
+```
+
+This convention is widely used in high-energy physics (HEP), including frameworks such as ROOT.
+
+Further, the transformations and rotations (including boosts) are active, and the Euler angle conventions align with the formalisations in the [GenVector package](https://root.cern/topical/GenVector.pdf). More precisely, the implementation of `rotate_euler` uses the matrices defined in the [wikipedia article](https://en.wikipedia.org/wiki/Euler_angles#Rotation_matrix).
 
 ## Getting help
 
