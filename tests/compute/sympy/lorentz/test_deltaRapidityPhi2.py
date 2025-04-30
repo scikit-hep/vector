@@ -28,9 +28,8 @@ def test_lorentz_sympy():
         vector.backends.sympy.LongitudinalSympyZ(nz),
         vector.backends.sympy.TemporalSympyTau(nt),
     )
-    assert (
-        v1.deltaRapidityPhi2(v2)
-        == 0.25
+    expected = (
+        0.25
         * (
             -sympy.log(
                 (nz + sympy.sqrt(nt**2 + nx**2 + ny**2 + nz**2))
@@ -48,6 +47,8 @@ def test_lorentz_sympy():
         )
         ** 2
     )
+
+    assert sympy.simplify(expected - v1.deltaRapidityPhi2(v2)) == 0
 
     expected_result = (
         # phi
