@@ -76,7 +76,7 @@ except ImportError:
     if not typing.TYPE_CHECKING:
         VectorAwkward = None
 else:
-    from vector.backends.awkward import VectorAwkward
+    from vector.backends.awkward import VectorAwkward, awkward_transform
 
 try:
     import sympy  # type: ignore[import-untyped]
@@ -143,6 +143,7 @@ __all__: tuple[str, ...] = (
     "arr",
     "array",
     "awk",
+    "awkward_transform",
     "dim",
     "obj",
     "register_awkward",

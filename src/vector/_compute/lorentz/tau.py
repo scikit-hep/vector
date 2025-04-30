@@ -43,6 +43,9 @@ def xy_z_tau(lib, x, y, z, tau):
     return tau
 
 
+xy_z_tau.__awkward_transform_allowed__ = False  # type:ignore[attr-defined]
+
+
 def xy_theta_t(lib, x, y, theta, t):
     squared = tau2.xy_theta_t(lib, x, y, theta, t)
     return lib.copysign(lib.sqrt(lib.absolute(squared)), squared)
@@ -50,6 +53,9 @@ def xy_theta_t(lib, x, y, theta, t):
 
 def xy_theta_tau(lib, x, y, theta, tau):
     return tau
+
+
+xy_theta_tau.__awkward_transform_allowed__ = False  # type:ignore[attr-defined]
 
 
 def xy_eta_t(lib, x, y, eta, t):
@@ -61,6 +67,9 @@ def xy_eta_tau(lib, x, y, eta, tau):
     return tau
 
 
+xy_eta_tau.__awkward_transform_allowed__ = False  # type:ignore[attr-defined]
+
+
 def rhophi_z_t(lib, rho, phi, z, t):
     squared = tau2.rhophi_z_t(lib, rho, phi, z, t)
     return lib.copysign(lib.sqrt(lib.absolute(squared)), squared)
@@ -68,6 +77,9 @@ def rhophi_z_t(lib, rho, phi, z, t):
 
 def rhophi_z_tau(lib, rho, phi, z, tau):
     return tau
+
+
+rhophi_z_tau.__awkward_transform_allowed__ = False  # type:ignore[attr-defined]
 
 
 def rhophi_theta_t(lib, rho, phi, theta, t):
@@ -79,6 +91,9 @@ def rhophi_theta_tau(lib, rho, phi, theta, tau):
     return tau
 
 
+rhophi_theta_tau.__awkward_transform_allowed__ = False  # type:ignore[attr-defined]
+
+
 def rhophi_eta_t(lib, rho, phi, eta, t):
     squared = tau2.rhophi_eta_t(lib, rho, phi, eta, t)
     return lib.copysign(lib.sqrt(lib.absolute(squared)), squared)
@@ -86,6 +101,9 @@ def rhophi_eta_t(lib, rho, phi, eta, t):
 
 def rhophi_eta_tau(lib, rho, phi, eta, tau):
     return tau
+
+
+rhophi_eta_tau.__awkward_transform_allowed__ = False  # type:ignore[attr-defined]
 
 
 dispatch_map = {
@@ -117,7 +135,7 @@ def dispatch(v: typing.Any) -> typing.Any:
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
             _flavor_of(v),
-            function(
+            v._wrap_dispatched_function(function)(
                 v.lib,
                 *v.azimuthal.elements,
                 *v.longitudinal.elements,

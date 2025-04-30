@@ -50,6 +50,9 @@ def xy_eta(lib, x, y, eta):
     return eta
 
 
+xy_eta.__awkward_transform_allowed__ = False  # type:ignore[attr-defined]
+
+
 def rhophi_z(lib, rho, phi, z):
     return lib.nan_to_num(
         lib.arcsinh(z / rho),
@@ -65,6 +68,9 @@ def rhophi_theta(lib, rho, phi, theta):
 
 def rhophi_eta(lib, rho, phi, eta):
     return eta
+
+
+rhophi_eta.__awkward_transform_allowed__ = False  # type:ignore[attr-defined]
 
 
 dispatch_map = {
@@ -89,7 +95,9 @@ def dispatch(v: typing.Any) -> typing.Any:
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
             _flavor_of(v),
-            function(v.lib, *v.azimuthal.elements, *v.longitudinal.elements),
+            v._wrap_dispatched_function(function)(
+                v.lib, *v.azimuthal.elements, *v.longitudinal.elements
+            ),
             returns,
             1,
         )

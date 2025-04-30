@@ -757,6 +757,9 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
         else:
             raise AssertionError(repr(returns))
 
+    def _wrap_dispatched_function(self, func: typing.Callable) -> typing.Callable:  # type: ignore[type-arg]
+        return func
+
     @property
     def x(self) -> float:
         return super().x
@@ -1157,6 +1160,9 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
 
         else:
             raise AssertionError(repr(returns))
+
+    def _wrap_dispatched_function(self, func: typing.Callable) -> typing.Callable:  # type: ignore[type-arg]
+        return func
 
     @property
     def x(self) -> float:
@@ -1875,6 +1881,9 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
 
         else:
             raise AssertionError(repr(returns))
+
+    def _wrap_dispatched_function(self, func: typing.Callable) -> typing.Callable:  # type: ignore[type-arg]
+        return func
 
     @property
     def x(self) -> float:

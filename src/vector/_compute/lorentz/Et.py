@@ -115,7 +115,7 @@ def dispatch(v: typing.Any) -> typing.Any:
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
             _flavor_of(v),
-            function(
+            v._wrap_dispatched_function(function)(
                 v.lib,
                 *v.azimuthal.elements,
                 *v.longitudinal.elements,

@@ -172,6 +172,9 @@ class VectorProtocol:
         """
         raise AssertionError
 
+    def _wrap_dispatched_function(self, func: typing.Callable) -> typing.Callable:  # type: ignore[type-arg]
+        raise AssertionError
+
     ProjectionClass2D: type[VectorProtocolPlanar]
     ProjectionClass3D: type[VectorProtocolSpatial]
     ProjectionClass4D: type[VectorProtocolLorentz]
@@ -4406,7 +4409,7 @@ def _lib_of(*objects: VectorProtocol) -> Module:  # NumPy-like module
         if isinstance(obj, Vector):
             if lib is None:
                 lib = obj.lib
-            elif lib is not obj.lib:
+            elif lib != obj.lib:
                 raise TypeError(
                     f"cannot use {lib} and {obj.lib} in the same calculation"
                 )

@@ -32,7 +32,9 @@ manages this non-strictness well.
 
 from __future__ import annotations
 
+import functools
 import numbers
+import operator
 import types
 import typing
 
@@ -620,10 +622,38 @@ class AwkwardProtocol(Protocol):
     def __getitem__(self, where: typing.Any) -> float | ak.Array | ak.Record | None: ...
 
 
+class _lib(typing.NamedTuple):
+    """a wrapper that respects the numpy-like interface of awkward-array and the module interface of numpy"""
+
+    module: types.ModuleType
+    nplike: ak._nplikes.numpy_like.NumpyLike
+
+    def __eq__(self, other: typing.Any) -> bool:
+        if isinstance(other, _lib):
+            return self.module is other.module and self.nplike is other.nplike
+        else:
+            return self.module is other
+
+    def __ne__(self, other: typing.Any) -> bool:
+        return not self.__eq__(other)
+
+    def __getattr__(self, name: str) -> typing.Any:
+        if fun := getattr(self.nplike, name, False):
+            return fun
+        else:
+            return getattr(self.module, name)
+
+
 class VectorAwkward:
     """Mixin class for Awkward vectors."""
 
-    lib: types.ModuleType = numpy
+    @property
+    def lib(self):  # type:ignore[no-untyped-def]
+        if (
+            nplike := self.layout.backend.nplike  # type:ignore[attr-defined]
+        ) is ak._nplikes.typetracer.TypeTracer.instance():
+            return _lib(module=numpy, nplike=nplike)
+        return numpy
 
     def _wrap_result(
         self: AwkwardProtocol,
@@ -966,6 +996,105 @@ class VectorAwkward:
 
         else:
             raise AssertionError(repr(returns))
+
+    def _wrap_dispatched_function(
+        self: AwkwardProtocol,
+        func: typing.Callable,  # type: ignore[type-arg]
+    ) -> typing.Callable:  # type: ignore[type-arg]
+        return awkward_transform(func)
+
+
+_placeholder = object()
+
+
+class bind(functools.partial):  # type: ignore[type-arg]
+    def __call__(self, *args: typing.Any, **keywords: typing.Any) -> typing.Any:
+        keywords = {**self.keywords, **keywords}
+        iargs = iter(args)
+        args = tuple(next(iargs) if arg is _placeholder else arg for arg in self.args)
+        return self.func(*args, *iargs, **keywords)
+
+
+class awkward_transform:
+    """Apply a batch of transformations in a single layout traversal"""
+
+    def __init__(self, func: typing.Callable) -> None:  # type: ignore[type-arg]
+        self.func = func
+
+    def __call__(self, *args: typing.Any, **kwargs: typing.Any) -> typing.Callable:  # type: ignore[type-arg]
+        # '__awkward_transform_allowed__' is a flag that can be set to False to disable this wrapping, e.g. for no-ops
+        if not getattr(self.func, "__awkward_transform_allowed__", True):
+            return self.func(*args, **kwargs)
+
+        # only pos args
+        assert not kwargs
+
+        # prepare the function and its args; we're currently assuming non-nested input args
+        args2bind, awkward_arrays = [], []
+        n_orig_akarrays = 0
+        for arg in args:
+            if isinstance(arg, (ak.highlevel.Array, ak.highlevel.Record)):
+                n_orig_akarrays += 1
+                awkward_arrays.append(arg)
+                args2bind.append(_placeholder)
+            elif ak._regularize.is_array_like(arg):
+                awkward_arrays.append(ak.Array(ak.to_layout(arg)))
+                args2bind.append(_placeholder)
+            else:
+                args2bind.append(arg)
+
+        # this means we're working with awkward-arrays and we should group operations with ak.transform
+        if n_orig_akarrays > 0:
+
+            def transformer(
+                layouts: ak.contents.Content | tuple[ak.contents.Content, ...],
+                **kwargs: typing.Any,
+            ) -> ak.contents.Content:
+                if not isinstance(layouts, tuple):
+                    layouts = (layouts,)
+                if all(layout.is_numpy for layout in layouts):
+                    # setup parameter propagation, taken from awkward's broadcasting machinery
+                    options = kwargs["options"]
+                    rule = options.pop("broadcast_parameters_rule", None)
+                    try:
+                        parameters_factory = (
+                            ak._broadcasting.BROADCAST_RULE_TO_FACTORY_IMPL[rule]
+                        )
+                    except KeyError:
+                        raise ValueError(
+                            f"`broadcast_parameters_rule` should be one of {[str(x) for x in ak._broadcasting.BroadcastParameterRule]}, "
+                            f"but this routine received `{rule}`"
+                        ) from None
+
+                    # apply the function to the numpy arrays, first we need to 'partial out' all non-awkward array arguments
+                    out_numpys = bind(self.func, *args2bind)(
+                        *(map(operator.attrgetter("data"), layouts))
+                    )
+                    # if the function returns a single array, wrap it in a tuple
+                    if not isinstance(out_numpys, tuple):
+                        out_numpys = (out_numpys,)
+                    # propagate parameters
+                    out_params = parameters_factory(
+                        tuple(map(operator.attrgetter("parameters"), layouts)),
+                        len(out_numpys),
+                    )
+                    # wrap the numpy arrays in awkward arrays
+                    out_arrays = tuple(
+                        ak.contents.NumpyArray(data=data, parameters=parameters)
+                        for data, parameters in zip(out_numpys, out_params)
+                    )
+                    # if the function returns a single array, return it directly
+                    if len(out_arrays) == 1:
+                        return out_arrays[0]
+                    # return the awkward array(s)
+                    return out_arrays
+
+            # apply to all arrays
+            return ak.transform(transformer, *awkward_arrays)
+        # if we arrived here this is because we're not working with awkward arrays (or have awkward-array installed).
+        # that also means that if we call nested functions that are all decorated with this decorator, we'll end up here,
+        # which is great, because that still means only one awkward broadcasting traversal!
+        return self.func(*args, **kwargs)
 
 
 class VectorAwkward2D(VectorAwkward, Planar, Vector2D):

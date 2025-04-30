@@ -243,7 +243,7 @@ def dispatch(gamma: typing.Any, v: typing.Any) -> typing.Any:
     with numpy.errstate(all="ignore"):
         return v._wrap_result(
             _flavor_of(v),
-            function(
+            v._wrap_dispatched_function(function)(
                 v.lib,
                 gamma,
                 *v.azimuthal.elements,
