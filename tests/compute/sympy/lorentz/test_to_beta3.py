@@ -146,20 +146,22 @@ def test_xy_eta_tau():
     assert isinstance(out, vector.backends.sympy.VectorSympy3D)
     assert type(vec.azimuthal) == type(out.azimuthal)  # noqa: E721
     assert type(vec.longitudinal) == type(out.longitudinal)  # noqa: E721
-    assert out.x == x / sympy.sqrt(
+    expected = x / sympy.sqrt(
         0.25
         * (1 + sympy.exp(-2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))) ** 2
         * (x**2 + y**2)
         * sympy.exp(2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))
         + sympy.Abs(-(t**2) + x**2 + y**2 + z**2)
     )
-    assert out.y == y / sympy.sqrt(
+    assert sympy.simplify(out.x - expected) == 0
+    expected = y / sympy.sqrt(
         0.25
         * (1 + sympy.exp(-2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))) ** 2
         * (x**2 + y**2)
         * sympy.exp(2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))
         + sympy.Abs(-(t**2) + x**2 + y**2 + z**2)
     )
+    assert sympy.simplify(expected - out.y) == 0
     # TODO: why won't sympy equate the expressions without double
     # simplifying?
     assert (
@@ -313,23 +315,10 @@ def test_rhophi_eta_tau():
     assert isinstance(out, vector.backends.sympy.VectorSympy3D)
     assert type(vec.azimuthal) == type(out.azimuthal)  # noqa: E721
     assert type(vec.longitudinal) == type(out.longitudinal)  # noqa: E721
-    assert out.x == rho * sympy.cos(phi) / sympy.sqrt(
-        0.25
-        * rho**2
-        * (1 + sympy.exp(-2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))) ** 2
-        * sympy.exp(2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))
-        + sympy.Abs(-(t**2) + x**2 + y**2 + z**2)
-    )
-    assert out.y == rho * sympy.sin(phi) / sympy.sqrt(
-        0.25
-        * rho**2
-        * (1 + sympy.exp(-2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))) ** 2
-        * sympy.exp(2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))
-        + sympy.Abs(-(t**2) + x**2 + y**2 + z**2)
-    )
-    assert out.z == rho * z / (
-        sympy.sqrt(x**2 + y**2)
-        * sympy.sqrt(
+    expected = (
+        rho
+        * sympy.cos(phi)
+        / sympy.sqrt(
             0.25
             * rho**2
             * (1 + sympy.exp(-2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))) ** 2
@@ -337,6 +326,34 @@ def test_rhophi_eta_tau():
             + sympy.Abs(-(t**2) + x**2 + y**2 + z**2)
         )
     )
+    assert sympy.simplify(out.x - expected) == 0
+    expected = (
+        rho
+        * sympy.sin(phi)
+        / sympy.sqrt(
+            0.25
+            * rho**2
+            * (1 + sympy.exp(-2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))) ** 2
+            * sympy.exp(2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))
+            + sympy.Abs(-(t**2) + x**2 + y**2 + z**2)
+        )
+    )
+    assert sympy.simplify(expected - out.y) == 0
+    expected = (
+        rho
+        * z
+        / (
+            sympy.sqrt(x**2 + y**2)
+            * sympy.sqrt(
+                0.25
+                * rho**2
+                * (1 + sympy.exp(-2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))) ** 2
+                * sympy.exp(2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))
+                + sympy.Abs(-(t**2) + x**2 + y**2 + z**2)
+            )
+        )
+    )
+    assert sympy.simplify(expected - out.z) == 0
     assert out.x.subs(values).evalf() == pytest.approx(5 / 20)
     assert out.y.subs(values).evalf() == pytest.approx(0 / 20)
     assert out.z.subs(values).evalf() == pytest.approx(10 / 20)
