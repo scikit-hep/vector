@@ -87,7 +87,19 @@
       "contributions": [
         "ideas"
       ]
+    },
+    {
+      "login": "Saransh-cpp",
+      "name": "Saransh Chopra",
+      "avatar_url": "https://avatars.githubusercontent.com/u/74055102?v=4",
+      "profile": "https://saransh-cpp.github.io/",
+      "contributions": [
+        "code",
+        "doc",
+        "maintenance"
+      ]
     }
   ],
-  "contributorsPerLine": 7
+  "contributorsPerLine": 7,
+  "commitType": "docs"
 }
