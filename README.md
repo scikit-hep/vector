@@ -2,19 +2,22 @@
 
 # Vector: arrays of 2D, 3D, and Lorentz vectors
 
+[![DOI][zenodo-badge]][zenodo-link]
+[![DOI][joss-badge]][joss-link]
+[![Scikit-HEP][sk-badge]][sk-link]
+
 [![Actions Status][actions-badge]][actions-link]
 [![Documentation Status][rtd-badge]][rtd-link]
 [![pre-commit.ci status][pre-commit-badge]][pre-commit-link]
 [![codecov percentage][codecov-badge]][codecov-link]
-[![GitHub Discussion][github-discussions-badge]][github-discussions-link]
-[![Gitter][gitter-badge]][gitter-link]
 
 [![PyPI platforms][pypi-platforms]][pypi-link]
 [![PyPI version][pypi-version]][pypi-link]
 [![Conda latest release][conda-version]][conda-link]
-[![DOI][zenodo-badge]][zenodo-link]
+
 [![LICENSE][license-badge]][license-link]
-[![Scikit-HEP][sk-badge]][sk-link]
+[![GitHub Discussion][github-discussions-badge]][github-discussions-link]
+[![Gitter][gitter-badge]][gitter-link]
 
 ## Installation
 
@@ -166,6 +169,8 @@ Support for this work was provided by the National Science Foundation cooperativ
 [github-discussions-link]: https://github.com/scikit-hep/vector/discussions
 [gitter-badge]: https://badges.gitter.im/Scikit-HEP/vector.svg
 [gitter-link]: https://gitter.im/Scikit-HEP/vector?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+[joss-badge]: https://joss.theoj.org/papers/10.21105/joss.07791/status.svg
+[joss-link]: https://doi.org/10.21105/joss.07791
 [license-badge]: https://img.shields.io/badge/License-BSD_3--Clause-blue.svg
 [license-link]: https://opensource.org/licenses/BSD-3-Clause
 [pre-commit-badge]: https://results.pre-commit.ci/badge/github/scikit-hep/vector/main.svg
@@ -177,5 +182,5 @@ Support for this work was provided by the National Science Foundation cooperativ
 [rtd-link]: https://vector.readthedocs.io/en/latest/?badge=latest
 [sk-badge]: https://scikit-hep.org/assets/images/Scikit--HEP-Project-blue.svg
 [sk-link]: https://scikit-hep.org/
-[zenodo-badge]: https://zenodo.org/badge/DOI/10.5281/zenodo.7054478.svg
-[zenodo-link]: https://doi.org/10.5281/zenodo.7054478
+[zenodo-badge]: https://zenodo.org/badge/DOI/10.5281/zenodo.15263860.svg
+[zenodo-link]: https://zenodo.org/records/15263860
