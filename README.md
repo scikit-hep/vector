@@ -140,7 +140,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/mayou36"><img src="https://avatars.githubusercontent.com/u/17454848?v=4?s=100" width="100px;" alt="Jonas Eschle"/><br /><sub><b>Jonas Eschle</b></sub></a><br /><a href="#ideas-mayou36" title="Ideas, Planning, & Feedback">🤔</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://saransh-cpp.github.io/"><img src="https://avatars.githubusercontent.com/u/74055102?v=4?s=100" width="100px;" alt="Saransh Chopra"/><br /><sub><b>Saransh Chopra</b></sub></a><br /><a href="https://github.com/scikit-hep/vector/commits?author=Saransh-cpp" title="Code">💻</a> <a href="https://github.com/scikit-hep/vector/commits?author=Saransh-cpp" title="Documentation">📖</a> <a href="#maintenance-Saransh-cpp" title="Maintenance">🚧</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://saransh-cpp.github.io/"><img src="https://avatars.githubusercontent.com/u/74055102?v=4?s=100" width="100px;" alt="Saransh Chopra"/><br /><sub><b>Saransh Chopra</b></sub></a><br /><a href="#maintenance-Saransh-cpp" title="Maintenance">🚧</a> <a href="https://github.com/scikit-hep/vector/commits?author=Saransh-cpp" title="Code">💻</a> <a href="https://github.com/scikit-hep/vector/commits?author=Saransh-cpp" title="Documentation">📖</a></td>
     </tr>
   </tbody>
 </table>

@@ -94,9 +94,9 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/74055102?v=4",
       "profile": "https://saransh-cpp.github.io/",
       "contributions": [
+        "maintenance",
         "code",
-        "doc",
-        "maintenance"
+        "doc"
       ]
     }
   ],
