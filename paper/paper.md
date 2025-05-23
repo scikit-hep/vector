@@ -40,18 +40,18 @@ bibliography: paper.bib
 
 # Summary
 
-Mathematical manipulations of vectors is a crucial component of data analysis
+Mathematical manipulation of vectors is a crucial component of data analysis
 pipelines in high energy physics, enabling physicists to transform raw data
 into meaningful results that can be visualized. More specifically, high energy
 physicists work with 2D and 3D Euclidean vectors, and 4D Lorentz vectors that
 can be used as physical quantities, such as position, momentum, and forces.
-Given that high energy physics data is not uniform, the vector manipulation
+Given that high energy physics data are not uniform, vector manipulation
 frameworks or libraries are expected to work readily on non-uniform or ragged
 data, data with variable-sized rows (or a nested data structure with variable-sized
 entries); thus, the library is expected to perform operations on an entire
 ragged structure in minimum passes. Furthermore, optimizing memory usage and
 processing time has become essential with the increasing computational demands
-at the the Large Hadron Collider (LHC), world’s largest particle accelerator.
+at the Large Hadron Collider (LHC), the world’s largest particle accelerator.
 Vector is a Python library for creating and manipulating 2D, 3D,
 and Lorentz vectors, especially arrays of vectors, to solve common physics
 problems in a NumPy-like [@harris:2020] way. The library enables physicists to
@@ -90,7 +90,7 @@ the computational needs of High Luminosity LHC [@Aberle:2749422].
 ## Impact
 
 Besides PyROOT's LorentzVectors and TLorentzVector, Vector has
-become a popular choice for mathematical manipulations in Python based high energy
+become a popular choice for mathematical manipulations in Python-based high energy
 physics analysis pipelines. Along with being utilized directly in
 analysis pipelines at LHC [@Kling:2023; @Held:2024; @Qu:2022], the library is also
 being used in other high energy physics experiments and as a dependency in other
@@ -98,7 +98,7 @@ user-facing frameworks, such as, Coffea, MadMiner [@Brehmer:2020], FastJet
 [@aryan:2023], Spyral [@spyral-utils:2024], Weaver [@weaver-core:2024], and pylhe
 [@pylhe]. The library is also used in multiple teaching materials for graduate
 courses and workshops. Finally, given the generic nature of the library, it is
-often used in non high energy physics use cases.
+often used in non-high-energy physics use cases.
 
 # Acknowledgements
 
