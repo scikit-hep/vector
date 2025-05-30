@@ -54,6 +54,7 @@ from vector.backends.object import (
 @numba.extending.overload(numpy.nan_to_num)  # FIXME: This needs to go into Numba!
 def nan_to_num(x, copy=True, nan=0.0, posinf=None, neginf=None):
     if isinstance(x, numba.types.Array):
+
         def nan_to_num_impl(x, copy=True, nan=0.0, posinf=None, neginf=None):
             out = numpy.copy(x).reshape(-1) if copy else x.reshape(-1)
             for i in range(len(out)):
