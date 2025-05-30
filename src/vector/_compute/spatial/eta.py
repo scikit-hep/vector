@@ -13,7 +13,7 @@
 from __future__ import annotations
 
 import typing
-from math import inf, nan
+from math import inf
 
 import numpy
 
@@ -48,7 +48,6 @@ xy_eta.__awkward_transform_allowed__ = False  # type:ignore[attr-defined]
 
 
 def rhophi_z(lib, rho, phi, z):
-    print(lib.where(z != 0, lib.arcsinh(z / rho), z))
     return lib.where(z != 0, lib.arcsinh(z / rho), z)
 
 

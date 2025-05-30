@@ -11,7 +11,7 @@ if typing.TYPE_CHECKING:
 
 class SympyLib:
     # functions modified specifically for sympy
-    
+
     # should NOT be used as a replacement for np.where
     def where(self, val1: sympy.Expr, val2: sympy.Expr, val3: sympy.Expr) -> sympy.Expr:
         return val2
