@@ -58,11 +58,11 @@ optional-dependencies.dev = [
   "pytest>=6",
   "pytest-cov>=3",
   "pytest-doctestplus",
-  "sympy",
+  "sympy==1.13.*",  # REMOVE THE PIN
 ]
 optional-dependencies.docs = [
   "awkward>=2",
-  "sympy",
+  "sympy==1.13.*",  # REMOVE THE PIN
   "ipykernel",
   "myst-parser>0.13",
   "nbsphinx",
@@ -75,7 +75,7 @@ optional-dependencies.numba = [
   "numba>=0.57; python_version<'3.14'",
 ]
 optional-dependencies.sympy = [
-  "sympy",
+  "sympy==1.13.*",  # REMOVE THE PIN
 ]
 optional-dependencies.test = [
   "nox",
