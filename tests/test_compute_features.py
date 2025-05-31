@@ -209,6 +209,18 @@ def is_nan_to_num(node):
     )
 
 
+def is_where(node):
+    if node.kind != "call_kw36" or len(node) < 3:
+        return False
+
+    function = expr(node[0])
+    return (
+        function.kind == "attribute"
+        and expr(function[0]).attr == "lib"
+        and function[1].attr == "where"
+    )
+
+
 def analyze_return(node, context):
     assert node.kind == "sstmt"
     assert len(node) == 1
@@ -281,7 +293,7 @@ def analyze_expression(node, context):
             assert expr_arg.kind == "expr", "only positional arguments"
             analyze_expression(expr(expr_arg), context)
 
-    elif is_nan_to_num(node):
+    elif is_nan_to_num(node) or is_where(node):
         analyze_expression(expr(node[1]), context)
 
     else:

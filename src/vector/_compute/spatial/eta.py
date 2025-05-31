@@ -30,8 +30,11 @@ from vector._methods import (
 )
 
 
+# TODO: revert back to `nan_to_num` implementation once
+# https://github.com/cupy/cupy/issues/9143 is fixed
+# `lib.where` works okay but does not generalise the SymPy backend
 def xy_z(lib, x, y, z):
-    return lib.where(z != 0, lib.arcsinh(z / lib.sqrt(x**2 + y**2)), z)
+    return lib.where(z != 0, lib.arcsinh(z / lib.sqrt(x**2 + y**2)), z) * 1
 
 
 def xy_theta(lib, x, y, theta):
@@ -47,8 +50,11 @@ def xy_eta(lib, x, y, eta):
 xy_eta.__awkward_transform_allowed__ = False  # type:ignore[attr-defined]
 
 
+# TODO: revert back to `nan_to_num` implementation once
+# https://github.com/cupy/cupy/issues/9143 is fixed
+# `lib.where` works but there is no `where` equivalent in SymPy
 def rhophi_z(lib, rho, phi, z):
-    return lib.where(z != 0, lib.arcsinh(z / rho), z)
+    return lib.where(z != 0, lib.arcsinh(z / rho), z) * 1
 
 
 def rhophi_theta(lib, rho, phi, theta):
