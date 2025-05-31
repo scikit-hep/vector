@@ -73,7 +73,7 @@ optional-dependencies.docs = [
   "sphinx-math-dollar",
 ]
 optional-dependencies.numba = [
-  "numba>=0.57; python_version<'3.13'",
+  "numba>=0.57",
 ]
 optional-dependencies.sympy = [
   "sympy",
