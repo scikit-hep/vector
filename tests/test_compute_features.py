@@ -105,16 +105,8 @@ def test(signature):
     analyze_function(functions[signature])
 
 
-# def test():
-#     for signature, function in functions.items():
-#         print(signature)
-#         analyze_function(function)
-
-
 def analyze_function(function):
     if function not in analyze_function.done:
-        # print(function.__module__ + "." + function.__name__)
-
         closure = dict(function.__globals__)
         if function.__closure__ is not None:
             for var, cell in zip(function.__code__.co_freevars, function.__closure__):
@@ -389,4 +381,7 @@ allowed_lib_functions = [
     "arccosh",
     "arctanh",
     "isclose",
+    # TODO: remove once https://github.com/cupy/cupy/issues/9143
+    # is fixed
+    "where",
 ]
