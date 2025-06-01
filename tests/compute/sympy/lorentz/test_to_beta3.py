@@ -147,15 +147,13 @@ def test_xy_eta_tau():
     assert type(vec.azimuthal) == type(out.azimuthal)  # noqa: E721
     assert type(vec.longitudinal) == type(out.longitudinal)  # noqa: E721
     assert out.x == x / sympy.sqrt(
-        0.25
-        * (1 + sympy.exp(-2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))) ** 2
+        (0.5 + 0.5 * sympy.exp(-2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))) ** 2
         * (x**2 + y**2)
         * sympy.exp(2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))
         + sympy.Abs(-(t**2) + x**2 + y**2 + z**2)
     )
     assert out.y == y / sympy.sqrt(
-        0.25
-        * (1 + sympy.exp(-2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))) ** 2
+        (0.5 + 0.5 * sympy.exp(-2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))) ** 2
         * (x**2 + y**2)
         * sympy.exp(2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))
         + sympy.Abs(-(t**2) + x**2 + y**2 + z**2)
@@ -314,25 +312,23 @@ def test_rhophi_eta_tau():
     assert type(vec.azimuthal) == type(out.azimuthal)  # noqa: E721
     assert type(vec.longitudinal) == type(out.longitudinal)  # noqa: E721
     assert out.x == rho * sympy.cos(phi) / sympy.sqrt(
-        0.25
-        * rho**2
-        * (1 + sympy.exp(-2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))) ** 2
+        rho**2
+        * (0.5 + 0.5 * sympy.exp(-2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))) ** 2
         * sympy.exp(2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))
         + sympy.Abs(-(t**2) + x**2 + y**2 + z**2)
     )
     assert out.y == rho * sympy.sin(phi) / sympy.sqrt(
-        0.25
-        * rho**2
-        * (1 + sympy.exp(-2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))) ** 2
+        rho**2
+        * (0.5 + 0.5 * sympy.exp(-2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))) ** 2
         * sympy.exp(2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))
         + sympy.Abs(-(t**2) + x**2 + y**2 + z**2)
     )
     assert out.z == rho * z / (
         sympy.sqrt(x**2 + y**2)
         * sympy.sqrt(
-            0.25
-            * rho**2
-            * (1 + sympy.exp(-2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))) ** 2
+            rho**2
+            * (0.5 + 0.5 * sympy.exp(-2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2))))
+            ** 2
             * sympy.exp(2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))
             + sympy.Abs(-(t**2) + x**2 + y**2 + z**2)
         )
