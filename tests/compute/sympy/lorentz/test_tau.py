@@ -73,7 +73,7 @@ def test_xy_eta_t():
         ),
         vector.backends.sympy.TemporalSympyT(t),
     )
-    vec.tau == sympy.sqrt(
+    assert vec.tau == sympy.sqrt(
         sympy.Abs(
             t**2
             - (0.5 + 0.5 * sympy.exp(-2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2))))
