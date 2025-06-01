@@ -73,17 +73,15 @@ def test_xy_eta_t():
         ),
         vector.backends.sympy.TemporalSympyT(t),
     )
-    # TODO: the expression blows up on simplifying?
-    expected = sympy.sqrt(
+    vec.tau == sympy.sqrt(
         sympy.Abs(
             t**2
-            - 0.25
-            * (1 + sympy.exp(-2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))) ** 2
+            - (0.5 + 0.5 * sympy.exp(-2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2))))
+            ** 2
             * (x**2 + y**2)
             * sympy.exp(2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))
         )
     )
-    assert sympy.simplify(expected - vec.tau) == 0
     assert vec.tau.subs(values).evalf() == pytest.approx(16.583123951777)
 
 

@@ -213,14 +213,12 @@ def test_rhophi_eta_tau():
             sympy.sqrt(sympy.Abs(rho**2 - t**2 + z**2))
         ),
     )
-    # TODO: the expression blows up on simplifying?
-    expected = 0.5 * sympy.log(
+    assert vec.rapidity == 0.5 * sympy.log(
         (
             z
             + sympy.sqrt(
-                0.25
-                * rho**2
-                * (1 + sympy.exp(-2 * sympy.asinh(z / rho))) ** 2
+                rho**2
+                * (0.5 + 0.5 * sympy.exp(-2 * sympy.asinh(z / rho))) ** 2
                 * sympy.exp(2 * sympy.asinh(z / rho))
                 + sympy.Abs(rho**2 - t**2 + z**2)
             )
@@ -228,13 +226,11 @@ def test_rhophi_eta_tau():
         / (
             -z
             + sympy.sqrt(
-                0.25
-                * rho**2
-                * (1 + sympy.exp(-2 * sympy.asinh(z / rho))) ** 2
+                rho**2
+                * (0.5 + 0.5 * sympy.exp(-2 * sympy.asinh(z / rho))) ** 2
                 * sympy.exp(2 * sympy.asinh(z / rho))
                 + sympy.Abs(rho**2 - t**2 + z**2)
             )
         )
     )
-    assert sympy.simplify(vec.rapidity - expected) == 0
     assert vec.rapidity.subs(values).evalf() == pytest.approx(0.5493061443340549)

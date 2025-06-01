@@ -28,16 +28,16 @@ def test_lorentz_object():
         vector.backends.sympy.LongitudinalSympyZ(nz),
         vector.backends.sympy.TemporalSympyTau(nt),
     )
-    expected = sympy.sqrt(
+    assert v1.deltaRapidityPhi(v2).simplify() == sympy.sqrt(
         0.25
         * (
-            -sympy.log(
-                (nz + sympy.sqrt(nt**2 + nx**2 + ny**2 + nz**2))
-                / (-nz + sympy.sqrt(nt**2 + nx**2 + ny**2 + nz**2))
+            sympy.log(
+                (-nz - sympy.sqrt(nt**2 + nx**2 + ny**2 + nz**2))
+                / (nz - sympy.sqrt(nt**2 + nx**2 + ny**2 + nz**2))
             )
-            + sympy.log(
-                (z + sympy.sqrt(t**2 + x**2 + y**2 + z**2))
-                / (-z + sympy.sqrt(t**2 + x**2 + y**2 + z**2))
+            - sympy.log(
+                (-z - sympy.sqrt(t**2 + x**2 + y**2 + z**2))
+                / (z - sympy.sqrt(t**2 + x**2 + y**2 + z**2))
             )
         )
         ** 2
@@ -47,8 +47,6 @@ def test_lorentz_object():
         )
         ** 2
     )
-
-    assert sympy.simplify(v1.deltaRapidityPhi(v2) - expected) == 0
 
     expected_result = sympy.sqrt(
         # phi
