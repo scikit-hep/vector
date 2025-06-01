@@ -11,7 +11,8 @@ the stable version of `vector`. The steps below describe the installation proces
 We recommend using a virtual environment to install `vector`. This would isolate the library from your global `Python` environment, which would be beneficial for reproducing bugs, and the overall development of `vector`. The first step would be to clone `vector` -
 
 ```bash
-git clone https://github.com/Scikit-hep/vector.git
+# fork scikit-hep/vector
+git clone https://github.com/<your_github_userame>/vector.git
 ```
 
 and then we can change the current working directory and enter `vector` -
@@ -22,7 +23,8 @@ cd vector
 
 ### Creating a virtual environment
 
-A virtual environment can be set up and activated using `venv` in both `UNIX` and `Windows` systems.
+A virtual environment can be set up and activated using `venv` in both `UNIX` and `Windows` systems
+(or use your favorite environment tool).
 
 **UNIX**:
 
@@ -42,11 +44,13 @@ python -m venv .env
 
 The developer installation of `vector` comes with several options -
 
-- `awkward`: installs [awkward](https://github.com/scikit-hep/awkward) along with `vector`
+- `awkward`: installs [awkward](https://github.com/scikit-hep/awkward) for the `awkward` backend
+- `numba`: installs [numba](https://github.com/numba/numba) for JIT compilation
+- `sympy`: installs [sympy](https://github.com/sympy/sympy) for the `sympy` backend
 - `test`: the test dependencies
-- `test-extras`: extra dependencies to run tests on a specific Python version and Operating System
+- `test-extras`: extra dependencies to run disassemble and `dask_awkward` tests
 - `docs`: extra dependencies to build and develop `vector`'s documentation
-- `dev`: installs the `awkward` option + the `test` option + [numba](https://github.com/numba/numba)
+- `dev`: installs the `awkward`, `test`, `numba`, and `sympy` options
 
 These options can be used with `pip` with the editable (`-e`) mode of installation in the following way -
 
@@ -65,7 +69,7 @@ Furthermore, `vector` can also be installed using `conda`. This installation als
 ```bash
 conda env create
 conda activate vector
-conda config --env --add channels conda-forge  # Optional
+conda config --env --add channels conda-forge  # optional
 ```
 
 ### Adding vector for notebooks
@@ -170,7 +174,7 @@ folder. You can view this build in any browser by opening the `index.html` file.
 pip install nox
 ```
 
-The default sessions (`lint`, `tests`, and `doctests`) can be executed using -
+The default sessions (`lint`, `lite`, `tests`, `doctests`, and `disassemble`) can be executed using -
 
 ```bash
 nox
@@ -178,10 +182,19 @@ nox
 
 ### Running pre-commit with nox
 
-The `pre-commit` hooks can be run with `nox` in the following way -
+The `pre-commit` hooks and `pylint` can be run with `nox` in the following way -
 
 ```
-nox -s lint
+nox -s lint    # run pre-commit on the default Python version
+nox -s pylint  # run pylint on the default Python version
+```
+
+### Building vector with nox
+
+`vector` can be built with `nox` in the following way -
+
+```
+nox -s build
 ```
 
 ### Running tests with nox
@@ -189,13 +202,12 @@ nox -s lint
 Tests can be run with `nox` in the following way -
 
 ```
-nox -s tests
-```
-
-Notebooks can be tested with `nox` in the following way -
-
-```
-nox -s notebooks
+nox -s lite         # test only with the required dependencies on all available Python versions (use lite-3.11 for a specific Python version)
+nox -s tests        # test with all extra dependencies on all available Python versions
+nox -s tests        # run doctests on all available Python versions
+nox -s coverage     # run the tests session and generate a coverage report on all available Python versions
+nox -s notebooks    # test notebooks on the default Python version
+nox -s disassemble  # check compute functions on Python 3.8
 ```
 
 ### Building documentation with nox
