@@ -92,10 +92,6 @@ jobs:
       - name: Test package and generate coverage report
         run: |
           nox -s coverage-${{ matrix.python-version }} --verbose
-          ls -a
-
-      - name: Debug
-        run: ls -a
 
       - name: Upload coverage report
         uses: codecov/codecov-action@v5.4.3
