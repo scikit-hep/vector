@@ -49,7 +49,7 @@ def tests(session: nox.Session) -> None:
 @nox.session(reuse_venv=True, python=ALL_PYTHON, default=False)
 def coverage(session: nox.Session) -> None:
     """Run tests and compute coverage."""
-    session.posargs.append("--cov=vector")
+    session.posargs.extend(["--cov=vector", "--cov-report=xml"])
     tests(session)
 
 
