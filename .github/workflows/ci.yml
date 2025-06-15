@@ -93,7 +93,7 @@ jobs:
         run: |
           nox -s coverage-${{ matrix.python-version }} --verbose
           ls -a
-      
+
       - name: Debug
         run: ls -a
 
