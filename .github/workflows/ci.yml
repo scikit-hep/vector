@@ -90,11 +90,12 @@ jobs:
         run: nox -s doctests-${{ matrix.python-version }} --verbose
 
       - name: Test package and generate coverage report
-        run: nox -s coverage-${{ matrix.python-version }} --verbose
-
-      - uses: actions/upload-artifact@v4
-        with:
-          path: "**/.coverage"
+        run: |
+          nox -s coverage-${{ matrix.python-version }} --verbose
+          ls -a
+      
+      - name: Debug
+        run: ls -a
 
       - name: Upload coverage report
         uses: codecov/codecov-action@v5.4.3
