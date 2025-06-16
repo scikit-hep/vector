@@ -1,6 +1,6 @@
 # Papers and talks
 
-## Paper
+## Papers
 
 - [CHEP 2024](https://indico.cern.ch/event/1338689) (to be published): [A new SymPy backend for vector: uniting experimental and theoretical physicists](https://indi.to/zTs5b)
 - [JOSS](https://joss.theoj.org) (2025-05-23): [Vector: JIT-compilable mathematical manipulations of ragged Lorentz vectors](https://doi.org/10.21105/joss.07791)
