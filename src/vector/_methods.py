@@ -784,10 +784,13 @@ class VectorProtocolPlanar(VectorProtocol):
         """
         Arbitrarily transforms the vector(s) by
 
+        .. blacken-docs:off
         .. code-block:: python
 
             obj["xx"] obj["xy"]
             obj["yx"] obj["yy"]
+
+        .. blacken-docs:on
 
         leaving any longitudinal or temporal coordinates unchanged. There is no
         restriction on the type of ``obj``; it just has to provide those components
@@ -1058,11 +1061,14 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
         """
         Arbitrarily transforms the vector(s) by
 
+        .. blacken-docs:off
         .. code-block:: python
 
             obj["xx"] obj["xy"] obj["xz"]
             obj["yx"] obj["yy"] obj["yz"]
             obj["zx"] obj["zy"] obj["zz"]
+
+        .. blacken-docs:on
 
         leaving any temporal coordinate unchanged. There is no restriction on the
         type of ``obj``; it just has to provide those components (which can be
@@ -1379,12 +1385,15 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """
         Arbitrarily transforms the vector(s) by
 
+        .. blacken-docs:off
         .. code-block:: python
 
             obj["xx"] obj["xy"] obj["xz"] obj["xt"]
             obj["yx"] obj["yy"] obj["yz"] obj["yt"]
             obj["zx"] obj["zy"] obj["zz"] obj["zt"]
             obj["tx"] obj["ty"] obj["tz"] obj["tt"]
+
+        .. blacken-docs:on
 
         There is no restriction on the type of ``obj``; it just has to provide
         those components (which can be arrays if the vectors are in an array).

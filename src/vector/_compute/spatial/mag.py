@@ -4,9 +4,10 @@
 # or https://github.com/scikit-hep/vector for details.
 
 """
+Property method `mag` for the magnitude of a spatial vector or an array of vectors.
+
 .. code-block:: python
 
-    @property
     Spatial.mag(self)
 """
 

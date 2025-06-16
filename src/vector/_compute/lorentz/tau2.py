@@ -4,9 +4,10 @@
 # or https://github.com/scikit-hep/vector for details.
 
 """
+Property method `tau2` for the squared proper time of a Lorentz vector.
+
 .. code-block:: python
 
-    @property
     Lorentz.tau2(self)
 """
 
