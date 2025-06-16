@@ -105,6 +105,24 @@ pip install -e .
 
 Refer to [CONTRIBUTING.md](https://github.com/scikit-hep/vector/blob/main/.github/CONTRIBUTING.md) for more.
 
+## Citing Vector
+
+To cite Vector, please use [![DOI][joss-badge]][joss-link]
+
+```bib
+@article{Chopra2025,
+doi = {10.21105/joss.07791},
+url = {https://doi.org/10.21105/joss.07791},
+year = {2025}, publisher = {The Open Journal},
+volume = {10},
+number = {109},
+pages = {7791},
+author = {Saransh Chopra and Henry Schreiner and Eduardo Rodrigues and Jonas Eschle and Jim Pivarski},
+title = {Vector: JIT-compilable mathematical manipulations of ragged Lorentz vectors},
+journal = {Journal of Open Source Software}
+}
+```
+
 ## Documentation
 
 ```{toctree}

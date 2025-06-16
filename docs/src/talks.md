@@ -1,6 +1,12 @@
-# Presentations about Vector
+# Papers and talks
 
-- [CHEP 2024](https://indico.cern.ch/event/1338689) (2024-10-21): [A new SymPy backend for vector: uniting experimental and theoretical physicists](https://indi.to/zTs5b)
+## Papers
+
+- [CHEP 2024](https://indico.cern.ch/event/1338689) (to be published): [A new SymPy backend for vector: uniting experimental and theoretical physicists](https://indi.to/zTs5b)
+- [JOSS](https://joss.theoj.org) (2025-05-23): [Vector: JIT-compilable mathematical manipulations of ragged Lorentz vectors](https://doi.org/10.21105/joss.07791)
+
+## Talks
+
 - [PyHEP 2024](https://indico.cern.ch/event/1384010) (2024-07-03): [🎥](https://www.youtube.com/watch?v=aVPhP_APhqw) [A new SymPy backend for vector: uniting experimental and theoretical physicists](https://indi.to/pfTC6)
 - [PyHEP 2023](https://indico.cern.ch/event/1252095) (2023-10-09): [🎥](https://www.youtube.com/watch?v=JHEAb2R3xzE&list=PLKZ9c4ONm-VlAorAG8kR09ZqhMfHiH2LJ&index=10) [What’s new with Vector? First major release is out!](https://indi.to/35ym5)
 - [PyHEP 2022](https://indico.cern.ch/event/1150631) (2022-09-13): [🎥](https://www.youtube.com/watch?v=4iveMzrbe7s&list=PLKZ9c4ONm-VkohKG-skzEG_gklMaSgaO7&index=15) [Constructing HEP vectors and analyzing HEP data using Vector](https://indi.to/bPmMc)
