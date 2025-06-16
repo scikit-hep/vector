@@ -123,6 +123,7 @@ Refer to [CONTRIBUTING.md](https://github.com/scikit-hep/vector/blob/main/.githu
 ## Citing Vector
 
 To cite Vector, please use [![DOI][joss-badge]][joss-link]
+
 ```bib
 @article{Chopra2025,
 doi = {10.21105/joss.07791},
