@@ -119,7 +119,8 @@ extend-select = [
 ignore = [
   "PLR09",   # Too many X
   "PLR2004", # Magic values
-  "ISC001", # Conflicts with formatter
+  "ISC001",  # Conflicts with formatter
+  "PLC0415", # Import should be at the top
 ]
 typing-modules = [
   "vector._typeutils",
