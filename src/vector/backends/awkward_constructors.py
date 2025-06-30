@@ -206,7 +206,7 @@ def _check_names(
     return is_momentum, dimension, names, columns
 
 
-def _is_type_safe(array_type: typing.Any) -> bool:
+def _is_type_safe(array_type: typing.Any) -> None:
     import awkward
 
     while isinstance(
@@ -220,8 +220,9 @@ def _is_type_safe(array_type: typing.Any) -> bool:
     ):
         array_type = array_type.content
 
+    msg = "a coordinate must be of the type int or float"
     if not isinstance(array_type, awkward.types.RecordType):
-        return False
+        raise TypeError(msg)
 
     contents = array_type.contents
     for field_type in contents:
@@ -230,16 +231,14 @@ def _is_type_safe(array_type: typing.Any) -> bool:
                 field_type.content
             )
         if not isinstance(field_type, awkward.types.NumpyType):
-            return False
+            raise TypeError(msg)
         dt = field_type.primitive
         if (
             not dt.startswith("int")
             and not dt.startswith("uint")
             and not dt.startswith("float")
         ):
-            return False
-
-    return True
+            raise TypeError(msg)
 
 
 def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
@@ -304,8 +303,8 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     )
     array_type = akarray.type
 
-    if not _is_type_safe(array_type):
-        raise TypeError("a coordinate must be of the type int or float")
+    _is_type_safe(array_type)
+
     fields = awkward.fields(akarray)
 
     is_momentum, dimension, names, arrays = _check_names(akarray, fields.copy())

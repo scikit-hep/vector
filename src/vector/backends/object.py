@@ -637,6 +637,8 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             >>> vec
             VectorObject2D(x=1, y=2)
         """
+        _is_type_safe(locals())
+
         return cls(azimuthal=AzimuthalObjectXY(x, y))
 
     @classmethod
@@ -653,13 +655,14 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             >>> vec
             VectorObject2D(rho=1, phi=2)
         """
+        _is_type_safe(locals())
+
         return cls(azimuthal=AzimuthalObjectRhoPhi(rho, phi))
 
     def __init__(
         self, azimuthal: AzimuthalObject | None = None, **kwargs: float
     ) -> None:
-        if not _is_type_safe(kwargs):
-            raise TypeError("a coordinate must be of the type int or float")
+        _is_type_safe(kwargs)
 
         for k, v in kwargs.copy().items():
             kwargs.pop(k)
@@ -916,6 +919,8 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             >>> vec
             VectorObject3D(x=1, y=1, z=1)
         """
+        _is_type_safe(locals())
+
         return cls(
             azimuthal=AzimuthalObjectXY(x, y), longitudinal=LongitudinalObjectZ(z)
         )
@@ -935,6 +940,8 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             >>> vec
             VectorObject3D(x=1, y=1, theta=1)
         """
+        _is_type_safe(locals())
+
         return cls(
             azimuthal=AzimuthalObjectXY(x, y),
             longitudinal=LongitudinalObjectTheta(theta),
@@ -955,6 +962,8 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             >>> vec
             VectorObject3D(x=1, y=1, eta=1)
         """
+        _is_type_safe(locals())
+
         return cls(
             azimuthal=AzimuthalObjectXY(x, y), longitudinal=LongitudinalObjectEta(eta)
         )
@@ -974,6 +983,8 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             >>> vec
             VectorObject3D(rho=1, phi=1, z=1)
         """
+        _is_type_safe(locals())
+
         return cls(
             azimuthal=AzimuthalObjectRhoPhi(rho, phi),
             longitudinal=LongitudinalObjectZ(z),
@@ -994,6 +1005,8 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             >>> vec
             VectorObject3D(rho=1, phi=1, theta=1)
         """
+        _is_type_safe(locals())
+
         return cls(
             azimuthal=AzimuthalObjectRhoPhi(rho, phi),
             longitudinal=LongitudinalObjectTheta(theta),
@@ -1014,6 +1027,8 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             >>> vec
             VectorObject3D(rho=1, phi=1, eta=1)
         """
+        _is_type_safe(locals())
+
         return cls(
             azimuthal=AzimuthalObjectRhoPhi(rho, phi),
             longitudinal=LongitudinalObjectEta(eta),
@@ -1025,8 +1040,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
         longitudinal: LongitudinalObject | None = None,
         **kwargs: float,
     ) -> None:
-        if not _is_type_safe(kwargs):
-            raise TypeError("a coordinate must be of the type int or float")
+        _is_type_safe(kwargs)
 
         for k, v in kwargs.copy().items():
             kwargs.pop(k)
@@ -1375,6 +1389,8 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             >>> vec
             VectorObject4D(x=1, y=1, z=1, t=1)
         """
+        _is_type_safe(locals())
+
         return cls(
             azimuthal=AzimuthalObjectXY(x, y),
             longitudinal=LongitudinalObjectZ(z),
@@ -1402,6 +1418,8 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             >>> vec
             VectorObject4D(x=1, y=1, z=1, tau=1)
         """
+        _is_type_safe(locals())
+
         return cls(
             azimuthal=AzimuthalObjectXY(x, y),
             longitudinal=LongitudinalObjectZ(z),
@@ -1429,6 +1447,8 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             >>> vec
             VectorObject4D(x=1, y=1, theta=1, t=1)
         """
+        _is_type_safe(locals())
+
         return cls(
             azimuthal=AzimuthalObjectXY(x, y),
             longitudinal=LongitudinalObjectTheta(theta),
@@ -1456,6 +1476,8 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             >>> vec
             VectorObject4D(x=1, y=1, theta=1, tau=1)
         """
+        _is_type_safe(locals())
+
         return cls(
             azimuthal=AzimuthalObjectXY(x, y),
             longitudinal=LongitudinalObjectTheta(theta),
@@ -1483,6 +1505,8 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             >>> vec
             VectorObject4D(x=1, y=1, eta=1, t=1)
         """
+        _is_type_safe(locals())
+
         return cls(
             azimuthal=AzimuthalObjectXY(x, y),
             longitudinal=LongitudinalObjectEta(eta),
@@ -1510,6 +1534,8 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             >>> vec
             VectorObject4D(x=1, y=1, eta=1, tau=1)
         """
+        _is_type_safe(locals())
+
         return cls(
             azimuthal=AzimuthalObjectXY(x, y),
             longitudinal=LongitudinalObjectEta(eta),
@@ -1537,6 +1563,8 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             >>> vec
             VectorObject4D(rho=1, phi=1, z=1, t=1)
         """
+        _is_type_safe(locals())
+
         return cls(
             azimuthal=AzimuthalObjectRhoPhi(rho, phi),
             longitudinal=LongitudinalObjectZ(z),
@@ -1564,6 +1592,8 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             >>> vec
             VectorObject4D(rho=1, phi=1, z=1, tau=1)
         """
+        _is_type_safe(locals())
+
         return cls(
             azimuthal=AzimuthalObjectRhoPhi(rho, phi),
             longitudinal=LongitudinalObjectZ(z),
@@ -1591,6 +1621,8 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             >>> vec
             VectorObject4D(rho=1, phi=1, theta=1, t=1)
         """
+        _is_type_safe(locals())
+
         return cls(
             azimuthal=AzimuthalObjectRhoPhi(rho, phi),
             longitudinal=LongitudinalObjectTheta(theta),
@@ -1618,6 +1650,8 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             >>> vec
             VectorObject4D(rho=1, phi=1, theta=1, tau=1)
         """
+        _is_type_safe(locals())
+
         return cls(
             azimuthal=AzimuthalObjectRhoPhi(rho, phi),
             longitudinal=LongitudinalObjectTheta(theta),
@@ -1645,6 +1679,8 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             >>> vec
             VectorObject4D(rho=1, phi=1, eta=1, t=1)
         """
+        _is_type_safe(locals())
+
         return cls(
             azimuthal=AzimuthalObjectRhoPhi(rho, phi),
             longitudinal=LongitudinalObjectEta(eta),
@@ -1672,6 +1708,8 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             >>> vec
             VectorObject4D(rho=1, phi=1, eta=1, tau=1)
         """
+        _is_type_safe(locals())
+
         return cls(
             azimuthal=AzimuthalObjectRhoPhi(rho, phi),
             longitudinal=LongitudinalObjectEta(eta),
@@ -1685,6 +1723,8 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         temporal: TemporalObject | None = None,
         **kwargs: float,
     ) -> None:
+        _is_type_safe(kwargs)
+
         for k, v in kwargs.copy().items():
             kwargs.pop(k)
             kwargs[_repr_momentum_to_generic.get(k, k)] = v
@@ -2097,11 +2137,13 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
         self.temporal = TemporalObjectTau(mass)
 
 
-def _is_type_safe(coordinates: dict[str, typing.Any]) -> bool:
-    for _, value in coordinates.items():
+def _is_type_safe(coordinates: dict[str, typing.Any]) -> None:
+    coords = coordinates.copy()
+    if "cls" in coords:
+        del coords["cls"]
+    for _, value in coords.items():
         if not issubclass(type(value), numbers.Real) or isinstance(value, bool):
-            return False
-    return True
+            raise TypeError("a coordinate must be of the type int or float")
 
 
 def _gather_coordinates(
@@ -3152,8 +3194,7 @@ def obj(**coordinates: float) -> VectorObject:
     is_momentum = False
     generic_coordinates = {}
 
-    if not _is_type_safe(coordinates):
-        raise TypeError("a coordinate must be of the type int or float")
+    _is_type_safe(coordinates)
 
     if "px" in coordinates:
         is_momentum = True

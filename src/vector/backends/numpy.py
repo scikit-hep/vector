@@ -381,14 +381,14 @@ def _is_type_safe(
     | MomentumNumpy3D
     | MomentumNumpy4D
     | CoordinatesNumpy,
-) -> bool:
+) -> None:
     for i in range(len(array.dtype)):  # type: ignore[arg-type]
         if not issubclass(
             array.dtype[i].type, (numpy.integer, numpy.floating)
         ) or issubclass(array.dtype[i].type, numpy.timedelta64):
-            return False
-
-    return True
+            raise TypeError(
+                "a coordinate must be of the type numpy.integer or numpy.floating"
+            )
 
 
 class GetItem:
@@ -1179,10 +1179,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
                 'fields ("x", "y") or ("rho", "phi")'
             )
 
-        if not _is_type_safe(self):
-            raise TypeError(
-                "a coordinate must be of the type numpy.integer or numpy.floating"
-            )
+        _is_type_safe(self)
 
     def __str__(self) -> str:
         return str(self.view(numpy.ndarray))
@@ -1359,10 +1356,7 @@ class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):
                 'fields ("x", "y") or ("rho", "phi") or ("px", "py") or ("pt", "phi")'
             )
 
-        if not _is_type_safe(self):
-            raise TypeError(
-                "a coordinate must be of the type numpy.integer or numpy.floating"
-            )
+        _is_type_safe(self)
 
     def __repr__(self) -> str:
         return _array_repr(self, True)
@@ -1437,10 +1431,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
                 'field "z" or "theta" or "eta"'
             )
 
-        if not _is_type_safe(self):
-            raise TypeError(
-                "a coordinate must be of the type numpy.integer or numpy.floating"
-            )
+        _is_type_safe(self)
 
     def __str__(self) -> str:
         return str(self.view(numpy.ndarray))
@@ -1676,10 +1667,7 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):
                 'field "z" or "theta" or "eta" or "pz"'
             )
 
-        if not _is_type_safe(self):
-            raise TypeError(
-                "a coordinate must be of the type numpy.integer or numpy.floating"
-            )
+        _is_type_safe(self)
 
     def __repr__(self) -> str:
         return _array_repr(self, True)
@@ -1768,10 +1756,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
                 'field "t" or "tau"'
             )
 
-        if not _is_type_safe(self):
-            raise TypeError(
-                "a coordinate must be of the type numpy.integer or numpy.floating"
-            )
+        _is_type_safe(self)
 
     def __str__(self) -> str:
         return str(self.view(numpy.ndarray))
@@ -2077,10 +2062,7 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):
                 'field "t" or "tau" or "E" or "e" or "energy" or "M" or "m" or "mass"'
             )
 
-        if not _is_type_safe(self):
-            raise TypeError(
-                "a coordinate must be of the type numpy.integer or numpy.floating"
-            )
+        _is_type_safe(self)
 
     def __repr__(self) -> str:
         return _array_repr(self, True)
