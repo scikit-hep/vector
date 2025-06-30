@@ -70,6 +70,16 @@ def test_constructors_2D():
     with pytest.raises(TypeError):
         vector.MomentumObject2D()
 
+    for coord in (
+        "xy",
+        "rhophi",
+    ):
+        with pytest.raises(TypeError):
+            getattr(vector.VectorObject2D, "from_" + coord)(complex(1, 2), 2)
+
+        with pytest.raises(TypeError):
+            getattr(vector.MomentumObject2D, "from_" + coord)(complex(1, 2), 2)
+
 
 def test_constructors_3D():
     vec = vector.VectorObject3D(x=1, y=2, z=3)
@@ -179,6 +189,227 @@ def test_constructors_3D():
 
     with pytest.raises(TypeError):
         vector.MomentumObject3D(x=complex(1, 2), y=2, z=3)
+
+    for coord in (
+        "xyz",
+        "xytheta",
+        "xyeta",
+        "rhophiz",
+        "rhophitheta",
+        "rhophieta",
+    ):
+        with pytest.raises(TypeError):
+            getattr(vector.VectorObject3D, "from_" + coord)(complex(1, 2), 2, 3)
+
+        with pytest.raises(TypeError):
+            getattr(vector.MomentumObject3D, "from_" + coord)(complex(1, 2), 2, 3)
+
+
+def test_constructors_4D():
+    vec = vector.VectorObject4D(x=1, y=2, z=3, t=4)
+    assert vec.x == 1
+    assert vec.y == 2
+    assert vec.z == 3
+    assert vec.t == 4
+
+    vec = vector.VectorObject4D(x=1, y=2, eta=3, t=4)
+    assert vec.x == 1
+    assert vec.y == 2
+    assert vec.eta == 3
+    assert vec.t == 4
+
+    vec = vector.VectorObject4D(x=1, y=2, theta=3, t=4)
+    assert vec.x == 1
+    assert vec.y == 2
+    assert vec.theta == 3
+    assert vec.t == 4
+
+    vec = vector.VectorObject4D(rho=1, phi=2, z=3, t=4)
+    assert vec.rho == 1
+    assert vec.phi == 2
+    assert vec.z == 3
+    assert vec.t == 4
+
+    vec = vector.VectorObject4D(rho=1, phi=2, eta=3, t=4)
+    assert vec.rho == 1
+    assert vec.phi == 2
+    assert vec.eta == 3
+    assert vec.t == 4
+
+    vec = vector.VectorObject4D(rho=1, phi=2, theta=3, t=4)
+    assert vec.rho == 1
+    assert vec.phi == 2
+    assert vec.theta == 3
+    assert vec.t == 4
+
+    vec = vector.VectorObject4D(x=1, y=2, z=3, tau=4)
+    assert vec.x == 1
+    assert vec.y == 2
+    assert vec.z == 3
+    assert vec.tau == 4
+
+    vec = vector.VectorObject4D(x=1, y=2, eta=3, tau=4)
+    assert vec.x == 1
+    assert vec.y == 2
+    assert vec.eta == 3
+    assert vec.tau == 4
+
+    vec = vector.VectorObject4D(x=1, y=2, theta=3, tau=4)
+    assert vec.x == 1
+    assert vec.y == 2
+    assert vec.theta == 3
+    assert vec.tau == 4
+
+    vec = vector.VectorObject4D(rho=1, phi=2, z=3, tau=4)
+    assert vec.rho == 1
+    assert vec.phi == 2
+    assert vec.z == 3
+    assert vec.tau == 4
+
+    vec = vector.VectorObject4D(rho=1, phi=2, eta=3, tau=4)
+    assert vec.rho == 1
+    assert vec.phi == 2
+    assert vec.eta == 3
+    assert vec.tau == 4
+
+    vec = vector.VectorObject4D(rho=1, phi=2, theta=3, tau=4)
+    assert vec.rho == 1
+    assert vec.phi == 2
+    assert vec.theta == 3
+    assert vec.tau == 4
+
+    vec = vector.VectorObject4D(
+        azimuthal=vector.backends.object.AzimuthalObjectXY(1, 2),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(3),
+        temporal=vector.backends.object.TemporalObjectT(4),
+    )
+    assert vec.x == 1
+    assert vec.y == 2
+    assert vec.z == 3
+    assert vec.t == 4
+
+    with pytest.raises(TypeError):
+        vector.VectorObject4D(rho=1, wow=2, z=3, t=4)
+
+    with pytest.raises(TypeError):
+        vector.VectorObject4D()
+
+    with pytest.raises(TypeError):
+        vector.VectorObject4D(x=complex(1, 2), y=2, z=3, t=4)
+
+    vec = vector.MomentumObject4D(px=1, py=2, pz=3, E=4)
+    assert vec.px == 1
+    assert vec.py == 2
+    assert vec.pz == 3
+    assert vec.E == 4
+
+    vec = vector.MomentumObject4D(px=1, py=2, eta=3, E=4)
+    assert vec.px == 1
+    assert vec.py == 2
+    assert vec.eta == 3
+    assert vec.E == 4
+
+    vec = vector.MomentumObject4D(px=1, py=2, theta=3, E=4)
+    assert vec.px == 1
+    assert vec.py == 2
+    assert vec.theta == 3
+    assert vec.E == 4
+
+    vec = vector.MomentumObject4D(pt=1, phi=2, pz=3, E=4)
+    assert vec.pt == 1
+    assert vec.phi == 2
+    assert vec.pz == 3
+    assert vec.E == 4
+
+    vec = vector.MomentumObject4D(pt=1, phi=2, eta=3, E=4)
+    assert vec.pt == 1
+    assert vec.phi == 2
+    assert vec.eta == 3
+    assert vec.E == 4
+
+    vec = vector.MomentumObject4D(pt=1, phi=2, theta=3, E=4)
+    assert vec.pt == 1
+    assert vec.phi == 2
+    assert vec.theta == 3
+    assert vec.E == 4
+
+    vec = vector.MomentumObject4D(px=1, py=2, pz=3, M=4)
+    assert vec.px == 1
+    assert vec.py == 2
+    assert vec.pz == 3
+    assert vec.M == 4
+
+    vec = vector.MomentumObject4D(px=1, py=2, eta=3, tau=4)
+    assert vec.px == 1
+    assert vec.py == 2
+    assert vec.eta == 3
+    assert vec.M == 4
+
+    vec = vector.MomentumObject4D(px=1, py=2, theta=3, tau=4)
+    assert vec.px == 1
+    assert vec.py == 2
+    assert vec.theta == 3
+    assert vec.M == 4
+
+    vec = vector.MomentumObject4D(pt=1, phi=2, pz=3, tau=4)
+    assert vec.pt == 1
+    assert vec.phi == 2
+    assert vec.pz == 3
+    assert vec.M == 4
+
+    vec = vector.MomentumObject4D(pt=1, phi=2, eta=3, tau=4)
+    assert vec.pt == 1
+    assert vec.phi == 2
+    assert vec.eta == 3
+    assert vec.M == 4
+
+    vec = vector.MomentumObject4D(pt=1, phi=2, theta=3, tau=4)
+    assert vec.pt == 1
+    assert vec.phi == 2
+    assert vec.theta == 3
+    assert vec.M == 4
+
+    vec = vector.MomentumObject4D(
+        azimuthal=vector.backends.object.AzimuthalObjectXY(1, 2),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(3),
+        temporal=vector.backends.object.TemporalObjectT(4),
+    )
+    assert vec.px == 1
+    assert vec.py == 2
+    assert vec.pz == 3
+    assert vec.x == 1
+    assert vec.y == 2
+    assert vec.z == 3
+    assert vec.t == 4
+
+    with pytest.raises(TypeError):
+        vector.MomentumObject4D(rho=1, wow=2, pz=3, t=4)
+
+    with pytest.raises(TypeError):
+        vector.MomentumObject4D()
+
+    with pytest.raises(TypeError):
+        vector.MomentumObject4D(x=complex(1, 2), y=2, z=3, t=4)
+
+    for coord in (
+        "xyzt",
+        "xythetat",
+        "xyetat",
+        "rhophizt",
+        "rhophithetat",
+        "rhophietat",
+        "xyztau",
+        "xythetatau",
+        "xyetatau",
+        "rhophiztau",
+        "rhophithetatau",
+        "rhophietatau",
+    ):
+        with pytest.raises(TypeError):
+            getattr(vector.VectorObject4D, "from_" + coord)(complex(1, 2), 2, 3, 4)
+
+        with pytest.raises(TypeError):
+            getattr(vector.MomentumObject4D, "from_" + coord)(complex(1, 2), 2, 3, 4)
 
 
 def test_array_casting():
