@@ -34,7 +34,7 @@ from vector._methods import (
 # https://github.com/cupy/cupy/issues/9143 is fixed
 # `lib.where` works but there is no SymPy equivalent for the function
 def xy_z(lib, x, y, z):
-    return lib.where(z != 0, lib.arcsinh(z / lib.sqrt(x**2 + y**2)), z) * 1
+    return lib.where(z != 0, lib.arcsinh(lib.where(z != 0, z / lib.sqrt(x**2 + y**2), z)), z) * 1
 
 
 def xy_theta(lib, x, y, theta):
@@ -54,7 +54,7 @@ xy_eta.__awkward_transform_allowed__ = False  # type:ignore[attr-defined]
 # https://github.com/cupy/cupy/issues/9143 is fixed
 # `lib.where` works but there is no SymPy equivalent for the function
 def rhophi_z(lib, rho, phi, z):
-    return lib.where(z != 0, lib.arcsinh(z / rho), z) * 1
+    return lib.where(z != 0, lib.arcsinh(lib.where( z!= 0, z / rho, z)), z) * 1
 
 
 def rhophi_theta(lib, rho, phi, theta):
