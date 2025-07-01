@@ -1,0 +1,9 @@
+/* to render Awkward Array reprs correctly */
+html[data-theme="dark"] div.output_area.rendered_html pre {
+  background-color: #000000df;
+  padding: 15px;
+}
+
+html[data-theme="light"] div.output_area.rendered_html pre {
+  background: unset;
+}
