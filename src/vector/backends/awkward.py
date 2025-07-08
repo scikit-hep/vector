@@ -629,7 +629,7 @@ class _lib(typing.NamedTuple):
     nplike: ak._nplikes.numpy_like.NumpyLike
 
     def __hash__(self) -> int:
-        return hash(self)
+        return hash((self.module, self.nplike))
 
     def __eq__(self, other: typing.Any) -> bool:
         if isinstance(other, _lib):

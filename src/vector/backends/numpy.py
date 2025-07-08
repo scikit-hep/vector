@@ -460,7 +460,7 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # typ
             )
 
     def __hash__(self) -> int:
-        return hash(self)
+        return hash((self.dtype,))
 
     def __eq__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, AzimuthalNumpyXY):
@@ -529,7 +529,7 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray)
             )
 
     def __hash__(self) -> int:
-        return hash(self)
+        return hash((self.drtype,))
 
     def __eq__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, AzimuthalNumpyRhoPhi):
@@ -595,7 +595,7 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):
             )
 
     def __hash__(self) -> int:
-        return hash(self)
+        return hash((self.dtype,))
 
     def __eq__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, LongitudinalNumpyZ):
@@ -656,7 +656,7 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, Floa
             )
 
     def __hash__(self) -> int:
-        return hash(self)
+        return hash((self.dtype,))
 
     def __eq__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, LongitudinalNumpyTheta):
@@ -717,7 +717,7 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArr
             )
 
     def __hash__(self) -> int:
-        return hash(self)
+        return hash((self.dtype,))
 
     def __eq__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, LongitudinalNumpyEta):
@@ -778,7 +778,7 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ig
             )
 
     def __hash__(self) -> int:
-        return hash(self)
+        return hash((self.dtype,))
 
     def __eq__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, TemporalNumpyT):
@@ -831,7 +831,7 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type
             )
 
     def __hash__(self) -> int:
-        return hash(self)
+        return hash((self.dtype,))
 
     def __eq__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, TemporalNumpyTau):
@@ -903,7 +903,7 @@ class VectorNumpy(Vector, GetItem):
         )
 
     def __hash__(self) -> int:
-        return hash(self)
+        return hash((self.lib, self.dtype))
 
     def __eq__(self, other: typing.Any) -> typing.Any:
         return numpy.equal(self, other)
