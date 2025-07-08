@@ -529,7 +529,7 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray)
             )
 
     def __hash__(self) -> int:
-        return hash((self.drtype,))
+        return hash((self.dtype,))
 
     def __eq__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, AzimuthalNumpyRhoPhi):
