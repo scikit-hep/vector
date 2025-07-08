@@ -332,7 +332,7 @@ class VectorObject(Vector):
     lib = numpy
 
     def __hash__(self) -> int:
-        return hash(self)
+        return hash((self.lib,))
 
     def __eq__(self, other: typing.Any) -> typing.Any:
         return numpy.equal(self, other)
