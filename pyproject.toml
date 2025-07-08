@@ -138,8 +138,23 @@ isort.required-imports = [
 "docs/src/*.ipynb" = [
   "T20", "I001", "I002", "F811"
 ]
+"src/vector/__init__.py" = [
+  "PLC0415",
+]
+"src/vector/_methods.py" = [
+  "PLC0415",
+]
 "src/vector/backends/_numba_object.py" = [
   "PGH003",
+]
+"src/vector/backends/awkward.py" = [
+  "PLC0415",
+]
+"src/vector/backends/awkward_constructors.py" = [
+  "PLC0415",
+]
+"src/vector/backends/object.py" = [
+  "PLC0415",
 ]
 "tests/backends/test_operators.py" = [
   "SIM201",
