@@ -442,6 +442,9 @@ class VectorSympy(Vector):
 
     lib = _lib()
 
+    def __hash__(self) -> int:
+        return hash(self)
+
     def __eq__(self, other: typing.Any) -> typing.Any:
         return numpy.equal(self, other)
 

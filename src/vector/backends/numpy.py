@@ -459,6 +459,9 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # typ
                 'fields ("x", "y")'
             )
 
+    def __hash__(self) -> int:
+        return hash(self)
+
     def __eq__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, AzimuthalNumpyXY):
             return False
@@ -525,6 +528,9 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray)
                 'fields ("rho", "phi")'
             )
 
+    def __hash__(self) -> int:
+        return hash(self)
+
     def __eq__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, AzimuthalNumpyRhoPhi):
             return False
@@ -588,6 +594,9 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):
                 'field "z"'
             )
 
+    def __hash__(self) -> int:
+        return hash(self)
+
     def __eq__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, LongitudinalNumpyZ):
             return False
@@ -645,6 +654,9 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, Floa
                 f"{type(self).__name__} must have a structured dtype containing "
                 'field "theta"'
             )
+
+    def __hash__(self) -> int:
+        return hash(self)
 
     def __eq__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, LongitudinalNumpyTheta):
@@ -704,6 +716,9 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArr
                 'field "eta"'
             )
 
+    def __hash__(self) -> int:
+        return hash(self)
+
     def __eq__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, LongitudinalNumpyEta):
             return False
@@ -762,6 +777,9 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ig
                 'field "t"'
             )
 
+    def __hash__(self) -> int:
+        return hash(self)
+
     def __eq__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, TemporalNumpyT):
             return False
@@ -811,6 +829,9 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type
                 f"{type(self).__name__} must have a structured dtype containing "
                 'field "tau"'
             )
+
+    def __hash__(self) -> int:
+        return hash(self)
 
     def __eq__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, TemporalNumpyTau):
@@ -880,6 +901,9 @@ class VectorNumpy(Vector, GetItem):
                 where=where,
             ),
         )
+
+    def __hash__(self) -> int:
+        return hash(self)
 
     def __eq__(self, other: typing.Any) -> typing.Any:
         return numpy.equal(self, other)
