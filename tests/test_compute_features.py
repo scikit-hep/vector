@@ -369,7 +369,8 @@ allowed_lib_functions = [
     "arccosh",
     "arctanh",
     "isclose",
-    # TODO: remove once https://github.com/cupy/cupy/issues/9143
-    # is fixed
+    # TODO: https://github.com/scikit-hep/vector/issues/615
+    # remove once https://github.com/cupy/cupy/issues/9143
+    # is fixed.
     "where",
 ]

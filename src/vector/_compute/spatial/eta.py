@@ -30,9 +30,10 @@ from vector._methods import (
 )
 
 
-# TODO: revert back to `nan_to_num` implementation once
-# https://github.com/cupy/cupy/issues/9143 is fixed
-# `lib.where` works but there is no SymPy equivalent for the function
+# TODO: https://github.com/scikit-hep/vector/issues/615
+# revert back to `nan_to_num` implementation once
+# https://github.com/cupy/cupy/issues/9143 is fixed.
+# `lib.where` works but there is no SymPy equivalent for the function.
 def xy_z(lib, x, y, z):
     return (
         lib.where(
@@ -55,9 +56,10 @@ def xy_eta(lib, x, y, eta):
 xy_eta.__awkward_transform_allowed__ = False  # type:ignore[attr-defined]
 
 
-# TODO: revert back to `nan_to_num` implementation once
-# https://github.com/cupy/cupy/issues/9143 is fixed
-# `lib.where` works but there is no SymPy equivalent for the function
+# TODO: https://github.com/scikit-hep/vector/issues/615
+# revert back to `nan_to_num` implementation once
+# https://github.com/cupy/cupy/issues/9143 is fixed.
+# `lib.where` works but there is no SymPy equivalent for the function.
 def rhophi_z(lib, rho, phi, z):
     return lib.where(z != 0, lib.arcsinh(lib.where(z != 0, z / rho, z)), z) * 1
 
