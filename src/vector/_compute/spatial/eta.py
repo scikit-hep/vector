@@ -13,7 +13,7 @@
 from __future__ import annotations
 
 import typing
-from math import inf, nan
+from math import inf
 
 import numpy
 
@@ -30,12 +30,16 @@ from vector._methods import (
 )
 
 
+# TODO: https://github.com/scikit-hep/vector/issues/615
+# revert back to `nan_to_num` implementation once
+# https://github.com/cupy/cupy/issues/9143 is fixed.
+# `lib.where` works but there is no SymPy equivalent for the function.
 def xy_z(lib, x, y, z):
-    return lib.nan_to_num(
-        lib.arcsinh(z / lib.sqrt(x**2 + y**2)),
-        nan=lib.nan_to_num((z != 0) * inf, posinf=nan),
-        posinf=inf,
-        neginf=-inf,
+    return (
+        lib.where(
+            z != 0, lib.arcsinh(lib.where(z != 0, z / lib.sqrt(x**2 + y**2), z)), z
+        )
+        * 1
     )
 
 
@@ -52,13 +56,12 @@ def xy_eta(lib, x, y, eta):
 xy_eta.__awkward_transform_allowed__ = False  # type:ignore[attr-defined]
 
 
+# TODO: https://github.com/scikit-hep/vector/issues/615
+# revert back to `nan_to_num` implementation once
+# https://github.com/cupy/cupy/issues/9143 is fixed.
+# `lib.where` works but there is no SymPy equivalent for the function.
 def rhophi_z(lib, rho, phi, z):
-    return lib.nan_to_num(
-        lib.arcsinh(z / rho),
-        nan=lib.nan_to_num((z != 0) * inf, posinf=nan),
-        posinf=inf,
-        neginf=-inf,
-    )
+    return lib.where(z != 0, lib.arcsinh(lib.where(z != 0, z / rho, z)), z) * 1
 
 
 def rhophi_theta(lib, rho, phi, theta):

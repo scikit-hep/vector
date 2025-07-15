@@ -43,6 +43,17 @@ class _lib:
     """a wrapper that maps numpy functions to sympy functions (or custom implementations)"""
 
     # functions modified specifically for sympy
+
+    # TODO: https://github.com/scikit-hep/vector/issues/615
+    # should NOT be used as a replacement for np.where as it works specifically for the
+    # case of vector/_compute/spatial/eta.py. `where` returns the second argument and
+    # ignores the third (first argument is a boolean condition) because the purpose of
+    # this function is to handle exceptional values — we know that the "normal" values
+    # are in the second argument and the "exceptional" ones are in the third argument.
+    # remove once https://github.com/cupy/cupy/issues/9143 is fixed.
+    def where(self, val1: sympy.Expr, val2: sympy.Expr, val3: sympy.Expr) -> sympy.Expr:
+        return val2
+
     def nan_to_num(self, val: sympy.Expr, **kwargs: typing.Any) -> sympy.Expr:
         return val
 
