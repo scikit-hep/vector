@@ -622,14 +622,11 @@ class AwkwardProtocol(Protocol):
     def __getitem__(self, where: typing.Any) -> float | ak.Array | ak.Record | None: ...
 
 
-class _lib(typing.NamedTuple):
+class _lib(typing.NamedTuple):  # noqa: PLW1641
     """a wrapper that respects the numpy-like interface of awkward-array and the module interface of numpy"""
 
     module: types.ModuleType
     nplike: ak._nplikes.numpy_like.NumpyLike
-
-    def __hash__(self) -> int:
-        return hash((self.module, self.nplike))
 
     def __eq__(self, other: typing.Any) -> bool:
         if isinstance(other, _lib):

@@ -20,6 +20,13 @@ a2 = vector.array({"x": [10, 100, 1000, 10000], "y": [20, 200, 2000, 20000]})
 def test_eq():
     assert v1 == v1
     assert not v1 == v2
+    assert hash(a1) == hash(a1)
+    assert not hash(a1) == hash(a2)
+
+
+def test_hash():
+    assert hash(v1) == hash(v1)
+    assert not hash(v1) == (v2)
     assert (a1 == a1).all()
     assert not (a1 == a2).any()
     assert (v1 == a1).any()

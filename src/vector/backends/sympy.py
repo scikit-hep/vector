@@ -437,13 +437,10 @@ def _replace_data(obj: typing.Any, result: typing.Any) -> typing.Any:
     return obj
 
 
-class VectorSympy(Vector):
+class VectorSympy(Vector):  # noqa: PLW1641
     """Mixin class for Sympy vectors."""
 
     lib = _lib()
-
-    def __hash__(self) -> int:
-        return hash((self.lib,))
 
     def __eq__(self, other: typing.Any) -> typing.Any:
         return numpy.equal(self, other)

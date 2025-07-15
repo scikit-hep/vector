@@ -326,13 +326,10 @@ def _replace_data(obj: typing.Any, result: typing.Any) -> typing.Any:
     return obj
 
 
-class VectorObject(Vector):
+class VectorObject(Vector):  # noqa: PLW1641
     """Mixin class for Object vectors."""
 
     lib = numpy
-
-    def __hash__(self) -> int:
-        return hash((self.lib,))
 
     def __eq__(self, other: typing.Any) -> typing.Any:
         return numpy.equal(self, other)
