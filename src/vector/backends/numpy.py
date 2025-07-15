@@ -429,7 +429,7 @@ class TemporalNumpy(CoordinatesNumpy, Temporal):
     ObjectClass: type[vector.backends.object.TemporalObject]
 
 
-class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # type: ignore[misc]
+class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # type: ignore[misc] # noqa: PLW1641
     """
     Class for the ``x`` and ``y`` (azimuthal) coordinates of NumPy backend.
     Creates a structured NumPy array and returns it as an AzimuthalNumpyXY object.
@@ -495,7 +495,7 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # typ
         return self["y"]
 
 
-class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray):  # type: ignore[misc]
+class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray):  # type: ignore[misc] # noqa: PLW1641
     """
     Class for the ``rho`` and ``phi`` (azimuthal) coordinates of NumPy backend.
     Creates a structured NumPy array and returns it as an AzimuthalNumpyXY object.
@@ -561,7 +561,7 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray)
         return self["phi"]
 
 
-class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):  # type: ignore[misc]
+class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):  # type: ignore[misc] # noqa: PLW1641
     """
     Class for the ``z`` (longitudinal) coordinate of NumPy backend.
     Creates a structured NumPy array and returns it as a LongitudinalNumpyZ object.
@@ -619,7 +619,7 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):
         return self["z"]
 
 
-class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, FloatArray):  # type: ignore[misc]
+class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, FloatArray):  # type: ignore[misc] # noqa: PLW1641
     """
     Class for the ``theta`` (longitudinal) coordinate of NumPy backend.
     Creates a structured NumPy array and returns it as a LongitudinalNumpyTheta object.
@@ -677,7 +677,7 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, Floa
         return self["theta"]
 
 
-class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArray):  # type: ignore[misc]
+class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArray):  # type: ignore[misc] # noqa: PLW1641
     """
     Class for the ``eta`` (longitudinal) coordinate of NumPy backend.
     Creates a structured NumPy array and returns it as a LongitudinalNumpyEta object.
@@ -735,7 +735,7 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArr
         return self["eta"]
 
 
-class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ignore[misc]
+class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ignore[misc] # noqa: PLW1641
     """
     Class for the ``t`` (temporal) coordinate of NumPy backend.
     Creates a structured NumPy array and returns it as a TemporalNumpyT object.
@@ -793,7 +793,7 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ig
         return self["t"]
 
 
-class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type: ignore[misc]
+class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type: ignore[misc] # noqa: PLW1641
     """Class for the ``tau`` (temporal) coordinate of NumPy backend."""
 
     ObjectClass = vector.backends.object.TemporalObjectTau
@@ -843,7 +843,7 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type
         return self["tau"]
 
 
-class VectorNumpy(Vector, GetItem):
+class VectorNumpy(Vector, GetItem):  # noqa: PLW1641
     """Mixin class for NumPy vectors."""
 
     lib = numpy

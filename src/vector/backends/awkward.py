@@ -622,7 +622,7 @@ class AwkwardProtocol(Protocol):
     def __getitem__(self, where: typing.Any) -> float | ak.Array | ak.Record | None: ...
 
 
-class _lib(typing.NamedTuple):
+class _lib(typing.NamedTuple):  # noqa: PLW1641
     """a wrapper that respects the numpy-like interface of awkward-array and the module interface of numpy"""
 
     module: types.ModuleType

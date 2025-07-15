@@ -437,7 +437,7 @@ def _replace_data(obj: typing.Any, result: typing.Any) -> typing.Any:
     return obj
 
 
-class VectorSympy(Vector):
+class VectorSympy(Vector):  # noqa: PLW1641
     """Mixin class for Sympy vectors."""
 
     lib = _lib()

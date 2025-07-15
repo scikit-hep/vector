@@ -326,7 +326,7 @@ def _replace_data(obj: typing.Any, result: typing.Any) -> typing.Any:
     return obj
 
 
-class VectorObject(Vector):
+class VectorObject(Vector):  # noqa: PLW1641
     """Mixin class for Object vectors."""
 
     lib = numpy
