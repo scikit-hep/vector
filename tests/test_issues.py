@@ -170,3 +170,18 @@ def test_issue_463():
     for transform in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
         trv = getattr(v, "to_" + transform)()
         assert trv.deltaangle(trv) == 0.0
+
+
+def test_issue_621():
+    _ = pytest.importorskip("awkward")
+    ak = pytest.importorskip("awkward")
+    vector.register_awkward()
+    ak.jax.register_and_check()
+
+    a = b = ak.to_backend(
+        ak.zip({"x": [1], "y": [1], "z": [1], "t": [1]}, with_name="Momentum4D"), "jax"
+    )
+
+    # some computation that involves broadcast_and_apply in awkward
+    # enough to check if it computes at all
+    assert (a + b).mass
