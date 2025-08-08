@@ -649,11 +649,10 @@ class VectorAwkward:
 
     @property
     def lib(self):  # type:ignore[no-untyped-def]
-        if (
-            nplike := self.layout.backend.nplike  # type:ignore[attr-defined]
-        ) is ak._nplikes.typetracer.TypeTracer.instance():
+        nplike = self.layout.backend.nplike  # type:ignore[attr-defined]
+        if nplike is ak._nplikes.typetracer.TypeTracer.instance():
             return _lib(module=numpy, nplike=nplike)
-        return numpy
+        return _lib(module=nplike._module, nplike=nplike)
 
     def _wrap_result(
         self: AwkwardProtocol,

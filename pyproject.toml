@@ -59,6 +59,7 @@ optional-dependencies.dev = [
   "pytest-cov>=3",
   "pytest-doctestplus",
   "sympy",
+  "jax",
 ]
 optional-dependencies.docs = [
   "awkward>=2",
@@ -85,6 +86,7 @@ optional-dependencies.test = [
   "pytest-doctestplus",
 ]
 optional-dependencies.test-extras = [
+  "jax",
   "dask_awkward",
   "spark-parser",
   'uncompyle6; python_version == "3.8"',
