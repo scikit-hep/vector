@@ -18,7 +18,7 @@ maintainers = [
 authors = [
   { name = "Jim Pivarski, Henry Schreiner, Eduardo Rodrigues", email = "eduardo.rodrigues@cern.ch" },
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Developers",
@@ -27,7 +27,6 @@ classifiers = [
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
@@ -164,7 +163,7 @@ isort.required-imports = [
 ]
 
 [tool.pylint]
-master.py-version = "3.8"
+master.py-version = "3.9"
 reports.output-format = "colorized"
 similarities.ignore-imports = "yes"
 master.jobs = "0"
@@ -253,7 +252,7 @@ filterwarnings = [
 files = [
   "src/vector",
 ]
-python_version = "3.8"
+python_version = "3.9"
 strict = true
 warn_return_any = false
 enable_error_code = [
