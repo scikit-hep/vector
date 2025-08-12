@@ -17,7 +17,7 @@ JAX traces a function for JIT-compilation and autodifferentiation by passing a
 reason to exclude ``if`` statements. Loops are even more problematic.
 
 This suite of tests statically analyzes all of the compute functions by decompiling
-their bytecode with uncompyle6 (on Python 3.8; will have to be modified slightly
+their bytecode with uncompyle6 (on Python 3.9; will have to be modified slightly
 every few years). Some compute functions are dynamically generated, so they don't
 all have an AST to inspect.
 
