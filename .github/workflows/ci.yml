@@ -93,7 +93,7 @@ jobs:
         run: nox -s coverage-${{ matrix.python-version }} --verbose
 
       - name: Upload coverage report
-        uses: codecov/codecov-action@v5.4.3
+        uses: codecov/codecov-action@v5.5.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
