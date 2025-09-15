@@ -66,6 +66,7 @@ def test_pytree_roundtrip_VectorObject3D():
     assert type(vec.azimuthal) is type(vec2.azimuthal)
     assert type(vec.longitudinal) is type(vec2.longitudinal)
 
+
 def test_pytree_roundtrip_MomentumObject3D():
     vec = vector.obj(px=1, py=2, pz=3)
     leaves, treedef = vector.pytree.flatten(vec)
@@ -88,6 +89,7 @@ def test_pytree_roundtrip_MomentumObject3D():
     assert vec == vec2
     assert type(vec.azimuthal) is type(vec2.azimuthal)
     assert type(vec.longitudinal) is type(vec2.longitudinal)
+
 
 def test_pytree_roundtrip_VectorObject4D():
     vec = vector.obj(x=1, y=2, z=3, t=4)
