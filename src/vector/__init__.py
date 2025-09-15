@@ -96,6 +96,16 @@ else:
     )
 
 
+try:
+    import optree.pytree
+
+    from vector._pytree import _register
+
+    pytree = optree.pytree.reexport(namespace="vector")
+    _register(pytree)
+except ImportError:
+    pytree = None
+
 __all__: tuple[str, ...] = (
     "Array",
     "Azimuthal",
@@ -146,6 +156,7 @@ __all__: tuple[str, ...] = (
     "awkward_transform",
     "dim",
     "obj",
+    "pytree",
     "register_awkward",
     "register_numba",
     "zip",

@@ -90,6 +90,7 @@ optional-dependencies.test-extras = [
   "dask_awkward",
   "spark-parser",
   'uncompyle6; python_version == "3.8"',
+  "optree>=0.16",
 ]
 urls."Bug Tracker" = "https://github.com/scikit-hep/vector/issues"
 urls.Changelog = "https://vector.readthedocs.io/en/latest/changelog.html"
