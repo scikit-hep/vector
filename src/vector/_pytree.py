@@ -7,6 +7,7 @@ See https://blog.scientific-python.org/pytrees/ for the rationale for these func
 from __future__ import annotations
 
 from types import ModuleType
+from typing import Any
 
 from vector._methods import (
     Vector2D,
@@ -22,25 +23,28 @@ from vector.backends.object import (
     VectorObject4D,
 )
 
+Children = tuple[Any, ...]
+MetaData = tuple[type, ...]
 
-def flatten2D(v: Vector2D) -> tuple[tuple, tuple]:
+
+def flatten2D(v: Vector2D) -> tuple[Children, MetaData]:
     children = v.azimuthal.elements
     metadata = type(v), type(v.azimuthal)
     return children, metadata
 
 
-def unflatten2D(metadata: tuple, children: tuple) -> Vector2D:
+def unflatten2D(metadata: MetaData, children: Children) -> Vector2D:
     backend, azimuthal = metadata
     return backend(azimuthal=azimuthal(*children))
 
 
-def flatten3D(v: Vector3D) -> tuple[tuple, tuple]:
+def flatten3D(v: Vector3D) -> tuple[Children, MetaData]:
     children = v.azimuthal.elements, v.longitudinal.elements
     metadata = type(v), type(v.azimuthal), type(v.longitudinal)
     return children, metadata
 
 
-def unflatten3D(metadata: tuple, children: tuple) -> Vector3D:
+def unflatten3D(metadata: MetaData, children: Children) -> Vector3D:
     coords_azimuthal, coords_longitudinal = children
     backend, azimuthal, longitudinal = metadata
     return backend(
@@ -49,7 +53,7 @@ def unflatten3D(metadata: tuple, children: tuple) -> Vector3D:
     )
 
 
-def flatten4D(v: Vector4D) -> tuple[tuple, tuple]:
+def flatten4D(v: Vector4D) -> tuple[Children, MetaData]:
     children = (
         v.azimuthal.elements,
         v.longitudinal.elements,
@@ -59,7 +63,7 @@ def flatten4D(v: Vector4D) -> tuple[tuple, tuple]:
     return children, metadata
 
 
-def unflatten4D(metadata: tuple, children: tuple) -> Vector4D:
+def unflatten4D(metadata: MetaData, children: Children) -> Vector4D:
     coords_azimuthal, coords_longitudinal, coords_temporal = children
     backend, azimuthal, longitudinal, temporal = metadata
     return backend(

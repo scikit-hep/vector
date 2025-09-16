@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import importlib.metadata
 import typing
+from types import ModuleType
 
 import packaging.version
 
@@ -96,6 +97,7 @@ else:
     )
 
 
+pytree: ModuleType | None = None
 try:
     import optree.pytree
 
@@ -104,7 +106,7 @@ try:
     pytree = optree.pytree.reexport(namespace="vector")
     _register(pytree)
 except ImportError:
-    pytree = None
+    pass
 
 __all__: tuple[str, ...] = (
     "Array",
