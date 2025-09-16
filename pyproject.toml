@@ -45,22 +45,42 @@ dependencies = [
   "numpy>=1.13.3",
   "packaging>=19",
 ]
-optional-dependencies.awkward = [
-  "awkward>=2",
-]
-optional-dependencies.dev = [
-  "awkward>=2",
-  "dask-awkward",
+
+[project.optional-dependencies]
+awkward = ["awkward>=2"]
+numba = ["numba>=0.57; python_version<'3.14'"]
+sympy = ["sympy"]
+
+[project.urls]
+"Bug Tracker" = "https://github.com/scikit-hep/vector/issues"
+Changelog = "https://vector.readthedocs.io/en/latest/changelog.html"
+Discussions = "https://github.com/scikit-hep/vector/discussions"
+Documentation = "https://vector.readthedocs.io/"
+Homepage = "https://github.com/scikit-hep/vector"
+
+[project.entry-points]
+numba_extensions.init = "vector:register_numba"
+
+[dependency-groups]
+test = [
   "nox",
-  "numba>=0.57; python_version<'3.14'",
   "papermill>=2.4",
   "pytest>=6",
   "pytest-cov>=3",
   "pytest-doctestplus",
-  "sympy",
-  "jax",
 ]
-optional-dependencies.docs = [
+test-optional = [
+  "awkward>=2",
+  "numba>=0.57; python_version<'3.14'",
+  "sympy",
+]
+test-extras = [
+  "jax",
+  "dask_awkward",
+  "spark-parser",
+  'uncompyle6; python_version == "3.8"',
+]
+docs = [
   "awkward>=2",
   "sympy",
   "ipykernel",
@@ -71,30 +91,15 @@ optional-dependencies.docs = [
   "sphinx-copybutton",
   "sphinx-math-dollar",
 ]
-optional-dependencies.numba = [
-  "numba>=0.57; python_version<'3.14'",
+test-all = [
+  { include-group = "test"},
+  { include-group = "test-optional"},
+  { include-group = "test-extras"},
 ]
-optional-dependencies.sympy = [
-  "sympy",
+dev = [
+  { include-group = "test"},
+  { include-group = "test-optional"},
 ]
-optional-dependencies.test = [
-  "nox",
-  "papermill>=2.4",
-  "pytest>=6",
-  "pytest-cov>=3",
-  "pytest-doctestplus",
-]
-optional-dependencies.test-extras = [
-  "jax",
-  "dask_awkward",
-  "spark-parser",
-]
-urls."Bug Tracker" = "https://github.com/scikit-hep/vector/issues"
-urls.Changelog = "https://vector.readthedocs.io/en/latest/changelog.html"
-urls.Discussions = "https://github.com/scikit-hep/vector/discussions"
-urls.Documentation = "https://vector.readthedocs.io/"
-urls.Homepage = "https://github.com/scikit-hep/vector"
-entry-points.numba_extensions.init = "vector:register_numba"
 
 [tool.hatch]
 version.source = "vcs"
