@@ -1,9 +1,3 @@
-"""PyTree operations for vector objects.
-
-This module defines how vector objects are handled within optree.
-See https://blog.scientific-python.org/pytrees/ for the rationale for these functions.
-"""
-
 from __future__ import annotations
 
 from functools import partial
@@ -108,7 +102,33 @@ def _unflattenAoSdata(
 
 
 def register_pytree() -> ReexportedPyTreeModule:
-    """Register vector objects with the optree module."""
+    """Register Optree PyTree operations for vector objects.
+
+    This module defines how vector objects are handled with the optree package.
+    See https://blog.scientific-python.org/pytrees/ for the rationale for these functions.
+
+    After calling this function, the returned PyTree module can be used to flatten
+    and unflatten Vector objects. For example:
+
+    >>> import vector
+    >>> pytree = vector.register_pytree()
+    >>> vec = vector.obj(x=1, y=2)
+    >>> leaves, treedef = pytree.flatten(vec)
+    >>> vec2 = pytree.unflatten(treedef, leaves)
+    >>> assert vec == vec2
+
+    As a convenience, a ravel function is also added to the returned PyTree module,
+    which can be used to flatten NumpyVector arrays into a 1D array and reconstruct them.
+
+    >>> import numpy as np
+    >>> vec = vector.array({"x": np.ones(10), "y": np.ones(10)})
+    >>> flat, unravel = pytree.ravel(vec)
+    >>> assert flat.shape == (20,)
+    >>> vec2 = unravel(flat)
+    >>> assert (vec == vec2).all()
+
+    Note that this function requires the `optree` package to be installed.
+    """
     try:
         import optree.pytree
         from optree import GetAttrEntry
