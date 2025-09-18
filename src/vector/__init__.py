@@ -7,7 +7,6 @@ from __future__ import annotations
 
 import importlib.metadata
 import typing
-from types import ModuleType
 
 import packaging.version
 
@@ -33,6 +32,7 @@ from vector._methods import (
     Vector4D,
     dim,
 )
+from vector._pytree import register_pytree
 from vector._version import version as __version__
 from vector.backends.awkward_constructors import Array, zip
 from vector.backends.awkward_constructors import Array as awk
@@ -96,18 +96,6 @@ else:
         VectorSympy4D,
     )
 
-
-pytree: ModuleType | None = None
-try:
-    import optree.pytree
-
-    from vector._pytree import _register
-
-    pytree = optree.pytree.reexport(namespace="vector")
-    _register(pytree)
-except ImportError:
-    pass
-
 __all__: tuple[str, ...] = (
     "Array",
     "Azimuthal",
@@ -158,9 +146,9 @@ __all__: tuple[str, ...] = (
     "awkward_transform",
     "dim",
     "obj",
-    "pytree",
     "register_awkward",
     "register_numba",
+    "register_pytree",
     "zip",
 )
 

@@ -147,6 +147,9 @@ isort.required-imports = [
 "src/vector/_methods.py" = [
   "PLC0415",
 ]
+"src/vector/_pytree.py" = [
+  "PLC0415",
+]
 "src/vector/backends/_numba_object.py" = [
   "PGH003",
 ]
@@ -275,3 +278,8 @@ module = [
 ignore_missing_imports = true
 disallow_untyped_defs = false
 disallow_untyped_calls = false
+
+[[tool.mypy.overrides]]
+module = "vector._pytree"
+# optree register_node typing requires vectors to be Collection, unnecessarily
+disable_error_code = ["call-arg", "arg-type"]

@@ -6,13 +6,27 @@ See https://blog.scientific-python.org/pytrees/ for the rationale for these func
 
 from __future__ import annotations
 
-from types import ModuleType
-from typing import Any
+from functools import partial
+from typing import TYPE_CHECKING, Any
+
+import numpy
+
+if TYPE_CHECKING:
+    from optree.pytree import ReexportedPyTreeModule
 
 from vector._methods import (
     Vector2D,
     Vector3D,
     Vector4D,
+)
+from vector.backends.numpy import (
+    MomentumNumpy2D,
+    MomentumNumpy3D,
+    MomentumNumpy4D,
+    VectorNumpy,
+    VectorNumpy2D,
+    VectorNumpy3D,
+    VectorNumpy4D,
 )
 from vector.backends.object import (
     MomentumObject2D,
@@ -27,24 +41,24 @@ Children = tuple[Any, ...]
 MetaData = tuple[type, ...]
 
 
-def flatten2D(v: Vector2D) -> tuple[Children, MetaData]:
+def _flatten2D(v: Vector2D) -> tuple[Children, MetaData]:
     children = v.azimuthal.elements
     metadata = type(v), type(v.azimuthal)
     return children, metadata
 
 
-def unflatten2D(metadata: MetaData, children: Children) -> Vector2D:
+def _unflatten2D(metadata: MetaData, children: Children) -> Vector2D:
     backend, azimuthal = metadata
     return backend(azimuthal=azimuthal(*children))
 
 
-def flatten3D(v: Vector3D) -> tuple[Children, MetaData]:
+def _flatten3D(v: Vector3D) -> tuple[Children, MetaData]:
     children = v.azimuthal.elements, v.longitudinal.elements
     metadata = type(v), type(v.azimuthal), type(v.longitudinal)
     return children, metadata
 
 
-def unflatten3D(metadata: MetaData, children: Children) -> Vector3D:
+def _unflatten3D(metadata: MetaData, children: Children) -> Vector3D:
     coords_azimuthal, coords_longitudinal = children
     backend, azimuthal, longitudinal = metadata
     return backend(
@@ -53,7 +67,7 @@ def unflatten3D(metadata: MetaData, children: Children) -> Vector3D:
     )
 
 
-def flatten4D(v: Vector4D) -> tuple[Children, MetaData]:
+def _flatten4D(v: Vector4D) -> tuple[Children, MetaData]:
     children = (
         v.azimuthal.elements,
         v.longitudinal.elements,
@@ -63,7 +77,7 @@ def flatten4D(v: Vector4D) -> tuple[Children, MetaData]:
     return children, metadata
 
 
-def unflatten4D(metadata: MetaData, children: Children) -> Vector4D:
+def _unflatten4D(metadata: MetaData, children: Children) -> Vector4D:
     coords_azimuthal, coords_longitudinal, coords_temporal = children
     backend, azimuthal, longitudinal, temporal = metadata
     return backend(
@@ -73,24 +87,90 @@ def unflatten4D(metadata: MetaData, children: Children) -> Vector4D:
     )
 
 
-def _register(pytree: ModuleType) -> None:
-    """Register vector objects with the given pytree module."""
+def _flattenAoSdata(v: VectorNumpy) -> tuple[Children, tuple[type, numpy.dtype]]:
+    assert v.dtype.fields is not None
+    field_dtypes = [dt for dt, *_ in v.dtype.fields.values()]
+    target_dtype = field_dtypes[0]
+    if not all(fd == target_dtype for fd in field_dtypes):
+        raise ValueError("All fields must have the same dtype to flatten")
+    array = numpy.array(v).view(target_dtype)
+    children = (array,)
+    metadata = (type(v), v.dtype)
+    return children, metadata
+
+
+def _unflattenAoSdata(
+    metadata: tuple[type, numpy.dtype], children: Children
+) -> VectorNumpy:
+    (array,) = children
+    (vtype, dtype) = metadata
+    return array.view(dtype).view(vtype)
+
+
+def register_pytree() -> ReexportedPyTreeModule:
+    """Register vector objects with the optree module."""
+    try:
+        import optree.pytree
+        from optree import GetAttrEntry
+        from optree.integrations.numpy import tree_ravel
+    except ImportError as e:
+        raise ImportError("Please install optree to use vector.pytree") from e
+
+    pytree = optree.pytree.reexport(namespace="vector", module="vector.pytree")
 
     pytree.register_node(
-        VectorObject2D, flatten_func=flatten2D, unflatten_func=unflatten2D
+        VectorObject2D,
+        flatten_func=_flatten2D,
+        unflatten_func=_unflatten2D,
+        path_entry_type=GetAttrEntry,
     )
     pytree.register_node(
-        MomentumObject2D, flatten_func=flatten2D, unflatten_func=unflatten2D
+        MomentumObject2D,
+        flatten_func=_flatten2D,
+        unflatten_func=_unflatten2D,
+        path_entry_type=GetAttrEntry,
     )
     pytree.register_node(
-        VectorObject3D, flatten_func=flatten3D, unflatten_func=unflatten3D
+        VectorObject3D,
+        flatten_func=_flatten3D,
+        unflatten_func=_unflatten3D,
+        path_entry_type=GetAttrEntry,
     )
     pytree.register_node(
-        MomentumObject3D, flatten_func=flatten3D, unflatten_func=unflatten3D
+        MomentumObject3D,
+        flatten_func=_flatten3D,
+        unflatten_func=_unflatten3D,
+        path_entry_type=GetAttrEntry,
     )
     pytree.register_node(
-        VectorObject4D, flatten_func=flatten4D, unflatten_func=unflatten4D
+        VectorObject4D,
+        flatten_func=_flatten4D,
+        unflatten_func=_unflatten4D,
+        path_entry_type=GetAttrEntry,
     )
     pytree.register_node(
-        MomentumObject4D, flatten_func=flatten4D, unflatten_func=unflatten4D
+        MomentumObject4D,
+        flatten_func=_flatten4D,
+        unflatten_func=_unflatten4D,
+        path_entry_type=GetAttrEntry,
     )
+
+    for cls in (
+        VectorNumpy2D,
+        MomentumNumpy2D,
+        VectorNumpy3D,
+        MomentumNumpy3D,
+        VectorNumpy4D,
+        MomentumNumpy4D,
+    ):
+        pytree.register_node(
+            cls,
+            flatten_func=_flattenAoSdata,
+            unflatten_func=_unflattenAoSdata,
+            path_entry_type=GetAttrEntry,
+        )
+
+    # A convenience function
+    pytree.ravel = partial(tree_ravel, namespace="vector")  # type: ignore[attr-defined]
+
+    return pytree
