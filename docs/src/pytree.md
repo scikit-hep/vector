@@ -4,8 +4,10 @@ PyTrees are a [powerful mechanism](https://blog.scientific-python.org/pytrees/) 
 nested data structures, while allowing algorithms like finite-differences, minimization, and integration routines
 to run on flattened 1D arrays of the the same data. To use PyTrees with vector objects, you need to install
 the [optree](https://github.com/metaopt/optree) package, and then register vector with PyTrees, for example:
+
 ```python
 import vector
+
 pytree = vector.register_pytree()
 
 state = {
@@ -16,12 +18,16 @@ flat_state, treedef = pytree.flatten(state)
 print(flat_state)
 print(treedef)
 ```
+
 `flat_state` is now a 1D array of length 8, and `treedef` contains the information needed to reconstruct the original structure:
+
 ```
 [0, 10, 0, 14, 1, 2, 3, 0]
 PyTreeSpec({'momentum': CustomTreeNode(VectorObject4D[(<class 'vector.backends.object.VectorObject4D'>, <class 'vector.backends.object.AzimuthalObjectXY'>, <class 'vector.backends.object.LongitudinalObjectZ'>, <class 'vector.backends.object.TemporalObjectT'>)], [(*, *), (*,), (*,)]), 'position': CustomTreeNode(VectorObject4D[(<class 'vector.backends.object.VectorObject4D'>, <class 'vector.backends.object.AzimuthalObjectXY'>, <class 'vector.backends.object.LongitudinalObjectZ'>, <class 'vector.backends.object.TemporalObjectT'>)], [(*, *), (*,), (*,)])}, namespace='vector')
 ```
+
 The original structure can be reconstructed with:
+
 ```python
 reconstructed_state = pytree.unflatten(treedef, flat_state)
 ```
