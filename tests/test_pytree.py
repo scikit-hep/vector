@@ -165,3 +165,8 @@ def test_pytree_roundtrip_AoS():
     assert flat.shape == (40,)
     assert flat.dtype == np.float64
     assert (unravel(flat) == vec).all()
+
+def test_run_once():
+    # Calling register_pytree multiple times returns the same object
+    pytree2 = vector.register_pytree()
+    assert pytree is pytree2

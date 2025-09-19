@@ -101,6 +101,9 @@ def _unflattenAoSdata(
     return array.view(dtype).view(vtype)
 
 
+_MODULE: list[ReexportedPyTreeModule] = []
+
+
 def register_pytree() -> ReexportedPyTreeModule:
     """Register Optree PyTree operations for vector objects.
 
@@ -129,6 +132,8 @@ def register_pytree() -> ReexportedPyTreeModule:
 
     Note that this function requires the `optree` package to be installed.
     """
+    if _MODULE:
+        return _MODULE[0]
     try:
         import optree.pytree
         from optree import GetAttrEntry
@@ -193,4 +198,5 @@ def register_pytree() -> ReexportedPyTreeModule:
     # A convenience function
     pytree.ravel = partial(tree_ravel, namespace="vector")  # type: ignore[attr-defined]
 
+    _MODULE.append(pytree)
     return pytree
