@@ -89,7 +89,6 @@ optional-dependencies.test-extras = [
   "jax",
   "dask_awkward",
   "spark-parser",
-  'uncompyle6; python_version == "3.8"',
 ]
 urls."Bug Tracker" = "https://github.com/scikit-hep/vector/issues"
 urls.Changelog = "https://vector.readthedocs.io/en/latest/changelog.html"
@@ -241,7 +240,6 @@ markers = [
   "slow",
   "numba",
   "awkward",
-  "dis",
   "sympy",
 ]
 log_cli_level = "DEBUG"

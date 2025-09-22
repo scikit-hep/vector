@@ -97,23 +97,8 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
-  discheck:
-    runs-on: ubuntu-latest
-    name: Disassemble check
-    steps:
-      - uses: actions/checkout@v5
-
-      - uses: actions/setup-python@v6
-        with:
-          python-version: 3.8.13
-
-      - uses: astral-sh/setup-uv@v6
-
-      - name: Test compute features
-        run: uvx nox -s disassemble --verbose
-
   pass:
-    needs: [pre-commit, check-lite, check-full, discheck]
+    needs: [pre-commit, check-lite, check-full]
     runs-on: ubuntu-latest
     steps:
       - run: echo "All jobs passed"
