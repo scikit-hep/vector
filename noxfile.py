@@ -88,11 +88,3 @@ def build(session: nox.Session) -> None:
     """Build an SDist and wheel."""
     session.install("build")
     session.run("python", "-m", "build")
-
-
-@nox.session(reuse_venv=True, python="3.8", default=False)
-def disassemble(session: nox.Session) -> None:
-    """Disassemble run."""
-    session.install("-e", ".[test-extras]")
-    session.posargs.extend(["-m", "dis"])
-    lite(session)
