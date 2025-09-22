@@ -31,25 +31,28 @@ from vector.backends.object import (
     VectorObject4D,
 )
 
+Children = tuple[Any, ...]
+MetaData = tuple[type, ...]
 
-def _flatten2D(v: Vector2D) -> tuple[tuple[Any, ...], tuple[type, ...]]:
+
+def _flatten2D(v: Vector2D) -> tuple[Children, MetaData]:
     children = v.azimuthal.elements
     metadata = type(v), type(v.azimuthal)
     return children, metadata
 
 
-def _unflatten2D(metadata: tuple[type, ...], children: tuple[Any, ...]) -> Vector2D:
+def _unflatten2D(metadata: MetaData, children: Children) -> Vector2D:
     backend, azimuthal = metadata
     return backend(azimuthal=azimuthal(*children))
 
 
-def _flatten3D(v: Vector3D) -> tuple[tuple[Any, ...], tuple[type, ...]]:
+def _flatten3D(v: Vector3D) -> tuple[Children, MetaData]:
     children = v.azimuthal.elements, v.longitudinal.elements
     metadata = type(v), type(v.azimuthal), type(v.longitudinal)
     return children, metadata
 
 
-def _unflatten3D(metadata: tuple[type, ...], children: tuple[Any, ...]) -> Vector3D:
+def _unflatten3D(metadata: MetaData, children: Children) -> Vector3D:
     coords_azimuthal, coords_longitudinal = children
     backend, azimuthal, longitudinal = metadata
     return backend(
@@ -58,7 +61,7 @@ def _unflatten3D(metadata: tuple[type, ...], children: tuple[Any, ...]) -> Vecto
     )
 
 
-def _flatten4D(v: Vector4D) -> tuple[tuple[Any, ...], tuple[type, ...]]:
+def _flatten4D(v: Vector4D) -> tuple[Children, MetaData]:
     children = (
         v.azimuthal.elements,
         v.longitudinal.elements,
@@ -68,7 +71,7 @@ def _flatten4D(v: Vector4D) -> tuple[tuple[Any, ...], tuple[type, ...]]:
     return children, metadata
 
 
-def _unflatten4D(metadata: tuple[type, ...], children: tuple[Any, ...]) -> Vector4D:
+def _unflatten4D(metadata: MetaData, children: Children) -> Vector4D:
     coords_azimuthal, coords_longitudinal, coords_temporal = children
     backend, azimuthal, longitudinal, temporal = metadata
     return backend(
@@ -78,7 +81,7 @@ def _unflatten4D(metadata: tuple[type, ...], children: tuple[Any, ...]) -> Vecto
     )
 
 
-def _flattenAoSdata(v: VectorNumpy) -> tuple[tuple[Any, ...], tuple[type, numpy.dtype]]:
+def _flattenAoSdata(v: VectorNumpy) -> tuple[Children, tuple[type, numpy.dtype]]:
     assert v.dtype.fields is not None
     field_dtypes = [dt for dt, *_ in v.dtype.fields.values()]
     target_dtype = field_dtypes[0]
@@ -91,7 +94,7 @@ def _flattenAoSdata(v: VectorNumpy) -> tuple[tuple[Any, ...], tuple[type, numpy.
 
 
 def _unflattenAoSdata(
-    metadata: tuple[type, numpy.dtype], children: tuple[Any, ...]
+    metadata: tuple[type, numpy.dtype], children: Children
 ) -> VectorNumpy:
     (array,) = children
     (vtype, dtype) = metadata
