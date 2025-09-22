@@ -78,7 +78,6 @@ test-extras = [
   "jax",
   "dask_awkward",
   "spark-parser",
-  'uncompyle6; python_version == "3.8"',
 ]
 docs = [
   "awkward>=2",
