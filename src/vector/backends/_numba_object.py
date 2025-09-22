@@ -1328,7 +1328,7 @@ lorentz_momentum_properties = ["Et", "Et2", "Mt", "Mt2"]
 def add_planar_property(vectortype, propertyname):
     @numba.extending.overload_attribute(vectortype, propertyname)
     def overloader(v):
-        function, *returns = _from_signature(
+        function, *_ = _from_signature(
             propertyname, numba_modules["planar"][propertyname], (numba_aztype(v),)
         )
         coord1 = getcoord1[numba_aztype(v)]
@@ -1343,7 +1343,7 @@ def add_planar_property(vectortype, propertyname):
 def add_spatial_property(vectortype, propertyname):
     @numba.extending.overload_attribute(vectortype, propertyname)
     def overloader(v):
-        function, *returns = _from_signature(
+        function, *_ = _from_signature(
             propertyname,
             numba_modules["spatial"][propertyname],
             (numba_aztype(v), numba_ltype(v)),
@@ -1361,7 +1361,7 @@ def add_spatial_property(vectortype, propertyname):
 def add_lorentz_property(vectortype, propertyname):
     @numba.extending.overload_attribute(vectortype, propertyname)
     def overloader(v):
-        function, *returns = _from_signature(
+        function, *_ = _from_signature(
             propertyname,
             numba_modules["lorentz"][propertyname],
             (numba_aztype(v), numba_ltype(v), numba_ttype(v)),
@@ -1645,7 +1645,7 @@ def add_tolerance_method(vectortype, methodname):
             coord22 = getcoord2[numba_aztype(v2)]
             coord23 = getcoord1[numba_ltype(v2)]
 
-        function, *returns = _from_signature(
+        function, *_ = _from_signature(
             groupname + "." + methodname,
             numba_modules[groupname][methodname],
             signature,
@@ -1740,7 +1740,7 @@ def add_isclose_method(vectortype):
                 f"{type(v1).__name__} and {type(v2).__name__} do not have the same dimension"
             )
 
-        function, *returns = _from_signature(
+        function, *_ = _from_signature(
             groupname + ".isclose",
             numba_modules[groupname]["isclose"],
             signature,
@@ -2810,7 +2810,7 @@ def VectorObject4DType_transform4D(v, obj):
 
 @numba.extending.overload_method(VectorObject4DType, "is_timelike")
 def VectorObject4DType_is_timelike(v, tolerance=0):
-    function, *returns = _from_signature(
+    function, *_ = _from_signature(
         "",
         numba_modules["lorentz"]["is_timelike"],
         (numba_aztype(v), numba_ltype(v), numba_ttype(v)),
@@ -2836,7 +2836,7 @@ def VectorObject4DType_is_timelike(v, tolerance=0):
 
 @numba.extending.overload_method(VectorObject4DType, "is_spacelike")
 def VectorObject4DType_is_spacelike(v, tolerance=0):
-    function, *returns = _from_signature(
+    function, *_ = _from_signature(
         "",
         numba_modules["lorentz"]["is_spacelike"],
         (numba_aztype(v), numba_ltype(v), numba_ttype(v)),
@@ -2862,7 +2862,7 @@ def VectorObject4DType_is_spacelike(v, tolerance=0):
 
 @numba.extending.overload_method(VectorObject4DType, "is_lightlike")
 def VectorObject4DType_is_lightlike(v, tolerance=1e-5):
-    function, *returns = _from_signature(
+    function, *_ = _from_signature(
         "",
         numba_modules["lorentz"]["is_lightlike"],
         (numba_aztype(v), numba_ltype(v), numba_ttype(v)),
