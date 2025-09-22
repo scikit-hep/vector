@@ -207,7 +207,6 @@ nox -s tests        # test with all extra dependencies on all available Python v
 nox -s tests        # run doctests on all available Python versions
 nox -s coverage     # run the tests session and generate a coverage report on all available Python versions
 nox -s notebooks    # test notebooks on the default Python version
-nox -s disassemble  # check compute functions on Python 3.9
 ```
 
 ### Building documentation with nox
