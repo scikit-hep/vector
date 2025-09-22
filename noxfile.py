@@ -8,7 +8,7 @@ nox.options.sessions = ["lint", "lite", "tests", "doctests", "disassemble"]
 nox.needs_version = ">=2024.4.15"
 nox.options.default_venv_backend = "uv|virtualenv"
 
-ALL_PYTHON = ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+ALL_PYTHON = ["3.9", "3.10", "3.11", "3.12", "3.13"]
 DIR = Path(__file__).parent.resolve()
 
 
