@@ -132,6 +132,9 @@ dmypy.json
 .vscode
 /.idea/*
 
+# Lock files
+uv.lock
+
 # Version file
 /src/vector/_version.py
 
