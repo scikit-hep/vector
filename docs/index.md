@@ -158,6 +158,12 @@ src/momentum4d.md
 
 ```{toctree}
 :maxdepth: 1
+:caption: Integrations
+src/pytree.md
+```
+
+```{toctree}
+:maxdepth: 1
 :caption: More ways to learn
 src/talks.md
 ```
