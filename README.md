@@ -57,6 +57,12 @@ Vectors may be included in any of these data types:
 
 Each of these "backends" provides the same suite of properties and methods, through a common "compute" library.
 
+### Integrations
+
+Optionally, the vector package provides integration with other libraries. Currently, this includes:
+
+- [PyTree integrations](https://vector.readthedocs.io/en/latest/src/pytree.html) using the [optree](https://github.com/metaopt/optree) package.
+
 ### Geometric versus momentum
 
 Finally, vectors come in two flavors:
@@ -133,6 +139,10 @@ journal = {Journal of Open Source Software}
 - [Interface for 2D momentum](https://vector.readthedocs.io/en/latest/src/momentum2d.html)
 - [Interface for 3D momentum](https://vector.readthedocs.io/en/latest/src/momentum3d.html)
 - [Interface for 4D momentum](https://vector.readthedocs.io/en/latest/src/momentum4d.html)
+
+### Integrations
+
+- [PyTree integration API](https://vector.readthedocs.io/en/latest/src/pytree.html)
 
 ### More ways to learn
 
