@@ -286,3 +286,7 @@ disallow_untyped_calls = false
 module = "vector._pytree"
 # optree register_node typing requires vectors to be Collection, unnecessarily
 disable_error_code = ["call-arg", "arg-type"]
+
+[tool.codespell]
+ignore-words-list = "HEP"
+ignore-regex = "[A-Za-z0-9+/]{100,}"

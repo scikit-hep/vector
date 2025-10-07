@@ -41,10 +41,6 @@ repos:
     rev: v2.4.1
     hooks:
       - id: codespell
-        args: ["-LHEP"]
-        exclude:
-          - ^docs/usage/intro.ipynb$
-          - ^docs/src/pytree.ipynb$
 
   - repo: https://github.com/rbubley/mirrors-prettier
     rev: "v3.6.2"
