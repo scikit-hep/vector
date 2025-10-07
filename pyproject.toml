@@ -90,6 +90,8 @@ docs = [
   "sphinx-book-theme>=0.0.42",
   "sphinx-copybutton",
   "sphinx-math-dollar",
+  "hepunits",
+  "matplotlib",
 ]
 test-all = [
   { include-group = "test"},

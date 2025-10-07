@@ -133,6 +133,7 @@ src/numpy.ipynb
 src/awkward.ipynb
 src/numba.ipynb
 src/sympy.ipynb
+src/pytree.ipynb
 ```
 
 ```{toctree}
