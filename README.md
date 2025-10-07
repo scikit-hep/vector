@@ -142,7 +142,7 @@ journal = {Journal of Open Source Software}
 
 ### Integrations
 
-- [PyTree integration API](https://vector.readthedocs.io/en/latest/src/pytree.html)
+- [PyTree integration API](https://vector.readthedocs.io/en/latest/src/pytree_api.html)
 
 ### More ways to learn
 
