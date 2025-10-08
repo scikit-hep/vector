@@ -57,6 +57,12 @@ Vectors may be included in any of these data types:
 
 Each of these "backends" provides the same suite of properties and methods, through a common "compute" library.
 
+### Integrations
+
+Optionally, the vector package provides integration with other libraries. Currently, this includes:
+
+- [PyTree integrations](https://vector.readthedocs.io/en/latest/src/pytree.html) using the [optree](https://github.com/metaopt/optree) package.
+
 ### Geometric versus momentum
 
 Finally, vectors come in two flavors:
@@ -133,6 +139,7 @@ src/numpy.ipynb
 src/awkward.ipynb
 src/numba.ipynb
 src/sympy.ipynb
+src/pytree.ipynb
 ```
 
 ```{toctree}
@@ -154,6 +161,12 @@ src/vector4d.md
 src/momentum2d.md
 src/momentum3d.md
 src/momentum4d.md
+```
+
+```{toctree}
+:maxdepth: 1
+:caption: Integrations
+src/pytree_api.md
 ```
 
 ```{toctree}

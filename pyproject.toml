@@ -78,6 +78,7 @@ test-extras = [
   "jax",
   "dask_awkward",
   "spark-parser",
+  "optree>=0.16",
 ]
 docs = [
   "awkward>=2",
@@ -89,6 +90,8 @@ docs = [
   "sphinx-book-theme>=0.0.42",
   "sphinx-copybutton",
   "sphinx-math-dollar",
+  "hepunits",
+  "matplotlib",
 ]
 test-all = [
   { include-group = "test"},
@@ -146,6 +149,9 @@ isort.required-imports = [
   "PLC0415",
 ]
 "src/vector/_methods.py" = [
+  "PLC0415",
+]
+"src/vector/_pytree.py" = [
   "PLC0415",
 ]
 "src/vector/backends/_numba_object.py" = [
@@ -275,3 +281,12 @@ module = [
 ignore_missing_imports = true
 disallow_untyped_defs = false
 disallow_untyped_calls = false
+
+[[tool.mypy.overrides]]
+module = "vector._pytree"
+# optree register_node typing requires vectors to be Collection, unnecessarily
+disable_error_code = ["call-arg", "arg-type"]
+
+[tool.codespell]
+ignore-words-list = "HEP"
+ignore-regex = "[A-Za-z0-9+/]{100,}"
