@@ -32,6 +32,7 @@ from vector._methods import (
     Vector4D,
     dim,
 )
+from vector._pytree import register_pytree
 from vector._version import version as __version__
 from vector.backends.awkward_constructors import Array, zip
 from vector.backends.awkward_constructors import Array as awk
@@ -95,7 +96,6 @@ else:
         VectorSympy4D,
     )
 
-
 __all__: tuple[str, ...] = (
     "Array",
     "Azimuthal",
@@ -148,6 +148,7 @@ __all__: tuple[str, ...] = (
     "obj",
     "register_awkward",
     "register_numba",
+    "register_pytree",
     "zip",
 )
 
