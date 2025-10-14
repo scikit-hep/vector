@@ -12,6 +12,7 @@ readme = { file = "README.md", content-type = "text/markdown" }
 keywords = [
   "vector",
 ]
+license = "BSD-3-Clause"
 maintainers = [
   { name = "The Scikit-HEP admins", email = "scikit-hep-admins@googlegroups.com" },
 ]
@@ -23,7 +24,6 @@ classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Developers",
   "Intended Audience :: Science/Research",
-  "License :: OSI Approved :: BSD License",
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3 :: Only",
@@ -32,6 +32,7 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Topic :: Scientific/Engineering",
   "Topic :: Scientific/Engineering :: Information Analysis",
   "Topic :: Scientific/Engineering :: Mathematics",
@@ -42,8 +43,8 @@ dynamic = [
   "version",
 ]
 dependencies = [
-  "numpy>=1.13.3",
-  "packaging>=19",
+  "numpy>=1.19.3",
+  "packaging>=20",
 ]
 
 [project.optional-dependencies]
@@ -126,7 +127,6 @@ extend-select = [
 ignore = [
   "PLR09",   # Too many X
   "PLR2004", # Magic values
-  "ISC001", # Conflicts with formatter
 ]
 typing-modules = [
   "vector._typeutils",
