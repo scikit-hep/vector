@@ -9,6 +9,8 @@ import typing
 
 import numpy
 
+from vector._methods import _repr_momentum_to_generic
+
 
 def _recname(is_momentum: bool, dimension: int) -> str:
     name = "Momentum" if is_momentum else "Vector"
@@ -202,8 +204,6 @@ def _check_names(
     # Check if any remaining fieldnames would conflict with already-processed coordinates
     # when mapped to generic names (e.g., pt was processed, rho shouldn't remain)
     if fieldnames:
-        from vector._methods import _repr_momentum_to_generic
-
         # Reconstruct original fieldnames from names already processed
         # to check against remaining fieldnames
         original_fieldnames = list(names)  # Start with processed generic names
