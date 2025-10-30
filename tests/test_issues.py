@@ -185,3 +185,101 @@ def test_issue_621():
     # some computation that involves broadcast_and_apply in awkward
     # enough to check if it computes at all
     assert (a + b).mass
+
+
+def test_issue_657():
+    ak = pytest.importorskip("awkward")
+    vector.register_awkward()
+
+    v1_lorentz = vector.Array(
+        [
+            {"x": 1.0, "y": 2.0, "z": 3.0, "t": 4.0},
+            {"x": 5.0, "y": 6.0, "z": 7.0, "t": 8.0},
+        ],
+    )
+
+    v2_lorentz = vector.Array(
+        [
+            {"x": 1.0 + 1e-9, "y": 2.0 - 1e-9, "z": 3.0 + 1e-9, "t": 4.0 - 1e-9},
+            {"x": 5.0 - 1e-9, "y": 6.0 + 1e-9, "z": 7.0 - 1e-9, "t": 8.0 + 1e-9},
+        ]
+    )
+
+    fields_lorentz = (
+        "xyzt",
+        "xythetat",
+        "xyetat",
+        "rhophizt",
+        "rhophithetat",
+        "rhophietat",
+        "xyztau",
+        "xythetatau",
+        "xyetatau",
+        "rhophiztau",
+        "rhophithetatau",
+        "rhophietatau",
+    )
+
+    for t1 in fields_lorentz:
+        for t2 in fields_lorentz:
+            transformed_v1, transformed_v2 = (
+                getattr(v1_lorentz, "to_" + t1)(),
+                getattr(v2_lorentz, "to_" + t2)(),
+            )
+            assert ak.all(transformed_v1.isclose(transformed_v2))
+            assert not ak.all(
+                transformed_v1.isclose(transformed_v2, rtol=1e-10, atol=1e-10)
+            )
+
+            # test ak.Record
+            transformed_r1 = transformed_v1[0]
+            transformed_r2 = transformed_v2[0]
+
+            assert transformed_r1.isclose(transformed_r2)
+            assert not transformed_r1.isclose(transformed_r2, rtol=1e-10, atol=1e-10)
+
+    v1_3d = v1_lorentz.to_xyz()
+    v2_3d = v2_lorentz.to_xyz()
+
+    fields_3d = ("xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta")
+
+    for t1 in fields_3d:
+        for t2 in fields_3d:
+            transformed_v1, transformed_v2 = (
+                getattr(v1_3d, "to_" + t1)(),
+                getattr(v2_3d, "to_" + t2)(),
+            )
+            assert ak.all(transformed_v1.isclose(transformed_v2))
+            assert not ak.all(
+                transformed_v1.isclose(transformed_v2, rtol=1e-10, atol=1e-10)
+            )
+
+            # test ak.Record
+            transformed_r1 = transformed_v1[0]
+            transformed_r2 = transformed_v2[0]
+
+            assert transformed_r1.isclose(transformed_r2)
+            assert not transformed_r1.isclose(transformed_r2, rtol=1e-10, atol=1e-10)
+
+    v1_2d = v1_lorentz.to_xy()
+    v2_2d = v2_lorentz.to_xy()
+
+    fields_2d = ("xy", "rhophi")
+
+    for t1 in fields_2d:
+        for t2 in fields_2d:
+            transformed_v1, transformed_v2 = (
+                getattr(v1_2d, "to_" + t1)(),
+                getattr(v2_2d, "to_" + t2)(),
+            )
+            assert ak.all(transformed_v1.isclose(transformed_v2))
+            assert not ak.all(
+                transformed_v1.isclose(transformed_v2, rtol=1e-10, atol=1e-10)
+            )
+
+            # test ak.Record
+            transformed_r1 = transformed_v1[0]
+            transformed_r2 = transformed_v2[0]
+
+            assert transformed_r1.isclose(transformed_r2)
+            assert not transformed_r1.isclose(transformed_r2, rtol=1e-10, atol=1e-10)

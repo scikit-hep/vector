@@ -32,8 +32,18 @@ from vector._methods import (
 
 # same types
 def xy_xy(lib, rtol, atol, equal_nan, x1, y1, x2, y2):
-    return lib.isclose(x1, x2, rtol, atol, equal_nan) & lib.isclose(
-        y1, y2, rtol, atol, equal_nan
+    return lib.isclose(
+        x1,
+        x2,
+        rtol=rtol,
+        atol=atol,
+        equal_nan=equal_nan,
+    ) & lib.isclose(
+        y1,
+        y2,
+        rtol=rtol,
+        atol=atol,
+        equal_nan=equal_nan,
     )
 
 
@@ -65,8 +75,18 @@ def rhophi_xy(lib, rtol, atol, equal_nan, rho1, phi1, x2, y2):
 
 # same types
 def rhophi_rhophi(lib, rtol, atol, equal_nan, rho1, phi1, rho2, phi2):
-    return lib.isclose(rho1, rho2, rtol, atol, equal_nan) & lib.isclose(
-        phi1, phi2, rtol, atol, equal_nan
+    return lib.isclose(
+        rho1,
+        rho2,
+        rtol=rtol,
+        atol=atol,
+        equal_nan=equal_nan,
+    ) & lib.isclose(
+        phi1,
+        phi2,
+        rtol=rtol,
+        atol=atol,
+        equal_nan=equal_nan,
     )
 
 
