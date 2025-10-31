@@ -202,22 +202,18 @@ def _check_names(
         raise TypeError(complaint1 if is_momentum else complaint2)
 
     # Check if any remaining fieldnames would conflict with already-processed coordinates
-    # when mapped to generic names (e.g., pt was processed, rho shouldn't remain)
+    # or with each other when mapped to generic names (e.g., "x" and "px" both map to "x")
     if fieldnames:
-        # Reconstruct original fieldnames from names already processed
-        # to check against remaining fieldnames
-        original_fieldnames = list(names)  # Start with processed generic names
-        original_fieldnames.extend(fieldnames)  # Add remaining fieldnames
-
-        # Map to generic names - but we need the original input fieldnames
-        # Actually, we need to check if remaining fieldnames conflict with processed ones
-        # The processed ones are in 'names' (generic form), remaining are in 'fieldnames'
-
-        # Check each remaining fieldname to see if its generic form was already used
+        # Check leftovers against already-processed coordinates
         for fname in fieldnames:
             generic = _repr_momentum_to_generic.get(fname, fname)
             if generic in names:
                 raise TypeError(complaint1 if is_momentum else complaint2)
+
+        # Check leftovers against each other for duplicates
+        leftover_generics = [_repr_momentum_to_generic.get(x, x) for x in fieldnames]
+        if len(leftover_generics) != len(set(leftover_generics)):
+            raise TypeError(complaint1 if is_momentum else complaint2)
 
     for name in fieldnames:
         names.append(name)
