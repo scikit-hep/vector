@@ -39,9 +39,9 @@ from vector._methods import (
 # same types
 def xy_z_xy_z(lib, rtol, atol, equal_nan, x1, y1, z1, x2, y2, z2):
     return (
-        lib.isclose(x1, x2, rtol, atol, equal_nan)
-        & lib.isclose(y1, y2, rtol, atol, equal_nan)
-        & lib.isclose(z1, z2, rtol, atol, equal_nan)
+        lib.isclose(x1, x2, rtol=rtol, atol=atol, equal_nan=equal_nan)
+        & lib.isclose(y1, y2, rtol=rtol, atol=atol, equal_nan=equal_nan)
+        & lib.isclose(z1, z2, rtol=rtol, atol=atol, equal_nan=equal_nan)
     )
 
 
@@ -111,9 +111,9 @@ def xy_theta_xy_z(lib, rtol, atol, equal_nan, x1, y1, theta1, x2, y2, z2):
 # same types
 def xy_theta_xy_theta(lib, rtol, atol, equal_nan, x1, y1, theta1, x2, y2, theta2):
     return (
-        lib.isclose(x1, x2, rtol, atol, equal_nan)
-        & lib.isclose(y1, y2, rtol, atol, equal_nan)
-        & lib.isclose(theta1, theta2, rtol, atol, equal_nan)
+        lib.isclose(x1, x2, rtol=rtol, atol=atol, equal_nan=equal_nan)
+        & lib.isclose(y1, y2, rtol=rtol, atol=atol, equal_nan=equal_nan)
+        & lib.isclose(theta1, theta2, rtol=rtol, atol=atol, equal_nan=equal_nan)
     )
 
 
@@ -203,9 +203,9 @@ def xy_eta_xy_theta(lib, rtol, atol, equal_nan, x1, y1, eta1, x2, y2, theta2):
 # same types
 def xy_eta_xy_eta(lib, rtol, atol, equal_nan, x1, y1, eta1, x2, y2, eta2):
     return (
-        lib.isclose(x1, x2, rtol, atol, equal_nan)
-        & lib.isclose(y1, y2, rtol, atol, equal_nan)
-        & lib.isclose(eta1, eta2, rtol, atol, equal_nan)
+        lib.isclose(x1, x2, rtol=rtol, atol=atol, equal_nan=equal_nan)
+        & lib.isclose(y1, y2, rtol=rtol, atol=atol, equal_nan=equal_nan)
+        & lib.isclose(eta1, eta2, rtol=rtol, atol=atol, equal_nan=equal_nan)
     )
 
 
@@ -302,9 +302,9 @@ def rhophi_z_xy_eta(lib, rtol, atol, equal_nan, rho1, phi1, z1, x2, y2, eta2):
 # same types
 def rhophi_z_rhophi_z(lib, rtol, atol, equal_nan, rho1, phi1, z1, rho2, phi2, z2):
     return (
-        lib.isclose(rho1, rho2, rtol, atol, equal_nan)
-        & lib.isclose(phi1, phi2, rtol, atol, equal_nan)
-        & lib.isclose(z1, z2, rtol, atol, equal_nan)
+        lib.isclose(rho1, rho2, rtol=rtol, atol=atol, equal_nan=equal_nan)
+        & lib.isclose(phi1, phi2, rtol=rtol, atol=atol, equal_nan=equal_nan)
+        & lib.isclose(z1, z2, rtol=rtol, atol=atol, equal_nan=equal_nan)
     )
 
 
@@ -409,9 +409,9 @@ def rhophi_theta_rhophi_theta(
     lib, rtol, atol, equal_nan, rho1, phi1, theta1, rho2, phi2, theta2
 ):
     return (
-        lib.isclose(rho1, rho2, rtol, atol, equal_nan)
-        & lib.isclose(phi1, phi2, rtol, atol, equal_nan)
-        & lib.isclose(theta1, theta2, rtol, atol, equal_nan)
+        lib.isclose(rho1, rho2, rtol=rtol, atol=atol, equal_nan=equal_nan)
+        & lib.isclose(phi1, phi2, rtol=rtol, atol=atol, equal_nan=equal_nan)
+        & lib.isclose(theta1, theta2, rtol=rtol, atol=atol, equal_nan=equal_nan)
     )
 
 
@@ -514,9 +514,9 @@ def rhophi_eta_rhophi_eta(
     lib, rtol, atol, equal_nan, rho1, phi1, eta1, rho2, phi2, eta2
 ):
     return (
-        lib.isclose(rho1, rho2, rtol, atol, equal_nan)
-        & lib.isclose(phi1, phi2, rtol, atol, equal_nan)
-        & lib.isclose(eta1, eta2, rtol, atol, equal_nan)
+        lib.isclose(rho1, rho2, rtol=rtol, atol=atol, equal_nan=equal_nan)
+        & lib.isclose(phi1, phi2, rtol=rtol, atol=atol, equal_nan=equal_nan)
+        & lib.isclose(eta1, eta2, rtol=rtol, atol=atol, equal_nan=equal_nan)
     )
 
 
