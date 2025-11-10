@@ -251,7 +251,7 @@ markers = [
   "awkward",
   "sympy",
 ]
-log_cli_level = "DEBUG"
+log_level = "DEBUG"
 filterwarnings = [
   "error",
   "ignore::DeprecationWarning",
