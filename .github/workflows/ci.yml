@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Check SDist
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with:
           python-version: 3.x
@@ -45,7 +45,7 @@ jobs:
           - "3.13"
     name: Python ${{ matrix.python-version }} - Lite
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - uses: actions/setup-python@v6
         with:
@@ -71,7 +71,7 @@ jobs:
           - "3.13"
     name: Python ${{ matrix.python-version }} - Full
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - uses: actions/setup-python@v6
         with:
@@ -104,7 +104,7 @@ jobs:
   # root:
   #   runs-on: ubuntu-latest
   #   steps:
-  #   - uses: actions/checkout@v5
+  #   - uses: actions/checkout@v6
 
   #   - name: Get Conda
   #     uses: conda-incubator/setup-miniconda@v2
