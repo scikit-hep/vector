@@ -106,11 +106,11 @@ jobs:
   #   steps:
   #   - uses: actions/checkout@v6
 
-  #   - name: Get Conda
-  #     uses: conda-incubator/setup-miniconda@v2
-  #     with:
-  #       environment-file: environment.yml
-  #       activate-environment: vector
+    - name: Get Conda
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        environment-file: environment.yml
+        activate-environment: vector
 
   #   - name: Run tests
   #     shell: "bash -l {0}"
