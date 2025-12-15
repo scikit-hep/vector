@@ -3211,7 +3211,7 @@ def obj(**coordinates: float) -> VectorObject:
     if "E" in coordinates:
         is_momentum = True
         generic_coordinates["t"] = coordinates.pop("E")
-    if "e" in coordinates:
+    if "e" in coordinates and "t" not in generic_coordinates:
         is_momentum = True
         generic_coordinates["t"] = coordinates.pop("e")
     if "energy" in coordinates and "t" not in generic_coordinates:
@@ -3220,7 +3220,7 @@ def obj(**coordinates: float) -> VectorObject:
     if "M" in coordinates:
         is_momentum = True
         generic_coordinates["tau"] = coordinates.pop("M")
-    if "m" in coordinates:
+    if "m" in coordinates and "tau" not in generic_coordinates:
         is_momentum = True
         generic_coordinates["tau"] = coordinates.pop("m")
     if "mass" in coordinates and "tau" not in generic_coordinates:
