@@ -191,14 +191,24 @@ def _setitem(
 
 
 def _getitem(
-    array: VectorNumpy2D | VectorNumpy3D | VectorNumpy4D,
+    array: VectorNumpy2D
+    | VectorNumpy3D
+    | VectorNumpy4D
+    | AzimuthalNumpyRhoPhi
+    | AzimuthalNumpyXY
+    | LongitudinalNumpyZ
+    | LongitudinalNumpyTheta
+    | LongitudinalNumpyEta
+    | TemporalNumpyT
+    | TemporalNumpyTau,
     where: typing.Any,
     is_momentum: bool,
-) -> float | FloatArray:
+) -> float | FloatArray | VectorProtocol | Azimuthal | Longitudinal | Temporal:
     """
     Implementation for the ``__getitem__`` method. See :class:`GetItem` for
     more details.
     """
+
     if isinstance(where, str):
         if is_momentum:
             where = _repr_momentum_to_generic.get(where, where)
@@ -209,27 +219,27 @@ def _getitem(
             return out
 
         azimuthal, longitudinal, temporal = None, None, None
-        if hasattr(array, "_azimuthal_type"):
+        if isinstance(array, (VectorNumpy2D | VectorNumpy3D | VectorNumpy4D)):
             azimuthal = array._azimuthal_type.ObjectClass(
                 *(out[x] for x in _coordinate_class_to_names[_aztype(array)])
             )
-        if hasattr(array, "_longitudinal_type"):
+        if isinstance(array, (VectorNumpy3D | VectorNumpy4D)):
             longitudinal = array._longitudinal_type.ObjectClass(
                 *(out[x] for x in _coordinate_class_to_names[_ltype(array)])
             )
-        if hasattr(array, "_temporal_type"):
+        if isinstance(array, VectorNumpy4D):
             temporal = array._temporal_type.ObjectClass(
                 *(out[x] for x in _coordinate_class_to_names[_ttype(array)])
             )
-        if temporal is not None:
+        if isinstance(array, VectorNumpy4D):
             return array.ObjectClass(
                 azimuthal=azimuthal,
-                longitudinal=longitudinal,  # type: ignore[arg-type]
-                temporal=temporal,  # type: ignore[arg-type]
+                longitudinal=longitudinal,
+                temporal=temporal,
             )
-        elif longitudinal is not None:
-            return array.ObjectClass(azimuthal=azimuthal, longitudinal=longitudinal)  # type: ignore[arg-type]
-        elif azimuthal is not None:
+        elif isinstance(array, VectorNumpy3D):
+            return array.ObjectClass(azimuthal=azimuthal, longitudinal=longitudinal)
+        elif isinstance(array, VectorNumpy2D):
             return array.ObjectClass(azimuthal=azimuthal)
         elif issubclass(array.ObjectClass, vector.backends.object.AzimuthalObject):
             return array.ObjectClass(*tuple(out)[:2])  # type: ignore[arg-type]
@@ -239,14 +249,14 @@ def _getitem(
                 if len(out) == 1  # type: ignore[arg-type]
                 else out.view(numpy.ndarray)[2]
             )
-            return array.ObjectClass(coords)
+            return array.ObjectClass(coords)  # type: ignore[call-arg]
         else:
             coords = (
                 out.view(numpy.ndarray)[0]
                 if len(out) == 1  # type: ignore[arg-type]
                 else out.view(numpy.ndarray)[3]
             )
-            return array.ObjectClass(coords)
+            return array.ObjectClass(coords)  # type: ignore[call-arg]
 
 
 def _array_repr(
@@ -398,9 +408,18 @@ class GetItem:
     def __getitem__(self, where: str) -> FloatArray: ...
 
     @typing.overload
-    def __getitem__(self, where: typing.Any) -> float | FloatArray: ...
+    def __getitem__(
+        self, where: int
+    ) -> VectorProtocol | Azimuthal | Longitudinal | Temporal: ...
 
-    def __getitem__(self, where: typing.Any) -> float | FloatArray:
+    @typing.overload
+    def __getitem__(
+        self, where: typing.Any
+    ) -> float | FloatArray | VectorProtocol | Azimuthal | Longitudinal | Temporal: ...
+
+    def __getitem__(
+        self, where: typing.Any
+    ) -> float | FloatArray | VectorProtocol | Azimuthal | Longitudinal | Temporal:
         return _getitem(self, where, self.__class__._IS_MOMENTUM)  # type: ignore[arg-type]
 
 
@@ -462,12 +481,12 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # typ
     def __eq__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, AzimuthalNumpyXY):
             return False
-        return all(coord1 == coord2 for coord1, coord2 in zip(self, other))
+        return all(coord1 == coord2 for coord1, coord2 in zip(self, other, strict=True))
 
     def __ne__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, AzimuthalNumpyXY):
             return True
-        return any(coord1 != coord2 for coord1, coord2 in zip(self, other))
+        return any(coord1 != coord2 for coord1, coord2 in zip(self, other, strict=True))
 
     @property
     def elements(self) -> tuple[FloatArray, FloatArray]:
@@ -528,12 +547,12 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray)
     def __eq__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, AzimuthalNumpyRhoPhi):
             return False
-        return all(coord1 == coord2 for coord1, coord2 in zip(self, other))
+        return all(coord1 == coord2 for coord1, coord2 in zip(self, other, strict=True))
 
     def __ne__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, AzimuthalNumpyRhoPhi):
             return True
-        return any(coord1 != coord2 for coord1, coord2 in zip(self, other))
+        return any(coord1 != coord2 for coord1, coord2 in zip(self, other, strict=True))
 
     @property
     def elements(self) -> tuple[FloatArray, FloatArray]:
@@ -591,12 +610,12 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):
     def __eq__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, LongitudinalNumpyZ):
             return False
-        return all(coord1 == coord2 for coord1, coord2 in zip(self, other))
+        return all(coord1 == coord2 for coord1, coord2 in zip(self, other, strict=True))
 
     def __ne__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, LongitudinalNumpyZ):
             return True
-        return any(coord1 != coord2 for coord1, coord2 in zip(self, other))
+        return any(coord1 != coord2 for coord1, coord2 in zip(self, other, strict=True))
 
     @property
     def elements(self) -> tuple[FloatArray]:
@@ -649,12 +668,12 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, Floa
     def __eq__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, LongitudinalNumpyTheta):
             return False
-        return all(coord1 == coord2 for coord1, coord2 in zip(self, other))
+        return all(coord1 == coord2 for coord1, coord2 in zip(self, other, strict=True))
 
     def __ne__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, LongitudinalNumpyTheta):
             return True
-        return any(coord1 != coord2 for coord1, coord2 in zip(self, other))
+        return any(coord1 != coord2 for coord1, coord2 in zip(self, other, strict=True))
 
     @property
     def elements(self) -> tuple[FloatArray]:
@@ -707,12 +726,12 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArr
     def __eq__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, LongitudinalNumpyEta):
             return False
-        return all(coord1 == coord2 for coord1, coord2 in zip(self, other))
+        return all(coord1 == coord2 for coord1, coord2 in zip(self, other, strict=True))
 
     def __ne__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, LongitudinalNumpyEta):
             return True
-        return any(coord1 != coord2 for coord1, coord2 in zip(self, other))
+        return any(coord1 != coord2 for coord1, coord2 in zip(self, other, strict=True))
 
     @property
     def elements(self) -> tuple[FloatArray]:
@@ -765,12 +784,12 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ig
     def __eq__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, TemporalNumpyT):
             return False
-        return all(coord1 == coord2 for coord1, coord2 in zip(self, other))
+        return all(coord1 == coord2 for coord1, coord2 in zip(self, other, strict=True))
 
     def __ne__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, TemporalNumpyT):
             return True
-        return any(coord1 != coord2 for coord1, coord2 in zip(self, other))
+        return any(coord1 != coord2 for coord1, coord2 in zip(self, other, strict=True))
 
     @property
     def elements(self) -> tuple[FloatArray]:
@@ -815,12 +834,12 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type
     def __eq__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, TemporalNumpyTau):
             return False
-        return all(coord1 == coord2 for coord1, coord2 in zip(self, other))
+        return all(coord1 == coord2 for coord1, coord2 in zip(self, other, strict=True))
 
     def __ne__(self, other: typing.Any) -> bool:
         if self.dtype != other.dtype or not isinstance(other, TemporalNumpyTau):
             return True
-        return any(coord1 != coord2 for coord1, coord2 in zip(self, other))
+        return any(coord1 != coord2 for coord1, coord2 in zip(self, other, strict=True))
 
     @property
     def elements(self) -> tuple[FloatArray]:
@@ -878,14 +897,16 @@ class VectorNumpy(Vector, GetItem):  # noqa: PLW1641
                 keepdims=keepdims,
                 initial=initial,
                 where=where,
-            ),
+            ),  # type: ignore[call-overload]
         )
 
     def __eq__(self, other: typing.Any) -> typing.Any:
-        return numpy.equal(self, other)
+        # numpy does not have typing overload for `other` of the type `Any`
+        return numpy.equal(self, other)  # type: ignore[call-overload]
 
     def __ne__(self, other: typing.Any) -> typing.Any:
-        return numpy.not_equal(self, other)
+        # numpy does not have typing overload for `other` of the type `Any`
+        return numpy.not_equal(self, other)  # type: ignore[call-overload]
 
     def __reduce__(self) -> str | tuple[typing.Any, ...]:
         pickled_state = super().__reduce__()
@@ -1311,7 +1332,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
         return _setitem(self, where, what, False)
 
 
-class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):
+class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore[misc]
     """
     Two dimensional momentum vector class for the NumPy backend. This class can be directly
     used to construct two dimensional NumPy momentum vectors. For two dimensional
@@ -1612,7 +1633,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
         return _setitem(self, where, what, False)
 
 
-class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):
+class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
     """
     Three dimensional momentum vector class for the NumPy backend. This class can be directly
     used to construct three dimensional NumPy momentum vectors. For three dimensional
@@ -1993,7 +2014,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
         return _setitem(self, where, what, False)
 
 
-class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):
+class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore[misc]
     """
     Four dimensional momentum vector class for the NumPy backend. This class can be directly
     used to construct four dimensional NumPy momentum vectors. For three dimensional

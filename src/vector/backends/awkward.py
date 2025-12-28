@@ -83,7 +83,7 @@ from vector.backends.object import (
 # Throws an error if awkward is too old
 vector._import_awkward()
 
-ArrayOrRecord = typing.TypeVar("ArrayOrRecord", bound=typing.Union[ak.Array, ak.Record])
+ArrayOrRecord = typing.TypeVar("ArrayOrRecord", bound=ak.Array | ak.Record)
 Array = typing.TypeVar("Array")
 
 behavior: typing.Any = {}
@@ -729,7 +729,7 @@ class VectorAwkward:
 
             return maybe_record(
                 ak.zip(
-                    dict(zip(names, arrays)),
+                    dict(zip(names, arrays, strict=True)),
                     depth_limit=first.layout.purelist_depth,
                     with_name=_class_to_name(cls),
                     behavior=None if vector._awkward_registered else first.behavior,
@@ -783,7 +783,7 @@ class VectorAwkward:
 
             return maybe_record(
                 ak.zip(
-                    dict(zip(names, arrays)),
+                    dict(zip(names, arrays, strict=True)),
                     depth_limit=first.layout.purelist_depth,
                     with_name=_class_to_name(cls.ProjectionClass2D),
                     behavior=None if vector._awkward_registered else first.behavior,
@@ -846,7 +846,7 @@ class VectorAwkward:
 
             return maybe_record(
                 ak.zip(
-                    dict(zip(names, arrays)),
+                    dict(zip(names, arrays, strict=True)),
                     depth_limit=first.layout.purelist_depth,
                     with_name=_class_to_name(cls),
                     behavior=None if vector._awkward_registered else first.behavior,
@@ -912,7 +912,7 @@ class VectorAwkward:
 
             return maybe_record(
                 ak.zip(
-                    dict(zip(names, arrays)),
+                    dict(zip(names, arrays, strict=True)),
                     depth_limit=first.layout.purelist_depth,
                     with_name=_class_to_name(cls.ProjectionClass3D),
                     behavior=None if vector._awkward_registered else first.behavior,
@@ -986,7 +986,7 @@ class VectorAwkward:
 
             return maybe_record(
                 ak.zip(
-                    dict(zip(names, arrays)),
+                    dict(zip(names, arrays, strict=True)),
                     depth_limit=first.layout.purelist_depth,
                     with_name=_class_to_name(cls.ProjectionClass4D),
                     behavior=None if vector._awkward_registered else first.behavior,
@@ -1080,7 +1080,7 @@ class awkward_transform:
                     # wrap the numpy arrays in awkward arrays
                     out_arrays = tuple(
                         ak.contents.NumpyArray(data=data, parameters=parameters)
-                        for data, parameters in zip(out_numpys, out_params)
+                        for data, parameters in zip(out_numpys, out_params, strict=True)
                     )
                     # if the function returns a single array, return it directly
                     if len(out_arrays) == 1:
