@@ -1332,7 +1332,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
         return _setitem(self, where, what, False)
 
 
-class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):
+class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore[misc]
     """
     Two dimensional momentum vector class for the NumPy backend. This class can be directly
     used to construct two dimensional NumPy momentum vectors. For two dimensional
@@ -1633,7 +1633,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
         return _setitem(self, where, what, False)
 
 
-class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):
+class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
     """
     Three dimensional momentum vector class for the NumPy backend. This class can be directly
     used to construct three dimensional NumPy momentum vectors. For three dimensional
@@ -2014,7 +2014,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
         return _setitem(self, where, what, False)
 
 
-class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):
+class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore[misc]
     """
     Four dimensional momentum vector class for the NumPy backend. This class can be directly
     used to construct four dimensional NumPy momentum vectors. For three dimensional
