@@ -4354,7 +4354,7 @@ _coordinate_order = [
 ]
 
 
-def _aztype(obj: VectorProtocolPlanar) -> type[Coordinates]:
+def _aztype(obj: VectorProtocolPlanar | Azimuthal) -> type[Coordinates]:
     """
     Determines the Azimuthal type of a vector for use in looking up a
     dispatched function.
@@ -4366,7 +4366,7 @@ def _aztype(obj: VectorProtocolPlanar) -> type[Coordinates]:
     raise AssertionError(repr(obj))
 
 
-def _ltype(obj: VectorProtocolSpatial) -> type[Coordinates]:
+def _ltype(obj: VectorProtocolSpatial | Longitudinal) -> type[Coordinates]:
     """
     Determines the Longitudinal type of a vector for use in looking up a
     dispatched function.
@@ -4378,7 +4378,7 @@ def _ltype(obj: VectorProtocolSpatial) -> type[Coordinates]:
     raise AssertionError(repr(obj))
 
 
-def _ttype(obj: VectorProtocolLorentz) -> type[Coordinates]:
+def _ttype(obj: VectorProtocolLorentz | Temporal) -> type[Coordinates]:
     """
     Determines the Temporal type of a vector for use in looking up a
     dispatched function.
