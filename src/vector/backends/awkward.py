@@ -83,7 +83,7 @@ from vector.backends.object import (
 # Throws an error if awkward is too old
 vector._import_awkward()
 
-ArrayOrRecord = typing.TypeVar("ArrayOrRecord", bound=ak.Array | ak.Record)
+ArrayOrRecord = typing.TypeVar("ArrayOrRecord", bound=typing.Union[ak.Array, ak.Record])
 Array = typing.TypeVar("Array")
 
 behavior: typing.Any = {}
