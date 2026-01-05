@@ -74,7 +74,7 @@ def coverage(session: nox.Session) -> None:
 @nox.session(reuse_venv=True, python=ALL_PYTHON)
 def doctests(session: nox.Session) -> None:
     """Run the doctests."""
-    test_deps = nox.project.dependency_groups(PYPROJECT, "test-all")
+    test_deps = nox.project.dependency_groups(PYPROJECT, "test-all-gil")
     session.install("-e.", *test_deps)
     session.run("pytest", "--doctest-plus", "src/vector/", *session.posargs)
 
@@ -82,7 +82,9 @@ def doctests(session: nox.Session) -> None:
 @nox.session(reuse_venv=True, default=False)
 def notebooks(session: nox.Session) -> None:
     """Run the notebook tests"""
-    test_deps = nox.project.dependency_groups(PYPROJECT, "test", "test-optional")
+    test_deps = nox.project.dependency_groups(
+        PYPROJECT, "test", "test-optional", "test-numba"
+    )
     session.install("-e.", *test_deps)
     session.install("jupyter")
     session.run("pytest", "tests/test_notebooks.py", *session.posargs)
