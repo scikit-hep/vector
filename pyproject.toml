@@ -17,7 +17,7 @@ maintainers = [
   { name = "The Scikit-HEP admins", email = "scikit-hep-admins@googlegroups.com" },
 ]
 authors = [
-  { name = "Jim Pivarski, Henry Schreiner, Eduardo Rodrigues", email = "eduardo.rodrigues@cern.ch" },
+  { name = "Saransh Chopra, Jim Pivarski, Henry Schreiner, Eduardo Rodrigues, Jonas Eschle", email = "eduardo.rodrigues@cern.ch" },
 ]
 requires-python = ">=3.9"
 classifiers = [
@@ -49,7 +49,7 @@ dependencies = [
 
 [project.optional-dependencies]
 awkward = ["awkward>=2"]
-numba = ["numba>=0.57; python_version<'3.14'"]
+numba = ["numba>=0.57; python_version<'3.15'"]
 sympy = ["sympy"]
 
 [project.urls]
@@ -72,7 +72,7 @@ test = [
 ]
 test-optional = [
   "awkward>=2",
-  "numba>=0.57; python_version<'3.14'",
+  "numba>=0.57; python_version<'3.15'",
   "sympy",
 ]
 test-extras = [
