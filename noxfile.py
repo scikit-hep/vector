@@ -6,6 +6,9 @@
 
 from __future__ import annotations
 
+import os
+import sys
+import sysconfig
 from pathlib import Path
 
 import nox
@@ -45,7 +48,13 @@ def lite(session: nox.Session) -> None:
 @nox.session(reuse_venv=True, python=ALL_PYTHON)
 def tests(session: nox.Session) -> None:
     """Run the unit and regular tests."""
-    test_deps = nox.project.dependency_groups(PYPROJECT, "test-all")
+    if sys.version_info[:2] >= (3, 14) and bool(
+        sysconfig.get_config_var("Py_GIL_DISABLED")
+    ):
+        os.environ["PYTHON_GIL"] = "0"
+        test_deps = nox.project.dependency_groups(PYPROJECT, "test-all-no-gil")
+    else:
+        test_deps = nox.project.dependency_groups(PYPROJECT, "test-all-gil")
     session.install("-e.", *test_deps)
     session.run(
         "pytest",
