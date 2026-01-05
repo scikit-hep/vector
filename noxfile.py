@@ -16,6 +16,7 @@ nox.options.default_venv_backend = "uv|virtualenv"
 DIR = Path(__file__).parent.resolve()
 PYPROJECT = nox.project.load_toml(DIR / "pyproject.toml")
 ALL_PYTHON = nox.project.python_versions(PYPROJECT)
+ALL_PYTHON += ["3.14t"]  # add free-threaded Python variant
 
 
 @nox.session(reuse_venv=True)
