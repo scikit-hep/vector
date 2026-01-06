@@ -6,6 +6,9 @@
 
 from __future__ import annotations
 
+import os
+import sys
+import sysconfig
 from pathlib import Path
 
 import nox
@@ -16,6 +19,7 @@ nox.options.default_venv_backend = "uv|virtualenv"
 DIR = Path(__file__).parent.resolve()
 PYPROJECT = nox.project.load_toml(DIR / "pyproject.toml")
 ALL_PYTHON = nox.project.python_versions(PYPROJECT)
+ALL_PYTHON += ["3.14t"]  # add free-threaded Python variant
 
 
 @nox.session(reuse_venv=True)
@@ -44,7 +48,13 @@ def lite(session: nox.Session) -> None:
 @nox.session(reuse_venv=True, python=ALL_PYTHON)
 def tests(session: nox.Session) -> None:
     """Run the unit and regular tests."""
-    test_deps = nox.project.dependency_groups(PYPROJECT, "test-all")
+    if sys.version_info[:2] >= (3, 14) and bool(
+        sysconfig.get_config_var("Py_GIL_DISABLED")
+    ):
+        os.environ["PYTHON_GIL"] = "0"
+        test_deps = nox.project.dependency_groups(PYPROJECT, "test-all-no-gil")
+    else:
+        test_deps = nox.project.dependency_groups(PYPROJECT, "test-all-gil")
     session.install("-e.", *test_deps)
     session.run(
         "pytest",
@@ -64,7 +74,7 @@ def coverage(session: nox.Session) -> None:
 @nox.session(reuse_venv=True, python=ALL_PYTHON)
 def doctests(session: nox.Session) -> None:
     """Run the doctests."""
-    test_deps = nox.project.dependency_groups(PYPROJECT, "test-all")
+    test_deps = nox.project.dependency_groups(PYPROJECT, "test-all-gil")
     session.install("-e.", *test_deps)
     session.run("pytest", "--doctest-plus", "src/vector/", *session.posargs)
 
@@ -72,7 +82,9 @@ def doctests(session: nox.Session) -> None:
 @nox.session(reuse_venv=True, default=False)
 def notebooks(session: nox.Session) -> None:
     """Run the notebook tests"""
-    test_deps = nox.project.dependency_groups(PYPROJECT, "test", "test-optional")
+    test_deps = nox.project.dependency_groups(
+        PYPROJECT, "test", "test-optional", "test-numba"
+    )
     session.install("-e.", *test_deps)
     session.install("jupyter")
     session.run("pytest", "tests/test_notebooks.py", *session.posargs)
