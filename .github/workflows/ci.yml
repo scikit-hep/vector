@@ -42,6 +42,8 @@ jobs:
           - "3.11"
           - "3.12"
           - "3.13"
+          - "3.14"
+          - "3.14t"
     name: Python ${{ matrix.python-version }} - Lite
     steps:
       - uses: actions/checkout@v6
@@ -67,6 +69,8 @@ jobs:
           - "3.11"
           - "3.12"
           - "3.13"
+          - "3.14"
+          - "3.14t"
     name: Python ${{ matrix.python-version }} - Full
     steps:
       - uses: actions/checkout@v6

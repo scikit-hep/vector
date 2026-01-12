@@ -48,38 +48,81 @@ def test_VectorObjectType():
         return obj, obj
 
     obj = vector.obj(x=1, y=2)
-    assert (sys.getrefcount(obj), sys.getrefcount(obj.azimuthal)) == (2, 2)
+    if sys.version_info[:2] <= (3, 13):
+        assert (sys.getrefcount(obj), sys.getrefcount(obj.azimuthal)) == (2, 2)
+    else:
+        assert (sys.getrefcount(obj), sys.getrefcount(obj.azimuthal)) == (1, 2)
 
     class_refs = None
     for _ in range(10):
         zero(obj)
-        assert (sys.getrefcount(obj), sys.getrefcount(obj.azimuthal)) == (2, 2)
+        if sys.version_info[:2] <= (3, 13):
+            assert (sys.getrefcount(obj), sys.getrefcount(obj.azimuthal)) == (2, 2)
+        else:
+            assert (sys.getrefcount(obj), sys.getrefcount(obj.azimuthal)) == (1, 2)
+
         if class_refs is None:
             class_refs = sys.getrefcount(vector.backends.object.VectorObject2D)
-        assert class_refs + 1 == sys.getrefcount(vector.backends.object.VectorObject2D)
+        if sys.version_info[:2] <= (3, 13):
+            assert class_refs + 1 == sys.getrefcount(
+                vector.backends.object.VectorObject2D
+            )
+        else:
+            assert class_refs == sys.getrefcount(vector.backends.object.VectorObject2D)
 
     class_refs = None
     for _ in range(10):
         a = one(obj)
-        assert (sys.getrefcount(obj), sys.getrefcount(obj.azimuthal)) == (2, 2)
-        assert (sys.getrefcount(a), sys.getrefcount(a.azimuthal)) == (2, 2)
+        if sys.version_info[:2] <= (3, 13):
+            assert (sys.getrefcount(obj), sys.getrefcount(obj.azimuthal)) == (2, 2)
+        else:
+            assert (sys.getrefcount(obj), sys.getrefcount(obj.azimuthal)) == (1, 2)
+
+        if sys.version_info[:2] <= (3, 13):
+            assert (sys.getrefcount(a), sys.getrefcount(a.azimuthal)) == (2, 2)
+        else:
+            assert (sys.getrefcount(a), sys.getrefcount(a.azimuthal)) == (1, 2)
+
         if class_refs is None:
             class_refs = sys.getrefcount(vector.backends.object.VectorObject2D)
-        assert class_refs + 1 == sys.getrefcount(vector.backends.object.VectorObject2D)
+        if sys.version_info[:2] <= (3, 13):
+            assert class_refs + 1 == sys.getrefcount(
+                vector.backends.object.VectorObject2D
+            )
+        else:
+            assert class_refs == sys.getrefcount(vector.backends.object.VectorObject2D)
 
     class_refs = None
     for _ in range(10):
         a, b = two(obj)
-        assert (sys.getrefcount(obj), sys.getrefcount(obj.azimuthal)) == (2, 2)
-        assert (
-            sys.getrefcount(a),
-            sys.getrefcount(a.azimuthal),
-            sys.getrefcount(b),
-            sys.getrefcount(b.azimuthal),
-        ) == (2, 2, 2, 2)
+        if sys.version_info[:2] <= (3, 13):
+            assert (sys.getrefcount(obj), sys.getrefcount(obj.azimuthal)) == (2, 2)
+        else:
+            assert (sys.getrefcount(obj), sys.getrefcount(obj.azimuthal)) == (1, 2)
+
+        if sys.version_info[:2] <= (3, 13):
+            assert (
+                sys.getrefcount(a),
+                sys.getrefcount(a.azimuthal),
+                sys.getrefcount(b),
+                sys.getrefcount(b.azimuthal),
+            ) == (2, 2, 2, 2)
+        else:
+            assert (
+                sys.getrefcount(a),
+                sys.getrefcount(a.azimuthal),
+                sys.getrefcount(b),
+                sys.getrefcount(b.azimuthal),
+            ) == (1, 2, 1, 2)
+
         if class_refs is None:
             class_refs = sys.getrefcount(vector.backends.object.VectorObject2D)
-        assert class_refs + 1 == sys.getrefcount(vector.backends.object.VectorObject2D)
+        if sys.version_info[:2] <= (3, 13):
+            assert class_refs + 1 == sys.getrefcount(
+                vector.backends.object.VectorObject2D
+            )
+        else:
+            assert class_refs == sys.getrefcount(vector.backends.object.VectorObject2D)
 
     # These tests just check that the rest of the implementations are sane.
 

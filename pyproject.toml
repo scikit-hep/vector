@@ -32,6 +32,7 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: Free Threading :: 3 - Stable",
   "Topic :: Scientific/Engineering",
   "Topic :: Scientific/Engineering :: Information Analysis",
   "Topic :: Scientific/Engineering :: Mathematics",
@@ -71,8 +72,10 @@ test = [
 ]
 test-optional = [
   "awkward>=2",
-  "numba>=0.62; python_version<'3.15'",
   "sympy",
+]
+test-numba = [
+  "numba>=0.57; python_version<'3.15'",
 ]
 test-extras = [
   "jax",
@@ -93,14 +96,19 @@ docs = [
   "hepunits",
   "matplotlib",
 ]
-test-all = [
+test-all-no-gil = [
   { include-group = "test"},
   { include-group = "test-optional"},
   { include-group = "test-extras"},
 ]
+test-all-gil = [
+  { include-group = "test-all-no-gil"},
+  { include-group = "test-numba"},
+]
 dev = [
   { include-group = "test"},
   { include-group = "test-optional"},
+  { include-group = "test-numba"},
 ]
 
 [tool.hatch]
