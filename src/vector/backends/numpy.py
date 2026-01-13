@@ -2092,6 +2092,168 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore[misc]
         return _setitem(self, where, what, True)
 
 
+def _validate_numpy_coordinates(fieldnames: tuple[str, ...]) -> None:
+    """
+    Validate coordinate field names using dimension-guard pattern.
+
+    This follows the same logic as _check_names in awkward_constructors to ensure
+    consistent validation across backends.
+
+    Raises TypeError if duplicate or conflicting coordinates are detected.
+    """
+    complaint1 = "duplicate coordinates (through momentum-aliases): " + ", ".join(
+        repr(x) for x in fieldnames
+    )
+    complaint2 = (
+        "unrecognized combination of coordinates, allowed combinations are:\n\n"
+        "    (2D) x= y=\n"
+        "    (2D) rho= phi=\n"
+        "    (3D) x= y= z=\n"
+        "    (3D) x= y= theta=\n"
+        "    (3D) x= y= eta=\n"
+        "    (3D) rho= phi= z=\n"
+        "    (3D) rho= phi= theta=\n"
+        "    (3D) rho= phi= eta=\n"
+        "    (4D) x= y= z= t=\n"
+        "    (4D) x= y= z= tau=\n"
+        "    (4D) x= y= theta= t=\n"
+        "    (4D) x= y= theta= tau=\n"
+        "    (4D) x= y= eta= t=\n"
+        "    (4D) x= y= eta= tau=\n"
+        "    (4D) rho= phi= z= t=\n"
+        "    (4D) rho= phi= z= tau=\n"
+        "    (4D) rho= phi= theta= t=\n"
+        "    (4D) rho= phi= theta= tau=\n"
+        "    (4D) rho= phi= eta= t=\n"
+        "    (4D) rho= phi= eta= tau="
+    )
+
+    is_momentum = False
+    dimension = 0
+    fieldnames_copy = list(fieldnames)
+
+    # 2D azimuthal coordinates
+    if "x" in fieldnames_copy and "y" in fieldnames_copy:
+        if dimension != 0:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 2
+        fieldnames_copy.remove("x")
+        fieldnames_copy.remove("y")
+    if "rho" in fieldnames_copy and "phi" in fieldnames_copy:
+        if dimension != 0:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 2
+        fieldnames_copy.remove("rho")
+        fieldnames_copy.remove("phi")
+    if "x" in fieldnames_copy and "py" in fieldnames_copy:
+        is_momentum = True
+        if dimension != 0:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 2
+        fieldnames_copy.remove("x")
+        fieldnames_copy.remove("py")
+    if "px" in fieldnames_copy and "y" in fieldnames_copy:
+        is_momentum = True
+        if dimension != 0:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 2
+        fieldnames_copy.remove("px")
+        fieldnames_copy.remove("y")
+    if "px" in fieldnames_copy and "py" in fieldnames_copy:
+        is_momentum = True
+        if dimension != 0:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 2
+        fieldnames_copy.remove("px")
+        fieldnames_copy.remove("py")
+    if "pt" in fieldnames_copy and "phi" in fieldnames_copy:
+        is_momentum = True
+        if dimension != 0:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 2
+        fieldnames_copy.remove("pt")
+        fieldnames_copy.remove("phi")
+
+    # 3D longitudinal coordinates
+    if "z" in fieldnames_copy:
+        if dimension != 2:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 3
+        fieldnames_copy.remove("z")
+    if "theta" in fieldnames_copy:
+        if dimension != 2:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 3
+        fieldnames_copy.remove("theta")
+    if "eta" in fieldnames_copy:
+        if dimension != 2:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 3
+        fieldnames_copy.remove("eta")
+    if "pz" in fieldnames_copy:
+        is_momentum = True
+        if dimension != 2:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 3
+        fieldnames_copy.remove("pz")
+
+    # 4D temporal coordinates
+    if "t" in fieldnames_copy:
+        if dimension != 3:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 4
+        fieldnames_copy.remove("t")
+    if "tau" in fieldnames_copy:
+        if dimension != 3:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 4
+        fieldnames_copy.remove("tau")
+    if "E" in fieldnames_copy:
+        is_momentum = True
+        if dimension != 3:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 4
+        fieldnames_copy.remove("E")
+    if "e" in fieldnames_copy:
+        is_momentum = True
+        if dimension != 3:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 4
+        fieldnames_copy.remove("e")
+    if "energy" in fieldnames_copy:
+        is_momentum = True
+        if dimension != 3:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 4
+        fieldnames_copy.remove("energy")
+    if "M" in fieldnames_copy:
+        is_momentum = True
+        if dimension != 3:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 4
+        fieldnames_copy.remove("M")
+    if "m" in fieldnames_copy:
+        is_momentum = True
+        if dimension != 3:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 4
+        fieldnames_copy.remove("m")
+    if "mass" in fieldnames_copy:
+        is_momentum = True
+        if dimension != 3:
+            raise TypeError(complaint1 if is_momentum else complaint2)
+        dimension = 4
+        fieldnames_copy.remove("mass")
+
+    # Check if any remaining fieldnames would conflict with already-processed coordinates
+    # when mapped to generic names (e.g., pt was processed, rho shouldn't remain)
+    if fieldnames_copy:
+        # Map all original fieldnames to generic names to detect conflicts
+        generic_names = [_repr_momentum_to_generic.get(x, x) for x in fieldnames]
+        if len(generic_names) != len(set(generic_names)):
+            raise TypeError(complaint1 if is_momentum else complaint2)
+
+
 def array(*args: typing.Any, **kwargs: typing.Any) -> VectorNumpy:
     """
     Constructs a NumPy array of vectors, whose type is determined by the dtype
@@ -2158,6 +2320,9 @@ def array(*args: typing.Any, **kwargs: typing.Any) -> VectorNumpy:
     cls: type[VectorNumpy]
 
     is_momentum = any(x in _repr_momentum_to_generic for x in names)
+
+    # Validate coordinates using dimension-guard pattern (same as awkward _check_names)
+    _validate_numpy_coordinates(names)
 
     if any(x in ("t", "E", "e", "energy", "tau", "M", "m", "mass") for x in names):
         cls = MomentumNumpy4D if is_momentum else VectorNumpy4D
