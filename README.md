@@ -44,7 +44,7 @@ import vector
 v = vector.obj(x=3, y=4, z=5)
 
 # Access basic geometric properties
-v.mag          # magnitude of the vector
+v.mag  # magnitude of the vector
 v.x, v.y, v.z  # Cartesian components
 
 # Vector arithmetic
