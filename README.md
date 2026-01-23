@@ -33,6 +33,25 @@ Vector is a Python library for 2D and 3D spatial vectors, as well as 4D space-ti
 
 Vector is part of the [Scikit-HEP project](https://scikit-hep.org/), High Energy Physics (HEP) tools in Python.
 
+## Quick example
+
+Below is a minimal example showing how to create and use a 3D vector. More advanced use cases are covered in the documentation.
+
+```python
+import vector
+
+# Create a 3D Cartesian vector
+v = vector.obj(x=3, y=4, z=5)
+
+# Access basic geometric properties
+v.mag          # magnitude of the vector
+v.x, v.y, v.z  # Cartesian components
+
+# Vector arithmetic
+u = vector.obj(x=1, y=0, z=0)
+(v + u).mag
+```
+
 ### Coordinate systems
 
 Vectors may be expressed in any of these coordinate systems:
