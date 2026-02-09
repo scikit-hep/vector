@@ -133,9 +133,9 @@ def _array_from_columns(columns: dict[str, ArrayLike]) -> ArrayLike:
         raise ValueError("no columns have been provided")
     names = list(columns.keys())
     names.sort(
-        key=lambda x: _coordinate_order.index(x)
-        if x in _coordinate_order
-        else float("inf")
+        key=lambda x: (
+            _coordinate_order.index(x) if x in _coordinate_order else float("inf")
+        )
     )
 
     dtype = []
