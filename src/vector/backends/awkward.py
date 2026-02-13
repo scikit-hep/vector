@@ -1648,9 +1648,9 @@ behavior[numpy.power, "Momentum4D", numbers.Real] = lambda v, expo: (
     v.tau2 if expo == 2 else v.tau**expo
 )
 
-behavior["__cast__", VectorNumpy2D] = lambda v: vector.Array(v)
-behavior["__cast__", VectorNumpy3D] = lambda v: vector.Array(v)
-behavior["__cast__", VectorNumpy4D] = lambda v: vector.Array(v)
+behavior["__cast__", VectorNumpy2D] = lambda v: vector.Array(v)  # noqa: PLW0108
+behavior["__cast__", VectorNumpy3D] = lambda v: vector.Array(v)  # noqa: PLW0108
+behavior["__cast__", VectorNumpy4D] = lambda v: vector.Array(v)  # noqa: PLW0108
 
 for left in (
     "Vector2D",
