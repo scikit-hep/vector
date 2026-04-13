@@ -99,8 +99,8 @@ docs = [
 test-all = [
   { include-group = "test"},
   { include-group = "test-optional"},
-  { include-group = "test-numba"},
   { include-group = "test-extras"},
+  { include-group = "test-numba"},
 ]
 dev = [
   { include-group = "test"},
