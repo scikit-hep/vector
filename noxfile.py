@@ -52,9 +52,7 @@ def tests(session: nox.Session) -> None:
         sysconfig.get_config_var("Py_GIL_DISABLED")
     ):
         os.environ["PYTHON_GIL"] = "0"
-        test_deps = nox.project.dependency_groups(PYPROJECT, "test-all-no-gil")
-    else:
-        test_deps = nox.project.dependency_groups(PYPROJECT, "test-all-gil")
+    test_deps = nox.project.dependency_groups(PYPROJECT, "test-all")
     session.install("-e.", *test_deps)
     session.run(
         "pytest",
@@ -74,7 +72,7 @@ def coverage(session: nox.Session) -> None:
 @nox.session(reuse_venv=True, python=ALL_PYTHON)
 def doctests(session: nox.Session) -> None:
     """Run the doctests."""
-    test_deps = nox.project.dependency_groups(PYPROJECT, "test-all-gil")
+    test_deps = nox.project.dependency_groups(PYPROJECT, "test-all")
     session.install("-e.", *test_deps)
     session.run("pytest", "--doctest-plus", "src/vector/", *session.posargs)
 

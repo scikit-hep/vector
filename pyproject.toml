@@ -96,14 +96,11 @@ docs = [
   "hepunits",
   "matplotlib",
 ]
-test-all-no-gil = [
+test-all = [
   { include-group = "test"},
   { include-group = "test-optional"},
-  { include-group = "test-extras"},
-]
-test-all-gil = [
-  { include-group = "test-all-no-gil"},
   { include-group = "test-numba"},
+  { include-group = "test-extras"},
 ]
 dev = [
   { include-group = "test"},
