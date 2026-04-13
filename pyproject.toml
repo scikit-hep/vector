@@ -72,10 +72,8 @@ test = [
 ]
 test-optional = [
   "awkward>=2",
-  "sympy",
-]
-test-numba = [
   "numba>=0.57; python_version<'3.15'",
+  "sympy",
 ]
 test-extras = [
   "jax",
@@ -96,19 +94,14 @@ docs = [
   "hepunits",
   "matplotlib",
 ]
-test-all-no-gil = [
+test-all = [
   { include-group = "test"},
   { include-group = "test-optional"},
   { include-group = "test-extras"},
 ]
-test-all-gil = [
-  { include-group = "test-all-no-gil"},
-  { include-group = "test-numba"},
-]
 dev = [
   { include-group = "test"},
   { include-group = "test-optional"},
-  { include-group = "test-numba"},
 ]
 
 [tool.hatch]

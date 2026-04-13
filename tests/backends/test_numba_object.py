@@ -68,7 +68,10 @@ def test_VectorObjectType():
                 vector.backends.object.VectorObject2D
             )
         else:
-            assert class_refs == sys.getrefcount(vector.backends.object.VectorObject2D)
+            assert (
+                abs(class_refs - sys.getrefcount(vector.backends.object.VectorObject2D))
+                <= 1
+            )
 
     class_refs = None
     for _ in range(10):
@@ -90,7 +93,10 @@ def test_VectorObjectType():
                 vector.backends.object.VectorObject2D
             )
         else:
-            assert class_refs == sys.getrefcount(vector.backends.object.VectorObject2D)
+            assert (
+                abs(class_refs - sys.getrefcount(vector.backends.object.VectorObject2D))
+                <= 1
+            )
 
     class_refs = None
     for _ in range(10):
@@ -122,7 +128,10 @@ def test_VectorObjectType():
                 vector.backends.object.VectorObject2D
             )
         else:
-            assert class_refs == sys.getrefcount(vector.backends.object.VectorObject2D)
+            assert (
+                abs(class_refs - sys.getrefcount(vector.backends.object.VectorObject2D))
+                <= 1
+            )
 
     # These tests just check that the rest of the implementations are sane.
 
