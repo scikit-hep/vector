@@ -9,6 +9,8 @@ import typing
 
 import numpy
 
+from vector._methods import _repr_momentum_to_generic
+
 
 def _recname(is_momentum: bool, dimension: int) -> str:
     name = "Momentum" if is_momentum else "Vector"
@@ -49,6 +51,7 @@ def _check_names(
     dimension = 0
     names = []
     columns = []
+    fieldnames_orig = list(fieldnames)
 
     if "x" in fieldnames and "y" in fieldnames:
         if dimension != 0:
@@ -198,6 +201,14 @@ def _check_names(
 
     if dimension == 0:
         raise TypeError(complaint1 if is_momentum else complaint2)
+
+    # Check if any remaining fieldnames would conflict with already-processed coordinates
+    # when mapped to generic names (e.g., pt was processed, rho shouldn't remain)
+    if fieldnames:
+        # Map all original fieldnames to generic names to detect conflicts
+        generic_names = [_repr_momentum_to_generic.get(x, x) for x in fieldnames_orig]
+        if len(generic_names) != len(set(generic_names)):
+            raise TypeError(complaint1 if is_momentum else complaint2)
 
     for name in fieldnames:
         names.append(name)

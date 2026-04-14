@@ -52,6 +52,7 @@ from vector._methods import (
     _ltype,
     _repr_momentum_to_generic,
     _ttype,
+    _validate_coordinates,
 )
 from vector._typeutils import BoolCollection, FloatArray, ScalarCollection
 
@@ -1190,6 +1191,8 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
         if obj is None:
             return
 
+        _validate_coordinates(self.dtype.names or ())
+
         if _has(self, ("x", "y")):
             self._azimuthal_type = AzimuthalNumpyXY
         elif _has(self, ("rho", "phi")):
@@ -1363,6 +1366,8 @@ class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore[misc]
         if obj is None:
             return
 
+        _validate_coordinates(self.dtype.names or ())
+
         self.dtype.names = tuple(
             _repr_momentum_to_generic.get(x, x) for x in (self.dtype.names or ())
         )
@@ -1430,6 +1435,8 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
     def __array_finalize__(self, obj: typing.Any) -> None:
         if obj is None:
             return
+
+        _validate_coordinates(self.dtype.names or ())
 
         if _has(self, ("x", "y")):
             self._azimuthal_type = AzimuthalNumpyXY
@@ -1664,6 +1671,8 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
         if obj is None:
             return
 
+        _validate_coordinates(self.dtype.names or ())
+
         self.dtype.names = tuple(
             _repr_momentum_to_generic.get(x, x) for x in (self.dtype.names or ())
         )
@@ -1744,6 +1753,8 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
     def __array_finalize__(self, obj: typing.Any) -> None:
         if obj is None:
             return
+
+        _validate_coordinates(self.dtype.names or ())
 
         if _has(self, ("x", "y")):
             self._azimuthal_type = AzimuthalNumpyXY
@@ -2047,6 +2058,8 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore[misc]
         if obj is None:
             return
 
+        _validate_coordinates(self.dtype.names or ())
+
         self.dtype.names = tuple(
             _repr_momentum_to_generic.get(x, x) for x in (self.dtype.names or ())
         )
@@ -2158,6 +2171,8 @@ def array(*args: typing.Any, **kwargs: typing.Any) -> VectorNumpy:
     cls: type[VectorNumpy]
 
     is_momentum = any(x in _repr_momentum_to_generic for x in names)
+
+    _validate_coordinates(names)
 
     if any(x in ("t", "E", "e", "energy", "tau", "M", "m", "mass") for x in names):
         cls = MomentumNumpy4D if is_momentum else VectorNumpy4D
