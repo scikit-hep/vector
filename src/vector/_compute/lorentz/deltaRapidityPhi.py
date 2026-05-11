@@ -33,7 +33,26 @@ from vector._methods import (
     _ttype,
 )
 
-dispatch_map = {}
+dispatch_map: dict[
+    tuple[typing.Any, typing.Any, typing.Any, typing.Any, typing.Any, typing.Any],
+    tuple[
+        typing.Callable[
+            [
+                typing.Any,
+                typing.Any,
+                typing.Any,
+                typing.Any,
+                typing.Any,
+                typing.Any,
+                typing.Any,
+                typing.Any,
+                typing.Any,
+            ],
+            typing.Any,
+        ],
+        type[float],
+    ],
+] = {}
 
 
 def make_conversion(
