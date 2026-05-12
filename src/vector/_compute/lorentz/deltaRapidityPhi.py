@@ -11,17 +11,21 @@
 
 from __future__ import annotations
 
+import types
 import typing
 
 import numpy
 
 from vector._compute.lorentz import deltaRapidityPhi2
 from vector._methods import (
+    Azimuthal,
     AzimuthalRhoPhi,
     AzimuthalXY,
+    Longitudinal,
     LongitudinalEta,
     LongitudinalTheta,
     LongitudinalZ,
+    Temporal,
     TemporalT,
     TemporalTau,
     _aztype,
@@ -32,8 +36,35 @@ from vector._methods import (
     _ltype,
     _ttype,
 )
+from vector._typeutils import ScalarCollection
 
-dispatch_map = {}
+dispatch_map: dict[
+    tuple[
+        type[Azimuthal],
+        type[Longitudinal],
+        type[Temporal],
+        type[Azimuthal],
+        type[Longitudinal],
+        type[Temporal],
+    ],
+    tuple[
+        typing.Callable[
+            [
+                types.ModuleType,
+                ScalarCollection,
+                ScalarCollection,
+                ScalarCollection,
+                ScalarCollection,
+                ScalarCollection,
+                ScalarCollection,
+                ScalarCollection,
+                ScalarCollection,
+            ],
+            ScalarCollection,
+        ],
+        type[float],
+    ],
+] = {}
 
 
 def make_conversion(

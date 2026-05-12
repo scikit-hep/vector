@@ -11,14 +11,17 @@
 
 from __future__ import annotations
 
+import types
 import typing
 
 import numpy
 
 from vector._compute.spatial import dot, mag
 from vector._methods import (
+    Azimuthal,
     AzimuthalRhoPhi,
     AzimuthalXY,
+    Longitudinal,
     LongitudinalEta,
     LongitudinalTheta,
     LongitudinalZ,
@@ -29,8 +32,27 @@ from vector._methods import (
     _lib_of,
     _ltype,
 )
+from vector._typeutils import BoolCollection, ScalarCollection
 
-dispatch_map = {}
+dispatch_map: dict[
+    tuple[type[Azimuthal], type[Longitudinal], type[Azimuthal], type[Longitudinal]],
+    tuple[
+        typing.Callable[
+            [
+                types.ModuleType,
+                ScalarCollection,
+                ScalarCollection,
+                ScalarCollection,
+                ScalarCollection,
+                ScalarCollection,
+                ScalarCollection,
+                ScalarCollection,
+            ],
+            BoolCollection,
+        ],
+        type[bool],
+    ],
+] = {}
 
 
 def make_function(azimuthal1, longitudinal1, azimuthal2, longitudinal2):
