@@ -289,8 +289,23 @@ def test_issue_704():
     ak = pytest.importorskip("awkward")
     vector.register_awkward()
 
-    vec_ak = ak.zip({"pt": [1, 2, 3, 4], "eta": [1, 2, 3, 4], "phi": [1, 2, 3, 4], "mass": [1, 2, 3, 4]}, with_name="Momentum4D")
-    vec_vec = vector.zip({"pt": [1, 2, 3, 4], "eta": [1, 2, 3, 4], "phi": [1, 2, 3, 4], "mass": [1, 2, 3, 4]})
+    vec_ak = ak.zip(
+        {
+            "pt": [1, 2, 3, 4],
+            "eta": [1, 2, 3, 4],
+            "phi": [1, 2, 3, 4],
+            "mass": [1, 2, 3, 4],
+        },
+        with_name="Momentum4D",
+    )
+    vec_vec = vector.zip(
+        {
+            "pt": [1, 2, 3, 4],
+            "eta": [1, 2, 3, 4],
+            "phi": [1, 2, 3, 4],
+            "mass": [1, 2, 3, 4],
+        }
+    )
 
     assert isinstance(vec_ak.neg3D, vector.backends.awkward.MomentumArray4D)
     assert isinstance(vec_vec.neg3D, vector.backends.awkward.MomentumArray4D)
