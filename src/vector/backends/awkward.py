@@ -720,9 +720,9 @@ class VectorAwkward:
                         names.append(name)
                         arrays.append(self[name])
 
-            if "t" in fields or "tau" in fields:
+            if any(f in fields for f in ("t", "tau", "M", "m", "mass", "E", "e", "energy")):
                 cls = cls.ProjectionClass4D
-            elif "z" in fields or "theta" in fields or "eta" in fields:
+            elif any(f in fields for f in ("z", "pz", "theta", "eta")):
                 cls = cls.ProjectionClass3D
             else:
                 cls = cls.ProjectionClass2D
@@ -839,7 +839,7 @@ class VectorAwkward:
                         names.append(name)
                         arrays.append(self[name])
 
-            if "t" in fields or "tau" in fields:
+            if any(f in fields for f in ("t", "tau", "M", "m", "mass", "E", "e", "energy")):
                 cls = cls.ProjectionClass4D
             else:
                 cls = cls.ProjectionClass3D
