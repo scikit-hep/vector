@@ -283,3 +283,30 @@ def test_issue_657():
 
             assert transformed_r1.isclose(transformed_r2)
             assert not transformed_r1.isclose(transformed_r2, rtol=1e-10, atol=1e-10)
+
+
+def test_issue_704():
+    ak = pytest.importorskip("awkward")
+    vector.register_awkward()
+
+    vec_ak = ak.zip(
+        {
+            "pt": [1, 2, 3, 4],
+            "eta": [1, 2, 3, 4],
+            "phi": [1, 2, 3, 4],
+            "mass": [1, 2, 3, 4],
+        },
+        with_name="Momentum4D",
+    )
+    vec_vec = vector.zip(
+        {
+            "pt": [1, 2, 3, 4],
+            "eta": [1, 2, 3, 4],
+            "phi": [1, 2, 3, 4],
+            "mass": [1, 2, 3, 4],
+        }
+    )
+
+    assert isinstance(vec_ak.neg3D, vector.backends.awkward.MomentumArray4D)
+    assert isinstance(vec_vec.neg3D, vector.backends.awkward.MomentumArray4D)
+    assert all(vec_ak.neg3D == vec_vec.neg3D)
