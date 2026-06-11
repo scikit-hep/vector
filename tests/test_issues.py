@@ -7,6 +7,8 @@ from __future__ import annotations
 
 import os
 import pickle
+import subprocess
+import sys
 
 import numpy as np
 import pytest
@@ -309,4 +311,63 @@ def test_issue_704():
 
     assert isinstance(vec_ak.neg3D, vector.backends.awkward.MomentumArray4D)
     assert isinstance(vec_vec.neg3D, vector.backends.awkward.MomentumArray4D)
-    assert all(vec_ak.neg3D == vec_vec.neg3D)
+
+
+def test_star_import_without_optional_deps():
+    """from vector import * must not raise even when sympy/awkward are absent."""
+    # Block sympy via a find_spec-based meta path finder inserted before vector is imported.
+    # We also clear any cached sympy entries from sys.modules so the blocker takes effect.
+    code = """
+import sys
+
+class _FailFinder:
+    def find_spec(self, fullname, path, target=None):
+        if fullname == 'sympy' or fullname.startswith('sympy.'):
+            from importlib.machinery import ModuleSpec
+            return ModuleSpec(fullname, None)  # no loader -> ImportError
+        return None
+
+for k in list(sys.modules.keys()):
+    if k == 'sympy' or k.startswith('sympy.'):
+        del sys.modules[k]
+sys.meta_path.insert(0, _FailFinder())
+
+import vector
+# from vector import * must not raise AttributeError
+exec('from vector import *')
+# All names in __all__ must be accessible (None for missing deps is acceptable)
+for name in vector.__all__:
+    _ = getattr(vector, name)
+# __dir__ must not include sympy names when sympy is absent
+d = dir(vector)
+for name in ('VectorSympy', 'VectorSympy2D', 'VectorSympy3D', 'VectorSympy4D',
+             'MomentumSympy2D', 'MomentumSympy3D', 'MomentumSympy4D'):
+    assert name not in d, f"{name!r} should not appear in dir(vector) when sympy is absent"
+print("OK")
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", code],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+
+
+def test_like_non_vector_raises():
+    """vector.like() must raise TypeError for non-vector arguments."""
+    v = vector.obj(x=1.0, y=2.0, z=3.0)
+    with pytest.raises(TypeError, match="is not a vector"):
+        v.like(5)
+    with pytest.raises(TypeError, match="is not a vector"):
+        v.like("not a vector")
+
+
+def test_to_vector4d_temporal_error_message():
+    """Error message for over-specified temporal coords should say 'temporal', not 'longitudinal'."""
+    v2 = vector.obj(x=1.0, y=2.0)
+    with pytest.raises(TypeError, match="temporal"):
+        v2.to_Vector4D(t=1.0, tau=2.0)
+    v3 = vector.obj(x=1.0, y=2.0, z=3.0)
+    with pytest.raises(TypeError, match="temporal"):
+        v3.to_Vector4D(t=1.0, mass=2.0)

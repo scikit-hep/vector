@@ -475,7 +475,7 @@ class VectorProtocol:
 
     def to_pxpythetamass(self) -> VectorProtocolLorentz:
         r"""
-        Converts to $px$-$py$-$\theta$-$energy$ coordinates, possibly imputing dimensions
+        Converts to $px$-$py$-$\theta$-$mass$ coordinates, possibly imputing dimensions
         with a projection.
 
         The $theta$ and $mass$ coordinates can be passed as a named argument.
@@ -592,7 +592,7 @@ class VectorProtocol:
 
     def to_ptphietamass(self) -> VectorProtocolLorentz:
         r"""
-        Converts to $pt$-$\phi$-$\theta$-$mass$ coordinates, possibly imputing dimensions
+        Converts to $pt$-$\phi$-$\eta$-$mass$ coordinates, possibly imputing dimensions
         with a projection.
 
         The $eta$ and $mass$ coordinates can be passed as a named argument.
@@ -858,7 +858,8 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
     def eta(self) -> ScalarCollection:
         r"""
         The pseudorapidity $\eta$ coordinate of the vector or every vector
-        in the array (in radians, always between $0$ ($+z$) and $\pi$ ($-z$)).
+        in the array: $\eta = -\ln\tan(\theta/2)$, which is unbounded, positive
+        in the $+z$ direction and negative in the $-z$ direction.
         """
         raise AssertionError
 
@@ -996,7 +997,7 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
 
         - ``"zxz"``, ``"xyx"``, ``"yzy"``, ``"zyz"``, ``"xzx"``, and ``"yxy"``
           are proper Euler angles
-        - ``"zxz"``, ``"xyx"``, ``"yzy"``, ``"zyz"``, ``"xzx"``, and ``"yxy"``
+        - ``"xzy"``, ``"xyz"``, ``"yxz"``, ``"yzx"``, ``"zyx"``, and ``"zxy"``
           are Tait-Bryan angles (see
           :meth:`vector._methods.VectorProtocolSpatial.rotate_nautical`)
 
@@ -1504,7 +1505,7 @@ class MomentumProtocolSpatial(VectorProtocolSpatial, MomentumProtocolPlanar):
 class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
     @property
     def E(self) -> ScalarCollection:
-        """Momentum-synonyor :attr:`vector._methods.VectorProtocolLorentz.t`."""
+        """Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.t`."""
         raise AssertionError
 
     @property
@@ -1519,7 +1520,7 @@ class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
 
     @property
     def E2(self) -> ScalarCollection:
-        """Momentum-synonym for :attr:`vector._methods.VectorProtocolLorent2`."""
+        """Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.t2`."""
         raise AssertionError
 
     @property
@@ -3165,8 +3166,10 @@ class Vector(VectorProtocol):
             return self.to_Vector2D()
         elif isinstance(other, Vector3D):
             return self.to_Vector3D()
-        else:
+        elif isinstance(other, Vector4D):
             return self.to_Vector4D()
+        else:
+            raise TypeError(f"{other!r} is not a vector.Vector")
 
 
 class Vector2D(Vector, VectorProtocolPlanar):
@@ -3257,7 +3260,7 @@ class Vector2D(Vector, VectorProtocolPlanar):
             )
         elif sum(x is not None for x in (t, tau, m, M, mass, e, E, energy)) > 1:
             raise TypeError(
-                "At most one longitudinal coordinate (`t`/`e`/`E`/`energy`, `tau`/`m`/`M`/`mass`) may be assigned (non-None)"
+                "At most one temporal coordinate (`t`/`e`/`E`/`energy`, `tau`/`m`/`M`/`mass`) may be assigned (non-None)"
             )
 
         t_value: float | FloatArray = 0.0
@@ -3346,7 +3349,7 @@ class Vector3D(Vector, VectorProtocolSpatial):
         """
         if sum(x is not None for x in (t, tau, m, M, mass, e, E, energy)) > 1:
             raise TypeError(
-                "At most one longitudinal coordinate (`t`/`e`/`E`/`energy`, `tau`/`m`/`M`/`mass`) may be assigned (non-None)"
+                "At most one temporal coordinate (`t`/`e`/`E`/`energy`, `tau`/`m`/`M`/`mass`) may be assigned (non-None)"
             )
 
         t_value: float | FloatArray = 0.0
