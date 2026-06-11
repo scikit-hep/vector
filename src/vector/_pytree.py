@@ -1,3 +1,11 @@
+# Copyright (c) 2019, Saransh Chopra, Henry Schreiner, Eduardo Rodrigues, Jonas Eschle, and Jim Pivarski.
+#
+# Distributed under the 3-clause BSD license, see accompanying file LICENSE
+# or https://github.com/scikit-hep/vector for details.
+"""
+PyTree integration for vector types (optree support).
+"""
+
 from __future__ import annotations
 
 import functools

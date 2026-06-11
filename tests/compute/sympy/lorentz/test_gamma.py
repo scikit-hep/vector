@@ -100,10 +100,13 @@ def test_xy_eta_tau():
         ),
     )
     assert vec.gamma == sympy.sqrt(
-        (0.5 + 0.5 * sympy.exp(-2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))) ** 2
-        * (x**2 + y**2)
-        * sympy.exp(2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))
-        + sympy.Abs(-(t**2) + x**2 + y**2 + z**2)
+        sympy.Max(
+            0,
+            (0.5 + 0.5 * sympy.exp(-2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))) ** 2
+            * (x**2 + y**2)
+            * sympy.exp(2 * sympy.asinh(z / sympy.sqrt(x**2 + y**2)))
+            + sympy.Abs(-(t**2) + x**2 + y**2 + z**2),
+        )
     ) / sympy.sqrt(sympy.Abs(-(t**2) + x**2 + y**2 + z**2))
     assert vec.gamma.subs(values).evalf() == pytest.approx(1.2060453783110545)
 
@@ -186,9 +189,12 @@ def test_rhophi_eta_tau():
         ),
     )
     assert vec.gamma == sympy.sqrt(
-        rho**2
-        * (0.5 + 0.5 * sympy.exp(-2 * sympy.asinh(z / rho))) ** 2
-        * sympy.exp(2 * sympy.asinh(z / rho))
-        + sympy.Abs(rho**2 - t**2 + z**2)
+        sympy.Max(
+            0,
+            rho**2
+            * (0.5 + 0.5 * sympy.exp(-2 * sympy.asinh(z / rho))) ** 2
+            * sympy.exp(2 * sympy.asinh(z / rho))
+            + sympy.Abs(rho**2 - t**2 + z**2),
+        )
     ) / sympy.sqrt(sympy.Abs(rho**2 - t**2 + z**2))
     assert vec.gamma.subs(values).evalf() == pytest.approx(1.2060453783110545)

@@ -124,7 +124,7 @@ def test_construction():
         with pytest.raises(TypeError):
             vec = vec_cls(bad=1, **coords)
 
-        assert vec.t == sympy.sqrt(tau**2 + x**2 + y**2 + z**2)
+        assert vec.t == sympy.sqrt(sympy.Max(0, tau**2 + x**2 + y**2 + z**2))
         assert vec.tau == tau
 
         assert isinstance(vec.temporal, vector.backends.sympy.TemporalSympyTau)
@@ -214,9 +214,9 @@ def test_construction():
         assert vec.m == M
         assert vec.M == M
         assert vec.mass == M
-        assert vec.e == sympy.sqrt(M**2 + px**2 + py**2 + pz**2)
-        assert sympy.sqrt(M**2 + px**2 + py**2 + pz**2) == vec.E
-        assert vec.energy == sympy.sqrt(M**2 + px**2 + py**2 + pz**2)
+        assert vec.e == sympy.sqrt(sympy.Max(0, M**2 + px**2 + py**2 + pz**2))
+        assert sympy.sqrt(sympy.Max(0, M**2 + px**2 + py**2 + pz**2)) == vec.E
+        assert vec.energy == sympy.sqrt(sympy.Max(0, M**2 + px**2 + py**2 + pz**2))
 
         assert isinstance(vec.temporal, vector.backends.sympy.TemporalSympyTau)
         assert vec.temporal.elements == (M,)
@@ -482,3 +482,32 @@ def test_setters():
     assert v.energy == 2 * energy
     v.E = 2 * E
     assert v.E == 2 * E
+
+
+def test_lib_sign_symbolic():
+    # https://github.com/scikit-hep/vector/issues/711
+    # _lib.sign delegated to numpy.sign, which raised on symbolic input
+    a = sympy.Symbol("a", real=True)
+    r = sympy.Symbol("r", positive=True)
+    vec = vector.VectorSympy2D(rho=r, phi=phi)
+    scaled = vec.scale(a)
+    assert scaled.rho.subs({r: 2, a: -3, phi: 0.5}) == 6
+    assert scaled.rho.subs({r: 2, a: 3, phi: 0.5}) == 6
+
+
+def test_lib_maximum_minimum_symbolic():
+    # maximum/minimum returned the first symbolic argument unconditionally
+    lib = vector.backends.sympy._lib()
+    a, b = sympy.symbols("a b", real=True)
+    assert lib.maximum(a, b) == sympy.Max(a, b)
+    assert lib.minimum(a, b) == sympy.Min(a, b)
+    assert lib.maximum(a, 0).subs({a: -1}) == 0
+    assert lib.minimum(a, 0).subs({a: -1}) == -1
+
+
+def test_lib_copysign_numeric():
+    # copysign returned the first argument unconditionally, even for plain
+    # numbers (symbolic input still assumes a non-negative sign carrier)
+    lib = vector.backends.sympy._lib()
+    assert lib.copysign(3.0, -2.0) == -3.0
+    assert lib.copysign(-3.0, 2.0) == 3.0

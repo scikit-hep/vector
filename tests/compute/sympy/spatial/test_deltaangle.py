@@ -27,8 +27,11 @@ def test_spatial_sympy():
         longitudinal=vector.backends.sympy.LongitudinalSympyZ(nz),
     )
     assert v1.deltaangle(v2) == sympy.acos(
-        (nx * x + ny * y + nz * z)
-        / (sympy.sqrt(nx**2 + ny**2 + nz**2) * sympy.sqrt(x**2 + y**2 + z**2))
+        sympy.Min(
+            1,
+            (nx * x + ny * y + nz * z)
+            / (sympy.sqrt(nx**2 + ny**2 + nz**2) * sympy.sqrt(x**2 + y**2 + z**2)),
+        )
     )
 
     for t1 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
@@ -54,8 +57,11 @@ def test_lorentz_sympy():
         temporal=vector.backends.sympy.TemporalSympyT(t),
     )
     assert v1.deltaangle(v2) == sympy.acos(
-        (nx * x + ny * y + nz * z)
-        / (sympy.sqrt(nx**2 + ny**2 + nz**2) * sympy.sqrt(x**2 + y**2 + z**2))
+        sympy.Min(
+            1,
+            (nx * x + ny * y + nz * z)
+            / (sympy.sqrt(nx**2 + ny**2 + nz**2) * sympy.sqrt(x**2 + y**2 + z**2)),
+        )
     )
 
     for t1 in (
