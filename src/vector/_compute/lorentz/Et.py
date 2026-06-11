@@ -34,7 +34,7 @@ from vector._methods import (
 
 
 def xy_z_t(lib, x, y, z, t):
-    return lib.sqrt(Et2.xy_z_t(lib, x, y, z, t))
+    return lib.copysign(lib.sqrt(Et2.xy_z_t(lib, x, y, z, t)), t)
 
 
 def xy_z_tau(lib, x, y, z, tau):
