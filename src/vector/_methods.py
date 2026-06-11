@@ -1930,12 +1930,12 @@ class Vector(VectorProtocol):
 
     @typing.overload
     def __new__(
-        cls, *, ptau: float, phi: float, z: float, tau: float
+        cls, *, pt: float, phi: float, z: float, tau: float
     ) -> vector.MomentumObject4D: ...
 
     @typing.overload
     def __new__(
-        cls, *, ptau: float, phi: float, pz: float, tau: float
+        cls, *, pt: float, phi: float, pz: float, tau: float
     ) -> vector.MomentumObject4D: ...
 
     @typing.overload
@@ -1965,7 +1965,7 @@ class Vector(VectorProtocol):
 
     @typing.overload
     def __new__(
-        cls, *, ptau: float, phi: float, theta: float, tau: float
+        cls, *, pt: float, phi: float, theta: float, tau: float
     ) -> vector.MomentumObject4D: ...
 
     @typing.overload
@@ -1995,7 +1995,7 @@ class Vector(VectorProtocol):
 
     @typing.overload
     def __new__(
-        cls, *, ptau: float, phi: float, eta: float, tau: float
+        cls, *, pt: float, phi: float, eta: float, tau: float
     ) -> vector.MomentumObject4D: ...
 
     @typing.overload
@@ -2050,12 +2050,12 @@ class Vector(VectorProtocol):
 
     @typing.overload
     def __new__(
-        cls, *, pE: float, phi: float, z: float, E: float
+        cls, *, pt: float, phi: float, z: float, E: float
     ) -> vector.MomentumObject4D: ...
 
     @typing.overload
     def __new__(
-        cls, *, pE: float, phi: float, pz: float, E: float
+        cls, *, pt: float, phi: float, pz: float, E: float
     ) -> vector.MomentumObject4D: ...
 
     @typing.overload
@@ -2085,7 +2085,7 @@ class Vector(VectorProtocol):
 
     @typing.overload
     def __new__(
-        cls, *, pE: float, phi: float, theta: float, E: float
+        cls, *, pt: float, phi: float, theta: float, E: float
     ) -> vector.MomentumObject4D: ...
 
     @typing.overload
@@ -2115,7 +2115,7 @@ class Vector(VectorProtocol):
 
     @typing.overload
     def __new__(
-        cls, *, pE: float, phi: float, eta: float, E: float
+        cls, *, pt: float, phi: float, eta: float, E: float
     ) -> vector.MomentumObject4D: ...
 
     @typing.overload
@@ -2170,12 +2170,12 @@ class Vector(VectorProtocol):
 
     @typing.overload
     def __new__(
-        cls, *, pe: float, phi: float, z: float, e: float
+        cls, *, pt: float, phi: float, z: float, e: float
     ) -> vector.MomentumObject4D: ...
 
     @typing.overload
     def __new__(
-        cls, *, pe: float, phi: float, pz: float, e: float
+        cls, *, pt: float, phi: float, pz: float, e: float
     ) -> vector.MomentumObject4D: ...
 
     @typing.overload
@@ -2205,7 +2205,7 @@ class Vector(VectorProtocol):
 
     @typing.overload
     def __new__(
-        cls, *, pe: float, phi: float, theta: float, e: float
+        cls, *, pt: float, phi: float, theta: float, e: float
     ) -> vector.MomentumObject4D: ...
 
     @typing.overload
@@ -2235,7 +2235,7 @@ class Vector(VectorProtocol):
 
     @typing.overload
     def __new__(
-        cls, *, pe: float, phi: float, eta: float, e: float
+        cls, *, pt: float, phi: float, eta: float, e: float
     ) -> vector.MomentumObject4D: ...
 
     @typing.overload
@@ -2410,12 +2410,12 @@ class Vector(VectorProtocol):
 
     @typing.overload
     def __new__(
-        cls, *, pM: float, phi: float, z: float, M: float
+        cls, *, pt: float, phi: float, z: float, M: float
     ) -> vector.MomentumObject4D: ...
 
     @typing.overload
     def __new__(
-        cls, *, pM: float, phi: float, pz: float, M: float
+        cls, *, pt: float, phi: float, pz: float, M: float
     ) -> vector.MomentumObject4D: ...
 
     @typing.overload
@@ -2445,7 +2445,7 @@ class Vector(VectorProtocol):
 
     @typing.overload
     def __new__(
-        cls, *, pM: float, phi: float, theta: float, M: float
+        cls, *, pt: float, phi: float, theta: float, M: float
     ) -> vector.MomentumObject4D: ...
 
     @typing.overload
@@ -2475,7 +2475,7 @@ class Vector(VectorProtocol):
 
     @typing.overload
     def __new__(
-        cls, *, pM: float, phi: float, eta: float, M: float
+        cls, *, pt: float, phi: float, eta: float, M: float
     ) -> vector.MomentumObject4D: ...
 
     @typing.overload
@@ -2530,12 +2530,12 @@ class Vector(VectorProtocol):
 
     @typing.overload
     def __new__(
-        cls, *, pm: float, phi: float, z: float, m: float
+        cls, *, pt: float, phi: float, z: float, m: float
     ) -> vector.MomentumObject4D: ...
 
     @typing.overload
     def __new__(
-        cls, *, pm: float, phi: float, pz: float, m: float
+        cls, *, pt: float, phi: float, pz: float, m: float
     ) -> vector.MomentumObject4D: ...
 
     @typing.overload
@@ -2565,7 +2565,7 @@ class Vector(VectorProtocol):
 
     @typing.overload
     def __new__(
-        cls, *, pm: float, phi: float, theta: float, m: float
+        cls, *, pt: float, phi: float, theta: float, m: float
     ) -> vector.MomentumObject4D: ...
 
     @typing.overload
@@ -2595,7 +2595,7 @@ class Vector(VectorProtocol):
 
     @typing.overload
     def __new__(
-        cls, *, pm: float, phi: float, eta: float, m: float
+        cls, *, pt: float, phi: float, eta: float, m: float
     ) -> vector.MomentumObject4D: ...
 
     @typing.overload

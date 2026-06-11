@@ -213,7 +213,7 @@ class LongitudinalObjectEta(LongitudinalObject, LongitudinalEta, TupleEta):
     @property
     def elements(self) -> tuple[float]:
         """
-        Longitudinal coordinates (``theta``) as a tuple.
+        Longitudinal coordinates (``eta``) as a tuple.
         Each coordinate is a scalar and not a vector.
 
         Examples:
@@ -601,7 +601,7 @@ class VectorObject(Vector):  # noqa: PLW1641
         ):
             if len(outputs) != 0:
                 raise TypeError(
-                    "output of 'numpy.equal' is scalar, cannot fill a VectorObject with 'out'"
+                    "output of 'numpy.not_equal' is scalar, cannot fill a VectorObject with 'out'"
                 )
             return inputs[0].not_equal(inputs[1])
 
@@ -710,15 +710,20 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
         out = [f"{x}={getattr(self.azimuthal, x)}" for x in aznames]
         return "VectorObject2D(" + ", ".join(out) + ")"
 
-    def __array__(self) -> FloatArray:
+    def __array__(
+        self, dtype: numpy.dtype | None = None, copy: bool | None = None
+    ) -> FloatArray:
         from vector.backends.numpy import VectorNumpy2D
 
-        return VectorNumpy2D(
+        out = VectorNumpy2D(
             self.azimuthal.elements,
             dtype=[
                 (x, numpy.float64) for x in _coordinate_class_to_names[_aztype(self)]
             ],
         )
+        if dtype is None:
+            return out
+        return numpy.asarray(out, dtype=dtype)
 
     def _wrap_result(
         self,
@@ -749,8 +754,8 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             return cls.ProjectionClass2D(azimuthal=azcoords)
 
-        elif len(returns) == 2 or (
-            (len(returns) == 3 and returns[2] is None)
+        elif (
+            (len(returns) == 2 or (len(returns) == 3 and returns[2] is None))
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
             and isinstance(returns[1], type)
@@ -846,15 +851,20 @@ class MomentumObject2D(PlanarMomentum, VectorObject2D):
             out.append(f"{y}={getattr(self.azimuthal, x)}")
         return "MomentumObject2D(" + ", ".join(out) + ")"
 
-    def __array__(self) -> FloatArray:
+    def __array__(
+        self, dtype: numpy.dtype | None = None, copy: bool | None = None
+    ) -> FloatArray:
         from vector.backends.numpy import MomentumNumpy2D
 
-        return MomentumNumpy2D(
+        out = MomentumNumpy2D(
             self.azimuthal.elements,
             dtype=[
                 (x, numpy.float64) for x in _coordinate_class_to_names[_aztype(self)]
             ],
         )
+        if dtype is None:
+            return out
+        return numpy.asarray(out, dtype=dtype)
 
     @property
     def px(self) -> float:
@@ -1112,10 +1122,12 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             out.append(f"{x}={getattr(self.longitudinal, x)}")
         return "VectorObject3D(" + ", ".join(out) + ")"
 
-    def __array__(self) -> FloatArray:
+    def __array__(
+        self, dtype: numpy.dtype | None = None, copy: bool | None = None
+    ) -> FloatArray:
         from vector.backends.numpy import VectorNumpy3D
 
-        return VectorNumpy3D(
+        out = VectorNumpy3D(
             self.azimuthal.elements + self.longitudinal.elements,
             dtype=[
                 (x, numpy.float64)
@@ -1123,6 +1135,9 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
                 + _coordinate_class_to_names[_ltype(self)]
             ],
         )
+        if dtype is None:
+            return out
+        return numpy.asarray(out, dtype=dtype)
 
     def _wrap_result(
         self,
@@ -1164,8 +1179,8 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             azcoords = _coord_object_type[returns[0]](result[0], result[1])
             return cls.ProjectionClass2D(azimuthal=azcoords)
 
-        elif len(returns) == 2 or (
-            (len(returns) == 3 and returns[2] is None)
+        elif (
+            (len(returns) == 2 or (len(returns) == 3 and returns[2] is None))
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
             and isinstance(returns[1], type)
@@ -1292,10 +1307,12 @@ class MomentumObject3D(SpatialMomentum, VectorObject3D):
             out.append(f"{y}={getattr(self.longitudinal, x)}")
         return "MomentumObject3D(" + ", ".join(out) + ")"
 
-    def __array__(self) -> FloatArray:
+    def __array__(
+        self, dtype: numpy.dtype | None = None, copy: bool | None = None
+    ) -> FloatArray:
         from vector.backends.numpy import MomentumNumpy3D
 
-        return MomentumNumpy3D(
+        out = MomentumNumpy3D(
             self.azimuthal.elements + self.longitudinal.elements,
             dtype=[
                 (x, numpy.float64)
@@ -1303,6 +1320,9 @@ class MomentumObject3D(SpatialMomentum, VectorObject3D):
                 + _coordinate_class_to_names[_ltype(self)]
             ],
         )
+        if dtype is None:
+            return out
+        return numpy.asarray(out, dtype=dtype)
 
     @property
     def px(self) -> float:
@@ -1396,10 +1416,10 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         t: float,
     ) -> VectorObject4D:
         """
-        Constructs a ``VectorObject3D`` from Cartesian coordinates and a time
+        Constructs a ``VectorObject4D`` from Cartesian coordinates and a time
         coordinate $t$.
 
-        Use :class:`vector.backends.object.MomentumObject3D` to construct a vector
+        Use :class:`vector.backends.object.MomentumObject4D` to construct a vector
         with momentum properties and methods.
 
         Examples:
@@ -1425,10 +1445,10 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         tau: float,
     ) -> VectorObject4D:
         r"""
-        Constructs a ``VectorObject3D`` from Cartesian coordinates and a proper time
+        Constructs a ``VectorObject4D`` from Cartesian coordinates and a proper time
         coordinate $\tau$.
 
-        Use :class:`vector.backends.object.MomentumObject3D` to construct a vector
+        Use :class:`vector.backends.object.MomentumObject4D` to construct a vector
         with momentum properties and methods.
 
         Examples:
@@ -1454,10 +1474,10 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         t: float,
     ) -> VectorObject4D:
         r"""
-        Constructs a ``VectorObject3D`` from Cartesian azimuthal coordinates, a
+        Constructs a ``VectorObject4D`` from Cartesian azimuthal coordinates, a
         polar angle $\theta$, and a time coordinate $t$.
 
-        Use :class:`vector.backends.object.MomentumObject3D` to construct a vector
+        Use :class:`vector.backends.object.MomentumObject4D` to construct a vector
         with momentum properties and methods.
 
         Examples:
@@ -1483,10 +1503,10 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         tau: float,
     ) -> VectorObject4D:
         r"""
-        Constructs a ``VectorObject3D`` from Cartesian azimuthal coordinates, a
+        Constructs a ``VectorObject4D`` from Cartesian azimuthal coordinates, a
         polar angle $\theta$, and a proper time coordinate $\tau$.
 
-        Use :class:`vector.backends.object.MomentumObject3D` to construct a vector
+        Use :class:`vector.backends.object.MomentumObject4D` to construct a vector
         with momentum properties and methods.
 
         Examples:
@@ -1512,10 +1532,10 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         t: float,
     ) -> VectorObject4D:
         r"""
-        Constructs a ``VectorObject3D`` from Cartesian coordinates, a pseudorapidity
+        Constructs a ``VectorObject4D`` from Cartesian coordinates, a pseudorapidity
         $\eta$, and a time coordinate $t$.
 
-        Use :class:`vector.backends.object.MomentumObject3D` to construct a vector
+        Use :class:`vector.backends.object.MomentumObject4D` to construct a vector
         with momentum properties and methods.
 
         Examples:
@@ -1541,10 +1561,10 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         tau: float,
     ) -> VectorObject4D:
         r"""
-        Constructs a ``VectorObject3D`` from Cartesian coordinates, a pseudorapidity
+        Constructs a ``VectorObject4D`` from Cartesian coordinates, a pseudorapidity
         $\eta$, and a proper time coordinate $\tau$.
 
-        Use :class:`vector.backends.object.MomentumObject3D` to construct a vector
+        Use :class:`vector.backends.object.MomentumObject4D` to construct a vector
         with momentum properties and methods.
 
         Examples:
@@ -1570,10 +1590,10 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         t: float,
     ) -> VectorObject4D:
         """
-        Constructs a ``VectorObject3D`` from polar azimuthal coordinates, a Cartesian
+        Constructs a ``VectorObject4D`` from polar azimuthal coordinates, a Cartesian
         longitudinal coordinate $z$, and a time coordinate $t$.
 
-        Use :class:`vector.backends.object.MomentumObject3D` to construct a vector
+        Use :class:`vector.backends.object.MomentumObject4D` to construct a vector
         with momentum properties and methods.
 
         Examples:
@@ -1599,10 +1619,10 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         tau: float,
     ) -> VectorObject4D:
         r"""
-        Constructs a ``VectorObject3D`` from polar azimuthal coordinates, a Cartesian
+        Constructs a ``VectorObject4D`` from polar azimuthal coordinates, a Cartesian
         longitudinal coordinate $z$, and a proper time coordinate $\tau$.
 
-        Use :class:`vector.backends.object.MomentumObject3D` to construct a vector
+        Use :class:`vector.backends.object.MomentumObject4D` to construct a vector
         with momentum properties and methods.
 
         Examples:
@@ -1628,10 +1648,10 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         t: float,
     ) -> VectorObject4D:
         r"""
-        Constructs a ``VectorObject3D`` from polar azimuthal coordinates, a polar
+        Constructs a ``VectorObject4D`` from polar azimuthal coordinates, a polar
         angle $\theta$, and a time coordinate $t$.
 
-        Use :class:`vector.backends.object.MomentumObject3D` to construct a vector
+        Use :class:`vector.backends.object.MomentumObject4D` to construct a vector
         with momentum properties and methods.
 
         Examples:
@@ -1657,10 +1677,10 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         tau: float,
     ) -> VectorObject4D:
         r"""
-        Constructs a ``VectorObject3D`` from polar azimuthal coordinates, a polar
+        Constructs a ``VectorObject4D`` from polar azimuthal coordinates, a polar
         angle $\theta$, and a proper time coordinate $\tau$.
 
-        Use :class:`vector.backends.object.MomentumObject3D` to construct a vector
+        Use :class:`vector.backends.object.MomentumObject4D` to construct a vector
         with momentum properties and methods.
 
         Examples:
@@ -1686,10 +1706,10 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         t: float,
     ) -> VectorObject4D:
         r"""
-        Constructs a ``VectorObject3D`` from polar azimuthal coordinates, a
+        Constructs a ``VectorObject4D`` from polar azimuthal coordinates, a
         pseudorapidity $\eta$, and a time coordinate $t$.
 
-        Use :class:`vector.backends.object.MomentumObject3D` to construct a vector
+        Use :class:`vector.backends.object.MomentumObject4D` to construct a vector
         with momentum properties and methods.
 
         Examples:
@@ -1715,10 +1735,10 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
         tau: float,
     ) -> VectorObject4D:
         r"""
-        Constructs a ``VectorObject3D`` from polar azimuthal coordinates, a
+        Constructs a ``VectorObject4D`` from polar azimuthal coordinates, a
         pseudorapidity $\eta$, and a proper time coordinate $\tau$.
 
-        Use :class:`vector.backends.object.MomentumObject3D` to construct a vector
+        Use :class:`vector.backends.object.MomentumObject4D` to construct a vector
         with momentum properties and methods.
 
         Examples:
@@ -1840,10 +1860,12 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             out.append(f"{x}={getattr(self.temporal, x)}")
         return "VectorObject4D(" + ", ".join(out) + ")"
 
-    def __array__(self) -> FloatArray:
+    def __array__(
+        self, dtype: numpy.dtype | None = None, copy: bool | None = None
+    ) -> FloatArray:
         from vector.backends.numpy import VectorNumpy4D
 
-        return VectorNumpy4D(
+        out = VectorNumpy4D(
             self.azimuthal.elements
             + self.longitudinal.elements
             + self.temporal.elements,
@@ -1854,6 +1876,9 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
                 + _coordinate_class_to_names[_ttype(self)]
             ],
         )
+        if dtype is None:
+            return out
+        return numpy.asarray(out, dtype=dtype)
 
     def _wrap_result(
         self,
@@ -2060,10 +2085,12 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
             out.append(f"{y}={getattr(self.temporal, x)}")
         return "MomentumObject4D(" + ", ".join(out) + ")"
 
-    def __array__(self) -> FloatArray:
+    def __array__(
+        self, dtype: numpy.dtype | None = None, copy: bool | None = None
+    ) -> FloatArray:
         from vector.backends.numpy import MomentumNumpy4D
 
-        return MomentumNumpy4D(
+        out = MomentumNumpy4D(
             self.azimuthal.elements
             + self.longitudinal.elements
             + self.temporal.elements,
@@ -2074,6 +2101,9 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
                 + _coordinate_class_to_names[_ttype(self)]
             ],
         )
+        if dtype is None:
+            return out
+        return numpy.asarray(out, dtype=dtype)
 
     @property
     def px(self) -> float:
@@ -2508,11 +2538,11 @@ def obj(*, rho: float, phi: float, pz: float, tau: float) -> MomentumObject4D: .
 
 
 @typing.overload
-def obj(*, ptau: float, phi: float, z: float, tau: float) -> MomentumObject4D: ...
+def obj(*, pt: float, phi: float, z: float, tau: float) -> MomentumObject4D: ...
 
 
 @typing.overload
-def obj(*, ptau: float, phi: float, pz: float, tau: float) -> MomentumObject4D: ...
+def obj(*, pt: float, phi: float, pz: float, tau: float) -> MomentumObject4D: ...
 
 
 @typing.overload
@@ -2536,7 +2566,7 @@ def obj(*, rho: float, phi: float, theta: float, tau: float) -> VectorObject4D: 
 
 
 @typing.overload
-def obj(*, ptau: float, phi: float, theta: float, tau: float) -> MomentumObject4D: ...
+def obj(*, pt: float, phi: float, theta: float, tau: float) -> MomentumObject4D: ...
 
 
 @typing.overload
@@ -2560,7 +2590,7 @@ def obj(*, rho: float, phi: float, eta: float, tau: float) -> VectorObject4D: ..
 
 
 @typing.overload
-def obj(*, ptau: float, phi: float, eta: float, tau: float) -> MomentumObject4D: ...
+def obj(*, pt: float, phi: float, eta: float, tau: float) -> MomentumObject4D: ...
 
 
 @typing.overload
@@ -2604,11 +2634,11 @@ def obj(*, rho: float, phi: float, pz: float, E: float) -> MomentumObject4D: ...
 
 
 @typing.overload
-def obj(*, pE: float, phi: float, z: float, E: float) -> MomentumObject4D: ...
+def obj(*, pt: float, phi: float, z: float, E: float) -> MomentumObject4D: ...
 
 
 @typing.overload
-def obj(*, pE: float, phi: float, pz: float, E: float) -> MomentumObject4D: ...
+def obj(*, pt: float, phi: float, pz: float, E: float) -> MomentumObject4D: ...
 
 
 @typing.overload
@@ -2632,7 +2662,7 @@ def obj(*, rho: float, phi: float, theta: float, E: float) -> MomentumObject4D: 
 
 
 @typing.overload
-def obj(*, pE: float, phi: float, theta: float, E: float) -> MomentumObject4D: ...
+def obj(*, pt: float, phi: float, theta: float, E: float) -> MomentumObject4D: ...
 
 
 @typing.overload
@@ -2656,7 +2686,7 @@ def obj(*, rho: float, phi: float, eta: float, E: float) -> MomentumObject4D: ..
 
 
 @typing.overload
-def obj(*, pE: float, phi: float, eta: float, E: float) -> MomentumObject4D: ...
+def obj(*, pt: float, phi: float, eta: float, E: float) -> MomentumObject4D: ...
 
 
 @typing.overload
@@ -2700,11 +2730,11 @@ def obj(*, rho: float, phi: float, pz: float, e: float) -> MomentumObject4D: ...
 
 
 @typing.overload
-def obj(*, pe: float, phi: float, z: float, e: float) -> MomentumObject4D: ...
+def obj(*, pt: float, phi: float, z: float, e: float) -> MomentumObject4D: ...
 
 
 @typing.overload
-def obj(*, pe: float, phi: float, pz: float, e: float) -> MomentumObject4D: ...
+def obj(*, pt: float, phi: float, pz: float, e: float) -> MomentumObject4D: ...
 
 
 @typing.overload
@@ -2728,7 +2758,7 @@ def obj(*, rho: float, phi: float, theta: float, e: float) -> MomentumObject4D: 
 
 
 @typing.overload
-def obj(*, pe: float, phi: float, theta: float, e: float) -> MomentumObject4D: ...
+def obj(*, pt: float, phi: float, theta: float, e: float) -> MomentumObject4D: ...
 
 
 @typing.overload
@@ -2752,7 +2782,7 @@ def obj(*, rho: float, phi: float, eta: float, e: float) -> MomentumObject4D: ..
 
 
 @typing.overload
-def obj(*, pe: float, phi: float, eta: float, e: float) -> MomentumObject4D: ...
+def obj(*, pt: float, phi: float, eta: float, e: float) -> MomentumObject4D: ...
 
 
 @typing.overload
@@ -2892,11 +2922,11 @@ def obj(*, rho: float, phi: float, pz: float, M: float) -> MomentumObject4D: ...
 
 
 @typing.overload
-def obj(*, pM: float, phi: float, z: float, M: float) -> MomentumObject4D: ...
+def obj(*, pt: float, phi: float, z: float, M: float) -> MomentumObject4D: ...
 
 
 @typing.overload
-def obj(*, pM: float, phi: float, pz: float, M: float) -> MomentumObject4D: ...
+def obj(*, pt: float, phi: float, pz: float, M: float) -> MomentumObject4D: ...
 
 
 @typing.overload
@@ -2920,7 +2950,7 @@ def obj(*, rho: float, phi: float, theta: float, M: float) -> MomentumObject4D: 
 
 
 @typing.overload
-def obj(*, pM: float, phi: float, theta: float, M: float) -> MomentumObject4D: ...
+def obj(*, pt: float, phi: float, theta: float, M: float) -> MomentumObject4D: ...
 
 
 @typing.overload
@@ -2944,7 +2974,7 @@ def obj(*, rho: float, phi: float, eta: float, M: float) -> MomentumObject4D: ..
 
 
 @typing.overload
-def obj(*, pM: float, phi: float, eta: float, M: float) -> MomentumObject4D: ...
+def obj(*, pt: float, phi: float, eta: float, M: float) -> MomentumObject4D: ...
 
 
 @typing.overload
@@ -2988,11 +3018,11 @@ def obj(*, rho: float, phi: float, pz: float, m: float) -> MomentumObject4D: ...
 
 
 @typing.overload
-def obj(*, pm: float, phi: float, z: float, m: float) -> MomentumObject4D: ...
+def obj(*, pt: float, phi: float, z: float, m: float) -> MomentumObject4D: ...
 
 
 @typing.overload
-def obj(*, pm: float, phi: float, pz: float, m: float) -> MomentumObject4D: ...
+def obj(*, pt: float, phi: float, pz: float, m: float) -> MomentumObject4D: ...
 
 
 @typing.overload
@@ -3016,7 +3046,7 @@ def obj(*, rho: float, phi: float, theta: float, m: float) -> MomentumObject4D: 
 
 
 @typing.overload
-def obj(*, pm: float, phi: float, theta: float, m: float) -> MomentumObject4D: ...
+def obj(*, pt: float, phi: float, theta: float, m: float) -> MomentumObject4D: ...
 
 
 @typing.overload
@@ -3040,7 +3070,7 @@ def obj(*, rho: float, phi: float, eta: float, m: float) -> MomentumObject4D: ..
 
 
 @typing.overload
-def obj(*, pm: float, phi: float, eta: float, m: float) -> MomentumObject4D: ...
+def obj(*, pt: float, phi: float, eta: float, m: float) -> MomentumObject4D: ...
 
 
 @typing.overload
@@ -3232,6 +3262,10 @@ def obj(**coordinates: float) -> VectorObject:
         generic_coordinates["t"] = coordinates.pop("E")
     if "e" in coordinates:
         is_momentum = True
+        if "t" in generic_coordinates:
+            raise TypeError(
+                "duplicate coordinates (through momentum-aliases): 'e' and 'E' both map to 't'"
+            )
         generic_coordinates["t"] = coordinates.pop("e")
     if "energy" in coordinates and "t" not in generic_coordinates:
         is_momentum = True
@@ -3241,6 +3275,10 @@ def obj(**coordinates: float) -> VectorObject:
         generic_coordinates["tau"] = coordinates.pop("M")
     if "m" in coordinates:
         is_momentum = True
+        if "tau" in generic_coordinates:
+            raise TypeError(
+                "duplicate coordinates (through momentum-aliases): 'm' and 'M' both map to 'tau'"
+            )
         generic_coordinates["tau"] = coordinates.pop("m")
     if "mass" in coordinates and "tau" not in generic_coordinates:
         is_momentum = True

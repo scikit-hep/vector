@@ -451,3 +451,49 @@ def test_array_casting():
 
     with pytest.raises(TypeError):
         vector.obj(x=1, y=False)
+
+
+def test_duplicate_temporal_aliases_raise():
+    # E and e both map to t — should raise TypeError
+    with pytest.raises(TypeError, match="duplicate"):
+        vector.obj(x=1, y=2, z=3, E=10, e=99)
+
+    # M and m both map to tau — should raise TypeError
+    with pytest.raises(TypeError, match="duplicate"):
+        vector.obj(x=1, y=2, z=3, M=5, m=9)
+
+    # energy does not raise when E is already set (it's guarded separately)
+    # but E + e should raise
+    with pytest.raises(TypeError, match="duplicate"):
+        vector.obj(x=1, y=2, z=3, E=1, e=2)
+
+
+def test_array_protocol_numpy2():
+    # numpy.asarray with explicit dtype should not raise TypeError (NumPy 2 protocol)
+    v2 = vector.obj(x=1.0, y=2.0)
+    # dtype=None: asanyarray preserves the subclass
+    arr2 = numpy.asanyarray(v2)
+    assert isinstance(arr2, vector.VectorNumpy2D)
+    # dtype=None via asarray: should not raise (just strips subclass)
+    arr2_base = numpy.asarray(v2, dtype=None)
+    assert arr2_base.shape == ()
+
+    v3 = vector.obj(x=1.0, y=2.0, z=3.0)
+    assert numpy.asanyarray(v3).shape == ()
+
+    v4 = vector.obj(x=1.0, y=2.0, z=3.0, t=4.0)
+    assert numpy.asanyarray(v4).shape == ()
+
+    # momentum variants — asanyarray preserves the subclass
+    mv2 = vector.obj(px=1.0, py=2.0)
+    assert isinstance(numpy.asanyarray(mv2), vector.MomentumNumpy2D)
+
+    mv3 = vector.obj(px=1.0, py=2.0, pz=3.0)
+    assert isinstance(numpy.asanyarray(mv3), vector.MomentumNumpy3D)
+
+    mv4 = vector.obj(px=1.0, py=2.0, pz=3.0, E=4.0)
+    assert isinstance(numpy.asanyarray(mv4), vector.MomentumNumpy4D)
+
+    # numpy.array(v, copy=False) should not raise (NumPy 2 __array__ copy param)
+    arr_nocopy = numpy.array(v2, copy=False)
+    assert arr_nocopy.shape == ()
