@@ -269,7 +269,7 @@ class TemporalAwkward(CoordinatesAwkward, Temporal):
     - :meth:`TemporalAwkward.from_fields`
     - :meth:`TemporalAwkward.from_momentum_fields`
 
-    to construct longitudinal type objects.
+    to construct temporal type objects.
     """
 
     def __repr__(self) -> str:
@@ -607,6 +607,23 @@ def _class_to_name(cls: type[VectorProtocol]) -> str:
 # the vector class ############################################################
 
 
+# Generic and momentum-alias coordinate field names, grouped by geometry tier.
+# Used by ``_wrap_result`` to exclude (already-recomputed) coordinate fields when
+# carrying along "extra" record fields, so that stale, pre-computation coordinates
+# are not leaked into the output. Previously these tuples were hand-copied into
+# each branch and omitted the ``px``/``py`` momentum aliases, leaking stale values.
+_azimuthal_fields = frozenset({"x", "y", "rho", "phi", "px", "py", "pt"})
+_longitudinal_fields = frozenset({"z", "theta", "eta", "pz"})
+_temporal_fields = frozenset({"t", "tau", "E", "e", "energy", "M", "m", "mass"})
+
+# Exclude only azimuthal coordinates (carry longitudinal/temporal as extras).
+_coordinate_fields_azimuthal = _azimuthal_fields
+# Exclude azimuthal + longitudinal coordinates (carry temporal as extras).
+_coordinate_fields_spatial = _azimuthal_fields | _longitudinal_fields
+# Exclude all coordinate names.
+_coordinate_fields_all = _azimuthal_fields | _longitudinal_fields | _temporal_fields
+
+
 def _yes_record(
     x: ak.Array,
 ) -> float | ak.Record | None:
@@ -678,10 +695,18 @@ class VectorAwkward:
 
         if all(not isinstance(x, ak.Array) for x in result):
             maybe_record = _yes_record
+            # Preserve the behavior of the input vector record; rebuilding the
+            # results via ``ak.Array`` would otherwise drop it (the raw compute
+            # outputs are plain scalars with no behavior), which breaks method
+            # chaining when vector is not globally registered.
+            record_behavior = getattr(self, "behavior", None)
             result = [
-                ak.Array(x.layout.array[x.layout.at : x.layout.at + 1])
+                ak.Array(
+                    x.layout.array[x.layout.at : x.layout.at + 1],
+                    behavior=record_behavior,
+                )
                 if isinstance(x, ak.Record)
-                else ak.Array([x])
+                else ak.Array([x], behavior=record_behavior)
                 for x in result
             ]
         else:
@@ -710,13 +735,7 @@ class VectorAwkward:
             fields = ak.fields(self)
             if num_vecargs == 1:
                 for name in fields:
-                    if name not in (
-                        "x",
-                        "y",
-                        "rho",
-                        "pt",
-                        "phi",
-                    ):
+                    if name not in _coordinate_fields_azimuthal:
                         names.append(name)
                         arrays.append(self[name])
 
@@ -761,25 +780,7 @@ class VectorAwkward:
 
             if num_vecargs == 1:
                 for name in ak.fields(self):
-                    if name not in (
-                        "x",
-                        "y",
-                        "rho",
-                        "pt",
-                        "phi",
-                        "z",
-                        "pz",
-                        "theta",
-                        "eta",
-                        "t",
-                        "tau",
-                        "m",
-                        "M",
-                        "mass",
-                        "e",
-                        "E",
-                        "energy",
-                    ):
+                    if name not in _coordinate_fields_all:
                         names.append(name)
                         arrays.append(self[name])
 
@@ -827,17 +828,7 @@ class VectorAwkward:
             fields = ak.fields(self)
             if num_vecargs == 1:
                 for name in fields:
-                    if name not in (
-                        "x",
-                        "y",
-                        "rho",
-                        "pt",
-                        "phi",
-                        "z",
-                        "pz",
-                        "theta",
-                        "eta",
-                    ):
+                    if name not in _coordinate_fields_spatial:
                         names.append(name)
                         arrays.append(self[name])
 
@@ -892,25 +883,7 @@ class VectorAwkward:
 
             if num_vecargs == 1:
                 for name in ak.fields(self):
-                    if name not in (
-                        "x",
-                        "y",
-                        "rho",
-                        "pt",
-                        "phi",
-                        "z",
-                        "pz",
-                        "theta",
-                        "eta",
-                        "t",
-                        "tau",
-                        "m",
-                        "M",
-                        "mass",
-                        "e",
-                        "E",
-                        "energy",
-                    ):
+                    if name not in _coordinate_fields_all:
                         names.append(name)
                         arrays.append(self[name])
 
@@ -966,25 +939,7 @@ class VectorAwkward:
 
             if num_vecargs == 1:
                 for name in ak.fields(self):
-                    if name not in (
-                        "x",
-                        "y",
-                        "rho",
-                        "pt",
-                        "phi",
-                        "z",
-                        "pz",
-                        "theta",
-                        "eta",
-                        "t",
-                        "tau",
-                        "m",
-                        "M",
-                        "mass",
-                        "e",
-                        "E",
-                        "energy",
-                    ):
+                    if name not in _coordinate_fields_all:
                         names.append(name)
                         arrays.append(self[name])
 
@@ -1136,7 +1091,7 @@ class MomentumAwkward2D(PlanarMomentum, VectorAwkward2D):
     Two dimensional momentum vectors for the users are defined using the
     :class:`MomentumArray2D` class.
 
-    See :class:`VectorAwkward2D` for momentum vectors.
+    See :class:`VectorAwkward2D` for vectors.
     """
 
     @property
@@ -1216,7 +1171,7 @@ class MomentumAwkward3D(SpatialMomentum, VectorAwkward3D):
     Three dimensional momentum vectors for the users are defined using the
     :class:`MomentumArray3D` class.
 
-    See :class:`VectorAwkward3D` for momentum vectors.
+    See :class:`VectorAwkward3D` for vectors.
     """
 
     @property
@@ -1262,11 +1217,11 @@ class MomentumAwkward3D(SpatialMomentum, VectorAwkward3D):
 
 class VectorAwkward4D(VectorAwkward, Lorentz, Vector4D):
     """
-    Four dimensional momentum vector class for the Awkward backend.
-    Four dimensional momentum vectors for the users are defined using the
-    :class:`MomentumArray4D` class.
+    Four dimensional vector class for the Awkward backend.
+    Four dimensional awkward vectors for the users are defined using the
+    :class:`VectorArray4D` class.
 
-    See :class:`VectorAwkward4D` for momentum vectors.
+    See :class:`MomentumAwkward4D` for momentum vectors.
     """
 
     @property
@@ -1336,7 +1291,7 @@ class MomentumAwkward4D(LorentzMomentum, VectorAwkward4D):
     Four dimensional momentum vectors for the users are defined using the
     :class:`MomentumArray4D` class.
 
-    See :class:`VectorAwkward4D` for momentum vectors.
+    See :class:`VectorAwkward4D` for vectors.
     """
 
     @property
@@ -1519,7 +1474,7 @@ class MomentumArray2D(MomentumAwkward2D, ak.Array):  # type: ignore[misc]
         atol: ScalarCollection = 1e-08,
         equal_nan: BoolCollection = False,
     ) -> BoolCollection:
-        """Like ``np.ndarray.allclose``, but for MomentumArray4D."""
+        """Like ``np.ndarray.allclose``, but for MomentumArray2D."""
         return ak.all(self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan))
 
 

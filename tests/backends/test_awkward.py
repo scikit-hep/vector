@@ -8,6 +8,9 @@ from __future__ import annotations
 import functools
 import importlib.metadata
 import numbers
+import subprocess
+import sys
+import textwrap
 
 import numpy as np
 import packaging.version
@@ -1170,3 +1173,91 @@ def test_subclass_fields(backend):
     assert vec.like(vector.obj(x=1, y=2)).fields == ["rho", "phi"]
     assert vec.like(vector.obj(x=1, y=2, z=3)).fields == ["rho", "phi", "eta"]
     assert (vec / 2).fields == ["rho", "phi", "eta", "t"]
+
+
+@pytest.mark.parametrize("backend", ["cpu", "typetracer"])
+def test_wrap_result_no_stale_momentum_fields(backend):
+    # Regression test: _wrap_result must not leak stale, pre-computation
+    # momentum-alias coordinate fields (px, py, ...) into the output.
+    vector.register_awkward()
+
+    arr = ak.to_backend(
+        ak.zip(
+            {"px": [1.0], "py": [2.0], "pz": [3.0]},
+            with_name="Momentum3D",
+        ),
+        backend=backend,
+    )
+
+    out = arr.rotateZ(0.1)
+    assert set(out.fields) == {"x", "y", "pz"}
+    assert "px" not in out.fields
+    assert "py" not in out.fields
+
+    # 4D, with the temporal momentum-alias carried as an extra coordinate
+    arr4 = ak.to_backend(
+        ak.zip(
+            {"px": [1.0], "py": [2.0], "pz": [3.0], "E": [10.0]},
+            with_name="Momentum4D",
+        ),
+        backend=backend,
+    )
+    out4 = arr4.rotateZ(0.1)
+    assert set(out4.fields) == {"x", "y", "pz", "E"}
+
+
+@pytest.mark.parametrize("backend", ["cpu", "typetracer"])
+def test_wrap_result_preserves_extra_fields(backend):
+    # Non-coordinate extra record fields must still be carried along.
+    vector.register_awkward()
+
+    arr = ak.to_backend(
+        ak.zip(
+            {"x": [1.0], "y": [2.0], "z": [3.0], "charge": [1]},
+            with_name="Vector3D",
+        ),
+        backend=backend,
+    )
+    out = arr.rotateZ(0.1)
+    assert set(out.fields) == {"x", "y", "z", "charge"}
+
+
+def test_array_from_dict_of_columns():
+    # Regression test: vector.Array should accept a dict of columns, as its
+    # docstring promises ("All allowed signatures for ak.Array").
+    out = vector.Array({"x": [1.0, 2.0], "y": [3.0, 4.0]})
+    assert isinstance(out, vector.backends.awkward.VectorArray2D)
+    assert out.fields == ["x", "y"]
+    assert ak.all(out.x == ak.Array([1.0, 2.0]))
+
+    momentum = vector.Array({"px": [1.0, 2.0], "py": [3.0, 4.0]})
+    assert isinstance(momentum, vector.backends.awkward.MomentumArray2D)
+
+
+def test_record_method_chaining_without_registration():
+    # Regression test (must run without global registration): chaining two
+    # methods on an ak.Record requires the record's behavior to survive the
+    # rebuild inside _wrap_result. Run in a subprocess so the global
+    # registration state cannot leak in from other tests.
+    script = textwrap.dedent(
+        """
+        import vector
+
+        assert not vector._awkward_registered
+
+        record = vector.Array([{"x": 1.0, "y": 2.0, "z": 3.0}])[0]
+        rotated = record.rotateZ(0.1)
+        # behavior must be preserved so methods are available again
+        assert rotated.behavior is not None
+        chained = rotated.rotateZ(0.1)
+        assert set(chained.fields) == {"x", "y", "z"}
+        assert abs(float(chained.z) - 3.0) < 1e-12
+        """
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", script],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
