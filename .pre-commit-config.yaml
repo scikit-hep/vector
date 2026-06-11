@@ -15,7 +15,6 @@ repos:
       - id: end-of-file-fixer
         exclude: ^docs
       - id: mixed-line-ending
-      - id: requirements-txt-fixer
       - id: trailing-whitespace
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
@@ -54,7 +53,7 @@ repos:
     hooks:
       - id: blacken-docs
         args: ["-E"]
-        additional_dependencies: [black~=24.0]
+        additional_dependencies: [black~=25.0]
 
   - repo: https://github.com/pre-commit/pygrep-hooks
     rev: v1.10.0

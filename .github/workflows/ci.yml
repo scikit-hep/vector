@@ -99,9 +99,11 @@ jobs:
 
   pass:
     needs: [pre-commit, check-lite, check-full]
+    if: always()
     runs-on: ubuntu-latest
     steps:
-      - run: echo "All jobs passed"
+      - name: Decide whether all required jobs succeeded
+        run: ${{ !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
 
   # root:
   #   runs-on: ubuntu-latest
