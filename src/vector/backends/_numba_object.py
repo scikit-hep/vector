@@ -394,7 +394,7 @@ def VectorObject4D_constructor_typer(context):
     def typer(azimuthaltype, longitudinaltype, temporaltype):
         if (
             is_azimuthaltype(azimuthaltype)
-            and is_temporaltype(temporaltype)
+            and is_longitudinaltype(longitudinaltype)
             and is_temporaltype(temporaltype)
         ):
             return VectorObject4DType(azimuthaltype, longitudinaltype, temporaltype)
@@ -412,7 +412,7 @@ def MomentumObject4D_constructor_typer(context):
     def typer(azimuthaltype, longitudinaltype, temporaltype):
         if (
             is_azimuthaltype(azimuthaltype)
-            and is_temporaltype(temporaltype)
+            and is_longitudinaltype(longitudinaltype)
             and is_temporaltype(temporaltype)
         ):
             return MomentumObject4DType(azimuthaltype, longitudinaltype, temporaltype)
@@ -803,7 +803,7 @@ def vector_obj(
                     temporal(t, E, e, energy, tau, M, m, mass),
                 )
 
-    elif azimuthal is not None and longitudinal is not None:
+    elif azimuthal is not None and longitudinal is not None and temporal is None:
         if is_momentum:
 
             def vector_obj_impl(
@@ -862,7 +862,7 @@ def vector_obj(
                     longitudinal(z, pz, theta, eta),
                 )
 
-    elif azimuthal is not None:
+    elif azimuthal is not None and longitudinal is None and temporal is None:
         if is_momentum:
 
             def vector_obj_impl(
@@ -1577,18 +1577,42 @@ def add_tolerance_method(vectortype, methodname):
         if isinstance(v1, VectorObject2DType) and not isinstance(
             v2, VectorObject2DType
         ):
+            # methodname is selected here, outside the returned closure, because
+            # nopython code cannot getattr an arbitrary method name.
+            if methodname == "is_parallel":
 
-            def overloader_impl(v1, v2, tolerance=1e-5):
-                return v1.to_Vector3D().is_parallel(v2, tolerance=tolerance)
+                def overloader_impl(v1, v2, tolerance=1e-5):
+                    return v1.to_Vector3D().is_parallel(v2, tolerance=tolerance)
+
+            elif methodname == "is_antiparallel":
+
+                def overloader_impl(v1, v2, tolerance=1e-5):
+                    return v1.to_Vector3D().is_antiparallel(v2, tolerance=tolerance)
+
+            else:  # is_perpendicular
+
+                def overloader_impl(v1, v2, tolerance=1e-5):
+                    return v1.to_Vector3D().is_perpendicular(v2, tolerance=tolerance)
 
             return overloader_impl
 
         if not isinstance(v1, VectorObject2DType) and isinstance(
             v2, VectorObject2DType
         ):
+            if methodname == "is_parallel":
 
-            def overloader_impl(v1, v2, tolerance=1e-5):
-                return v1.is_parallel(v2.to_Vector3D(), tolerance=tolerance)
+                def overloader_impl(v1, v2, tolerance=1e-5):
+                    return v1.is_parallel(v2.to_Vector3D(), tolerance=tolerance)
+
+            elif methodname == "is_antiparallel":
+
+                def overloader_impl(v1, v2, tolerance=1e-5):
+                    return v1.is_antiparallel(v2.to_Vector3D(), tolerance=tolerance)
+
+            else:  # is_perpendicular
+
+                def overloader_impl(v1, v2, tolerance=1e-5):
+                    return v1.is_perpendicular(v2.to_Vector3D(), tolerance=tolerance)
 
             return overloader_impl
 
@@ -2058,7 +2082,9 @@ def VectorObject34DType_scale2D(v, factor):
         return VectorObject34DType_scale2D_impl
 
     else:
-        numba.TypingError("'factor' must be an integer or a floating-point number")
+        raise numba.TypingError(
+            "'factor' must be an integer or a floating-point number"
+        )
 
 
 @numba.extending.overload_method(VectorObject4DType, "scale3D")
@@ -2082,7 +2108,9 @@ def VectorObject4DType_scale3D(v, factor):
         return VectorObject4DType_scale3D_impl
 
     else:
-        numba.TypingError("'factor' must be an integer or a floating-point number")
+        raise numba.TypingError(
+            "'factor' must be an integer or a floating-point number"
+        )
 
 
 @numba.extending.overload_method(VectorObject3DType, "cross")
@@ -2962,100 +2990,45 @@ def MomentumObject34DType_p2(v):
     return MomentumObject34DType_p2_impl
 
 
-@numba.extending.overload_attribute(MomentumObject4DType, "E")
-def MomentumObject4DType_E(v):
-    def MomentumObject4DType_E_impl(v):
-        return v.t
+# Momentum aliases on the 4D temporal coordinate. Each alias resolves to the
+# same base property exposed by the pure-Python Momentum protocol in
+# _methods.py (see _repr_momentum_to_generic and the Momentum protocol
+# properties), including the lowercase synonyms (e, e2, m, m2, et, et2, mt, mt2).
+# The base property name is baked into the returned closure as a literal so
+# nopython code reads a constant attribute, mirroring the per-property pattern.
+def _add_momentum_temporal_alias(alias, base):
+    def overloader(v):
+        def overloader_impl(v):
+            return getattr(v, base)
 
-    return MomentumObject4DType_E_impl
+        return overloader_impl
 
-
-@numba.extending.overload_attribute(MomentumObject4DType, "energy")
-def MomentumObject4DType_energy(v):
-    def MomentumObject4DType_energy_impl(v):
-        return v.t
-
-    return MomentumObject4DType_energy_impl
-
-
-@numba.extending.overload_attribute(MomentumObject4DType, "E2")
-def MomentumObject4DType_E2(v):
-    def MomentumObject4DType_E2_impl(v):
-        return v.t2
-
-    return MomentumObject4DType_E2_impl
+    numba.extending.overload_attribute(MomentumObject4DType, alias)(overloader)
 
 
-@numba.extending.overload_attribute(MomentumObject4DType, "energy2")
-def MomentumObject4DType_energy2(v):
-    def MomentumObject4DType_energy2_impl(v):
-        return v.t2
-
-    return MomentumObject4DType_energy2_impl
-
-
-@numba.extending.overload_attribute(MomentumObject4DType, "M")
-def MomentumObject4DType_M(v):
-    def MomentumObject4DType_M_impl(v):
-        return v.tau
-
-    return MomentumObject4DType_M_impl
-
-
-@numba.extending.overload_attribute(MomentumObject4DType, "mass")
-def MomentumObject4DType_mass(v):
-    def MomentumObject4DType_mass_impl(v):
-        return v.tau
-
-    return MomentumObject4DType_mass_impl
-
-
-@numba.extending.overload_attribute(MomentumObject4DType, "M2")
-def MomentumObject4DType_M2(v):
-    def MomentumObject4DType_M2_impl(v):
-        return v.tau2
-
-    return MomentumObject4DType_M2_impl
-
-
-@numba.extending.overload_attribute(MomentumObject4DType, "mass2")
-def MomentumObject4DType_mass2(v):
-    def MomentumObject4DType_mass2_impl(v):
-        return v.tau2
-
-    return MomentumObject4DType_mass2_impl
-
-
-@numba.extending.overload_attribute(MomentumObject4DType, "transverse_energy")
-def MomentumObject4DType_transverse_energy(v):
-    def MomentumObject4DType_transverse_energy_impl(v):
-        return v.Et
-
-    return MomentumObject4DType_transverse_energy_impl
-
-
-@numba.extending.overload_attribute(MomentumObject4DType, "transverse_energy2")
-def MomentumObject4DType_transverse_energy2(v):
-    def MomentumObject4DType_transverse_energy2_impl(v):
-        return v.Et2
-
-    return MomentumObject4DType_transverse_energy2_impl
-
-
-@numba.extending.overload_attribute(MomentumObject4DType, "transverse_mass")
-def MomentumObject4DType_transverse_mass(v):
-    def MomentumObject4DType_transverse_mass_impl(v):
-        return v.Mt
-
-    return MomentumObject4DType_transverse_mass_impl
-
-
-@numba.extending.overload_attribute(MomentumObject4DType, "transverse_mass2")
-def MomentumObject4DType_transverse_mass2(v):
-    def MomentumObject4DType_transverse_mass2_impl(v):
-        return v.Mt2
-
-    return MomentumObject4DType_transverse_mass2_impl
+for _alias, _base in {
+    "E": "t",
+    "e": "t",
+    "energy": "t",
+    "E2": "t2",
+    "e2": "t2",
+    "energy2": "t2",
+    "M": "tau",
+    "m": "tau",
+    "mass": "tau",
+    "M2": "tau2",
+    "m2": "tau2",
+    "mass2": "tau2",
+    "transverse_energy": "Et",
+    "et": "Et",
+    "transverse_energy2": "Et2",
+    "et2": "Et2",
+    "transverse_mass": "Mt",
+    "mt": "Mt",
+    "transverse_mass2": "Mt2",
+    "mt2": "Mt2",
+}.items():
+    _add_momentum_temporal_alias(_alias, _base)
 
 
 # NumPy functions in Numba ####################################################
@@ -3502,20 +3475,16 @@ def operator_pow(a, b):
         return operator_pow_impl
 
 
-if hasattr(operator, "matmul"):
+@numba.extending.overload(operator.matmul)
+def operator_matmul(v1, v2):
+    if isinstance(
+        v1, (VectorObject2DType, VectorObject3DType, VectorObject4DType)
+    ) and isinstance(v2, (VectorObject2DType, VectorObject3DType, VectorObject4DType)):
 
-    @numba.extending.overload(operator.matmul)
-    def operator_matmul(v1, v2):
-        if isinstance(
-            v1, (VectorObject2DType, VectorObject3DType, VectorObject4DType)
-        ) and isinstance(
-            v2, (VectorObject2DType, VectorObject3DType, VectorObject4DType)
-        ):
+        def operator_matmul_impl(v1, v2):
+            return v1.dot(v2)
 
-            def operator_matmul_impl(v1, v2):
-                return v1.dot(v2)
-
-            return operator_matmul_impl
+        return operator_matmul_impl
 
 
 # helper functions for Awkward Numba backend ##################################

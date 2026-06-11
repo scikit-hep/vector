@@ -1707,3 +1707,96 @@ def test_method_boostCM_of():
     assert out.y == pytest.approx(0)
     assert out.z == pytest.approx(0)
     assert out.t == pytest.approx(vec.tau)
+
+
+def test_method_isantiparallel_mixed_dimension():
+    # Regression: mixed-dimension is_antiparallel/is_perpendicular used to fall
+    # back to is_parallel.
+    @numba.njit
+    def get_isantiparallel(v1, v2):
+        return v1.is_antiparallel(v2)
+
+    @numba.njit
+    def get_isperpendicular(v1, v2):
+        return v1.is_perpendicular(v2)
+
+    # 2D vs 3D, opposite-pointing -> antiparallel (and NOT parallel)
+    assert get_isantiparallel(
+        vector.obj(x=1.1, y=2.2), vector.obj(x=-2.2, y=-4.4, z=0.0)
+    )
+    assert get_isantiparallel(
+        vector.obj(x=1.1, y=2.2, z=0.0), vector.obj(x=-2.2, y=-4.4)
+    )
+
+    # 2D vs 3D, perpendicular
+    assert get_isperpendicular(
+        vector.obj(x=1.0, y=0.0), vector.obj(x=0.0, y=1.0, z=0.0)
+    )
+    assert get_isperpendicular(
+        vector.obj(x=1.0, y=0.0, z=0.0), vector.obj(x=0.0, y=1.0)
+    )
+
+    # the mixed-dimension fallback must not silently report parallel
+    assert not get_isantiparallel(
+        vector.obj(x=1.1, y=2.2), vector.obj(x=2.2, y=4.4, z=0.0)
+    )
+    assert not get_isperpendicular(
+        vector.obj(x=1.1, y=2.2), vector.obj(x=2.2, y=4.4, z=0.0)
+    )
+
+
+def test_obj_unrecognized_combination():
+    # Regression: vector.obj(x=, y=, t=) used to silently drop t and build a 2D
+    # vector; pure Python raises, so the JIT path must raise too.
+    @numba.njit
+    def make_xyt():
+        return vector.obj(x=1.0, y=2.0, t=3.0)
+
+    with pytest.raises(numba.TypingError):
+        make_xyt()
+
+
+def test_momentum_lowercase_aliases():
+    # Regression: lowercase momentum aliases (e, e2, m, m2, et, et2, mt, mt2)
+    # were missing from the Numba backend.
+    @numba.njit
+    def get_e(v):
+        return v.e
+
+    @numba.njit
+    def get_e2(v):
+        return v.e2
+
+    @numba.njit
+    def get_m(v):
+        return v.m
+
+    @numba.njit
+    def get_m2(v):
+        return v.m2
+
+    @numba.njit
+    def get_et(v):
+        return v.et
+
+    @numba.njit
+    def get_et2(v):
+        return v.et2
+
+    @numba.njit
+    def get_mt(v):
+        return v.mt
+
+    @numba.njit
+    def get_mt2(v):
+        return v.mt2
+
+    p = vector.obj(px=1.1, py=2.2, pz=3.3, E=10.0)
+    assert get_e(p) == pytest.approx(p.e)
+    assert get_e2(p) == pytest.approx(p.e2)
+    assert get_m(p) == pytest.approx(p.m)
+    assert get_m2(p) == pytest.approx(p.m2)
+    assert get_et(p) == pytest.approx(p.et)
+    assert get_et2(p) == pytest.approx(p.et2)
+    assert get_mt(p) == pytest.approx(p.mt)
+    assert get_mt2(p) == pytest.approx(p.mt2)
