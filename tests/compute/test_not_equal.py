@@ -20,6 +20,12 @@ def test_planar_object():
     )
     assert not v1.not_equal(v2)
 
+    # differ in a single component (regression: not_equal must OR, not AND)
+    v3 = vector.backends.object.VectorObject2D(
+        azimuthal=vector.backends.object.AzimuthalObjectXY(0.1, 0.3)
+    )
+    assert v1.not_equal(v3)
+
     for t1 in "xy", "rhophi":
         for t2 in "xy", "rhophi":
             transformed1, transformed2 = (
@@ -40,6 +46,13 @@ def test_planar_numpy():
         dtype=[("x", numpy.float64), ("y", numpy.float64)],
     )
     assert not v1.not_equal(v2).all()
+
+    # differ in a single component (regression: not_equal must OR, not AND)
+    v3 = vector.backends.numpy.VectorNumpy2D(
+        [(0.1, 0.3)],
+        dtype=[("x", numpy.float64), ("y", numpy.float64)],
+    )
+    assert v1.not_equal(v3).all()
 
     for t1 in "xy", "rhophi":
         for t2 in "xy", "rhophi":
@@ -62,6 +75,13 @@ def test_spatial_object():
     )
     assert not v1.not_equal(v2)
 
+    # differ in a single component (regression: not_equal must OR, not AND)
+    v3 = vector.backends.object.VectorObject3D(
+        azimuthal=vector.backends.object.AzimuthalObjectXY(0.1, 0.2),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(0.4),
+    )
+    assert v1.not_equal(v3)
+
     for t1 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
         for t2 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
             transformed1, transformed2 = (
@@ -82,6 +102,13 @@ def test_spatial_numpy():
         dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
     )
     assert not v1.not_equal(v2).all()
+
+    # differ in a single component (regression: not_equal must OR, not AND)
+    v3 = vector.backends.numpy.VectorNumpy3D(
+        [(0.1, 0.2, 0.4)],
+        dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
+    )
+    assert v1.not_equal(v3).all()
 
     for t1 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
         for t2 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
@@ -105,6 +132,22 @@ def test_lorentz_object():
         temporal=vector.backends.object.TemporalObjectT(0.4),
     )
     assert not v1.not_equal(v2)
+
+    # differ only in the temporal component (regression: not_equal must OR)
+    v_t = vector.backends.object.VectorObject4D(
+        azimuthal=vector.backends.object.AzimuthalObjectXY(0.1, 0.2),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(0.3),
+        temporal=vector.backends.object.TemporalObjectT(0.5),
+    )
+    assert v1.not_equal(v_t)
+
+    # differ only in a spatial component (regression: not_equal must OR)
+    v_x = vector.backends.object.VectorObject4D(
+        azimuthal=vector.backends.object.AzimuthalObjectXY(0.9, 0.2),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(0.3),
+        temporal=vector.backends.object.TemporalObjectT(0.4),
+    )
+    assert v1.not_equal(v_x)
 
     for t1 in (
         "xyzt",
@@ -159,6 +202,30 @@ def test_lorentz_numpy():
         ],
     )
     assert not v1.not_equal(v2).all()
+
+    # differ only in the temporal component (regression: not_equal must OR)
+    v_t = vector.backends.numpy.VectorNumpy4D(
+        [(0.1, 0.2, 0.3, 0.5)],
+        dtype=[
+            ("x", numpy.float64),
+            ("y", numpy.float64),
+            ("z", numpy.float64),
+            ("t", numpy.float64),
+        ],
+    )
+    assert v1.not_equal(v_t).all()
+
+    # differ only in a spatial component (regression: not_equal must OR)
+    v_x = vector.backends.numpy.VectorNumpy4D(
+        [(0.9, 0.2, 0.3, 0.4)],
+        dtype=[
+            ("x", numpy.float64),
+            ("y", numpy.float64),
+            ("z", numpy.float64),
+            ("t", numpy.float64),
+        ],
+    )
+    assert v1.not_equal(v_x).all()
 
     for t1 in (
         "xyzt",

@@ -30,6 +30,10 @@ def test_planar_sympy():
     assert not v1.is_perpendicular(v3).subs(values)
     assert not v2.is_perpendicular(v3).subs(values)
 
+    # antiparallel vectors are not perpendicular (regression: needs abs(dot))
+    v4 = vector.VectorSympy2D(azimuthal=vector.backends.sympy.AzimuthalSympyXY(-1, 0))
+    assert not v2.is_perpendicular(v4).subs(values)
+
     for t1 in "xy", "rhophi":
         for t2 in "xy", "rhophi":
             tr1, tr2 = (
@@ -58,6 +62,13 @@ def test_spatial_sympy():
     assert v1.is_perpendicular(v2).subs(values)
     assert not v1.is_perpendicular(v3).subs(values)
     assert not v2.is_perpendicular(v3).subs(values)
+
+    # antiparallel vectors are not perpendicular (regression: needs abs(dot))
+    v4 = vector.VectorSympy3D(
+        azimuthal=vector.backends.sympy.AzimuthalSympyXY(-1, 0),
+        longitudinal=vector.backends.sympy.LongitudinalSympyZ(0),
+    )
+    assert not v2.is_perpendicular(v4).subs(values)
 
     for t1 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
         for t2 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":

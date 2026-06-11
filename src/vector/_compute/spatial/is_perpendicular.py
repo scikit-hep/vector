@@ -63,8 +63,8 @@ def make_function(azimuthal1, longitudinal1, azimuthal2, longitudinal2):
     mag2_function, _ = mag.dispatch_map[azimuthal2, longitudinal2]
 
     def f(lib, tolerance, coord11, coord12, coord13, coord21, coord22, coord23):
-        return dot_function(
-            lib, coord11, coord12, coord13, coord21, coord22, coord23
+        return lib.absolute(
+            dot_function(lib, coord11, coord12, coord13, coord21, coord22, coord23)
         ) < lib.absolute(tolerance) * mag1_function(
             lib, coord11, coord12, coord13
         ) * mag2_function(lib, coord21, coord22, coord23)
