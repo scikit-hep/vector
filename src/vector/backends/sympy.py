@@ -36,6 +36,7 @@ from vector._methods import (
     _repr_generic_to_momentum,
     _repr_momentum_to_generic,
     _ttype,
+    _validate_coordinates,
 )
 
 
@@ -733,6 +734,8 @@ class VectorSympy2D(VectorSympy, Planar, Vector2D):
     azimuthal: AzimuthalSympy
 
     def __init__(self, azimuthal: AzimuthalSympy | None = None, **kwargs: sympy.Symbol):
+        _validate_coordinates(tuple(kwargs))
+
         for k, v in kwargs.copy().items():
             kwargs.pop(k)
             kwargs[_repr_momentum_to_generic.get(k, k)] = v
@@ -934,6 +937,8 @@ class VectorSympy3D(VectorSympy, Spatial, Vector3D):
         longitudinal: LongitudinalSympy | None = None,
         **kwargs: sympy.Symbol,
     ):
+        _validate_coordinates(tuple(kwargs))
+
         for k, v in kwargs.copy().items():
             kwargs.pop(k)
             kwargs[_repr_momentum_to_generic.get(k, k)] = v
@@ -1208,6 +1213,8 @@ class VectorSympy4D(VectorSympy, Lorentz, Vector4D):
         temporal: TemporalSympy | None = None,
         **kwargs: sympy.Symbol,
     ):
+        _validate_coordinates(tuple(kwargs))
+
         for k, v in kwargs.copy().items():
             kwargs.pop(k)
             kwargs[_repr_momentum_to_generic.get(k, k)] = v
