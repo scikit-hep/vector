@@ -6,9 +6,6 @@
 
 from __future__ import annotations
 
-import os
-import sys
-import sysconfig
 from pathlib import Path
 
 import nox
@@ -40,18 +37,24 @@ def pylint(session: nox.Session) -> None:
 @nox.session(reuse_venv=True, python=ALL_PYTHON)
 def lite(session: nox.Session) -> None:
     """Run lightweight tests."""
+    is_free_threaded = isinstance(session.python, str) and session.python.endswith("t")
+    run_env = {"PYTHON_GIL": "0"} if is_free_threaded else {}
     test_deps = nox.project.dependency_groups(PYPROJECT, "test")
     session.install("-e.", *test_deps)
-    session.run("pytest", "--ignore", "tests/test_notebooks.py", *session.posargs)
+    session.run(
+        "pytest",
+        "--ignore",
+        "tests/test_notebooks.py",
+        *session.posargs,
+        env=run_env,
+    )
 
 
 @nox.session(reuse_venv=True, python=ALL_PYTHON)
 def tests(session: nox.Session) -> None:
     """Run the unit and regular tests."""
-    if sys.version_info[:2] >= (3, 14) and bool(
-        sysconfig.get_config_var("Py_GIL_DISABLED")
-    ):
-        os.environ["PYTHON_GIL"] = "0"
+    is_free_threaded = isinstance(session.python, str) and session.python.endswith("t")
+    run_env = {"PYTHON_GIL": "0"} if is_free_threaded else {}
     test_deps = nox.project.dependency_groups(PYPROJECT, "test-all")
     session.install("-e.", *test_deps)
     session.run(
@@ -59,6 +62,7 @@ def tests(session: nox.Session) -> None:
         "--ignore",
         "tests/test_notebooks.py",
         *session.posargs,
+        env=run_env,
     )
 
 
@@ -90,7 +94,7 @@ def notebooks(session: nox.Session) -> None:
 def docs(session: nox.Session) -> None:
     """Build the docs. Pass "serve" to serve."""
     doc_deps = nox.project.dependency_groups(PYPROJECT, "docs", "test")
-    session.install("-e.", doc_deps)
+    session.install("-e.", *doc_deps)
     session.chdir("docs")
     session.run("sphinx-build", "-M", "html", ".", "_build")
 
