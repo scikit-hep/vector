@@ -5,6 +5,7 @@
 
 from __future__ import annotations
 
+import builtins
 import typing
 
 import numpy
@@ -295,10 +296,12 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
     import vector
     import vector.backends.awkward
 
-    # don't pass dask_awkward arrays in ak.Array
+    # convert plain Python/NumPy containers (lists, dicts of columns, ndarrays)
+    # to an ak.Array, but pass through arrays that are already ak.Array or are
+    # foreign array types (e.g. dask_awkward arrays), which must not be coerced.
     akarray = (
         awkward.Array(*args, **kwargs)
-        if isinstance(args[0], (list, numpy.ndarray))
+        if isinstance(args[0], (list, dict, numpy.ndarray))
         else args[0]
     )
     array_type = akarray.type
@@ -309,25 +312,11 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
 
     is_momentum, dimension, names, arrays = _check_names(akarray, fields.copy())
 
-    # don't execute for dask_awkward arrays
-    if isinstance(args[0], (awkward.Array, list, numpy.ndarray)):
-        needs_behavior = not vector._awkward_registered
-        for x in arrays:
-            if needs_behavior:
-                if x.behavior is None:
-                    x.behavior = vector.backends.awkward.behavior
-                else:
-                    x.behavior = dict(x.behavior)
-                    x.behavior.update(vector.backends.awkward.behavior)
-            else:
-                x.behavior = None
-            needs_behavior = False
-
     assert 2 <= dimension <= 4, f"Dimension must be between 2-4, not {dimension}"
 
     return awkward.with_name(
         awkward.zip(
-            dict(__builtins__["zip"](names, arrays)),  # type: ignore[index]
+            dict(builtins.zip(names, arrays, strict=True)),
             depth_limit=akarray.layout.purelist_depth,
         ),
         _recname(is_momentum, dimension),
@@ -404,7 +393,7 @@ def zip(arrays: dict[str, typing.Any], depth_limit: int | None = None) -> typing
         behavior = dict(vector.backends.awkward.behavior)
 
     return awkward.zip(
-        dict(__builtins__["zip"](names, columns)),  # type: ignore[index]
+        dict(builtins.zip(names, columns, strict=True)),
         depth_limit=depth_limit,
         with_name=_recname(is_momentum, dimension),
         behavior=behavior,
