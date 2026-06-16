@@ -497,3 +497,12 @@ def test_array_protocol_numpy2():
     # numpy.array(v, copy=False) should not raise (NumPy 2 __array__ copy param)
     arr_nocopy = numpy.array(v2, copy=False)
     assert arr_nocopy.shape == ()
+
+    # explicit dtype must flow through __array__ for every class (the
+    # `dtype is not None` branch); a structured vector casts to a matching
+    # structured dtype
+    for v in (v2, v3, v4, mv2, mv3, mv4):
+        names = numpy.asanyarray(v).dtype.names
+        target = numpy.dtype([(n, numpy.float32) for n in names])
+        cast = numpy.asarray(v, dtype=target)
+        assert cast.dtype == target
