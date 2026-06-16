@@ -21,6 +21,10 @@ def test_planar_sympy():
     v2 = vector.VectorSympy2D(azimuthal=vector.backends.sympy.AzimuthalSympyXY(x, y))
     assert not v1.not_equal(v2)
 
+    # differ in a single component (regression: not_equal must OR, not AND)
+    v3 = vector.VectorSympy2D(azimuthal=vector.backends.sympy.AzimuthalSympyXY(x, z))
+    assert v1.not_equal(v3)
+
     for t1 in "xy", "rhophi":
         for t2 in "xy", "rhophi":
             transformed1, transformed2 = (

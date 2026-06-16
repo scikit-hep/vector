@@ -32,7 +32,7 @@ from vector._methods import (
 
 # same types
 def xy_xy(lib, x1, y1, x2, y2):
-    return (x1 != x2) & (y1 != y2)
+    return (x1 != x2) | (y1 != y2)
 
 
 def xy_rhophi(lib, x1, y1, rho2, phi2):
@@ -45,7 +45,7 @@ def rhophi_xy(lib, rho1, phi1, x2, y2):
 
 # same types
 def rhophi_rhophi(lib, rho1, phi1, rho2, phi2):
-    return (rho1 != rho2) & (phi1 != phi2)
+    return (rho1 != rho2) | (phi1 != phi2)
 
 
 dispatch_map = {

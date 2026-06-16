@@ -54,9 +54,11 @@ def make_function(azimuthal1, azimuthal2):
     rho2_function, _ = rho.dispatch_map[azimuthal2,]
 
     def f(lib, tolerance, coord11, coord12, coord21, coord22):
-        return dot_function(lib, coord11, coord12, coord21, coord22) < lib.absolute(
-            tolerance
-        ) * rho1_function(lib, coord11, coord12) * rho2_function(lib, coord21, coord22)
+        return lib.absolute(
+            dot_function(lib, coord11, coord12, coord21, coord22)
+        ) < lib.absolute(tolerance) * rho1_function(
+            lib, coord11, coord12
+        ) * rho2_function(lib, coord21, coord22)
 
     dispatch_map[azimuthal1, azimuthal2] = (f, bool)
 

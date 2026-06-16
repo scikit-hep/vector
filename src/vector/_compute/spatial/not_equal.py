@@ -38,7 +38,7 @@ from vector._methods import (
 
 # same types
 def xy_z_xy_z(lib, x1, y1, z1, x2, y2, z2):
-    return (x1 != x2) & (y1 != y2) & (z1 != z2)
+    return (x1 != x2) | (y1 != y2) | (z1 != z2)
 
 
 def xy_z_xy_theta(lib, x1, y1, z1, x2, y2, theta2):
@@ -85,7 +85,7 @@ def xy_theta_xy_z(lib, x1, y1, theta1, x2, y2, z2):
 
 # same types
 def xy_theta_xy_theta(lib, x1, y1, theta1, x2, y2, theta2):
-    return (x1 != x2) & (y1 != y2) & (theta1 != theta2)
+    return (x1 != x2) | (y1 != y2) | (theta1 != theta2)
 
 
 def xy_theta_xy_eta(lib, x1, y1, theta1, x2, y2, eta2):
@@ -138,7 +138,7 @@ def xy_eta_xy_theta(lib, x1, y1, eta1, x2, y2, theta2):
 
 # same types
 def xy_eta_xy_eta(lib, x1, y1, eta1, x2, y2, eta2):
-    return (x1 != x2) & (y1 != y2) & (eta1 != eta2)
+    return (x1 != x2) | (y1 != y2) | (eta1 != eta2)
 
 
 def xy_eta_rhophi_z(lib, x1, y1, eta1, rho2, phi2, z2):
@@ -203,7 +203,7 @@ def rhophi_z_xy_eta(lib, rho1, phi1, z1, x2, y2, eta2):
 
 # same types
 def rhophi_z_rhophi_z(lib, rho1, phi1, z1, rho2, phi2, z2):
-    return (rho1 != rho2) & (phi1 != phi2) & (z1 != z2)
+    return (rho1 != rho2) | (phi1 != phi2) | (z1 != z2)
 
 
 def rhophi_z_rhophi_theta(lib, rho1, phi1, z1, rho2, phi2, theta2):
@@ -262,7 +262,7 @@ def rhophi_theta_rhophi_z(lib, rho1, phi1, theta1, rho2, phi2, z2):
 
 # same types
 def rhophi_theta_rhophi_theta(lib, rho1, phi1, theta1, rho2, phi2, theta2):
-    return (rho1 != rho2) & (phi1 != phi2) & (theta1 != theta2)
+    return (rho1 != rho2) | (phi1 != phi2) | (theta1 != theta2)
 
 
 def rhophi_theta_rhophi_eta(lib, rho1, phi1, theta1, rho2, phi2, eta2):
@@ -315,7 +315,7 @@ def rhophi_eta_rhophi_theta(lib, rho1, phi1, eta1, rho2, phi2, theta2):
 
 # same types
 def rhophi_eta_rhophi_eta(lib, rho1, phi1, eta1, rho2, phi2, eta2):
-    return (rho1 != rho2) & (phi1 != phi2) & (eta1 != eta2)
+    return (rho1 != rho2) | (phi1 != phi2) | (eta1 != eta2)
 
 
 dispatch_map = {

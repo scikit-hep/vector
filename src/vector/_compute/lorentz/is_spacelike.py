@@ -63,7 +63,7 @@ def make_function(azimuthal, longitudinal, temporal):
     def f(lib, tolerance, coord1, coord2, coord3, coord4):
         return dot_function(
             lib, coord1, coord2, coord3, coord4, coord1, coord2, coord3, coord4
-        ) < lib.absolute(tolerance)
+        ) < -lib.absolute(tolerance)
 
     dispatch_map[azimuthal, longitudinal, temporal] = (f, bool)
 

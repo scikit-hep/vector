@@ -17,7 +17,7 @@ import typing
 import numpy
 
 from vector._compute.lorentz import t
-from vector._compute.spatial import equal
+from vector._compute.spatial import not_equal
 from vector._methods import (
     Azimuthal,
     AzimuthalRhoPhi,
@@ -71,7 +71,7 @@ dispatch_map: dict[
 def make_conversion(
     azimuthal1, longitudinal1, temporal1, azimuthal2, longitudinal2, temporal2
 ):
-    spatial_equal, _ = equal.dispatch_map[
+    spatial_not_equal, _ = not_equal.dispatch_map[
         azimuthal1, longitudinal1, azimuthal2, longitudinal2
     ]
 
@@ -146,7 +146,7 @@ def make_conversion(
         def f(
             lib, coord11, coord12, coord13, coord14, coord21, coord22, coord23, coord24
         ):
-            return (coord14 != coord24) & spatial_equal(
+            return (coord14 != coord24) | spatial_not_equal(
                 lib, coord11, coord12, coord13, coord21, coord22, coord23
             )
 
@@ -158,7 +158,9 @@ def make_conversion(
             return (
                 to_t1(lib, coord11, coord12, coord13, coord14)
                 != to_t2(lib, coord21, coord22, coord23, coord24)
-            ) & spatial_equal(lib, coord11, coord12, coord13, coord21, coord22, coord23)
+            ) | spatial_not_equal(
+                lib, coord11, coord12, coord13, coord21, coord22, coord23
+            )
 
     dispatch_map[
         azimuthal1, longitudinal1, temporal1, azimuthal2, longitudinal2, temporal2

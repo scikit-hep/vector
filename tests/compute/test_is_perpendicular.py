@@ -28,6 +28,12 @@ def test_planar_object():
     assert not v1.is_perpendicular(v3)
     assert not v2.is_perpendicular(v3)
 
+    # antiparallel vectors are not perpendicular (regression: needs abs(dot))
+    v4 = vector.backends.object.VectorObject2D(
+        azimuthal=vector.backends.object.AzimuthalObjectXY(-1, 0)
+    )
+    assert not v2.is_perpendicular(v4)
+
     for t1 in "xy", "rhophi":
         for t2 in "xy", "rhophi":
             tr1, tr2 = (
@@ -56,6 +62,13 @@ def test_planar_numpy():
     assert v1.is_perpendicular(v2)
     assert not v1.is_perpendicular(v3)
     assert not v2.is_perpendicular(v3)
+
+    # antiparallel vectors are not perpendicular (regression: needs abs(dot))
+    v4 = vector.backends.numpy.VectorNumpy2D(
+        [(-1, 0)],
+        dtype=[("x", numpy.float64), ("y", numpy.float64)],
+    )
+    assert not v2.is_perpendicular(v4)
 
     for t1 in "xy", "rhophi":
         for t2 in "xy", "rhophi":
@@ -86,6 +99,13 @@ def test_spatial_object():
     assert not v1.is_perpendicular(v3)
     assert not v2.is_perpendicular(v3)
 
+    # antiparallel vectors are not perpendicular (regression: needs abs(dot))
+    v4 = vector.backends.object.VectorObject3D(
+        azimuthal=vector.backends.object.AzimuthalObjectXY(-1, 0),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(0),
+    )
+    assert not v2.is_perpendicular(v4)
+
     for t1 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
         for t2 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
             tr1, tr2 = (
@@ -114,6 +134,13 @@ def test_spatial_numpy():
     assert v1.is_perpendicular(v2)
     assert not v1.is_perpendicular(v3)
     assert not v2.is_perpendicular(v3)
+
+    # antiparallel vectors are not perpendicular (regression: needs abs(dot))
+    v4 = vector.backends.numpy.VectorNumpy3D(
+        [(-1, 0, 0)],
+        dtype=[("x", numpy.float64), ("y", numpy.float64), ("z", numpy.float64)],
+    )
+    assert not v2.is_perpendicular(v4)
 
     for t1 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
         for t2 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
