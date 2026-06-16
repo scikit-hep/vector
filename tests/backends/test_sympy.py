@@ -5,6 +5,8 @@
 
 from __future__ import annotations
 
+import math
+
 import pytest
 
 import vector
@@ -503,6 +505,15 @@ def test_lib_maximum_minimum_symbolic():
     assert lib.minimum(a, b) == sympy.Min(a, b)
     assert lib.maximum(a, 0).subs({a: -1}) == 0
     assert lib.minimum(a, 0).subs({a: -1}) == -1
+
+
+def test_lib_maximum_minimum_numeric():
+    # plain numbers (from mixed sympy/object operations) fall back to numpy,
+    # which sympy.Max/Min would reject for nan
+    lib = vector.backends.sympy._lib()
+    assert lib.maximum(2.0, 5.0) == 5.0
+    assert lib.minimum(2.0, 5.0) == 2.0
+    assert math.isnan(lib.maximum(float("nan"), 1.0))  # numpy.maximum propagates nan
 
 
 def test_lib_copysign_numeric():
