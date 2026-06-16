@@ -371,3 +371,18 @@ def test_to_vector4d_temporal_error_message():
     v3 = vector.obj(x=1.0, y=2.0, z=3.0)
     with pytest.raises(TypeError, match="temporal"):
         v3.to_Vector4D(t=1.0, mass=2.0)
+
+
+def test_dir_excludes_missing_backend_names(monkeypatch):
+    """__dir__ drops awkward/sympy names when the backend module is unavailable."""
+    monkeypatch.setattr(vector, "awkward", None)
+    monkeypatch.setattr(vector, "sympy", None)
+    names = set(dir(vector))
+    assert not (names & vector._AWKWARD_NAMES)
+    assert not (names & vector._SYMPY_NAMES)
+
+    monkeypatch.setattr(vector, "awkward", object())
+    monkeypatch.setattr(vector, "sympy", object())
+    names = set(dir(vector))
+    assert names >= vector._AWKWARD_NAMES
+    assert names >= vector._SYMPY_NAMES

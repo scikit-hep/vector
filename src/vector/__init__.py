@@ -72,7 +72,7 @@ try:
     import awkward
 
     _import_awkward()
-except ImportError:
+except ImportError:  # pragma: no cover - exercised only without awkward installed
     awkward = None
     if not typing.TYPE_CHECKING:
         VectorAwkward = None
@@ -82,7 +82,7 @@ else:
 
 try:
     import sympy  # type: ignore[import-untyped]
-except ImportError:
+except ImportError:  # pragma: no cover - exercised only without sympy installed
     sympy = None
     if not typing.TYPE_CHECKING:
         VectorSympy = None
