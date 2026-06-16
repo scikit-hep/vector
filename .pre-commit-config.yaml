@@ -1,6 +1,7 @@
 ci:
   autoupdate_commit_msg: "chore: update pre-commit hooks"
   autofix_commit_msg: "style: pre-commit fixes"
+  autoupdate_schedule: monthly
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -18,7 +19,7 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.15.16"
+    rev: "v0.15.17"
     hooks:
       - id: ruff-check
         args: ["--fix", "--show-fixes"]
@@ -42,7 +43,7 @@ repos:
       - id: codespell
 
   - repo: https://github.com/rbubley/mirrors-prettier
-    rev: "v3.8.3"
+    rev: "v3.8.4"
     hooks:
       - id: prettier
         types_or: [yaml, markdown, html, css, scss, javascript, json]
