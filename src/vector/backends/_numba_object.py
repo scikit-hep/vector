@@ -1581,17 +1581,17 @@ def add_tolerance_method(vectortype, methodname):
             # nopython code cannot getattr an arbitrary method name.
             if methodname == "is_parallel":
 
-                def overloader_impl(v1, v2, tolerance=1e-5):
+                def overloader_impl(v1, v2, tolerance=1e-5):  # pragma: no cover
                     return v1.to_Vector3D().is_parallel(v2, tolerance=tolerance)
 
             elif methodname == "is_antiparallel":
 
-                def overloader_impl(v1, v2, tolerance=1e-5):
+                def overloader_impl(v1, v2, tolerance=1e-5):  # pragma: no cover
                     return v1.to_Vector3D().is_antiparallel(v2, tolerance=tolerance)
 
             else:  # is_perpendicular
 
-                def overloader_impl(v1, v2, tolerance=1e-5):
+                def overloader_impl(v1, v2, tolerance=1e-5):  # pragma: no cover
                     return v1.to_Vector3D().is_perpendicular(v2, tolerance=tolerance)
 
             return overloader_impl
@@ -1601,17 +1601,17 @@ def add_tolerance_method(vectortype, methodname):
         ):
             if methodname == "is_parallel":
 
-                def overloader_impl(v1, v2, tolerance=1e-5):
+                def overloader_impl(v1, v2, tolerance=1e-5):  # pragma: no cover
                     return v1.is_parallel(v2.to_Vector3D(), tolerance=tolerance)
 
             elif methodname == "is_antiparallel":
 
-                def overloader_impl(v1, v2, tolerance=1e-5):
+                def overloader_impl(v1, v2, tolerance=1e-5):  # pragma: no cover
                     return v1.is_antiparallel(v2.to_Vector3D(), tolerance=tolerance)
 
             else:  # is_perpendicular
 
-                def overloader_impl(v1, v2, tolerance=1e-5):
+                def overloader_impl(v1, v2, tolerance=1e-5):  # pragma: no cover
                     return v1.is_perpendicular(v2.to_Vector3D(), tolerance=tolerance)
 
             return overloader_impl
@@ -2081,7 +2081,7 @@ def VectorObject34DType_scale2D(v, factor):
 
         return VectorObject34DType_scale2D_impl
 
-    else:
+    else:  # pragma: no cover - numba raises at type-inference time
         raise numba.TypingError(
             "'factor' must be an integer or a floating-point number"
         )
@@ -2107,7 +2107,7 @@ def VectorObject4DType_scale3D(v, factor):
 
         return VectorObject4DType_scale3D_impl
 
-    else:
+    else:  # pragma: no cover - numba raises at type-inference time
         raise numba.TypingError(
             "'factor' must be an integer or a floating-point number"
         )
@@ -2998,7 +2998,7 @@ def MomentumObject34DType_p2(v):
 # nopython code reads a constant attribute, mirroring the per-property pattern.
 def _add_momentum_temporal_alias(alias, base):
     def overloader(v):
-        def overloader_impl(v):
+        def overloader_impl(v):  # pragma: no cover - numba-compiled body
             return getattr(v, base)
 
         return overloader_impl
@@ -3481,7 +3481,7 @@ def operator_matmul(v1, v2):
         v1, (VectorObject2DType, VectorObject3DType, VectorObject4DType)
     ) and isinstance(v2, (VectorObject2DType, VectorObject3DType, VectorObject4DType)):
 
-        def operator_matmul_impl(v1, v2):
+        def operator_matmul_impl(v1, v2):  # pragma: no cover - numba-compiled body
             return v1.dot(v2)
 
         return operator_matmul_impl
