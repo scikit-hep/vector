@@ -72,19 +72,26 @@ try:
     import awkward
 
     _import_awkward()
-except ImportError:
+except ImportError:  # pragma: no cover - exercised only without awkward installed
     awkward = None
     if not typing.TYPE_CHECKING:
         VectorAwkward = None
+        awkward_transform = None
 else:
     from vector.backends.awkward import VectorAwkward, awkward_transform
 
 try:
     import sympy  # type: ignore[import-untyped]
-except ImportError:
+except ImportError:  # pragma: no cover - exercised only without sympy installed
     sympy = None
     if not typing.TYPE_CHECKING:
         VectorSympy = None
+        MomentumSympy2D = None
+        MomentumSympy3D = None
+        MomentumSympy4D = None
+        VectorSympy2D = None
+        VectorSympy3D = None
+        VectorSympy4D = None
 else:
     from vector.backends.sympy import (
         MomentumSympy2D,
@@ -153,12 +160,27 @@ __all__: tuple[str, ...] = (
 )
 
 
+_AWKWARD_NAMES = frozenset({"VectorAwkward", "awkward_transform"})
+_SYMPY_NAMES = frozenset(
+    {
+        "VectorSympy",
+        "VectorSympy2D",
+        "VectorSympy3D",
+        "VectorSympy4D",
+        "MomentumSympy2D",
+        "MomentumSympy3D",
+        "MomentumSympy4D",
+    }
+)
+
+
 def __dir__() -> tuple[str, ...]:
-    return (
-        tuple(s for s in __all__ if s != "VectorAwkward")
-        if awkward is None
-        else __all__
-    )
+    excluded: set[str] = set()
+    if awkward is None:
+        excluded |= _AWKWARD_NAMES
+    if sympy is None:
+        excluded |= _SYMPY_NAMES
+    return tuple(s for s in __all__ if s not in excluded)
 
 
 def register_numba() -> None:
