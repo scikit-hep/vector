@@ -148,3 +148,7 @@ uv.lock
 
 # MacOS
 .DS_Store
+
+# pixi
+/pixi.lock
+.pixi/
