@@ -62,7 +62,9 @@ def rhophi_z(lib, rho, phi, z):
 
 
 def rhophi_theta(lib, rho, phi, theta):
-    return lib.nan_to_num(-lib.log(lib.tan(0.5 * theta)), nan=0.0)
+    return lib.nan_to_num(
+        -lib.log(lib.tan(0.5 * theta)), nan=0.0, posinf=inf, neginf=-inf
+    )
 
 
 def rhophi_eta(lib, rho, phi, eta):
