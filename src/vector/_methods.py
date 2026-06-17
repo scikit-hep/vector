@@ -3611,7 +3611,7 @@ class Spatial(Planar, VectorProtocolSpatial):
     ) -> ScalarCollection:
         from vector._compute.spatial import deltaangle
 
-        if dim(other) != 3 and dim(other) != 4:
+        if dim(other) not in (3, 4):
             raise TypeError(f"{other!r} is not a 3D or a 4D vector")
         return deltaangle.dispatch(self, other)
 
@@ -3620,7 +3620,7 @@ class Spatial(Planar, VectorProtocolSpatial):
     ) -> ScalarCollection:
         from vector._compute.spatial import deltaeta
 
-        if dim(other) != 3 and dim(other) != 4:
+        if dim(other) not in (3, 4):
             raise TypeError(f"{other!r} is not a 3D or a 4D vector")
         return deltaeta.dispatch(self, other)
 
@@ -3629,7 +3629,7 @@ class Spatial(Planar, VectorProtocolSpatial):
     ) -> ScalarCollection:
         from vector._compute.spatial import deltaR
 
-        if dim(other) != 3 and dim(other) != 4:
+        if dim(other) not in (3, 4):
             raise TypeError(f"{other!r} is not a 3D or a 4D vector")
         return deltaR.dispatch(self, other)
 
@@ -3638,7 +3638,7 @@ class Spatial(Planar, VectorProtocolSpatial):
     ) -> ScalarCollection:
         from vector._compute.spatial import deltaR2
 
-        if dim(other) != 3 and dim(other) != 4:
+        if dim(other) not in (3, 4):
             raise TypeError(f"{other!r} is not a 3D or a 4D vector")
         return deltaR2.dispatch(self, other)
 
@@ -4357,14 +4357,30 @@ _coordinate_order = [
 ]
 
 
+# Caches mapping a concrete coordinate class to its marker type. These are
+# keyed on the concrete ``type(...)`` of a coordinate object, which is fixed at
+# import time apart from rare third-party subclasses; caching by concrete type
+# means later-defined subclasses are looked up correctly on first use. A plain
+# dict is safe under free-threading because the computed values are
+# deterministic, so a racing get-then-set can only ever store identical values.
+_aztype_cache: dict[type, type[Coordinates]] = {}
+_ltype_cache: dict[type, type[Coordinates]] = {}
+_ttype_cache: dict[type, type[Coordinates]] = {}
+
+
 def _aztype(obj: VectorProtocolPlanar) -> type[Coordinates]:
     """
     Determines the Azimuthal type of a vector for use in looking up a
     dispatched function.
     """
     if hasattr(obj, "azimuthal"):
-        for t in type(obj.azimuthal).__mro__:
+        coord_type = type(obj.azimuthal)
+        cached = _aztype_cache.get(coord_type)
+        if cached is not None:
+            return cached
+        for t in coord_type.__mro__:
             if t in (AzimuthalXY, AzimuthalRhoPhi):
+                _aztype_cache[coord_type] = t
                 return t
     raise AssertionError(repr(obj))
 
@@ -4375,8 +4391,13 @@ def _ltype(obj: VectorProtocolSpatial) -> type[Coordinates]:
     dispatched function.
     """
     if hasattr(obj, "longitudinal"):
-        for t in type(obj.longitudinal).__mro__:
+        coord_type = type(obj.longitudinal)
+        cached = _ltype_cache.get(coord_type)
+        if cached is not None:
+            return cached
+        for t in coord_type.__mro__:
             if t in (LongitudinalZ, LongitudinalTheta, LongitudinalEta):
+                _ltype_cache[coord_type] = t
                 return t
     raise AssertionError(repr(obj))
 
@@ -4387,8 +4408,13 @@ def _ttype(obj: VectorProtocolLorentz) -> type[Coordinates]:
     dispatched function.
     """
     if hasattr(obj, "temporal"):
-        for t in type(obj.temporal).__mro__:
+        coord_type = type(obj.temporal)
+        cached = _ttype_cache.get(coord_type)
+        if cached is not None:
+            return cached
+        for t in coord_type.__mro__:
             if t in (TemporalT, TemporalTau):
+                _ttype_cache[coord_type] = t
                 return t
     raise AssertionError(repr(obj))
 
@@ -4437,11 +4463,23 @@ _handler_priority = [
 ]
 
 
+# Caches mapping a concrete vector class to its handler-priority index. Keyed on
+# the concrete ``type(...)`` for the same reasons (and with the same
+# free-threading safety) as the coordinate-type caches above.
+_handler_index_cache: dict[type, int] = {}
+
+
 def _get_handler_index(obj: VectorProtocol) -> int:
     """Returns the index of the first valid handler checking the list of parent classes"""
-    for cls in type(obj).__mro__:
+    obj_type = type(obj)
+    cached = _handler_index_cache.get(obj_type)
+    if cached is not None:
+        return cached
+    for cls in obj_type.__mro__:
         with suppress(ValueError):
-            return _handler_priority.index(cls.__module__)
+            index = _handler_priority.index(cls.__module__)
+            _handler_index_cache[obj_type] = index
+            return index
     raise AssertionError(
         f"Could not find a valid handler for {obj}! This should not happen."
     )
