@@ -89,10 +89,12 @@ def scalar(request):
 @pytest.mark.parametrize("constructor", constructor)
 def test_Dot(constructor, coordinates):
     v1 = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))),
+        coordinates,
     )()
     v2 = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))),
+        coordinates,
     )()
     assert ROOT.Math.PtEtaPhiEVector(*constructor).Dot(
         ROOT.Math.PtEtaPhiEVector(*constructor)
@@ -105,7 +107,9 @@ def test_Dot(constructor, coordinates):
 def test_M2(constructor, coordinates):
     assert ROOT.Math.PtEtaPhiEVector(*constructor).M2() == pytest.approx(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))),
+            vector.obj(
+                **dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))
+            ),
             coordinates,
         )().tau2
     )
@@ -117,7 +121,9 @@ def test_M2(constructor, coordinates):
 def test_M(constructor, coordinates):
     assert ROOT.Math.PtEtaPhiEVector(*constructor).M() == pytest.approx(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))),
+            vector.obj(
+                **dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))
+            ),
             coordinates,
         )().tau
     )
@@ -127,7 +133,8 @@ def test_M(constructor, coordinates):
 @pytest.mark.parametrize("constructor", constructor)
 def test_Mt2(constructor, coordinates):
     v = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))),
+        coordinates,
     )()
     assert ROOT.Math.PtEtaPhiEVector(*constructor).Mt2() == pytest.approx(
         v.t * v.t - v.z * v.z
@@ -138,7 +145,8 @@ def test_Mt2(constructor, coordinates):
 @pytest.mark.parametrize("constructor", constructor)
 def test_Mt(constructor, coordinates):
     v = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))),
+        coordinates,
     )()
     assert ROOT.Math.PtEtaPhiEVector(*constructor).mt() == pytest.approx(
         v.lib.sqrt(v.t * v.t - v.z * v.z)
@@ -151,7 +159,9 @@ def test_Mt(constructor, coordinates):
 def test_P2(constructor, coordinates):
     assert ROOT.Math.PtEtaPhiEVector(*constructor).P2() == pytest.approx(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))),
+            vector.obj(
+                **dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))
+            ),
             coordinates,
         )().mag2
     )
@@ -163,7 +173,9 @@ def test_P2(constructor, coordinates):
 def test_P(constructor, coordinates):
     assert ROOT.Math.PtEtaPhiEVector(*constructor).P() == pytest.approx(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))),
+            vector.obj(
+                **dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))
+            ),
             coordinates,
         )().mag
     )
@@ -174,7 +186,9 @@ def test_P(constructor, coordinates):
 def test_Perp2(constructor, coordinates):
     assert ROOT.Math.PtEtaPhiEVector(*constructor).Perp2() == pytest.approx(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))),
+            vector.obj(
+                **dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))
+            ),
             coordinates,
         )().rho2
     )
@@ -187,7 +201,9 @@ def test_Perp(constructor, coordinates):
         ROOT.Math.PtEtaPhiEVector(*constructor).Perp2()
     ) == pytest.approx(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))),
+            vector.obj(
+                **dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))
+            ),
             coordinates,
         )().rho
     )
@@ -198,7 +214,9 @@ def test_Perp(constructor, coordinates):
 def test_Phi(constructor, coordinates):
     assert ROOT.Math.PtEtaPhiEVector(*constructor).Phi() == pytest.approx(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))),
+            vector.obj(
+                **dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))
+            ),
             coordinates,
         )().phi
     )
@@ -209,7 +227,9 @@ def test_Phi(constructor, coordinates):
 def test_Rapidity(constructor, coordinates):
     assert ROOT.Math.PtEtaPhiEVector(*constructor).Rapidity() == pytest.approx(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))),
+            vector.obj(
+                **dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))
+            ),
             coordinates,
         )().rapidity
     )
@@ -220,7 +240,9 @@ def test_Rapidity(constructor, coordinates):
 def test_Beta(constructor, coordinates):
     assert ROOT.Math.PtEtaPhiEVector(*constructor).Beta() == pytest.approx(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))),
+            vector.obj(
+                **dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))
+            ),
             coordinates,
         )().beta
     )
@@ -231,7 +253,9 @@ def test_Beta(constructor, coordinates):
 def test_Eta(constructor, coordinates):
     assert ROOT.Math.PtEtaPhiEVector(*constructor).Eta() == pytest.approx(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))),
+            vector.obj(
+                **dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))
+            ),
             coordinates,
         )().eta
     )
@@ -242,7 +266,9 @@ def test_Eta(constructor, coordinates):
 def test_Gamma(constructor, coordinates):
     assert ROOT.Math.PtEtaPhiEVector(*constructor).Gamma() == pytest.approx(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))),
+            vector.obj(
+                **dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))
+            ),
             coordinates,
         )().gamma
     )
@@ -253,7 +279,9 @@ def test_Gamma(constructor, coordinates):
 def test_isLightlike(constructor, coordinates):
     assert ROOT.Math.PtEtaPhiEVector(*constructor).isLightlike() == pytest.approx(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))),
+            vector.obj(
+                **dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))
+            ),
             coordinates,
         )().is_lightlike()
     )
@@ -264,7 +292,9 @@ def test_isLightlike(constructor, coordinates):
 def test_isSpacelike(constructor, coordinates):
     assert ROOT.Math.PtEtaPhiEVector(*constructor).isSpacelike() == pytest.approx(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))),
+            vector.obj(
+                **dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))
+            ),
             coordinates,
         )().is_spacelike()
     )
@@ -275,7 +305,9 @@ def test_isSpacelike(constructor, coordinates):
 def test_isTimelike(constructor, coordinates):
     assert ROOT.Math.PtEtaPhiEVector(*constructor).isTimelike() == pytest.approx(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))),
+            vector.obj(
+                **dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))
+            ),
             coordinates,
         )().is_timelike()
     )
@@ -286,7 +318,9 @@ def test_isTimelike(constructor, coordinates):
 def test_Theta(constructor, coordinates):
     assert ROOT.Math.PtEtaPhiEVector(*constructor).Theta() == pytest.approx(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))),
+            vector.obj(
+                **dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))
+            ),
             coordinates,
         )().theta
     )
@@ -297,7 +331,9 @@ def test_Theta(constructor, coordinates):
 def test_X(constructor, coordinates):
     assert ROOT.Math.PtEtaPhiEVector(*constructor).X() == pytest.approx(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))),
+            vector.obj(
+                **dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))
+            ),
             coordinates,
         )().x
     )
@@ -308,7 +344,9 @@ def test_X(constructor, coordinates):
 def test_Y(constructor, coordinates):
     assert ROOT.Math.PtEtaPhiEVector(*constructor).Y() == pytest.approx(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))),
+            vector.obj(
+                **dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))
+            ),
             coordinates,
         )().y
     )
@@ -319,7 +357,9 @@ def test_Y(constructor, coordinates):
 def test_Z(constructor, coordinates):
     assert ROOT.Math.PtEtaPhiEVector(*constructor).Z() == pytest.approx(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))),
+            vector.obj(
+                **dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))
+            ),
             coordinates,
         )().z
     )
@@ -330,7 +370,9 @@ def test_Z(constructor, coordinates):
 def test_T(constructor, coordinates):
     assert ROOT.Math.PtEtaPhiEVector(*constructor).T() == pytest.approx(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))),
+            vector.obj(
+                **dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))
+            ),
             coordinates,
         )().t
     )
@@ -343,10 +385,13 @@ def test_add(constructor, coordinates):
         ROOT.Math.PtEtaPhiEVector(*constructor)
     )
     vec = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))),
+        coordinates,
     )().add(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))),
+            vector.obj(
+                **dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))
+            ),
             coordinates,
         )()
     )
@@ -363,10 +408,12 @@ def test_sub(constructor, coordinates):
         ROOT.Math.PtEtaPhiEVector(*constructor)
     )
     vec1 = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))),
+        coordinates,
     )()
     vec2 = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))),
+        coordinates,
     )()
     res_vec = vec1.subtract(vec2)
     assert ref_vec.X() == pytest.approx(res_vec.x)
@@ -380,7 +427,8 @@ def test_sub(constructor, coordinates):
 def test_neg(constructor, coordinates):
     ref_vec = ROOT.Math.PtEtaPhiEVector(*constructor).__neg__()
     vec = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))),
+        coordinates,
     )().__neg__
     assert ref_vec.X() == pytest.approx(vec().x)
     assert ref_vec.Y() == pytest.approx(vec().y)
@@ -393,7 +441,8 @@ def test_neg(constructor, coordinates):
 def test_mul(constructor, scalar, coordinates):
     ref_vec = ROOT.Math.PtEtaPhiEVector(*constructor).__mul__(scalar)
     vec = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))),
+        coordinates,
     )().__mul__(scalar)
     assert ref_vec.X() == pytest.approx(vec.x)
     assert ref_vec.Y() == pytest.approx(vec.y)
@@ -406,7 +455,8 @@ def test_mul(constructor, scalar, coordinates):
 def test_truediv(constructor, scalar, coordinates):
     ref_vec = ROOT.Math.PtEtaPhiEVector(*constructor).__truediv__(scalar)
     vec = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))),
+        coordinates,
     )().__truediv__(scalar)
     assert ref_vec.X() == pytest.approx(vec.x)
     assert ref_vec.Y() == pytest.approx(vec.y)
@@ -421,10 +471,13 @@ def test_eq(constructor, coordinates):
         ROOT.Math.PtEtaPhiEVector(*constructor)
     )
     vec = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))),
+        coordinates,
     )().isclose(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))),
+            vector.obj(
+                **dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))
+            ),
             coordinates,
         )()
     )
@@ -436,7 +489,8 @@ def test_eq(constructor, coordinates):
 def test_RotateX(constructor, angle, coordinates):
     ref_vec = ROOT.Math.RotationX(angle) * ROOT.Math.PtEtaPhiEVector(*constructor)
     vec = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))),
+        coordinates,
     )()
     res_vec = vec.rotateX(angle)
     assert ref_vec.X() == pytest.approx(res_vec.x)
@@ -450,7 +504,8 @@ def test_RotateX(constructor, angle, coordinates):
 def test_RotateY(constructor, angle, coordinates):
     ref_vec = ROOT.Math.RotationY(angle) * ROOT.Math.PtEtaPhiEVector(*constructor)
     vec = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))),
+        coordinates,
     )()
     res_vec = vec.rotateY(angle)
     assert ref_vec.X() == pytest.approx(res_vec.x)
@@ -464,7 +519,8 @@ def test_RotateY(constructor, angle, coordinates):
 def test_RotateZ(constructor, angle, coordinates):
     ref_vec = ROOT.Math.RotationZ(angle) * ROOT.Math.PtEtaPhiEVector(*constructor)
     vec = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi", "t"], constructor, strict=False))),
+        coordinates,
     )()
     res_vec = vec.rotateZ(angle)
     assert ref_vec.X() == pytest.approx(res_vec.x)

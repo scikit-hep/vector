@@ -47,7 +47,8 @@ constructor = [
 def test_M2(constructor, coordinates):
     assert ROOT.Math.PxPyPzEVector(*constructor).M2() == pytest.approx(
         getattr(
-            vector.obj(**dict(zip(["x", "y", "z", "t"], constructor))), coordinates
+            vector.obj(**dict(zip(["x", "y", "z", "t"], constructor, strict=False))),
+            coordinates,
         )().tau2
     )
 

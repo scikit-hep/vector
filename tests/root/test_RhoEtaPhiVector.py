@@ -81,10 +81,14 @@ def test_Dot(constructor, coordinates):
         ROOT.Math.RhoEtaPhiVector(*constructor)
     ) == pytest.approx(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi"], constructor))), coordinates
+            vector.obj(**dict(zip(["rho", "eta", "phi"], constructor, strict=False))),
+            coordinates,
         )().dot(
             getattr(
-                vector.obj(**dict(zip(["rho", "eta", "phi"], constructor))), coordinates
+                vector.obj(
+                    **dict(zip(["rho", "eta", "phi"], constructor, strict=False))
+                ),
+                coordinates,
             )()
         )
     )
@@ -95,7 +99,8 @@ def test_Dot(constructor, coordinates):
 def test_Mag2(constructor, coordinates):
     assert ROOT.Math.RhoEtaPhiVector(*constructor).Mag2() == pytest.approx(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi"], constructor))), coordinates
+            vector.obj(**dict(zip(["rho", "eta", "phi"], constructor, strict=False))),
+            coordinates,
         )().rho2
     )
 
@@ -106,7 +111,10 @@ def test_R(constructor, coordinates):
     assert ROOT.Math.RhoEtaPhiVector(*constructor).R() == pytest.approx(
         np.sqrt(
             getattr(
-                vector.obj(**dict(zip(["rho", "eta", "phi"], constructor))), coordinates
+                vector.obj(
+                    **dict(zip(["rho", "eta", "phi"], constructor, strict=False))
+                ),
+                coordinates,
             )().rho2
         )
     )
@@ -117,7 +125,8 @@ def test_R(constructor, coordinates):
 def test_Phi(constructor, coordinates):
     assert ROOT.Math.RhoEtaPhiVector(*constructor).Phi() == pytest.approx(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi"], constructor))), coordinates
+            vector.obj(**dict(zip(["rho", "eta", "phi"], constructor, strict=False))),
+            coordinates,
         )().phi
     )
 
@@ -127,7 +136,8 @@ def test_Phi(constructor, coordinates):
 def test_RotateX(constructor, angle, coordinates):
     ref_vec = ROOT.Math.RotationX(angle) * ROOT.Math.RhoEtaPhiVector(*constructor)
     vec = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi"], constructor, strict=False))),
+        coordinates,
     )()
     res_vec = vec.rotateX(angle)
     assert ref_vec.X() == pytest.approx(res_vec.x)
@@ -140,7 +150,8 @@ def test_RotateX(constructor, angle, coordinates):
 def test_RotateY(constructor, angle, coordinates):
     ref_vec = ROOT.Math.RotationY(angle) * ROOT.Math.RhoEtaPhiVector(*constructor)
     vec = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi"], constructor, strict=False))),
+        coordinates,
     )()
     res_vec = vec.rotateY(angle)
     assert ref_vec.X() == pytest.approx(res_vec.x)
@@ -153,7 +164,8 @@ def test_RotateY(constructor, angle, coordinates):
 def test_RotateZ(constructor, angle, coordinates):
     ref_vec = ROOT.Math.RotationZ(angle) * ROOT.Math.RhoEtaPhiVector(*constructor)
     vec = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi"], constructor, strict=False))),
+        coordinates,
     )()
     res_vec = vec.rotateZ(angle)
     assert ref_vec.X() == pytest.approx(res_vec.x)
@@ -166,7 +178,8 @@ def test_RotateZ(constructor, angle, coordinates):
 def test_Unit(constructor, coordinates):
     ref_vec = ROOT.Math.RhoEtaPhiVector(*constructor).Unit()
     vec = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi"], constructor, strict=False))),
+        coordinates,
     )()
     res_vec = vec.unit
     assert ref_vec.X() == pytest.approx(res_vec().x)
@@ -178,11 +191,11 @@ def test_Unit(constructor, coordinates):
 @pytest.mark.parametrize("constructor", constructor)
 def test_X_and_Y(constructor, coordinates):
     vec = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi"], constructor, strict=False))),
+        coordinates,
     )()
-    assert ROOT.Math.RhoEtaPhiVector(*constructor).X() == pytest.approx(
-        vec.x
-    ) and ROOT.Math.RhoEtaPhiVector(*constructor).Y() == pytest.approx(vec.y)
+    assert ROOT.Math.RhoEtaPhiVector(*constructor).X() == pytest.approx(vec.x)
+    assert ROOT.Math.RhoEtaPhiVector(*constructor).Y() == pytest.approx(vec.y)
 
 
 # Run a test that compares ROOT's '__add__' with vector's 'add' for all cases.
@@ -192,10 +205,12 @@ def test_add(constructor, coordinates):
         ROOT.Math.RhoEtaPhiVector(*constructor)
     )
     vec = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi"], constructor, strict=False))),
+        coordinates,
     )().add(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi"], constructor))), coordinates
+            vector.obj(**dict(zip(["rho", "eta", "phi"], constructor, strict=False))),
+            coordinates,
         )()
     )
     assert ref_vec.X() == pytest.approx(vec.x)
@@ -210,10 +225,12 @@ def test_sub(constructor, coordinates):
         ROOT.Math.RhoEtaPhiVector(*constructor)
     )
     vec1 = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi"], constructor, strict=False))),
+        coordinates,
     )()
     vec2 = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi"], constructor, strict=False))),
+        coordinates,
     )()
     res_vec = vec1.subtract(vec2)
     assert ref_vec.X() == pytest.approx(res_vec.x)
@@ -226,7 +243,8 @@ def test_sub(constructor, coordinates):
 def test_neg(constructor, coordinates):
     ref_vec = ROOT.Math.RhoEtaPhiVector(*constructor).__neg__()
     vec = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi"], constructor, strict=False))),
+        coordinates,
     )().__neg__
     assert ref_vec.X() == pytest.approx(vec().x)
     assert ref_vec.Y() == pytest.approx(vec().y)
@@ -238,7 +256,8 @@ def test_neg(constructor, coordinates):
 def test_mul(constructor, scalar, coordinates):
     ref_vec = ROOT.Math.RhoEtaPhiVector(*constructor).__mul__(scalar)
     vec = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi"], constructor, strict=False))),
+        coordinates,
     )().__mul__(scalar)
     assert ref_vec.X() == pytest.approx(vec.x)
     assert ref_vec.Y() == pytest.approx(vec.y)
@@ -250,7 +269,8 @@ def test_mul(constructor, scalar, coordinates):
 def test_truediv(constructor, scalar, coordinates):
     ref_vec = ROOT.Math.RhoEtaPhiVector(*constructor).__truediv__(scalar)
     vec = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi"], constructor, strict=False))),
+        coordinates,
     )().__truediv__(scalar)
     assert ref_vec.X() == pytest.approx(vec.x)
     assert ref_vec.Y() == pytest.approx(vec.y)
@@ -264,10 +284,12 @@ def test_eq(constructor, coordinates):
         ROOT.Math.RhoEtaPhiVector(*constructor)
     )
     vec = getattr(
-        vector.obj(**dict(zip(["rho", "eta", "phi"], constructor))), coordinates
+        vector.obj(**dict(zip(["rho", "eta", "phi"], constructor, strict=False))),
+        coordinates,
     )().isclose(
         getattr(
-            vector.obj(**dict(zip(["rho", "eta", "phi"], constructor))), coordinates
+            vector.obj(**dict(zip(["rho", "eta", "phi"], constructor, strict=False))),
+            coordinates,
         )()
     )
     assert ref_vec == vec
