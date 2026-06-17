@@ -30,9 +30,6 @@ for groupname, module in names_and_modules:
         if isinstance(submodule, types.ModuleType) and submodule.__name__.startswith(
             "vector._compute."
         ):
-            new_name = submodule.__name__.replace(
-                "vector._compute.", "vector._compute._numba."
-            )
             numba_modules[groupname][modname] = {}
 
             for name, obj in submodule.__dict__.items():
