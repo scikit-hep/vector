@@ -1,3 +1,19 @@
+# Copyright (c) 2019, Saransh Chopra, Henry Schreiner, Eduardo Rodrigues, Jonas Eschle, and Jim Pivarski.
+#
+# Distributed under the 3-clause BSD license, see accompanying file LICENSE
+# or https://github.com/scikit-hep/vector for details.
+"""
+Defines behaviors for SymPy vectors. New vectors created with the respective classes
+
+.. code-block:: python
+
+    vector.VectorSympy2D(...)
+    vector.VectorSympy3D(...)
+    vector.VectorSympy4D(...)
+
+will have these behaviors built in (and will pass them to any derived objects).
+"""
+
 from __future__ import annotations
 
 import typing
@@ -47,10 +63,16 @@ class _lib:
         return val
 
     def maximum(self, val1: sympy.Expr | int, val2: sympy.Expr | int) -> sympy.Expr:
-        return val1 if isinstance(val1, sympy.Expr) else val2
+        # sympy.Max rejects nan, which numeric coordinates (from mixed
+        # sympy/object operations) can legitimately carry
+        if isinstance(val1, sympy.Expr) or isinstance(val2, sympy.Expr):
+            return sympy.Max(val1, val2)
+        return numpy.maximum(val1, val2)
 
     def minimum(self, val1: sympy.Expr | int, val2: sympy.Expr | int) -> sympy.Expr:
-        return val1 if isinstance(val1, sympy.Expr) else val2
+        if isinstance(val1, sympy.Expr) or isinstance(val2, sympy.Expr):
+            return sympy.Min(val1, val2)
+        return numpy.minimum(val1, val2)
 
     def arcsin(self, val: sympy.Expr) -> sympy.Expr:
         return sympy.asin(val)
@@ -85,15 +107,21 @@ class _lib:
         return sympy.Eq(val1, val2)
 
     def copysign(self, val1: sympy.Expr, val2: sympy.Expr) -> sympy.Expr:
-        return val1
+        # this assumes the sign carrier (val2) is non-negative, which holds for
+        # timelike vectors; a faithful Abs(val1)*sign(val2) translation makes
+        # sympy's simplifier choke on the nested Piecewise expressions that
+        # tau/t round-trips produce (see scikit-hep/vector#711)
+        if isinstance(val1, sympy.Expr) or isinstance(val2, sympy.Expr):
+            return val1
+        return numpy.copysign(val1, val2)
 
     @property
     def inf(self) -> sympy.Expr:
         return sympy.oo
 
     # same named functions
-    def sign(self, val: int | float) -> sympy.Expr:
-        return numpy.sign(val)
+    def sign(self, val: sympy.Expr | int | float) -> sympy.Expr:
+        return sympy.sign(val) if isinstance(val, sympy.Expr) else numpy.sign(val)
 
     def sqrt(self, val: sympy.Expr) -> sympy.Expr:
         return sympy.sqrt(val)
@@ -822,8 +850,8 @@ class VectorSympy2D(VectorSympy, Planar, Vector2D):
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             return cls.ProjectionClass2D(azimuthal=azcoords)
 
-        elif len(returns) == 2 or (
-            (len(returns) == 3 and returns[2] is None)
+        elif (
+            (len(returns) == 2 or (len(returns) == 3 and returns[2] is None))
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
             and isinstance(returns[1], type)
@@ -1026,8 +1054,8 @@ class VectorSympy3D(VectorSympy, Spatial, Vector3D):
             azcoords = _coord_sympy_type[returns[0]](result[0], result[1])
             return cls.ProjectionClass2D(azimuthal=azcoords)
 
-        elif len(returns) == 2 or (
-            (len(returns) == 3 and returns[2] is None)
+        elif (
+            (len(returns) == 2 or (len(returns) == 3 and returns[2] is None))
             and isinstance(returns[0], type)
             and issubclass(returns[0], Azimuthal)
             and isinstance(returns[1], type)

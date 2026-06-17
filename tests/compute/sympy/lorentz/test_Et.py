@@ -68,8 +68,14 @@ def test_xy_theta_tau():
             sympy.sqrt(sympy.Abs(-(t**2) + x**2 + y**2 + z**2))
         ),
     )
-    assert vec.Et.simplify() == sympy.sqrt(x**2 + y**2) * sympy.sqrt(
-        x**2 + y**2 + z**2 + sympy.Abs(-(t**2) + x**2 + y**2 + z**2)
+    assert vec.Et.simplify() == sympy.sqrt(
+        x**4
+        + 2 * x**2 * y**2
+        + x**2 * z**2
+        + x**2 * sympy.Abs(-(t**2) + x**2 + y**2 + z**2)
+        + y**4
+        + y**2 * z**2
+        + y**2 * sympy.Abs(-(t**2) + x**2 + y**2 + z**2)
     ) / sympy.sqrt(x**2 + y**2 + z**2)
     assert vec.Et.subs(values).evalf() == pytest.approx(math.sqrt(80))
 
