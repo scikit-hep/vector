@@ -289,3 +289,29 @@ disable_error_code = ["call-arg", "arg-type"]
 [tool.codespell]
 ignore-words-list = "HEP"
 ignore-regex = "[A-Za-z0-9+/]{100,}"
+
+# ROOT is conda-only, so the comparison tests in tests/root run in a pixi
+# environment that mirrors environment.yml. Run with: pixi run root-tests
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-arm64", "osx-64"]
+
+[tool.pixi.feature.root.dependencies]
+python = ">=3.10"
+root = ">=6.18.04"
+numba = ">=0.57"
+numpy = ">=1.19.3"
+awkward = ">=2.0.0"
+uproot = ">=5.0.0"
+scikit-hep-testdata = ">=0.2.0"
+pytest = ">=6"
+pip = ">=18"
+
+[tool.pixi.feature.root.pypi-dependencies]
+vector = { path = ".", editable = true }
+
+[tool.pixi.feature.root.tasks]
+root-tests = "pytest tests/root -ra"
+
+[tool.pixi.environments]
+root = ["root"]

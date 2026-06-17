@@ -97,25 +97,21 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
+  root:
+    runs-on: ubuntu-latest
+    name: ROOT comparison tests
+    steps:
+      - uses: actions/checkout@v6
+      - uses: prefix-dev/setup-pixi@v0.9.6
+        with:
+          environments: root
+      - name: Run ROOT comparison tests
+        run: pixi run root-tests
+
   pass:
-    needs: [pre-commit, check-lite, check-full]
+    needs: [pre-commit, check-lite, check-full, root]
     if: always()
     runs-on: ubuntu-latest
     steps:
       - name: Decide whether all required jobs succeeded
         run: ${{ !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
-
-  # root:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v6
-
-  #   - name: Get Conda
-  #     uses: conda-incubator/setup-miniconda@v2
-  #     with:
-  #       environment-file: environment.yml
-  #       activate-environment: vector
-
-  #   - name: Run tests
-  #     shell: "bash -l {0}"
-  #     run: python -m pytest tests/root_tests -ra
