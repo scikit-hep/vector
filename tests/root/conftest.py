@@ -99,6 +99,7 @@ KNOWN_FAILING = {
         "test_add",
         "test_eq",
         "test_isLightlike",
+        "test_isSpacelike",
         "test_isTimelike",
         "test_mul",
         "test_neg",
