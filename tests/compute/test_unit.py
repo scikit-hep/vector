@@ -47,6 +47,31 @@ def test_planar_numpy():
         assert u.rho[0] == pytest.approx(1)
 
 
+def test_planar_zero_vector():
+    # The unit of the zero vector is conventionally the zero vector. The xy and
+    # rhophi representations must agree (previously rhophi returned (1, phi)).
+    for v in (
+        vector.backends.object.VectorObject2D(
+            azimuthal=vector.backends.object.AzimuthalObjectXY(0.0, 0.0)
+        ),
+        vector.backends.object.VectorObject2D(
+            azimuthal=vector.backends.object.AzimuthalObjectRhoPhi(0.0, 1.0)
+        ),
+    ):
+        u = v.unit()
+        assert u.rho == pytest.approx(0.0)
+
+
+def test_planar_zero_vector_numpy():
+    v = vector.backends.numpy.VectorNumpy2D(
+        [(0.0, 1.0), (3.0, 1.0)],
+        dtype=[("rho", numpy.float64), ("phi", numpy.float64)],
+    )
+    u = v.unit()
+    assert u.rho[0] == pytest.approx(0.0)
+    assert u.rho[1] == pytest.approx(1.0)
+
+
 def test_spatial_object():
     v = vector.backends.object.VectorObject3D(
         azimuthal=vector.backends.object.AzimuthalObjectXY(0.1, 0.2),
