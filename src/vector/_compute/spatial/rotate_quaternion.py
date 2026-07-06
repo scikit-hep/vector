@@ -65,24 +65,36 @@ dispatch_map = {
 
 def make_conversion(azimuthal, longitudinal):
     if (azimuthal, longitudinal) != (AzimuthalXY, LongitudinalZ):
+        to_x = None
+        to_y = None
+        to_z = None
+
         if azimuthal is AzimuthalXY:
             to_x = x.xy
             to_y = y.xy
+
             if longitudinal is LongitudinalZ:
                 to_z = z.xy_z
             elif longitudinal is LongitudinalTheta:
                 to_z = z.xy_theta
             elif longitudinal is LongitudinalEta:
                 to_z = z.xy_eta
+
         elif azimuthal is AzimuthalRhoPhi:
             to_x = x.rhophi
             to_y = y.rhophi
+
             if longitudinal is LongitudinalZ:
                 to_z = z.rhophi_z
             elif longitudinal is LongitudinalTheta:
                 to_z = z.rhophi_theta
             elif longitudinal is LongitudinalEta:
                 to_z = z.rhophi_eta
+
+        assert to_x is not None
+        assert to_y is not None
+        assert to_z is not None
+
         cartesian, azout, lout = dispatch_map[AzimuthalXY, LongitudinalZ]
 
         def f(lib, u, i, j, k, coord1, coord2, coord3):
