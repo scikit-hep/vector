@@ -28,7 +28,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: 3.x
-      - uses: astral-sh/setup-uv@v8.2.0
+      - uses: astral-sh/setup-uv@v8.3.0
       - name: PyLint
         run: uvx nox -s pylint -- --output-format=github
 
@@ -53,7 +53,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
 
-      - uses: astral-sh/setup-uv@v8.2.0
+      - uses: astral-sh/setup-uv@v8.3.0
 
       - name: Test lite package
         run: uvx nox -s lite-${{ matrix.python-version }} --verbose
@@ -80,7 +80,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
 
-      - uses: astral-sh/setup-uv@v8.2.0
+      - uses: astral-sh/setup-uv@v8.3.0
 
       - name: Install nox
         run: uv tool install nox
@@ -102,7 +102,7 @@ jobs:
     name: ROOT comparison tests
     steps:
       - uses: actions/checkout@v7
-      - uses: prefix-dev/setup-pixi@v0.9.6
+      - uses: prefix-dev/setup-pixi@v0.10.0
         with:
           environments: root
       - name: Run ROOT comparison tests
