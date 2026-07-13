@@ -117,10 +117,7 @@ def make_conversion(azimuthal1, longitudinal1, azimuthal2, longitudinal2):
         assert to_z2 is not None
 
         cartesian, azout, lout, tout = dispatch_map[
-            AzimuthalXY,
-            LongitudinalZ,
-            AzimuthalXY,
-            LongitudinalZ,
+            AzimuthalXY, LongitudinalZ, AzimuthalXY, LongitudinalZ
         ]
 
         def f(lib, coord11, coord12, coord13, coord21, coord22, coord23):
