@@ -68,7 +68,6 @@ def make_conversion(azimuthal1, longitudinal1, azimuthal2, longitudinal2):
         if azimuthal1 is AzimuthalXY:
             to_x1 = x.xy
             to_y1 = y.xy
-
             if longitudinal1 is LongitudinalZ:
                 to_z1 = z.xy_z
             elif longitudinal1 is LongitudinalTheta:
@@ -79,7 +78,6 @@ def make_conversion(azimuthal1, longitudinal1, azimuthal2, longitudinal2):
         elif azimuthal1 is AzimuthalRhoPhi:
             to_x1 = x.rhophi
             to_y1 = y.rhophi
-
             if longitudinal1 is LongitudinalZ:
                 to_z1 = z.rhophi_z
             elif longitudinal1 is LongitudinalTheta:
@@ -90,7 +88,6 @@ def make_conversion(azimuthal1, longitudinal1, azimuthal2, longitudinal2):
         if azimuthal2 is AzimuthalXY:
             to_x2 = x.xy
             to_y2 = y.xy
-
             if longitudinal2 is LongitudinalZ:
                 to_z2 = z.xy_z
             elif longitudinal2 is LongitudinalTheta:
