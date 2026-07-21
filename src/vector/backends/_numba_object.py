@@ -27,6 +27,7 @@ from vector._methods import (
     Momentum,
     TemporalT,
     TemporalTau,
+    _check_coordinate_names,
     _from_signature,
 )
 from vector.backends._numba import numba_modules
@@ -575,6 +576,34 @@ def vector_obj_Temporal_mass(t, E, e, energy, tau, M, m, mass):
     return TemporalObjectTau(mass)
 
 
+_vector_obj_azimuthal = {
+    ("x", "y"): vector_obj_Azimuthal_xy,
+    ("x", "py"): vector_obj_Azimuthal_xpy,
+    ("px", "y"): vector_obj_Azimuthal_pxy,
+    ("px", "py"): vector_obj_Azimuthal_pxpy,
+    ("rho", "phi"): vector_obj_Azimuthal_rhophi,
+    ("pt", "phi"): vector_obj_Azimuthal_ptphi,
+}
+
+_vector_obj_longitudinal = {
+    "z": vector_obj_Longitudinal_z,
+    "pz": vector_obj_Longitudinal_pz,
+    "theta": vector_obj_Longitudinal_theta,
+    "eta": vector_obj_Longitudinal_eta,
+}
+
+_vector_obj_temporal = {
+    "t": vector_obj_Temporal_t,
+    "E": vector_obj_Temporal_E,
+    "e": vector_obj_Temporal_e,
+    "energy": vector_obj_Temporal_energy,
+    "tau": vector_obj_Temporal_tau,
+    "M": vector_obj_Temporal_M,
+    "m": vector_obj_Temporal_m,
+    "mass": vector_obj_Temporal_mass,
+}
+
+
 @numba.extending.overload(vector.obj)
 def vector_obj(
     unrecognized_argument=None,
@@ -603,342 +632,130 @@ def vector_obj(
             "only keyword arguments are allowed in vector.obj; no positional arguments"
         )
 
-    has_x = x is not None
-    has_px = px is not None
-    has_y = y is not None
-    has_py = py is not None
-    has_rho = rho is not None
-    has_pt = pt is not None
-    has_phi = phi is not None
-    has_z = z is not None
-    has_pz = pz is not None
-    has_theta = theta is not None
-    has_eta = eta is not None
-    has_t = t is not None
-    has_E = E is not None
-    has_e = e is not None
-    has_energy = energy is not None
-    has_tau = tau is not None
-    has_M = M is not None
-    has_m = m is not None
-    has_mass = mass is not None
+    given = tuple(
+        name
+        for name, value in (
+            ("x", x),
+            ("px", px),
+            ("y", y),
+            ("py", py),
+            ("rho", rho),
+            ("pt", pt),
+            ("phi", phi),
+            ("z", z),
+            ("pz", pz),
+            ("theta", theta),
+            ("eta", eta),
+            ("t", t),
+            ("E", E),
+            ("e", e),
+            ("energy", energy),
+            ("tau", tau),
+            ("M", M),
+            ("m", m),
+            ("mass", mass),
+        )
+        if value is not None
+    )
 
-    is_momentum = False
-    azimuthal = None
-    longitudinal = None
-    temporal = None
+    try:
+        is_momentum, dimension, names, _ = _check_coordinate_names(given)
+    except TypeError as err:
+        raise numba.TypingError(str(err)) from err
 
-    if (has_x and has_y) and not (has_rho or has_pt or has_phi):
-        if has_px or has_py:
-            raise numba.TypingError(
-                "duplicate coordinates (through momentum-aliases): x/px or y/py"
-            )
-        azimuthal = vector_obj_Azimuthal_xy
-    elif (has_x and has_py) and not (has_rho or has_pt or has_phi):
-        is_momentum = True
-        if has_px or has_y:
-            raise numba.TypingError(
-                "duplicate coordinates (through momentum-aliases): x/px or y/py"
-            )
-        azimuthal = vector_obj_Azimuthal_xpy
-    elif (has_px and has_y) and not (has_rho or has_pt or has_phi):
-        is_momentum = True
-        if has_x or has_py:
-            raise numba.TypingError(
-                "duplicate coordinates (through momentum-aliases): x/px or y/py"
-            )
-        azimuthal = vector_obj_Azimuthal_pxy
-    elif (has_px and has_py) and not (has_rho or has_pt or has_phi):
-        is_momentum = True
-        if has_x or has_y:
-            raise numba.TypingError(
-                "duplicate coordinates (through momentum-aliases): x/px or y/py"
-            )
-        azimuthal = vector_obj_Azimuthal_pxpy
-    elif (has_rho and has_phi) and not (has_x or has_px or has_y or has_py):
-        if has_pt:
-            raise numba.TypingError(
-                "duplicate coordinates (through momentum-aliases): rho/pt"
-            )
-        azimuthal = vector_obj_Azimuthal_rhophi
-    elif (has_pt and has_phi) and not (has_x or has_px or has_y or has_py):
-        is_momentum = True
-        if has_rho:
-            raise numba.TypingError(
-                "duplicate coordinates (through momentum-aliases): rho/pt"
-            )
-        azimuthal = vector_obj_Azimuthal_ptphi
+    azimuthal = _vector_obj_azimuthal[names[0][1], names[1][1]]
+    if dimension >= 3:
+        longitudinal = _vector_obj_longitudinal[names[2][1]]
+    if dimension == 4:
+        temporal = _vector_obj_temporal[names[3][1]]
 
-    if has_z and not (has_theta or has_eta):
-        if has_pz:
-            raise numba.TypingError(
-                "duplicate coordinates (through momentum-aliases): z/pz"
+    if dimension == 4:
+        cls = MomentumObject4D if is_momentum else VectorObject4D
+
+        def vector_obj_impl(
+            unrecognized_argument=None,
+            x=None,
+            px=None,
+            y=None,
+            py=None,
+            rho=None,
+            pt=None,
+            phi=None,
+            z=None,
+            pz=None,
+            theta=None,
+            eta=None,
+            t=None,
+            E=None,
+            e=None,
+            energy=None,
+            tau=None,
+            M=None,
+            m=None,
+            mass=None,
+        ):
+            return cls(
+                azimuthal(x, px, y, py, rho, pt, phi),
+                longitudinal(z, pz, theta, eta),
+                temporal(t, E, e, energy, tau, M, m, mass),
             )
-        longitudinal = vector_obj_Longitudinal_z
-    elif has_pz and not (has_theta or has_eta):
-        is_momentum = True
-        if has_z:
-            raise numba.TypingError(
-                "duplicate coordinates (through momentum-aliases): z/pz"
+
+    elif dimension == 3:
+        cls = MomentumObject3D if is_momentum else VectorObject3D
+
+        def vector_obj_impl(
+            unrecognized_argument=None,
+            x=None,
+            px=None,
+            y=None,
+            py=None,
+            rho=None,
+            pt=None,
+            phi=None,
+            z=None,
+            pz=None,
+            theta=None,
+            eta=None,
+            t=None,
+            E=None,
+            e=None,
+            energy=None,
+            tau=None,
+            M=None,
+            m=None,
+            mass=None,
+        ):
+            return cls(
+                azimuthal(x, px, y, py, rho, pt, phi),
+                longitudinal(z, pz, theta, eta),
             )
-        longitudinal = vector_obj_Longitudinal_pz
-    elif has_theta and not (has_z or has_eta):
-        longitudinal = vector_obj_Longitudinal_theta
-    elif has_eta and not (has_z or has_theta):
-        longitudinal = vector_obj_Longitudinal_eta
-
-    if has_t and not (has_tau or has_M or has_m or has_mass):
-        if has_E or has_e or has_energy:
-            raise numba.TypingError(
-                "duplicate coordinates (through momentum-aliases): t/E/e/energy"
-            )
-        temporal = vector_obj_Temporal_t
-    elif has_E and not (has_tau or has_M or has_m or has_mass):
-        is_momentum = True
-        if has_t or has_e or has_energy:
-            raise numba.TypingError(
-                "duplicate coordinates (through momentum-aliases): t/E/e/energy"
-            )
-        temporal = vector_obj_Temporal_E
-    elif has_e and not (has_tau or has_M or has_m or has_mass):
-        is_momentum = True
-        if has_t or has_E or has_energy:
-            raise numba.TypingError(
-                "duplicate coordinates (through momentum-aliases): t/E/e/energy"
-            )
-        temporal = vector_obj_Temporal_e
-    elif has_energy and not (has_tau or has_M or has_m or has_mass):
-        is_momentum = True
-        if has_t or has_E or has_e:
-            raise numba.TypingError(
-                "duplicate coordinates (through momentum-aliases): t/E/e/energy"
-            )
-        temporal = vector_obj_Temporal_energy
-    elif has_tau and not (has_t or has_E or has_e or has_energy):
-        if has_M or has_m or has_mass:
-            raise numba.TypingError(
-                "duplicate coordinates (through momentum-aliases): tau/M/m/mass"
-            )
-        temporal = vector_obj_Temporal_tau
-    elif has_M and not (has_t or has_E or has_e or has_energy):
-        is_momentum = True
-        if has_tau or has_m or has_mass:
-            raise numba.TypingError(
-                "duplicate coordinates (through momentum-aliases): tau/M/m/mass"
-            )
-        temporal = vector_obj_Temporal_M
-    elif has_m and not (has_t or has_E or has_e or has_energy):
-        is_momentum = True
-        if has_tau or has_M or has_mass:
-            raise numba.TypingError(
-                "duplicate coordinates (through momentum-aliases): tau/M/m/mass"
-            )
-        temporal = vector_obj_Temporal_m
-    elif has_mass and not (has_t or has_E or has_e or has_energy):
-        is_momentum = True
-        if has_tau or has_M or has_m:
-            raise numba.TypingError(
-                "duplicate coordinates (through momentum-aliases): tau/M/m/mass"
-            )
-        temporal = vector_obj_Temporal_mass
-
-    if azimuthal is not None and longitudinal is not None and temporal is not None:
-        if is_momentum:
-
-            def vector_obj_impl(
-                unrecognized_argument=None,
-                x=None,
-                px=None,
-                y=None,
-                py=None,
-                rho=None,
-                pt=None,
-                phi=None,
-                z=None,
-                pz=None,
-                theta=None,
-                eta=None,
-                t=None,
-                E=None,
-                e=None,
-                energy=None,
-                tau=None,
-                M=None,
-                m=None,
-                mass=None,
-            ):
-                return MomentumObject4D(
-                    azimuthal(x, px, y, py, rho, pt, phi),
-                    longitudinal(z, pz, theta, eta),
-                    temporal(t, E, e, energy, tau, M, m, mass),
-                )
-
-        else:
-
-            def vector_obj_impl(
-                unrecognized_argument=None,
-                x=None,
-                px=None,
-                y=None,
-                py=None,
-                rho=None,
-                pt=None,
-                phi=None,
-                z=None,
-                pz=None,
-                theta=None,
-                eta=None,
-                t=None,
-                E=None,
-                e=None,
-                energy=None,
-                tau=None,
-                M=None,
-                m=None,
-                mass=None,
-            ):
-                return VectorObject4D(
-                    azimuthal(x, px, y, py, rho, pt, phi),
-                    longitudinal(z, pz, theta, eta),
-                    temporal(t, E, e, energy, tau, M, m, mass),
-                )
-
-    elif azimuthal is not None and longitudinal is not None and temporal is None:
-        if is_momentum:
-
-            def vector_obj_impl(
-                unrecognized_argument=None,
-                x=None,
-                px=None,
-                y=None,
-                py=None,
-                rho=None,
-                pt=None,
-                phi=None,
-                z=None,
-                pz=None,
-                theta=None,
-                eta=None,
-                t=None,
-                E=None,
-                e=None,
-                energy=None,
-                tau=None,
-                M=None,
-                m=None,
-                mass=None,
-            ):
-                return MomentumObject3D(
-                    azimuthal(x, px, y, py, rho, pt, phi),
-                    longitudinal(z, pz, theta, eta),
-                )
-
-        else:
-
-            def vector_obj_impl(
-                unrecognized_argument=None,
-                x=None,
-                px=None,
-                y=None,
-                py=None,
-                rho=None,
-                pt=None,
-                phi=None,
-                z=None,
-                pz=None,
-                theta=None,
-                eta=None,
-                t=None,
-                E=None,
-                e=None,
-                energy=None,
-                tau=None,
-                M=None,
-                m=None,
-                mass=None,
-            ):
-                return VectorObject3D(
-                    azimuthal(x, px, y, py, rho, pt, phi),
-                    longitudinal(z, pz, theta, eta),
-                )
-
-    elif azimuthal is not None and longitudinal is None and temporal is None:
-        if is_momentum:
-
-            def vector_obj_impl(
-                unrecognized_argument=None,
-                x=None,
-                px=None,
-                y=None,
-                py=None,
-                rho=None,
-                pt=None,
-                phi=None,
-                z=None,
-                pz=None,
-                theta=None,
-                eta=None,
-                t=None,
-                E=None,
-                e=None,
-                energy=None,
-                tau=None,
-                M=None,
-                m=None,
-                mass=None,
-            ):
-                return MomentumObject2D(azimuthal(x, px, y, py, rho, pt, phi))
-
-        else:
-
-            def vector_obj_impl(
-                unrecognized_argument=None,
-                x=None,
-                px=None,
-                y=None,
-                py=None,
-                rho=None,
-                pt=None,
-                phi=None,
-                z=None,
-                pz=None,
-                theta=None,
-                eta=None,
-                t=None,
-                E=None,
-                e=None,
-                energy=None,
-                tau=None,
-                M=None,
-                m=None,
-                mass=None,
-            ):
-                return VectorObject2D(azimuthal(x, px, y, py, rho, pt, phi))
 
     else:
-        raise numba.TypingError(
-            "unrecognized combination of coordinates, allowed combinations are:\n\n"
-            "    (2D) x= y=\n"
-            "    (2D) rho= phi=\n"
-            "    (3D) x= y= z=\n"
-            "    (3D) x= y= theta=\n"
-            "    (3D) x= y= eta=\n"
-            "    (3D) rho= phi= z=\n"
-            "    (3D) rho= phi= theta=\n"
-            "    (3D) rho= phi= eta=\n"
-            "    (4D) x= y= z= t=\n"
-            "    (4D) x= y= z= tau=\n"
-            "    (4D) x= y= theta= t=\n"
-            "    (4D) x= y= theta= tau=\n"
-            "    (4D) x= y= eta= t=\n"
-            "    (4D) x= y= eta= tau=\n"
-            "    (4D) rho= phi= z= t=\n"
-            "    (4D) rho= phi= z= tau=\n"
-            "    (4D) rho= phi= theta= t=\n"
-            "    (4D) rho= phi= theta= tau=\n"
-            "    (4D) rho= phi= eta= t=\n"
-            "    (4D) rho= phi= eta= tau="
-        )
+        cls = MomentumObject2D if is_momentum else VectorObject2D
+
+        def vector_obj_impl(
+            unrecognized_argument=None,
+            x=None,
+            px=None,
+            y=None,
+            py=None,
+            rho=None,
+            pt=None,
+            phi=None,
+            z=None,
+            pz=None,
+            theta=None,
+            eta=None,
+            t=None,
+            E=None,
+            e=None,
+            energy=None,
+            tau=None,
+            M=None,
+            m=None,
+            mass=None,
+        ):
+            return cls(azimuthal(x, px, y, py, rho, pt, phi))
 
     return vector_obj_impl
 
