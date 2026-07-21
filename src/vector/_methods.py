@@ -5,6 +5,7 @@
 
 from __future__ import annotations
 
+import functools
 import typing
 from contextlib import suppress
 
@@ -4355,6 +4356,178 @@ _coordinate_order = [
     "m",
     "mass",
 ]
+
+
+_repr_all_to_generic = {
+    **{x: x for x in ("x", "y", "rho", "phi", "z", "theta", "eta", "t", "tau")},
+    **_repr_momentum_to_generic,
+}
+
+
+_azimuthal_combinations = (("x", "y"), ("rho", "phi"))
+_azimuthal_names = ("x", "y", "rho", "phi")
+_longitudinal_names = ("z", "theta", "eta")
+_temporal_names = ("t", "tau")
+
+
+# Every name, including momentum-aliases, grouped by geometry tier.
+_azimuthal_fields = frozenset(
+    name
+    for name, generic in _repr_all_to_generic.items()
+    if generic in _azimuthal_names
+)
+_longitudinal_fields = frozenset(
+    name
+    for name, generic in _repr_all_to_generic.items()
+    if generic in _longitudinal_names
+)
+_temporal_fields = frozenset(
+    name for name, generic in _repr_all_to_generic.items() if generic in _temporal_names
+)
+
+
+# The 2 + 6 + 12 combinations that describe a vector, in the order reported to users.
+_allowed_coordinates = (
+    *_azimuthal_combinations,
+    *(
+        (*azimuthal, longitudinal)
+        for azimuthal in _azimuthal_combinations
+        for longitudinal in _longitudinal_names
+    ),
+    *(
+        (*azimuthal, longitudinal, temporal)
+        for azimuthal in _azimuthal_combinations
+        for longitudinal in _longitudinal_names
+        for temporal in _temporal_names
+    ),
+)
+
+
+def _coordinate_complaint(dimension: int | None, momentum: bool | None) -> str:
+    """Lists the combinations a vector of this ``dimension`` may be built from."""
+    complaint = "unrecognized combination of coordinates, allowed combinations are:\n\n"
+    complaint += "\n".join(
+        "    "
+        + ("" if dimension is not None else f"({len(names)}D) ")
+        + " ".join(f"{name}=" for name in names)
+        for names in _allowed_coordinates
+        if dimension in (None, len(names))
+    )
+    if momentum is not False:
+        complaint += "\n\nor their momentum equivalents"
+    return complaint
+
+
+# Awkward Array validates on every array it attaches a vector behavior to; bounded
+# because the field names this is keyed on come from user data.
+@functools.lru_cache(maxsize=4096)
+def _check_coordinate_names(
+    fieldnames: tuple[str, ...],
+    dimension: int | None = None,
+    momentum: bool | None = None,
+    allow_extra: bool = False,
+) -> tuple[bool, int, tuple[tuple[str, str], ...], tuple[str, ...]]:
+    """
+    Determines the dimension and the momentum-ness of a set of coordinate names,
+    raising a ``TypeError`` if they do not describe exactly one vector. Every
+    backend validates through this function.
+
+    Args:
+        fieldnames (tuple of str): Coordinate names, as given by the user.
+        dimension (int or None): Dimension that the names must describe, or
+            None to deduce it from the names.
+        momentum (bool or None): Whether momentum-aliases are allowed (True),
+            not allowed (False), or unconstrained (None).
+        allow_extra (bool): If True, names that are not coordinates are
+            returned instead of rejected.
+
+    Returns:
+        tuple: ``(is_momentum, dimension, coordinates, extra)``, in which
+        ``coordinates`` is a tuple of ``(generic name, given name)`` pairs in
+        canonical order and ``extra`` holds the names that are not coordinates.
+
+    Examples:
+        >>> from vector._methods import _check_coordinate_names
+        >>> _check_coordinate_names(("pt", "phi", "eta"))
+        (True, 3, (('rho', 'pt'), ('phi', 'phi'), ('eta', 'eta')), ())
+    """
+    given: dict[str, str] = {}
+    extra: list[str] = []
+    is_momentum = False
+
+    for name in fieldnames:
+        generic = _repr_all_to_generic.get(name)
+        if generic is None:
+            extra.append(name)
+            continue
+        if name in _repr_momentum_to_generic:
+            is_momentum = True
+        if generic in given:
+            raise TypeError(
+                "duplicate coordinates (through momentum-aliases): "
+                f"{given[generic]!r} and {name!r} both map to {generic!r}"
+            )
+        given[generic] = name
+
+    if is_momentum and momentum is False:
+        raise TypeError(
+            "momentum-aliases are not allowed in a generic vector: "
+            + ", ".join(repr(x) for x in fieldnames if x in _repr_momentum_to_generic)
+        )
+    if extra and not allow_extra:
+        raise TypeError(_coordinate_complaint(dimension, momentum))
+
+    if ("x" in given or "y" in given) and ("rho" in given or "phi" in given):
+        raise TypeError("specify x= and y= or rho= and phi=, but not both")
+    if sum(name in given for name in _longitudinal_names) > 1:
+        raise TypeError("specify z= or theta= or eta=, but not more than one")
+    if sum(name in given for name in _temporal_names) > 1:
+        raise TypeError("specify t= or tau=, but not more than one")
+
+    azimuthal = next(
+        (names for names in _azimuthal_combinations if all(x in given for x in names)),
+        None,
+    )
+    longitudinal = next((x for x in _longitudinal_names if x in given), None)
+    temporal = next((x for x in _temporal_names if x in given), None)
+
+    if (
+        azimuthal is None
+        or (temporal is not None and longitudinal is None)
+        or len(given) != 2 + (longitudinal is not None) + (temporal is not None)
+    ):
+        raise TypeError(_coordinate_complaint(dimension, momentum))
+
+    names = (
+        *azimuthal,
+        *(() if longitudinal is None else (longitudinal,)),
+        *(() if temporal is None else (temporal,)),
+    )
+
+    if dimension is not None and dimension != len(names):
+        raise TypeError(_coordinate_complaint(dimension, momentum))
+
+    return (
+        is_momentum,
+        len(names),
+        tuple((name, given[name]) for name in names),
+        tuple(extra),
+    )
+
+
+_CoordinateT = typing.TypeVar("_CoordinateT")
+
+
+def _generic_coordinates(
+    coordinates: dict[str, _CoordinateT],
+    dimension: int | None = None,
+    momentum: bool | None = None,
+) -> dict[str, _CoordinateT]:
+    """Validates a constructor's keyword arguments, keyed by their generic names."""
+    _, _, names, _ = _check_coordinate_names(
+        tuple(coordinates), dimension=dimension, momentum=momentum
+    )
+    return {name: coordinates[given] for name, given in names}
 
 
 # Caches mapping a concrete coordinate class to its marker type. These are
