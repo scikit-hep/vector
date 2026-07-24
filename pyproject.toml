@@ -249,6 +249,7 @@ markers = [
   "numba",
   "awkward",
   "sympy",
+  "cuda",
 ]
 log_level = "DEBUG"
 filterwarnings = [
