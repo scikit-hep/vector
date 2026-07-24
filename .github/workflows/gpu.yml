@@ -1,0 +1,66 @@
+name: GPU
+
+on:
+  schedule:
+    - cron: "19 5 * * *"
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
+
+env:
+  FORCE_COLOR: "1"
+
+jobs:
+  gpu-tests:
+    name: CUDA ${{ matrix.cuda-version }}
+    if: github.event_name != 'schedule' || github.repository_owner == 'scikit-hep'
+    runs-on: self-hosted
+    timeout-minutes: 60
+
+    # Required for micromamba to activate conda
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        cuda-version:
+          - 12
+          - 13
+
+    steps:
+      - name: Clean the workspace and micromamba
+        run: |
+          rm -rf * .[!.]* || echo "Nothing to clean"
+          rm -rf ~/micromamba* || echo "Nothing to clean"
+
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: mamba-org/setup-micromamba@v3
+        with:
+          environment-name: test-env
+          init-shell: bash
+          create-args: >-
+            python=3.13
+            cupy>=14
+            cuda-version=${{ matrix.cuda-version }}
+
+      - name: Install vector and test dependencies
+        run: python -m pip install -v ".[awkward]" pytest pytest-github-actions-annotate-failures
+
+      - name: Print versions
+        run: python -m pip list
+
+      - name: Run the GPU tests
+        run: python -m pytest -vv -rs tests/cuda -m cuda
