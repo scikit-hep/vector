@@ -584,6 +584,23 @@ class TemporalAwkwardTau(TemporalAwkward, TemporalTau):
         return (self.tau,)
 
 
+def _projection_class(
+    cls: type[VectorProtocol], dimension: int
+) -> type[VectorProtocol]:
+    name = f"ProjectionClass{dimension}D"
+    projection: type[VectorProtocol] | None = getattr(cls, name, None)
+    if projection is None:
+        msg = (
+            f"{cls.__name__} does not define {name}: this operation implicitly "
+            f"converts a {cls.__name__} into a {dimension}D vector, but no "
+            f"{dimension}D equivalent has been declared for it. Assign "
+            f"`{cls.__name__}.{name}` to a suitable vector class to allow the "
+            "conversion, or convert the vectors explicitly before the operation."
+        )
+        raise TypeError(msg)
+    return projection
+
+
 def _class_to_name(cls: type[VectorProtocol]) -> str:
     # respect the type of classes inheriting VectorAwkward classes
     is_vector = "vector.backends" in cls.__module__
@@ -742,11 +759,11 @@ class VectorAwkward:
             if any(
                 f in fields for f in ("t", "tau", "M", "m", "mass", "E", "e", "energy")
             ):
-                cls = cls.ProjectionClass4D
+                cls = _projection_class(cls, 4)
             elif any(f in fields for f in ("z", "pz", "theta", "eta")):
-                cls = cls.ProjectionClass3D
+                cls = _projection_class(cls, 3)
             else:
-                cls = cls.ProjectionClass2D
+                cls = _projection_class(cls, 2)
 
             return maybe_record(
                 ak.zip(
@@ -788,7 +805,7 @@ class VectorAwkward:
                 ak.zip(
                     dict(zip(names, arrays, strict=True)),
                     depth_limit=first.layout.purelist_depth,
-                    with_name=_class_to_name(cls.ProjectionClass2D),
+                    with_name=_class_to_name(_projection_class(cls, 2)),
                     behavior=None if vector._awkward_registered else first.behavior,
                 )
             )
@@ -835,9 +852,9 @@ class VectorAwkward:
             if any(
                 f in fields for f in ("t", "tau", "M", "m", "mass", "E", "e", "energy")
             ):
-                cls = cls.ProjectionClass4D
+                cls = _projection_class(cls, 4)
             else:
-                cls = cls.ProjectionClass3D
+                cls = _projection_class(cls, 3)
 
             return maybe_record(
                 ak.zip(
@@ -891,7 +908,7 @@ class VectorAwkward:
                 ak.zip(
                     dict(zip(names, arrays, strict=True)),
                     depth_limit=first.layout.purelist_depth,
-                    with_name=_class_to_name(cls.ProjectionClass3D),
+                    with_name=_class_to_name(_projection_class(cls, 3)),
                     behavior=None if vector._awkward_registered else first.behavior,
                 )
             )
@@ -947,7 +964,7 @@ class VectorAwkward:
                 ak.zip(
                     dict(zip(names, arrays, strict=True)),
                     depth_limit=first.layout.purelist_depth,
-                    with_name=_class_to_name(cls.ProjectionClass4D),
+                    with_name=_class_to_name(_projection_class(cls, 4)),
                     behavior=None if vector._awkward_registered else first.behavior,
                 )
             )
