@@ -1431,6 +1431,9 @@ def add_binary_method(vectortype, gn, methodname):
             coord23 = getcoord1[numba_ltype(v2)]
             coord24 = getcoord1[numba_ttype(v2)]
 
+        else:
+            raise AssertionError
+
         if groupname == "planar":
             signature = (numba_aztype(v1), numba_aztype(v2))
 
@@ -1451,6 +1454,9 @@ def add_binary_method(vectortype, gn, methodname):
                 numba_ltype(v2),
                 numba_ttype(v2),
             )
+
+        else:
+            raise AssertionError
 
         function, *returns = _from_signature(
             groupname + "." + methodname,
@@ -1639,6 +1645,9 @@ def add_tolerance_method(vectortype, methodname):
             coord22 = getcoord2[numba_aztype(v2)]
             coord23 = getcoord1[numba_ltype(v2)]
 
+        else:
+            raise AssertionError
+
         function, *_ = _from_signature(
             groupname + "." + methodname,
             numba_modules[groupname][methodname],
@@ -1788,6 +1797,9 @@ def add_isclose_method(vectortype):
                     coord24(v2),
                 )
 
+        else:
+            raise AssertionError
+
         return overloader_impl
 
 
@@ -1897,6 +1909,9 @@ def add_transform2D(vectortype):
                     coord2(v),
                 )
                 return instance_class(azcoords(out1, out2), v.longitudinal, v.temporal)
+
+        else:
+            raise AssertionError
 
         return overloader_impl
 
