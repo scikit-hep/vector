@@ -5,6 +5,8 @@
 
 from __future__ import annotations
 
+import math
+
 import pytest
 
 import vector.backends.numpy
@@ -192,7 +194,11 @@ def test_lorentz_postime_negfactor():
         assert out.x == pytest.approx(1 * -1.75)
         assert out.y == pytest.approx(2 * -1.75)
         assert out.z == pytest.approx(3 * -1.75)
-        assert out.t == pytest.approx(6.06217782649107)
+        # Tau coordinates do not store the sign of t, so |t| is reconstructed.
+        # Scaling preserves the timelike character (tau stays positive), so the
+        # magnitude matches |4 * -1.75| = 7.0 (previously this gave the buggy
+        # spacelike value 6.0621... because tau's sign was flipped).
+        assert out.t == pytest.approx(4 * 1.75)
 
 
 def test_lorentz_negtime_posfactor():
@@ -296,4 +302,31 @@ def test_lorentz_negtime_negfactor():
         assert out.x == pytest.approx(1 * -1.75)
         assert out.y == pytest.approx(2 * -1.75)
         assert out.z == pytest.approx(3 * -1.75)
-        assert out.t == pytest.approx(8.880280119455692)
+        # This vector is spacelike (|t| < |p|, tau < 0). Scaling preserves the
+        # spacelike character, so the reconstructed |t| now matches the
+        # t-coordinate result |-1.5 * -1.75| = 2.625 (previously this gave the
+        # buggy value 8.8802... because tau's sign was flipped to positive).
+        assert out.t == pytest.approx(-1.5 * -1.75)
+
+
+def test_lorentz_scale_tau_sign_invariant():
+    # Scaling by a factor lambda multiplies t**2 - mag**2 by lambda**2, so the
+    # causal character (sign of tau) is invariant: |tau| scales by |lambda| and
+    # the sign is preserved. A negative factor must NOT flip a timelike vector
+    # into the spacelike (negative-tau) encoding.
+    # timelike vector (tau > 0)
+    mag = math.sqrt(1.0 + 4.0 + 9.0)
+    t_vec = vector.obj(x=1.0, y=2.0, z=3.0, t=math.sqrt(mag**2 + 25.0))  # tau = 5
+    assert t_vec.tau == pytest.approx(5.0)
+
+    tau_vec = vector.obj(x=1.0, y=2.0, z=3.0, tau=5.0)
+    scaled_tau = tau_vec.scale(-2.0)
+    scaled_t = t_vec.scale(-2.0)
+    # tau magnitude scales by |factor|, sign stays positive (timelike)
+    assert scaled_tau.tau == pytest.approx(10.0)
+    assert scaled_t.tau == pytest.approx(10.0)
+    assert scaled_tau.tau == pytest.approx(scaled_t.tau)
+
+    # spacelike vector (tau < 0) stays spacelike under negative scaling
+    spacelike = vector.obj(x=3.0, y=4.0, z=0.0, tau=-2.0)
+    assert spacelike.scale(-3.0).tau == pytest.approx(-6.0)

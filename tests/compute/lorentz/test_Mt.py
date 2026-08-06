@@ -118,3 +118,37 @@ def test_rhophi_eta_tau():
         vector.backends.object.TemporalObjectTau(16.583123951777),
     )
     assert vec.Mt == pytest.approx(math.sqrt(300))
+
+
+def test_transverse_spacelike_consistency():
+    # For a transverse-spacelike vector (t**2 - z**2 < 0), ROOT's Mt() is
+    # sign-preserving: Mt = copysign(sqrt(|Mt2|), Mt2). The T- and
+    # Tau-coordinate representations of the same vector must agree.
+    base = vector.obj(px=3.0, py=4.0, pz=10.0, E=2.0)
+    expected = -math.sqrt(96)  # Mt2 = 4 - 100 = -96
+    assert base.Mt2 == pytest.approx(-96)
+    assert base.Mt == pytest.approx(expected)
+
+    tau_vec = vector.obj(px=3.0, py=4.0, pz=10.0, tau=base.tau)
+    assert tau_vec.Mt2 == pytest.approx(-96)
+    assert tau_vec.Mt == pytest.approx(expected)
+    assert base.Mt == pytest.approx(tau_vec.Mt)
+
+    # all azimuthal/longitudinal representations agree (both T and Tau)
+    for vec in (
+        vector.obj(pt=base.pt, phi=base.phi, pz=10.0, E=2.0),
+        vector.obj(px=3.0, py=4.0, theta=base.theta, E=2.0),
+        vector.obj(px=3.0, py=4.0, eta=base.eta, E=2.0),
+        vector.obj(pt=base.pt, phi=base.phi, theta=base.theta, tau=base.tau),
+        vector.obj(px=3.0, py=4.0, eta=base.eta, tau=base.tau),
+    ):
+        assert vec.Mt2 == pytest.approx(-96)
+        assert vec.Mt == pytest.approx(expected)
+
+
+def test_timelike_consistency():
+    # Sanity: ordinary timelike vector still matches between T and Tau coords.
+    base = vector.obj(px=3.0, py=4.0, pz=0.0, E=10.0)
+    tau_vec = vector.obj(px=3.0, py=4.0, pz=0.0, tau=base.tau)
+    assert base.Mt == pytest.approx(10.0)
+    assert tau_vec.Mt == pytest.approx(10.0)

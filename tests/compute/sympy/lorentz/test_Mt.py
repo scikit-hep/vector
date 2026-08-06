@@ -25,7 +25,7 @@ def test_xy_z_t():
         vector.backends.sympy.LongitudinalSympyZ(z),
         vector.backends.sympy.TemporalSympyT(t),
     )
-    assert vec.Mt == sympy.sqrt(t**2 - z**2)
+    assert vec.Mt == sympy.sqrt(sympy.Abs(t**2 - z**2))
     assert vec.Mt.subs(values).evalf() == pytest.approx(math.sqrt(300))
 
 
@@ -51,7 +51,7 @@ def test_xy_theta_t():
         ),
         vector.backends.sympy.TemporalSympyT(t),
     )
-    assert vec.Mt.simplify() == sympy.sqrt(t**2 - z**2)
+    assert vec.Mt.simplify() == sympy.sqrt(sympy.Abs(t**2 - z**2))
     assert vec.Mt.subs(values).evalf() == pytest.approx(math.sqrt(300))
 
 
@@ -79,7 +79,7 @@ def test_xy_eta_t():
         ),
         vector.backends.sympy.TemporalSympyT(t),
     )
-    assert vec.Mt.simplify() == sympy.sqrt(t**2 - z**2)
+    assert vec.Mt.simplify() == sympy.sqrt(sympy.Abs(t**2 - z**2))
     assert vec.Mt.subs(values).evalf() == pytest.approx(math.sqrt(300))
 
 
@@ -105,7 +105,7 @@ def test_rhophi_z_t():
         vector.backends.sympy.LongitudinalSympyZ(z),
         vector.backends.sympy.TemporalSympyT(t),
     )
-    assert vec.Mt.simplify() == sympy.sqrt(t**2 - z**2)
+    assert vec.Mt.simplify() == sympy.sqrt(sympy.Abs(t**2 - z**2))
     assert vec.Mt.subs(values).evalf() == pytest.approx(math.sqrt(300))
 
 
@@ -129,7 +129,7 @@ def test_rhophi_theta_t():
         ),
         vector.backends.sympy.TemporalSympyT(t),
     )
-    assert vec.Mt.simplify() == sympy.sqrt(t**2 - z**2)
+    assert vec.Mt.simplify() == sympy.sqrt(sympy.Abs(t**2 - z**2))
     assert vec.Mt.subs(values).evalf() == pytest.approx(math.sqrt(300))
 
 
@@ -153,7 +153,7 @@ def test_rhophi_eta_t():
         vector.backends.sympy.LongitudinalSympyEta(sympy.asinh(z / rho)),
         vector.backends.sympy.TemporalSympyT(t),
     )
-    assert vec.Mt.simplify() == sympy.sqrt(t**2 - z**2)
+    assert vec.Mt.simplify() == sympy.sqrt(sympy.Abs(t**2 - z**2))
     assert vec.Mt.subs(values).evalf() == pytest.approx(math.sqrt(300))
 
 

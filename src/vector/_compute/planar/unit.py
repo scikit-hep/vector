@@ -35,10 +35,8 @@ def xy(lib, x, y):
 
 
 def rhophi(lib, rho, phi):
-    return (1, phi)
-
-
-rhophi.__awkward_transform_allowed__ = False  # type:ignore[attr-defined]
+    norm = lib.sqrt(rho**2)
+    return (lib.nan_to_num(rho / norm, nan=0, posinf=inf, neginf=-inf), phi)
 
 
 dispatch_map = {

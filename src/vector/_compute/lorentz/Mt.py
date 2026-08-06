@@ -34,51 +34,63 @@ from vector._methods import (
 
 
 def xy_z_t(lib, x, y, z, t):
-    return lib.sqrt(Mt2.xy_z_t(lib, x, y, z, t))
+    mt2 = Mt2.xy_z_t(lib, x, y, z, t)
+    return lib.copysign(lib.sqrt(lib.absolute(mt2)), mt2)
 
 
 def xy_z_tau(lib, x, y, z, tau):
-    return lib.sqrt(Mt2.xy_z_tau(lib, x, y, z, tau))
+    mt2 = Mt2.xy_z_tau(lib, x, y, z, tau)
+    return lib.copysign(lib.sqrt(lib.absolute(mt2)), mt2)
 
 
 def xy_theta_t(lib, x, y, theta, t):
-    return lib.sqrt(Mt2.xy_theta_t(lib, x, y, theta, t))
+    mt2 = Mt2.xy_theta_t(lib, x, y, theta, t)
+    return lib.copysign(lib.sqrt(lib.absolute(mt2)), mt2)
 
 
 def xy_theta_tau(lib, x, y, theta, tau):
-    return lib.sqrt(Mt2.xy_theta_tau(lib, x, y, theta, tau))
+    mt2 = Mt2.xy_theta_tau(lib, x, y, theta, tau)
+    return lib.copysign(lib.sqrt(lib.absolute(mt2)), mt2)
 
 
 def xy_eta_t(lib, x, y, eta, t):
-    return lib.sqrt(Mt2.xy_eta_t(lib, x, y, eta, t))
+    mt2 = Mt2.xy_eta_t(lib, x, y, eta, t)
+    return lib.copysign(lib.sqrt(lib.absolute(mt2)), mt2)
 
 
 def xy_eta_tau(lib, x, y, eta, tau):
-    return lib.sqrt(Mt2.xy_eta_tau(lib, x, y, eta, tau))
+    mt2 = Mt2.xy_eta_tau(lib, x, y, eta, tau)
+    return lib.copysign(lib.sqrt(lib.absolute(mt2)), mt2)
 
 
 def rhophi_z_t(lib, rho, phi, z, t):
-    return lib.sqrt(Mt2.rhophi_z_t(lib, rho, phi, z, t))
+    mt2 = Mt2.rhophi_z_t(lib, rho, phi, z, t)
+    return lib.copysign(lib.sqrt(lib.absolute(mt2)), mt2)
 
 
 def rhophi_z_tau(lib, rho, phi, z, tau):
-    return lib.sqrt(Mt2.rhophi_z_tau(lib, rho, phi, z, tau))
+    mt2 = Mt2.rhophi_z_tau(lib, rho, phi, z, tau)
+    return lib.copysign(lib.sqrt(lib.absolute(mt2)), mt2)
 
 
 def rhophi_theta_t(lib, rho, phi, theta, t):
-    return lib.sqrt(Mt2.rhophi_theta_t(lib, rho, phi, theta, t))
+    mt2 = Mt2.rhophi_theta_t(lib, rho, phi, theta, t)
+    return lib.copysign(lib.sqrt(lib.absolute(mt2)), mt2)
 
 
 def rhophi_theta_tau(lib, rho, phi, theta, tau):
-    return lib.sqrt(Mt2.rhophi_theta_tau(lib, rho, phi, theta, tau))
+    mt2 = Mt2.rhophi_theta_tau(lib, rho, phi, theta, tau)
+    return lib.copysign(lib.sqrt(lib.absolute(mt2)), mt2)
 
 
 def rhophi_eta_t(lib, rho, phi, eta, t):
-    return lib.sqrt(Mt2.rhophi_eta_t(lib, rho, phi, eta, t))
+    mt2 = Mt2.rhophi_eta_t(lib, rho, phi, eta, t)
+    return lib.copysign(lib.sqrt(lib.absolute(mt2)), mt2)
 
 
 def rhophi_eta_tau(lib, rho, phi, eta, tau):
-    return lib.sqrt(Mt2.rhophi_eta_tau(lib, rho, phi, eta, tau))
+    mt2 = Mt2.rhophi_eta_tau(lib, rho, phi, eta, tau)
+    return lib.copysign(lib.sqrt(lib.absolute(mt2)), mt2)
 
 
 dispatch_map = {
