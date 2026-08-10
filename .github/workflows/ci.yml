@@ -102,7 +102,7 @@ jobs:
     name: ROOT comparison tests
     steps:
       - uses: actions/checkout@v7
-      - uses: prefix-dev/setup-pixi@v0.10.0
+      - uses: prefix-dev/setup-pixi@v0.10.1
         with:
           environments: root
       - name: Run ROOT comparison tests
