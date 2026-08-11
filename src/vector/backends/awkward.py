@@ -589,7 +589,7 @@ def _projection_class(
 ) -> type[VectorProtocol]:
     name = f"ProjectionClass{dimension}D"
     projection: type[VectorProtocol] | None = getattr(cls, name, None)
-    if projection is None:
+    if not projection:
         msg = f"{dimension}D conversion for {cls.__name__} is not defined"
         raise TypeError(msg)
     return projection
