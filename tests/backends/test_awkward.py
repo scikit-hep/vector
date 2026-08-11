@@ -1261,30 +1261,3 @@ def test_record_method_chaining_without_registration():
         check=False,
     )
     assert result.returncode == 0, result.stderr
-
-
-def test_missing_projection_class_message():
-    # https://github.com/scikit-hep/vector/issues/488
-    behavior: dict = {}
-
-    class VertexArray(vector.backends.awkward.VectorAwkward3D, ak.Array):
-        pass
-
-    class VertexRecord(vector.backends.awkward.VectorAwkward3D, ak.Record):
-        pass
-
-    # a subclass (like coffea's VertexArray) that defines GenericClass but
-    # deliberately no ProjectionClass*D, because it has no such interpretation
-    VertexArray.GenericClass = VertexArray
-    VertexRecord.GenericClass = VertexRecord
-
-    behavior["*", "Vertex"] = VertexArray
-    behavior["Vertex"] = VertexRecord
-
-    v = ak.zip(
-        {"x": [1.1], "y": [2.2], "z": [3.3]},
-        with_name="Vertex",
-        behavior=behavior,
-    )
-    with pytest.raises(TypeError, match="does not define ProjectionClass3D"):
-        v.add(v)

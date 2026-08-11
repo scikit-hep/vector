@@ -313,6 +313,40 @@ def test_issue_704():
     assert isinstance(vec_vec.neg3D, vector.backends.awkward.MomentumArray4D)
 
 
+def test_issue_488():
+    ak = pytest.importorskip("awkward")
+
+    coordinates = {
+        2: {"x": [1.1], "y": [2.2]},
+        3: {"x": [1.1], "y": [2.2], "z": [3.3]},
+        4: {"x": [1.1], "y": [2.2], "z": [3.3], "t": [4.4]},
+    }
+
+    for dimension, fields in coordinates.items():
+        mixin = getattr(vector.backends.awkward, f"VectorAwkward{dimension}D")
+
+        class VertexArray(mixin, ak.Array):
+            pass
+
+        class VertexRecord(mixin, ak.Record):
+            pass
+
+        # a subclass (like coffea's VertexArray) that defines GenericClass but
+        # deliberately no ProjectionClass*D, because it has no such interpretation
+        VertexArray.GenericClass = VertexArray
+        VertexRecord.GenericClass = VertexRecord
+
+        v = ak.zip(
+            fields,
+            with_name="Vertex",
+            behavior={("*", "Vertex"): VertexArray, "Vertex": VertexRecord},
+        )
+        with pytest.raises(
+            TypeError, match=f"{dimension}D conversion for VertexArray is not defined"
+        ):
+            v.add(v)
+
+
 def test_star_import_without_optional_deps():
     """from vector import * must not raise even when sympy/awkward are absent."""
     # Block sympy via a find_spec-based meta path finder inserted before vector is imported.

@@ -590,13 +590,7 @@ def _projection_class(
     name = f"ProjectionClass{dimension}D"
     projection: type[VectorProtocol] | None = getattr(cls, name, None)
     if projection is None:
-        msg = (
-            f"{cls.__name__} does not define {name}: this operation implicitly "
-            f"converts a {cls.__name__} into a {dimension}D vector, but no "
-            f"{dimension}D equivalent has been declared for it. Assign "
-            f"`{cls.__name__}.{name}` to a suitable vector class to allow the "
-            "conversion, or convert the vectors explicitly before the operation."
-        )
+        msg = f"{dimension}D conversion for {cls.__name__} is not defined"
         raise TypeError(msg)
     return projection
 
