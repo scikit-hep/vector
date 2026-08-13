@@ -5,7 +5,7 @@ ci:
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v6.0.0
+    rev: 3e8a8703264a2f4a69428a0aa4dcb512790b2c8c # frozen: v6.0.0
     hooks:
       - id: check-added-large-files
       - id: check-case-conflict
@@ -19,14 +19,14 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.15.20"
+    rev: "c59bba8fb259db0fec2bbb77ad8ba51ea7341b56" # frozen: v0.15.20
     hooks:
       - id: ruff-check
         args: ["--fix", "--show-fixes"]
       - id: ruff-format
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v2.1.0
+    rev: d2823d321df3af8f878f7ee3414dc94d037145b9 # frozen: v2.1.0
     hooks:
       - id: mypy
         files: src
@@ -40,29 +40,36 @@ repos:
           - optree
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.2
+    rev: 57b21406f092110c18776e39b0bda50d37c945c8 # frozen: v2.4.3
     hooks:
       - id: codespell
 
   - repo: https://github.com/rbubley/mirrors-prettier
-    rev: "v3.9.4"
+    rev: "39e2973981e6d2f9b6c543b0086a2d2393abdc89" # frozen: v3.9.4
     hooks:
       - id: prettier
         types_or: [yaml, markdown, html, css, scss, javascript, json]
         exclude: assets/js/webapp\.js
 
   - repo: https://github.com/adamchainz/blacken-docs
-    rev: 1.20.0
+    rev: fda77690955e9b63c6687d8806bafd56a526e45f # frozen: 1.20.0
     hooks:
       - id: blacken-docs
         args: ["-E"]
         additional_dependencies: [black~=26.0]
 
   - repo: https://github.com/pre-commit/pygrep-hooks
-    rev: v1.10.0
+    rev: 3a6eb0fadf60b3cccfd80bad9dbb6fae7e47b316 # frozen: v1.10.0
     hooks:
       - id: python-check-blanket-type-ignore
         exclude: ^src/vector/backends/_numba_object.py$
       - id: rst-backticks
       - id: rst-directive-colons
       - id: rst-inline-touching-normal
+
+  - repo: https://github.com/zizmorcore/zizmor-pre-commit
+    rev: 451b56af716f9f0d0c2b816503a3fd0cf8b036fa # frozen: v1.29.0
+    hooks:
+      - id: zizmor
+        files: "^\\.github"
+        args: [--persona=pedantic]

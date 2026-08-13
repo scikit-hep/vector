@@ -4,8 +4,22 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     groups:
-      actions:
+      github-actions:
         patterns:
           - "*"
+    cooldown:
+      default-days: 7
+
+  # Maintain pre-commit hooks
+  - package-ecosystem: "pre-commit"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    groups:
+      pre-commit:
+        patterns:
+          - "*"
+    cooldown:
+      default-days: 7
