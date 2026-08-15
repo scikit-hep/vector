@@ -108,6 +108,10 @@ dev = [
 version.source = "vcs"
 build.hooks.vcs.version-file = "src/vector/_version.py"
 
+# Supply-chain cooldown: ignore releases newer than this
+[tool.uv]
+exclude-newer = "7 days"
+
 [tool.ruff.lint]
 extend-select = [
   "B",   # flake8-bugbear
@@ -296,6 +300,7 @@ ignore-regex = "[A-Za-z0-9+/]{100,}"
 [tool.pixi.workspace]
 channels = ["conda-forge"]
 platforms = ["linux-64", "osx-arm64", "osx-64"]
+exclude-newer = "7d"
 
 [tool.pixi.feature.root.dependencies]
 python = ">=3.10"
