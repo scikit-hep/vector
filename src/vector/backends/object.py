@@ -44,6 +44,7 @@ from vector._methods import (
     LongitudinalZ,
     Lorentz,
     LorentzMomentum,
+    Momentum,
     Planar,
     PlanarMomentum,
     SameVectorType,
@@ -58,11 +59,12 @@ from vector._methods import (
     Vector4D,
     VectorProtocol,
     _aztype,
+    _check_coordinate_names,
     _coordinate_class_to_names,
+    _generic_coordinates,
     _handler_of,
     _ltype,
     _repr_generic_to_momentum,
-    _repr_momentum_to_generic,
     _ttype,
 )
 from vector._typeutils import FloatArray
@@ -291,6 +293,29 @@ _coord_object_type = {
     TemporalT: TemporalObjectT,
     TemporalTau: TemporalObjectTau,
 }
+
+
+def _azimuthal_object(coordinates: dict[str, float]) -> AzimuthalObject:
+    """Builds an azimuthal object from validated, generically named coordinates."""
+    if "x" in coordinates:
+        return AzimuthalObjectXY(coordinates["x"], coordinates["y"])
+    return AzimuthalObjectRhoPhi(coordinates["rho"], coordinates["phi"])
+
+
+def _longitudinal_object(coordinates: dict[str, float]) -> LongitudinalObject:
+    """Builds a longitudinal object from validated, generically named coordinates."""
+    if "z" in coordinates:
+        return LongitudinalObjectZ(coordinates["z"])
+    if "theta" in coordinates:
+        return LongitudinalObjectTheta(coordinates["theta"])
+    return LongitudinalObjectEta(coordinates["eta"])
+
+
+def _temporal_object(coordinates: dict[str, float]) -> TemporalObject:
+    """Builds a temporal object from validated, generically named coordinates."""
+    if "t" in coordinates:
+        return TemporalObjectT(coordinates["t"])
+    return TemporalObjectTau(coordinates["tau"])
 
 
 def _replace_data(obj: typing.Any, result: typing.Any) -> typing.Any:
@@ -683,25 +708,11 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
     ) -> None:
         _is_type_safe(kwargs)
 
-        for k, v in kwargs.copy().items():
-            kwargs.pop(k)
-            kwargs[_repr_momentum_to_generic.get(k, k)] = v
-
         if not kwargs and azimuthal is not None:
             self.azimuthal = azimuthal
         elif kwargs and azimuthal is None:
-            if set(kwargs) == {"x", "y"}:
-                self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
-            elif set(kwargs) == {"rho", "phi"}:
-                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
-            else:
-                complaint = """unrecognized combination of coordinates, allowed combinations are:\n
-                    x= y=
-                    rho= phi=""".replace("                    ", "    ")
-                if type(self) is VectorObject2D:
-                    raise TypeError(complaint)
-                else:
-                    raise TypeError(f"{complaint}\n\nor their momentum equivalents")
+            coordinates = _generic_coordinates(kwargs, 2, isinstance(self, Momentum))
+            self.azimuthal = _azimuthal_object(coordinates)
         else:
             raise TypeError("must give Azimuthal if not giving keyword arguments")
 
@@ -1071,44 +1082,13 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
     ) -> None:
         _is_type_safe(kwargs)
 
-        for k, v in kwargs.copy().items():
-            kwargs.pop(k)
-            kwargs[_repr_momentum_to_generic.get(k, k)] = v
-
         if not kwargs and azimuthal is not None and longitudinal is not None:
             self.azimuthal = azimuthal
             self.longitudinal = longitudinal
         elif kwargs and azimuthal is None and longitudinal is None:
-            if set(kwargs) == {"x", "y", "z"}:
-                self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
-                self.longitudinal = LongitudinalObjectZ(kwargs["z"])
-            elif set(kwargs) == {"x", "y", "eta"}:
-                self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
-                self.longitudinal = LongitudinalObjectEta(kwargs["eta"])
-            elif set(kwargs) == {"x", "y", "theta"}:
-                self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
-                self.longitudinal = LongitudinalObjectTheta(kwargs["theta"])
-            elif set(kwargs) == {"rho", "phi", "z"}:
-                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
-                self.longitudinal = LongitudinalObjectZ(kwargs["z"])
-            elif set(kwargs) == {"rho", "phi", "eta"}:
-                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
-                self.longitudinal = LongitudinalObjectEta(kwargs["eta"])
-            elif set(kwargs) == {"rho", "phi", "theta"}:
-                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
-                self.longitudinal = LongitudinalObjectTheta(kwargs["theta"])
-            else:
-                complaint = """unrecognized combination of coordinates, allowed combinations are:\n
-                    x= y= z=
-                    x= y= theta=
-                    x= y= eta=
-                    rho= phi= z=
-                    rho= phi= theta=
-                    rho= phi= eta=""".replace("                    ", "    ")
-                if type(self) is VectorObject3D:
-                    raise TypeError(complaint)
-                else:
-                    raise TypeError(f"{complaint}\n\nor their momentum equivalents")
+            coordinates = _generic_coordinates(kwargs, 3, isinstance(self, Momentum))
+            self.azimuthal = _azimuthal_object(coordinates)
+            self.longitudinal = _longitudinal_object(coordinates)
         else:
             raise TypeError(
                 "must give Azimuthal and Longitudinal if not giving keyword arguments"
@@ -1764,10 +1744,6 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
     ) -> None:
         _is_type_safe(kwargs)
 
-        for k, v in kwargs.copy().items():
-            kwargs.pop(k)
-            kwargs[_repr_momentum_to_generic.get(k, k)] = v
-
         if (
             not kwargs
             and azimuthal is not None
@@ -1778,72 +1754,10 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             self.longitudinal = longitudinal
             self.temporal = temporal
         elif kwargs and azimuthal is None and longitudinal is None and temporal is None:
-            if set(kwargs) == {"x", "y", "z", "t"}:
-                self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
-                self.longitudinal = LongitudinalObjectZ(kwargs["z"])
-                self.temporal = TemporalObjectT(kwargs["t"])
-            elif set(kwargs) == {"x", "y", "eta", "t"}:
-                self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
-                self.longitudinal = LongitudinalObjectEta(kwargs["eta"])
-                self.temporal = TemporalObjectT(kwargs["t"])
-            elif set(kwargs) == {"x", "y", "theta", "t"}:
-                self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
-                self.longitudinal = LongitudinalObjectTheta(kwargs["theta"])
-                self.temporal = TemporalObjectT(kwargs["t"])
-            elif set(kwargs) == {"rho", "phi", "z", "t"}:
-                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
-                self.longitudinal = LongitudinalObjectZ(kwargs["z"])
-                self.temporal = TemporalObjectT(kwargs["t"])
-            elif set(kwargs) == {"rho", "phi", "eta", "t"}:
-                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
-                self.longitudinal = LongitudinalObjectEta(kwargs["eta"])
-                self.temporal = TemporalObjectT(kwargs["t"])
-            elif set(kwargs) == {"rho", "phi", "theta", "t"}:
-                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
-                self.longitudinal = LongitudinalObjectTheta(kwargs["theta"])
-                self.temporal = TemporalObjectT(kwargs["t"])
-            elif set(kwargs) == {"x", "y", "z", "tau"}:
-                self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
-                self.longitudinal = LongitudinalObjectZ(kwargs["z"])
-                self.temporal = TemporalObjectTau(kwargs["tau"])
-            elif set(kwargs) == {"x", "y", "eta", "tau"}:
-                self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
-                self.longitudinal = LongitudinalObjectEta(kwargs["eta"])
-                self.temporal = TemporalObjectTau(kwargs["tau"])
-            elif set(kwargs) == {"x", "y", "theta", "tau"}:
-                self.azimuthal = AzimuthalObjectXY(kwargs["x"], kwargs["y"])
-                self.longitudinal = LongitudinalObjectTheta(kwargs["theta"])
-                self.temporal = TemporalObjectTau(kwargs["tau"])
-            elif set(kwargs) == {"rho", "phi", "z", "tau"}:
-                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
-                self.longitudinal = LongitudinalObjectZ(kwargs["z"])
-                self.temporal = TemporalObjectTau(kwargs["tau"])
-            elif set(kwargs) == {"rho", "phi", "eta", "tau"}:
-                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
-                self.longitudinal = LongitudinalObjectEta(kwargs["eta"])
-                self.temporal = TemporalObjectTau(kwargs["tau"])
-            elif set(kwargs) == {"rho", "phi", "theta", "tau"}:
-                self.azimuthal = AzimuthalObjectRhoPhi(kwargs["rho"], kwargs["phi"])
-                self.longitudinal = LongitudinalObjectTheta(kwargs["theta"])
-                self.temporal = TemporalObjectTau(kwargs["tau"])
-            else:
-                complaint = """unrecognized combination of coordinates, allowed combinations are:\n
-                    x= y= z= tau=
-                    x= y= theta= t=
-                    x= y= theta= tau=
-                    x= y= eta= t=
-                    x= y= z= t=
-                    x= y= eta= tau=
-                    rho= phi= z= t=
-                    rho= phi= z= tau=
-                    rho= phi= theta= t=
-                    rho= phi= theta= tau=
-                    rho= phi= eta= t=
-                    rho= phi= eta= tau=""".replace("                    ", "    ")
-                if type(self) is VectorObject4D:
-                    raise TypeError(complaint)
-                else:
-                    raise TypeError(f"{complaint}\n\nor their momentum equivalents")
+            coordinates = _generic_coordinates(kwargs, 4, isinstance(self, Momentum))
+            self.azimuthal = _azimuthal_object(coordinates)
+            self.longitudinal = _longitudinal_object(coordinates)
+            self.temporal = _temporal_object(coordinates)
         else:
             raise TypeError(
                 "must give Azimuthal, Longitudinal, and Temporal if not giving keyword arguments"
@@ -2200,84 +2114,27 @@ def _gather_coordinates(
     spatial_class: type[VectorObject3D],
     lorentz_class: type[VectorObject4D],
     coordinates: dict[str, typing.Any],
+    dimension: int,
 ) -> typing.Any:
     """
     Helper function for :func:`vector.backends.object.obj`.
 
     Constructs and returns a 2D, 3D, or 4D ``VectorObject`` or ``MomentumObject`` with
-    the provided coordinates (dictionary), planar (``VectorObject2D`` or ``MomentumObject2D``),
-    spatial (``VectorObject3D`` or ``MomentumObject3D``), and lorentz
-    (``VectorObject4D`` or ``MomentumObject4D``) classes.
+    the provided (validated, generically named) coordinates, planar (``VectorObject2D``
+    or ``MomentumObject2D``), spatial (``VectorObject3D`` or ``MomentumObject3D``), and
+    lorentz (``VectorObject4D`` or ``MomentumObject4D``) classes.
     """
-    azimuthal: None | (AzimuthalObjectXY | AzimuthalObjectRhoPhi) = None
-
-    if "x" in coordinates and "y" in coordinates:
-        if "rho" in coordinates or "phi" in coordinates:
-            raise TypeError("specify x= and y= or rho= and phi=, but not both")
-        azimuthal = AzimuthalObjectXY(coordinates.pop("x"), coordinates.pop("y"))
-    elif "rho" in coordinates and "phi" in coordinates:
-        if "x" in coordinates or "y" in coordinates:
-            raise TypeError("specify x= and y= or rho= and phi=, but not both")
-        azimuthal = AzimuthalObjectRhoPhi(
-            coordinates.pop("rho"), coordinates.pop("phi")
+    if dimension == 2:
+        return planar_class(azimuthal=_azimuthal_object(coordinates))
+    if dimension == 3:
+        return spatial_class(
+            azimuthal=_azimuthal_object(coordinates),
+            longitudinal=_longitudinal_object(coordinates),
         )
-
-    longitudinal: None | (
-        LongitudinalObjectZ | LongitudinalObjectTheta | LongitudinalObjectEta
-    ) = None
-
-    if "z" in coordinates:
-        if "theta" in coordinates or "eta" in coordinates:
-            raise TypeError("specify z= or theta= or eta=, but not more than one")
-        longitudinal = LongitudinalObjectZ(coordinates.pop("z"))
-    elif "theta" in coordinates:
-        if "eta" in coordinates:
-            raise TypeError("specify z= or theta= or eta=, but not more than one")
-        longitudinal = LongitudinalObjectTheta(coordinates.pop("theta"))
-    elif "eta" in coordinates:
-        longitudinal = LongitudinalObjectEta(coordinates.pop("eta"))
-
-    temporal: TemporalObjectT | TemporalObjectTau | None = None
-
-    if "t" in coordinates:
-        if "tau" in coordinates:
-            raise TypeError("specify t= or tau=, but not more than one")
-        temporal = TemporalObjectT(coordinates.pop("t"))
-    elif "tau" in coordinates:
-        temporal = TemporalObjectTau(coordinates.pop("tau"))
-
-    if not coordinates:
-        if azimuthal is not None and longitudinal is None and temporal is None:
-            return planar_class(azimuthal=azimuthal)
-        if azimuthal is not None and longitudinal is not None and temporal is None:
-            return spatial_class(azimuthal=azimuthal, longitudinal=longitudinal)
-        if azimuthal is not None and longitudinal is not None and temporal is not None:
-            return lorentz_class(
-                azimuthal=azimuthal, longitudinal=longitudinal, temporal=temporal
-            )
-
-    raise TypeError(
-        "unrecognized combination of coordinates, allowed combinations are:\n\n"
-        "    (2D) x= y=\n"
-        "    (2D) rho= phi=\n"
-        "    (3D) x= y= z=\n"
-        "    (3D) x= y= theta=\n"
-        "    (3D) x= y= eta=\n"
-        "    (3D) rho= phi= z=\n"
-        "    (3D) rho= phi= theta=\n"
-        "    (3D) rho= phi= eta=\n"
-        "    (4D) x= y= z= t=\n"
-        "    (4D) x= y= z= tau=\n"
-        "    (4D) x= y= theta= t=\n"
-        "    (4D) x= y= theta= tau=\n"
-        "    (4D) x= y= eta= t=\n"
-        "    (4D) x= y= eta= tau=\n"
-        "    (4D) rho= phi= z= t=\n"
-        "    (4D) rho= phi= z= tau=\n"
-        "    (4D) rho= phi= theta= t=\n"
-        "    (4D) rho= phi= theta= tau=\n"
-        "    (4D) rho= phi= eta= t=\n"
-        "    (4D) rho= phi= eta= tau="
+    return lorentz_class(
+        azimuthal=_azimuthal_object(coordinates),
+        longitudinal=_longitudinal_object(coordinates),
+        temporal=_temporal_object(coordinates),
     )
 
 
@@ -3212,6 +3069,10 @@ def obj(**coordinates: float) -> VectorObject:
 
     to make the vector a momentum vector.
 
+    A coordinate may be given only once, whether by its generic name or through
+    a momentum-alias, and the names must form exactly one of the combinations
+    above; anything else raises a ``TypeError``.
+
     Alternatively, the :class:`vector.VectorObject2D`,
     :class:`vector.VectorObject3D`, and
     :class:`vector.VectorObject4D` classes (with momentum
@@ -3240,64 +3101,26 @@ def obj(**coordinates: float) -> VectorObject:
     - :meth:`vector.VectorObject4D.from_rhophietat`
     - :meth:`vector.VectorObject4D.from_rhophietatau`
     """
-    is_momentum = False
-    generic_coordinates = {}
-
     _is_type_safe(coordinates)
 
-    if "px" in coordinates:
-        is_momentum = True
-        generic_coordinates["x"] = coordinates.pop("px")
-    if "py" in coordinates:
-        is_momentum = True
-        generic_coordinates["y"] = coordinates.pop("py")
-    if "pt" in coordinates:
-        is_momentum = True
-        generic_coordinates["rho"] = coordinates.pop("pt")
-    if "pz" in coordinates:
-        is_momentum = True
-        generic_coordinates["z"] = coordinates.pop("pz")
-    if "E" in coordinates:
-        is_momentum = True
-        generic_coordinates["t"] = coordinates.pop("E")
-    if "e" in coordinates:
-        is_momentum = True
-        if "t" in generic_coordinates:
-            raise TypeError(
-                "duplicate coordinates (through momentum-aliases): 'e' and 'E' both map to 't'"
-            )
-        generic_coordinates["t"] = coordinates.pop("e")
-    if "energy" in coordinates and "t" not in generic_coordinates:
-        is_momentum = True
-        generic_coordinates["t"] = coordinates.pop("energy")
-    if "M" in coordinates:
-        is_momentum = True
-        generic_coordinates["tau"] = coordinates.pop("M")
-    if "m" in coordinates:
-        is_momentum = True
-        if "tau" in generic_coordinates:
-            raise TypeError(
-                "duplicate coordinates (through momentum-aliases): 'm' and 'M' both map to 'tau'"
-            )
-        generic_coordinates["tau"] = coordinates.pop("m")
-    if "mass" in coordinates and "tau" not in generic_coordinates:
-        is_momentum = True
-        generic_coordinates["tau"] = coordinates.pop("mass")
-    for x in list(coordinates):
-        if x not in generic_coordinates:
-            generic_coordinates[x] = coordinates.pop(x)
-    if len(coordinates) != 0:
-        raise TypeError(
-            "duplicate coordinates (through momentum-aliases): "
-            + ", ".join(repr(x) for x in coordinates)
-        )
+    is_momentum, dimension, names, _ = _check_coordinate_names(tuple(coordinates))
+    generic_coordinates = {name: coordinates[given] for name, given in names}
+
     if is_momentum:
         return _gather_coordinates(
-            MomentumObject2D, MomentumObject3D, MomentumObject4D, generic_coordinates
+            MomentumObject2D,
+            MomentumObject3D,
+            MomentumObject4D,
+            generic_coordinates,
+            dimension,
         )
     else:
         return _gather_coordinates(
-            VectorObject2D, VectorObject3D, VectorObject4D, generic_coordinates
+            VectorObject2D,
+            VectorObject3D,
+            VectorObject4D,
+            generic_coordinates,
+            dimension,
         )
 
 

@@ -27,7 +27,18 @@ and thus the `abs` function computes the magnitude of each record as `sqrt(x**2 
 
 It is not necessary to install Vector's behaviors globally. They could be installed in the `vec` array only by passing `behavior=vector.backends.awkward.behavior` to the [ak.Array](https://awkward-array.org/doc/main/reference/generated/ak.Array.html) constructor.
 
-The records can contain more fields than those that specify coordinates, which can be useful for specifying properties of a particle other than its momentum. Only the coordinate names are considered when performing vector calculations. Coordinates must be numbers (not, for instance, lists of numbers). Be careful about field names that coincide with coordinates, such as `rho` (azimuthal magnitude) and `tau` (proper time).
+The records can contain more fields than those that specify coordinates, which can be useful for specifying properties of a particle other than its momentum. Only the coordinate names are considered when performing vector calculations. Coordinates must be numbers (not, for instance, lists of numbers).
+
+Field names that mean a coordinate under another name, such as `rho` (a synonym of `pt`) or `energy` in a record that already has `mass`, would silently change what a vector means, so Vector rejects them:
+
+```python
+>>> ak.Array([{"pt": 1.1, "phi": 2.2, "eta": 3.3, "mass": 4.4, "energy": 5.5}], with_name="Momentum4D")
+Traceback (most recent call last):
+    ...
+TypeError: specify t= or tau=, but not more than one
+```
+
+This runs whenever the behaviors are attached, not only in `vector.Array` and `vector.zip`, so `jets["rho"] = ...` is caught too. It is the `__awkward_validation__` hook of each behavior class and needs `awkward>=2.8.11`; older versions skip it. Subclassed behaviors (see [Advanced: subclassing Awkward-Vector behaviors](awkward.ipynb)) inherit the check and can extend it by overriding `__awkward_validation__` and calling `super().__awkward_validation__()`.
 
 The `vector.Array` function (`vector.awk` is a synonym) is an alternative to the [ak.Array](https://awkward-array.org/doc/main/reference/generated/ak.Array.html) constructor, which installs Vector's behavior in the new array (not globally in `ak.behavior`).
 

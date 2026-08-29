@@ -64,6 +64,10 @@ from vector._methods import (
     Vector3D,
     Vector4D,
     VectorProtocol,
+    _azimuthal_fields,
+    _check_coordinate_names,
+    _longitudinal_fields,
+    _temporal_fields,
 )
 from vector._typeutils import BoolCollection, Protocol, ScalarCollection
 from vector.backends.numpy import VectorNumpy2D, VectorNumpy3D, VectorNumpy4D
@@ -607,21 +611,32 @@ def _class_to_name(cls: type[VectorProtocol]) -> str:
 # the vector class ############################################################
 
 
-# Generic and momentum-alias coordinate field names, grouped by geometry tier.
 # Used by ``_wrap_result`` to exclude (already-recomputed) coordinate fields when
 # carrying along "extra" record fields, so that stale, pre-computation coordinates
-# are not leaked into the output. Previously these tuples were hand-copied into
-# each branch and omitted the ``px``/``py`` momentum aliases, leaking stale values.
-_azimuthal_fields = frozenset({"x", "y", "rho", "phi", "px", "py", "pt"})
-_longitudinal_fields = frozenset({"z", "theta", "eta", "pz"})
-_temporal_fields = frozenset({"t", "tau", "E", "e", "energy", "M", "m", "mass"})
-
+# are not leaked into the output.
+#
 # Exclude only azimuthal coordinates (carry longitudinal/temporal as extras).
 _coordinate_fields_azimuthal = _azimuthal_fields
 # Exclude azimuthal + longitudinal coordinates (carry temporal as extras).
 _coordinate_fields_spatial = _azimuthal_fields | _longitudinal_fields
 # Exclude all coordinate names.
 _coordinate_fields_all = _azimuthal_fields | _longitudinal_fields | _temporal_fields
+
+
+def _check_fields(array: typing.Any, dimension: int, momentum: bool) -> None:
+    """
+    Validates the fields of an array a vector behavior is being attached to. Its
+    record name was chosen elsewhere, so the complaint has to name the array.
+    """
+    fields = tuple(array.fields)
+    try:
+        _check_coordinate_names(
+            fields, dimension=dimension, momentum=momentum, allow_extra=True
+        )
+    except TypeError as err:
+        raise TypeError(
+            f"{type(array).__name__} with fields {list(fields)}: {err}"
+        ) from err
 
 
 def _yes_record(
@@ -636,6 +651,8 @@ def _no_record(x: ak.Array) -> ak.Array | None:
 
 # Type for mixing in Awkward later
 class AwkwardProtocol(Protocol):
+    fields: list[str]
+
     def __getitem__(self, where: typing.Any) -> float | ak.Array | ak.Record | None: ...
 
 
@@ -739,11 +756,9 @@ class VectorAwkward:
                         names.append(name)
                         arrays.append(self[name])
 
-            if any(
-                f in fields for f in ("t", "tau", "M", "m", "mass", "E", "e", "energy")
-            ):
+            if any(f in _temporal_fields for f in fields):
                 cls = cls.ProjectionClass4D
-            elif any(f in fields for f in ("z", "pz", "theta", "eta")):
+            elif any(f in _longitudinal_fields for f in fields):
                 cls = cls.ProjectionClass3D
             else:
                 cls = cls.ProjectionClass2D
@@ -832,9 +847,7 @@ class VectorAwkward:
                         names.append(name)
                         arrays.append(self[name])
 
-            if any(
-                f in fields for f in ("t", "tau", "M", "m", "mass", "E", "e", "energy")
-            ):
+            if any(f in _temporal_fields for f in fields):
                 cls = cls.ProjectionClass4D
             else:
                 cls = cls.ProjectionClass3D
@@ -1064,6 +1077,10 @@ class VectorAwkward2D(VectorAwkward, Planar, Vector2D):
     See :class:`MomentumAwkward2D` for momentum vectors.
     """
 
+    def __awkward_validation__(self: AwkwardProtocol) -> None:
+        """Raises a ``TypeError`` if these fields do not describe a vector."""
+        _check_fields(self, 2, False)
+
     @property
     def azimuthal(self) -> AzimuthalAwkward:
         """
@@ -1094,6 +1111,10 @@ class MomentumAwkward2D(PlanarMomentum, VectorAwkward2D):
     See :class:`VectorAwkward2D` for vectors.
     """
 
+    def __awkward_validation__(self: AwkwardProtocol) -> None:
+        """Raises a ``TypeError`` if these fields do not describe a momentum vector."""
+        _check_fields(self, 2, True)
+
     @property
     def azimuthal(self) -> AzimuthalAwkward:
         """
@@ -1123,6 +1144,10 @@ class VectorAwkward3D(VectorAwkward, Spatial, Vector3D):
 
     See :class:`MomentumAwkward3D` for momentum vectors.
     """
+
+    def __awkward_validation__(self: AwkwardProtocol) -> None:
+        """Raises a ``TypeError`` if these fields do not describe a vector."""
+        _check_fields(self, 3, False)
 
     @property
     def azimuthal(self) -> AzimuthalAwkward:
@@ -1174,6 +1199,10 @@ class MomentumAwkward3D(SpatialMomentum, VectorAwkward3D):
     See :class:`VectorAwkward3D` for vectors.
     """
 
+    def __awkward_validation__(self: AwkwardProtocol) -> None:
+        """Raises a ``TypeError`` if these fields do not describe a momentum vector."""
+        _check_fields(self, 3, True)
+
     @property
     def azimuthal(self) -> AzimuthalAwkward:
         """
@@ -1223,6 +1252,10 @@ class VectorAwkward4D(VectorAwkward, Lorentz, Vector4D):
 
     See :class:`MomentumAwkward4D` for momentum vectors.
     """
+
+    def __awkward_validation__(self: AwkwardProtocol) -> None:
+        """Raises a ``TypeError`` if these fields do not describe a vector."""
+        _check_fields(self, 4, False)
 
     @property
     def azimuthal(self) -> AzimuthalAwkward:
@@ -1293,6 +1326,10 @@ class MomentumAwkward4D(LorentzMomentum, VectorAwkward4D):
 
     See :class:`VectorAwkward4D` for vectors.
     """
+
+    def __awkward_validation__(self: AwkwardProtocol) -> None:
+        """Raises a ``TypeError`` if these fields do not describe a momentum vector."""
+        _check_fields(self, 4, True)
 
     @property
     def azimuthal(self) -> AzimuthalAwkward:

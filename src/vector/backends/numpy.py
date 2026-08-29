@@ -46,6 +46,7 @@ from vector._methods import (
     Vector4D,
     VectorProtocol,
     _aztype,
+    _check_coordinate_names,
     _coordinate_class_to_names,
     _coordinate_order,
     _handler_of,
@@ -865,6 +866,46 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type
         return self["tau"]
 
 
+_azimuthal_numpy_type: dict[
+    str, type[AzimuthalNumpyXY] | type[AzimuthalNumpyRhoPhi]
+] = {"x": AzimuthalNumpyXY, "rho": AzimuthalNumpyRhoPhi}
+_longitudinal_numpy_type: dict[
+    str,
+    type[LongitudinalNumpyZ]
+    | type[LongitudinalNumpyTheta]
+    | type[LongitudinalNumpyEta],
+] = {
+    "z": LongitudinalNumpyZ,
+    "theta": LongitudinalNumpyTheta,
+    "eta": LongitudinalNumpyEta,
+}
+_temporal_numpy_type: dict[str, type[TemporalNumpyT] | type[TemporalNumpyTau]] = {
+    "t": TemporalNumpyT,
+    "tau": TemporalNumpyTau,
+}
+
+
+def _check_dtype_names(
+    array: VectorNumpy2D | VectorNumpy3D | VectorNumpy4D, dimension: int
+) -> tuple[tuple[str, str], ...]:
+    """
+    Validates a structured dtype against the coordinates that ``array``'s class
+    expects, returning the ``(generic name, given name)`` pairs it found.
+    """
+    if array.dtype.names is None:
+        raise TypeError(
+            f"{type(array).__name__} must have a structured dtype containing "
+            "its coordinates as fields"
+        )
+    _, _, names, _ = _check_coordinate_names(
+        array.dtype.names,
+        dimension=dimension,
+        momentum=type(array)._IS_MOMENTUM,
+        allow_extra=True,
+    )
+    return names
+
+
 class VectorNumpy(Vector, GetItem):  # noqa: PLW1641
     """Mixin class for NumPy vectors."""
 
@@ -1193,15 +1234,8 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
         if obj is None:
             return
 
-        if _has(self, ("x", "y")):
-            self._azimuthal_type = AzimuthalNumpyXY
-        elif _has(self, ("rho", "phi")):
-            self._azimuthal_type = AzimuthalNumpyRhoPhi
-        else:
-            raise TypeError(
-                f"{type(self).__name__} must have a structured dtype containing "
-                'fields ("x", "y") or ("rho", "phi")'
-            )
+        names = _check_dtype_names(self, 2)
+        self._azimuthal_type = _azimuthal_numpy_type[names[0][0]]
 
         _is_type_safe(self)
 
@@ -1366,19 +1400,13 @@ class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore[misc]
         if obj is None:
             return
 
+        names = _check_dtype_names(self, 2)
+
         # Install a fresh dtype on ``self`` rather than mutating the dtype object,
         # which is shared with the base array and would rename the caller's fields.
         self.dtype = _momentum_to_generic_dtype(self.dtype)
 
-        if _has(self, ("x", "y")):
-            self._azimuthal_type = AzimuthalNumpyXY
-        elif _has(self, ("rho", "phi")):
-            self._azimuthal_type = AzimuthalNumpyRhoPhi
-        else:
-            raise TypeError(
-                f"{type(self).__name__} must have a structured dtype containing "
-                'fields ("x", "y") or ("rho", "phi") or ("px", "py") or ("pt", "phi")'
-            )
+        self._azimuthal_type = _azimuthal_numpy_type[names[0][0]]
 
         _is_type_safe(self)
 
@@ -1434,26 +1462,9 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
         if obj is None:
             return
 
-        if _has(self, ("x", "y")):
-            self._azimuthal_type = AzimuthalNumpyXY
-        elif _has(self, ("rho", "phi")):
-            self._azimuthal_type = AzimuthalNumpyRhoPhi
-        else:
-            raise TypeError(
-                f"{type(self).__name__} must have a structured dtype containing "
-                'fields ("x", "y") or ("rho", "phi")'
-            )
-        if _has(self, ("z",)):
-            self._longitudinal_type = LongitudinalNumpyZ
-        elif _has(self, ("theta",)):
-            self._longitudinal_type = LongitudinalNumpyTheta
-        elif _has(self, ("eta",)):
-            self._longitudinal_type = LongitudinalNumpyEta
-        else:
-            raise TypeError(
-                f"{type(self).__name__} must have a structured dtype containing "
-                'field "z" or "theta" or "eta"'
-            )
+        names = _check_dtype_names(self, 3)
+        self._azimuthal_type = _azimuthal_numpy_type[names[0][0]]
+        self._longitudinal_type = _longitudinal_numpy_type[names[2][0]]
 
         _is_type_safe(self)
 
@@ -1671,29 +1682,14 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
         if obj is None:
             return
 
+        names = _check_dtype_names(self, 3)
+
         # Install a fresh dtype on ``self`` rather than mutating the dtype object,
         # which is shared with the base array and would rename the caller's fields.
         self.dtype = _momentum_to_generic_dtype(self.dtype)
-        if _has(self, ("x", "y")):
-            self._azimuthal_type = AzimuthalNumpyXY
-        elif _has(self, ("rho", "phi")):
-            self._azimuthal_type = AzimuthalNumpyRhoPhi
-        else:
-            raise TypeError(
-                f"{type(self).__name__} must have a structured dtype containing "
-                'fields ("x", "y") or ("rho", "phi") or ("px", "py") or ("pt", "phi")'
-            )
-        if _has(self, ("z",)):
-            self._longitudinal_type = LongitudinalNumpyZ
-        elif _has(self, ("theta",)):
-            self._longitudinal_type = LongitudinalNumpyTheta
-        elif _has(self, ("eta",)):
-            self._longitudinal_type = LongitudinalNumpyEta
-        else:
-            raise TypeError(
-                f"{type(self).__name__} must have a structured dtype containing "
-                'field "z" or "theta" or "eta" or "pz"'
-            )
+
+        self._azimuthal_type = _azimuthal_numpy_type[names[0][0]]
+        self._longitudinal_type = _longitudinal_numpy_type[names[2][0]]
 
         _is_type_safe(self)
 
@@ -1752,37 +1748,10 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
         if obj is None:
             return
 
-        if _has(self, ("x", "y")):
-            self._azimuthal_type = AzimuthalNumpyXY
-        elif _has(self, ("rho", "phi")):
-            self._azimuthal_type = AzimuthalNumpyRhoPhi
-        else:
-            raise TypeError(
-                f"{type(self).__name__} must have a structured dtype containing "
-                'fields ("x", "y") or ("rho", "phi")'
-            )
-
-        if _has(self, ("z",)):
-            self._longitudinal_type = LongitudinalNumpyZ
-        elif _has(self, ("theta",)):
-            self._longitudinal_type = LongitudinalNumpyTheta
-        elif _has(self, ("eta",)):
-            self._longitudinal_type = LongitudinalNumpyEta
-        else:
-            raise TypeError(
-                f"{type(self).__name__} must have a structured dtype containing "
-                'field "z" or "theta" or "eta"'
-            )
-
-        if _has(self, ("t",)):
-            self._temporal_type = TemporalNumpyT
-        elif _has(self, ("tau",)):
-            self._temporal_type = TemporalNumpyTau
-        else:
-            raise TypeError(
-                f"{type(self).__name__} must have a structured dtype containing "
-                'field "t" or "tau"'
-            )
+        names = _check_dtype_names(self, 4)
+        self._azimuthal_type = _azimuthal_numpy_type[names[0][0]]
+        self._longitudinal_type = _longitudinal_numpy_type[names[2][0]]
+        self._temporal_type = _temporal_numpy_type[names[3][0]]
 
         _is_type_safe(self)
 
@@ -2061,41 +2030,15 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore[misc]
         if obj is None:
             return
 
+        names = _check_dtype_names(self, 4)
+
         # Install a fresh dtype on ``self`` rather than mutating the dtype object,
         # which is shared with the base array and would rename the caller's fields.
         self.dtype = _momentum_to_generic_dtype(self.dtype)
 
-        if _has(self, ("x", "y")):
-            self._azimuthal_type = AzimuthalNumpyXY
-        elif _has(self, ("rho", "phi")):
-            self._azimuthal_type = AzimuthalNumpyRhoPhi
-        else:
-            raise TypeError(
-                f"{type(self).__name__} must have a structured dtype containing "
-                'fields ("x", "y") or ("rho", "phi") or ("px", "py") or ("pt", "phi")'
-            )
-
-        if _has(self, ("z",)):
-            self._longitudinal_type = LongitudinalNumpyZ
-        elif _has(self, ("theta",)):
-            self._longitudinal_type = LongitudinalNumpyTheta
-        elif _has(self, ("eta",)):
-            self._longitudinal_type = LongitudinalNumpyEta
-        else:
-            raise TypeError(
-                f"{type(self).__name__} must have a structured dtype containing "
-                'field "z" or "theta" or "eta" or "pz"'
-            )
-
-        if _has(self, ("t",)):
-            self._temporal_type = TemporalNumpyT
-        elif _has(self, ("tau",)):
-            self._temporal_type = TemporalNumpyTau
-        else:
-            raise TypeError(
-                f"{type(self).__name__} must have a structured dtype containing "
-                'field "t" or "tau" or "E" or "e" or "energy" or "M" or "m" or "mass"'
-            )
+        self._azimuthal_type = _azimuthal_numpy_type[names[0][0]]
+        self._longitudinal_type = _longitudinal_numpy_type[names[2][0]]
+        self._temporal_type = _temporal_numpy_type[names[3][0]]
 
         _is_type_safe(self)
 
@@ -2158,6 +2101,13 @@ def array(*args: typing.Any, **kwargs: typing.Any) -> VectorNumpy:
     - ``mass`` may be substituted for ``tau``
 
     to make the vector a momentum vector.
+
+    A coordinate may be given only once, whether by its generic name or through
+    a momentum-alias, and the names must form exactly one of the combinations
+    above; anything else raises a ``TypeError``.
+
+    Names that are not coordinates become extra fields of the array, which can be
+    used to carry properties of a particle other than its momentum.
     """
     names: tuple[str, ...]
     if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
@@ -2173,11 +2123,11 @@ def array(*args: typing.Any, **kwargs: typing.Any) -> VectorNumpy:
 
     cls: type[VectorNumpy]
 
-    is_momentum = any(x in _repr_momentum_to_generic for x in names)
+    is_momentum, dimension, _, _ = _check_coordinate_names(names, allow_extra=True)
 
-    if any(x in ("t", "E", "e", "energy", "tau", "M", "m", "mass") for x in names):
+    if dimension == 4:
         cls = MomentumNumpy4D if is_momentum else VectorNumpy4D
-    elif any(x in ("z", "pz", "theta", "eta") for x in names):
+    elif dimension == 3:
         cls = MomentumNumpy3D if is_momentum else VectorNumpy3D
     else:
         cls = MomentumNumpy2D if is_momentum else VectorNumpy2D
