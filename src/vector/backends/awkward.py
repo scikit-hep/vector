@@ -962,6 +962,69 @@ class VectorAwkward:
         return awkward_transform(func)
 
 
+def _indexed_node(layout: typing.Any) -> typing.Any:
+    """
+    The plain ``IndexedArray`` over numbers that ``layout`` reaches through list
+    nodes only, or None.
+    """
+    while layout.is_list:
+        layout = layout.content
+    if (
+        type(layout) is ak.contents.IndexedArray
+        and layout.content.is_numpy
+        and not layout.parameters
+    ):
+        return layout
+    return None
+
+
+def _replace_indexed_node(layout: typing.Any, content: typing.Any) -> typing.Any:
+    if type(layout) is ak.contents.IndexedArray:
+        return content
+    return layout.copy(content=_replace_indexed_node(layout.content, content))
+
+
+def _gather_shared_indexes(arrays: list[ak.Array]) -> list[ak.Array]:
+    """
+    Materialize every group of ``arrays`` that sits behind the same ``Index``
+    with one index kernel.
+
+    Fields taken from one record behind an ``IndexedArray`` (what
+    ``ak.combinations``/``ak.cartesian`` produce, before or after broadcasting
+    pushes the index inside the record) all share the ``Index`` object. Left to
+    ``ak.transform``, each field runs the ``getitem_nextcarry`` kernel over the
+    whole index again; that kernel is most of the cost of arithmetic on such
+    arrays. Gathered as one tuple record, the group pays one kernel and the same
+    per-field carries.
+    """
+    groups: dict[int, list[int]] = {}
+    nodes: list[typing.Any] = []
+    for i, array in enumerate(arrays):
+        layout = array.layout
+        # a typetracer has no data to gather, and gathering would touch buffers the
+        # calculation may not need (dask-awkward reads those touches to project columns)
+        node = _indexed_node(layout) if layout.backend.nplike.known_data else None
+        nodes.append(node)
+        if node is not None:
+            groups.setdefault(id(node.index), []).append(i)
+    arrays = list(arrays)
+    for members in groups.values():
+        if len(members) < 2:
+            continue
+        projected = ak.contents.IndexedArray(
+            nodes[members[0]].index,
+            ak.contents.RecordArray([nodes[i].content for i in members], None),
+        ).project()
+        for k, i in enumerate(members):
+            # a copy keeps behavior and attrs; only the layout changes
+            gathered = ak.Array(arrays[i])
+            gathered.layout = _replace_indexed_node(
+                arrays[i].layout, projected.content(k)
+            )
+            arrays[i] = gathered
+    return arrays
+
+
 _placeholder = object()
 
 
@@ -1003,6 +1066,7 @@ class awkward_transform:
 
         # this means we're working with awkward-arrays and we should group operations with ak.transform
         if n_orig_akarrays > 0:
+            awkward_arrays = _gather_shared_indexes(awkward_arrays)
 
             def transformer(
                 layouts: ak.contents.Content | tuple[ak.contents.Content, ...],
