@@ -1261,3 +1261,256 @@ def test_record_method_chaining_without_registration():
         check=False,
     )
     assert result.returncode == 0, result.stderr
+
+
+# ``vector.Array`` field name for each generic coordinate, per flavor.
+_MOMENTUM_NAMES = {
+    "x": "px",
+    "y": "py",
+    "rho": "pt",
+    "phi": "phi",
+    "z": "pz",
+    "theta": "theta",
+    "eta": "eta",
+    "t": "E",
+    "tau": "mass",
+}
+# Chosen so every coordinate system is well defined (rho > 0, 0 < theta < pi) and
+# no operation below produces a NaN, which would defeat the exact comparisons.
+_COORDINATE_VALUES = {
+    "x": [1.0, 4.0, 2.5, -1.0, 2.0],
+    "y": [2.0, 5.0, -1.5, 0.5, -3.0],
+    "rho": [1.5, 4.0, 2.5, 1.0, 2.0],
+    "phi": [0.1, -2.0, 3.0, 1.5, -0.5],
+    "z": [3.0, 6.0, -2.0, 2.0, 1.0],
+    "theta": [0.3, 1.2, 2.5, 1.0, 0.7],
+    "eta": [1.1, -0.4, 0.25, 2.0, -1.5],
+    "t": [10.0, 20.0, 15.0, 9.0, 11.0],
+    "tau": [1.0, 2.0, 0.5, 3.0, 1.5],
+}
+_COORDINATE_SYSTEMS = [
+    (azimuthal, longitudinal + temporal)
+    for azimuthal in (("x", "y"), ("rho", "phi"))
+    for longitudinal, temporals in (
+        ((), ((),)),
+        (("z",), ((), ("t",), ("tau",))),
+        (("theta",), ((), ("t",), ("tau",))),
+        (("eta",), ((), ("t",), ("tau",))),
+    )
+    for temporal in temporals
+]
+
+
+def _pairs(coordinates, *, momentum, with_none):
+    """``ak.combinations`` of vectors, i.e. records behind an ``IndexedArray``."""
+    names = _MOMENTUM_NAMES if momentum else dict.fromkeys(_COORDINATE_VALUES)
+    fields = {names[name] or name: _COORDINATE_VALUES[name] for name in coordinates}
+    # a non-coordinate field, to check that it is never gathered or carried along
+    fields["flag"] = [7.0, 8.0, 6.0, 9.0, 1.0]
+    array = ak.unflatten(ak.zip(fields), [3, 0, 2])
+    if with_none:
+        array = ak.Array([list(sublist) for sublist in array.to_list()])
+        array = ak.with_field(
+            array, ak.Array([[1.0, None, 3.0], [], [4.0, 5.0]]), "opt"
+        )
+        array = array[[name for name in array.fields if name != "opt"]]
+    return ak.combinations(vector.Array(array), 2, fields=["u", "v"])
+
+
+def _without_single_carry(monkeypatch):
+    """Restore the pre-optimization path: every coordinate field gathers itself."""
+    monkeypatch.setattr(
+        vector.backends.awkward, "_gather_coordinates", lambda array, groups: None
+    )
+
+
+def _carried_fields(monkeypatch, values):
+    """Names of the fields each ``NumpyArray._carry`` gathers, in call order."""
+    carried = []
+    tags = {np.float64(value).tobytes(): name for name, value in values.items()}
+    carry = ak.contents.NumpyArray._carry
+
+    def counted(self, *args, **kwargs):
+        carried.append(tags.get(self.data.tobytes()[:8], "?"))
+        return carry(self, *args, **kwargs)
+
+    monkeypatch.setattr(ak.contents.NumpyArray, "_carry", counted)
+    return carried
+
+
+@pytest.mark.parametrize("momentum", [False, True])
+@pytest.mark.parametrize("with_none", [False, True])
+@pytest.mark.parametrize(("azimuthal", "rest"), _COORDINATE_SYSTEMS)
+def test_single_carry_is_bit_identical(azimuthal, rest, momentum, with_none):
+    coordinates = azimuthal + rest
+    fast = _pairs(coordinates, momentum=momentum, with_none=with_none)
+    fast_sum = fast.u + fast.v
+    fast_scalar = fast.u.rho2
+
+    with pytest.MonkeyPatch.context() as patch:
+        _without_single_carry(patch)
+        slow = _pairs(coordinates, momentum=momentum, with_none=with_none)
+        slow_sum = slow.u + slow.v
+        slow_scalar = slow.u.rho2
+
+    assert str(fast_sum.type) == str(slow_sum.type)
+    assert fast_sum.to_list() == slow_sum.to_list()
+    assert str(fast_scalar.type) == str(slow_scalar.type)
+    assert fast_scalar.to_list() == slow_scalar.to_list()
+
+
+@pytest.mark.parametrize("momentum", [False, True])
+def test_single_carry_keeps_extra_fields_of_one_argument_ops(momentum):
+    fast = _pairs(("x", "y", "z", "t"), momentum=momentum, with_none=False)
+    fast_scaled = fast.u.scale(2.5)
+
+    with pytest.MonkeyPatch.context() as patch:
+        _without_single_carry(patch)
+        slow = _pairs(("x", "y", "z", "t"), momentum=momentum, with_none=False)
+        slow_scaled = slow.u.scale(2.5)
+
+    assert "flag" in fast_scaled.fields
+    assert str(fast_scaled.type) == str(slow_scaled.type)
+    assert fast_scaled.to_list() == slow_scaled.to_list()
+
+
+def test_coordinates_are_gathered_once_per_argument(monkeypatch):
+    pairs = _pairs(("x", "y", "z", "t"), momentum=False, with_none=False)
+    projections = []
+    project = ak.contents.IndexedArray.project
+
+    def counted(self, mask=None):
+        projections.append(self)
+        return project(self, mask)
+
+    monkeypatch.setattr(ak.contents.IndexedArray, "project", counted)
+
+    pairs.u + pairs.v
+    gathered = len(projections)
+
+    projections.clear()
+    _without_single_carry(monkeypatch)
+    pairs.u + pairs.v
+    per_field = len(projections)
+
+    # one index kernel per argument, instead of one per (argument, coordinate)
+    assert gathered == 2
+    assert per_field == 8
+
+
+@pytest.mark.parametrize(
+    ("operation", "expected"),
+    [
+        (lambda u, v: u.rho2, ["x", "y"]),
+        (lambda u, v: u.phi, ["x", "y"]),
+        (lambda u, v: u.deltaphi(v), ["x", "x", "y", "y"]),
+        (lambda u, v: u.deltaR(v), ["x", "x", "y", "y", "z", "z"]),
+        (lambda u, v: u.tau, ["t", "x", "y", "z"]),
+        (lambda u, v: u + v, ["t", "t", "x", "x", "y", "y", "z", "z"]),
+    ],
+)
+def test_only_the_needed_fields_are_gathered(monkeypatch, operation, expected):
+    # every field holds a distinct constant, so the buffer a carry reads names it
+    values = {"x": 1.0, "y": 2.0, "z": 3.0, "t": 10.0, "flag": 7.0}
+    zipped = ak.zip({name: [value] * 5 for name, value in values.items()})
+    pairs = ak.combinations(
+        vector.Array(ak.unflatten(zipped, [3, 0, 2])), 2, fields=["u", "v"]
+    )
+    u, v = pairs.u, pairs.v
+    carried = _carried_fields(monkeypatch, values)
+    operation(u, v)
+    assert sorted(carried) == expected
+
+
+def test_nothing_is_retained_on_the_array():
+    pairs = _pairs(("x", "y", "z", "t"), momentum=False, with_none=False)
+    u, v = pairs.u, pairs.v
+    before = set(vars(u))
+    for result in (u + v, u.rho2, u.deltaR(v)):
+        assert len(result) == len(u)
+    assert set(vars(u)) == before
+    assert not vector.backends.awkward._dispatch_operands()
+
+
+def test_unshared_indexes_are_left_untouched():
+    values = ak.contents.NumpyArray(np.array([1.0, 2.0, 3.0]))
+    record = ak.contents.RecordArray(
+        [
+            ak.contents.IndexedArray(ak.index.Index64(np.array([0, 1, 2])), values),
+            ak.contents.IndexedArray(ak.index.Index64(np.array([2, 1, 0])), values),
+        ],
+        ["x", "y"],
+        parameters={"__record__": "Vector2D"},
+    )
+    assert vector.backends.awkward._shared_index(record) is None
+
+    array = ak.Array(record, behavior=vector.backends.awkward.behavior)
+    assert vector.backends.awkward._gather_coordinates(array, ("azimuthal",)) is None
+    assert (array + array).to_list() == [
+        {"x": 2.0, "y": 6.0},
+        {"x": 4.0, "y": 4.0},
+        {"x": 6.0, "y": 2.0},
+    ]
+
+
+def test_record_parameters_survive_the_hoisted_index():
+    values = ak.contents.NumpyArray(np.array([1.0, 2.0, 3.0]))
+    index = ak.index.Index64(np.array([2, 0, 1]))
+    record = ak.contents.RecordArray(
+        [
+            ak.contents.IndexedArray(index, values),
+            ak.contents.IndexedArray(index, values),
+        ],
+        ["x", "y"],
+        parameters={"__record__": "Vector2D", "spam": "eggs"},
+    )
+    projected = vector.backends.awkward._project_one_carry(record)
+    assert projected.parameters == {"__record__": "Vector2D", "spam": "eggs"}
+    assert projected.to_list() == record.to_list()
+
+    array = ak.Array(record, behavior=vector.backends.awkward.behavior)
+    assert (array + array).to_list() == [
+        {"x": 6.0, "y": 6.0},
+        {"x": 2.0, "y": 2.0},
+        {"x": 4.0, "y": 4.0},
+    ]
+
+
+def test_shorter_record_than_its_fields_projects_its_own_rows():
+    values = ak.contents.NumpyArray(np.array([1.0, 2.0, 3.0, 4.0]))
+    index = ak.index.Index64(np.array([3, 0, 2, 1]))
+    record = ak.contents.RecordArray(
+        [
+            ak.contents.IndexedArray(index, values),
+            ak.contents.IndexedArray(index, values),
+        ],
+        ["x", "y"],
+        length=2,
+        parameters={"__record__": "Vector2D"},
+    )
+    projected = vector.backends.awkward._project_one_carry(record)
+    assert projected.length == 2
+    assert projected.to_list() == record.to_list()
+
+
+def test_dispatch_that_raises_before_its_call_leaves_no_record_behind():
+    pairs = _pairs(("x", "y", "z", "t"), momentum=False, with_none=False)
+    u, v = pairs.u, pairs.v
+    w = _pairs(("x", "y"), momentum=False, with_none=False).u
+    expected = (w.x**2 + w.y**2).to_list()
+    operands = vector.backends.awkward._dispatch_operands()
+
+    # signature lookup + wrap of ``u + v``, then the argument list raises: the
+    # dispatched function is never called
+    vector._methods._aztype(u), vector._methods._aztype(v)
+    u._wrap_dispatched_function(lambda lib, *args: None)
+    assert len(operands) == 2
+    assert all(o.source is not o.array for o in operands.values())
+
+    # the next dispatch drops them at its own wrap, before taking its elements
+    vector._methods._aztype(w)
+    w._wrap_dispatched_function(lambda lib, *args: None)
+    assert [o.array is w for o in operands.values()] == [True]
+
+    assert w.rho2.to_list() == expected
+    assert not operands
