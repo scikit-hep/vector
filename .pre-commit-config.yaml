@@ -19,14 +19,14 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: c59bba8fb259db0fec2bbb77ad8ba51ea7341b56 # frozen: v0.15.20
+    rev: 321478e58f4938179c6b86e4ddfa923d1547a49b  # frozen: v0.16.6
     hooks:
       - id: ruff-check
         args: ["--fix", "--show-fixes"]
       - id: ruff-format
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: d2823d321df3af8f878f7ee3414dc94d037145b9 # frozen: v2.1.0
+    rev: 7ff8d35ae36a7d2b968f2f90b4c723e292e594ee  # frozen: v2.3.1
     hooks:
       - id: mypy
         files: src
@@ -45,14 +45,14 @@ repos:
       - id: codespell
 
   - repo: https://github.com/rbubley/mirrors-prettier
-    rev: "39e2973981e6d2f9b6c543b0086a2d2393abdc89" # frozen: v3.9.4
+    rev: "0ee178619d696787ca73d210cc191d720868c631"  # frozen: v3.9.6
     hooks:
       - id: prettier
         types_or: [yaml, markdown, html, css, scss, javascript, json]
         exclude: assets/js/webapp\.js
 
   - repo: https://github.com/adamchainz/blacken-docs
-    rev: fda77690955e9b63c6687d8806bafd56a526e45f # frozen: 1.20.0
+    rev: dda8db18cfc68df532abf33b185ecd12d5b7b326  # frozen: 1.20.0
     hooks:
       - id: blacken-docs
         args: ["-E"]
@@ -68,7 +68,7 @@ repos:
       - id: rst-inline-touching-normal
 
   - repo: https://github.com/zizmorcore/zizmor-pre-commit
-    rev: 451b56af716f9f0d0c2b816503a3fd0cf8b036fa # frozen: v1.29.0
+    rev: cef8b8350da46d8114c7e6b7272aebdccdf193ce  # frozen: v1.30.0
     hooks:
       - id: zizmor
         files: "^\\.github"
