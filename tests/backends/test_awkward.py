@@ -1263,18 +1263,6 @@ def test_record_method_chaining_without_registration():
     assert result.returncode == 0, result.stderr
 
 
-# ``vector.Array`` field name for each generic coordinate, per flavor.
-_MOMENTUM_NAMES = {
-    "x": "px",
-    "y": "py",
-    "rho": "pt",
-    "phi": "phi",
-    "z": "pz",
-    "theta": "theta",
-    "eta": "eta",
-    "t": "E",
-    "tau": "mass",
-}
 # Chosen so every coordinate system is well defined (rho > 0, 0 < theta < pi) and
 # no operation below produces a NaN, which would defeat the exact comparisons.
 _COORDINATE_VALUES = {
@@ -1303,8 +1291,8 @@ _COORDINATE_SYSTEMS = [
 
 def _pairs(coordinates, *, momentum, with_none):
     """``ak.combinations`` of vectors, i.e. records behind an ``IndexedArray``."""
-    names = _MOMENTUM_NAMES if momentum else dict.fromkeys(_COORDINATE_VALUES)
-    fields = {names[name] or name: _COORDINATE_VALUES[name] for name in coordinates}
+    names = vector._methods._repr_generic_to_momentum if momentum else {}
+    fields = {names.get(name, name): _COORDINATE_VALUES[name] for name in coordinates}
     # a non-coordinate field, to check that it is never gathered or carried along
     fields["flag"] = [7.0, 8.0, 6.0, 9.0, 1.0]
     array = ak.unflatten(ak.zip(fields), [3, 0, 2])
@@ -1320,7 +1308,7 @@ def _pairs(coordinates, *, momentum, with_none):
 def _without_single_carry(monkeypatch):
     """Restore the pre-optimization path: every coordinate field gathers itself."""
     monkeypatch.setattr(
-        vector.backends.awkward, "_gather_coordinates", lambda array, groups: None
+        vector.backends.awkward, "_gather_shared_indexes", lambda arrays: arrays
     )
 
 
@@ -1422,16 +1410,6 @@ def test_only_the_needed_fields_are_gathered(monkeypatch, operation, expected):
     assert sorted(carried) == expected
 
 
-def test_nothing_is_retained_on_the_array():
-    pairs = _pairs(("x", "y", "z", "t"), momentum=False, with_none=False)
-    u, v = pairs.u, pairs.v
-    before = set(vars(u))
-    for result in (u + v, u.rho2, u.deltaR(v)):
-        assert len(result) == len(u)
-    assert set(vars(u)) == before
-    assert not vector.backends.awkward._dispatch_operands()
-
-
 def test_unshared_indexes_are_left_untouched():
     values = ak.contents.NumpyArray(np.array([1.0, 2.0, 3.0]))
     record = ak.contents.RecordArray(
@@ -1442,10 +1420,9 @@ def test_unshared_indexes_are_left_untouched():
         ["x", "y"],
         parameters={"__record__": "Vector2D"},
     )
-    assert vector.backends.awkward._shared_index(record) is None
-
     array = ak.Array(record, behavior=vector.backends.awkward.behavior)
-    assert vector.backends.awkward._gather_coordinates(array, ("azimuthal",)) is None
+    x, y = array["x"], array["y"]
+    assert vector.backends.awkward._gather_shared_indexes([x, y]) == [x, y]
     assert (array + array).to_list() == [
         {"x": 2.0, "y": 6.0},
         {"x": 4.0, "y": 4.0},
@@ -1453,64 +1430,19 @@ def test_unshared_indexes_are_left_untouched():
     ]
 
 
-def test_record_parameters_survive_the_hoisted_index():
+def test_indexed_nodes_with_parameters_are_left_untouched():
     values = ak.contents.NumpyArray(np.array([1.0, 2.0, 3.0]))
     index = ak.index.Index64(np.array([2, 0, 1]))
-    record = ak.contents.RecordArray(
-        [
-            ak.contents.IndexedArray(index, values),
-            ak.contents.IndexedArray(index, values),
-        ],
-        ["x", "y"],
-        parameters={"__record__": "Vector2D", "spam": "eggs"},
-    )
-    projected = vector.backends.awkward._project_one_carry(record)
-    assert projected.parameters == {"__record__": "Vector2D", "spam": "eggs"}
-    assert projected.to_list() == record.to_list()
-
-    array = ak.Array(record, behavior=vector.backends.awkward.behavior)
-    assert (array + array).to_list() == [
-        {"x": 6.0, "y": 6.0},
-        {"x": 2.0, "y": 2.0},
-        {"x": 4.0, "y": 4.0},
-    ]
+    x = ak.Array(ak.contents.IndexedArray(index, values, parameters={"spam": "eggs"}))
+    y = ak.Array(ak.contents.IndexedArray(index, values, parameters={"spam": "eggs"}))
+    assert vector.backends.awkward._gather_shared_indexes([x, y]) == [x, y]
 
 
-def test_shorter_record_than_its_fields_projects_its_own_rows():
-    values = ak.contents.NumpyArray(np.array([1.0, 2.0, 3.0, 4.0]))
-    index = ak.index.Index64(np.array([3, 0, 2, 1]))
-    record = ak.contents.RecordArray(
-        [
-            ak.contents.IndexedArray(index, values),
-            ak.contents.IndexedArray(index, values),
-        ],
-        ["x", "y"],
-        length=2,
-        parameters={"__record__": "Vector2D"},
-    )
-    projected = vector.backends.awkward._project_one_carry(record)
-    assert projected.length == 2
-    assert projected.to_list() == record.to_list()
-
-
-def test_dispatch_that_raises_before_its_call_leaves_no_record_behind():
-    pairs = _pairs(("x", "y", "z", "t"), momentum=False, with_none=False)
-    u, v = pairs.u, pairs.v
-    w = _pairs(("x", "y"), momentum=False, with_none=False).u
-    expected = (w.x**2 + w.y**2).to_list()
-    operands = vector.backends.awkward._dispatch_operands()
-
-    # signature lookup + wrap of ``u + v``, then the argument list raises: the
-    # dispatched function is never called
-    vector._methods._aztype(u), vector._methods._aztype(v)
-    u._wrap_dispatched_function(lambda lib, *args: None)
-    assert len(operands) == 2
-    assert all(o.source is not o.array for o in operands.values())
-
-    # the next dispatch drops them at its own wrap, before taking its elements
-    vector._methods._aztype(w)
-    w._wrap_dispatched_function(lambda lib, *args: None)
-    assert [o.array is w for o in operands.values()] == [True]
-
-    assert w.rho2.to_list() == expected
-    assert not operands
+def test_gathered_arrays_keep_behavior_and_attrs():
+    pairs = _pairs(("x", "y"), momentum=False, with_none=False)
+    x = pairs.u["x"]
+    x.attrs["note"] = "kept"
+    gathered = vector.backends.awkward._gather_shared_indexes([x, pairs.u["y"]])
+    assert gathered[0].behavior is x.behavior
+    assert gathered[0].attrs == {"note": "kept"}
+    assert gathered[0].to_list() == x.to_list()

@@ -35,7 +35,6 @@ from __future__ import annotations
 import functools
 import numbers
 import operator
-import threading
 import types
 import typing
 
@@ -625,139 +624,6 @@ _coordinate_fields_spatial = _azimuthal_fields | _longitudinal_fields
 _coordinate_fields_all = _azimuthal_fields | _longitudinal_fields | _temporal_fields
 
 
-_coordinate_field_groups = {
-    "azimuthal": _azimuthal_fields,
-    "longitudinal": _longitudinal_fields,
-    "temporal": _temporal_fields,
-}
-
-
-def _shared_index(record: typing.Any) -> typing.Any:
-    """
-    The one ``Index`` behind every field of ``record``, or None if the fields do
-    not all sit behind the same plain ``IndexedArray``.
-
-    ``RecordArray {f: Indexed(a), g: Indexed(b)}`` is what awkward's broadcasting
-    leaves behind after pushing an index inside a record; it is equivalent to
-    ``Indexed(RecordArray {f: a, g: b})``, which materializes with one index
-    kernel instead of one per field.
-    """
-    contents = record.contents
-    if not contents or record.is_tuple:
-        return None
-    first = contents[0]
-    if type(first) is not ak.contents.IndexedArray:
-        return None
-    for content in contents[1:]:
-        if type(content) is not ak.contents.IndexedArray or content.index is not (
-            first.index
-        ):
-            return None
-    return first.index
-
-
-def _can_one_carry(layout: typing.Any) -> bool:
-    """
-    Whether ``layout`` holds a record behind one shared index, i.e. whether a
-    one-carry gather has anything to collapse; if not, gathering only adds work.
-
-    Option types are excluded: ``IndexedOptionArray.project`` has to build a mask
-    as well, and the shapes it appears in are not the ones this optimizes.
-    """
-    if layout.is_option or layout.is_union or layout.is_numpy or layout.is_unknown:
-        return False
-    if layout.is_indexed:
-        return bool(layout.content.is_record)
-    if layout.is_record:
-        return _shared_index(layout) is not None
-    return _can_one_carry(layout.content)
-
-
-def _project_one_carry(layout: typing.Any) -> typing.Any:
-    """
-    Materialize the record inside ``layout`` with a single index lookup, or None
-    if it is not one of the shapes :func:`_can_one_carry` accepts.
-    """
-    if layout.is_option or layout.is_union or layout.is_numpy or layout.is_unknown:
-        return None
-    if layout.is_indexed:
-        return layout.project() if layout.content.is_record else None
-    if layout.is_record:
-        index = _shared_index(layout)
-        if index is None:
-            return None
-        # a RecordArray may be shorter than its fields; project only its own rows
-        return ak.contents.IndexedArray(
-            index[: layout.length],
-            ak.contents.RecordArray(
-                [content.content for content in layout.contents],
-                layout.fields,
-                parameters=layout._parameters,
-            ),
-        ).project()
-    content = _project_one_carry(layout.content)
-    return None if content is None else layout.copy(content=content)
-
-
-def _gather_coordinates(array: typing.Any, groups: typing.Iterable[str]) -> typing.Any:
-    """
-    Materialize exactly the coordinate fields that ``groups`` names, with a single
-    index lookup, or return None when there is nothing to gain.
-
-    Awkward projects an ``IndexedArray`` once per field asked of it, and every
-    projection re-runs the ``getitem_nextcarry`` kernel over the whole index. An
-    operation reading ``k`` fields of an indexed record therefore pays ``k`` index
-    kernels and ``k`` gathers; done once for the fields the dispatched function
-    actually reads it costs one kernel and the same ``k`` gathers. That index
-    kernel is most of the cost of arithmetic on ``ak.combinations``/
-    ``ak.cartesian`` output.
-    """
-    if not isinstance(array, ak.Array):
-        return None
-    layout = array.layout
-    # A typetracer has no data to gather, and gathering would touch buffers the
-    # calculation may not need (dask-awkward reads those touches to project columns).
-    if not layout.backend.nplike.known_data or not _can_one_carry(layout):
-        return None
-    wanted = frozenset().union(*(_coordinate_field_groups[group] for group in groups))
-    names = [name for name in layout.fields if name in wanted]
-    if len(names) < 2:
-        return None
-    # slicing first carries ``behavior`` (and named axes) over without rebuilding
-    # them, and drops the fields this operation does not read
-    selected = array[names]
-    projected = _project_one_carry(selected.layout)
-    if projected is None:
-        return None
-    selected.layout = projected
-    return selected
-
-
-class _Operand:
-    """One vector's coordinate objects for the duration of one dispatch."""
-
-    __slots__ = ("array", "coordinates", "groups", "source", "wrapped")
-
-    def __init__(self, array: typing.Any) -> None:
-        self.array = array
-        self.source = array
-        self.groups: set[str] = set()
-        self.coordinates: dict[str, typing.Any] = {}
-        # set by a wrap, cleared by the next request: a record still wrapped at
-        # the following wrap belongs to a dispatch that raised before its call
-        self.wrapped = False
-
-
-_dispatch_local = threading.local()
-
-
-def _dispatch_operands() -> dict[int, _Operand]:
-    operands: dict[int, _Operand] | None = getattr(_dispatch_local, "operands", None)
-    if operands is None:
-        operands = _dispatch_local.operands = {}
-    return operands
-
-
 def _yes_record(
     x: ak.Array,
 ) -> float | ak.Record | None:
@@ -797,41 +663,6 @@ class _lib(typing.NamedTuple):  # noqa: PLW1641
 
 class VectorAwkward:
     """Mixin class for Awkward vectors."""
-
-    def _coordinates(
-        self,
-        group: str,
-        from_fields: typing.Callable[[typing.Any], typing.Any],
-    ) -> typing.Any:
-        """
-        The ``azimuthal``/``longitudinal``/``temporal`` object, reused across the
-        dispatch that is asking for it.
-
-        A dispatch asks each operand for a coordinate group three times: twice to
-        look up the coordinate type (:func:`vector._methods._aztype` and friends
-        test with ``hasattr`` and then read the type) and once for the elements.
-        Recording the groups here is also how :meth:`_wrap_dispatched_function`
-        knows which fields the dispatched function will read: it is called after
-        the signature lookup and before the elements are taken.
-
-        Nothing is stored on ``self``; the record lives until the dispatch ends.
-        """
-        operands = _dispatch_operands()
-        operand = operands.get(id(self))
-        if operand is None or operand.array is not self:
-            operand = operands[id(self)] = _Operand(self)
-        operand.wrapped = False
-        coordinates = operand.coordinates
-        if group not in operand.groups:
-            operand.groups.add(group)
-            if operand.source is not operand.array:
-                # a dispatch that raised before taking its elements left a gather
-                # behind; it is narrower than what is being asked for now
-                operand.source = operand.array
-                coordinates.clear()
-        if group not in coordinates:
-            coordinates[group] = from_fields(operand.source)
-        return coordinates[group]
 
     @property
     def lib(self):  # type:ignore[no-untyped-def]
@@ -1128,34 +959,70 @@ class VectorAwkward:
         self: AwkwardProtocol,
         func: typing.Callable,  # type: ignore[type-arg]
     ) -> typing.Callable:  # type: ignore[type-arg]
-        # Every ``dispatch`` calls this after looking the signature up (which asks
-        # each operand for the coordinate groups the chosen function reads, and no
-        # others) and before evaluating ``*v.azimuthal.elements`` and friends. So
-        # this is the one point where the needed field set is known and the
-        # elements have not been taken yet: gather each operand once, here.
-        operands = _dispatch_operands()
-        for key, operand in list(operands.items()):
-            if operand.wrapped:
-                # not asked for since the last wrap: that dispatch never ran its
-                # call, so its ``finally`` never cleared this record
-                del operands[key]
-                continue
-            operand.wrapped = True
-            if operand.source is not operand.array:
-                continue
-            gathered = _gather_coordinates(operand.array, operand.groups)
-            if gathered is not None:
-                operand.source = gathered
-                operand.coordinates.clear()
-        inner = awkward_transform(func)
+        return awkward_transform(func)
 
-        def dispatched(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
-            try:
-                return inner(*args, **kwargs)
-            finally:
-                operands.clear()
 
-        return dispatched
+def _indexed_node(layout: typing.Any) -> typing.Any:
+    """
+    The plain ``IndexedArray`` over numbers that ``layout`` reaches through list
+    nodes only, or None.
+    """
+    while layout.is_list:
+        layout = layout.content
+    if (
+        type(layout) is ak.contents.IndexedArray
+        and layout.content.is_numpy
+        and not layout.parameters
+    ):
+        return layout
+    return None
+
+
+def _replace_indexed_node(layout: typing.Any, content: typing.Any) -> typing.Any:
+    if type(layout) is ak.contents.IndexedArray:
+        return content
+    return layout.copy(content=_replace_indexed_node(layout.content, content))
+
+
+def _gather_shared_indexes(arrays: list[ak.Array]) -> list[ak.Array]:
+    """
+    Materialize every group of ``arrays`` that sits behind the same ``Index``
+    with one index kernel.
+
+    Fields taken from one record behind an ``IndexedArray`` (what
+    ``ak.combinations``/``ak.cartesian`` produce, before or after broadcasting
+    pushes the index inside the record) all share the ``Index`` object. Left to
+    ``ak.transform``, each field runs the ``getitem_nextcarry`` kernel over the
+    whole index again; that kernel is most of the cost of arithmetic on such
+    arrays. Gathered as one tuple record, the group pays one kernel and the same
+    per-field carries.
+    """
+    groups: dict[int, list[int]] = {}
+    nodes: list[typing.Any] = []
+    for i, array in enumerate(arrays):
+        layout = array.layout
+        # a typetracer has no data to gather, and gathering would touch buffers the
+        # calculation may not need (dask-awkward reads those touches to project columns)
+        node = _indexed_node(layout) if layout.backend.nplike.known_data else None
+        nodes.append(node)
+        if node is not None:
+            groups.setdefault(id(node.index), []).append(i)
+    arrays = list(arrays)
+    for members in groups.values():
+        if len(members) < 2:
+            continue
+        projected = ak.contents.IndexedArray(
+            nodes[members[0]].index,
+            ak.contents.RecordArray([nodes[i].content for i in members], None),
+        ).project()
+        for k, i in enumerate(members):
+            # a copy keeps behavior and attrs; only the layout changes
+            gathered = ak.Array(arrays[i])
+            gathered.layout = _replace_indexed_node(
+                arrays[i].layout, projected.content(k)
+            )
+            arrays[i] = gathered
+    return arrays
 
 
 _placeholder = object()
@@ -1199,6 +1066,7 @@ class awkward_transform:
 
         # this means we're working with awkward-arrays and we should group operations with ak.transform
         if n_orig_akarrays > 0:
+            awkward_arrays = _gather_shared_indexes(awkward_arrays)
 
             def transformer(
                 layouts: ak.contents.Content | tuple[ak.contents.Content, ...],
@@ -1278,7 +1146,7 @@ class VectorAwkward2D(VectorAwkward, Planar, Vector2D):
             >>> a.azimuthal.elements
             (<Array [1, 2] type='2 * int64'>, <Array [1.1, 2.2] type='2 * float64'>)
         """
-        return self._coordinates("azimuthal", AzimuthalAwkward.from_fields)
+        return AzimuthalAwkward.from_fields(self)
 
 
 class MomentumAwkward2D(PlanarMomentum, VectorAwkward2D):
@@ -1308,7 +1176,7 @@ class MomentumAwkward2D(PlanarMomentum, VectorAwkward2D):
             >>> a.azimuthal.elements
             (<Array [1, 2] type='2 * int64'>, <Array [1.1, 2.2] type='2 * float64'>)
         """
-        return self._coordinates("azimuthal", AzimuthalAwkward.from_momentum_fields)
+        return AzimuthalAwkward.from_momentum_fields(self)
 
 
 class VectorAwkward3D(VectorAwkward, Spatial, Vector3D):
@@ -1338,7 +1206,7 @@ class VectorAwkward3D(VectorAwkward, Spatial, Vector3D):
             >>> a.azimuthal.elements
             (<Array [1, 2] type='2 * int64'>, <Array [1.1, 2.2] type='2 * float64'>)
         """
-        return self._coordinates("azimuthal", AzimuthalAwkward.from_fields)
+        return AzimuthalAwkward.from_fields(self)
 
     @property
     def longitudinal(self) -> LongitudinalAwkward:
@@ -1358,7 +1226,7 @@ class VectorAwkward3D(VectorAwkward, Spatial, Vector3D):
             >>> a.longitudinal.elements
             (<Array [0.1, 0.2] type='2 * float64'>,)
         """
-        return self._coordinates("longitudinal", LongitudinalAwkward.from_fields)
+        return LongitudinalAwkward.from_fields(self)
 
 
 class MomentumAwkward3D(SpatialMomentum, VectorAwkward3D):
@@ -1388,7 +1256,7 @@ class MomentumAwkward3D(SpatialMomentum, VectorAwkward3D):
             >>> a.azimuthal.elements
             (<Array [1, 2] type='2 * int64'>, <Array [1.1, 2.2] type='2 * float64'>)
         """
-        return self._coordinates("azimuthal", AzimuthalAwkward.from_momentum_fields)
+        return AzimuthalAwkward.from_momentum_fields(self)
 
     @property
     def longitudinal(self) -> LongitudinalAwkward:
@@ -1408,9 +1276,7 @@ class MomentumAwkward3D(SpatialMomentum, VectorAwkward3D):
             >>> a.longitudinal.elements
             (<Array [0.1, 0.2] type='2 * float64'>,)
         """
-        return self._coordinates(
-            "longitudinal", LongitudinalAwkward.from_momentum_fields
-        )
+        return LongitudinalAwkward.from_momentum_fields(self)
 
 
 class VectorAwkward4D(VectorAwkward, Lorentz, Vector4D):
@@ -1440,7 +1306,7 @@ class VectorAwkward4D(VectorAwkward, Lorentz, Vector4D):
             >>> a.azimuthal.elements
             (<Array [1, 2] type='2 * int64'>, <Array [1.1, 2.2] type='2 * float64'>)
         """
-        return self._coordinates("azimuthal", AzimuthalAwkward.from_fields)
+        return AzimuthalAwkward.from_fields(self)
 
     @property
     def longitudinal(self) -> LongitudinalAwkward:
@@ -1460,7 +1326,7 @@ class VectorAwkward4D(VectorAwkward, Lorentz, Vector4D):
             >>> a.longitudinal.elements
             (<Array [0.1, 0.2] type='2 * float64'>,)
         """
-        return self._coordinates("longitudinal", LongitudinalAwkward.from_fields)
+        return LongitudinalAwkward.from_fields(self)
 
     @property
     def temporal(self) -> TemporalAwkward:
@@ -1480,7 +1346,7 @@ class VectorAwkward4D(VectorAwkward, Lorentz, Vector4D):
             >>> a.temporal.elements
             (<Array [1, 3] type='2 * int64'>,)
         """
-        return self._coordinates("temporal", TemporalAwkward.from_fields)
+        return TemporalAwkward.from_fields(self)
 
 
 class MomentumAwkward4D(LorentzMomentum, VectorAwkward4D):
@@ -1510,7 +1376,7 @@ class MomentumAwkward4D(LorentzMomentum, VectorAwkward4D):
             >>> a.azimuthal.elements
             (<Array [1, 2] type='2 * int64'>, <Array [1.1, 2.2] type='2 * float64'>)
         """
-        return self._coordinates("azimuthal", AzimuthalAwkward.from_momentum_fields)
+        return AzimuthalAwkward.from_momentum_fields(self)
 
     @property
     def longitudinal(self) -> LongitudinalAwkward:
@@ -1530,9 +1396,7 @@ class MomentumAwkward4D(LorentzMomentum, VectorAwkward4D):
             >>> a.longitudinal.elements
             (<Array [0.1, 0.2] type='2 * float64'>,)
         """
-        return self._coordinates(
-            "longitudinal", LongitudinalAwkward.from_momentum_fields
-        )
+        return LongitudinalAwkward.from_momentum_fields(self)
 
     @property
     def temporal(self) -> TemporalAwkward:
@@ -1551,7 +1415,7 @@ class MomentumAwkward4D(LorentzMomentum, VectorAwkward4D):
             >>> a.temporal.elements
             (<Array [1, 3] type='2 * int64'>,)
         """
-        return self._coordinates("temporal", TemporalAwkward.from_momentum_fields)
+        return TemporalAwkward.from_momentum_fields(self)
 
 
 # ak.Array and ak.Record subclasses ###########################################
