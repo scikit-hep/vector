@@ -120,7 +120,7 @@ class _lib:
         return sympy.oo
 
     # same named functions
-    def sign(self, val: sympy.Expr | int | float) -> sympy.Expr:
+    def sign(self, val: sympy.Expr | float) -> sympy.Expr:
         return sympy.sign(val) if isinstance(val, sympy.Expr) else numpy.sign(val)
 
     def sqrt(self, val: sympy.Expr) -> sympy.Expr:
@@ -467,10 +467,10 @@ class VectorSympy(Vector):  # noqa: PLW1641
     # that behavior. We can refactor out each `if` block in `__array_ufunc__`
     # into separate functions to avoid the type ignore comments, but that
     # would make the code less readable.
-    def __eq__(self, other: typing.Any) -> typing.Any:
+    def __eq__(self, other: object) -> typing.Any:
         return numpy.equal(self, other)  # type: ignore[call-overload]
 
-    def __ne__(self, other: typing.Any) -> typing.Any:
+    def __ne__(self, other: object) -> typing.Any:
         return numpy.not_equal(self, other)  # type: ignore[call-overload]
 
     def __abs__(self) -> float:

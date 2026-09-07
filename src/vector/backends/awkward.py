@@ -645,13 +645,13 @@ class _lib(typing.NamedTuple):  # noqa: PLW1641
     module: types.ModuleType
     nplike: ak._nplikes.numpy_like.NumpyLike
 
-    def __eq__(self, other: typing.Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, _lib):
             return self.module is other.module and self.nplike is other.nplike
         else:
             return self.module is other
 
-    def __ne__(self, other: typing.Any) -> bool:
+    def __ne__(self, other: object) -> bool:
         return not self.__eq__(other)
 
     def __getattr__(self, name: str) -> typing.Any:
@@ -1753,7 +1753,7 @@ def _arraytype_of(awkwardtype: typing.Any, component: str) -> typing.Any:
 def _aztype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
     import numba
 
-    cls: type[AzimuthalObjectXY] | type[AzimuthalObjectRhoPhi]
+    cls: type[AzimuthalObjectXY | AzimuthalObjectRhoPhi]
 
     x_index = None
     y_index = None
@@ -1821,11 +1821,7 @@ def _aztype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
 def _ltype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
     import numba
 
-    cls: (
-        type[LongitudinalObjectZ]
-        | type[LongitudinalObjectTheta]
-        | type[LongitudinalObjectEta]
-    )
+    cls: type[LongitudinalObjectZ | LongitudinalObjectTheta | LongitudinalObjectEta]
 
     z_index = None
     theta_index = None
@@ -1878,7 +1874,7 @@ def _ltype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
 def _ttype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
     import numba
 
-    cls: type[TemporalObjectT] | type[TemporalObjectTau]
+    cls: type[TemporalObjectT | TemporalObjectTau]
 
     t_index = None
     tau_index = None
