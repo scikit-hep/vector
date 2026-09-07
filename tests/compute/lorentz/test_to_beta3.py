@@ -18,8 +18,8 @@ def test_xy_z_t():
     )
     out = vec.to_beta3()
     assert isinstance(out, vector.backends.object.VectorObject3D)
-    assert type(vec.azimuthal) == type(out.azimuthal)  # noqa: E721
-    assert type(vec.longitudinal) == type(out.longitudinal)  # noqa: E721
+    assert type(vec.azimuthal) == type(out.azimuthal)
+    assert type(vec.longitudinal) == type(out.longitudinal)
     assert out.x == pytest.approx(3 / 20)
     assert out.y == pytest.approx(4 / 20)
     assert out.z == pytest.approx(10 / 20)
@@ -33,8 +33,8 @@ def test_xy_z_tau():
     )
     out = vec.to_beta3()
     assert isinstance(out, vector.backends.object.VectorObject3D)
-    assert type(vec.azimuthal) == type(out.azimuthal)  # noqa: E721
-    assert type(vec.longitudinal) == type(out.longitudinal)  # noqa: E721
+    assert type(vec.azimuthal) == type(out.azimuthal)
+    assert type(vec.longitudinal) == type(out.longitudinal)
     assert out.x == pytest.approx(3 / 20)
     assert out.y == pytest.approx(4 / 20)
     assert out.z == pytest.approx(10 / 20)
@@ -48,8 +48,8 @@ def test_xy_theta_t():
     )
     out = vec.to_beta3()
     assert isinstance(out, vector.backends.object.VectorObject3D)
-    assert type(vec.azimuthal) == type(out.azimuthal)  # noqa: E721
-    assert type(vec.longitudinal) == type(out.longitudinal)  # noqa: E721
+    assert type(vec.azimuthal) == type(out.azimuthal)
+    assert type(vec.longitudinal) == type(out.longitudinal)
     assert out.x == pytest.approx(3 / 20)
     assert out.y == pytest.approx(4 / 20)
     assert out.z == pytest.approx(10 / 20)
@@ -63,8 +63,8 @@ def test_xy_theta_tau():
     )
     out = vec.to_beta3()
     assert isinstance(out, vector.backends.object.VectorObject3D)
-    assert type(vec.azimuthal) == type(out.azimuthal)  # noqa: E721
-    assert type(vec.longitudinal) == type(out.longitudinal)  # noqa: E721
+    assert type(vec.azimuthal) == type(out.azimuthal)
+    assert type(vec.longitudinal) == type(out.longitudinal)
     assert out.x == pytest.approx(3 / 20)
     assert out.y == pytest.approx(4 / 20)
     assert out.z == pytest.approx(10 / 20)
@@ -78,8 +78,8 @@ def test_xy_eta_t():
     )
     out = vec.to_beta3()
     assert isinstance(out, vector.backends.object.VectorObject3D)
-    assert type(vec.azimuthal) == type(out.azimuthal)  # noqa: E721
-    assert type(vec.longitudinal) == type(out.longitudinal)  # noqa: E721
+    assert type(vec.azimuthal) == type(out.azimuthal)
+    assert type(vec.longitudinal) == type(out.longitudinal)
     assert out.x == pytest.approx(3 / 20)
     assert out.y == pytest.approx(4 / 20)
     assert out.z == pytest.approx(10 / 20)
@@ -93,8 +93,8 @@ def test_xy_eta_tau():
     )
     out = vec.to_beta3()
     assert isinstance(out, vector.backends.object.VectorObject3D)
-    assert type(vec.azimuthal) == type(out.azimuthal)  # noqa: E721
-    assert type(vec.longitudinal) == type(out.longitudinal)  # noqa: E721
+    assert type(vec.azimuthal) == type(out.azimuthal)
+    assert type(vec.longitudinal) == type(out.longitudinal)
     assert out.x == pytest.approx(3 / 20)
     assert out.y == pytest.approx(4 / 20)
     assert out.z == pytest.approx(10 / 20)
@@ -108,8 +108,8 @@ def test_rhophi_z_t():
     )
     out = vec.to_beta3()
     assert isinstance(out, vector.backends.object.VectorObject3D)
-    assert type(vec.azimuthal) == type(out.azimuthal)  # noqa: E721
-    assert type(vec.longitudinal) == type(out.longitudinal)  # noqa: E721
+    assert type(vec.azimuthal) == type(out.azimuthal)
+    assert type(vec.longitudinal) == type(out.longitudinal)
     assert out.x == pytest.approx(5 / 20)
     assert out.y == pytest.approx(0 / 20)
     assert out.z == pytest.approx(10 / 20)
@@ -123,8 +123,8 @@ def test_rhophi_z_tau():
     )
     out = vec.to_beta3()
     assert isinstance(out, vector.backends.object.VectorObject3D)
-    assert type(vec.azimuthal) == type(out.azimuthal)  # noqa: E721
-    assert type(vec.longitudinal) == type(out.longitudinal)  # noqa: E721
+    assert type(vec.azimuthal) == type(out.azimuthal)
+    assert type(vec.longitudinal) == type(out.longitudinal)
     assert out.x == pytest.approx(5 / 20)
     assert out.y == pytest.approx(0 / 20)
     assert out.z == pytest.approx(10 / 20)
@@ -138,8 +138,8 @@ def test_rhophi_theta_t():
     )
     out = vec.to_beta3()
     assert isinstance(out, vector.backends.object.VectorObject3D)
-    assert type(vec.azimuthal) == type(out.azimuthal)  # noqa: E721
-    assert type(vec.longitudinal) == type(out.longitudinal)  # noqa: E721
+    assert type(vec.azimuthal) == type(out.azimuthal)
+    assert type(vec.longitudinal) == type(out.longitudinal)
     assert out.x == pytest.approx(5 / 20)
     assert out.y == pytest.approx(0 / 20)
     assert out.z == pytest.approx(10 / 20)
@@ -153,8 +153,8 @@ def test_rhophi_theta_tau():
     )
     out = vec.to_beta3()
     assert isinstance(out, vector.backends.object.VectorObject3D)
-    assert type(vec.azimuthal) == type(out.azimuthal)  # noqa: E721
-    assert type(vec.longitudinal) == type(out.longitudinal)  # noqa: E721
+    assert type(vec.azimuthal) == type(out.azimuthal)
+    assert type(vec.longitudinal) == type(out.longitudinal)
     assert out.x == pytest.approx(5 / 20)
     assert out.y == pytest.approx(0 / 20)
     assert out.z == pytest.approx(10 / 20)
@@ -168,8 +168,8 @@ def test_rhophi_eta_t():
     )
     out = vec.to_beta3()
     assert isinstance(out, vector.backends.object.VectorObject3D)
-    assert type(vec.azimuthal) == type(out.azimuthal)  # noqa: E721
-    assert type(vec.longitudinal) == type(out.longitudinal)  # noqa: E721
+    assert type(vec.azimuthal) == type(out.azimuthal)
+    assert type(vec.longitudinal) == type(out.longitudinal)
     assert out.x == pytest.approx(5 / 20)
     assert out.y == pytest.approx(0 / 20)
     assert out.z == pytest.approx(10 / 20)
@@ -183,8 +183,8 @@ def test_rhophi_eta_tau():
     )
     out = vec.to_beta3()
     assert isinstance(out, vector.backends.object.VectorObject3D)
-    assert type(vec.azimuthal) == type(out.azimuthal)  # noqa: E721
-    assert type(vec.longitudinal) == type(out.longitudinal)  # noqa: E721
+    assert type(vec.azimuthal) == type(out.azimuthal)
+    assert type(vec.longitudinal) == type(out.longitudinal)
     assert out.x == pytest.approx(5 / 20)
     assert out.y == pytest.approx(0 / 20)
     assert out.z == pytest.approx(10 / 20)

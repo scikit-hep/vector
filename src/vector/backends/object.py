@@ -336,10 +336,10 @@ class VectorObject(Vector):  # noqa: PLW1641
     # as their backend for computations. We can refactor out each `if` block in
     # `__array_ufunc__` into separate functions to avoid the type ignore comments,
     # but that would make the code less readable.
-    def __eq__(self, other: typing.Any) -> typing.Any:
+    def __eq__(self, other: object) -> typing.Any:
         return numpy.equal(self, other)  # type: ignore[call-overload]
 
-    def __ne__(self, other: typing.Any) -> typing.Any:
+    def __ne__(self, other: object) -> typing.Any:
         return numpy.not_equal(self, other)  # type: ignore[call-overload]
 
     def __abs__(self) -> float:
