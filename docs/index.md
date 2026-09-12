@@ -1,3 +1,11 @@
+---
+myst:
+  html_meta:
+    description:
+      Vector is a Python library for 2D, 3D, and Lorentz vectors, with
+      object, NumPy, Awkward, SymPy, and Numba backends.
+---
+
 ![](_images/LogoSrc.svg)
 
 # Overview
