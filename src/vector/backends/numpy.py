@@ -886,21 +886,33 @@ _temporal_numpy_type: dict[str, type[TemporalNumpyT] | type[TemporalNumpyTau]] =
 }
 
 
-def _check_dtype_names(
-    array: VectorNumpy2D | VectorNumpy3D | VectorNumpy4D, dimension: int
-) -> tuple[tuple[str, str], ...]:
+def _finalize_vector(array: typing.Any) -> None:
     """
-    Validates a structured dtype against the coordinates that ``array``'s class
-    expects, returning the ``(generic name, given name)`` pairs it found.
+    The ``__array_finalize__`` of every vector class: validates the structured
+    dtype against the coordinates that ``array``'s class expects, renames
+    momentum-aliases to their generic names, and picks the coordinate types.
     """
     if array.dtype.names is None:
         raise TypeError(
             f"{type(array).__name__} must have a structured dtype containing "
             "its coordinates as fields"
         )
-    return _check_field_names(
-        type(array).__name__, array.dtype.names, dimension, type(array)._IS_MOMENTUM
-    )
+    coordinates = _check_field_names(array, array.dtype.names)
+
+    # Install a fresh dtype on ``array`` rather than mutating the dtype object,
+    # which is shared with the base array and would rename the caller's fields.
+    # Views and slices of what was already renamed have nothing left to rename.
+    if any(generic != given for generic, given in coordinates):
+        array.dtype = _momentum_to_generic_dtype(array.dtype)
+
+    generic_names = [generic for generic, _ in coordinates]
+    array._azimuthal_type = _azimuthal_numpy_type[generic_names[0]]
+    if len(generic_names) > 2:
+        array._longitudinal_type = _longitudinal_numpy_type[generic_names[2]]
+    if len(generic_names) > 3:
+        array._temporal_type = _temporal_numpy_type[generic_names[3]]
+
+    _is_type_safe(array)
 
 
 class VectorNumpy(Vector, GetItem):  # noqa: PLW1641
@@ -908,6 +920,12 @@ class VectorNumpy(Vector, GetItem):  # noqa: PLW1641
 
     lib = numpy
     dtype: numpy.dtype[typing.Any]
+
+    def __array_finalize__(self, obj: typing.Any) -> None:
+        if obj is None:
+            return
+
+        _finalize_vector(self)
 
     def allclose(
         self,
@@ -1227,15 +1245,6 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
             array = numpy.array(*args, **kwargs)
         return array.view(cls)
 
-    def __array_finalize__(self, obj: typing.Any) -> None:
-        if obj is None:
-            return
-
-        names = _check_dtype_names(self, 2)
-        self._azimuthal_type = _azimuthal_numpy_type[names[0][0]]
-
-        _is_type_safe(self)
-
     def __str__(self) -> str:
         return str(self.view(numpy.ndarray))
 
@@ -1393,20 +1402,6 @@ class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore[misc]
     _IS_MOMENTUM = True
     dtype: numpy.dtype[typing.Any]
 
-    def __array_finalize__(self, obj: typing.Any) -> None:
-        if obj is None:
-            return
-
-        names = _check_dtype_names(self, 2)
-
-        # Install a fresh dtype on ``self`` rather than mutating the dtype object,
-        # which is shared with the base array and would rename the caller's fields.
-        self.dtype = _momentum_to_generic_dtype(self.dtype)
-
-        self._azimuthal_type = _azimuthal_numpy_type[names[0][0]]
-
-        _is_type_safe(self)
-
     def __repr__(self) -> str:
         return _array_repr(self, True)
 
@@ -1454,16 +1449,6 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
         else:
             array = numpy.array(*args, **kwargs)
         return array.view(cls)
-
-    def __array_finalize__(self, obj: typing.Any) -> None:
-        if obj is None:
-            return
-
-        names = _check_dtype_names(self, 3)
-        self._azimuthal_type = _azimuthal_numpy_type[names[0][0]]
-        self._longitudinal_type = _longitudinal_numpy_type[names[2][0]]
-
-        _is_type_safe(self)
 
     def __str__(self) -> str:
         return str(self.view(numpy.ndarray))
@@ -1675,21 +1660,6 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
     _IS_MOMENTUM = True
     dtype: numpy.dtype[typing.Any]
 
-    def __array_finalize__(self, obj: typing.Any) -> None:
-        if obj is None:
-            return
-
-        names = _check_dtype_names(self, 3)
-
-        # Install a fresh dtype on ``self`` rather than mutating the dtype object,
-        # which is shared with the base array and would rename the caller's fields.
-        self.dtype = _momentum_to_generic_dtype(self.dtype)
-
-        self._azimuthal_type = _azimuthal_numpy_type[names[0][0]]
-        self._longitudinal_type = _longitudinal_numpy_type[names[2][0]]
-
-        _is_type_safe(self)
-
     def __repr__(self) -> str:
         return _array_repr(self, True)
 
@@ -1740,17 +1710,6 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
         else:
             array = numpy.array(*args, **kwargs)
         return array.view(cls)
-
-    def __array_finalize__(self, obj: typing.Any) -> None:
-        if obj is None:
-            return
-
-        names = _check_dtype_names(self, 4)
-        self._azimuthal_type = _azimuthal_numpy_type[names[0][0]]
-        self._longitudinal_type = _longitudinal_numpy_type[names[2][0]]
-        self._temporal_type = _temporal_numpy_type[names[3][0]]
-
-        _is_type_safe(self)
 
     def __str__(self) -> str:
         return str(self.view(numpy.ndarray))
@@ -2022,22 +1981,6 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore[misc]
     ObjectClass = vector.backends.object.MomentumObject4D
     _IS_MOMENTUM = True
     dtype: numpy.dtype[typing.Any]
-
-    def __array_finalize__(self, obj: typing.Any) -> None:
-        if obj is None:
-            return
-
-        names = _check_dtype_names(self, 4)
-
-        # Install a fresh dtype on ``self`` rather than mutating the dtype object,
-        # which is shared with the base array and would rename the caller's fields.
-        self.dtype = _momentum_to_generic_dtype(self.dtype)
-
-        self._azimuthal_type = _azimuthal_numpy_type[names[0][0]]
-        self._longitudinal_type = _longitudinal_numpy_type[names[2][0]]
-        self._temporal_type = _temporal_numpy_type[names[3][0]]
-
-        _is_type_safe(self)
 
     def __repr__(self) -> str:
         return _array_repr(self, True)

@@ -14,6 +14,7 @@ reference implementation (:func:`reference`) and against each other.
 
 from __future__ import annotations
 
+import functools
 import itertools
 
 import numpy as np
@@ -446,6 +447,7 @@ def test_complaint_lists_the_allowed_combinations():
     assert "or their momentum equivalents" not in complaint
 
 
+@functools.cache
 def awkward_validates() -> bool:
     """Whether the installed Awkward Array calls ``__awkward_validation__``."""
     ak = pytest.importorskip("awkward")

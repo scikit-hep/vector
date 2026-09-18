@@ -44,7 +44,6 @@ from vector._methods import (
     LongitudinalZ,
     Lorentz,
     LorentzMomentum,
-    Momentum,
     Planar,
     PlanarMomentum,
     SameVectorType,
@@ -711,7 +710,7 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
         if not kwargs and azimuthal is not None:
             self.azimuthal = azimuthal
         elif kwargs and azimuthal is None:
-            coordinates = _generic_coordinates(kwargs, 2, isinstance(self, Momentum))
+            coordinates = _generic_coordinates(self, kwargs)
             self.azimuthal = _azimuthal_object(coordinates)
         else:
             raise TypeError("must give Azimuthal if not giving keyword arguments")
@@ -1086,7 +1085,7 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
             self.azimuthal = azimuthal
             self.longitudinal = longitudinal
         elif kwargs and azimuthal is None and longitudinal is None:
-            coordinates = _generic_coordinates(kwargs, 3, isinstance(self, Momentum))
+            coordinates = _generic_coordinates(self, kwargs)
             self.azimuthal = _azimuthal_object(coordinates)
             self.longitudinal = _longitudinal_object(coordinates)
         else:
@@ -1754,7 +1753,7 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
             self.longitudinal = longitudinal
             self.temporal = temporal
         elif kwargs and azimuthal is None and longitudinal is None and temporal is None:
-            coordinates = _generic_coordinates(kwargs, 4, isinstance(self, Momentum))
+            coordinates = _generic_coordinates(self, kwargs)
             self.azimuthal = _azimuthal_object(coordinates)
             self.longitudinal = _longitudinal_object(coordinates)
             self.temporal = _temporal_object(coordinates)

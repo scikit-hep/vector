@@ -5,7 +5,6 @@
 
 from __future__ import annotations
 
-import builtins
 import typing
 
 import numpy
@@ -19,8 +18,8 @@ def _recname(is_momentum: bool, dimension: int) -> str:
 
 
 def _check_names(
-    projectable: typing.Any, fieldnames: list[str]
-) -> tuple[bool, int, list[str], typing.Any]:
+    projectable: typing.Any, fieldnames: typing.Iterable[str]
+) -> tuple[str, dict[str, typing.Any]]:
     """
     Determines the record name and the columns of an array of vectors from its
     field names, allowing fields that are not coordinates to be carried along.
@@ -29,12 +28,10 @@ def _check_names(
         tuple(fieldnames), allow_extra=True
     )
 
-    names = [name for name, _ in coordinates] + list(extra)
-    columns = [projectable[given] for _, given in coordinates] + [
-        projectable[name] for name in extra
-    ]
+    columns = {generic: projectable[given] for generic, given in coordinates}
+    columns.update((name, projectable[name]) for name in extra)
 
-    return is_momentum, dimension, names, columns
+    return _recname(is_momentum, dimension), columns
 
 
 def _is_type_safe(array_type: typing.Any) -> None:
@@ -145,14 +142,11 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
 
     fields = awkward.fields(akarray)
 
-    is_momentum, dimension, names, arrays = _check_names(akarray, fields)
+    recname, columns = _check_names(akarray, fields)
 
     return awkward.with_name(
-        awkward.zip(
-            dict(builtins.zip(names, arrays, strict=True)),
-            depth_limit=akarray.layout.purelist_depth,
-        ),
-        _recname(is_momentum, dimension),
+        awkward.zip(columns, depth_limit=akarray.layout.purelist_depth),
+        recname,
         behavior=vector.backends.awkward.behavior,
     )
 
@@ -224,15 +218,15 @@ def zip(arrays: dict[str, typing.Any], depth_limit: int | None = None) -> typing
     if not isinstance(arrays, dict):
         raise TypeError("argument passed to vector.zip must be a dictionary")
 
-    is_momentum, dimension, names, columns = _check_names(arrays, list(arrays.keys()))
+    recname, columns = _check_names(arrays, arrays)
 
     behavior = None
     if not vector._awkward_registered:
         behavior = dict(vector.backends.awkward.behavior)
 
     return awkward.zip(
-        dict(builtins.zip(names, columns, strict=True)),
+        columns,
         depth_limit=depth_limit,
-        with_name=_recname(is_momentum, dimension),
+        with_name=recname,
         behavior=behavior,
     )

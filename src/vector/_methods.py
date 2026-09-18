@@ -4358,32 +4358,28 @@ _coordinate_order = [
 ]
 
 
-_repr_all_to_generic = {
-    **{x: x for x in ("x", "y", "rho", "phi", "z", "theta", "eta", "t", "tau")},
-    **_repr_momentum_to_generic,
-}
-
-
 _azimuthal_combinations = (("x", "y"), ("rho", "phi"))
 _azimuthal_names = ("x", "y", "rho", "phi")
 _longitudinal_names = ("z", "theta", "eta")
 _temporal_names = ("t", "tau")
+_generic_names = (*_azimuthal_names, *_longitudinal_names, *_temporal_names)
 
 
-# Every name, including momentum-aliases, grouped by geometry tier.
-_azimuthal_fields = frozenset(
-    name
-    for name, generic in _repr_all_to_generic.items()
-    if generic in _azimuthal_names
-)
-_longitudinal_fields = frozenset(
-    name
-    for name, generic in _repr_all_to_generic.items()
-    if generic in _longitudinal_names
-)
-_temporal_fields = frozenset(
-    name for name, generic in _repr_all_to_generic.items() if generic in _temporal_names
-)
+_repr_all_to_generic = {**{x: x for x in _generic_names}, **_repr_momentum_to_generic}
+
+
+def _fields_of(generic_names: tuple[str, ...]) -> frozenset[str]:
+    """Every name of a geometry tier, including its momentum-aliases."""
+    return frozenset(
+        name
+        for name, generic in _repr_all_to_generic.items()
+        if generic in generic_names
+    )
+
+
+_azimuthal_fields = _fields_of(_azimuthal_names)
+_longitudinal_fields = _fields_of(_longitudinal_names)
+_temporal_fields = _fields_of(_temporal_names)
 
 
 # The 2 + 6 + 12 combinations that describe a vector, in the order reported to users.
@@ -4501,22 +4497,9 @@ def _check_coordinate_names(
             f"specify t= or tau=, but not more than one (got {got(_temporal_names)})"
         )
 
-    azimuthal = next(
-        (names for names in _azimuthal_combinations if all(x in given for x in names)),
-        None,
-    )
-    longitudinal = next((x for x in _longitudinal_names if x in given), None)
-    temporal = next((x for x in _temporal_names if x in given), None)
-
-    # Nothing else can be left over: the checks above leave at most one name per tier.
-    if azimuthal is None or (temporal is not None and longitudinal is None):
+    names = tuple(x for x in _generic_names if x in given)
+    if names not in _allowed_coordinates:
         raise TypeError(_coordinate_complaint(dimension, momentum))
-
-    names = (
-        *azimuthal,
-        *(() if longitudinal is None else (longitudinal,)),
-        *(() if temporal is None else (temporal,)),
-    )
 
     # The names are fine, so "unrecognized" would send the reader looking at them.
     if dimension is not None and dimension != len(names):
@@ -4538,20 +4521,22 @@ def _check_coordinate_names(
 
 
 def _check_field_names(
-    owner: str, fieldnames: tuple[str, ...], dimension: int, momentum: bool
+    v: VectorProtocol, fieldnames: tuple[str, ...]
 ) -> tuple[tuple[str, str], ...]:
     """
-    Validates the field names of data that the vector class named ``owner`` is
-    being attached to, returning the ``(generic name, given name)`` pairs. Unlike
-    a constructor's arguments, neither the class nor the names were necessarily
-    chosen where the complaint surfaces, so it has to name both.
+    Validates the field names of data that the class of ``v`` is being attached
+    to, returning the ``(generic name, given name)`` pairs. Unlike a constructor's
+    arguments, neither the class nor the names were necessarily chosen where the
+    complaint surfaces, so it has to name both.
     """
     try:
         _, _, coordinates, _ = _check_coordinate_names(
-            fieldnames, dimension, momentum, True
+            fieldnames, dim(v), isinstance(v, Momentum), True
         )
     except TypeError as err:
-        raise TypeError(f"{owner} with fields {list(fieldnames)}: {err}") from err
+        raise TypeError(
+            f"{type(v).__name__} with fields {list(fieldnames)}: {err}"
+        ) from err
     return coordinates
 
 
@@ -4559,13 +4544,11 @@ _CoordinateT = typing.TypeVar("_CoordinateT")
 
 
 def _generic_coordinates(
-    coordinates: dict[str, _CoordinateT],
-    dimension: int | None = None,
-    momentum: bool | None = None,
+    v: VectorProtocol, coordinates: dict[str, _CoordinateT]
 ) -> dict[str, _CoordinateT]:
-    """Validates a constructor's keyword arguments, keyed by their generic names."""
+    """Validates the keyword arguments of ``v``'s constructor, keyed by generic name."""
     _, _, names, _ = _check_coordinate_names(
-        tuple(coordinates), dimension=dimension, momentum=momentum
+        tuple(coordinates), dim(v), isinstance(v, Momentum)
     )
     return {name: coordinates[given] for name, given in names}
 

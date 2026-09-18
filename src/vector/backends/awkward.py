@@ -627,6 +627,9 @@ def _record_fields(layout: typing.Any) -> list[tuple[str, ...]]:
     """
     Field names of each kind of record in ``layout``. A union has more than one,
     and its own ``fields`` are only the names that all of them have in common.
+
+    This is the descent of ``purelist_parameter("__record__")``, by which Awkward
+    Array picked the behavior class, so these are the records it was picked for.
     """
     while layout.is_list or layout.is_option or layout.is_indexed:
         layout = layout.content
@@ -690,12 +693,7 @@ class VectorAwkward:
         """
         layout = self.layout.array if isinstance(self, ak.Record) else self.layout
         for fields in _record_fields(layout):
-            _check_field_names(
-                type(self).__name__,
-                fields,
-                vector.dim(self),
-                isinstance(self, Momentum),
-            )
+            _check_field_names(self, fields)
 
     def _wrap_result(
         self: AwkwardProtocol,

@@ -32,7 +32,6 @@ from vector._methods import (
     LongitudinalZ,
     Lorentz,
     LorentzMomentum,
-    Momentum,
     Planar,
     PlanarMomentum,
     SameVectorType,
@@ -789,7 +788,7 @@ class VectorSympy2D(VectorSympy, Planar, Vector2D):
             self.azimuthal = azimuthal
         elif kwargs and azimuthal is None:
             _is_type_safe(kwargs)
-            coordinates = _generic_coordinates(kwargs, 2, isinstance(self, Momentum))
+            coordinates = _generic_coordinates(self, kwargs)
             self.azimuthal = _azimuthal_sympy(coordinates)
         else:
             raise TypeError("must give Azimuthal if not giving keyword arguments")
@@ -977,7 +976,7 @@ class VectorSympy3D(VectorSympy, Spatial, Vector3D):
             self.longitudinal = longitudinal
         elif kwargs and azimuthal is None and longitudinal is None:
             _is_type_safe(kwargs)
-            coordinates = _generic_coordinates(kwargs, 3, isinstance(self, Momentum))
+            coordinates = _generic_coordinates(self, kwargs)
             self.azimuthal = _azimuthal_sympy(coordinates)
             self.longitudinal = _longitudinal_sympy(coordinates)
         else:
@@ -1226,7 +1225,7 @@ class VectorSympy4D(VectorSympy, Lorentz, Vector4D):
             self.temporal = temporal
         elif kwargs and azimuthal is None and longitudinal is None and temporal is None:
             _is_type_safe(kwargs)
-            coordinates = _generic_coordinates(kwargs, 4, isinstance(self, Momentum))
+            coordinates = _generic_coordinates(self, kwargs)
             self.azimuthal = _azimuthal_sympy(coordinates)
             self.longitudinal = _longitudinal_sympy(coordinates)
             self.temporal = _temporal_sympy(coordinates)
