@@ -7,7 +7,7 @@
 from __future__ import annotations
 
 import importlib.metadata
-from datetime import datetime
+from datetime import datetime, timezone
 
 # -- Path setup --------------------------------------------------------------
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -22,7 +22,7 @@ from datetime import datetime
 # -- Project information -----------------------------------------------------
 
 project = "Vector"
-copyright = f"2019\u2012{datetime.now().year}"
+copyright = f"2019\u2012{datetime.now(tz=timezone.utc).year}"
 author = (
     "Saransh Chopra, Henry Schreiner, Jim Pivarski, Eduardo Rodrigues, and Jonas Eschle"
 )

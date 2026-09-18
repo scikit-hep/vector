@@ -8,6 +8,8 @@ from __future__ import annotations
 import typing
 from contextlib import suppress
 
+from typing_extensions import Self
+
 import vector
 from vector._typeutils import (
     BoolCollection,
@@ -599,7 +601,7 @@ class VectorProtocol:
         """
         raise AssertionError
 
-    def unit(self: SameVectorType) -> SameVectorType:
+    def unit(self) -> Self:
         """
         Returns vector(s) normalized to unit length, which is `rho == 1` for 2D
         vectors, `mag == 1` for 3D vectors, and `tau == 1` for 4D vectors.
@@ -630,7 +632,7 @@ class VectorProtocol:
         """
         raise AssertionError
 
-    def scale(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
+    def scale(self, factor: ScalarCollection) -> Self:
         """
         Returns vector(s) scaled by a ``factor``, changing the length(s) but not
         the direction(s).
@@ -751,7 +753,7 @@ class VectorProtocolPlanar(VectorProtocol):
         """
         raise AssertionError
 
-    def scale2D(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
+    def scale2D(self, factor: ScalarCollection) -> Self:
         """
         Returns vector(s) with the 2D part scaled by a ``factor``, not affecting
         any longitudinal or temporal parts.
@@ -759,7 +761,7 @@ class VectorProtocolPlanar(VectorProtocol):
         raise AssertionError
 
     @property
-    def neg2D(self: SameVectorType) -> SameVectorType:
+    def neg2D(self) -> Self:
         """
         Returns vector(s) with the 2D part negated, not affecting any longitudinal
         or temporal parts.
@@ -770,7 +772,7 @@ class VectorProtocolPlanar(VectorProtocol):
         r"""Signed difference in $\phi$ of ``self`` minus ``other`` (in radians)."""
         raise AssertionError
 
-    def rotateZ(self: SameVectorType, angle: ScalarCollection) -> SameVectorType:
+    def rotateZ(self, angle: ScalarCollection) -> Self:
         """
         Rotates the vector(s) by a given ``angle`` (in radians) around the
         longitudinal axis.
@@ -780,7 +782,7 @@ class VectorProtocolPlanar(VectorProtocol):
         """
         raise AssertionError
 
-    def transform2D(self: SameVectorType, obj: TransformProtocol2D) -> SameVectorType:
+    def transform2D(self, obj: TransformProtocol2D) -> Self:
         """
         Arbitrarily transforms the vector(s) by
 
@@ -889,7 +891,7 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
         """The magnitude-squared of the vector(s) in 3D (not including any temporal parts)."""
         raise AssertionError
 
-    def scale3D(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
+    def scale3D(self, factor: ScalarCollection) -> Self:
         """
         Returns vector(s) with the 3D part scaled by a ``factor``, not affecting
         any longitudinal or temporal parts.
@@ -897,7 +899,7 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
         raise AssertionError
 
     @property
-    def neg3D(self: SameVectorType) -> SameVectorType:
+    def neg3D(self) -> Self:
         """
         Returns vector(s) with the 3D part negated, not affecting any longitudinal
         or temporal parts.
@@ -950,7 +952,7 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
         """
         raise AssertionError
 
-    def rotateX(self: SameVectorType, angle: ScalarCollection) -> SameVectorType:
+    def rotateX(self, angle: ScalarCollection) -> Self:
         """
         Rotates the vector(s) by a given ``angle`` (in radians) around the
         $x$ axis.
@@ -960,7 +962,7 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
         """
         raise AssertionError
 
-    def rotateY(self: SameVectorType, angle: ScalarCollection) -> SameVectorType:
+    def rotateY(self, angle: ScalarCollection) -> Self:
         """
         Rotates the vector(s) by a given ``angle`` (in radians) around the
         $y$ axis.
@@ -970,9 +972,7 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
         """
         raise AssertionError
 
-    def rotate_axis(
-        self: SameVectorType, axis: VectorProtocolSpatial, angle: ScalarCollection
-    ) -> SameVectorType:
+    def rotate_axis(self, axis: VectorProtocolSpatial, angle: ScalarCollection) -> Self:
         """
         Rotates the vector(s) by a given ``angle`` (in radians) around the
         axis indicated by another vector, ``axis``. The magnitude of ``axis`` is
@@ -984,12 +984,12 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
         raise AssertionError
 
     def rotate_euler(
-        self: SameVectorType,
+        self,
         phi: ScalarCollection,
         theta: ScalarCollection,
         psi: ScalarCollection,
         order: str = "zxz",
-    ) -> SameVectorType:
+    ) -> Self:
         """
         Rotates the vector(s) by three given angles: ``phi``, ``theta``, and ``psi``
         (in radians). The ``order`` string determines which axis each rotation is
@@ -1013,11 +1013,11 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
         raise AssertionError
 
     def rotate_nautical(
-        self: SameVectorType,
+        self,
         yaw: ScalarCollection,
         pitch: ScalarCollection,
         roll: ScalarCollection,
-    ) -> SameVectorType:
+    ) -> Self:
         """
         Rotates the vector(s) by three given angles: ``yaw``, ``pitch``, and ``roll``
         (in radians). These are Tait-Bryan angles often used for boats and planes
@@ -1036,12 +1036,12 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
         raise AssertionError
 
     def rotate_quaternion(
-        self: SameVectorType,
+        self,
         u: ScalarCollection,
         i: ScalarCollection,
         j: ScalarCollection,
         k: ScalarCollection,
-    ) -> SameVectorType:
+    ) -> Self:
         """
         Rotates the vector(s) by four angles as quaternion coefficients (in radians).
         Four angles are sometimes preferred over three because the latter has a
@@ -1055,7 +1055,7 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
         """
         raise AssertionError
 
-    def transform3D(self: SameVectorType, obj: TransformProtocol3D) -> SameVectorType:
+    def transform3D(self, obj: TransformProtocol3D) -> Self:
         """
         Arbitrarily transforms the vector(s) by
 
@@ -1198,16 +1198,16 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """
         raise AssertionError
 
-    def scale4D(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
+    def scale4D(self, factor: ScalarCollection) -> Self:
         """Same as ``scale``."""
         raise AssertionError
 
     @property
-    def neg4D(self: SameVectorType) -> SameVectorType:
+    def neg4D(self) -> Self:
         """Same as multiplying by -1."""
         raise AssertionError
 
-    def boost_p4(self: SameVectorType, p4: VectorProtocolLorentz) -> SameVectorType:
+    def boost_p4(self, p4: VectorProtocolLorentz) -> Self:
         """
         Boosts the vector or array of vectors in a direction and magnitude given
         by the 4D vector or array of vectors ``p4``.
@@ -1233,9 +1233,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """
         raise AssertionError
 
-    def boost_beta3(
-        self: SameVectorType, beta3: VectorProtocolSpatial
-    ) -> SameVectorType:
+    def boost_beta3(self, beta3: VectorProtocolSpatial) -> Self:
         """
         Boosts the vector or array of vectors in a direction and magnitude given
         by the 3D velocity or array of velocity vectors ``beta3``.
@@ -1252,9 +1250,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """
         raise AssertionError
 
-    def boost(
-        self: SameVectorType, booster: VectorProtocolSpatial | VectorProtocolLorentz
-    ) -> SameVectorType:
+    def boost(self, booster: VectorProtocolSpatial | VectorProtocolLorentz) -> Self:
         """
         Boosts the vector or array of vectors using the 3D or 4D ``booster``.
 
@@ -1276,9 +1272,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """
         raise AssertionError
 
-    def boostCM_of_p4(
-        self: SameVectorType, p4: VectorProtocolLorentz
-    ) -> SameVectorType:
+    def boostCM_of_p4(self, p4: VectorProtocolLorentz) -> Self:
         """
         Boosts the vector or array of vectors to the center-of-mass (CM) frame of
         the 4D vector or array of vectors ``p4``.
@@ -1294,9 +1288,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """
         raise AssertionError
 
-    def boostCM_of_beta3(
-        self: SameVectorType, beta3: VectorProtocolSpatial
-    ) -> SameVectorType:
+    def boostCM_of_beta3(self, beta3: VectorProtocolSpatial) -> Self:
         """
         Boosts the vector or array of vectors to the center-of-mass (CM) frame of
         the 3D velocity or array of velocity vectors ``beta3``.
@@ -1307,8 +1299,8 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         raise AssertionError
 
     def boostCM_of(
-        self: SameVectorType, booster: VectorProtocolSpatial | VectorProtocolLorentz
-    ) -> SameVectorType:
+        self, booster: VectorProtocolSpatial | VectorProtocolLorentz
+    ) -> Self:
         """
         Boosts the vector or array of vectors to the center-of-mass (CM) frame of
         the 3D or 4D ``booster``.
@@ -1326,10 +1318,10 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         raise AssertionError
 
     def boostX(
-        self: SameVectorType,
+        self,
         beta: ScalarCollection | None = None,
         gamma: ScalarCollection | None = None,
-    ) -> SameVectorType:
+    ) -> Self:
         """
         Boosts the vector or array of vectors in the $x$ direction by a speed
         ``beta`` (in which lightlike boosts have ``beta == 1``) or time dilation/length
@@ -1343,10 +1335,10 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         raise AssertionError
 
     def boostY(
-        self: SameVectorType,
+        self,
         beta: ScalarCollection | None = None,
         gamma: ScalarCollection | None = None,
-    ) -> SameVectorType:
+    ) -> Self:
         """
         Boosts the vector or array of vectors in the $y$ direction by a speed
         ``beta`` (in which lightlike boosts have ``beta == 1``) or time dilation/length
@@ -1360,10 +1352,10 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         raise AssertionError
 
     def boostZ(
-        self: SameVectorType,
+        self,
         beta: ScalarCollection | None = None,
         gamma: ScalarCollection | None = None,
-    ) -> SameVectorType:
+    ) -> Self:
         """
         Boosts the vector or array of vectors in the $z$ direction by a speed
         ``beta`` (in which lightlike boosts have ``beta == 1``) or time dilation/length
@@ -1376,7 +1368,7 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
         """
         raise AssertionError
 
-    def transform4D(self: SameVectorType, obj: TransformProtocol4D) -> SameVectorType:
+    def transform4D(self, obj: TransformProtocol4D) -> Self:
         """
         Arbitrarily transforms the vector(s) by
 
@@ -3461,12 +3453,12 @@ class Planar(VectorProtocolPlanar):
 
         return deltaphi.dispatch(self, other)
 
-    def rotateZ(self: SameVectorType, angle: ScalarCollection) -> SameVectorType:
+    def rotateZ(self, angle: ScalarCollection) -> Self:
         from vector._compute.planar import rotateZ
 
         return rotateZ.dispatch(angle, self)
 
-    def transform2D(self: SameVectorType, obj: TransformProtocol2D) -> SameVectorType:
+    def transform2D(self, obj: TransformProtocol2D) -> Self:
         from vector._compute.planar import transform2D
 
         return transform2D.dispatch(obj, self)
@@ -3495,7 +3487,7 @@ class Planar(VectorProtocolPlanar):
         _maybe_same_dimension_error(self, other, self.is_perpendicular.__name__)
         return is_perpendicular.dispatch(tolerance, self, other)
 
-    def unit(self: SameVectorType) -> SameVectorType:
+    def unit(self) -> Self:
         from vector._compute.planar import unit
 
         return unit.dispatch(self)
@@ -3516,17 +3508,17 @@ class Planar(VectorProtocolPlanar):
         return module.subtract.dispatch(self, other)
 
     @property
-    def neg2D(self: SameVectorType) -> SameVectorType:
+    def neg2D(self) -> Self:
         from vector._compute.planar import scale
 
         return scale.dispatch(-1, self)
 
-    def scale2D(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
+    def scale2D(self, factor: ScalarCollection) -> Self:
         from vector._compute.planar import scale
 
         return scale.dispatch(factor, self)
 
-    def scale(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
+    def scale(self, factor: ScalarCollection) -> Self:
         from vector._compute.planar import scale
 
         return scale.dispatch(factor, self)
@@ -3642,19 +3634,17 @@ class Spatial(Planar, VectorProtocolSpatial):
             raise TypeError(f"{other!r} is not a 3D or a 4D vector")
         return deltaR2.dispatch(self, other)
 
-    def rotateX(self: SameVectorType, angle: ScalarCollection) -> SameVectorType:
+    def rotateX(self, angle: ScalarCollection) -> Self:
         from vector._compute.spatial import rotateX
 
         return rotateX.dispatch(angle, self)
 
-    def rotateY(self: SameVectorType, angle: ScalarCollection) -> SameVectorType:
+    def rotateY(self, angle: ScalarCollection) -> Self:
         from vector._compute.spatial import rotateY
 
         return rotateY.dispatch(angle, self)
 
-    def rotate_axis(
-        self: SameVectorType, axis: VectorProtocolSpatial, angle: ScalarCollection
-    ) -> SameVectorType:
+    def rotate_axis(self, axis: VectorProtocolSpatial, angle: ScalarCollection) -> Self:
         from vector._compute.spatial import rotate_axis
 
         if dim(axis) != 3:
@@ -3662,22 +3652,22 @@ class Spatial(Planar, VectorProtocolSpatial):
         return rotate_axis.dispatch(angle, axis, self)
 
     def rotate_euler(
-        self: SameVectorType,
+        self,
         phi: ScalarCollection,
         theta: ScalarCollection,
         psi: ScalarCollection,
         order: str = "zxz",
-    ) -> SameVectorType:
+    ) -> Self:
         from vector._compute.spatial import rotate_euler
 
         return rotate_euler.dispatch(phi, theta, psi, order.lower(), self)
 
     def rotate_nautical(
-        self: SameVectorType,
+        self,
         yaw: ScalarCollection,
         pitch: ScalarCollection,
         roll: ScalarCollection,
-    ) -> SameVectorType:
+    ) -> Self:
         # The order of arguments is reversed because rotate_euler
         # follows ROOT's argument order: phi, theta, psi.
         from vector._compute.spatial import rotate_euler
@@ -3685,17 +3675,17 @@ class Spatial(Planar, VectorProtocolSpatial):
         return rotate_euler.dispatch(roll, pitch, yaw, "zyx", self)
 
     def rotate_quaternion(
-        self: SameVectorType,
+        self,
         u: ScalarCollection,
         i: ScalarCollection,
         j: ScalarCollection,
         k: ScalarCollection,
-    ) -> SameVectorType:
+    ) -> Self:
         from vector._compute.spatial import rotate_quaternion
 
         return rotate_quaternion.dispatch(u, i, j, k, self)
 
-    def transform3D(self: SameVectorType, obj: TransformProtocol3D) -> SameVectorType:
+    def transform3D(self, obj: TransformProtocol3D) -> Self:
         from vector._compute.spatial import transform3D
 
         return transform3D.dispatch(obj, self)
@@ -3724,7 +3714,7 @@ class Spatial(Planar, VectorProtocolSpatial):
         _maybe_same_dimension_error(self, other, self.is_perpendicular.__name__)
         return is_perpendicular.dispatch(tolerance, self, other)
 
-    def unit(self: SameVectorType) -> SameVectorType:
+    def unit(self) -> Self:
         from vector._compute.spatial import unit
 
         return unit.dispatch(self)
@@ -3745,28 +3735,28 @@ class Spatial(Planar, VectorProtocolSpatial):
         return module.subtract.dispatch(self, other)
 
     @property
-    def neg2D(self: SameVectorType) -> SameVectorType:
+    def neg2D(self) -> Self:
         from vector._compute.planar import scale
 
         return scale.dispatch(-1, self)
 
     @property
-    def neg3D(self: SameVectorType) -> SameVectorType:
+    def neg3D(self) -> Self:
         from vector._compute.spatial import scale
 
         return scale.dispatch(-1, self)
 
-    def scale2D(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
+    def scale2D(self, factor: ScalarCollection) -> Self:
         from vector._compute.planar import scale
 
         return scale.dispatch(factor, self)
 
-    def scale3D(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
+    def scale3D(self, factor: ScalarCollection) -> Self:
         from vector._compute.spatial import scale
 
         return scale.dispatch(factor, self)
 
-    def scale(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
+    def scale(self, factor: ScalarCollection) -> Self:
         from vector._compute.spatial import scale
 
         return scale.dispatch(factor, self)
@@ -3853,25 +3843,21 @@ class Lorentz(Spatial, VectorProtocolLorentz):
             raise TypeError(f"{other!r} is not a 4D vector")
         return deltaRapidityPhi2.dispatch(self, other)
 
-    def boost_p4(self: SameVectorType, p4: VectorProtocolLorentz) -> SameVectorType:
+    def boost_p4(self, p4: VectorProtocolLorentz) -> Self:
         from vector._compute.lorentz import boost_p4
 
         if dim(p4) != 4:
             raise TypeError(f"{p4!r} is not a 4D vector")
         return boost_p4.dispatch(self, p4)
 
-    def boost_beta3(
-        self: SameVectorType, beta3: VectorProtocolSpatial
-    ) -> SameVectorType:
+    def boost_beta3(self, beta3: VectorProtocolSpatial) -> Self:
         from vector._compute.lorentz import boost_beta3
 
         if dim(beta3) != 3:
             raise TypeError(f"{beta3!r} is not a 3D vector")
         return boost_beta3.dispatch(self, beta3)
 
-    def boost(
-        self: SameVectorType, booster: VectorProtocolSpatial | VectorProtocolLorentz
-    ) -> SameVectorType:
+    def boost(self, booster: VectorProtocolSpatial | VectorProtocolLorentz) -> Self:
         from vector._compute.lorentz import boost_beta3, boost_p4
 
         if isinstance(booster, Vector3D):
@@ -3884,18 +3870,14 @@ class Lorentz(Spatial, VectorProtocolLorentz):
                 "a Vector4D to boost by a momentum 4-vector"
             )
 
-    def boostCM_of_p4(
-        self: SameVectorType, p4: VectorProtocolLorentz
-    ) -> SameVectorType:
+    def boostCM_of_p4(self, p4: VectorProtocolLorentz) -> Self:
         from vector._compute.lorentz import boost_p4
 
         if dim(p4) != 4:
             raise TypeError(f"{p4!r} is not a 4D momentum vector")
         return boost_p4.dispatch(self, p4.neg3D)
 
-    def boostCM_of_beta3(
-        self: SameVectorType, beta3: VectorProtocolSpatial
-    ) -> SameVectorType:
+    def boostCM_of_beta3(self, beta3: VectorProtocolSpatial) -> Self:
         from vector._compute.lorentz import boost_beta3
 
         if dim(beta3) != 3:
@@ -3903,8 +3885,8 @@ class Lorentz(Spatial, VectorProtocolLorentz):
         return boost_beta3.dispatch(self, beta3.neg3D)
 
     def boostCM_of(
-        self: SameVectorType, booster: VectorProtocolSpatial | VectorProtocolLorentz
-    ) -> SameVectorType:
+        self, booster: VectorProtocolSpatial | VectorProtocolLorentz
+    ) -> Self:
         from vector._compute.lorentz import boost_beta3, boost_p4
 
         if isinstance(booster, Vector3D):
@@ -3918,10 +3900,10 @@ class Lorentz(Spatial, VectorProtocolLorentz):
             )
 
     def boostX(
-        self: SameVectorType,
+        self,
         beta: ScalarCollection | None = None,
         gamma: ScalarCollection | None = None,
-    ) -> SameVectorType:
+    ) -> Self:
         from vector._compute.lorentz import boostX_beta, boostX_gamma
 
         if beta is not None and gamma is None:
@@ -3932,10 +3914,10 @@ class Lorentz(Spatial, VectorProtocolLorentz):
             raise TypeError("specify 'beta' xor 'gamma', not both or neither")
 
     def boostY(
-        self: SameVectorType,
+        self,
         beta: ScalarCollection | None = None,
         gamma: ScalarCollection | None = None,
-    ) -> SameVectorType:
+    ) -> Self:
         from vector._compute.lorentz import boostY_beta, boostY_gamma
 
         if beta is not None and gamma is None:
@@ -3946,10 +3928,10 @@ class Lorentz(Spatial, VectorProtocolLorentz):
             raise TypeError("specify 'beta' xor 'gamma', not both or neither")
 
     def boostZ(
-        self: SameVectorType,
+        self,
         beta: ScalarCollection | None = None,
         gamma: ScalarCollection | None = None,
-    ) -> SameVectorType:
+    ) -> Self:
         from vector._compute.lorentz import boostZ_beta, boostZ_gamma
 
         if beta is not None and gamma is None:
@@ -3959,7 +3941,7 @@ class Lorentz(Spatial, VectorProtocolLorentz):
         else:
             raise TypeError("specify 'beta' xor 'gamma', not both or neither")
 
-    def transform4D(self: SameVectorType, obj: TransformProtocol4D) -> SameVectorType:
+    def transform4D(self, obj: TransformProtocol4D) -> Self:
         from vector._compute.lorentz import transform4D
 
         return transform4D.dispatch(obj, self)
@@ -3984,7 +3966,7 @@ class Lorentz(Spatial, VectorProtocolLorentz):
 
         return is_lightlike.dispatch(tolerance, self)
 
-    def unit(self: SameVectorType) -> SameVectorType:
+    def unit(self) -> Self:
         from vector._compute.lorentz import unit
 
         return unit.dispatch(self)
@@ -4005,39 +3987,39 @@ class Lorentz(Spatial, VectorProtocolLorentz):
         return module.subtract.dispatch(self, other)
 
     @property
-    def neg2D(self: SameVectorType) -> SameVectorType:
+    def neg2D(self) -> Self:
         from vector._compute.planar import scale
 
         return scale.dispatch(-1, self)
 
     @property
-    def neg3D(self: SameVectorType) -> SameVectorType:
+    def neg3D(self) -> Self:
         from vector._compute.spatial import scale
 
         return scale.dispatch(-1, self)
 
     @property
-    def neg4D(self: SameVectorType) -> SameVectorType:
+    def neg4D(self) -> Self:
         from vector._compute.lorentz import scale
 
         return scale.dispatch(-1, self)
 
-    def scale2D(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
+    def scale2D(self, factor: ScalarCollection) -> Self:
         from vector._compute.planar import scale
 
         return scale.dispatch(factor, self)
 
-    def scale3D(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
+    def scale3D(self, factor: ScalarCollection) -> Self:
         from vector._compute.spatial import scale
 
         return scale.dispatch(factor, self)
 
-    def scale4D(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
+    def scale4D(self, factor: ScalarCollection) -> Self:
         from vector._compute.lorentz import scale
 
         return scale.dispatch(factor, self)
 
-    def scale(self: SameVectorType, factor: ScalarCollection) -> SameVectorType:
+    def scale(self, factor: ScalarCollection) -> Self:
         from vector._compute.lorentz import scale
 
         return scale.dispatch(factor, self)

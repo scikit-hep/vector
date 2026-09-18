@@ -146,7 +146,7 @@ pytest tests/test_notebooks.py
 
 `vector`'s documentation is mainly written in the form of [docstrings](https://peps.python.org/pep-0257) and [reStructurredText](https://docutils.sourceforge.io/docs/user/rst/quickref.html). The docstrings include the description, arguments, examples, return values, and attributes of a class or a function, and the `.rst` files enable us to render this documentation on `vector`'s documentation website.
 
-`vector` primarily uses [Sphinx](https://www.sphinx-doc.org/en/master/) for rendering documentation on its website. The configuration file (`conf.py`) for `sphinx` can be found [here](https://github.com/scikit-hep/vector/blob/main/docs/conf.py). The documentation is deployed on [https://readthedocs.io]() [here](https://vector.readthedocs.io/en/latest/).
+`vector` primarily uses [Sphinx](https://www.sphinx-doc.org/en/master/) for rendering documentation on its website. The configuration file (`conf.py`) for `sphinx` can be found [here](https://github.com/scikit-hep/vector/blob/main/docs/conf.py). The documentation is deployed on [https://readthedocs.io](<>) [here](https://vector.readthedocs.io/en/latest/).
 
 Ideally, with the addition of every new feature to `vector`, documentation should be added using comments, docstrings, and `.rst` files.
 
