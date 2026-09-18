@@ -91,6 +91,7 @@ docs = [
   "sphinx-book-theme>=0.0.42",
   "sphinx-copybutton",
   "sphinx-math-dollar",
+  "sphinx-llm",
   "hepunits>=2.4.0",
   "matplotlib",
 ]
@@ -107,6 +108,10 @@ dev = [
 [tool.hatch]
 version.source = "vcs"
 build.hooks.vcs.version-file = "src/vector/_version.py"
+
+# Supply-chain cooldown: ignore releases newer than this
+[tool.uv]
+exclude-newer = "7 days"
 
 [tool.ruff.lint]
 extend-select = [
@@ -127,6 +132,10 @@ extend-select = [
 ignore = [
   "PLR09",   # Too many X
   "PLR2004", # Magic values
+  "N999",    # Module names follow ROOT's spelling (Et, deltaR, rotateZ, ...)
+  "PYI019",  # returning Self needs typing_extensions on Python 3.10
+  "PYI034",  # __new__ returning Self needs typing_extensions on Python 3.10
+  "TRY004",  # AssertionError marks unreachable branches, not bad user types
 ]
 typing-modules = [
   "vector._typeutils",
@@ -249,6 +258,7 @@ markers = [
   "numba",
   "awkward",
   "sympy",
+  "cuda",
 ]
 log_level = "DEBUG"
 filterwarnings = [
@@ -295,6 +305,7 @@ ignore-regex = "[A-Za-z0-9+/]{100,}"
 [tool.pixi.workspace]
 channels = ["conda-forge"]
 platforms = ["linux-64", "osx-arm64", "osx-64"]
+exclude-newer = "7d"
 
 [tool.pixi.feature.root.dependencies]
 python = ">=3.10"

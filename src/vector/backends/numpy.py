@@ -529,10 +529,10 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # typ
                 'fields ("x", "y")'
             )
 
-    def __eq__(self, other: typing.Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         return _coordinates_eq(self, other, AzimuthalNumpyXY)
 
-    def __ne__(self, other: typing.Any) -> bool:
+    def __ne__(self, other: object) -> bool:
         return not self.__eq__(other)
 
     @property
@@ -586,10 +586,10 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray)
                 'fields ("rho", "phi")'
             )
 
-    def __eq__(self, other: typing.Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         return _coordinates_eq(self, other, AzimuthalNumpyRhoPhi)
 
-    def __ne__(self, other: typing.Any) -> bool:
+    def __ne__(self, other: object) -> bool:
         return not self.__eq__(other)
 
     @property
@@ -642,10 +642,10 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):
                 'field "z"'
             )
 
-    def __eq__(self, other: typing.Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         return _coordinates_eq(self, other, LongitudinalNumpyZ)
 
-    def __ne__(self, other: typing.Any) -> bool:
+    def __ne__(self, other: object) -> bool:
         return not self.__eq__(other)
 
     @property
@@ -693,10 +693,10 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, Floa
                 'field "theta"'
             )
 
-    def __eq__(self, other: typing.Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         return _coordinates_eq(self, other, LongitudinalNumpyTheta)
 
-    def __ne__(self, other: typing.Any) -> bool:
+    def __ne__(self, other: object) -> bool:
         return not self.__eq__(other)
 
     @property
@@ -744,10 +744,10 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArr
                 'field "eta"'
             )
 
-    def __eq__(self, other: typing.Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         return _coordinates_eq(self, other, LongitudinalNumpyEta)
 
-    def __ne__(self, other: typing.Any) -> bool:
+    def __ne__(self, other: object) -> bool:
         return not self.__eq__(other)
 
     @property
@@ -795,10 +795,10 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ig
                 'field "t"'
             )
 
-    def __eq__(self, other: typing.Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         return _coordinates_eq(self, other, TemporalNumpyT)
 
-    def __ne__(self, other: typing.Any) -> bool:
+    def __ne__(self, other: object) -> bool:
         return not self.__eq__(other)
 
     @property
@@ -838,10 +838,10 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type
                 'field "tau"'
             )
 
-    def __eq__(self, other: typing.Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         return _coordinates_eq(self, other, TemporalNumpyTau)
 
-    def __ne__(self, other: typing.Any) -> bool:
+    def __ne__(self, other: object) -> bool:
         return not self.__eq__(other)
 
     @property
@@ -903,11 +903,11 @@ class VectorNumpy(Vector, GetItem):  # noqa: PLW1641
             ),  # type: ignore[call-overload]
         )
 
-    def __eq__(self, other: typing.Any) -> typing.Any:
+    def __eq__(self, other: object) -> typing.Any:
         # numpy does not have typing overload for `other` of the type `Any`
         return numpy.equal(self, other)  # type: ignore[call-overload]
 
-    def __ne__(self, other: typing.Any) -> typing.Any:
+    def __ne__(self, other: object) -> typing.Any:
         # numpy does not have typing overload for `other` of the type `Any`
         return numpy.not_equal(self, other)  # type: ignore[call-overload]
 
@@ -1051,7 +1051,7 @@ class VectorNumpy(Vector, GetItem):  # noqa: PLW1641
             and isinstance(inputs[0], Vector)
             and not isinstance(inputs[1], Vector)
         ):
-            result = numpy.absolute(inputs[0]) ** inputs[1]
+            result = numpy.absolute(inputs[0]) ** inputs[1]  # type: ignore[call-overload]
             for output in outputs:
                 assert output.dtype.names is not None
                 for name in output.dtype.names:
@@ -1179,7 +1179,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
 
     ObjectClass = vector.backends.object.VectorObject2D
     _IS_MOMENTUM = False
-    _azimuthal_type: type[AzimuthalNumpyXY] | type[AzimuthalNumpyRhoPhi]
+    _azimuthal_type: type[AzimuthalNumpyXY | AzimuthalNumpyRhoPhi]
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> VectorNumpy2D:
         """Returns the object of ``VectorNumpy2D``. Behaves as ``__init__`` in this case."""
@@ -1415,12 +1415,10 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
     ObjectClass = vector.backends.object.VectorObject3D
     _IS_MOMENTUM = False
 
-    _azimuthal_type: type[AzimuthalNumpyXY] | type[AzimuthalNumpyRhoPhi]
-    _longitudinal_type: (
-        type[LongitudinalNumpyZ]
-        | type[LongitudinalNumpyTheta]
-        | type[LongitudinalNumpyEta]
-    )
+    _azimuthal_type: type[AzimuthalNumpyXY | AzimuthalNumpyRhoPhi]
+    _longitudinal_type: type[
+        LongitudinalNumpyZ | LongitudinalNumpyTheta | LongitudinalNumpyEta
+    ]
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> VectorNumpy3D:
         """Returns the object of ``VectorNumpy3D``. Behaves as ``__init__`` in this case."""
@@ -1732,13 +1730,11 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
     ObjectClass = vector.backends.object.VectorObject4D
     _IS_MOMENTUM = False
 
-    _azimuthal_type: type[AzimuthalNumpyXY] | type[AzimuthalNumpyRhoPhi]
-    _longitudinal_type: (
-        type[LongitudinalNumpyZ]
-        | type[LongitudinalNumpyTheta]
-        | type[LongitudinalNumpyEta]
-    )
-    _temporal_type: type[TemporalNumpyT] | type[TemporalNumpyTau]
+    _azimuthal_type: type[AzimuthalNumpyXY | AzimuthalNumpyRhoPhi]
+    _longitudinal_type: type[
+        LongitudinalNumpyZ | LongitudinalNumpyTheta | LongitudinalNumpyEta
+    ]
+    _temporal_type: type[TemporalNumpyT | TemporalNumpyTau]
 
     def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> VectorNumpy4D:
         """Returns the object of ``VectorNumpy4D``. Behaves as ``__init__`` in this case."""

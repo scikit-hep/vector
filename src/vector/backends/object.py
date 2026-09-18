@@ -336,10 +336,10 @@ class VectorObject(Vector):  # noqa: PLW1641
     # as their backend for computations. We can refactor out each `if` block in
     # `__array_ufunc__` into separate functions to avoid the type ignore comments,
     # but that would make the code less readable.
-    def __eq__(self, other: typing.Any) -> typing.Any:
+    def __eq__(self, other: object) -> typing.Any:
         return numpy.equal(self, other)  # type: ignore[call-overload]
 
-    def __ne__(self, other: typing.Any) -> typing.Any:
+    def __ne__(self, other: object) -> typing.Any:
         return numpy.not_equal(self, other)  # type: ignore[call-overload]
 
     def __abs__(self) -> float:
@@ -526,7 +526,7 @@ class VectorObject(Vector):  # noqa: PLW1641
             and isinstance(inputs[0], Vector)
             and not isinstance(inputs[1], Vector)
         ):
-            result = numpy.absolute(inputs[0]) ** inputs[1]
+            result = numpy.absolute(inputs[0]) ** inputs[1]  # type: ignore[call-overload]
             for output in outputs:
                 _replace_data(output, result)
             return result
@@ -2190,7 +2190,7 @@ def _is_type_safe(coordinates: dict[str, typing.Any]) -> None:
     coords = coordinates.copy()
     if "cls" in coords:
         del coords["cls"]
-    for _, value in coords.items():
+    for value in coords.values():
         if not issubclass(type(value), numbers.Real) or isinstance(value, bool):
             raise TypeError("a coordinate must be of the type int or float")
 
@@ -2209,7 +2209,7 @@ def _gather_coordinates(
     spatial (``VectorObject3D`` or ``MomentumObject3D``), and lorentz
     (``VectorObject4D`` or ``MomentumObject4D``) classes.
     """
-    azimuthal: None | (AzimuthalObjectXY | AzimuthalObjectRhoPhi) = None
+    azimuthal: AzimuthalObjectXY | AzimuthalObjectRhoPhi | None = None
 
     if "x" in coordinates and "y" in coordinates:
         if "rho" in coordinates or "phi" in coordinates:
@@ -2222,8 +2222,8 @@ def _gather_coordinates(
             coordinates.pop("rho"), coordinates.pop("phi")
         )
 
-    longitudinal: None | (
-        LongitudinalObjectZ | LongitudinalObjectTheta | LongitudinalObjectEta
+    longitudinal: (
+        LongitudinalObjectZ | LongitudinalObjectTheta | LongitudinalObjectEta | None
     ) = None
 
     if "z" in coordinates:

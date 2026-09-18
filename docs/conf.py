@@ -7,7 +7,7 @@
 from __future__ import annotations
 
 import importlib.metadata
-from datetime import datetime
+from datetime import datetime, timezone
 
 # -- Path setup --------------------------------------------------------------
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -22,7 +22,7 @@ from datetime import datetime
 # -- Project information -----------------------------------------------------
 
 project = "Vector"
-copyright = f"2019\u2012{datetime.now().year}"
+copyright = f"2019\u2012{datetime.now(tz=timezone.utc).year}"
 author = (
     "Saransh Chopra, Henry Schreiner, Jim Pivarski, Eduardo Rodrigues, and Jonas Eschle"
 )
@@ -42,6 +42,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx_copybutton",
     "sphinx_math_dollar",
+    "sphinx_llm.txt",
 ]
 
 source_suffix = [".rst", ".md"]
@@ -63,6 +64,14 @@ templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 autodoc_mock_imports = ["numba"]
+
+# -- Options for LLM-friendly output -----------------------------------------
+
+# The default is the full README, which is too long for the summary block
+llms_txt_description = (
+    "Documentation of the Vector library for 2D, 3D, and Lorentz vectors,"
+    " including the object, NumPy, Awkward, SymPy, and Numba backends."
+)
 
 # -- Options for HTML output -------------------------------------------------
 

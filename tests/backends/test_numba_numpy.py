@@ -13,7 +13,7 @@ import vector.backends.object
 numba = pytest.importorskip("numba")
 
 
-import vector.backends.numba_numpy  # noqa: E402
+import vector.backends.numba_numpy
 
 pytestmark = pytest.mark.numba
 
