@@ -8,8 +8,7 @@ on:
       - main
   workflow_dispatch:
 
-permissions:
-  contents: read
+permissions: {}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -23,6 +22,7 @@ jobs:
     name: CUDA ${{ matrix.cuda-version }}
     if: github.event_name != 'schedule' || github.repository_owner == 'scikit-hep'
     runs-on: self-hosted
+    permissions: {}
     timeout-minutes: 60
 
     # Required for micromamba to activate conda
@@ -43,11 +43,11 @@ jobs:
           rm -rf * .[!.]* || echo "Nothing to clean"
           rm -rf ~/micromamba* || echo "Nothing to clean"
 
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
-      - uses: mamba-org/setup-micromamba@v3
+      - uses: mamba-org/setup-micromamba@f457c30a868e4760d3a6fcea5f25dc655b8edf39 # v3.2.1
         with:
           environment-name: test-env
           init-shell: bash

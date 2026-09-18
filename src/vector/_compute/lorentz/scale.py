@@ -39,7 +39,7 @@ def xy_z_t(lib, factor, x, y, z, t):
 
 def xy_z_tau(lib, factor, x, y, z, tau):
     sx, sy, sz = scale3d.xy_z(lib, factor, x, y, z)
-    return (sx, sy, sz, tau * factor)
+    return (sx, sy, sz, tau * lib.absolute(factor))
 
 
 def xy_theta_t(lib, factor, x, y, theta, t):
@@ -49,7 +49,7 @@ def xy_theta_t(lib, factor, x, y, theta, t):
 
 def xy_theta_tau(lib, factor, x, y, theta, tau):
     sx, sy, stheta = scale3d.xy_theta(lib, factor, x, y, theta)
-    return (sx, sy, stheta, tau * factor)
+    return (sx, sy, stheta, tau * lib.absolute(factor))
 
 
 def xy_eta_t(lib, factor, x, y, eta, t):
@@ -59,7 +59,7 @@ def xy_eta_t(lib, factor, x, y, eta, t):
 
 def xy_eta_tau(lib, factor, x, y, eta, tau):
     sx, sy, seta = scale3d.xy_eta(lib, factor, x, y, eta)
-    return (sx, sy, seta, tau * factor)
+    return (sx, sy, seta, tau * lib.absolute(factor))
 
 
 def rhophi_z_t(lib, factor, rho, phi, z, t):
@@ -69,7 +69,7 @@ def rhophi_z_t(lib, factor, rho, phi, z, t):
 
 def rhophi_z_tau(lib, factor, rho, phi, z, tau):
     srho, sphi, sz = scale3d.rhophi_z(lib, factor, rho, phi, z)
-    return (srho, sphi, sz, tau * factor)
+    return (srho, sphi, sz, tau * lib.absolute(factor))
 
 
 def rhophi_theta_t(lib, factor, rho, phi, theta, t):
@@ -79,7 +79,7 @@ def rhophi_theta_t(lib, factor, rho, phi, theta, t):
 
 def rhophi_theta_tau(lib, factor, rho, phi, theta, tau):
     srho, sphi, stheta = scale3d.rhophi_theta(lib, factor, rho, phi, theta)
-    return (srho, sphi, stheta, tau * factor)
+    return (srho, sphi, stheta, tau * lib.absolute(factor))
 
 
 def rhophi_eta_t(lib, factor, rho, phi, eta, t):
@@ -89,7 +89,7 @@ def rhophi_eta_t(lib, factor, rho, phi, eta, t):
 
 def rhophi_eta_tau(lib, factor, rho, phi, eta, tau):
     srho, sphi, seta = scale3d.rhophi_eta(lib, factor, rho, phi, eta)
-    return (srho, sphi, seta, tau * factor)
+    return (srho, sphi, seta, tau * lib.absolute(factor))
 
 
 dispatch_map = {
