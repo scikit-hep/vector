@@ -322,7 +322,8 @@ def test_issue_488():
         4: {"x": [1.1], "y": [2.2], "z": [3.3], "t": [4.4]},
     }
 
-    for dimension, fields in coordinates.items():
+    def vertex_behavior(dimension, projections=()):
+        """A coffea-style subclass of the mixins, declaring only ``projections``."""
         mixin = getattr(vector.backends.awkward, f"VectorAwkward{dimension}D")
 
         class VertexArray(mixin, ak.Array):
@@ -331,20 +332,48 @@ def test_issue_488():
         class VertexRecord(mixin, ak.Record):
             pass
 
-        # a subclass (like coffea's VertexArray) that defines GenericClass but
-        # deliberately no ProjectionClass*D, because it has no such interpretation
         VertexArray.GenericClass = VertexArray
         VertexRecord.GenericClass = VertexRecord
+        for projected in projections:
+            setattr(
+                VertexArray,
+                f"ProjectionClass{projected}D",
+                getattr(vector.backends.awkward, f"VectorArray{projected}D"),
+            )
+            setattr(
+                VertexRecord,
+                f"ProjectionClass{projected}D",
+                getattr(vector.backends.awkward, f"VectorRecord{projected}D"),
+            )
+        return {("*", "Vertex"): VertexArray, "Vertex": VertexRecord}
 
-        v = ak.zip(
-            fields,
-            with_name="Vertex",
-            behavior={("*", "Vertex"): VertexArray, "Vertex": VertexRecord},
-        )
+    # a subclass that declares no ProjectionClass*D at all cannot even name the
+    # class of its own dimension's result
+    for dimension, fields in coordinates.items():
+        v = ak.zip(fields, with_name="Vertex", behavior=vertex_behavior(dimension))
         with pytest.raises(
-            TypeError, match=f"{dimension}D conversion for VertexArray is not defined"
+            TypeError,
+            match=f"VertexArray does not define ProjectionClass{dimension}D",
         ):
             v.add(v)
+
+    # coffea's Delphes Vertex is a 4D vector that declares 2D and 3D projections
+    # and, without its `ProjectionClass4D = VertexArray` line, no 4D one
+    v = ak.zip(coordinates[4], with_name="Vertex", behavior=vertex_behavior(4, (2, 3)))
+    assert v.to_Vector2D().x.to_list() == [1.1]
+    assert v.to_Vector3D().z.to_list() == [3.3]
+    with pytest.raises(
+        TypeError, match="VertexArray does not define ProjectionClass4D"
+    ):
+        v.add(v)
+
+    # and a 3D subclass with no 4D counterpart must say so on an implicit upcast
+    v = ak.zip(coordinates[3], with_name="Vertex", behavior=vertex_behavior(3, (2, 3)))
+    assert v.add(v).z.to_list() == [6.6]
+    with pytest.raises(
+        TypeError, match="VertexArray does not define ProjectionClass4D"
+    ):
+        v.like(vector.obj(x=1.1, y=2.2, z=3.3, t=4.4))
 
 
 def test_star_import_without_optional_deps():
