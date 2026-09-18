@@ -42,6 +42,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx_copybutton",
     "sphinx_math_dollar",
+    "sphinx_llm.txt",
 ]
 
 source_suffix = [".rst", ".md"]
@@ -63,6 +64,14 @@ templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 autodoc_mock_imports = ["numba"]
+
+# -- Options for LLM-friendly output -----------------------------------------
+
+# The default is the full README, which is too long for the summary block
+llms_txt_description = (
+    "Documentation of the Vector library for 2D, 3D, and Lorentz vectors,"
+    " including the object, NumPy, Awkward, SymPy, and Numba backends."
+)
 
 # -- Options for HTML output -------------------------------------------------
 

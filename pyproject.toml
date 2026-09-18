@@ -91,6 +91,7 @@ docs = [
   "sphinx-book-theme>=0.0.42",
   "sphinx-copybutton",
   "sphinx-math-dollar",
+  "sphinx-llm",
   "hepunits>=2.4.0",
   "matplotlib",
 ]
