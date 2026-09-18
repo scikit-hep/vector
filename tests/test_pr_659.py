@@ -530,6 +530,11 @@ def test_awkward_behavior_validation_names_the_array():
     with pytest.raises(TypeError, match=r"MomentumArray2D with fields"):
         del vec["phi"]
 
+    # these fields are a vector, so it is the record name that has to be pointed at
+    columns = {"pt": [1.0], "phi": [2.0], "eta": [3.0], "mass": [4.0]}
+    with pytest.raises(TypeError, match="coordinates of a 4D vector, not of a 3D"):
+        ak.zip(columns, with_name="Momentum3D", behavior=behavior)
+
 
 def test_awkward_behavior_validation_union():
     """

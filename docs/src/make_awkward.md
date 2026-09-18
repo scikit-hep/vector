@@ -38,7 +38,7 @@ Traceback (most recent call last):
 TypeError: MomentumArray4D with fields ['pt', 'phi', 'eta', 'mass', 'energy']: specify t= or tau=, but not more than one (got 'energy', 'mass')
 ```
 
-This runs whenever the behaviors are attached, not only in `vector.Array` and `vector.zip`, so `jets["rho"] = ...` is caught too. It is the `__awkward_validation__` hook of each behavior class and needs `awkward>=2.8.11`; older versions skip it. Subclassed behaviors (see [Advanced: subclassing Awkward-Vector behaviors](awkward.ipynb)) inherit the check and can extend it by overriding `__awkward_validation__` and calling `super().__awkward_validation__()`.
+This runs whenever the behaviors are attached, not only in `vector.Array` and `vector.zip`, so `jets["rho"] = ...` is caught too. It is the `__awkward_validation__` hook of each behavior class and needs `awkward>=2.8.11`; older versions skip it. A rejected in-place assignment is only undone by `awkward>=2.12`: before that, the `TypeError` is raised but the array keeps the offending field. Subclassed behaviors (see [Advanced: subclassing Awkward-Vector behaviors](awkward.ipynb)) inherit the check and can extend it by overriding `__awkward_validation__` and calling `super().__awkward_validation__()`.
 
 The `vector.Array` function (`vector.awk` is a synonym) is an alternative to the [ak.Array](https://awkward-array.org/doc/main/reference/generated/ak.Array.html) constructor, which installs Vector's behavior in the new array (not globally in `ak.behavior`).
 

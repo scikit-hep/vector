@@ -4403,9 +4403,13 @@ _allowed_coordinates = (
 )
 
 
-def _coordinate_complaint(dimension: int | None, momentum: bool | None) -> str:
+def _coordinate_complaint(
+    dimension: int | None,
+    momentum: bool | None,
+    reason: str = "unrecognized combination of coordinates",
+) -> str:
     """Lists the combinations a vector of this ``dimension`` may be built from."""
-    complaint = "unrecognized combination of coordinates, allowed combinations are:\n\n"
+    complaint = f"{reason}, allowed combinations are:\n\n"
     complaint += "\n".join(
         "    "
         + ("" if dimension is not None else f"({len(names)}D) ")
@@ -4514,8 +4518,16 @@ def _check_coordinate_names(
         *(() if temporal is None else (temporal,)),
     )
 
+    # The names are fine, so "unrecognized" would send the reader looking at them.
     if dimension is not None and dimension != len(names):
-        raise TypeError(_coordinate_complaint(dimension, momentum))
+        raise TypeError(
+            _coordinate_complaint(
+                dimension,
+                momentum,
+                f"these are the coordinates of a {len(names)}D vector, "
+                f"not of a {dimension}D vector",
+            )
+        )
 
     return (
         is_momentum,
