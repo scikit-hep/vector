@@ -20,7 +20,6 @@ import collections.abc
 import typing
 
 import numpy
-from typing_extensions import Self
 
 import vector.backends.object
 from vector._methods import (
@@ -938,16 +937,16 @@ class VectorNumpy(Vector, GetItem):  # noqa: PLW1641
         return self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan).all()
 
     def sum(
-        self,
+        self: SameVectorNumpyType,
         axis: int | None = None,
         dtype: numpy.dtype[typing.Any] | str | None = None,
         out: ArrayLike | None = None,
         keepdims: bool = False,
         initial: typing.Any = None,
         where: typing.Any = None,
-    ) -> Self:
+    ) -> SameVectorNumpyType:
         return typing.cast(
-            Self,
+            SameVectorNumpyType,
             numpy.sum(
                 self,
                 axis=axis,
