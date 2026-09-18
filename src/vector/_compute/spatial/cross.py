@@ -58,6 +58,13 @@ def make_conversion(azimuthal1, longitudinal1, azimuthal2, longitudinal2):
         AzimuthalXY,
         LongitudinalZ,
     ):
+        to_x1 = None
+        to_y1 = None
+        to_z1 = None
+        to_x2 = None
+        to_y2 = None
+        to_z2 = None
+
         if azimuthal1 is AzimuthalXY:
             to_x1 = x.xy
             to_y1 = y.xy
@@ -67,6 +74,7 @@ def make_conversion(azimuthal1, longitudinal1, azimuthal2, longitudinal2):
                 to_z1 = z.xy_theta
             elif longitudinal1 is LongitudinalEta:
                 to_z1 = z.xy_eta
+
         elif azimuthal1 is AzimuthalRhoPhi:
             to_x1 = x.rhophi
             to_y1 = y.rhophi
@@ -76,6 +84,7 @@ def make_conversion(azimuthal1, longitudinal1, azimuthal2, longitudinal2):
                 to_z1 = z.rhophi_theta
             elif longitudinal1 is LongitudinalEta:
                 to_z1 = z.rhophi_eta
+
         if azimuthal2 is AzimuthalXY:
             to_x2 = x.xy
             to_y2 = y.xy
@@ -85,15 +94,25 @@ def make_conversion(azimuthal1, longitudinal1, azimuthal2, longitudinal2):
                 to_z2 = z.xy_theta
             elif longitudinal2 is LongitudinalEta:
                 to_z2 = z.xy_eta
+
         elif azimuthal2 is AzimuthalRhoPhi:
             to_x2 = x.rhophi
             to_y2 = y.rhophi
+
             if longitudinal2 is LongitudinalZ:
                 to_z2 = z.rhophi_z
             elif longitudinal2 is LongitudinalTheta:
                 to_z2 = z.rhophi_theta
             elif longitudinal2 is LongitudinalEta:
                 to_z2 = z.rhophi_eta
+
+        assert to_x1 is not None
+        assert to_y1 is not None
+        assert to_z1 is not None
+        assert to_x2 is not None
+        assert to_y2 is not None
+        assert to_z2 is not None
+
         cartesian, azout, lout, tout = dispatch_map[
             AzimuthalXY, LongitudinalZ, AzimuthalXY, LongitudinalZ
         ]
