@@ -645,7 +645,7 @@ def test_numba_obj_combinations():
     source += "    )\n"
 
     namespace = {"vector": vector}
-    exec(source, namespace)
+    exec(source, namespace)  # noqa: S102 (source is built from the constants above)
 
     vectors = numba.njit(namespace["make_all"])()
 

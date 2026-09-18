@@ -132,6 +132,9 @@ extend-select = [
 ignore = [
   "PLR09",   # Too many X
   "PLR2004", # Magic values
+  "N999",    # Module names follow ROOT's spelling (Et, deltaR, rotateZ, ...)
+  "PYI034",  # __new__ returning Self needs typing_extensions on Python 3.10
+  "TRY004",  # AssertionError marks unreachable branches, not bad user types
 ]
 typing-modules = [
   "vector._typeutils",
