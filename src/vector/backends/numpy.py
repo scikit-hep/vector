@@ -1052,7 +1052,7 @@ class VectorNumpy(Vector, GetItem):  # noqa: PLW1641
             and isinstance(inputs[0], Vector)
             and not isinstance(inputs[1], Vector)
         ):
-            result = numpy.absolute(inputs[0]) ** inputs[1]
+            result = numpy.absolute(inputs[0]) ** inputs[1]  # type: ignore[call-overload]
             for output in outputs:
                 assert output.dtype.names is not None
                 for name in output.dtype.names:
