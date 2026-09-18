@@ -24,10 +24,12 @@ Module = typing.Any  # returns a module, but we can't be specific about which on
 
 
 class Coordinates:
-    pass
+    __slots__ = ()
 
 
 class Azimuthal(Coordinates):
+    __slots__ = ()
+
     @property
     def elements(self) -> tuple[ScalarCollection, ScalarCollection]:
         """
@@ -40,6 +42,8 @@ class Azimuthal(Coordinates):
 
 
 class Longitudinal(Coordinates):
+    __slots__ = ()
+
     @property
     def elements(self) -> tuple[ScalarCollection]:
         """
@@ -52,6 +56,8 @@ class Longitudinal(Coordinates):
 
 
 class Temporal(Coordinates):
+    __slots__ = ()
+
     @property
     def elements(self) -> tuple[ScalarCollection]:
         """
@@ -70,6 +76,7 @@ class AzimuthalXY(Azimuthal):
         y (scalar, ``np.ndarray``, ``ak.Array``, etc.): The $y$ coordinate(s).
     """
 
+    __slots__ = ()
     x: ScalarCollection
     y: ScalarCollection
 
@@ -81,6 +88,7 @@ class AzimuthalRhoPhi(Azimuthal):
         phi (scalar, ``np.ndarray``, ``ak.Array``, etc.): The $\phi$ coordinate(s).
     """
 
+    __slots__ = ()
     rho: ScalarCollection
     phi: ScalarCollection
 
@@ -91,6 +99,7 @@ class LongitudinalZ(Longitudinal):
         z (scalar, ``np.ndarray``, ``ak.Array``, etc.): The $z$ coordinate(s).
     """
 
+    __slots__ = ()
     z: ScalarCollection
 
 
@@ -100,6 +109,7 @@ class LongitudinalTheta(Longitudinal):
         theta (scalar, ``np.ndarray``, ``ak.Array``, etc.): The $\theta$ coordinate(s).
     """
 
+    __slots__ = ()
     theta: ScalarCollection
 
 
@@ -109,6 +119,7 @@ class LongitudinalEta(Longitudinal):
         eta (scalar, ``np.ndarray``, ``ak.Array``, etc.): The $\eta$ coordinate(s).
     """
 
+    __slots__ = ()
     eta: ScalarCollection
 
 
@@ -118,6 +129,7 @@ class TemporalT(Temporal):
         t (scalar, ``np.ndarray``, ``ak.Array``, etc.): The $t$ coordinate(s).
     """
 
+    __slots__ = ()
     t: ScalarCollection
 
 
@@ -127,6 +139,7 @@ class TemporalTau(Temporal):
         tau (scalar, ``np.ndarray``, ``ak.Array``, etc.): The $\tau$ coordinate(s).
     """
 
+    __slots__ = ()
     tau: ScalarCollection
 
 
@@ -149,6 +162,8 @@ class VectorProtocol:
         MomentumClass (type): The momentum class for this type, for vectors with
             momentum-synonyms.
     """
+
+    __slots__ = ()
 
     @property
     def lib(self) -> Module: ...
@@ -712,6 +727,8 @@ class VectorProtocol:
 
 
 class VectorProtocolPlanar(VectorProtocol):
+    __slots__ = ()
+
     @property
     def azimuthal(self) -> Azimuthal:
         """
@@ -835,6 +852,8 @@ class VectorProtocolPlanar(VectorProtocol):
 
 
 class VectorProtocolSpatial(VectorProtocolPlanar):
+    __slots__ = ()
+
     @property
     def longitudinal(self) -> Longitudinal:
         """
@@ -1088,6 +1107,8 @@ class VectorProtocolSpatial(VectorProtocolPlanar):
 
 
 class VectorProtocolLorentz(VectorProtocolSpatial):
+    __slots__ = ()
+
     @property
     def temporal(self) -> Temporal:
         """
@@ -1451,6 +1472,8 @@ class VectorProtocolLorentz(VectorProtocolSpatial):
 
 
 class MomentumProtocolPlanar(VectorProtocolPlanar):
+    __slots__ = ()
+
     @property
     def px(self) -> ScalarCollection:
         """Momentum-synonym for :attr:`vector._methods.VectorProtocolPlanar.x`."""
@@ -1473,6 +1496,8 @@ class MomentumProtocolPlanar(VectorProtocolPlanar):
 
 
 class MomentumProtocolSpatial(VectorProtocolSpatial, MomentumProtocolPlanar):
+    __slots__ = ()
+
     @property
     def pz(self) -> ScalarCollection:
         """Momentum-synonym for :attr:`vector._methods.VectorProtocolSpatial.z`."""
@@ -1495,6 +1520,8 @@ class MomentumProtocolSpatial(VectorProtocolSpatial, MomentumProtocolPlanar):
 
 
 class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
+    __slots__ = ()
+
     @property
     def E(self) -> ScalarCollection:
         """Momentum-synonym for :attr:`vector._methods.VectorProtocolLorentz.t`."""
@@ -1641,6 +1668,8 @@ class MomentumProtocolLorentz(VectorProtocolLorentz, MomentumProtocolSpatial):
 
 
 class Vector(VectorProtocol):
+    __slots__ = ()
+
     @typing.overload
     def __new__(cls, *, x: float, y: float) -> vector.VectorObject2D: ...
 
@@ -3165,6 +3194,8 @@ class Vector(VectorProtocol):
 
 
 class Vector2D(Vector, VectorProtocolPlanar):
+    __slots__ = ()
+
     def to_Vector2D(self) -> VectorProtocolPlanar:
         return self
 
@@ -3301,6 +3332,8 @@ class Vector2D(Vector, VectorProtocolPlanar):
 
 
 class Vector3D(Vector, VectorProtocolSpatial):
+    __slots__ = ()
+
     def to_Vector2D(self) -> VectorProtocolPlanar:
         return self._wrap_result(
             type(self),
@@ -3379,6 +3412,8 @@ class Vector3D(Vector, VectorProtocolSpatial):
 
 
 class Vector4D(Vector, VectorProtocolLorentz):
+    __slots__ = ()
+
     def to_Vector2D(self) -> VectorProtocolPlanar:
         return self._wrap_result(
             type(self),
@@ -3418,6 +3453,8 @@ class Vector4D(Vector, VectorProtocolLorentz):
 
 
 class Planar(VectorProtocolPlanar):
+    __slots__ = ()
+
     @property
     def x(self) -> ScalarCollection:
         from vector._compute.planar import x
@@ -3549,6 +3586,8 @@ class Planar(VectorProtocolPlanar):
 
 
 class Spatial(Planar, VectorProtocolSpatial):
+    __slots__ = ()
+
     @property
     def z(self) -> ScalarCollection:
         from vector._compute.spatial import z
@@ -3787,6 +3826,8 @@ class Spatial(Planar, VectorProtocolSpatial):
 
 
 class Lorentz(Spatial, VectorProtocolLorentz):
+    __slots__ = ()
+
     @property
     def t(self) -> ScalarCollection:
         from vector._compute.lorentz import t
@@ -4050,10 +4091,12 @@ class Lorentz(Spatial, VectorProtocolLorentz):
 
 
 class Momentum:
-    pass
+    __slots__ = ()
 
 
 class PlanarMomentum(Momentum, MomentumProtocolPlanar):
+    __slots__ = ()
+
     @property
     def px(self) -> ScalarCollection:
         return self.x
@@ -4072,6 +4115,8 @@ class PlanarMomentum(Momentum, MomentumProtocolPlanar):
 
 
 class SpatialMomentum(PlanarMomentum, MomentumProtocolSpatial):
+    __slots__ = ()
+
     @property
     def pz(self) -> ScalarCollection:
         return self.z
@@ -4090,6 +4135,8 @@ class SpatialMomentum(PlanarMomentum, MomentumProtocolSpatial):
 
 
 class LorentzMomentum(SpatialMomentum, MomentumProtocolLorentz):
+    __slots__ = ()
+
     @property
     def E(self) -> ScalarCollection:
         return self.t
