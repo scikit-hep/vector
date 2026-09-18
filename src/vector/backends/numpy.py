@@ -47,6 +47,7 @@ from vector._methods import (
     VectorProtocol,
     _aztype,
     _check_coordinate_names,
+    _check_field_names,
     _coordinate_class_to_names,
     _coordinate_order,
     _handler_of,
@@ -897,13 +898,9 @@ def _check_dtype_names(
             f"{type(array).__name__} must have a structured dtype containing "
             "its coordinates as fields"
         )
-    _, _, names, _ = _check_coordinate_names(
-        array.dtype.names,
-        dimension=dimension,
-        momentum=type(array)._IS_MOMENTUM,
-        allow_extra=True,
+    return _check_field_names(
+        type(array).__name__, array.dtype.names, dimension, type(array)._IS_MOMENTUM
     )
-    return names
 
 
 class VectorNumpy(Vector, GetItem):  # noqa: PLW1641

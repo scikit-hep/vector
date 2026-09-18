@@ -362,6 +362,16 @@ def test_conflicting_coordinates():
         vector.obj(pt=1.0, phi=2.0, eta=3.0, mass=4.0, energy=5.0)
 
 
+def test_conflicting_coordinates_name_what_was_given():
+    """``t=`` and ``tau=`` mean nothing to someone whose fields are mass and energy."""
+    with pytest.raises(TypeError, match=r"\(got 'energy', 'mass'\)"):
+        vector.obj(pt=1.0, phi=2.0, eta=3.0, mass=4.0, energy=5.0)
+    with pytest.raises(TypeError, match=r"\(got 'pz', 'eta'\)"):
+        vector.obj(px=1.0, py=2.0, pz=3.0, eta=4.0)
+    with pytest.raises(TypeError, match=r"\(got 'px', 'phi'\)"):
+        vector.obj(px=1.0, phi=2.0)
+
+
 def test_extra_fields():
     """Non-coordinate fields are records' payload; keyword arguments are not."""
     array = vector.array(
@@ -383,6 +393,18 @@ def test_extra_fields_awkward():
         vector.zip({"x": [1.0], "y": [2.0], "wow": [3.0]}),
     ):
         assert vec.wow[0] == pytest.approx(3.0)
+
+
+def test_numpy_class_complaint_names_the_array():
+    """``__array_finalize__`` runs on views and slices, far from any constructor."""
+    array = vector.array({"pt": [1.0], "phi": [2.0], "eta": [3.0], "mass": [4.0]})
+
+    with pytest.raises(
+        TypeError, match=r"MomentumNumpy3D with fields \['rho', 'phi', 'eta', 'tau'\]"
+    ):
+        array.view(vector.MomentumNumpy3D)
+    with pytest.raises(TypeError, match=r"VectorNumpy2D with fields \['px', 'py'\]"):
+        numpy_array({"px": 1.0, "py": 2.0}).view(vector.VectorNumpy2D)
 
 
 def test_unstructured_numpy_array():
@@ -507,6 +529,52 @@ def test_awkward_behavior_validation_names_the_array():
     vec = ak.zip(columns, with_name="Momentum2D", behavior=behavior)
     with pytest.raises(TypeError, match=r"MomentumArray2D with fields"):
         del vec["phi"]
+
+
+def test_awkward_behavior_validation_union():
+    """
+    A union's own fields are only those that its contents share, so each kind of
+    record in it is validated by itself.
+    """
+    ak = pytest.importorskip("awkward")
+    if not awkward_validates():
+        pytest.skip("awkward is too old to validate behaviors")
+
+    behavior = vector.backends.awkward.behavior
+    polar = ak.zip(
+        {"pt": [[1.0]], "phi": [[2.0]], "eta": [[3.0]], "mass": [[4.0]]},
+        with_name="Momentum4D",
+        behavior=behavior,
+    )
+    cartesian = ak.zip(
+        {"px": [[5.0]], "py": [[6.0]], "pz": [[7.0]], "E": [[8.0]]},
+        with_name="Momentum4D",
+        behavior=behavior,
+    )
+
+    # every record in it is a vector, even though they have no field in common
+    both = ak.concatenate([polar, cartesian], axis=1)
+    assert both.fields == []
+    assert both[0, 0].pt == pytest.approx(1.0)
+    assert both[0, 1].px == pytest.approx(5.0)
+
+    # ... but the valid records must not hide the ones that are not; as a layout,
+    # nothing has validated these, so it can only be the union that is rejected
+    overdetermined = ak.with_name(
+        ak.zip(
+            {
+                "pt": [[1.0]],
+                "phi": [[2.0]],
+                "eta": [[3.0]],
+                "mass": [[4.0]],
+                "E": [[5.0]],
+            }
+        ),
+        "Momentum4D",
+        highlevel=False,
+    )
+    with pytest.raises(TypeError, match=r"'E'\]: specify t= or tau="):
+        ak.concatenate([polar, overdetermined], axis=1)
 
 
 def test_awkward_behavior_validation_subclass():

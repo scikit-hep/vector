@@ -4477,12 +4477,25 @@ def _check_coordinate_names(
     if extra and not allow_extra:
         raise TypeError(_coordinate_complaint(dimension, momentum))
 
+    # The names that were given are not necessarily the ones in the complaint:
+    # nothing about "specify t= or tau=" points at a 'mass' and an 'energy' field.
+    def got(names: tuple[str, ...]) -> str:
+        return ", ".join(repr(given[x]) for x in names if x in given)
+
     if ("x" in given or "y" in given) and ("rho" in given or "phi" in given):
-        raise TypeError("specify x= and y= or rho= and phi=, but not both")
+        raise TypeError(
+            "specify x= and y= or rho= and phi=, but not both "
+            f"(got {got(_azimuthal_names)})"
+        )
     if sum(name in given for name in _longitudinal_names) > 1:
-        raise TypeError("specify z= or theta= or eta=, but not more than one")
+        raise TypeError(
+            "specify z= or theta= or eta=, but not more than one "
+            f"(got {got(_longitudinal_names)})"
+        )
     if sum(name in given for name in _temporal_names) > 1:
-        raise TypeError("specify t= or tau=, but not more than one")
+        raise TypeError(
+            f"specify t= or tau=, but not more than one (got {got(_temporal_names)})"
+        )
 
     azimuthal = next(
         (names for names in _azimuthal_combinations if all(x in given for x in names)),
@@ -4491,11 +4504,8 @@ def _check_coordinate_names(
     longitudinal = next((x for x in _longitudinal_names if x in given), None)
     temporal = next((x for x in _temporal_names if x in given), None)
 
-    if (
-        azimuthal is None
-        or (temporal is not None and longitudinal is None)
-        or len(given) != 2 + (longitudinal is not None) + (temporal is not None)
-    ):
+    # Nothing else can be left over: the checks above leave at most one name per tier.
+    if azimuthal is None or (temporal is not None and longitudinal is None):
         raise TypeError(_coordinate_complaint(dimension, momentum))
 
     names = (
@@ -4513,6 +4523,24 @@ def _check_coordinate_names(
         tuple((name, given[name]) for name in names),
         tuple(extra),
     )
+
+
+def _check_field_names(
+    owner: str, fieldnames: tuple[str, ...], dimension: int, momentum: bool
+) -> tuple[tuple[str, str], ...]:
+    """
+    Validates the field names of data that the vector class named ``owner`` is
+    being attached to, returning the ``(generic name, given name)`` pairs. Unlike
+    a constructor's arguments, neither the class nor the names were necessarily
+    chosen where the complaint surfaces, so it has to name both.
+    """
+    try:
+        _, _, coordinates, _ = _check_coordinate_names(
+            fieldnames, dimension, momentum, True
+        )
+    except TypeError as err:
+        raise TypeError(f"{owner} with fields {list(fieldnames)}: {err}") from err
+    return coordinates
 
 
 _CoordinateT = typing.TypeVar("_CoordinateT")

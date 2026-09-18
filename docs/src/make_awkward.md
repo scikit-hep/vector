@@ -35,7 +35,7 @@ Field names that mean a coordinate under another name, such as `rho` (a synonym 
 >>> ak.Array([{"pt": 1.1, "phi": 2.2, "eta": 3.3, "mass": 4.4, "energy": 5.5}], with_name="Momentum4D")
 Traceback (most recent call last):
     ...
-TypeError: specify t= or tau=, but not more than one
+TypeError: MomentumArray4D with fields ['pt', 'phi', 'eta', 'mass', 'energy']: specify t= or tau=, but not more than one (got 'energy', 'mass')
 ```
 
 This runs whenever the behaviors are attached, not only in `vector.Array` and `vector.zip`, so `jets["rho"] = ...` is caught too. It is the `__awkward_validation__` hook of each behavior class and needs `awkward>=2.8.11`; older versions skip it. Subclassed behaviors (see [Advanced: subclassing Awkward-Vector behaviors](awkward.ipynb)) inherit the check and can extend it by overriding `__awkward_validation__` and calling `super().__awkward_validation__()`.

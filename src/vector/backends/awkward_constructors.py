@@ -145,7 +145,7 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
 
     fields = awkward.fields(akarray)
 
-    is_momentum, dimension, names, arrays = _check_names(akarray, fields.copy())
+    is_momentum, dimension, names, arrays = _check_names(akarray, fields)
 
     return awkward.with_name(
         awkward.zip(
