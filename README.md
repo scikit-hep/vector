@@ -7,6 +7,7 @@
 [![Scikit-HEP][sk-badge]][sk-link]
 
 [![Actions Status][actions-badge]][actions-link]
+[![GPU Action Status][gpu-badge]][actions-link]
 [![Documentation Status][rtd-badge]][rtd-link]
 [![pre-commit.ci status][pre-commit-badge]][pre-commit-link]
 [![codecov percentage][codecov-badge]][codecov-link]
@@ -200,6 +201,7 @@ Support for this work was provided by the National Science Foundation cooperativ
 [github-discussions-link]: https://github.com/scikit-hep/vector/discussions
 [gitter-badge]: https://badges.gitter.im/Scikit-HEP/vector.svg
 [gitter-link]: https://gitter.im/Scikit-HEP/vector?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+[gpu-badge]: https://github.com/scikit-hep/vector/actions/workflows/gpu.yml/badge.svg
 [joss-badge]: https://joss.theoj.org/papers/10.21105/joss.07791/status.svg
 [joss-link]: https://doi.org/10.21105/joss.07791
 [license-badge]: https://img.shields.io/badge/License-BSD_3--Clause-blue.svg

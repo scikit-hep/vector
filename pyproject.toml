@@ -69,6 +69,7 @@ test = [
   "pytest>=7",
   "pytest-cov>=6",
   "pytest-doctestplus",
+  "pytest-github-actions-annotate-failures",
 ]
 test-optional = [
   "awkward>=2",
