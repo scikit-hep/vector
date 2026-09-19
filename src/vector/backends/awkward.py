@@ -64,6 +64,10 @@ from vector._methods import (
     Vector3D,
     Vector4D,
     VectorProtocol,
+    _azimuthal_fields,
+    _check_field_names,
+    _longitudinal_fields,
+    _temporal_fields,
 )
 from vector._typeutils import BoolCollection, Protocol, ScalarCollection
 from vector.backends.numpy import VectorNumpy2D, VectorNumpy3D, VectorNumpy4D
@@ -621,21 +625,31 @@ def _class_to_name(cls: type[VectorProtocol]) -> str:
 # the vector class ############################################################
 
 
-# Generic and momentum-alias coordinate field names, grouped by geometry tier.
 # Used by ``_wrap_result`` to exclude (already-recomputed) coordinate fields when
 # carrying along "extra" record fields, so that stale, pre-computation coordinates
-# are not leaked into the output. Previously these tuples were hand-copied into
-# each branch and omitted the ``px``/``py`` momentum aliases, leaking stale values.
-_azimuthal_fields = frozenset({"x", "y", "rho", "phi", "px", "py", "pt"})
-_longitudinal_fields = frozenset({"z", "theta", "eta", "pz"})
-_temporal_fields = frozenset({"t", "tau", "E", "e", "energy", "M", "m", "mass"})
-
+# are not leaked into the output.
+#
 # Exclude only azimuthal coordinates (carry longitudinal/temporal as extras).
 _coordinate_fields_azimuthal = _azimuthal_fields
 # Exclude azimuthal + longitudinal coordinates (carry temporal as extras).
 _coordinate_fields_spatial = _azimuthal_fields | _longitudinal_fields
 # Exclude all coordinate names.
 _coordinate_fields_all = _azimuthal_fields | _longitudinal_fields | _temporal_fields
+
+
+def _record_fields(layout: typing.Any) -> list[tuple[str, ...]]:
+    """
+    Field names of each kind of record in ``layout``. A union has more than one,
+    and its own ``fields`` are only the names that all of them have in common.
+
+    This is the descent of ``purelist_parameter("__record__")``, by which Awkward
+    Array picked the behavior class, so these are the records it was picked for.
+    """
+    while layout.is_list or layout.is_option or layout.is_indexed:
+        layout = layout.content
+    if layout.is_union:
+        return [x for content in layout.contents for x in _record_fields(content)]
+    return [tuple(layout.fields)]
 
 
 def _yes_record(
@@ -684,6 +698,16 @@ class VectorAwkward:
         if nplike is ak._nplikes.typetracer.TypeTracer.instance():
             return _lib(module=numpy, nplike=nplike)
         return _lib(module=nplike._module, nplike=nplike)
+
+    def __awkward_validation__(self: typing.Any) -> None:
+        """
+        Raises a ``TypeError`` if the fields do not describe this kind of vector.
+        Awkward Array calls this on every array and record that it attaches the
+        behavior to, whichever way the record name got there.
+        """
+        layout = self.layout.array if isinstance(self, ak.Record) else self.layout
+        for fields in _record_fields(layout):
+            _check_field_names(self, fields)
 
     def _wrap_result(
         self: AwkwardProtocol,
@@ -753,11 +777,9 @@ class VectorAwkward:
                         names.append(name)
                         arrays.append(self[name])
 
-            if any(
-                f in fields for f in ("t", "tau", "M", "m", "mass", "E", "e", "energy")
-            ):
+            if any(f in _temporal_fields for f in fields):
                 cls = _projection_class(cls, 4)
-            elif any(f in fields for f in ("z", "pz", "theta", "eta")):
+            elif any(f in _longitudinal_fields for f in fields):
                 cls = _projection_class(cls, 3)
             else:
                 cls = _projection_class(cls, 2)
@@ -846,9 +868,7 @@ class VectorAwkward:
                         names.append(name)
                         arrays.append(self[name])
 
-            if any(
-                f in fields for f in ("t", "tau", "M", "m", "mass", "E", "e", "energy")
-            ):
+            if any(f in _temporal_fields for f in fields):
                 cls = _projection_class(cls, 4)
             else:
                 cls = _projection_class(cls, 3)

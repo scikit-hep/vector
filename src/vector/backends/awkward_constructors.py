@@ -5,10 +5,11 @@
 
 from __future__ import annotations
 
-import builtins
 import typing
 
 import numpy
+
+from vector._methods import _check_coordinate_names
 
 
 def _recname(is_momentum: bool, dimension: int) -> str:
@@ -17,194 +18,20 @@ def _recname(is_momentum: bool, dimension: int) -> str:
 
 
 def _check_names(
-    projectable: typing.Any, fieldnames: list[str]
-) -> tuple[bool, int, list[str], typing.Any]:
-    complaint1 = "duplicate coordinates (through momentum-aliases): " + ", ".join(
-        repr(x) for x in fieldnames
-    )
-    complaint2 = (
-        "unrecognized combination of coordinates, allowed combinations are:\n\n"
-        "    (2D) x= y=\n"
-        "    (2D) rho= phi=\n"
-        "    (3D) x= y= z=\n"
-        "    (3D) x= y= theta=\n"
-        "    (3D) x= y= eta=\n"
-        "    (3D) rho= phi= z=\n"
-        "    (3D) rho= phi= theta=\n"
-        "    (3D) rho= phi= eta=\n"
-        "    (4D) x= y= z= t=\n"
-        "    (4D) x= y= z= tau=\n"
-        "    (4D) x= y= theta= t=\n"
-        "    (4D) x= y= theta= tau=\n"
-        "    (4D) x= y= eta= t=\n"
-        "    (4D) x= y= eta= tau=\n"
-        "    (4D) rho= phi= z= t=\n"
-        "    (4D) rho= phi= z= tau=\n"
-        "    (4D) rho= phi= theta= t=\n"
-        "    (4D) rho= phi= theta= tau=\n"
-        "    (4D) rho= phi= eta= t=\n"
-        "    (4D) rho= phi= eta= tau="
+    projectable: typing.Any, fieldnames: typing.Iterable[str]
+) -> tuple[str, dict[str, typing.Any]]:
+    """
+    Determines the record name and the columns of an array of vectors from its
+    field names, allowing fields that are not coordinates to be carried along.
+    """
+    is_momentum, dimension, coordinates, extra = _check_coordinate_names(
+        tuple(fieldnames), allow_extra=True
     )
 
-    is_momentum = False
-    dimension = 0
-    names = []
-    columns = []
+    columns = {generic: projectable[given] for generic, given in coordinates}
+    columns.update((name, projectable[name]) for name in extra)
 
-    if "x" in fieldnames and "y" in fieldnames:
-        if dimension != 0:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 2
-        names.extend(["x", "y"])
-        columns.extend([projectable["x"], projectable["y"]])
-        fieldnames.remove("x")
-        fieldnames.remove("y")
-    if "rho" in fieldnames and "phi" in fieldnames:
-        if dimension != 0:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 2
-        names.extend(["rho", "phi"])
-        columns.extend([projectable["rho"], projectable["phi"]])
-        fieldnames.remove("rho")
-        fieldnames.remove("phi")
-    if "x" in fieldnames and "py" in fieldnames:
-        is_momentum = True
-        if dimension != 0:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 2
-        names.extend(["x", "y"])
-        columns.extend([projectable["x"], projectable["py"]])
-        fieldnames.remove("x")
-        fieldnames.remove("py")
-    if "px" in fieldnames and "y" in fieldnames:
-        is_momentum = True
-        if dimension != 0:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 2
-        names.extend(["x", "y"])
-        columns.extend([projectable["px"], projectable["y"]])
-        fieldnames.remove("px")
-        fieldnames.remove("y")
-    if "px" in fieldnames and "py" in fieldnames:
-        is_momentum = True
-        if dimension != 0:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 2
-        names.extend(["x", "y"])
-        columns.extend([projectable["px"], projectable["py"]])
-        fieldnames.remove("px")
-        fieldnames.remove("py")
-    if "pt" in fieldnames and "phi" in fieldnames:
-        is_momentum = True
-        if dimension != 0:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 2
-        names.extend(["rho", "phi"])
-        columns.extend([projectable["pt"], projectable["phi"]])
-        fieldnames.remove("pt")
-        fieldnames.remove("phi")
-
-    if "z" in fieldnames:
-        if dimension != 2:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 3
-        names.append("z")
-        columns.append(projectable["z"])
-        fieldnames.remove("z")
-    if "theta" in fieldnames:
-        if dimension != 2:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 3
-        names.append("theta")
-        columns.append(projectable["theta"])
-        fieldnames.remove("theta")
-    if "eta" in fieldnames:
-        if dimension != 2:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 3
-        names.append("eta")
-        columns.append(projectable["eta"])
-        fieldnames.remove("eta")
-    if "pz" in fieldnames:
-        is_momentum = True
-        if dimension != 2:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 3
-        names.append("z")
-        columns.append(projectable["pz"])
-        fieldnames.remove("pz")
-
-    if "t" in fieldnames:
-        if dimension != 3:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 4
-        names.append("t")
-        columns.append(projectable["t"])
-        fieldnames.remove("t")
-    if "tau" in fieldnames:
-        if dimension != 3:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 4
-        names.append("tau")
-        columns.append(projectable["tau"])
-        fieldnames.remove("tau")
-    if "E" in fieldnames:
-        is_momentum = True
-        if dimension != 3:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 4
-        names.append("t")
-        columns.append(projectable["E"])
-        fieldnames.remove("E")
-    if "e" in fieldnames:
-        is_momentum = True
-        if dimension != 3:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 4
-        names.append("t")
-        columns.append(projectable["e"])
-        fieldnames.remove("e")
-    if "energy" in fieldnames:
-        is_momentum = True
-        if dimension != 3:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 4
-        names.append("t")
-        columns.append(projectable["energy"])
-        fieldnames.remove("energy")
-    if "M" in fieldnames:
-        is_momentum = True
-        if dimension != 3:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 4
-        names.append("tau")
-        columns.append(projectable["M"])
-        fieldnames.remove("M")
-    if "m" in fieldnames:
-        is_momentum = True
-        if dimension != 3:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 4
-        names.append("tau")
-        columns.append(projectable["m"])
-        fieldnames.remove("m")
-    if "mass" in fieldnames:
-        is_momentum = True
-        if dimension != 3:
-            raise TypeError(complaint1 if is_momentum else complaint2)
-        dimension = 4
-        names.append("tau")
-        columns.append(projectable["mass"])
-        fieldnames.remove("mass")
-
-    if dimension == 0:
-        raise TypeError(complaint1 if is_momentum else complaint2)
-
-    for name in fieldnames:
-        names.append(name)
-        columns.append(projectable[name])
-
-    return is_momentum, dimension, names, columns
+    return _recname(is_momentum, dimension), columns
 
 
 def _is_type_safe(array_type: typing.Any) -> None:
@@ -287,6 +114,11 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
 
     to make the vector a momentum vector.
 
+    A coordinate may be given only once, whether by its generic name or through
+    a momentum-alias, and the names must form exactly one of the combinations
+    above; anything else raises a ``TypeError``. Names that are not coordinates
+    become extra fields of the records.
+
     No constraints are placed on the types of the vector fields, though if they
     are not numbers, mathematical operations will fail. Usually, you want them to be
     integers or floating-point numbers.
@@ -310,16 +142,11 @@ def Array(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
 
     fields = awkward.fields(akarray)
 
-    is_momentum, dimension, names, arrays = _check_names(akarray, fields.copy())
-
-    assert 2 <= dimension <= 4, f"Dimension must be between 2-4, not {dimension}"
+    recname, columns = _check_names(akarray, fields)
 
     return awkward.with_name(
-        awkward.zip(
-            dict(builtins.zip(names, arrays, strict=True)),
-            depth_limit=akarray.layout.purelist_depth,
-        ),
-        _recname(is_momentum, dimension),
+        awkward.zip(columns, depth_limit=akarray.layout.purelist_depth),
+        recname,
         behavior=vector.backends.awkward.behavior,
     )
 
@@ -377,6 +204,11 @@ def zip(arrays: dict[str, typing.Any], depth_limit: int | None = None) -> typing
     - ``mass`` may be substituted for ``tau``
 
     to make the vector a momentum vector.
+
+    A coordinate may be given only once, whether by its generic name or through
+    a momentum-alias, and the names must form exactly one of the combinations
+    above; anything else raises a ``TypeError``. Names that are not coordinates
+    become extra fields of the records.
     """
     import awkward
 
@@ -386,15 +218,15 @@ def zip(arrays: dict[str, typing.Any], depth_limit: int | None = None) -> typing
     if not isinstance(arrays, dict):
         raise TypeError("argument passed to vector.zip must be a dictionary")
 
-    is_momentum, dimension, names, columns = _check_names(arrays, list(arrays.keys()))
+    recname, columns = _check_names(arrays, arrays)
 
     behavior = None
     if not vector._awkward_registered:
         behavior = dict(vector.backends.awkward.behavior)
 
     return awkward.zip(
-        dict(builtins.zip(names, columns, strict=True)),
+        columns,
         depth_limit=depth_limit,
-        with_name=_recname(is_momentum, dimension),
+        with_name=recname,
         behavior=behavior,
     )
