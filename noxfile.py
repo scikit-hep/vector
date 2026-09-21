@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import nox
@@ -16,7 +17,7 @@ nox.options.default_venv_backend = "uv|virtualenv"
 DIR = Path(__file__).parent.resolve()
 PYPROJECT = nox.project.load_toml(DIR / "pyproject.toml")
 ALL_PYTHON = nox.project.python_versions(PYPROJECT)
-ALL_PYTHON += ["3.14t"]  # add free-threaded Python variant
+ALL_PYTHON += ["3.14t", "3.15t"]  # add free-threaded Python variant
 
 
 @nox.session(reuse_venv=True)
@@ -88,6 +89,19 @@ def notebooks(session: nox.Session) -> None:
     session.install("-e.", *test_deps)
     session.install("jupyter")
     session.run("pytest", "tests/test_notebooks.py", *session.posargs)
+
+
+# Not reuse_venv: the CuPy wheel is chosen by CUDA_VERSION, so a reused venv would
+# keep the one installed for whichever version ran first.
+@nox.session(python="3.13", default=False)
+def gpu(session: nox.Session) -> None:
+    """Run the GPU tests. CUDA_VERSION picks the CuPy wheel (CUDA major, default 13)."""
+    cuda_version = os.environ.get("CUDA_VERSION", "13")
+    test_deps = nox.project.dependency_groups(PYPROJECT, "test", "test-optional")
+    # The "ctk" extra brings the CUDA runtime with it; the bare wheel expects a
+    # toolkit to be installed already. The driver is the host's either way.
+    session.install("-e.", *test_deps, f"cupy-cuda{cuda_version}x[ctk]>=14")
+    session.run("pytest", "tests/cuda", *session.posargs)
 
 
 @nox.session(reuse_venv=True, default=False)

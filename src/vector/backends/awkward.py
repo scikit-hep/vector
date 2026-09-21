@@ -64,6 +64,10 @@ from vector._methods import (
     Vector3D,
     Vector4D,
     VectorProtocol,
+    _azimuthal_fields,
+    _check_field_names,
+    _longitudinal_fields,
+    _temporal_fields,
 )
 from vector._typeutils import BoolCollection, Protocol, ScalarCollection
 from vector.backends.numpy import VectorNumpy2D, VectorNumpy3D, VectorNumpy4D
@@ -584,6 +588,20 @@ class TemporalAwkwardTau(TemporalAwkward, TemporalTau):
         return (self.tau,)
 
 
+def _projection_class(
+    cls: type[VectorProtocol], dimension: int
+) -> type[VectorProtocol]:
+    name = f"ProjectionClass{dimension}D"
+    projection: type[VectorProtocol] | None = getattr(cls, name, None)
+    if not projection:
+        msg = (
+            f"{cls.__name__} does not define {name}, which this operation "
+            f"needs to build its {dimension}D result"
+        )
+        raise TypeError(msg)
+    return projection
+
+
 def _class_to_name(cls: type[VectorProtocol]) -> str:
     # respect the type of classes inheriting VectorAwkward classes
     is_vector = "vector.backends" in cls.__module__
@@ -607,21 +625,31 @@ def _class_to_name(cls: type[VectorProtocol]) -> str:
 # the vector class ############################################################
 
 
-# Generic and momentum-alias coordinate field names, grouped by geometry tier.
 # Used by ``_wrap_result`` to exclude (already-recomputed) coordinate fields when
 # carrying along "extra" record fields, so that stale, pre-computation coordinates
-# are not leaked into the output. Previously these tuples were hand-copied into
-# each branch and omitted the ``px``/``py`` momentum aliases, leaking stale values.
-_azimuthal_fields = frozenset({"x", "y", "rho", "phi", "px", "py", "pt"})
-_longitudinal_fields = frozenset({"z", "theta", "eta", "pz"})
-_temporal_fields = frozenset({"t", "tau", "E", "e", "energy", "M", "m", "mass"})
-
+# are not leaked into the output.
+#
 # Exclude only azimuthal coordinates (carry longitudinal/temporal as extras).
 _coordinate_fields_azimuthal = _azimuthal_fields
 # Exclude azimuthal + longitudinal coordinates (carry temporal as extras).
 _coordinate_fields_spatial = _azimuthal_fields | _longitudinal_fields
 # Exclude all coordinate names.
 _coordinate_fields_all = _azimuthal_fields | _longitudinal_fields | _temporal_fields
+
+
+def _record_fields(layout: typing.Any) -> list[tuple[str, ...]]:
+    """
+    Field names of each kind of record in ``layout``. A union has more than one,
+    and its own ``fields`` are only the names that all of them have in common.
+
+    This is the descent of ``purelist_parameter("__record__")``, by which Awkward
+    Array picked the behavior class, so these are the records it was picked for.
+    """
+    while layout.is_list or layout.is_option or layout.is_indexed:
+        layout = layout.content
+    if layout.is_union:
+        return [x for content in layout.contents for x in _record_fields(content)]
+    return [tuple(layout.fields)]
 
 
 def _yes_record(
@@ -645,13 +673,13 @@ class _lib(typing.NamedTuple):  # noqa: PLW1641
     module: types.ModuleType
     nplike: ak._nplikes.numpy_like.NumpyLike
 
-    def __eq__(self, other: typing.Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, _lib):
             return self.module is other.module and self.nplike is other.nplike
         else:
             return self.module is other
 
-    def __ne__(self, other: typing.Any) -> bool:
+    def __ne__(self, other: object) -> bool:
         return not self.__eq__(other)
 
     def __getattr__(self, name: str) -> typing.Any:
@@ -670,6 +698,16 @@ class VectorAwkward:
         if nplike is ak._nplikes.typetracer.TypeTracer.instance():
             return _lib(module=numpy, nplike=nplike)
         return _lib(module=nplike._module, nplike=nplike)
+
+    def __awkward_validation__(self: typing.Any) -> None:
+        """
+        Raises a ``TypeError`` if the fields do not describe this kind of vector.
+        Awkward Array calls this on every array and record that it attaches the
+        behavior to, whichever way the record name got there.
+        """
+        layout = self.layout.array if isinstance(self, ak.Record) else self.layout
+        for fields in _record_fields(layout):
+            _check_field_names(self, fields)
 
     def _wrap_result(
         self: AwkwardProtocol,
@@ -739,14 +777,12 @@ class VectorAwkward:
                         names.append(name)
                         arrays.append(self[name])
 
-            if any(
-                f in fields for f in ("t", "tau", "M", "m", "mass", "E", "e", "energy")
-            ):
-                cls = cls.ProjectionClass4D
-            elif any(f in fields for f in ("z", "pz", "theta", "eta")):
-                cls = cls.ProjectionClass3D
+            if any(f in _temporal_fields for f in fields):
+                cls = _projection_class(cls, 4)
+            elif any(f in _longitudinal_fields for f in fields):
+                cls = _projection_class(cls, 3)
             else:
-                cls = cls.ProjectionClass2D
+                cls = _projection_class(cls, 2)
 
             return maybe_record(
                 ak.zip(
@@ -788,7 +824,7 @@ class VectorAwkward:
                 ak.zip(
                     dict(zip(names, arrays, strict=True)),
                     depth_limit=first.layout.purelist_depth,
-                    with_name=_class_to_name(cls.ProjectionClass2D),
+                    with_name=_class_to_name(_projection_class(cls, 2)),
                     behavior=None if vector._awkward_registered else first.behavior,
                 )
             )
@@ -832,12 +868,10 @@ class VectorAwkward:
                         names.append(name)
                         arrays.append(self[name])
 
-            if any(
-                f in fields for f in ("t", "tau", "M", "m", "mass", "E", "e", "energy")
-            ):
-                cls = cls.ProjectionClass4D
+            if any(f in _temporal_fields for f in fields):
+                cls = _projection_class(cls, 4)
             else:
-                cls = cls.ProjectionClass3D
+                cls = _projection_class(cls, 3)
 
             return maybe_record(
                 ak.zip(
@@ -891,7 +925,7 @@ class VectorAwkward:
                 ak.zip(
                     dict(zip(names, arrays, strict=True)),
                     depth_limit=first.layout.purelist_depth,
-                    with_name=_class_to_name(cls.ProjectionClass3D),
+                    with_name=_class_to_name(_projection_class(cls, 3)),
                     behavior=None if vector._awkward_registered else first.behavior,
                 )
             )
@@ -947,7 +981,7 @@ class VectorAwkward:
                 ak.zip(
                     dict(zip(names, arrays, strict=True)),
                     depth_limit=first.layout.purelist_depth,
-                    with_name=_class_to_name(cls.ProjectionClass4D),
+                    with_name=_class_to_name(_projection_class(cls, 4)),
                     behavior=None if vector._awkward_registered else first.behavior,
                 )
             )
@@ -960,6 +994,69 @@ class VectorAwkward:
         func: typing.Callable,  # type: ignore[type-arg]
     ) -> typing.Callable:  # type: ignore[type-arg]
         return awkward_transform(func)
+
+
+def _indexed_node(layout: typing.Any) -> typing.Any:
+    """
+    The plain ``IndexedArray`` over numbers that ``layout`` reaches through list
+    nodes only, or None.
+    """
+    while layout.is_list:
+        layout = layout.content
+    if (
+        type(layout) is ak.contents.IndexedArray
+        and layout.content.is_numpy
+        and not layout.parameters
+    ):
+        return layout
+    return None
+
+
+def _replace_indexed_node(layout: typing.Any, content: typing.Any) -> typing.Any:
+    if type(layout) is ak.contents.IndexedArray:
+        return content
+    return layout.copy(content=_replace_indexed_node(layout.content, content))
+
+
+def _gather_shared_indexes(arrays: list[ak.Array]) -> list[ak.Array]:
+    """
+    Materialize every group of ``arrays`` that sits behind the same ``Index``
+    with one index kernel.
+
+    Fields taken from one record behind an ``IndexedArray`` (what
+    ``ak.combinations``/``ak.cartesian`` produce, before or after broadcasting
+    pushes the index inside the record) all share the ``Index`` object. Left to
+    ``ak.transform``, each field runs the ``getitem_nextcarry`` kernel over the
+    whole index again; that kernel is most of the cost of arithmetic on such
+    arrays. Gathered as one tuple record, the group pays one kernel and the same
+    per-field carries.
+    """
+    groups: dict[int, list[int]] = {}
+    nodes: list[typing.Any] = []
+    for i, array in enumerate(arrays):
+        layout = array.layout
+        # a typetracer has no data to gather, and gathering would touch buffers the
+        # calculation may not need (dask-awkward reads those touches to project columns)
+        node = _indexed_node(layout) if layout.backend.nplike.known_data else None
+        nodes.append(node)
+        if node is not None:
+            groups.setdefault(id(node.index), []).append(i)
+    arrays = list(arrays)
+    for members in groups.values():
+        if len(members) < 2:
+            continue
+        projected = ak.contents.IndexedArray(
+            nodes[members[0]].index,
+            ak.contents.RecordArray([nodes[i].content for i in members], None),
+        ).project()
+        for k, i in enumerate(members):
+            # a copy keeps behavior and attrs; only the layout changes
+            gathered = ak.Array(arrays[i])
+            gathered.layout = _replace_indexed_node(
+                arrays[i].layout, projected.content(k)
+            )
+            arrays[i] = gathered
+    return arrays
 
 
 _placeholder = object()
@@ -1003,6 +1100,7 @@ class awkward_transform:
 
         # this means we're working with awkward-arrays and we should group operations with ak.transform
         if n_orig_akarrays > 0:
+            awkward_arrays = _gather_shared_indexes(awkward_arrays)
 
             def transformer(
                 layouts: ak.contents.Content | tuple[ak.contents.Content, ...],
@@ -1753,7 +1851,7 @@ def _arraytype_of(awkwardtype: typing.Any, component: str) -> typing.Any:
 def _aztype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
     import numba
 
-    cls: type[AzimuthalObjectXY] | type[AzimuthalObjectRhoPhi]
+    cls: type[AzimuthalObjectXY | AzimuthalObjectRhoPhi]
 
     x_index = None
     y_index = None
@@ -1821,11 +1919,7 @@ def _aztype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
 def _ltype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
     import numba
 
-    cls: (
-        type[LongitudinalObjectZ]
-        | type[LongitudinalObjectTheta]
-        | type[LongitudinalObjectEta]
-    )
+    cls: type[LongitudinalObjectZ | LongitudinalObjectTheta | LongitudinalObjectEta]
 
     z_index = None
     theta_index = None
@@ -1878,7 +1972,7 @@ def _ltype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
 def _ttype_of(recordarraytype: typing.Any, is_momentum: bool) -> typing.Any:
     import numba
 
-    cls: type[TemporalObjectT] | type[TemporalObjectTau]
+    cls: type[TemporalObjectT | TemporalObjectTau]
 
     t_index = None
     tau_index = None

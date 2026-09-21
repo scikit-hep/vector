@@ -116,3 +116,13 @@ def test_rhophi_eta_tau():
         vector.backends.object.TemporalObjectTau(16.583123951777),
     )
     assert vec.Mt2 == pytest.approx(300)
+
+
+def test_transverse_spacelike_consistency():
+    # Mt2 must be the signed t**2 - z**2 in both T- and Tau-coordinates
+    # (no clamp to zero), so the two representations agree.
+    base = vector.obj(px=3.0, py=4.0, pz=10.0, E=2.0)
+    tau_vec = vector.obj(px=3.0, py=4.0, pz=10.0, tau=base.tau)
+    assert base.Mt2 == pytest.approx(-96)
+    assert tau_vec.Mt2 == pytest.approx(-96)
+    assert base.Mt2 == pytest.approx(tau_vec.Mt2)

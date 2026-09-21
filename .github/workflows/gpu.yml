@@ -1,0 +1,48 @@
+name: GPU
+
+on:
+  schedule:
+    - cron: "19 5 * * *"
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
+
+env:
+  FORCE_COLOR: "1"
+
+jobs:
+  gpu-tests:
+    name: CUDA ${{ matrix.cuda-version }}
+    if: github.event_name != 'schedule' || github.repository_owner == 'scikit-hep'
+    runs-on: self-hosted
+    permissions: {}
+    timeout-minutes: 60
+
+    strategy:
+      fail-fast: false
+      matrix:
+        cuda-version:
+          - 12
+          - 13
+
+    steps:
+      - name: Clean the workspace
+        run: rm -rf * .[!.]* || echo "Nothing to clean"
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+
+      - name: Run the GPU tests
+        run: uvx nox -s gpu --verbose --download-python always
+        env:
+          CUDA_VERSION: ${{ matrix.cuda-version }}
