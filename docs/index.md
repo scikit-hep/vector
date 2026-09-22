@@ -25,7 +25,6 @@ myst:
 
 [![LICENSE][license-badge]][license-link]
 [![GitHub Discussion][github-discussions-badge]][github-discussions-link]
-[![Gitter][gitter-badge]][gitter-link]
 
 ## Installation
 
@@ -103,7 +102,6 @@ Further, the transformations and rotations (including boosts) are active, and th
 - Source code on GitHub: [scikit-hep/vector](https://github.com/scikit-hep/vector)
 - Report bugs and request features on the [GitHub Issues page](https://github.com/scikit-hep/vector/issues)
 - Ask questions on the [GitHub Discussions page](https://github.com/scikit-hep/vector/discussions)
-- Real-time chat on Gitter: [Scikit-HEP/Vector](https://gitter.im/Scikit-HEP/vector)
 
 ## Contributing to Vector
 
@@ -191,8 +189,6 @@ src/talks.md
 [conda-link]: https://github.com/conda-forge/vector-feedstock
 [github-discussions-badge]: https://img.shields.io/static/v1?label=Discussions&message=Ask&color=blue&logo=github
 [github-discussions-link]: https://github.com/scikit-hep/vector/discussions
-[gitter-badge]: https://badges.gitter.im/Scikit-HEP/vector.svg
-[gitter-link]: https://gitter.im/Scikit-HEP/vector?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 [joss-badge]: https://joss.theoj.org/papers/10.21105/joss.07791/status.svg
 [joss-link]: https://doi.org/10.21105/joss.07791
 [license-badge]: https://img.shields.io/badge/License-BSD_3--Clause-blue.svg
