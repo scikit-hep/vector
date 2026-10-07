@@ -72,17 +72,25 @@ from vector._typeutils import FloatArray
 class CoordinatesObject:
     """Coordinates class for the Object backend."""
 
+    __slots__ = ()
+
 
 class AzimuthalObject(CoordinatesObject, Azimuthal):
     """Azimuthal class for the Object backend."""
+
+    __slots__ = ()
 
 
 class LongitudinalObject(CoordinatesObject, Longitudinal):
     """Longitudinal class for the Object backend."""
 
+    __slots__ = ()
+
 
 class TemporalObject(CoordinatesObject, Temporal):
     """Temporal class for the Object backend."""
+
+    __slots__ = ()
 
 
 class TupleXY(typing.NamedTuple):
@@ -97,6 +105,8 @@ class AzimuthalObjectXY(AzimuthalObject, AzimuthalXY, TupleXY):
     Class for the ``x`` and ``y`` (azimuthal) coordinates of Object backend.
     Use the ``elements`` property to retrieve the coordinates.
     """
+
+    __slots__ = ()
 
     @property
     def elements(self) -> tuple[float, float]:
@@ -127,6 +137,8 @@ class AzimuthalObjectRhoPhi(AzimuthalObject, AzimuthalRhoPhi, TupleRhoPhi):
     Use the ``elements`` property to retrieve the coordinates.
     """
 
+    __slots__ = ()
+
     @property
     def elements(self) -> tuple[float, float]:
         """
@@ -154,6 +166,8 @@ class LongitudinalObjectZ(LongitudinalObject, LongitudinalZ, TupleZ):
     Class for the ``z`` (longitudinal) coordinate of Object backend.
     Use the ``elements`` property to retrieve the coordinates.
     """
+
+    __slots__ = ()
 
     @property
     def elements(self) -> tuple[float]:
@@ -183,6 +197,8 @@ class LongitudinalObjectTheta(LongitudinalObject, LongitudinalTheta, TupleTheta)
     Use the ``elements`` property to retrieve the coordinates.
     """
 
+    __slots__ = ()
+
     @property
     def elements(self) -> tuple[float]:
         """
@@ -210,6 +226,8 @@ class LongitudinalObjectEta(LongitudinalObject, LongitudinalEta, TupleEta):
     Class for the ``eta`` (longitudinal) coordinate of Object backend.
     Use the ``elements`` property to retrieve the coordinates.
     """
+
+    __slots__ = ()
 
     @property
     def elements(self) -> tuple[float]:
@@ -239,6 +257,8 @@ class TemporalObjectT(TemporalObject, TemporalT, TupleT):
     Use the ``elements`` property to retrieve the coordinates.
     """
 
+    __slots__ = ()
+
     @property
     def elements(self) -> tuple[float]:
         """
@@ -266,6 +286,8 @@ class TemporalObjectTau(TemporalObject, TemporalTau, TupleTau):
     Class for the ``tau`` (temporal) coordinate of Object backend.
     Use the ``elements`` property to retrieve the coordinates.
     """
+
+    __slots__ = ()
 
     @property
     def elements(self) -> tuple[float]:
@@ -353,6 +375,7 @@ def _replace_data(obj: typing.Any, result: typing.Any) -> typing.Any:
 class VectorObject(Vector):  # noqa: PLW1641
     """Mixin class for Object vectors."""
 
+    __slots__ = ()
     lib = numpy
 
     # The type ignore comments below cannot be removed because `VectorObject`
