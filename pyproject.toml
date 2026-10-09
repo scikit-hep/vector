@@ -114,10 +114,7 @@ build.hooks.vcs.version-file = "src/vector/_version.py"
 # Supply-chain cooldown: ignore releases newer than this
 [tool.uv]
 exclude-newer = "7 days"
-exclude-newer-package = [
-  { awkward_cpp = false },
-  { awkward = false },
-]
+exclude-newer-package = {awkward_cpp = false , awkward = false}
 
 [tool.ruff.lint]
 extend-select = [
