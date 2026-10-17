@@ -449,3 +449,27 @@ def test_dir_excludes_missing_backend_names(monkeypatch):
     names = set(dir(vector))
     assert names >= vector._AWKWARD_NAMES
     assert names >= vector._SYMPY_NAMES
+
+
+@pytest.mark.parametrize("backend", ["object", "numpy"])
+@pytest.mark.parametrize("azimuthal", ["pxpy", "ptphi"])
+@pytest.mark.parametrize(("temporal", "suffix"), [("mass", "mass"), ("E", "energy")])
+def test_theta_conversion_at_rest(backend, azimuthal, temporal, suffix):
+    coordinates = {"px": 0.0, "py": 0.0, "pz": 0.0, temporal: 5.0}
+    if backend == "object":
+        original = vector.obj(**coordinates)
+    else:
+        original = vector.array({key: [value] for key, value in coordinates.items()})
+
+    converted = getattr(original, f"to_{azimuthal}theta{suffix}")()
+    assert pytest.approx(5) == converted.E
+    assert converted.mass == pytest.approx(5)
+    assert converted.mag == pytest.approx(0)
+    assert converted.mag2 == pytest.approx(0)
+    assert converted.px == pytest.approx(0)
+    assert converted.py == pytest.approx(0)
+    assert converted.pz == pytest.approx(0)
+
+    boosted = converted.boostX(beta=0.6)
+    assert boosted.px == pytest.approx(15 / 4)
+    assert pytest.approx(25 / 4) == boosted.E
