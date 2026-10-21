@@ -5,6 +5,7 @@
 
 from __future__ import annotations
 
+import numpy
 import pytest
 
 import vector.backends.object
@@ -116,3 +117,12 @@ def test_rhophi_eta_tau():
         temporal=vector.backends.object.TemporalObjectTau(16.583123951777),
     )
     assert vec.rapidity == pytest.approx(0.5493061443340549)
+
+
+@pytest.mark.parametrize("pz", [5, 5.0])
+def test_massless_along_z(pz):
+    # a massless particle along the z axis has infinite rapidity, in either
+    # direction, instead of raising ZeroDivisionError for E == pz
+    with numpy.errstate(divide="ignore"):
+        assert vector.obj(px=0, py=0, pz=pz, E=5).rapidity == numpy.inf
+        assert vector.obj(px=0, py=0, pz=-pz, E=5).rapidity == -numpy.inf
