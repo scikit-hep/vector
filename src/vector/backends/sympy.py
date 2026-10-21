@@ -98,6 +98,9 @@ class _lib:
     def absolute(self, val: sympy.Expr) -> sympy.Expr:
         return sympy.Abs(val)
 
+    def true_divide(self, val1: sympy.Expr, val2: sympy.Expr) -> sympy.Expr:
+        return val1 / val2
+
     def isclose(
         self,
         val1: sympy.Expr,
