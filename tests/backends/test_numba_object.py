@@ -1800,3 +1800,117 @@ def test_momentum_lowercase_aliases():
     assert get_et2(p) == pytest.approx(p.et2)
     assert get_mt(p) == pytest.approx(p.mt)
     assert get_mt2(p) == pytest.approx(p.mt2)
+
+
+def test_dimension_conversions_numbered():
+    @numba.njit
+    def to_2d(v):
+        return v.to_2D()
+
+    @numba.njit
+    def to_3d(v):
+        return v.to_3D()
+
+    @numba.njit
+    def to_4d(v):
+        return v.to_4D()
+
+    # 4D momentum vector
+    p4 = vector.obj(px=1.0, py=2.0, pz=3.0, E=10.0)
+    p2 = to_2d(p4)
+    p3 = to_3d(p4)
+    assert p2.px == pytest.approx(1.0)
+    assert p2.py == pytest.approx(2.0)
+    assert p3.px == pytest.approx(1.0)
+    assert p3.py == pytest.approx(2.0)
+    assert p3.pz == pytest.approx(3.0)
+    assert pytest.approx(10.0) == to_4d(p4).E
+
+    # 2D generic vector
+    v2 = vector.obj(x=1.0, y=2.0)
+    v3 = to_3d(v2)
+    v4 = to_4d(v2)
+    assert to_2d(v2).x == pytest.approx(1.0)
+    assert v3.x == pytest.approx(1.0)
+    assert v3.y == pytest.approx(2.0)
+    assert v3.z == pytest.approx(0.0)
+    assert v4.t == pytest.approx(0.0)
+
+
+def test_momentum_named_coordinate_conversions():
+    @numba.njit
+    def to_pxpy(v):
+        return v.to_pxpy()
+
+    @numba.njit
+    def to_ptphi(v):
+        return v.to_ptphi()
+
+    @numba.njit
+    def to_pxpypz(v):
+        return v.to_pxpypz()
+
+    @numba.njit
+    def to_pxpypzenergy(v):
+        return v.to_pxpypzenergy()
+
+    @numba.njit
+    def to_ptphietamass(v):
+        return v.to_ptphietamass()
+
+    p = vector.obj(px=1.0, py=2.0, pz=3.0, E=10.0)
+    res_pxpy = to_pxpy(p)
+    assert res_pxpy.px == pytest.approx(1.0)
+    assert res_pxpy.py == pytest.approx(2.0)
+
+    res_ptphi = to_ptphi(p)
+    assert res_ptphi.pt == pytest.approx(p.pt)
+    assert res_ptphi.phi == pytest.approx(p.phi)
+
+    res_pxpypz = to_pxpypz(p)
+    assert res_pxpypz.px == pytest.approx(1.0)
+    assert res_pxpypz.py == pytest.approx(2.0)
+    assert res_pxpypz.pz == pytest.approx(3.0)
+
+    res_energy = to_pxpypzenergy(p)
+    assert pytest.approx(10.0) == res_energy.E
+
+    res_mass = to_ptphietamass(p)
+    assert res_mass.mass == pytest.approx(p.mass)
+    assert res_mass.eta == pytest.approx(p.eta)
+
+
+def test_like():
+    @numba.njit
+    def project_like(v, target):
+        return v.like(target)
+
+    v2 = vector.obj(x=1.0, y=2.0)
+    v3 = vector.obj(x=3.0, y=4.0, z=5.0)
+    v4 = vector.obj(px=1.0, py=2.0, pz=3.0, E=10.0)
+
+    # 4D projected into 2D
+    res_4_to_2 = project_like(v4, v2)
+    assert res_4_to_2.px == pytest.approx(1.0)
+    assert res_4_to_2.py == pytest.approx(2.0)
+
+    # 2D projected into 4D
+    res_2_to_4 = project_like(v2, v4)
+    assert res_2_to_4.x == pytest.approx(1.0)
+    assert res_2_to_4.y == pytest.approx(2.0)
+    assert res_2_to_4.z == pytest.approx(0.0)
+    assert res_2_to_4.t == pytest.approx(0.0)
+
+    # 3D projected into 3D
+    res_3_to_3 = project_like(v3, v3)
+    assert res_3_to_3.x == pytest.approx(3.0)
+    assert res_3_to_3.y == pytest.approx(4.0)
+    assert res_3_to_3.z == pytest.approx(5.0)
+
+    # Invalid target raises TypingError
+    @numba.njit
+    def invalid_like(v):
+        return v.like(123)
+
+    with pytest.raises(numba.TypingError):
+        invalid_like(v2)
