@@ -46,7 +46,6 @@ from vector._methods import (
     LorentzMomentum,
     Planar,
     PlanarMomentum,
-    SameVectorType,
     Spatial,
     SpatialMomentum,
     Temporal,
@@ -375,7 +374,7 @@ class VectorObject(Vector):  # noqa: PLW1641
     def __radd__(self, other: VectorProtocol) -> VectorProtocol:
         return numpy.add(other, self)  # type: ignore[call-overload]
 
-    def __iadd__(self: SameVectorType, other: VectorProtocol) -> SameVectorType:
+    def __iadd__(self, other: VectorProtocol) -> typing.Self:
         return _replace_data(
             self,
             numpy.add(self, other),  # type: ignore[call-overload]
@@ -387,7 +386,7 @@ class VectorObject(Vector):  # noqa: PLW1641
     def __rsub__(self, other: VectorProtocol) -> VectorProtocol:
         return numpy.subtract(other, self)  # type: ignore[call-overload]
 
-    def __isub__(self: SameVectorType, other: VectorProtocol) -> SameVectorType:
+    def __isub__(self, other: VectorProtocol) -> typing.Self:
         return _replace_data(
             self,
             numpy.subtract(self, other),  # type: ignore[call-overload]
@@ -399,17 +398,17 @@ class VectorObject(Vector):  # noqa: PLW1641
     def __rmul__(self, other: float) -> VectorProtocol:
         return numpy.multiply(other, self)  # type: ignore[call-overload]
 
-    def __imul__(self: SameVectorType, other: float) -> SameVectorType:
+    def __imul__(self, other: float) -> typing.Self:
         return _replace_data(
             self,
             numpy.multiply(self, other),  # type: ignore[call-overload]
         )
 
-    def __neg__(self: SameVectorType) -> SameVectorType:
-        return numpy.negative(self)  # type: ignore[call-overload]
+    def __neg__(self) -> typing.Self:
+        return numpy.negative(self)
 
-    def __pos__(self: SameVectorType) -> SameVectorType:
-        return numpy.positive(self)  # type: ignore[call-overload]
+    def __pos__(self) -> typing.Self:
+        return numpy.positive(self)
 
     def __truediv__(self, other: float) -> VectorProtocol:
         return numpy.true_divide(self, other)  # type: ignore[call-overload]
@@ -417,7 +416,7 @@ class VectorObject(Vector):  # noqa: PLW1641
     def __rtruediv__(self, other: float) -> VectorProtocol:
         return numpy.true_divide(other, self)  # type: ignore[call-overload]
 
-    def __itruediv__(self: SameVectorType, other: float) -> VectorProtocol:
+    def __itruediv__(self, other: float) -> VectorProtocol:
         return _replace_data(
             self,
             numpy.true_divide(self, other),  # type: ignore[call-overload]

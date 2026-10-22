@@ -19,7 +19,7 @@ maintainers = [
 authors = [
   { name = "Saransh Chopra, Jim Pivarski, Henry Schreiner, Eduardo Rodrigues, Jonas Eschle", email = "eduardo.rodrigues@cern.ch" },
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Developers",
@@ -27,7 +27,6 @@ classifiers = [
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
@@ -136,8 +135,6 @@ ignore = [
   "PLR09",   # Too many X
   "PLR2004", # Magic values
   "N999",    # Module names follow ROOT's spelling (Et, deltaR, rotateZ, ...)
-  "PYI019",  # returning Self needs typing_extensions on Python 3.10
-  "PYI034",  # __new__ returning Self needs typing_extensions on Python 3.10
   "TRY004",  # AssertionError marks unreachable branches, not bad user types
 ]
 typing-modules = [
@@ -185,7 +182,7 @@ isort.required-imports = [
 ]
 
 [tool.pylint]
-master.py-version = "3.10"
+master.py-version = "3.11"
 reports.output-format = "colorized"
 similarities.ignore-imports = "yes"
 master.jobs = "0"
@@ -274,7 +271,7 @@ filterwarnings = [
 files = [
   "src/vector",
 ]
-python_version = "3.10"
+python_version = "3.11"
 strict = true
 warn_return_any = false
 enable_error_code = [
@@ -311,7 +308,7 @@ platforms = ["linux-64", "osx-arm64", "osx-64"]
 exclude-newer = "7d"
 
 [tool.pixi.feature.root.dependencies]
-python = ">=3.10"
+python = ">=3.11"
 root = ">=6.18.04"
 numba = ">=0.57"
 numpy = ">=1.19.3"
