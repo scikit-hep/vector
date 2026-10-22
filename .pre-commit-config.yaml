@@ -33,7 +33,7 @@ repos:
         args: []
         additional_dependencies:
           # numpy>=2.5 requires Python>=3.12 and its stubs use PEP 695 syntax,
-          # which mypy cannot parse while python_version is pinned to 3.10
+          # which mypy cannot parse while python_version is pinned to 3.11
           - numpy<2.5
           - packaging
           - sympy
