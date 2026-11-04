@@ -24,8 +24,8 @@ def test_xy_z():
             sympy.sqrt(x**2 + y**2) / sympy.tan(theta)
         ),
     )
-    assert vec.theta.simplify() == sympy.acos(
-        sympy.Abs(sympy.cos(theta) * sympy.tan(theta)) / sympy.tan(theta)
+    assert vec.theta == sympy.atan2(
+        sympy.sqrt(x**2 + y**2), sympy.sqrt(x**2 + y**2) / sympy.tan(theta)
     )
     assert vec.theta.subs(values).evalf() == pytest.approx(0.4636476090008061)
 
@@ -55,9 +55,7 @@ def test_rhophi_z():
         azimuthal=vector.backends.sympy.AzimuthalSympyRhoPhi(rho, phi),
         longitudinal=vector.backends.sympy.LongitudinalSympyZ(rho / sympy.tan(theta)),
     )
-    assert vec.theta.simplify() == sympy.acos(
-        sympy.Abs(sympy.cos(theta) * sympy.tan(theta)) / sympy.tan(theta)
-    )
+        assert vec.theta == sympy.atan2(rho, rho / sympy.tan(theta))
     assert vec.theta.subs(values).evalf() == pytest.approx(0.4636476090008061)
 
 
