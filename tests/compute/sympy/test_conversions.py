@@ -235,7 +235,7 @@ def test_momentum_conversion_3D():
                 elif longitudinal == "eta":
                     assert tv.eta == sympy.asinh(pz / sympy.sqrt(px**2 + py**2))
                 elif longitudinal == "theta":
-                    assert tv.theta == sympy.atan2(sympy.sqrt(px**2 + py**2), pz) 
+                    assert tv.theta == sympy.atan2(sympy.sqrt(px**2 + py**2), pz)
                 assert getattr(tv, temporal) == pytest.approx(0)
 
 
@@ -282,7 +282,7 @@ def test_conversion_4D():
             elif longitudinal == "eta":
                 assert tv.eta == sympy.asinh(z / sympy.sqrt(x**2 + y**2))
             elif longitudinal == "theta":
-                assert tv.theta == sympy.atan2(sympy.sqrt(x**2 + y**2), z)                
+                assert tv.theta == sympy.atan2(sympy.sqrt(x**2 + y**2), z)
 
             for temporal in "t", "tau":
                 tv = getattr(v, "to_" + azimuthal + longitudinal + temporal)()
@@ -299,7 +299,7 @@ def test_conversion_4D():
                 elif longitudinal == "eta":
                     assert tv.eta == sympy.asinh(z / sympy.sqrt(x**2 + y**2))
                 elif longitudinal == "theta":
-                  assert tv.theta == sympy.atan2(sympy.sqrt(x**2 + y**2), z)                    
+                    assert tv.theta == sympy.atan2(sympy.sqrt(x**2 + y**2), z)
 
                 if temporal == "t":
                     assert tv.t == t
@@ -351,7 +351,7 @@ def test_momentum_conversion_4D():
                 assert tv.eta == sympy.asinh(pz / sympy.sqrt(px**2 + py**2))
             elif longitudinal == "theta":
                 assert tv.theta == sympy.atan2(sympy.sqrt(px**2 + py**2), pz)
-                
+
             for temporal in "t", "tau":
                 tv = getattr(v, "to_" + azimuthal + longitudinal + temporal)()
                 assert isinstance(tv, vector.MomentumSympy4D)
