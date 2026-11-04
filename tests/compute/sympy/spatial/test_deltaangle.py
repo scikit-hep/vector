@@ -41,6 +41,7 @@ def test_spatial_sympy():
                 0.225726
             )
 
+
 def test_lorentz_sympy():
     v1 = vector.VectorSympy4D(
         azimuthal=vector.backends.sympy.AzimuthalSympyXY(x, y),
