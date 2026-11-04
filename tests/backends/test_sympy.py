@@ -73,7 +73,7 @@ def test_construction():
 
         assert vec.z == z
         assert vec.eta == sympy.asinh(z / sympy.sqrt(x**2 + y**2))
-        assert vec.theta == sympy.acos(z / sympy.sqrt(x**2 + y**2 + z**2))
+        assert vec.theta == sympy.atan2(sympy.sqrt(x**2 + y**2), z)
 
         assert isinstance(vec.longitudinal, vector.backends.sympy.LongitudinalSympyZ)
         assert vec.longitudinal.elements == (z,)
@@ -186,7 +186,7 @@ def test_construction():
 
         assert vec.pz == pz
         assert vec.eta == sympy.asinh(pz / sympy.sqrt(px**2 + py**2))
-        assert vec.theta == sympy.acos(pz / sympy.sqrt(px**2 + py**2 + pz**2))
+        assert vec.theta == sympy.atan2(sympy.sqrt(px**2 + py**2), pz)
 
         assert isinstance(vec.longitudinal, vector.backends.sympy.LongitudinalSympyZ)
         assert vec.longitudinal.elements == (pz,)
