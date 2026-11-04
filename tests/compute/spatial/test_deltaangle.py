@@ -5,9 +5,12 @@
 
 from __future__ import annotations
 
+import math
+
 import numpy
 import pytest
 
+import vector
 import vector.backends.numpy
 import vector.backends.object
 
@@ -148,3 +151,35 @@ def test_lorentz_numpy():
         ):
             tr1, tr2 = getattr(v1, "to_" + t1)(), getattr(v2, "to_" + t2)()
             assert tr1.deltaangle(tr2) == pytest.approx(0.225726)
+
+
+@pytest.mark.parametrize("delta", [1e-3, 1e-6, 1e-8, 1e-10, 1e-12])
+def test_small_angle_precision(delta):
+    v1 = vector.obj(x=1.0, y=0.0, z=0.0)
+    v2 = vector.obj(x=1.0, y=delta, z=0.0)
+    assert v1.deltaangle(v2) == pytest.approx(math.atan(delta), rel=1e-14, abs=0)
+
+    a1 = vector.array({"x": [1.0], "y": [0.0], "z": [0.0]})
+    a2 = vector.array({"x": [1.0], "y": [delta], "z": [0.0]})
+    assert a1.deltaangle(a2) == pytest.approx([math.atan(delta)], rel=1e-14, abs=0)
+
+
+def test_antiparallel_and_perpendicular():
+    v = vector.obj(x=1.0, y=2.0, z=3.0)
+    assert v.deltaangle(-v) == pytest.approx(math.pi)
+    assert vector.obj(x=1.0, y=0.0, z=0.0).deltaangle(
+        vector.obj(x=0.0, y=5.0, z=0.0)
+    ) == pytest.approx(math.pi / 2)
+
+
+@pytest.mark.parametrize(
+    "coordinates", ["xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta"]
+)
+@pytest.mark.parametrize(
+    "other", ["xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta"]
+)
+def test_same_vector_in_different_coordinates(coordinates, other):
+    v = vector.obj(x=1.0, y=1.0, z=1.0)
+    first = getattr(v, "to_" + coordinates)()
+    second = getattr(v, "to_" + other)()
+    assert first.deltaangle(second) == pytest.approx(0.0, abs=1e-14)
