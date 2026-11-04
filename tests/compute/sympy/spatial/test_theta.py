@@ -55,7 +55,7 @@ def test_rhophi_z():
         azimuthal=vector.backends.sympy.AzimuthalSympyRhoPhi(rho, phi),
         longitudinal=vector.backends.sympy.LongitudinalSympyZ(rho / sympy.tan(theta)),
     )
-        assert vec.theta == sympy.atan2(rho, rho / sympy.tan(theta))
+    assert vec.theta == sympy.atan2(rho, rho / sympy.tan(theta))
     assert vec.theta.subs(values).evalf() == pytest.approx(0.4636476090008061)
 
 
