@@ -36,9 +36,11 @@ def xy_z_xy_z(lib, x1, y1, z1, x2, y2, z2):
     # The angle is arctan2(|v1 x v2|, v1 . v2), not arccos(v1 . v2 / (|v1||v2|)):
     # arccos has no precision for angles near 0 or pi (the argument rounds to
     # +-1 for angles below ~1e-8) and does not return 0 for identical vectors.
+    # hypot, not sqrt(cx**2 + ...): squaring the cross product components would
+    # overflow or underflow for vectors above ~1e77 or below ~1e-77.
     cx, cy, cz = cross.xy_z_xy_z(lib, x1, y1, z1, x2, y2, z2)
     return lib.arctan2(
-        lib.sqrt(cx * cx + cy * cy + cz * cz),
+        lib.hypot(lib.hypot(cx, cy), cz),
         dot.xy_z_xy_z(lib, x1, y1, z1, x2, y2, z2),
     )
 
