@@ -13,7 +13,7 @@
 from __future__ import annotations
 
 import typing
-from math import inf
+from math import inf, nan
 
 import numpy
 
@@ -36,7 +36,10 @@ def xy_z(lib, x, y, z):
 
 def xy_theta(lib, x, y, theta):
     return lib.nan_to_num(
-        (x**2 + y**2) / lib.sin(theta) ** 2, nan=0.0, posinf=inf, neginf=-inf
+        (x**2 + y**2) / lib.sin(theta) ** 2,
+        nan=lib.nan_to_num(((x != 0) | (y != 0)) * inf, posinf=nan),
+        posinf=inf,
+        neginf=-inf,
     )
 
 
@@ -52,7 +55,10 @@ def rhophi_z(lib, rho, phi, z):
 
 def rhophi_theta(lib, rho, phi, theta):
     return lib.nan_to_num(
-        rho**2 / lib.sin(theta) ** 2, nan=0.0, posinf=inf, neginf=-inf
+        rho**2 / lib.sin(theta) ** 2,
+        nan=lib.nan_to_num((rho != 0) * inf, posinf=nan),
+        posinf=inf,
+        neginf=-inf,
     )
 
 
