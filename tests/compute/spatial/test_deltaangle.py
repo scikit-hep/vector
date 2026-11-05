@@ -164,6 +164,19 @@ def test_small_angle_precision(delta):
     assert a1.deltaangle(a2) == pytest.approx([math.atan(delta)], rel=1e-14, abs=0)
 
 
+@pytest.mark.parametrize("scale", [1e-150, 1e-100, 1e-77, 1e77, 1e100, 1e150])
+def test_scale_invariance(scale):
+    # squaring the cross product components overflowed above ~1e77 and
+    # underflowed below ~1e-77, which turned a 45 degree angle into 0 or pi/2
+    v1 = vector.obj(x=scale, y=0.0, z=0.0)
+    v2 = vector.obj(x=scale, y=scale, z=0.0)
+    assert v1.deltaangle(v2) == pytest.approx(math.pi / 4)
+
+    a1 = vector.array({"x": [scale], "y": [0.0], "z": [0.0]})
+    a2 = vector.array({"x": [scale], "y": [scale], "z": [0.0]})
+    assert a1.deltaangle(a2) == pytest.approx([math.pi / 4])
+
+
 def test_antiparallel_and_perpendicular():
     v = vector.obj(x=1.0, y=2.0, z=3.0)
     assert v.deltaangle(-v) == pytest.approx(math.pi)
