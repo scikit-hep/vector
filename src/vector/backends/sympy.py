@@ -128,7 +128,7 @@ class _lib:
 
     def hypot(self, val1: sympy.Expr, val2: sympy.Expr) -> sympy.Expr:
         return sympy.sqrt(val1**2 + val2**2)
-        
+
     def exp(self, val: sympy.Expr) -> sympy.Expr:
         return sympy.exp(val)
 
