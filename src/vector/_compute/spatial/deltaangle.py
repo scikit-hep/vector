@@ -15,7 +15,8 @@ import typing
 
 import numpy
 
-from vector._compute.spatial import dot, mag
+from vector._compute.planar import x, y
+from vector._compute.spatial import cross, dot, z
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
@@ -32,655 +33,92 @@ from vector._methods import (
 
 
 def xy_z_xy_z(lib, x1, y1, z1, x2, y2, z2):
-    v1m = mag.xy_z(lib, x1, y1, z1)
-    v2m = mag.xy_z(lib, x2, y2, z2)
-    return lib.arccos(
-        lib.maximum(
-            -1, lib.minimum(1, dot.xy_z_xy_z(lib, x1, y1, z1, x2, y2, z2) / v1m / v2m)
-        )
-    )
-
-
-def xy_z_xy_theta(lib, x1, y1, z1, x2, y2, theta2):
-    v1m = mag.xy_z(lib, x1, y1, z1)
-    v2m = mag.xy_theta(lib, x2, y2, theta2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1, dot.xy_z_xy_theta(lib, x1, y1, z1, x2, y2, theta2) / v1m / v2m
-            ),
-        )
-    )
-
-
-def xy_z_xy_eta(lib, x1, y1, z1, x2, y2, eta2):
-    v1m = mag.xy_z(lib, x1, y1, z1)
-    v2m = mag.xy_eta(lib, x2, y2, eta2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(1, dot.xy_z_xy_eta(lib, x1, y1, z1, x2, y2, eta2) / v1m / v2m),
-        )
-    )
-
-
-def xy_z_rhophi_z(lib, x1, y1, z1, rho2, phi2, z2):
-    v1m = mag.xy_z(lib, x1, y1, z1)
-    v2m = mag.rhophi_z(lib, rho2, phi2, z2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1, dot.xy_z_rhophi_z(lib, x1, y1, z1, rho2, phi2, z2) / v1m / v2m
-            ),
-        )
-    )
-
-
-def xy_z_rhophi_theta(lib, x1, y1, z1, rho2, phi2, theta2):
-    v1m = mag.xy_z(lib, x1, y1, z1)
-    v2m = mag.rhophi_theta(lib, rho2, phi2, theta2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1,
-                dot.xy_z_rhophi_theta(lib, x1, y1, z1, rho2, phi2, theta2) / v1m / v2m,
-            ),
-        )
-    )
-
-
-def xy_z_rhophi_eta(lib, x1, y1, z1, rho2, phi2, eta2):
-    v1m = mag.xy_z(lib, x1, y1, z1)
-    v2m = mag.rhophi_eta(lib, rho2, phi2, eta2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1, dot.xy_z_rhophi_eta(lib, x1, y1, z1, rho2, phi2, eta2) / v1m / v2m
-            ),
-        )
-    )
-
-
-def xy_theta_xy_z(lib, x1, y1, theta1, x2, y2, z2):
-    v1m = mag.xy_theta(lib, x1, y1, theta1)
-    v2m = mag.xy_z(lib, x2, y2, z2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1, dot.xy_theta_xy_z(lib, x1, y1, theta1, x2, y2, z2) / v1m / v2m
-            ),
-        )
-    )
-
-
-def xy_theta_xy_theta(lib, x1, y1, theta1, x2, y2, theta2):
-    v1m = mag.xy_theta(lib, x1, y1, theta1)
-    v2m = mag.xy_theta(lib, x2, y2, theta2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1,
-                dot.xy_theta_xy_theta(lib, x1, y1, theta1, x2, y2, theta2) / v1m / v2m,
-            ),
-        )
-    )
-
-
-def xy_theta_xy_eta(lib, x1, y1, theta1, x2, y2, eta2):
-    v1m = mag.xy_theta(lib, x1, y1, theta1)
-    v2m = mag.xy_eta(lib, x2, y2, eta2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1, dot.xy_theta_xy_eta(lib, x1, y1, theta1, x2, y2, eta2) / v1m / v2m
-            ),
-        )
-    )
-
-
-def xy_theta_rhophi_z(lib, x1, y1, theta1, rho2, phi2, z2):
-    v1m = mag.xy_theta(lib, x1, y1, theta1)
-    v2m = mag.rhophi_z(lib, rho2, phi2, z2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1,
-                dot.xy_theta_rhophi_z(lib, x1, y1, theta1, rho2, phi2, z2) / v1m / v2m,
-            ),
-        )
-    )
-
-
-def xy_theta_rhophi_theta(lib, x1, y1, theta1, rho2, phi2, theta2):
-    v1m = mag.xy_theta(lib, x1, y1, theta1)
-    v2m = mag.rhophi_theta(lib, rho2, phi2, theta2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1,
-                dot.xy_theta_rhophi_theta(lib, x1, y1, theta1, rho2, phi2, theta2)
-                / v1m
-                / v2m,
-            ),
-        )
-    )
-
-
-def xy_theta_rhophi_eta(lib, x1, y1, theta1, rho2, phi2, eta2):
-    v1m = mag.xy_theta(lib, x1, y1, theta1)
-    v2m = mag.rhophi_eta(lib, rho2, phi2, eta2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1,
-                dot.xy_theta_rhophi_eta(lib, x1, y1, theta1, rho2, phi2, eta2)
-                / v1m
-                / v2m,
-            ),
-        )
-    )
-
-
-def xy_eta_xy_z(lib, x1, y1, eta1, x2, y2, z2):
-    v1m = mag.xy_eta(lib, x1, y1, eta1)
-    v2m = mag.xy_z(lib, x2, y2, z2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(1, dot.xy_eta_xy_z(lib, x1, y1, eta1, x2, y2, z2) / v1m / v2m),
-        )
-    )
-
-
-def xy_eta_xy_theta(lib, x1, y1, eta1, x2, y2, theta2):
-    v1m = mag.xy_eta(lib, x1, y1, eta1)
-    v2m = mag.xy_theta(lib, x2, y2, theta2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1, dot.xy_eta_xy_theta(lib, x1, y1, eta1, x2, y2, theta2) / v1m / v2m
-            ),
-        )
-    )
-
-
-def xy_eta_xy_eta(lib, x1, y1, eta1, x2, y2, eta2):
-    v1m = mag.xy_eta(lib, x1, y1, eta1)
-    v2m = mag.xy_eta(lib, x2, y2, eta2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1, dot.xy_eta_xy_eta(lib, x1, y1, eta1, x2, y2, eta2) / v1m / v2m
-            ),
-        )
-    )
-
-
-def xy_eta_rhophi_z(lib, x1, y1, eta1, rho2, phi2, z2):
-    v1m = mag.xy_eta(lib, x1, y1, eta1)
-    v2m = mag.rhophi_z(lib, rho2, phi2, z2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1, dot.xy_eta_rhophi_z(lib, x1, y1, eta1, rho2, phi2, z2) / v1m / v2m
-            ),
-        )
-    )
-
-
-def xy_eta_rhophi_theta(lib, x1, y1, eta1, rho2, phi2, theta2):
-    v1m = mag.xy_eta(lib, x1, y1, eta1)
-    v2m = mag.rhophi_theta(lib, rho2, phi2, theta2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1,
-                dot.xy_eta_rhophi_theta(lib, x1, y1, eta1, rho2, phi2, theta2)
-                / v1m
-                / v2m,
-            ),
-        )
-    )
-
-
-def xy_eta_rhophi_eta(lib, x1, y1, eta1, rho2, phi2, eta2):
-    v1m = mag.xy_eta(lib, x1, y1, eta1)
-    v2m = mag.rhophi_eta(lib, rho2, phi2, eta2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1,
-                dot.xy_eta_rhophi_eta(lib, x1, y1, eta1, rho2, phi2, eta2) / v1m / v2m,
-            ),
-        )
-    )
-
-
-def rhophi_z_xy_z(lib, rho1, phi1, z1, x2, y2, z2):
-    v1m = mag.rhophi_z(lib, rho1, phi1, z1)
-    v2m = mag.xy_z(lib, x2, y2, z2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1, dot.rhophi_z_xy_z(lib, rho1, phi1, z1, x2, y2, z2) / v1m / v2m
-            ),
-        )
-    )
-
-
-def rhophi_z_xy_theta(lib, rho1, phi1, z1, x2, y2, theta2):
-    v1m = mag.rhophi_z(lib, rho1, phi1, z1)
-    v2m = mag.xy_theta(lib, x2, y2, theta2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1,
-                dot.rhophi_z_xy_theta(lib, rho1, phi1, z1, x2, y2, theta2) / v1m / v2m,
-            ),
-        )
-    )
-
-
-def rhophi_z_xy_eta(lib, rho1, phi1, z1, x2, y2, eta2):
-    v1m = mag.rhophi_z(lib, rho1, phi1, z1)
-    v2m = mag.xy_eta(lib, x2, y2, eta2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1, dot.rhophi_z_xy_eta(lib, rho1, phi1, z1, x2, y2, eta2) / v1m / v2m
-            ),
-        )
-    )
-
-
-def rhophi_z_rhophi_z(lib, rho1, phi1, z1, rho2, phi2, z2):
-    v1m = mag.rhophi_z(lib, rho1, phi1, z1)
-    v2m = mag.rhophi_z(lib, rho2, phi2, z2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1,
-                dot.rhophi_z_rhophi_z(lib, rho1, phi1, z1, rho2, phi2, z2) / v1m / v2m,
-            ),
-        )
-    )
-
-
-def rhophi_z_rhophi_theta(lib, rho1, phi1, z1, rho2, phi2, theta2):
-    v1m = mag.rhophi_z(lib, rho1, phi1, z1)
-    v2m = mag.rhophi_theta(lib, rho2, phi2, theta2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1,
-                dot.rhophi_z_rhophi_theta(lib, rho1, phi1, z1, rho2, phi2, theta2)
-                / v1m
-                / v2m,
-            ),
-        )
-    )
-
-
-def rhophi_z_rhophi_eta(lib, rho1, phi1, z1, rho2, phi2, eta2):
-    v1m = mag.rhophi_z(lib, rho1, phi1, z1)
-    v2m = mag.rhophi_eta(lib, rho2, phi2, eta2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1,
-                dot.rhophi_z_rhophi_eta(lib, rho1, phi1, z1, rho2, phi2, eta2)
-                / v1m
-                / v2m,
-            ),
-        )
-    )
-
-
-def rhophi_theta_xy_z(lib, rho1, phi1, theta1, x2, y2, z2):
-    v1m = mag.rhophi_theta(lib, rho1, phi1, theta1)
-    v2m = mag.xy_z(lib, x2, y2, z2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1,
-                dot.rhophi_theta_xy_z(lib, rho1, phi1, theta1, x2, y2, z2) / v1m / v2m,
-            ),
-        )
-    )
-
-
-def rhophi_theta_xy_theta(lib, rho1, phi1, theta1, x2, y2, theta2):
-    v1m = mag.rhophi_theta(lib, rho1, phi1, theta1)
-    v2m = mag.xy_theta(lib, x2, y2, theta2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1,
-                dot.rhophi_theta_xy_theta(lib, rho1, phi1, theta1, x2, y2, theta2)
-                / v1m
-                / v2m,
-            ),
-        )
-    )
-
-
-def rhophi_theta_xy_eta(lib, rho1, phi1, theta1, x2, y2, eta2):
-    v1m = mag.rhophi_theta(lib, rho1, phi1, theta1)
-    v2m = mag.xy_eta(lib, x2, y2, eta2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1,
-                dot.rhophi_theta_xy_eta(lib, rho1, phi1, theta1, x2, y2, eta2)
-                / v1m
-                / v2m,
-            ),
-        )
-    )
-
-
-def rhophi_theta_rhophi_z(lib, rho1, phi1, theta1, rho2, phi2, z2):
-    v1m = mag.rhophi_theta(lib, rho1, phi1, theta1)
-    v2m = mag.rhophi_z(lib, rho2, phi2, z2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1,
-                dot.rhophi_theta_rhophi_z(lib, rho1, phi1, theta1, rho2, phi2, z2)
-                / v1m
-                / v2m,
-            ),
-        )
-    )
-
-
-def rhophi_theta_rhophi_theta(lib, rho1, phi1, theta1, rho2, phi2, theta2):
-    v1m = mag.rhophi_theta(lib, rho1, phi1, theta1)
-    v2m = mag.rhophi_theta(lib, rho2, phi2, theta2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1,
-                dot.rhophi_theta_rhophi_theta(
-                    lib, rho1, phi1, theta1, rho2, phi2, theta2
-                )
-                / v1m
-                / v2m,
-            ),
-        )
-    )
-
-
-def rhophi_theta_rhophi_eta(lib, rho1, phi1, theta1, rho2, phi2, eta2):
-    v1m = mag.rhophi_theta(lib, rho1, phi1, theta1)
-    v2m = mag.rhophi_eta(lib, rho2, phi2, eta2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1,
-                dot.rhophi_theta_rhophi_eta(lib, rho1, phi1, theta1, rho2, phi2, eta2)
-                / v1m
-                / v2m,
-            ),
-        )
-    )
-
-
-def rhophi_eta_xy_z(lib, rho1, phi1, eta1, x2, y2, z2):
-    v1m = mag.rhophi_eta(lib, rho1, phi1, eta1)
-    v2m = mag.xy_z(lib, x2, y2, z2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1, dot.rhophi_eta_xy_z(lib, rho1, phi1, eta1, x2, y2, z2) / v1m / v2m
-            ),
-        )
-    )
-
-
-def rhophi_eta_xy_theta(lib, rho1, phi1, eta1, x2, y2, theta2):
-    v1m = mag.rhophi_eta(lib, rho1, phi1, eta1)
-    v2m = mag.xy_theta(lib, x2, y2, theta2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1,
-                dot.rhophi_eta_xy_theta(lib, rho1, phi1, eta1, x2, y2, theta2)
-                / v1m
-                / v2m,
-            ),
-        )
-    )
-
-
-def rhophi_eta_xy_eta(lib, rho1, phi1, eta1, x2, y2, eta2):
-    v1m = mag.rhophi_eta(lib, rho1, phi1, eta1)
-    v2m = mag.xy_eta(lib, x2, y2, eta2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1,
-                dot.rhophi_eta_xy_eta(lib, rho1, phi1, eta1, x2, y2, eta2) / v1m / v2m,
-            ),
-        )
-    )
-
-
-def rhophi_eta_rhophi_z(lib, rho1, phi1, eta1, rho2, phi2, z2):
-    v1m = mag.rhophi_eta(lib, rho1, phi1, eta1)
-    v2m = mag.rhophi_z(lib, rho2, phi2, z2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1,
-                dot.rhophi_eta_rhophi_z(lib, rho1, phi1, eta1, rho2, phi2, z2)
-                / v1m
-                / v2m,
-            ),
-        )
-    )
-
-
-def rhophi_eta_rhophi_theta(lib, rho1, phi1, eta1, rho2, phi2, theta2):
-    v1m = mag.rhophi_eta(lib, rho1, phi1, eta1)
-    v2m = mag.rhophi_theta(lib, rho2, phi2, theta2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1,
-                dot.rhophi_eta_rhophi_theta(lib, rho1, phi1, eta1, rho2, phi2, theta2)
-                / v1m
-                / v2m,
-            ),
-        )
-    )
-
-
-def rhophi_eta_rhophi_eta(lib, rho1, phi1, eta1, rho2, phi2, eta2):
-    v1m = mag.rhophi_eta(lib, rho1, phi1, eta1)
-    v2m = mag.rhophi_eta(lib, rho2, phi2, eta2)
-    return lib.arccos(
-        lib.maximum(
-            -1,
-            lib.minimum(
-                1,
-                dot.rhophi_eta_rhophi_eta(lib, rho1, phi1, eta1, rho2, phi2, eta2)
-                / v1m
-                / v2m,
-            ),
-        )
+    # The angle is arctan2(|v1 x v2|, v1 . v2), not arccos(v1 . v2 / (|v1||v2|)):
+    # arccos has no precision for angles near 0 or pi (the argument rounds to
+    # +-1 for angles below ~1e-8) and does not return 0 for identical vectors.
+    # hypot, not sqrt(cx**2 + ...): squaring the cross product components would
+    # overflow or underflow for vectors above ~1e77 or below ~1e-77.
+    cx, cy, cz = cross.xy_z_xy_z(lib, x1, y1, z1, x2, y2, z2)
+    return lib.arctan2(
+        lib.hypot(lib.hypot(cx, cy), cz),
+        dot.xy_z_xy_z(lib, x1, y1, z1, x2, y2, z2),
     )
 
 
 dispatch_map = {
     (AzimuthalXY, LongitudinalZ, AzimuthalXY, LongitudinalZ): (xy_z_xy_z, float),
-    (AzimuthalXY, LongitudinalZ, AzimuthalXY, LongitudinalTheta): (
-        xy_z_xy_theta,
-        float,
-    ),
-    (AzimuthalXY, LongitudinalZ, AzimuthalXY, LongitudinalEta): (xy_z_xy_eta, float),
-    (AzimuthalXY, LongitudinalZ, AzimuthalRhoPhi, LongitudinalZ): (
-        xy_z_rhophi_z,
-        float,
-    ),
-    (AzimuthalXY, LongitudinalZ, AzimuthalRhoPhi, LongitudinalTheta): (
-        xy_z_rhophi_theta,
-        float,
-    ),
-    (AzimuthalXY, LongitudinalZ, AzimuthalRhoPhi, LongitudinalEta): (
-        xy_z_rhophi_eta,
-        float,
-    ),
-    (AzimuthalXY, LongitudinalTheta, AzimuthalXY, LongitudinalZ): (
-        xy_theta_xy_z,
-        float,
-    ),
-    (AzimuthalXY, LongitudinalTheta, AzimuthalXY, LongitudinalTheta): (
-        xy_theta_xy_theta,
-        float,
-    ),
-    (AzimuthalXY, LongitudinalTheta, AzimuthalXY, LongitudinalEta): (
-        xy_theta_xy_eta,
-        float,
-    ),
-    (AzimuthalXY, LongitudinalTheta, AzimuthalRhoPhi, LongitudinalZ): (
-        xy_theta_rhophi_z,
-        float,
-    ),
-    (AzimuthalXY, LongitudinalTheta, AzimuthalRhoPhi, LongitudinalTheta): (
-        xy_theta_rhophi_theta,
-        float,
-    ),
-    (AzimuthalXY, LongitudinalTheta, AzimuthalRhoPhi, LongitudinalEta): (
-        xy_theta_rhophi_eta,
-        float,
-    ),
-    (AzimuthalXY, LongitudinalEta, AzimuthalXY, LongitudinalZ): (xy_eta_xy_z, float),
-    (AzimuthalXY, LongitudinalEta, AzimuthalXY, LongitudinalTheta): (
-        xy_eta_xy_theta,
-        float,
-    ),
-    (AzimuthalXY, LongitudinalEta, AzimuthalXY, LongitudinalEta): (
-        xy_eta_xy_eta,
-        float,
-    ),
-    (AzimuthalXY, LongitudinalEta, AzimuthalRhoPhi, LongitudinalZ): (
-        xy_eta_rhophi_z,
-        float,
-    ),
-    (AzimuthalXY, LongitudinalEta, AzimuthalRhoPhi, LongitudinalTheta): (
-        xy_eta_rhophi_theta,
-        float,
-    ),
-    (AzimuthalXY, LongitudinalEta, AzimuthalRhoPhi, LongitudinalEta): (
-        xy_eta_rhophi_eta,
-        float,
-    ),
-    (AzimuthalRhoPhi, LongitudinalZ, AzimuthalXY, LongitudinalZ): (
-        rhophi_z_xy_z,
-        float,
-    ),
-    (AzimuthalRhoPhi, LongitudinalZ, AzimuthalXY, LongitudinalTheta): (
-        rhophi_z_xy_theta,
-        float,
-    ),
-    (AzimuthalRhoPhi, LongitudinalZ, AzimuthalXY, LongitudinalEta): (
-        rhophi_z_xy_eta,
-        float,
-    ),
-    (AzimuthalRhoPhi, LongitudinalZ, AzimuthalRhoPhi, LongitudinalZ): (
-        rhophi_z_rhophi_z,
-        float,
-    ),
-    (AzimuthalRhoPhi, LongitudinalZ, AzimuthalRhoPhi, LongitudinalTheta): (
-        rhophi_z_rhophi_theta,
-        float,
-    ),
-    (AzimuthalRhoPhi, LongitudinalZ, AzimuthalRhoPhi, LongitudinalEta): (
-        rhophi_z_rhophi_eta,
-        float,
-    ),
-    (AzimuthalRhoPhi, LongitudinalTheta, AzimuthalXY, LongitudinalZ): (
-        rhophi_theta_xy_z,
-        float,
-    ),
-    (AzimuthalRhoPhi, LongitudinalTheta, AzimuthalXY, LongitudinalTheta): (
-        rhophi_theta_xy_theta,
-        float,
-    ),
-    (AzimuthalRhoPhi, LongitudinalTheta, AzimuthalXY, LongitudinalEta): (
-        rhophi_theta_xy_eta,
-        float,
-    ),
-    (AzimuthalRhoPhi, LongitudinalTheta, AzimuthalRhoPhi, LongitudinalZ): (
-        rhophi_theta_rhophi_z,
-        float,
-    ),
-    (AzimuthalRhoPhi, LongitudinalTheta, AzimuthalRhoPhi, LongitudinalTheta): (
-        rhophi_theta_rhophi_theta,
-        float,
-    ),
-    (AzimuthalRhoPhi, LongitudinalTheta, AzimuthalRhoPhi, LongitudinalEta): (
-        rhophi_theta_rhophi_eta,
-        float,
-    ),
-    (AzimuthalRhoPhi, LongitudinalEta, AzimuthalXY, LongitudinalZ): (
-        rhophi_eta_xy_z,
-        float,
-    ),
-    (AzimuthalRhoPhi, LongitudinalEta, AzimuthalXY, LongitudinalTheta): (
-        rhophi_eta_xy_theta,
-        float,
-    ),
-    (AzimuthalRhoPhi, LongitudinalEta, AzimuthalXY, LongitudinalEta): (
-        rhophi_eta_xy_eta,
-        float,
-    ),
-    (AzimuthalRhoPhi, LongitudinalEta, AzimuthalRhoPhi, LongitudinalZ): (
-        rhophi_eta_rhophi_z,
-        float,
-    ),
-    (AzimuthalRhoPhi, LongitudinalEta, AzimuthalRhoPhi, LongitudinalTheta): (
-        rhophi_eta_rhophi_theta,
-        float,
-    ),
-    (AzimuthalRhoPhi, LongitudinalEta, AzimuthalRhoPhi, LongitudinalEta): (
-        rhophi_eta_rhophi_eta,
-        float,
-    ),
 }
+
+
+def make_conversion(azimuthal1, longitudinal1, azimuthal2, longitudinal2):
+    if (azimuthal1, longitudinal1, azimuthal2, longitudinal2) != (
+        AzimuthalXY,
+        LongitudinalZ,
+        AzimuthalXY,
+        LongitudinalZ,
+    ):
+        if azimuthal1 is AzimuthalXY:
+            to_x1 = x.xy
+            to_y1 = y.xy
+            if longitudinal1 is LongitudinalZ:
+                to_z1 = z.xy_z
+            elif longitudinal1 is LongitudinalTheta:
+                to_z1 = z.xy_theta
+            elif longitudinal1 is LongitudinalEta:
+                to_z1 = z.xy_eta
+        elif azimuthal1 is AzimuthalRhoPhi:
+            to_x1 = x.rhophi
+            to_y1 = y.rhophi
+            if longitudinal1 is LongitudinalZ:
+                to_z1 = z.rhophi_z
+            elif longitudinal1 is LongitudinalTheta:
+                to_z1 = z.rhophi_theta
+            elif longitudinal1 is LongitudinalEta:
+                to_z1 = z.rhophi_eta
+        if azimuthal2 is AzimuthalXY:
+            to_x2 = x.xy
+            to_y2 = y.xy
+            if longitudinal2 is LongitudinalZ:
+                to_z2 = z.xy_z
+            elif longitudinal2 is LongitudinalTheta:
+                to_z2 = z.xy_theta
+            elif longitudinal2 is LongitudinalEta:
+                to_z2 = z.xy_eta
+        elif azimuthal2 is AzimuthalRhoPhi:
+            to_x2 = x.rhophi
+            to_y2 = y.rhophi
+            if longitudinal2 is LongitudinalZ:
+                to_z2 = z.rhophi_z
+            elif longitudinal2 is LongitudinalTheta:
+                to_z2 = z.rhophi_theta
+            elif longitudinal2 is LongitudinalEta:
+                to_z2 = z.rhophi_eta
+        cartesian, returns = dispatch_map[
+            AzimuthalXY, LongitudinalZ, AzimuthalXY, LongitudinalZ
+        ]
+
+        def f(lib, coord11, coord12, coord13, coord21, coord22, coord23):
+            return cartesian(
+                lib,
+                to_x1(lib, coord11, coord12),
+                to_y1(lib, coord11, coord12),
+                to_z1(lib, coord11, coord12, coord13),
+                to_x2(lib, coord21, coord22),
+                to_y2(lib, coord21, coord22),
+                to_z2(lib, coord21, coord22, coord23),
+            )
+
+        dispatch_map[azimuthal1, longitudinal1, azimuthal2, longitudinal2] = (
+            f,
+            returns,
+        )
+
+
+for azimuthal1 in (AzimuthalXY, AzimuthalRhoPhi):
+    for longitudinal1 in (LongitudinalZ, LongitudinalTheta, LongitudinalEta):
+        for azimuthal2 in (AzimuthalXY, AzimuthalRhoPhi):
+            for longitudinal2 in (LongitudinalZ, LongitudinalTheta, LongitudinalEta):
+                make_conversion(azimuthal1, longitudinal1, azimuthal2, longitudinal2)
 
 
 def dispatch(v1: typing.Any, v2: typing.Any) -> typing.Any:
