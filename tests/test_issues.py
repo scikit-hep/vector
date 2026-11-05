@@ -449,3 +449,53 @@ def test_dir_excludes_missing_backend_names(monkeypatch):
     names = set(dir(vector))
     assert names >= vector._AWKWARD_NAMES
     assert names >= vector._SYMPY_NAMES
+
+
+@pytest.mark.parametrize("backend", ["object", "numpy"])
+@pytest.mark.parametrize("azimuthal", ["pxpy", "ptphi"])
+@pytest.mark.parametrize(("temporal", "suffix"), [("mass", "mass"), ("E", "energy")])
+def test_theta_conversion_at_rest(backend, azimuthal, temporal, suffix):
+    coordinates = {"px": 0.0, "py": 0.0, "pz": 0.0, temporal: 5.0}
+    if backend == "object":
+        original = vector.obj(**coordinates)
+    else:
+        original = vector.array({key: [value] for key, value in coordinates.items()})
+
+    converted = getattr(original, f"to_{azimuthal}theta{suffix}")()
+    assert pytest.approx(5) == converted.E
+    assert converted.mass == pytest.approx(5)
+    assert converted.mag == pytest.approx(0)
+    assert converted.mag2 == pytest.approx(0)
+    assert converted.px == pytest.approx(0)
+    assert converted.py == pytest.approx(0)
+    assert converted.pz == pytest.approx(0)
+
+    boosted = converted.boostX(beta=0.6)
+    assert boosted.px == pytest.approx(15 / 4)
+    assert pytest.approx(25 / 4) == boosted.E
+
+
+@pytest.mark.parametrize("backend", ["object", "numpy"])
+@pytest.mark.parametrize("azimuthal", [("px", "py"), ("pt", "phi")])
+def test_theta_missing_momentum_stays_nan(backend, azimuthal):
+    rows = {
+        azimuthal[0]: [0.0, 1.0, np.nan],
+        azimuthal[1]: [0.0, 0.0, 0.0],
+        "theta": [0.0, np.pi / 2, np.pi / 2],
+        "mass": [5.0, 5.0, 5.0],
+    }
+    if backend == "object":
+        vectors = [
+            vector.obj(**{key: value[i] for key, value in rows.items()})
+            for i in range(3)
+        ]
+    else:
+        array = vector.array({key: np.array(value) for key, value in rows.items()})
+
+    for name, at_rest, moving in [("mag", 0, 1), ("mag2", 0, 1), ("E", 5, 26**0.5)]:
+        if backend == "object":
+            values = np.array([getattr(v, name) for v in vectors])
+        else:
+            values = np.asarray(getattr(array, name))
+        assert values[:2] == pytest.approx([at_rest, moving])
+        assert np.isnan(values[2])
