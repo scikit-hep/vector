@@ -50,7 +50,7 @@ dispatch_map = {
     ),
 }
 
-
+# Guard against Pylint E0601/E0606 for conditionally assigned conversion variables.
 def make_conversion(azimuthal1, longitudinal1, azimuthal2, longitudinal2):
     if (azimuthal1, longitudinal1, azimuthal2, longitudinal2) != (
         AzimuthalXY,
