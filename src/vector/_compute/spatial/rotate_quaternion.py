@@ -62,7 +62,7 @@ dispatch_map = {
     (AzimuthalXY, LongitudinalZ): (cartesian, AzimuthalXY, LongitudinalZ),
 }
 
-
+# Guard against Pylint E0601/E0606 for conditionally assigned conversion variables.
 def make_conversion(azimuthal, longitudinal):
     if (azimuthal, longitudinal) != (AzimuthalXY, LongitudinalZ):
         to_x = None
