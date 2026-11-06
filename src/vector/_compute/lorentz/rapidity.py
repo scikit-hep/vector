@@ -35,7 +35,7 @@ from vector._methods import (
 
 
 def xy_z_t(lib, x, y, z, t):
-    return 0.5 * lib.log((t + z) / (t - z))
+    return 0.5 * lib.log(lib.true_divide(t + z, t - z))
 
 
 def xy_z_tau(lib, x, y, z, tau):
@@ -63,7 +63,7 @@ def xy_eta_tau(lib, x, y, eta, tau):
 
 
 def rhophi_z_t(lib, rho, phi, z, t):
-    return 0.5 * lib.log((t + z) / (t - z))
+    return 0.5 * lib.log(lib.true_divide(t + z, t - z))
 
 
 def rhophi_z_tau(lib, rho, phi, z, tau):
