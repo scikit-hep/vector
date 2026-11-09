@@ -16,7 +16,7 @@ import typing
 
 import numpy
 
-from vector._compute.spatial import costheta
+from vector._compute.planar import rho
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
@@ -31,7 +31,7 @@ from vector._methods import (
 
 
 def xy_z(lib, x, y, z):
-    return lib.arccos(costheta.xy_z(lib, x, y, z))
+    return lib.arctan2(rho.xy(lib, x, y), z)
 
 
 def xy_theta(lib, x, y, theta):
@@ -46,7 +46,7 @@ def xy_eta(lib, x, y, eta):
 
 
 def rhophi_z(lib, rho, phi, z):
-    return lib.arccos(costheta.rhophi_z(lib, rho, phi, z))
+    return lib.arctan2(lib.absolute(rho), z)
 
 
 def rhophi_theta(lib, rho, phi, theta):
