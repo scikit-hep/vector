@@ -521,7 +521,7 @@ class AzimuthalNumpyXY(AzimuthalNumpy, AzimuthalXY, GetItem, FloatArray):  # typ
     ObjectClass = vector.backends.object.AzimuthalObjectXY
     _IS_MOMENTUM = False
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> AzimuthalNumpyXY:
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> typing.Self:
         return numpy.array(*args, **kwargs).view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:
@@ -578,7 +578,7 @@ class AzimuthalNumpyRhoPhi(AzimuthalNumpy, AzimuthalRhoPhi, GetItem, FloatArray)
     ObjectClass = vector.backends.object.AzimuthalObjectRhoPhi
     _IS_MOMENTUM = False
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> AzimuthalNumpyRhoPhi:
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> typing.Self:
         return numpy.array(*args, **kwargs).view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:
@@ -634,7 +634,7 @@ class LongitudinalNumpyZ(LongitudinalNumpy, LongitudinalZ, GetItem, FloatArray):
     ObjectClass = vector.backends.object.LongitudinalObjectZ
     _IS_MOMENTUM = False
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> LongitudinalNumpyZ:
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> typing.Self:
         return numpy.array(*args, **kwargs).view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:
@@ -685,7 +685,7 @@ class LongitudinalNumpyTheta(LongitudinalNumpy, LongitudinalTheta, GetItem, Floa
     ObjectClass = vector.backends.object.LongitudinalObjectTheta
     _IS_MOMENTUM = False
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> LongitudinalNumpyTheta:
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> typing.Self:
         return numpy.array(*args, **kwargs).view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:
@@ -736,7 +736,7 @@ class LongitudinalNumpyEta(LongitudinalNumpy, LongitudinalEta, GetItem, FloatArr
     ObjectClass = vector.backends.object.LongitudinalObjectEta
     _IS_MOMENTUM = False
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> LongitudinalNumpyEta:
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> typing.Self:
         return numpy.array(*args, **kwargs).view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:
@@ -787,7 +787,7 @@ class TemporalNumpyT(TemporalNumpy, TemporalT, GetItem, FloatArray):  # type: ig
     ObjectClass = vector.backends.object.TemporalObjectT
     _IS_MOMENTUM = False
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> TemporalNumpyT:
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> typing.Self:
         return numpy.array(*args, **kwargs).view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:
@@ -830,7 +830,7 @@ class TemporalNumpyTau(TemporalNumpy, TemporalTau, GetItem, FloatArray):  # type
     ObjectClass = vector.backends.object.TemporalObjectTau
     _IS_MOMENTUM = False
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> TemporalNumpyTau:
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> typing.Self:
         return numpy.array(*args, **kwargs).view(cls)
 
     def __array_finalize__(self, obj: typing.Any) -> None:
@@ -937,16 +937,16 @@ class VectorNumpy(Vector, GetItem):  # noqa: PLW1641
         return self.isclose(other, rtol=rtol, atol=atol, equal_nan=equal_nan).all()
 
     def sum(
-        self: SameVectorNumpyType,
+        self,
         axis: int | None = None,
         dtype: numpy.dtype[typing.Any] | str | None = None,
         out: ArrayLike | None = None,
         keepdims: bool = False,
         initial: typing.Any = None,
         where: typing.Any = None,
-    ) -> SameVectorNumpyType:
+    ) -> typing.Self:
         return typing.cast(
-            SameVectorNumpyType,
+            typing.Self,
             numpy.sum(
                 self,
                 axis=axis,
@@ -1236,7 +1236,7 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
     _IS_MOMENTUM = False
     _azimuthal_type: type[AzimuthalNumpyXY | AzimuthalNumpyRhoPhi]
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> VectorNumpy2D:
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> typing.Self:
         """Returns the object of ``VectorNumpy2D``. Behaves as ``__init__`` in this case."""
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             array = _array_from_columns(args[0])
@@ -1439,7 +1439,7 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
         LongitudinalNumpyZ | LongitudinalNumpyTheta | LongitudinalNumpyEta
     ]
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> VectorNumpy3D:
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> typing.Self:
         """Returns the object of ``VectorNumpy3D``. Behaves as ``__init__`` in this case."""
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             array = _array_from_columns(args[0])
@@ -1698,7 +1698,7 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
     ]
     _temporal_type: type[TemporalNumpyT | TemporalNumpyTau]
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> VectorNumpy4D:
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> typing.Self:
         """Returns the object of ``VectorNumpy4D``. Behaves as ``__init__`` in this case."""
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             array = _array_from_columns(args[0])
