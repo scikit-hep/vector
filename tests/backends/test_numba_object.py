@@ -1800,3 +1800,76 @@ def test_momentum_lowercase_aliases():
     assert get_et2(p) == pytest.approx(p.et2)
     assert get_mt(p) == pytest.approx(p.mt)
     assert get_mt2(p) == pytest.approx(p.mt2)
+
+
+# One generic and one momentum vector per dimension, covering every coordinate
+# system between them.
+_alias_inputs = [
+    vector.obj(x=1.1, y=2.2),
+    vector.obj(pt=2.5, phi=0.3),
+    vector.obj(rho=2.5, phi=0.3, theta=1.1),
+    vector.obj(px=1.1, py=2.2, eta=0.7),
+    vector.obj(x=1.1, y=2.2, z=3.3, t=4.4),
+    vector.obj(pt=2.5, phi=0.3, eta=0.7, mass=0.5),
+]
+
+
+def _assert_same_vector(actual, expected):
+    # Same class (so the same dimension and momentum-ness), the same coordinate
+    # systems, and the same coordinate values.
+    assert type(actual) is type(expected)
+    for part in ("azimuthal", "longitudinal", "temporal"):
+        if hasattr(expected, part):
+            assert type(getattr(actual, part)) is type(getattr(expected, part))
+            assert tuple(getattr(actual, part)) == pytest.approx(
+                tuple(getattr(expected, part))
+            )
+
+
+@pytest.mark.parametrize(
+    "function",
+    [
+        pytest.param(lambda v: v.to_2D(), id="to_2D"),
+        pytest.param(lambda v: v.to_3D(), id="to_3D"),
+        pytest.param(lambda v: v.to_4D(), id="to_4D"),
+        pytest.param(lambda v: v.to_pxpy(), id="to_pxpy"),
+        pytest.param(lambda v: v.to_ptphi(), id="to_ptphi"),
+        pytest.param(lambda v: v.to_pxpypz(), id="to_pxpypz"),
+        pytest.param(lambda v: v.to_pxpytheta(), id="to_pxpytheta"),
+        pytest.param(lambda v: v.to_pxpyeta(), id="to_pxpyeta"),
+        pytest.param(lambda v: v.to_ptphipz(), id="to_ptphipz"),
+        pytest.param(lambda v: v.to_ptphitheta(), id="to_ptphitheta"),
+        pytest.param(lambda v: v.to_ptphieta(), id="to_ptphieta"),
+        pytest.param(lambda v: v.to_pxpypzenergy(), id="to_pxpypzenergy"),
+        pytest.param(lambda v: v.to_pxpythetaenergy(), id="to_pxpythetaenergy"),
+        pytest.param(lambda v: v.to_pxpyetaenergy(), id="to_pxpyetaenergy"),
+        pytest.param(lambda v: v.to_pxpypzmass(), id="to_pxpypzmass"),
+        pytest.param(lambda v: v.to_pxpythetamass(), id="to_pxpythetamass"),
+        pytest.param(lambda v: v.to_pxpyetamass(), id="to_pxpyetamass"),
+        pytest.param(lambda v: v.to_ptphipzenergy(), id="to_ptphipzenergy"),
+        pytest.param(lambda v: v.to_ptphithetaenergy(), id="to_ptphithetaenergy"),
+        pytest.param(lambda v: v.to_ptphietaenergy(), id="to_ptphietaenergy"),
+        pytest.param(lambda v: v.to_ptphipzmass(), id="to_ptphipzmass"),
+        pytest.param(lambda v: v.to_ptphithetamass(), id="to_ptphithetamass"),
+        pytest.param(lambda v: v.to_ptphietamass(), id="to_ptphietamass"),
+    ],
+)
+def test_conversion_aliases(function):
+    # to_2D/to_3D/to_4D and the momentum-named coordinate conversions are
+    # aliases in pure Python, so the compiled result must match it exactly.
+    compiled = numba.njit(function)
+    for v in _alias_inputs:
+        _assert_same_vector(compiled(v), function(v))
+
+
+def test_method_like():
+    @numba.njit
+    def like(v, other):
+        return v.like(other)
+
+    for v in _alias_inputs:
+        for other in _alias_inputs:
+            _assert_same_vector(like(v, other), v.like(other))
+
+    with pytest.raises(numba.TypingError, match=r"is not a vector\.Vector"):
+        like(vector.obj(x=1.1, y=2.2), 1.1)
