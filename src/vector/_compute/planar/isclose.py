@@ -15,7 +15,7 @@ import typing
 
 import numpy
 
-from vector._compute.planar import x, y
+from vector._compute.planar import deltaphi, x, y
 from vector._methods import (
     AzimuthalRhoPhi,
     AzimuthalXY,
@@ -83,7 +83,7 @@ def rhophi_rhophi(lib, rtol, atol, equal_nan, rho1, phi1, rho2, phi2):
         equal_nan=equal_nan,
     ) & lib.isclose(
         phi1,
-        phi2,
+        phi1 - deltaphi.rhophi_rhophi(lib, rho1, phi1, rho2, phi2),
         rtol=rtol,
         atol=atol,
         equal_nan=equal_nan,

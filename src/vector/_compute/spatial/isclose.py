@@ -15,7 +15,7 @@ import typing
 
 import numpy
 
-from vector._compute.planar import x, y
+from vector._compute.planar import deltaphi, x, y
 from vector._compute.spatial import eta, z
 from vector._methods import (
     AzimuthalRhoPhi,
@@ -303,7 +303,13 @@ def rhophi_z_xy_eta(lib, rtol, atol, equal_nan, rho1, phi1, z1, x2, y2, eta2):
 def rhophi_z_rhophi_z(lib, rtol, atol, equal_nan, rho1, phi1, z1, rho2, phi2, z2):
     return (
         lib.isclose(rho1, rho2, rtol=rtol, atol=atol, equal_nan=equal_nan)
-        & lib.isclose(phi1, phi2, rtol=rtol, atol=atol, equal_nan=equal_nan)
+        & lib.isclose(
+            phi1,
+            phi1 - deltaphi.rhophi_rhophi(lib, rho1, phi1, rho2, phi2),
+            rtol=rtol,
+            atol=atol,
+            equal_nan=equal_nan,
+        )
         & lib.isclose(z1, z2, rtol=rtol, atol=atol, equal_nan=equal_nan)
     )
 
@@ -410,7 +416,13 @@ def rhophi_theta_rhophi_theta(
 ):
     return (
         lib.isclose(rho1, rho2, rtol=rtol, atol=atol, equal_nan=equal_nan)
-        & lib.isclose(phi1, phi2, rtol=rtol, atol=atol, equal_nan=equal_nan)
+        & lib.isclose(
+            phi1,
+            phi1 - deltaphi.rhophi_rhophi(lib, rho1, phi1, rho2, phi2),
+            rtol=rtol,
+            atol=atol,
+            equal_nan=equal_nan,
+        )
         & lib.isclose(theta1, theta2, rtol=rtol, atol=atol, equal_nan=equal_nan)
     )
 
@@ -515,7 +527,13 @@ def rhophi_eta_rhophi_eta(
 ):
     return (
         lib.isclose(rho1, rho2, rtol=rtol, atol=atol, equal_nan=equal_nan)
-        & lib.isclose(phi1, phi2, rtol=rtol, atol=atol, equal_nan=equal_nan)
+        & lib.isclose(
+            phi1,
+            phi1 - deltaphi.rhophi_rhophi(lib, rho1, phi1, rho2, phi2),
+            rtol=rtol,
+            atol=atol,
+            equal_nan=equal_nan,
+        )
         & lib.isclose(eta1, eta2, rtol=rtol, atol=atol, equal_nan=equal_nan)
     )
 
