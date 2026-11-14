@@ -185,3 +185,23 @@ def test_lorentz_numpy():
         ):
             tr1, tr2 = getattr(v1, "to_" + t1)(), getattr(v2, "to_" + t2)()
             assert tr1.isclose(tr2).all()
+
+
+def test_phi_wraparound():
+    v1 = vector.backends.object.VectorObject3D(
+        azimuthal=vector.backends.object.AzimuthalObjectRhoPhi(0.1, numpy.pi),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(0.3),
+    )
+    v2 = vector.backends.object.VectorObject3D(
+        azimuthal=vector.backends.object.AzimuthalObjectRhoPhi(0.1, -numpy.pi),
+        longitudinal=vector.backends.object.LongitudinalObjectZ(0.3),
+    )
+    assert v1.to_Vector2D().isclose(v2.to_Vector2D())
+
+    for t1 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
+        for t2 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
+            transformed1, transformed2 = (
+                getattr(v1, "to_" + t1)(),
+                getattr(v2, "to_" + t2)(),
+            )
+            assert transformed1.isclose(transformed2)
