@@ -45,7 +45,7 @@ def xy_eta(lib, x, y, eta):
 
 
 def rhophi_z(lib, rho, phi, z):
-    return lib.nan_to_num(z / rho, nan=lib.inf, posinf=inf, neginf=-inf)
+    return lib.nan_to_num(lib.true_divide(z, rho), nan=lib.inf, posinf=inf, neginf=-inf)
 
 
 def rhophi_theta(lib, rho, phi, theta):

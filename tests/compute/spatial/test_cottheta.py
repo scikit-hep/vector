@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import math
 
+import numpy
 import pytest
 
 import vector.backends.object
@@ -58,3 +59,14 @@ def test_rhophi_eta():
         longitudinal=vector.backends.object.LongitudinalObjectEta(1.4436354751788103),
     )
     assert vec.cottheta == pytest.approx(1 / math.tan(0.4636476090008061))
+
+
+@pytest.mark.parametrize("z", [-3, 0, 3, -3.0, 0.0, 3.0])
+@pytest.mark.parametrize("zero", [0, 0.0])
+def test_rhophi_z_on_z_axis(z, zero):
+    # rho == 0 gives the same cottheta as x == y == 0 instead of raising
+    # ZeroDivisionError for Python numbers
+    xy = vector.obj(x=zero, y=zero, z=z)
+    rhophi = vector.obj(rho=zero, phi=zero, z=z)
+    with numpy.errstate(divide="ignore", invalid="ignore"):
+        assert rhophi.cottheta == xy.cottheta
