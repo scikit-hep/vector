@@ -5,6 +5,7 @@
 
 from __future__ import annotations
 
+import numpy
 import pytest
 
 import vector.backends.object
@@ -74,3 +75,14 @@ def test_theta_out_of_range_consistency():
         assert xy.eta == pytest.approx(0.0)
         assert rhophi.eta == pytest.approx(0.0)
         assert xy.eta == pytest.approx(rhophi.eta)
+
+
+@pytest.mark.parametrize("z", [-3, 0, 3, -3.0, 0.0, 3.0])
+@pytest.mark.parametrize("zero", [0, 0.0])
+def test_rhophi_z_on_z_axis(z, zero):
+    # rho == 0 gives the same eta as x == y == 0 (+-inf, or 0 at the origin)
+    # instead of raising ZeroDivisionError for Python numbers
+    xy = vector.obj(x=zero, y=zero, z=z)
+    rhophi = vector.obj(rho=zero, phi=zero, z=z)
+    with numpy.errstate(divide="ignore", invalid="ignore"):
+        assert rhophi.eta == xy.eta
