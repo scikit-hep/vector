@@ -26,12 +26,9 @@ def test_spatial_sympy():
         azimuthal=vector.backends.sympy.AzimuthalSympyXY(nx, ny),
         longitudinal=vector.backends.sympy.LongitudinalSympyZ(nz),
     )
-    assert v1.deltaangle(v2) == sympy.acos(
-        sympy.Min(
-            1,
-            (nx * x + ny * y + nz * z)
-            / (sympy.sqrt(nx**2 + ny**2 + nz**2) * sympy.sqrt(x**2 + y**2 + z**2)),
-        )
+    cx, cy, cz = y * nz - z * ny, z * nx - x * nz, x * ny - y * nx
+    assert v1.deltaangle(v2) == sympy.atan2(
+        sympy.sqrt(cx**2 + cy**2 + cz**2), nx * x + ny * y + nz * z
     )
 
     for t1 in "xyz", "xytheta", "xyeta", "rhophiz", "rhophitheta", "rhophieta":
@@ -56,12 +53,9 @@ def test_lorentz_sympy():
         longitudinal=vector.backends.sympy.LongitudinalSympyZ(nz),
         temporal=vector.backends.sympy.TemporalSympyT(t),
     )
-    assert v1.deltaangle(v2) == sympy.acos(
-        sympy.Min(
-            1,
-            (nx * x + ny * y + nz * z)
-            / (sympy.sqrt(nx**2 + ny**2 + nz**2) * sympy.sqrt(x**2 + y**2 + z**2)),
-        )
+    cx, cy, cz = y * nz - z * ny, z * nx - x * nz, x * ny - y * nx
+    assert v1.deltaangle(v2) == sympy.atan2(
+        sympy.sqrt(cx**2 + cy**2 + cz**2), nx * x + ny * y + nz * z
     )
 
     for t1 in (
