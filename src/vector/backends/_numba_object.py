@@ -764,6 +764,7 @@ def vector_obj(
 
 
 @numba.extending.overload_method(VectorObject2DType, "to_Vector2D")
+@numba.extending.overload_method(VectorObject2DType, "to_2D")
 def VectorObject2D_to_Vector2D(v):
     def VectorObject2D_to_Vector2D_impl(v):
         return v
@@ -772,6 +773,7 @@ def VectorObject2D_to_Vector2D(v):
 
 
 @numba.extending.overload_method(VectorObject2DType, "to_Vector3D")
+@numba.extending.overload_method(VectorObject2DType, "to_3D")
 def VectorObject2D_to_Vector3D(v):
     if issubclass(v.instance_class, Momentum):
 
@@ -787,6 +789,7 @@ def VectorObject2D_to_Vector3D(v):
 
 
 @numba.extending.overload_method(VectorObject2DType, "to_Vector4D")
+@numba.extending.overload_method(VectorObject2DType, "to_4D")
 def VectorObject2D_to_Vector4D(v):
     if issubclass(v.instance_class, Momentum):
 
@@ -806,6 +809,7 @@ def VectorObject2D_to_Vector4D(v):
 
 
 @numba.extending.overload_method(VectorObject3DType, "to_Vector2D")
+@numba.extending.overload_method(VectorObject3DType, "to_2D")
 def VectorObject3D_to_Vector2D(v):
     if issubclass(v.instance_class, Momentum):
 
@@ -821,6 +825,7 @@ def VectorObject3D_to_Vector2D(v):
 
 
 @numba.extending.overload_method(VectorObject3DType, "to_Vector3D")
+@numba.extending.overload_method(VectorObject3DType, "to_3D")
 def VectorObject3D_to_Vector3D(v):
     def VectorObject3D_to_Vector3D_impl(v):
         return v
@@ -829,6 +834,7 @@ def VectorObject3D_to_Vector3D(v):
 
 
 @numba.extending.overload_method(VectorObject3DType, "to_Vector4D")
+@numba.extending.overload_method(VectorObject3DType, "to_4D")
 def VectorObject3D_to_Vector4D(v):
     if issubclass(v.instance_class, Momentum):
 
@@ -844,6 +850,7 @@ def VectorObject3D_to_Vector4D(v):
 
 
 @numba.extending.overload_method(VectorObject4DType, "to_Vector2D")
+@numba.extending.overload_method(VectorObject4DType, "to_2D")
 def VectorObject4D_to_Vector2D(v):
     if issubclass(v.instance_class, Momentum):
 
@@ -859,6 +866,7 @@ def VectorObject4D_to_Vector2D(v):
 
 
 @numba.extending.overload_method(VectorObject4DType, "to_Vector3D")
+@numba.extending.overload_method(VectorObject4DType, "to_3D")
 def VectorObject4D_to_Vector3D(v):
     if issubclass(v.instance_class, Momentum):
 
@@ -874,11 +882,39 @@ def VectorObject4D_to_Vector3D(v):
 
 
 @numba.extending.overload_method(VectorObject4DType, "to_Vector4D")
+@numba.extending.overload_method(VectorObject4DType, "to_4D")
 def VectorObject4D_to_Vector4D(v):
     def VectorObject4D_to_Vector4D_impl(v):
         return v
 
     return VectorObject4D_to_Vector4D_impl
+
+
+@numba.extending.overload_method(VectorObject2DType, "like")
+@numba.extending.overload_method(VectorObject3DType, "like")
+@numba.extending.overload_method(VectorObject4DType, "like")
+def VectorObject234DType_like(v, other):
+    # The dimension of 'other' is part of its type, so the projection is
+    # chosen at compile time.
+    if isinstance(other, VectorObject2DType):
+
+        def VectorObject234DType_like_impl(v, other):
+            return v.to_Vector2D()
+
+    elif isinstance(other, VectorObject3DType):
+
+        def VectorObject234DType_like_impl(v, other):
+            return v.to_Vector3D()
+
+    elif isinstance(other, VectorObject4DType):
+
+        def VectorObject234DType_like_impl(v, other):
+            return v.to_Vector4D()
+
+    else:
+        raise numba.TypingError(f"{other} is not a vector.Vector")
+
+    return VectorObject234DType_like_impl
 
 
 @numba.jit(nopython=True)
@@ -967,23 +1003,34 @@ make_coordobject = {
 
 
 def add_coordinate_change(vectortype, azcoordtype, lcoordtype, tcoordtype):
+    # Every conversion also has a momentum-named alias, as in pure Python:
+    # to_xy is also to_pxpy, to_rhophietatau is also to_ptphietamass, etc.
     methodname = "to_"
+    momentumname = "to_"
     if azcoordtype is AzimuthalObjectXY:
         methodname += "xy"
+        momentumname += "pxpy"
     elif azcoordtype is AzimuthalObjectRhoPhi:
         methodname += "rhophi"
+        momentumname += "ptphi"
     if lcoordtype is LongitudinalObjectZ:
         methodname += "z"
+        momentumname += "pz"
     if lcoordtype is LongitudinalObjectTheta:
         methodname += "theta"
+        momentumname += "theta"
     if lcoordtype is LongitudinalObjectEta:
         methodname += "eta"
+        momentumname += "eta"
     if tcoordtype is TemporalObjectT:
         methodname += "t"
+        momentumname += "energy"
     if tcoordtype is TemporalObjectTau:
         methodname += "tau"
+        momentumname += "mass"
 
     @numba.extending.overload_method(vectortype, methodname)
+    @numba.extending.overload_method(vectortype, momentumname)
     def overloader(v):
         if lcoordtype is None and tcoordtype is None:
             azcoords = make_coordobject[vectortype, azcoordtype]
