@@ -177,6 +177,7 @@ def test_issue_463():
 def test_issue_621():
     _ = pytest.importorskip("jax")
     ak = pytest.importorskip("awkward")
+    pytest.importorskip("awkward.jax")
     vector.register_awkward()
     ak.jax.register_and_check()
 
