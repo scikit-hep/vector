@@ -54,7 +54,7 @@ xy_eta.__awkward_transform_allowed__ = False  # type:ignore[attr-defined]
 
 def rhophi_z(lib, rho, phi, z):
     return lib.nan_to_num(
-        lib.arcsinh(z / rho),
+        lib.arcsinh(lib.true_divide(z, rho)),
         nan=lib.nan_to_num((z != 0) * inf, posinf=nan),
         posinf=inf,
         neginf=-inf,
