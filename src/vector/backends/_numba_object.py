@@ -1269,6 +1269,9 @@ def add_binary_method(vectortype, gn, methodname):
                 numba_ttype(v2),
             )
 
+        else:
+            raise numba.TypingError(f"unrecognized groupname: {groupname}")
+
         function, *returns = _from_signature(
             groupname + "." + methodname,
             numba_modules[groupname][methodname],
@@ -1456,6 +1459,11 @@ def add_tolerance_method(vectortype, methodname):
             coord22 = getcoord2[numba_aztype(v2)]
             coord23 = getcoord1[numba_ltype(v2)]
 
+        else:
+            raise numba.TypingError(
+                f"unsupported vector type {vectortype} for method {methodname}"
+            )
+
         function, *_ = _from_signature(
             groupname + "." + methodname,
             numba_modules[groupname][methodname],
@@ -1487,6 +1495,11 @@ def add_tolerance_method(vectortype, methodname):
                     coord22(v2),
                     coord23(v2),
                 )
+
+        else:
+            raise numba.TypingError(
+                f"unsupported vector type {vectortype} for method {methodname}"
+            )
 
         return overloader_impl
 
@@ -1604,6 +1617,11 @@ def add_isclose_method(vectortype):
                     coord23(v2),
                     coord24(v2),
                 )
+
+        else:
+            raise numba.TypingError(
+                f"{type(v1).__name__} and {type(v2).__name__} do not have the same dimension"
+            )
 
         return overloader_impl
 
