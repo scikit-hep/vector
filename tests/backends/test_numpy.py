@@ -582,3 +582,88 @@ def test_wrap_result_azimuthal_precedence_regression():
     assert isinstance(rotated, vector.backends.numpy.VectorNumpy2D)
     assert rotated.x.tolist() == pytest.approx([3.0])
     assert rotated.y.tolist() == pytest.approx([4.0])
+
+
+@pytest.mark.parametrize("momentum", [False, True])
+@pytest.mark.parametrize(
+    ("source_dim", "target_dim"), [(2, 3), (2, 4), (3, 2), (3, 4), (4, 2), (4, 3)]
+)
+@pytest.mark.parametrize("scalar", [float, numpy.array])
+def test_conversion_sum(momentum, source_dim, target_dim, scalar):
+    names = ("px", "py", "pz", "E") if momentum else ("x", "y", "z", "t")
+    coordinates = ([1.0, 3.0], [2.0, 4.0], [5.0, 7.0], [11.0, 13.0])
+    vectors = vector.array(
+        dict(zip(names[:source_dim], coordinates[:source_dim], strict=True))
+    )
+    total = numpy.sum(vectors)
+    assert total.shape == ()
+    extra = {name: scalar(10.0) for name in names[source_dim:target_dim]}
+
+    result = getattr(total, f"to_Vector{target_dim}D")(**extra)
+
+    shape = (1,) if target_dim > source_dim and scalar is float else ()
+    assert result.shape == shape
+    assert isinstance(
+        result,
+        getattr(vector, f"{'Momentum' if momentum else 'Vector'}Numpy{target_dim}D"),
+    )
+    for name, expected in zip(names[:target_dim], (4.0, 6.0, 12.0, 24.0), strict=False):
+        assert getattr(result, name) == pytest.approx(
+            10.0 if name in extra else expected
+        )
+
+
+@pytest.mark.parametrize("momentum", [False, True])
+@pytest.mark.parametrize(("source_dim", "target_dim"), [(2, 3), (2, 4), (3, 4)])
+@pytest.mark.parametrize("coordinate", [5.0, numpy.array(5.0), numpy.array([5.0, 6.0])])
+def test_conversion_coordinate_shapes(momentum, source_dim, target_dim, coordinate):
+    names = ("px", "py", "pz", "E") if momentum else ("x", "y", "z", "t")
+    fields = {name: numpy.array([1.0, 3.0]) for name in names[:source_dim]}
+    vectors = vector.array(fields)
+    extra = dict.fromkeys(names[source_dim:target_dim], coordinate)
+
+    result = getattr(vectors, f"to_Vector{target_dim}D")(**extra)
+
+    assert result.shape == (2,)
+    for name, expected in fields.items():
+        assert getattr(result, name) == pytest.approx(expected)
+    for name in extra:
+        assert getattr(result, name) == pytest.approx(
+            numpy.broadcast_to(coordinate, (2,))
+        )
+
+
+@pytest.mark.parametrize("momentum", [False, True])
+@pytest.mark.parametrize(("source_dim", "target_dim"), [(2, 3), (2, 4), (3, 4)])
+@pytest.mark.parametrize("rows", [0, 2])
+def test_conversion_broadcast_coordinates(momentum, source_dim, target_dim, rows):
+    names = ("px", "py", "pz", "E") if momentum else ("x", "y", "z", "t")
+    fields = {
+        name: numpy.arange(rows, dtype=float).reshape(rows, 1)
+        for name in names[:source_dim]
+    }
+    vectors = vector.array(fields)
+    extra = {
+        name: numpy.array([[10.0, 20.0, 30.0]]) for name in names[source_dim:target_dim]
+    }
+
+    result = getattr(vectors, f"to_Vector{target_dim}D")(**extra)
+
+    assert result.shape == (rows, 3)
+    for name, expected in {**fields, **extra}.items():
+        assert getattr(result, name) == pytest.approx(
+            numpy.broadcast_to(expected, (rows, 3))
+        )
+
+
+@pytest.mark.parametrize("momentum", [False, True])
+@pytest.mark.parametrize("dimension", [2, 3, 4])
+def test_sum_scalar_arithmetic_shape(momentum, dimension):
+    names = ("px", "py", "pz", "E") if momentum else ("x", "y", "z", "t")
+    total = numpy.sum(vector.array({name: [1.0, 3.0] for name in names[:dimension]}))
+
+    result = total * 2.0
+
+    assert result.shape == (1,)
+    for name in names[:dimension]:
+        assert getattr(result, name) == pytest.approx([8.0])

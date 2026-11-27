@@ -407,8 +407,7 @@ def _toarrays(
 
 def _shape_of(result: tuple[FloatArray, ...] | ScalarCollection) -> tuple[int, ...]:
     """
-    Calculates the shape of a tuple of ``numpy.array``s. The shape returned
-    is the highest (numerical) value of the shapes present in the tuple.
+    Calculates the joint broadcast shape of a tuple of ``numpy.array``s.
 
     Args:
         result (tuple): A tuple of ``numpy.array``s.
@@ -425,20 +424,14 @@ def _shape_of(result: tuple[FloatArray, ...] | ScalarCollection) -> tuple[int, .
         (2,)
         >>> _shape_of((np.array([1]), np.array([2, 8])))
         (2,)
+        >>> _shape_of((np.array(1), np.array(2)))
+        ()
+        >>> _shape_of((np.ones((2, 1)), np.ones((1, 3))))
+        (2, 3)
     """
     if not isinstance(result, tuple):
         result = (result,)
-    shape: list[int] | None = None
-    for x in result:
-        if hasattr(x, "shape"):
-            thisshape = list(x.shape)
-        elif isinstance(x, collections.abc.Sized):
-            thisshape = [len(x)]
-        if shape is None or thisshape[0] > shape[0]:
-            shape = thisshape
-
-    assert shape is not None
-    return tuple(shape)
+    return numpy.broadcast(*result).shape
 
 
 def _is_type_safe(
