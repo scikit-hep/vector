@@ -1373,6 +1373,42 @@ class VectorNumpy2D(VectorNumpy, Planar, Vector2D, FloatArray):  # type: ignore[
     def __setitem__(self, where: typing.Any, what: typing.Any) -> None:
         return _setitem(self, where, what, False)
 
+    if typing.TYPE_CHECKING:
+
+        def to_Vector2D(self) -> VectorNumpy2D: ...
+
+        def to_Vector3D(
+            self,
+            *,
+            z: float | FloatArray | None = None,
+            pz: float | FloatArray | None = None,
+            theta: float | FloatArray | None = None,
+            eta: float | FloatArray | None = None,
+        ) -> VectorNumpy3D: ...
+
+        def to_Vector4D(
+            self,
+            *,
+            z: float | FloatArray | None = None,
+            pz: float | FloatArray | None = None,
+            theta: float | FloatArray | None = None,
+            eta: float | FloatArray | None = None,
+            t: float | FloatArray | None = None,
+            e: float | FloatArray | None = None,
+            E: float | FloatArray | None = None,
+            energy: float | FloatArray | None = None,
+            tau: float | FloatArray | None = None,
+            m: float | FloatArray | None = None,
+            M: float | FloatArray | None = None,
+            mass: float | FloatArray | None = None,
+        ) -> VectorNumpy4D: ...
+
+        def to_2D(self) -> VectorNumpy2D: ...
+
+        def to_3D(self, **kwargs: float | None) -> VectorNumpy3D: ...
+
+        def to_4D(self, **kwargs: float | None) -> VectorNumpy4D: ...
+
 
 class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore[misc]
     """
@@ -1406,6 +1442,42 @@ class MomentumNumpy2D(PlanarMomentum, VectorNumpy2D):  # type: ignore[misc]
 
     def __setitem__(self, where: typing.Any, what: typing.Any) -> None:
         return _setitem(self, where, what, True)
+
+    if typing.TYPE_CHECKING:
+
+        def to_Vector2D(self) -> MomentumNumpy2D: ...
+
+        def to_Vector3D(
+            self,
+            *,
+            z: float | FloatArray | None = None,
+            pz: float | FloatArray | None = None,
+            theta: float | FloatArray | None = None,
+            eta: float | FloatArray | None = None,
+        ) -> MomentumNumpy3D: ...
+
+        def to_Vector4D(
+            self,
+            *,
+            z: float | FloatArray | None = None,
+            pz: float | FloatArray | None = None,
+            theta: float | FloatArray | None = None,
+            eta: float | FloatArray | None = None,
+            t: float | FloatArray | None = None,
+            e: float | FloatArray | None = None,
+            E: float | FloatArray | None = None,
+            energy: float | FloatArray | None = None,
+            tau: float | FloatArray | None = None,
+            m: float | FloatArray | None = None,
+            M: float | FloatArray | None = None,
+            mass: float | FloatArray | None = None,
+        ) -> MomentumNumpy4D: ...
+
+        def to_2D(self) -> MomentumNumpy2D: ...
+
+        def to_3D(self, **kwargs: float | None) -> MomentumNumpy3D: ...
+
+        def to_4D(self, **kwargs: float | None) -> MomentumNumpy4D: ...
 
 
 class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore[misc]
@@ -1629,6 +1701,31 @@ class VectorNumpy3D(VectorNumpy, Spatial, Vector3D, FloatArray):  # type: ignore
     def __setitem__(self, where: typing.Any, what: typing.Any) -> None:
         return _setitem(self, where, what, False)
 
+    if typing.TYPE_CHECKING:
+
+        def to_Vector2D(self) -> VectorNumpy2D: ...
+
+        def to_Vector3D(self) -> VectorNumpy3D: ...
+
+        def to_Vector4D(
+            self,
+            *,
+            t: float | FloatArray | None = None,
+            e: float | FloatArray | None = None,
+            E: float | FloatArray | None = None,
+            energy: float | FloatArray | None = None,
+            tau: float | FloatArray | None = None,
+            m: float | FloatArray | None = None,
+            M: float | FloatArray | None = None,
+            mass: float | FloatArray | None = None,
+        ) -> VectorNumpy4D: ...
+
+        def to_2D(self) -> VectorNumpy2D: ...
+
+        def to_3D(self) -> VectorNumpy3D: ...
+
+        def to_4D(self, **kwargs: float | None) -> VectorNumpy4D: ...
+
 
 class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
     """
@@ -1662,6 +1759,31 @@ class MomentumNumpy3D(SpatialMomentum, VectorNumpy3D):  # type: ignore[misc]
 
     def __setitem__(self, where: typing.Any, what: typing.Any) -> None:
         return _setitem(self, where, what, True)
+
+    if typing.TYPE_CHECKING:
+
+        def to_Vector2D(self) -> MomentumNumpy2D: ...
+
+        def to_Vector3D(self) -> MomentumNumpy3D: ...
+
+        def to_Vector4D(
+            self,
+            *,
+            t: float | FloatArray | None = None,
+            e: float | FloatArray | None = None,
+            E: float | FloatArray | None = None,
+            energy: float | FloatArray | None = None,
+            tau: float | FloatArray | None = None,
+            m: float | FloatArray | None = None,
+            M: float | FloatArray | None = None,
+            mass: float | FloatArray | None = None,
+        ) -> MomentumNumpy4D: ...
+
+        def to_2D(self) -> MomentumNumpy2D: ...
+
+        def to_3D(self) -> MomentumNumpy3D: ...
+
+        def to_4D(self, **kwargs: float | None) -> MomentumNumpy4D: ...
 
 
 class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore[misc]
@@ -1947,6 +2069,20 @@ class VectorNumpy4D(VectorNumpy, Lorentz, Vector4D, FloatArray):  # type: ignore
     def __setitem__(self, where: typing.Any, what: typing.Any) -> None:
         return _setitem(self, where, what, False)
 
+    if typing.TYPE_CHECKING:
+
+        def to_Vector2D(self) -> VectorNumpy2D: ...
+
+        def to_Vector3D(self) -> VectorNumpy3D: ...
+
+        def to_Vector4D(self) -> VectorNumpy4D: ...
+
+        def to_2D(self) -> VectorNumpy2D: ...
+
+        def to_3D(self) -> VectorNumpy3D: ...
+
+        def to_4D(self) -> VectorNumpy4D: ...
+
 
 class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore[misc]
     """
@@ -1982,6 +2118,20 @@ class MomentumNumpy4D(LorentzMomentum, VectorNumpy4D):  # type: ignore[misc]
 
     def __setitem__(self, where: typing.Any, what: typing.Any) -> None:
         return _setitem(self, where, what, True)
+
+    if typing.TYPE_CHECKING:
+
+        def to_Vector2D(self) -> MomentumNumpy2D: ...
+
+        def to_Vector3D(self) -> MomentumNumpy3D: ...
+
+        def to_Vector4D(self) -> MomentumNumpy4D: ...
+
+        def to_2D(self) -> MomentumNumpy2D: ...
+
+        def to_3D(self) -> MomentumNumpy3D: ...
+
+        def to_4D(self) -> MomentumNumpy4D: ...
 
 
 def array(*args: typing.Any, **kwargs: typing.Any) -> VectorNumpy:

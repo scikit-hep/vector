@@ -828,6 +828,42 @@ class VectorObject2D(VectorObject, Planar, Vector2D):
     def phi(self, phi: float) -> None:
         self.azimuthal = AzimuthalObjectRhoPhi(self.rho, phi)
 
+    if typing.TYPE_CHECKING:
+
+        def to_Vector2D(self) -> VectorObject2D: ...
+
+        def to_Vector3D(
+            self,
+            *,
+            z: float | None = None,
+            pz: float | None = None,
+            theta: float | None = None,
+            eta: float | None = None,
+        ) -> VectorObject3D: ...
+
+        def to_Vector4D(
+            self,
+            *,
+            z: float | None = None,
+            pz: float | None = None,
+            theta: float | None = None,
+            eta: float | None = None,
+            t: float | None = None,
+            e: float | None = None,
+            E: float | None = None,
+            energy: float | None = None,
+            tau: float | None = None,
+            m: float | None = None,
+            M: float | None = None,
+            mass: float | None = None,
+        ) -> VectorObject4D: ...
+
+        def to_2D(self) -> VectorObject2D: ...
+
+        def to_3D(self, **kwargs: float | None) -> VectorObject3D: ...
+
+        def to_4D(self, **kwargs: float | None) -> VectorObject4D: ...
+
 
 class MomentumObject2D(PlanarMomentum, VectorObject2D):
     """
@@ -898,6 +934,42 @@ class MomentumObject2D(PlanarMomentum, VectorObject2D):
     @pt.setter
     def pt(self, pt: float) -> None:
         self.azimuthal = AzimuthalObjectRhoPhi(pt, self.phi)
+
+    if typing.TYPE_CHECKING:
+
+        def to_Vector2D(self) -> MomentumObject2D: ...
+
+        def to_Vector3D(
+            self,
+            *,
+            z: float | None = None,
+            pz: float | None = None,
+            theta: float | None = None,
+            eta: float | None = None,
+        ) -> MomentumObject3D: ...
+
+        def to_Vector4D(
+            self,
+            *,
+            z: float | None = None,
+            pz: float | None = None,
+            theta: float | None = None,
+            eta: float | None = None,
+            t: float | None = None,
+            e: float | None = None,
+            E: float | None = None,
+            energy: float | None = None,
+            tau: float | None = None,
+            m: float | None = None,
+            M: float | None = None,
+            mass: float | None = None,
+        ) -> MomentumObject4D: ...
+
+        def to_2D(self) -> MomentumObject2D: ...
+
+        def to_3D(self, **kwargs: float | None) -> MomentumObject3D: ...
+
+        def to_4D(self, **kwargs: float | None) -> MomentumObject4D: ...
 
 
 class VectorObject3D(VectorObject, Spatial, Vector3D):
@@ -1246,6 +1318,31 @@ class VectorObject3D(VectorObject, Spatial, Vector3D):
     def eta(self, eta: float) -> None:
         self.longitudinal = LongitudinalObjectEta(eta)
 
+    if typing.TYPE_CHECKING:
+
+        def to_Vector2D(self) -> VectorObject2D: ...
+
+        def to_Vector3D(self) -> VectorObject3D: ...
+
+        def to_Vector4D(
+            self,
+            *,
+            t: float | None = None,
+            e: float | None = None,
+            E: float | None = None,
+            energy: float | None = None,
+            tau: float | None = None,
+            m: float | None = None,
+            M: float | None = None,
+            mass: float | None = None,
+        ) -> VectorObject4D: ...
+
+        def to_2D(self) -> VectorObject2D: ...
+
+        def to_3D(self) -> VectorObject3D: ...
+
+        def to_4D(self, **kwargs: float | None) -> VectorObject4D: ...
+
 
 class MomentumObject3D(SpatialMomentum, VectorObject3D):
     """
@@ -1333,6 +1430,31 @@ class MomentumObject3D(SpatialMomentum, VectorObject3D):
     @pz.setter
     def pz(self, pz: float) -> None:
         self.longitudinal = LongitudinalObjectZ(pz)
+
+    if typing.TYPE_CHECKING:
+
+        def to_Vector2D(self) -> MomentumObject2D: ...
+
+        def to_Vector3D(self) -> MomentumObject3D: ...
+
+        def to_Vector4D(
+            self,
+            *,
+            t: float | None = None,
+            e: float | None = None,
+            E: float | None = None,
+            energy: float | None = None,
+            tau: float | None = None,
+            m: float | None = None,
+            M: float | None = None,
+            mass: float | None = None,
+        ) -> MomentumObject4D: ...
+
+        def to_2D(self) -> MomentumObject2D: ...
+
+        def to_3D(self) -> MomentumObject3D: ...
+
+        def to_4D(self, **kwargs: float | None) -> MomentumObject4D: ...
 
 
 class VectorObject4D(VectorObject, Lorentz, Vector4D):
@@ -1953,6 +2075,20 @@ class VectorObject4D(VectorObject, Lorentz, Vector4D):
     def tau(self, tau: float) -> None:
         self.temporal = TemporalObjectTau(tau)
 
+    if typing.TYPE_CHECKING:
+
+        def to_Vector2D(self) -> VectorObject2D: ...
+
+        def to_Vector3D(self) -> VectorObject3D: ...
+
+        def to_Vector4D(self) -> VectorObject4D: ...
+
+        def to_2D(self) -> VectorObject2D: ...
+
+        def to_3D(self) -> VectorObject3D: ...
+
+        def to_4D(self) -> VectorObject4D: ...
+
 
 class MomentumObject4D(LorentzMomentum, VectorObject4D):
     """
@@ -2096,6 +2232,20 @@ class MomentumObject4D(LorentzMomentum, VectorObject4D):
     @mass.setter
     def mass(self, mass: float) -> None:
         self.temporal = TemporalObjectTau(mass)
+
+    if typing.TYPE_CHECKING:
+
+        def to_Vector2D(self) -> MomentumObject2D: ...
+
+        def to_Vector3D(self) -> MomentumObject3D: ...
+
+        def to_Vector4D(self) -> MomentumObject4D: ...
+
+        def to_2D(self) -> MomentumObject2D: ...
+
+        def to_3D(self) -> MomentumObject3D: ...
+
+        def to_4D(self) -> MomentumObject4D: ...
 
 
 def _is_type_safe(coordinates: dict[str, typing.Any]) -> None:
