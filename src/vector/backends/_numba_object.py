@@ -1269,7 +1269,7 @@ def add_binary_method(vectortype, gn, methodname):
                 numba_ttype(v2),
             )
 
-        else:
+        else:  # pragma: no cover
             raise numba.TypingError(f"unrecognized groupname: {groupname}")
 
         function, *returns = _from_signature(
@@ -1459,7 +1459,7 @@ def add_tolerance_method(vectortype, methodname):
             coord22 = getcoord2[numba_aztype(v2)]
             coord23 = getcoord1[numba_ltype(v2)]
 
-        else:
+        else:  # pragma: no cover
             raise numba.TypingError(
                 f"unsupported vector type {vectortype} for method {methodname}"
             )
@@ -1496,7 +1496,7 @@ def add_tolerance_method(vectortype, methodname):
                     coord23(v2),
                 )
 
-        else:
+        else:  # pragma: no cover
             raise numba.TypingError(
                 f"unsupported vector type {vectortype} for method {methodname}"
             )
@@ -1618,7 +1618,7 @@ def add_isclose_method(vectortype):
                     coord24(v2),
                 )
 
-        else:
+        else:  # pragma: no cover
             raise numba.TypingError(
                 f"{type(v1).__name__} and {type(v2).__name__} do not have the same dimension"
             )

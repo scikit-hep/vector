@@ -1800,3 +1800,13 @@ def test_momentum_lowercase_aliases():
     assert get_et2(p) == pytest.approx(p.et2)
     assert get_mt(p) == pytest.approx(p.mt)
     assert get_mt2(p) == pytest.approx(p.mt2)
+
+
+def test_isclose_dimension_mismatch_raises_typing_error():
+    @numba.njit
+    def check_isclose(v1, v2):
+        return v1.isclose(v2)
+
+    assert check_isclose(vector.obj(x=1, y=2), vector.obj(x=1, y=2))
+    with pytest.raises(numba.TypingError):
+        check_isclose(vector.obj(x=1, y=2), vector.obj(x=1, y=2, z=3))
